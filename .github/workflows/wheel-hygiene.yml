@@ -54,12 +54,16 @@ jobs:
               find "$PWD/build-runtime" -name 'libgpu_runtime*' -print >&2
               exit 1
           fi
-      - name: Build wheel and sdist
+      - name: Build wheel
         run: |
           cd python
-          python -m build \
+          python -m build --wheel \
             -Ccmake.define.NAVATALA_FFI_INCLUDE_DIR="$NAVATALA_FFI_INCLUDE_DIR" \
             -Ccmake.define.NAVATALA_FFI_LIBRARY="$NAVATALA_FFI_LIBRARY"
+      - name: Build standalone sdist
+        run: |
+          cd python
+          python -m build --sdist
       - name: Repair Linux wheel
         if: ${{ runner.os == 'Linux' }}
         run: |
@@ -109,6 +113,19 @@ jobs:
           # macosx_11_0_arm64 environments. This hygiene job is still useful
           # before that because it fails on packaging/install/import errors.
           pip install python/dist/navatala_gpu-*.whl
+          python - <<'PY'
+          import navatala_gpu
+          print('version', navatala_gpu.__version__)
+          print('abi_version', navatala_gpu.__abi_version__)
+          print('manifest_id', navatala_gpu._meta.manifest_id())
+          PY
+      - name: Install sdist + smoke test in fresh venv
+        run: |
+          set -euo pipefail
+          python -m venv /tmp/sdisttest-venv
+          source /tmp/sdisttest-venv/bin/activate
+          pip install --upgrade pip
+          pip install python/dist/navatala_gpu-*.tar.gz
           python - <<'PY'
           import navatala_gpu
           print('version', navatala_gpu.__version__)

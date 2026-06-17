@@ -31,6 +31,8 @@ option(GPU_RUNTIME_USE_METAL  "Enable Metal backend (macOS/iOS)" OFF)
 option(GPU_RUNTIME_NAVATALA_WRAPPER "Build the public Navatala C FFI wrapper" ON)
 option(GPU_RUNTIME_NAVATALA_FFI_STUB "Use Navatala stub FFI implementation (no GPU required)" ON)
 option(GPU_RUNTIME_HIDE_INTERNAL_SYMBOLS "Hide internal C++ runtime symbols on ELF shared-library builds" ON)
+option(GPU_RUNTIME_INSTALL_STANDALONE_ARTIFACTS
+       "Install runtime headers/library for standalone CMake consumers" ON)
 
 # Test compilation is gated on GPU_RUNTIME_BUILD_TESTS. When this library is
 # built as part of the navatala_gpu top-level project, the parent CMake
@@ -189,12 +191,14 @@ endif()
 # ============================================================================
 
 include(GNUInstallDirs)
-install(TARGETS gpu_runtime
-    EXPORT  gpu_runtime-targets
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-)
-install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+if(GPU_RUNTIME_INSTALL_STANDALONE_ARTIFACTS)
+    install(TARGETS gpu_runtime
+        EXPORT  gpu_runtime-targets
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
+    install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+endif()
 
 # ============================================================================
 # Tests

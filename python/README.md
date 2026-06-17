@@ -12,7 +12,10 @@ Generated Python bindings and runtime facade for Navatala GPU operations.
 
 ## Build
 
-Configure the extension with the public runtime include directory and runtime library:
+The default package build uses the bundled public runtime in stub mode, so
+`pip install .` works on hosts without GPU SDKs. Advanced users may link
+against an already-built runtime by passing the public runtime include
+directory and shared library:
 
 ```bash
 cmake -S . -B build \
@@ -21,7 +24,7 @@ cmake -S . -B build \
 cmake --build build -j
 ```
 
-For Python packaging, use a build frontend compatible with `scikit-build-core` and pass the same CMake cache variables.
+For Python packaging, use a build frontend compatible with `scikit-build-core`.
 
 ## Python Usage
 

@@ -1,0 +1,6 @@
+GPU_RUNTIME_0.1 {
+    global:
+        navatala_*;
+    local:
+        *;
+};

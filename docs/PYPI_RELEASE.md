@@ -49,17 +49,42 @@ It is manual-only:
 4. Install from TestPyPI and run a smoke test.
 5. If the result is acceptable, run again with `target=pypi`.
 
-The publish workflow currently builds and uploads repaired binary wheels for
-CPython 3.9 through 3.13. It intentionally does **not** publish the sdist yet:
-the source distribution requires additional work so it can build the bundled
-runtime without external `NAVATALA_FFI_*` CMake defines.
+The publish workflow builds and uploads repaired binary wheels for CPython 3.9
+through 3.13, plus exactly one source distribution. Wheel jobs link against a
+separately built public runtime. The source distribution is intentionally built
+without `NAVATALA_FFI_*` CMake defines so it exercises the bundled-runtime
+fallback path.
 
 ## Local Validation
 
-Build the runtime shared library with all optional GPU backends disabled, then
-build the Python source distribution and wheel against that library:
+First verify the standalone source distribution. This should work without any
+external runtime path; the source archive carries `python/runtime/` and builds
+the public runtime in stub mode:
 
 ```bash
+cd python
+rm -rf dist build *.egg-info
+python -m build --sdist
+python -m twine check dist/*.tar.gz
+
+python -m venv /tmp/navatala_gpu_sdist_test
+. /tmp/navatala_gpu_sdist_test/bin/activate
+pip install --upgrade pip
+pip install dist/navatala_gpu-*.tar.gz
+python - <<'PY'
+import navatala_gpu
+print(navatala_gpu.__version__)
+print(navatala_gpu.__abi_version__)
+print(navatala_gpu.get_capabilities())
+PY
+deactivate
+```
+
+Then build a local wheel. The release workflow builds a runtime library first
+and supplies it to the Python wheel build through explicit CMake defines:
+
+```bash
+cd ..
 cmake -S . -B /tmp/navatala_gpu_runtime_pypi \
   -DNAVATALA_GPU_USE_CUDA=OFF \
   -DNAVATALA_GPU_USE_HIP=OFF \
@@ -70,7 +95,8 @@ cmake -S . -B /tmp/navatala_gpu_runtime_pypi \
 cmake --build /tmp/navatala_gpu_runtime_pypi -j
 
 cd python
-python -m build \
+rm -rf dist build *.egg-info
+python -m build --wheel \
   -Ccmake.define.NAVATALA_FFI_INCLUDE_DIR="$PWD/../runtime/include" \
   -Ccmake.define.NAVATALA_FFI_LIBRARY="/tmp/navatala_gpu_runtime_pypi/runtime/libgpu_runtime.so"
 python -m twine check dist/*
@@ -94,10 +120,9 @@ PY
 ## Wheel Policy
 
 PyPI/TestPyPI reject raw `linux_x86_64` wheels. The current GitHub workflow
-therefore repairs the Linux wheel with `auditwheel` before `twine check` and
-upload. It publishes wheels only until the sdist can build the bundled runtime
-standalone. Before a production PyPI release intended for general users,
-replace the single-runner repair path with a real wheel matrix:
+therefore repairs Linux wheels with `auditwheel` before `twine check` and
+upload. Before a production PyPI release intended for general users, replace
+the single-runner repair path with a real wheel matrix:
 
 - `manylinux_2_28_x86_64`
 - `manylinux_2_28_aarch64`

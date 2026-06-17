@@ -183,10 +183,10 @@ AVG=$(
         find kernels -mindepth 2 -type f \
             \( -name '*.cu' -o -name '*.hip' -o -name '*.cl' \
                -o -name '*.comp' -o -name '*.metal' \) \
-            -exec grep -h 'extern "C".*void [A-Za-z0-9_]\+' {} + 2>/dev/null \
+            -exec grep -hE '(extern "C".*void|__kernel void|kernel void) [A-Za-z0-9_]+' {} + 2>/dev/null \
             || true
     } \
-    | sed -E 's/.*void ([A-Za-z0-9_]+).*/\1/' \
+    | sed -E 's/.*(extern "C".*void|__kernel void|kernel void) ([A-Za-z0-9_]+).*/\2/' \
     | awk '{s+=length($1); n++} END {if (n) print s/n; else print 0}'
 )
 if [[ -z "$AVG" || "$AVG" == "0" ]]; then

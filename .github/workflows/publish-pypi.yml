@@ -90,8 +90,43 @@ jobs:
           name: python-dist-${{ matrix.python-version }}
           path: python/dist/*
 
+  build-sdist:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install build deps
+        run: |
+          python -m pip install --upgrade pip build twine
+      - name: Build standalone source distribution
+        run: |
+          cd python
+          python -m build --sdist
+          twine check dist/*.tar.gz
+      - name: Install smoke test from sdist
+        run: |
+          set -euo pipefail
+          python -m venv /tmp/navatala-gpu-sdist-smoke
+          source /tmp/navatala-gpu-sdist-smoke/bin/activate
+          pip install --upgrade pip
+          pip install python/dist/navatala_gpu-*.tar.gz
+          python - <<'PY'
+          import navatala_gpu
+          print("version", navatala_gpu.__version__)
+          print("abi_version", navatala_gpu.__abi_version__)
+          print("manifest_id", navatala_gpu._meta.manifest_id())
+          PY
+      - name: Upload sdist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-sdist
+          path: python/dist/*.tar.gz
+
   publish-testpypi:
-    needs: build
+    needs: [build, build-sdist]
     if: ${{ github.event.inputs.target == 'testpypi' }}
     runs-on: ubuntu-latest
     environment: testpypi
@@ -101,7 +136,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          pattern: python-dist-*
+          pattern: python-*
           path: dist
           merge-multiple: true
       - name: Publish to TestPyPI
@@ -112,7 +147,7 @@ jobs:
           skip-existing: true
 
   publish-pypi:
-    needs: build
+    needs: [build, build-sdist]
     if: ${{ github.event.inputs.target == 'pypi' }}
     runs-on: ubuntu-latest
     environment: pypi
@@ -122,7 +157,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          pattern: python-dist-*
+          pattern: python-*
           path: dist
           merge-multiple: true
       - name: Publish to PyPI

@@ -8,10 +8,18 @@ target_include_directories(navatala_gpu_ext PRIVATE
 if(UNIX AND NOT APPLE)
     target_link_options(navatala_gpu_ext PRIVATE "LINKER:--no-as-needed")
 endif()
-target_link_libraries(navatala_gpu_ext PRIVATE ${NAVATALA_FFI_LIBRARY})
+if(NAVATALA_USE_BUNDLED_RUNTIME)
+    target_link_libraries(navatala_gpu_ext PRIVATE gpu_runtime)
+else()
+    target_link_libraries(navatala_gpu_ext PRIVATE ${NAVATALA_FFI_LIBRARY})
+endif()
 set_target_properties(navatala_gpu_ext PROPERTIES
     BUILD_RPATH "$ORIGIN"
     INSTALL_RPATH "$ORIGIN"
 )
 install(TARGETS navatala_gpu_ext LIBRARY DESTINATION navatala_gpu)
-install(FILES ${NAVATALA_FFI_LIBRARY} DESTINATION navatala_gpu)
+if(NAVATALA_USE_BUNDLED_RUNTIME)
+    install(TARGETS gpu_runtime LIBRARY DESTINATION navatala_gpu)
+else()
+    install(FILES ${NAVATALA_FFI_LIBRARY} DESTINATION navatala_gpu)
+endif()
