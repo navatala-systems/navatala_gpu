@@ -1,0 +1,115 @@
+# SPDX-License-Identifier: Apache-2.0
+name: Publish Python Package
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Publishing target'
+        required: true
+        default: testpypi
+        type: choice
+        options:
+          - testpypi
+          - pypi
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install build deps
+        run: |
+          python -m pip install --upgrade pip build twine
+      - name: Build public runtime for wheel link
+        run: |
+          cmake -S . -B build-runtime \
+            -DNAVATALA_GPU_USE_CUDA=OFF \
+            -DNAVATALA_GPU_USE_HIP=OFF \
+            -DNAVATALA_GPU_USE_VULKAN=OFF \
+            -DNAVATALA_GPU_USE_OPENCL=OFF \
+            -DNAVATALA_GPU_USE_METAL=OFF \
+            -DNAVATALA_GPU_BUILD_TESTS=OFF
+          cmake --build build-runtime -j
+          echo "NAVATALA_FFI_INCLUDE_DIR=$PWD/runtime/include" >> "$GITHUB_ENV"
+          if [ -f "$PWD/build-runtime/runtime/libgpu_runtime.so" ]; then
+              echo "NAVATALA_FFI_LIBRARY=$PWD/build-runtime/runtime/libgpu_runtime.so" >> "$GITHUB_ENV"
+          elif [ -f "$PWD/build-runtime/runtime/libgpu_runtime.dylib" ]; then
+              echo "NAVATALA_FFI_LIBRARY=$PWD/build-runtime/runtime/libgpu_runtime.dylib" >> "$GITHUB_ENV"
+          else
+              echo "libgpu_runtime shared library not found" >&2
+              find "$PWD/build-runtime" -name 'libgpu_runtime*' -print >&2
+              exit 1
+          fi
+      - name: Build wheel and sdist
+        run: |
+          cd python
+          python -m build \
+            -Ccmake.define.NAVATALA_FFI_INCLUDE_DIR="$NAVATALA_FFI_INCLUDE_DIR" \
+            -Ccmake.define.NAVATALA_FFI_LIBRARY="$NAVATALA_FFI_LIBRARY"
+      - name: Twine metadata check
+        run: |
+          twine check python/dist/*
+      - name: Install smoke test
+        run: |
+          set -euo pipefail
+          python -m venv /tmp/navatala-gpu-smoke
+          source /tmp/navatala-gpu-smoke/bin/activate
+          pip install --upgrade pip
+          pip install python/dist/navatala_gpu-*.whl
+          python - <<'PY'
+import navatala_gpu
+print("version", navatala_gpu.__version__)
+print("abi_version", navatala_gpu.__abi_version__)
+print("manifest_id", navatala_gpu._meta.manifest_id())
+PY
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-dist
+          path: python/dist/*
+
+  publish-testpypi:
+    needs: build
+    if: ${{ github.event.inputs.target == 'testpypi' }}
+    runs-on: ubuntu-latest
+    environment: testpypi
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: python-dist
+          path: dist
+      - name: Publish to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+          packages-dir: dist/
+          skip-existing: true
+
+  publish-pypi:
+    needs: build
+    if: ${{ github.event.inputs.target == 'pypi' }}
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: python-dist
+          path: dist
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/

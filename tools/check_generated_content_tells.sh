@@ -22,6 +22,7 @@ ALLOWLIST=(
     "tools/check_release_hygiene.py"
     ".github/workflows/regen-trailer.yml"
     ".github/workflows/wheel-hygiene.yml"
+    ".github/workflows/publish-pypi.yml"
 )
 
 is_allowlisted() {

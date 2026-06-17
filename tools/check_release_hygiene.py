@@ -52,6 +52,7 @@ def main() -> int:
             "tools/check_release_hygiene.py",
             "tools/check_generated_content_tells.sh",
             ".github/workflows/wheel-hygiene.yml",
+            ".github/workflows/publish-pypi.yml",
         }:
             continue
         try:

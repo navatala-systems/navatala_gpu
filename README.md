@@ -92,6 +92,7 @@ For a fuller tour, see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 - [`docs/KERNEL_INDEX.md`](docs/KERNEL_INDEX.md) — generated domain-grouped kernel index.
 - [`docs/PUBLIC_PRIVATE_BOUNDARY.md`](docs/PUBLIC_PRIVATE_BOUNDARY.md) — what is public, private, and generated.
 - [`docs/SBOM.md`](docs/SBOM.md) — dependency and license summary for the release tree.
+- [`docs/PYPI_RELEASE.md`](docs/PYPI_RELEASE.md) — TestPyPI/PyPI release procedure.
 - [`docs/ALPHA_RELEASE_CHECKLIST.md`](docs/ALPHA_RELEASE_CHECKLIST.md) — release-readiness checklist.
 - [`SECURITY.md`](SECURITY.md) — vulnerability reporting policy.
 
