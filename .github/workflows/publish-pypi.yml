@@ -65,11 +65,11 @@ jobs:
           pip install --upgrade pip
           pip install python/dist/navatala_gpu-*.whl
           python - <<'PY'
-import navatala_gpu
-print("version", navatala_gpu.__version__)
-print("abi_version", navatala_gpu.__abi_version__)
-print("manifest_id", navatala_gpu._meta.manifest_id())
-PY
+          import navatala_gpu
+          print("version", navatala_gpu.__version__)
+          print("abi_version", navatala_gpu.__abi_version__)
+          print("manifest_id", navatala_gpu._meta.manifest_id())
+          PY
       - name: Upload dist artifact
         uses: actions/upload-artifact@v4
         with:

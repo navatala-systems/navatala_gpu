@@ -71,19 +71,21 @@ jobs:
           for whl in python/dist/*.whl; do
               echo "::group::Inspect $whl"
               # Use python to list wheel contents portably.
-              python -c "
-import zipfile, sys
-sentinels = ['generated', 'codegen', 'CodeGenGPU', 'GPU.GPUType', 'Calculations_GPU', '__pycache__', '.pyc', '.pytest_cache']
-fails = 0
-with zipfile.ZipFile('$whl') as z:
-    for name in z.namelist():
-        for s in sentinels:
-            if s in name:
-                print(f'FAIL: {name!r} matches sentinel {s!r}', file=sys.stderr)
-                fails += 1
-                break
-sys.exit(1 if fails else 0)
-"
+              python - "$whl" <<'PY'
+          import sys
+          import zipfile
+
+          sentinels = ['generated', 'codegen', 'CodeGenGPU', 'GPU.GPUType', 'Calculations_GPU', '__pycache__', '.pyc', '.pytest_cache']
+          fails = 0
+          with zipfile.ZipFile(sys.argv[1]) as z:
+              for name in z.namelist():
+                  for s in sentinels:
+                      if s in name:
+                          print(f'FAIL: {name!r} matches sentinel {s!r}', file=sys.stderr)
+                          fails += 1
+                          break
+          sys.exit(1 if fails else 0)
+          PY
               echo "::endgroup::"
           done
       - name: Install + smoke test in fresh venv
@@ -97,12 +99,12 @@ sys.exit(1 if fails else 0)
           # macosx_11_0_arm64 environments. This hygiene job is still useful
           # before that because it fails on packaging/install/import errors.
           pip install python/dist/navatala_gpu-*.whl
-          python -c "
-import navatala_gpu
-print('version', navatala_gpu.__version__)
-print('abi_version', navatala_gpu.__abi_version__)
-print('manifest_id', navatala_gpu._meta.manifest_id())
-"
+          python - <<'PY'
+          import navatala_gpu
+          print('version', navatala_gpu.__version__)
+          print('abi_version', navatala_gpu.__abi_version__)
+          print('manifest_id', navatala_gpu._meta.manifest_id())
+          PY
       - name: Run acceptance checks on installed tree
         run: |
           if [ -x tools/check_generated_content_tells.sh ]; then
