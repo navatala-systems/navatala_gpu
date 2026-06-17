@@ -1,0 +1,132 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_queryData {
+  float queryData[];
+};
+layout(std430, binding = 1) readonly buffer buf_queryIndices {
+  int queryIndices[];
+};
+layout(std430, binding = 2) readonly buffer buf_queryStart {
+  uint queryStart[];
+};
+layout(std430, binding = 3) readonly buffer buf_queryEnd {
+  uint queryEnd[];
+};
+layout(std430, binding = 4) readonly buffer buf_idxData {
+  float idxData[];
+};
+layout(std430, binding = 5) readonly buffer buf_idxIndices {
+  int idxIndices[];
+};
+layout(std430, binding = 6) readonly buffer buf_idxIndptr {
+  int idxIndptr[];
+};
+layout(std430, binding = 7) readonly buffer buf_nIdxRows {
+  uint nIdxRows[];
+};
+layout(std430, binding = 8) writeonly buffer buf_distances {
+  float distances[];
+};
+
+// kernel: navatala_sparse_knn_sparse_k_n_n_distance_f32
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint gid = uint(int(gl_GlobalInvocationID.x));
+  uint nRows = nIdxRows[0];
+  uint qStart = queryStart[0];
+  uint qEnd = queryEnd[0];
+  uint rowIdx = gid;
+  bool inBounds = (rowIdx < nRows);
+  if (inBounds) {
+    int idxRowStart = idxIndptr[rowIdx];
+    uint rowIdxPlus1 = (rowIdx + 1u);
+    int idxRowEnd = idxIndptr[rowIdxPlus1];
+    uint idxStart = uint(idxRowStart);
+    uint idxEnd = uint(idxRowEnd);
+    float queryNormSqAccum = uintBitsToFloat(0x00000000u);
+    uint qIdxAccum = qStart;
+    uint qLen = (qEnd - qStart);
+    for (int qLoop = 0; qLoop < int(qLen); ++qLoop) {
+      uint qPos = qIdxAccum;
+      if ((qPos < qEnd)) {
+        float qVal = queryData[qPos];
+        float qValSq = (qVal * qVal);
+        float currQNorm = queryNormSqAccum;
+        float newQNorm = (currQNorm + qValSq);
+        queryNormSqAccum = newQNorm;
+      }
+      uint currQIdx = qIdxAccum;
+      uint nextQIdx = (currQIdx + 1u);
+      qIdxAccum = nextQIdx;
+    }
+    float queryNormSq = queryNormSqAccum;
+    float idxNormSqAccum = uintBitsToFloat(0x00000000u);
+    uint iIdxAccum = idxStart;
+    uint idxLen = (idxEnd - idxStart);
+    for (int iLoop = 0; iLoop < int(idxLen); ++iLoop) {
+      uint iPos = iIdxAccum;
+      if ((iPos < idxEnd)) {
+        float iVal = idxData[iPos];
+        float iValSq = (iVal * iVal);
+        float currINorm = idxNormSqAccum;
+        float newINorm = (currINorm + iValSq);
+        idxNormSqAccum = newINorm;
+      }
+      uint currIIdx = iIdxAccum;
+      uint nextIIdx = (currIIdx + 1u);
+      iIdxAccum = nextIIdx;
+    }
+    float idxNormSq = idxNormSqAccum;
+    float dotAccum = uintBitsToFloat(0x00000000u);
+    uint qIdx2Accum = qStart;
+    for (int dotQLoop = 0; dotQLoop < int(qLen); ++dotQLoop) {
+      uint qPos2 = qIdx2Accum;
+      if ((qPos2 < qEnd)) {
+        float qVal2 = queryData[qPos2];
+        int qCol = queryIndices[qPos2];
+        uint iIdx2Accum = idxStart;
+        for (int dotILoop = 0; dotILoop < int(idxLen); ++dotILoop) {
+          uint iPos2 = iIdx2Accum;
+          if ((iPos2 < idxEnd)) {
+            int iCol = idxIndices[iPos2];
+            bool colMatch = (qCol == iCol);
+            if (colMatch) {
+              float iVal2 = idxData[iPos2];
+              float prod = (qVal2 * iVal2);
+              float currDot = dotAccum;
+              float newDot = (currDot + prod);
+              dotAccum = newDot;
+            }
+          }
+          uint currI2Idx = iIdx2Accum;
+          uint nextI2Idx = (currI2Idx + 1u);
+          iIdx2Accum = nextI2Idx;
+        }
+      }
+      uint currQ2Idx = qIdx2Accum;
+      uint nextQ2Idx = (currQ2Idx + 1u);
+      qIdx2Accum = nextQ2Idx;
+    }
+    float dotProd = dotAccum;
+    float twoDot = (uintBitsToFloat(0x40000000u) * dotProd);
+    float sumNorms = (queryNormSq + idxNormSq);
+    float distSq = (sumNorms - twoDot);
+    distances[rowIdx] = distSq;
+  }
+}

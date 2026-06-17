@@ -1,0 +1,30 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include <metal_stdlib>
+using namespace metal;
+
+kernel void navatala_sparse_amg_cycle_counter_f32(device const float* residualNorm [[buffer(0)]], device const float* tolerance [[buffer(1)]], device const uint* maxCycles [[buffer(2)]], device uint* cycleCount [[buffer(3)]], device uint* converged [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
+  float norm = residualNorm[0];
+  float tol = tolerance[0];
+  uint cc = cycleCount[0];
+  uint mc = maxCycles[0];
+  uint newCc = (cc + 1u);
+  uint conv = (((norm < tol)) ? (1u) : (0u));
+  uint maxReached = (((newCc >= mc)) ? (1u) : (0u));
+  uint flag = ((((conv == 1u) || (maxReached == 1u))) ? (1u) : (0u));
+  cycleCount[0] = newCc;
+  converged[0] = flag;
+}

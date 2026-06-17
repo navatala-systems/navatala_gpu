@@ -1,0 +1,84 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_recvVals {
+  float recvVals[];
+};
+layout(std430, binding = 1) readonly buffer buf_counts {
+  int counts[];
+};
+layout(std430, binding = 2) buffer buf_muCell {
+  float muCell[];
+};
+layout(std430, binding = 3) buffer buf_gXX {
+  float gXX[];
+};
+layout(std430, binding = 4) buffer buf_gXY {
+  float gXY[];
+};
+layout(std430, binding = 5) buffer buf_gXZ {
+  float gXZ[];
+};
+layout(std430, binding = 6) buffer buf_gYX {
+  float gYX[];
+};
+layout(std430, binding = 7) buffer buf_gYY {
+  float gYY[];
+};
+layout(std430, binding = 8) buffer buf_gYZ {
+  float gYZ[];
+};
+layout(std430, binding = 9) buffer buf_gZX {
+  float gZX[];
+};
+layout(std430, binding = 10) buffer buf_gZY {
+  float gZY[];
+};
+layout(std430, binding = 11) buffer buf_gZZ {
+  float gZZ[];
+};
+
+// kernel: navatala_cfd_scatter_mu_grad_ghost
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  if ((int(gl_GlobalInvocationID.x) >= int(counts[0]))) {
+    return;
+  } else {
+    int idx = (int(counts[1]) + int(gl_GlobalInvocationID.x));
+    int base = (int(gl_GlobalInvocationID.x) * 10);
+    muCell[idx] = recvVals[base];
+    int b1 = (base + 1);
+    gXX[idx] = recvVals[b1];
+    int b2 = (base + 2);
+    gXY[idx] = recvVals[b2];
+    int b3 = (base + 3);
+    gXZ[idx] = recvVals[b3];
+    int b4 = (base + 4);
+    gYX[idx] = recvVals[b4];
+    int b5 = (base + 5);
+    gYY[idx] = recvVals[b5];
+    int b6 = (base + 6);
+    gYZ[idx] = recvVals[b6];
+    int b7 = (base + 7);
+    gZX[idx] = recvVals[b7];
+    int b8 = (base + 8);
+    gZY[idx] = recvVals[b8];
+    int b9 = (base + 9);
+    gZZ[idx] = recvVals[b9];
+  }
+}

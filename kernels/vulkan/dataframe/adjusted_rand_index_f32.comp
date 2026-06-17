@@ -1,0 +1,129 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_contingency {
+  float contingency[];
+};
+layout(std430, binding = 1) readonly buffer buf_rowSums {
+  float rowSums[];
+};
+layout(std430, binding = 2) readonly buffer buf_colSums {
+  float colSums[];
+};
+layout(std430, binding = 3) readonly buffer buf_n {
+  float n[];
+};
+layout(std430, binding = 4) readonly buffer buf_numTrue {
+  uint numTrue[];
+};
+layout(std430, binding = 5) readonly buffer buf_numPred {
+  uint numPred[];
+};
+layout(std430, binding = 6) writeonly buffer buf_ari {
+  float ari[];
+};
+
+shared float sumNij[256];
+shared float sumAi[256];
+shared float sumBj[256];
+
+// kernel: navatala_dataframe_adjusted_rand_index_f32
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint gid = uint(int(gl_GlobalInvocationID.x));
+  uint lid = uint(int(gl_LocalInvocationID.x));
+  float nVal = n[0u];
+  uint numTrueVal = numTrue[0u];
+  uint numPredVal = numPred[0u];
+  uint totalCells = (numTrueVal * numPredVal);
+  float localSumNijAccum = uintBitsToFloat(0x00000000u);
+  for (int idx = 0; idx < int(totalCells); ++idx) {
+    uint idxU32 = uint(idx);
+    bool shouldProcess = ((idxU32 % 256u) == lid);
+    if (shouldProcess) {
+      float nij = contingency[idxU32];
+      float nijM1 = (nij - uintBitsToFloat(0x3f800000u));
+      float choose2 = ((nij * nijM1) / uintBitsToFloat(0x40000000u));
+      float curSumNij = localSumNijAccum;
+      float newSumNij = (curSumNij + choose2);
+      localSumNijAccum = newSumNij;
+    }
+  }
+  float localSumNij = localSumNijAccum;
+  float localSumAiAccum = uintBitsToFloat(0x00000000u);
+  for (int i = 0; i < int(numTrueVal); ++i) {
+    uint iU32 = uint(i);
+    bool shouldProcess = ((iU32 % 256u) == lid);
+    if (shouldProcess) {
+      float ai = rowSums[iU32];
+      float aiM1 = (ai - uintBitsToFloat(0x3f800000u));
+      float choose2Ai = ((ai * aiM1) / uintBitsToFloat(0x40000000u));
+      float curSumAi = localSumAiAccum;
+      float newSumAi = (curSumAi + choose2Ai);
+      localSumAiAccum = newSumAi;
+    }
+  }
+  float localSumAi = localSumAiAccum;
+  float localSumBjAccum = uintBitsToFloat(0x00000000u);
+  for (int j = 0; j < int(numPredVal); ++j) {
+    uint jU32 = uint(j);
+    bool shouldProcess = ((jU32 % 256u) == lid);
+    if (shouldProcess) {
+      float bj = colSums[jU32];
+      float bjM1 = (bj - uintBitsToFloat(0x3f800000u));
+      float choose2Bj = ((bj * bjM1) / uintBitsToFloat(0x40000000u));
+      float curSumBj = localSumBjAccum;
+      float newSumBj = (curSumBj + choose2Bj);
+      localSumBjAccum = newSumBj;
+    }
+  }
+  float localSumBj = localSumBjAccum;
+  sumNij[lid] = localSumNij;
+  sumAi[lid] = localSumAi;
+  sumBj[lid] = localSumBj;
+  barrier();
+  for (int stride = 0; stride < int(128u); ++stride) {
+    uint strideU32 = uint(stride);
+    if ((lid < strideU32)) {
+      float otherNij = sumNij[(lid + strideU32)];
+      float mineNij = sumNij[lid];
+      sumNij[lid] = (mineNij + otherNij);
+      float otherAi = sumAi[(lid + strideU32)];
+      float mineAi = sumAi[lid];
+      sumAi[lid] = (mineAi + otherAi);
+      float otherBj = sumBj[(lid + strideU32)];
+      float mineBj = sumBj[lid];
+      sumBj[lid] = (mineBj + otherBj);
+    }
+    barrier();
+  }
+  if ((lid == 0u)) {
+    float sumNijFinal = sumNij[0u];
+    float sumAiFinal = sumAi[0u];
+    float sumBjFinal = sumBj[0u];
+    float nM1 = (nVal - uintBitsToFloat(0x3f800000u));
+    float nChoose2 = ((nVal * nM1) / uintBitsToFloat(0x40000000u));
+    float expectedIdx = ((sumAiFinal * sumBjFinal) / nChoose2);
+    float maxIdx = ((sumAiFinal + sumBjFinal) / uintBitsToFloat(0x40000000u));
+    float numerator = (sumNijFinal - expectedIdx);
+    float denominator = (maxIdx - expectedIdx);
+    bool denomIsZero = (denominator == uintBitsToFloat(0x00000000u));
+    float ariVal = ((denomIsZero) ? (uintBitsToFloat(0x3f800000u)) : ((numerator / denominator)));
+    ari[0u] = ariVal;
+  }
+}

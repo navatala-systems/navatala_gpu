@@ -1,0 +1,66 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_query {
+  float query[];
+};
+layout(std430, binding = 1) readonly buffer buf_codebook {
+  float codebook[];
+};
+layout(std430, binding = 2) readonly buffer buf_n_subspaces {
+  uint n_subspaces[];
+};
+layout(std430, binding = 3) readonly buffer buf_n_codes {
+  uint n_codes[];
+};
+layout(std430, binding = 4) readonly buffer buf_sub_dim {
+  uint sub_dim[];
+};
+layout(std430, binding = 5) writeonly buffer buf_lut {
+  float lut[];
+};
+
+// kernel: navatala_vector_search_ivfpq_compute_p_q_lookup_table_f32
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint gid = uint(int(gl_GlobalInvocationID.x));
+  uint ns = n_subspaces[0];
+  uint nc = n_codes[0];
+  uint sd = sub_dim[0];
+  uint total = (ns * nc);
+  bool inBounds = (gid < total);
+  if (inBounds) {
+    uint subspace = (gid / nc);
+    uint code = (gid % nc);
+    uint q_start = (subspace * sd);
+    uint cb_base = ((subspace * (nc * sd)) + (code * sd));
+    float dist = uintBitsToFloat(0x00000000u);
+    for (int k = 0; k < int(sd); ++k) {
+      uint q_idx = (q_start + k);
+      uint cb_idx = (cb_base + k);
+      float q_val = query[q_idx];
+      float cb_val = codebook[cb_idx];
+      float diff = (q_val - cb_val);
+      float diff_sq = (diff * diff);
+      float old = dist;
+      dist = (old + diff_sq);
+    }
+    float result = dist;
+    lut[gid] = result;
+  }
+}

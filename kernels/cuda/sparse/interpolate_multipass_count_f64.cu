@@ -1,0 +1,63 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include <cuda_runtime.h>
+extern "C" __global__ void navatala_sparse_interpolate_multipass_count_f64(const unsigned int* rowPtr, const unsigned int* colIdx, const unsigned int* strongMask, const int* cfMarking, const unsigned int* nRows, unsigned int* nnzPerRow) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  int row = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  int N = ((int)(nRows[0]));
+  if ((row < N)) {
+    int mark = cfMarking[row];
+    if ((mark == 1)) {
+      nnzPerRow[row] = 1u;
+    } else {
+      if ((mark == -1)) {
+        int rs = ((int)(rowPtr[row]));
+        int re = ((int)(rowPtr[(row + 1)]));
+        unsigned int nnz = 0u;
+        for (int j1 = 0; j1 < (int)((re - rs)); ++j1) {
+          int k1 = (rs + j1);
+          unsigned int isStr1 = strongMask[k1];
+          if ((isStr1 == 1u)) {
+            int nbr1 = ((int)(colIdx[k1]));
+            int m1 = cfMarking[nbr1];
+            if ((m1 == 1)) {
+              nnz = (nnz + 1u);
+            } else {
+              if ((m1 == -1)) {
+                int rs2 = ((int)(rowPtr[nbr1]));
+                int re2 = ((int)(rowPtr[(nbr1 + 1)]));
+                for (int j2 = 0; j2 < (int)((re2 - rs2)); ++j2) {
+                  int k2 = (rs2 + j2);
+                  unsigned int isStr2 = strongMask[k2];
+                  if ((isStr2 == 1u)) {
+                    int nbr2 = ((int)(colIdx[k2]));
+                    int m2 = cfMarking[nbr2];
+                    if ((m2 == 1)) {
+                      nnz = (nnz + 1u);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        nnzPerRow[row] = nnz;
+      } else {
+        nnzPerRow[row] = 0u;
+      }
+    }
+  }
+}

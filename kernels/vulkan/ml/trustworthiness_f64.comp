@@ -1,0 +1,84 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_origNeighbors {
+  uint origNeighbors[];
+};
+layout(std430, binding = 1) readonly buffer buf_embedNeighbors {
+  uint embedNeighbors[];
+};
+layout(std430, binding = 2) readonly buffer buf_origRanks {
+  uint origRanks[];
+};
+layout(std430, binding = 3) readonly buffer buf_n {
+  uint n[];
+};
+layout(std430, binding = 4) readonly buffer buf_k {
+  uint k[];
+};
+layout(std430, binding = 5) writeonly buffer buf_penalty {
+  double penalty[];
+};
+
+// kernel: navatala_ml_trustworthiness_f64
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint gid = uint(int(gl_GlobalInvocationID.x));
+  uint nVal = n[0u];
+  uint kVal = k[0u];
+  bool inBounds = (gid < nVal);
+  if (inBounds) {
+    uint kRowBase = (gid * kVal);
+    uint nRowBase = (gid * nVal);
+    double penaltySumAccum = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
+    uint inOriginalAccum = 0u;
+    for (int embedIdx = 0; embedIdx < int(kVal); ++embedIdx) {
+      uint embedIdxU32 = uint(embedIdx);
+      uint embedNeighborIdx = (kRowBase + embedIdxU32);
+      uint embedNeighbor = embedNeighbors[embedNeighborIdx];
+      inOriginalAccum = 0u;
+      for (int origIdx = 0; origIdx < int(kVal); ++origIdx) {
+        uint origIdxU32 = uint(origIdx);
+        uint origNeighborIdx = (kRowBase + origIdxU32);
+        uint origNeighbor = origNeighbors[origNeighborIdx];
+        bool isMatch = (embedNeighbor == origNeighbor);
+        uint currentInOrig = inOriginalAccum;
+        uint matchAsU32 = ((isMatch) ? (1u) : (0u));
+        uint newInOrig = (currentInOrig | matchAsU32);
+        inOriginalAccum = newInOrig;
+      }
+      uint finalInOrig = inOriginalAccum;
+      bool inOriginal = (finalInOrig > 0u);
+      bool isFalseNeighbor = (!inOriginal);
+      if (isFalseNeighbor) {
+        uint rankIdx = (nRowBase + embedNeighbor);
+        uint rank = origRanks[rankIdx];
+        bool rankGtK = (rank > kVal);
+        if (rankGtK) {
+          uint diff = (rank - kVal);
+          double diffFloat = double(diff);
+          double currentPenalty = penaltySumAccum;
+          double newPenalty = (currentPenalty + diffFloat);
+          penaltySumAccum = newPenalty;
+        }
+      }
+    }
+    double finalPenaltySum = penaltySumAccum;
+    penalty[gid] = finalPenaltySum;
+  }
+}

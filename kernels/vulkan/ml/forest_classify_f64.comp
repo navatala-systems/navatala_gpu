@@ -1,0 +1,148 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_X {
+  double X[];
+};
+layout(std430, binding = 1) readonly buffer buf_feature_indices {
+  int feature_indices[];
+};
+layout(std430, binding = 2) readonly buffer buf_thresholds {
+  double thresholds[];
+};
+layout(std430, binding = 3) readonly buffer buf_left_children {
+  int left_children[];
+};
+layout(std430, binding = 4) readonly buffer buf_right_children {
+  int right_children[];
+};
+layout(std430, binding = 5) readonly buffer buf_leaf_value_indices {
+  int leaf_value_indices[];
+};
+layout(std430, binding = 6) readonly buffer buf_forest_leaves {
+  double forest_leaves[];
+};
+layout(std430, binding = 7) readonly buffer buf_tree_offsets {
+  int tree_offsets[];
+};
+layout(std430, binding = 8) readonly buffer buf_leaf_offsets {
+  int leaf_offsets[];
+};
+layout(std430, binding = 9) readonly buffer buf_n_samples {
+  uint n_samples[];
+};
+layout(std430, binding = 10) readonly buffer buf_n_features {
+  uint n_features[];
+};
+layout(std430, binding = 11) readonly buffer buf_n_trees {
+  uint n_trees[];
+};
+layout(std430, binding = 12) readonly buffer buf_n_classes {
+  uint n_classes[];
+};
+layout(std430, binding = 13) writeonly buffer buf_predictions {
+  int predictions[];
+};
+layout(std430, binding = 14) buffer buf_vote_counts {
+  uint vote_counts[];
+};
+
+// kernel: navatala_ml_forest_classify_f64
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint gid = uint(int(gl_GlobalInvocationID.x));
+  uint nSamples = n_samples[0];
+  uint nFeatures = n_features[0];
+  uint nTrees = n_trees[0];
+  uint nClasses = n_classes[0];
+  bool inBounds = (gid < nSamples);
+  if (inBounds) {
+    uint sampleBase = (gid * nFeatures);
+    uint voteBase = (gid * nClasses);
+    for (int c = 0; c < int(nClasses); ++c) {
+      uint cU32 = uint(c);
+      uint voteIdx = (voteBase + cU32);
+      vote_counts[voteIdx] = 0u;
+    }
+    for (int t = 0; t < int(nTrees); ++t) {
+      uint tU32 = uint(t);
+      int treeNodeOffset = tree_offsets[tU32];
+      uint treeNodeOffsetU32 = uint(treeNodeOffset);
+      int treeLeafOffset = leaf_offsets[tU32];
+      uint treeLeafOffsetU32 = uint(treeLeafOffset);
+      int currentNode = 0;
+      for (int depth = 0; depth < int(64u); ++depth) {
+        int nodeIdx = currentNode;
+        uint nodeIdxU32 = uint(nodeIdx);
+        uint absNodeIdx = (treeNodeOffsetU32 + nodeIdxU32);
+        int featureIdx = feature_indices[absNodeIdx];
+        bool isLeaf = (featureIdx == -1);
+        if (isLeaf) {
+          int leafIdxI32 = leaf_value_indices[absNodeIdx];
+          uint leafIdx = uint(leafIdxI32);
+          uint absLeafBase = (treeLeafOffsetU32 + (leafIdx * nClasses));
+          int bestClass = 0;
+          double bestProb = packDouble2x32(uvec2(0x00000000u, 0xbff00000u));
+          for (int classIdx = 0; classIdx < int(nClasses); ++classIdx) {
+            uint classIdxU32 = uint(classIdx);
+            uint probIdx = (absLeafBase + classIdxU32);
+            double prob = forest_leaves[probIdx];
+            double currBest = bestProb;
+            if ((prob > currBest)) {
+              bestClass = classIdx;
+              bestProb = prob;
+            }
+          }
+          int predictedClass = bestClass;
+          uint predictedClassU32 = uint(predictedClass);
+          uint voteIdx = (voteBase + predictedClassU32);
+          uint currVotes = vote_counts[voteIdx];
+          uint newVotes = (currVotes + 1u);
+          vote_counts[voteIdx] = newVotes;
+        } else {
+          double threshold = thresholds[absNodeIdx];
+          uint featureIdxU32 = uint(featureIdx);
+          uint featureAddr = (sampleBase + featureIdxU32);
+          double featureVal = X[featureAddr];
+          bool goLeft = (featureVal <= threshold);
+          if (goLeft) {
+            int leftChild = left_children[absNodeIdx];
+            currentNode = leftChild;
+          } else {
+            int rightChild = right_children[absNodeIdx];
+            currentNode = rightChild;
+          }
+        }
+      }
+    }
+    int finalClass = 0;
+    uint maxVotes = 0u;
+    for (int c = 0; c < int(nClasses); ++c) {
+      uint cU32 = uint(c);
+      uint voteIdx = (voteBase + cU32);
+      uint votes = vote_counts[voteIdx];
+      uint currMax = maxVotes;
+      if ((votes > currMax)) {
+        finalClass = c;
+        maxVotes = votes;
+      }
+    }
+    int result = finalClass;
+    predictions[gid] = result;
+  }
+}

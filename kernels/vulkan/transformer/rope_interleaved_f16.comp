@@ -1,0 +1,92 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+#extension GL_EXT_shader_explicit_arithmetic_types_float16 : enable
+#extension GL_EXT_shader_16bit_storage : enable
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf__input {
+  float16_t _input[];
+};
+layout(std430, binding = 1) readonly buffer buf_positions {
+  uint positions[];
+};
+layout(std430, binding = 2) readonly buffer buf_batchSize {
+  uint batchSize[];
+};
+layout(std430, binding = 3) readonly buffer buf_seqLen {
+  uint seqLen[];
+};
+layout(std430, binding = 4) readonly buffer buf_headDim {
+  uint headDim[];
+};
+layout(std430, binding = 5) readonly buffer buf_base {
+  float base[];
+};
+layout(std430, binding = 6) writeonly buffer buf__output {
+  float16_t _output[];
+};
+
+// kernel: navatala_transformer_rope_interleaved_f16
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint gid = uint(int(gl_GlobalInvocationID.x));
+  uint bs = batchSize[0u];
+  uint sl = seqLen[0u];
+  uint hd = headDim[0u];
+  float ropeBase = base[0u];
+  uint halfHd = (hd / 2u);
+  uint totalPairs = (bs * (sl * halfHd));
+  bool inBounds = (gid < totalPairs);
+  if (inBounds) {
+    uint batchSeqPairs = (sl * halfHd);
+    uint batchIdx = (gid / batchSeqPairs);
+    uint remainder = (gid % batchSeqPairs);
+    uint seqIdx = (remainder / halfHd);
+    uint dimIdx = (remainder % halfHd);
+    uint posIdx = ((batchIdx * sl) + seqIdx);
+    uint pos = positions[posIdx];
+    float posF32 = float(pos);
+    float dimIdxF32 = float(dimIdx);
+    float hdF32 = float(hd);
+    float twoD = (uintBitsToFloat(0x40000000u) * dimIdxF32);
+    float exponent = (twoD / hdF32);
+    float logBase = log(ropeBase);
+    float expArg = (exponent * logBase);
+    float freqScale = exp(expArg);
+    float theta = (posF32 / freqScale);
+    float cosTheta = cos(theta);
+    float sinTheta = sin(theta);
+    uint baseOffset = (batchIdx * (sl * hd));
+    uint seqOffset = (seqIdx * hd);
+    uint idx0 = (baseOffset + (seqOffset + dimIdx));
+    uint idx1 = (idx0 + halfHd);
+    float16_t x0F16 = _input[idx0];
+    float16_t x1F16 = _input[idx1];
+    float x0 = float(x0F16);
+    float x1 = float(x1F16);
+    float x0Cos = (x0 * cosTheta);
+    float x1Sin = (x1 * sinTheta);
+    float y0F32 = (x0Cos - x1Sin);
+    float x0Sin = (x0 * sinTheta);
+    float x1Cos = (x1 * cosTheta);
+    float y1F32 = (x0Sin + x1Cos);
+    float16_t y0 = float16_t(y0F32);
+    float16_t y1 = float16_t(y1F32);
+    _output[idx0] = y0;
+    _output[idx1] = y1;
+  }
+}

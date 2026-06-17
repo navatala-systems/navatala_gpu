@@ -1,0 +1,75 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_ArowPtr {
+  uint ArowPtr[];
+};
+layout(std430, binding = 1) readonly buffer buf_AcolIdx {
+  uint AcolIdx[];
+};
+layout(std430, binding = 2) readonly buffer buf_Avalues {
+  float Avalues[];
+};
+layout(std430, binding = 3) readonly buffer buf_diagInv {
+  float diagInv[];
+};
+layout(std430, binding = 4) readonly buffer buf_ProwPtr {
+  uint ProwPtr[];
+};
+layout(std430, binding = 5) readonly buffer buf_PcolIdx {
+  uint PcolIdx[];
+};
+layout(std430, binding = 6) readonly buffer buf_Pvalues {
+  float Pvalues[];
+};
+layout(std430, binding = 7) readonly buffer buf_omega {
+  float omega[];
+};
+layout(std430, binding = 8) readonly buffer buf_nRows {
+  uint nRows[];
+};
+layout(std430, binding = 9) writeonly buffer buf_PsmoothValues {
+  float PsmoothValues[];
+};
+
+// kernel: navatala_sparse_build_smoothed_prolongation_f32
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  int row = int(gl_GlobalInvocationID.x);
+  int N = int(nRows[0]);
+  if ((row < N)) {
+    uint myAgg = PcolIdx[row];
+    float myPval = Pvalues[row];
+    int aStart = int(ArowPtr[row]);
+    int aEnd = int(ArowPtr[(row + 1)]);
+    float sumAP = uintBitsToFloat(0x00000000u);
+    for (int k = 0; k < int((aEnd - aStart)); ++k) {
+      int idx = (aStart + k);
+      int col = int(AcolIdx[idx]);
+      float aVal = Avalues[idx];
+      uint colAgg = PcolIdx[col];
+      if ((colAgg == myAgg)) {
+        sumAP = (sumAP + aVal);
+      }
+    }
+    float om = omega[0];
+    float di = diagInv[row];
+    float correction = (om * (di * sumAP));
+    PsmoothValues[row] = (myPval - correction);
+  }
+}

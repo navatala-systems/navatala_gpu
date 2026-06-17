@@ -1,0 +1,20 @@
+# SPDX-License-Identifier: Apache-2.0
+[build-system]
+requires = ["scikit-build-core>=0.10", "nanobind>=2.4"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "navatala-gpu"
+version = "0.1.0"
+description = "Generated multi-backend GPU kernels and Python bindings"
+requires-python = ">=3.9"
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [{ name = "Navatala" }]
+dependencies = ["numpy>=1.23"]
+
+[tool.scikit-build]
+minimum-version = "build-system.requires"
+build-dir = "build/{wheel_tag}"
+wheel.packages = ["navatala_gpu"]

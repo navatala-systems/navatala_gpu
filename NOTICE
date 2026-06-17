@@ -1,0 +1,44 @@
+Navatala GPU
+Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+
+This product includes software developed at Navatala Systems (OPC) Pvt Ltd.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+see the LICENSE file in this distribution or
+http://www.apache.org/licenses/LICENSE-2.0 for the full text.
+
+================================================================================
+Third-party components linked at build time
+================================================================================
+
+This distribution does not embed third-party source. The build system can
+optionally link against the following projects when their headers and
+libraries are available on the build host; each is governed by its own
+license terms:
+
+  - DLPack header
+      https://github.com/dmlc/dlpack
+      Apache License 2.0.
+      Included only when the runtime tree contains runtime/include/dlpack/.
+
+  - NVIDIA CUDA Toolkit
+      https://developer.nvidia.com/cuda-toolkit
+      NVIDIA Software License Agreement.
+
+  - AMD ROCm / HIP
+      https://github.com/ROCm/HIP
+      MIT License.
+
+  - Khronos Vulkan SDK / glslang
+      https://www.khronos.org/vulkan/
+      Apache License 2.0 (Vulkan headers); BSD-3-Clause (glslang).
+
+  - Khronos OpenCL
+      https://www.khronos.org/opencl/
+      Apache License 2.0 (OpenCL headers).
+
+  - Apple Metal (macOS/iOS only)
+      System framework provided by Apple Inc.
+
+Users of this distribution are responsible for complying with the license
+terms of any third-party components they choose to enable at build time.

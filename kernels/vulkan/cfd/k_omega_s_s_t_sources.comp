@@ -1,0 +1,136 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_k {
+  float k[];
+};
+layout(std430, binding = 1) readonly buffer buf_omega {
+  float omega[];
+};
+layout(std430, binding = 2) readonly buffer buf_nut {
+  float nut[];
+};
+layout(std430, binding = 3) readonly buffer buf_nu {
+  float nu[];
+};
+layout(std430, binding = 4) readonly buffer buf_alpha {
+  float alpha[];
+};
+layout(std430, binding = 5) readonly buffer buf_rho {
+  float rho[];
+};
+layout(std430, binding = 6) readonly buffer buf_F1 {
+  float F1[];
+};
+layout(std430, binding = 7) readonly buffer buf_F23 {
+  float F23[];
+};
+layout(std430, binding = 8) readonly buffer buf_CDkOmega {
+  float CDkOmega[];
+};
+layout(std430, binding = 9) readonly buffer buf_S2 {
+  float S2[];
+};
+layout(std430, binding = 10) readonly buffer buf_divU {
+  float divU[];
+};
+layout(std430, binding = 11) readonly buffer buf_counts {
+  int counts[];
+};
+layout(std430, binding = 12) writeonly buffer buf_outOmegaSp {
+  float outOmegaSp[];
+};
+layout(std430, binding = 13) writeonly buffer buf_outOmegaSuSp1 {
+  float outOmegaSuSp1[];
+};
+layout(std430, binding = 14) writeonly buffer buf_outOmegaSuSp2 {
+  float outOmegaSuSp2[];
+};
+layout(std430, binding = 15) writeonly buffer buf_outOmegaExpl {
+  float outOmegaExpl[];
+};
+layout(std430, binding = 16) writeonly buffer buf_outKSp {
+  float outKSp[];
+};
+layout(std430, binding = 17) writeonly buffer buf_outKSuSp {
+  float outKSuSp[];
+};
+layout(std430, binding = 18) writeonly buffer buf_outKExpl {
+  float outKExpl[];
+};
+layout(std430, binding = 19) writeonly buffer buf_outDomegaEff {
+  float outDomegaEff[];
+};
+layout(std430, binding = 20) writeonly buffer buf_outDkEff {
+  float outDkEff[];
+};
+
+// kernel: navatala_cfd_k_omega_s_s_t_sources
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  if ((int(int(gl_GlobalInvocationID.x)) >= counts[0])) {
+    return;
+  } else {
+    float kC = k[int(int(gl_GlobalInvocationID.x))];
+    float omC = omega[int(int(gl_GlobalInvocationID.x))];
+    float nutC = nut[int(int(gl_GlobalInvocationID.x))];
+    float nuC = nu[int(int(gl_GlobalInvocationID.x))];
+    float alphaC = alpha[int(int(gl_GlobalInvocationID.x))];
+    float rhoC = rho[int(int(gl_GlobalInvocationID.x))];
+    float f1C = F1[int(int(gl_GlobalInvocationID.x))];
+    float f23C = F23[int(int(gl_GlobalInvocationID.x))];
+    float cdkwC = CDkOmega[int(int(gl_GlobalInvocationID.x))];
+    float s2C = S2[int(int(gl_GlobalInvocationID.x))];
+    float divUC = divU[int(int(gl_GlobalInvocationID.x))];
+    float arC = (alphaC * rhoC);
+    float gammaC = ((f1C * uintBitsToFloat(0x3decbfb1u)) + uintBitsToFloat(0x3ee147aeu));
+    float betaC = (uintBitsToFloat(0x3da9930cu) - (f1C * uintBitsToFloat(0x3bff9724u)));
+    float alphaKC = (uintBitsToFloat(0x3f800000u) - (f1C * uintBitsToFloat(0x3e19999au)));
+    float alphaOmC = (uintBitsToFloat(0x3f5b22d1u) - (f1C * uintBitsToFloat(0x3eb645a2u)));
+    float s2Safe = (((s2C > uintBitsToFloat(0x00000000u))) ? (s2C) : (uintBitsToFloat(0x00000000u)));
+    float sqrtS2 = sqrt(s2Safe);
+    float a1om = (uintBitsToFloat(0x3e9eb852u) * omC);
+    float f23s = (f23C * sqrtS2);
+    float maxTerm = (((a1om >= f23s)) ? (a1om) : (f23s));
+    float limRhs = (uintBitsToFloat(0x4039ce07u) * (omC * maxTerm));
+    float GbyNu = (((s2C <= limRhs)) ? (s2C) : (limRhs));
+    float nutS2 = (nutC * s2C);
+    float c1bsKOm = (uintBitsToFloat(0x3f666666u) * (kC * omC));
+    float pk = (((nutS2 <= c1bsKOm)) ? (nutS2) : (c1bsKOm));
+    float omSp = (uintBitsToFloat(0x00000000u) - (arC * (betaC * omC)));
+    float omSuSp1 = (uintBitsToFloat(0x00000000u) - (uintBitsToFloat(0x3f2aacdau) * (arC * (gammaC * divUC))));
+    float omSafe = (((omC > uintBitsToFloat(0x26901d7du))) ? (omC) : (uintBitsToFloat(0x26901d7du)));
+    float f1m1 = (f1C - uintBitsToFloat(0x3f800000u));
+    float omSuSp2 = (uintBitsToFloat(0x00000000u) - ((arC * (f1m1 * cdkwC)) / omSafe));
+    float omExpl = (arC * (gammaC * GbyNu));
+    float kSp = (uintBitsToFloat(0x00000000u) - (arC * (uintBitsToFloat(0x3db851ecu) * omC)));
+    float kSuSp = (uintBitsToFloat(0x00000000u) - (uintBitsToFloat(0x3f2aacdau) * (arC * divUC)));
+    float kExpl = (arC * pk);
+    float domEff = (arC * ((alphaOmC * nutC) + nuC));
+    float dkEff = (arC * ((alphaKC * nutC) + nuC));
+    outOmegaSp[int(int(gl_GlobalInvocationID.x))] = omSp;
+    outOmegaSuSp1[int(int(gl_GlobalInvocationID.x))] = omSuSp1;
+    outOmegaSuSp2[int(int(gl_GlobalInvocationID.x))] = omSuSp2;
+    outOmegaExpl[int(int(gl_GlobalInvocationID.x))] = omExpl;
+    outKSp[int(int(gl_GlobalInvocationID.x))] = kSp;
+    outKSuSp[int(int(gl_GlobalInvocationID.x))] = kSuSp;
+    outKExpl[int(int(gl_GlobalInvocationID.x))] = kExpl;
+    outDomegaEff[int(int(gl_GlobalInvocationID.x))] = domEff;
+    outDkEff[int(int(gl_GlobalInvocationID.x))] = dkEff;
+  }
+}

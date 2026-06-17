@@ -1,0 +1,38 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include <hip/hip_runtime.h>
+extern "C" __global__ void navatala_sparse_sparse_bicgstab_iter_f64(const double* x, const double* p, const double* r, const double* v, double* s, const double* t, const double* alpha, const double* omega, const unsigned int* n, double* x_new, double* r_new) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
+  unsigned int i = gid;
+  unsigned int nVal = n[0u];
+  if ((i < nVal)) {
+    double alphaVal = alpha[0u];
+    double omegaVal = omega[0u];
+    double xi = x[i];
+    double pi = p[i];
+    double si = s[i];
+    double ti = t[i];
+    double alphaPi = (alphaVal * pi);
+    double omegaSi = (omegaVal * si);
+    double xNew = (xi + alphaPi);
+    double xNew2 = (xNew + omegaSi);
+    x_new[i] = xNew2;
+    double omegaTi = (omegaVal * ti);
+    double rNew = (si - omegaTi);
+    r_new[i] = rNew;
+  }
+}

@@ -1,0 +1,98 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_ux {
+  float ux[];
+};
+layout(std430, binding = 1) readonly buffer buf_uy {
+  float uy[];
+};
+layout(std430, binding = 2) readonly buffer buf_uz {
+  float uz[];
+};
+layout(std430, binding = 3) readonly buffer buf_lapx {
+  float lapx[];
+};
+layout(std430, binding = 4) readonly buffer buf_lapy {
+  float lapy[];
+};
+layout(std430, binding = 5) readonly buffer buf_lapz {
+  float lapz[];
+};
+layout(std430, binding = 6) readonly buffer buf_divx {
+  float divx[];
+};
+layout(std430, binding = 7) readonly buffer buf_divy {
+  float divy[];
+};
+layout(std430, binding = 8) readonly buffer buf_divz {
+  float divz[];
+};
+layout(std430, binding = 9) readonly buffer buf_extrax {
+  float extrax[];
+};
+layout(std430, binding = 10) readonly buffer buf_extray {
+  float extray[];
+};
+layout(std430, binding = 11) readonly buffer buf_extraz {
+  float extraz[];
+};
+layout(std430, binding = 12) readonly buffer buf_rau {
+  float rau[];
+};
+layout(std430, binding = 13) readonly buffer buf_counts {
+  int counts[];
+};
+layout(std430, binding = 14) readonly buffer buf_modeBuf {
+  int modeBuf[];
+};
+layout(std430, binding = 15) writeonly buffer buf_outx {
+  float outx[];
+};
+layout(std430, binding = 16) writeonly buffer buf_outy {
+  float outy[];
+};
+layout(std430, binding = 17) writeonly buffer buf_outz {
+  float outz[];
+};
+
+// kernel: navatala_cfd_hby_a_from_u_and_terms
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  if ((int(int(gl_GlobalInvocationID.x)) >= counts[0])) {
+    return;
+  } else {
+    float tx = lapx[int(int(gl_GlobalInvocationID.x))];
+    float ty = lapy[int(int(gl_GlobalInvocationID.x))];
+    float tz = lapz[int(int(gl_GlobalInvocationID.x))];
+    if (((modeBuf[0] == 1) || (modeBuf[0] == 3))) {
+      tx = (tx - divx[int(int(gl_GlobalInvocationID.x))]);
+      ty = (ty - divy[int(int(gl_GlobalInvocationID.x))]);
+      tz = (tz - divz[int(int(gl_GlobalInvocationID.x))]);
+    }
+    if (((modeBuf[0] == 2) || (modeBuf[0] == 3))) {
+      tx = (tx + extrax[int(int(gl_GlobalInvocationID.x))]);
+      ty = (ty + extray[int(int(gl_GlobalInvocationID.x))]);
+      tz = (tz + extraz[int(int(gl_GlobalInvocationID.x))]);
+    }
+    float a = rau[int(int(gl_GlobalInvocationID.x))];
+    outx[int(int(gl_GlobalInvocationID.x))] = (ux[int(int(gl_GlobalInvocationID.x))] + (a * tx));
+    outy[int(int(gl_GlobalInvocationID.x))] = (uy[int(int(gl_GlobalInvocationID.x))] + (a * ty));
+    outz[int(int(gl_GlobalInvocationID.x))] = (uz[int(int(gl_GlobalInvocationID.x))] + (a * tz));
+  }
+}

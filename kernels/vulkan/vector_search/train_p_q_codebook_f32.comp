@@ -1,0 +1,59 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_subvectors {
+  float subvectors[];
+};
+layout(std430, binding = 1) readonly buffer buf_assignments {
+  uint assignments[];
+};
+layout(std430, binding = 2) readonly buffer buf_n_vectors {
+  uint n_vectors[];
+};
+layout(std430, binding = 3) readonly buffer buf_n_codewords {
+  uint n_codewords[];
+};
+layout(std430, binding = 4) readonly buffer buf_sub_dim {
+  uint sub_dim[];
+};
+layout(std430, binding = 5) buffer buf_codebook_sums {
+  float codebook_sums[];
+};
+layout(std430, binding = 6) buffer buf_codebook_counts {
+  uint codebook_counts[];
+};
+
+// kernel: navatala_vector_search_train_p_q_codebook_f32
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint vid = uint(int(gl_GlobalInvocationID.x));
+  uint nv = n_vectors[0];
+  uint sd = sub_dim[0];
+  if ((vid < nv)) {
+    uint cw = assignments[vid];
+    for (int k = 0; k < int(sd); ++k) {
+      uint src_idx = ((vid * sd) + k);
+      uint dst_idx = ((cw * sd) + k);
+      float val = subvectors[src_idx];
+      float old = codebook_sums[dst_idx];
+      float new_val = (old + val);
+      codebook_sums[dst_idx] = new_val;
+    }
+    uint _cnt = atomicAdd(codebook_counts[cw], 1u);
+  }
+}

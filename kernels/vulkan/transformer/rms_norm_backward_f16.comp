@@ -1,0 +1,156 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+#extension GL_EXT_shader_explicit_arithmetic_types_float16 : enable
+#extension GL_EXT_shader_16bit_storage : enable
+#extension GL_EXT_shader_atomic_float : enable
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf__input {
+  float16_t _input[];
+};
+layout(std430, binding = 1) readonly buffer buf_gradOutput {
+  float16_t gradOutput[];
+};
+layout(std430, binding = 2) readonly buffer buf_gamma {
+  float16_t gamma[];
+};
+layout(std430, binding = 3) readonly buffer buf_rsigma {
+  float rsigma[];
+};
+layout(std430, binding = 4) readonly buffer buf_batchSize {
+  uint batchSize[];
+};
+layout(std430, binding = 5) readonly buffer buf_hiddenSize {
+  uint hiddenSize[];
+};
+layout(std430, binding = 6) writeonly buffer buf_gradInput {
+  float16_t gradInput[];
+};
+layout(std430, binding = 7) buffer buf_gradGamma {
+  float gradGamma[];
+};
+
+shared float sumDyGammaXhat[256];
+
+// kernel: navatala_transformer_rms_norm_backward_f16
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint lid = uint(int(gl_LocalInvocationID.x));
+  uint batchIdx = uint(int(gl_WorkGroupID.x));
+  uint bs = batchSize[0u];
+  uint hs = hiddenSize[0u];
+  bool batchValid = (batchIdx < bs);
+  bool hiddenValid = (lid < hs);
+  uint globalIdx = ((batchIdx * hs) + lid);
+  float16_t xF16 = (((batchValid && hiddenValid)) ? (_input[globalIdx]) : (float16_t(0.000000)));
+  float x = float(xF16);
+  float16_t dyF16 = (((batchValid && hiddenValid)) ? (gradOutput[globalIdx]) : (float16_t(0.000000)));
+  float dy = float(dyF16);
+  float16_t gF16 = ((hiddenValid) ? (gamma[lid]) : (float16_t(0.000000)));
+  float g = float(gF16);
+  float rs = ((batchValid) ? (rsigma[batchIdx]) : (uintBitsToFloat(0x3f800000u)));
+  float xHat = (x * rs);
+  float dyGamma = (dy * g);
+  float dyGammaXhat = (dyGamma * xHat);
+  sumDyGammaXhat[lid] = ((hiddenValid) ? (dyGammaXhat) : (uintBitsToFloat(0x00000000u)));
+  barrier();
+  bool shouldReduce_sumDyGammaXhat_128 = (lid < 128u);
+  if (shouldReduce_sumDyGammaXhat_128) {
+    uint neighborIdx_sumDyGammaXhat_128 = (lid + 128u);
+    float myVal_sumDyGammaXhat_128 = sumDyGammaXhat[lid];
+    float neighborVal_sumDyGammaXhat_128 = sumDyGammaXhat[neighborIdx_sumDyGammaXhat_128];
+    float sumVal_sumDyGammaXhat_128 = (myVal_sumDyGammaXhat_128 + neighborVal_sumDyGammaXhat_128);
+    sumDyGammaXhat[lid] = sumVal_sumDyGammaXhat_128;
+  }
+  barrier();
+  bool shouldReduce_sumDyGammaXhat_64 = (lid < 64u);
+  if (shouldReduce_sumDyGammaXhat_64) {
+    uint neighborIdx_sumDyGammaXhat_64 = (lid + 64u);
+    float myVal_sumDyGammaXhat_64 = sumDyGammaXhat[lid];
+    float neighborVal_sumDyGammaXhat_64 = sumDyGammaXhat[neighborIdx_sumDyGammaXhat_64];
+    float sumVal_sumDyGammaXhat_64 = (myVal_sumDyGammaXhat_64 + neighborVal_sumDyGammaXhat_64);
+    sumDyGammaXhat[lid] = sumVal_sumDyGammaXhat_64;
+  }
+  barrier();
+  bool shouldReduce_sumDyGammaXhat_32 = (lid < 32u);
+  if (shouldReduce_sumDyGammaXhat_32) {
+    uint neighborIdx_sumDyGammaXhat_32 = (lid + 32u);
+    float myVal_sumDyGammaXhat_32 = sumDyGammaXhat[lid];
+    float neighborVal_sumDyGammaXhat_32 = sumDyGammaXhat[neighborIdx_sumDyGammaXhat_32];
+    float sumVal_sumDyGammaXhat_32 = (myVal_sumDyGammaXhat_32 + neighborVal_sumDyGammaXhat_32);
+    sumDyGammaXhat[lid] = sumVal_sumDyGammaXhat_32;
+  }
+  barrier();
+  bool shouldReduce_sumDyGammaXhat_16 = (lid < 16u);
+  if (shouldReduce_sumDyGammaXhat_16) {
+    uint neighborIdx_sumDyGammaXhat_16 = (lid + 16u);
+    float myVal_sumDyGammaXhat_16 = sumDyGammaXhat[lid];
+    float neighborVal_sumDyGammaXhat_16 = sumDyGammaXhat[neighborIdx_sumDyGammaXhat_16];
+    float sumVal_sumDyGammaXhat_16 = (myVal_sumDyGammaXhat_16 + neighborVal_sumDyGammaXhat_16);
+    sumDyGammaXhat[lid] = sumVal_sumDyGammaXhat_16;
+  }
+  barrier();
+  bool shouldReduce_sumDyGammaXhat_8 = (lid < 8u);
+  if (shouldReduce_sumDyGammaXhat_8) {
+    uint neighborIdx_sumDyGammaXhat_8 = (lid + 8u);
+    float myVal_sumDyGammaXhat_8 = sumDyGammaXhat[lid];
+    float neighborVal_sumDyGammaXhat_8 = sumDyGammaXhat[neighborIdx_sumDyGammaXhat_8];
+    float sumVal_sumDyGammaXhat_8 = (myVal_sumDyGammaXhat_8 + neighborVal_sumDyGammaXhat_8);
+    sumDyGammaXhat[lid] = sumVal_sumDyGammaXhat_8;
+  }
+  barrier();
+  bool shouldReduce_sumDyGammaXhat_4 = (lid < 4u);
+  if (shouldReduce_sumDyGammaXhat_4) {
+    uint neighborIdx_sumDyGammaXhat_4 = (lid + 4u);
+    float myVal_sumDyGammaXhat_4 = sumDyGammaXhat[lid];
+    float neighborVal_sumDyGammaXhat_4 = sumDyGammaXhat[neighborIdx_sumDyGammaXhat_4];
+    float sumVal_sumDyGammaXhat_4 = (myVal_sumDyGammaXhat_4 + neighborVal_sumDyGammaXhat_4);
+    sumDyGammaXhat[lid] = sumVal_sumDyGammaXhat_4;
+  }
+  barrier();
+  bool shouldReduce_sumDyGammaXhat_2 = (lid < 2u);
+  if (shouldReduce_sumDyGammaXhat_2) {
+    uint neighborIdx_sumDyGammaXhat_2 = (lid + 2u);
+    float myVal_sumDyGammaXhat_2 = sumDyGammaXhat[lid];
+    float neighborVal_sumDyGammaXhat_2 = sumDyGammaXhat[neighborIdx_sumDyGammaXhat_2];
+    float sumVal_sumDyGammaXhat_2 = (myVal_sumDyGammaXhat_2 + neighborVal_sumDyGammaXhat_2);
+    sumDyGammaXhat[lid] = sumVal_sumDyGammaXhat_2;
+  }
+  barrier();
+  bool shouldReduce_sumDyGammaXhat_1 = (lid < 1u);
+  if (shouldReduce_sumDyGammaXhat_1) {
+    uint neighborIdx_sumDyGammaXhat_1 = (lid + 1u);
+    float myVal_sumDyGammaXhat_1 = sumDyGammaXhat[lid];
+    float neighborVal_sumDyGammaXhat_1 = sumDyGammaXhat[neighborIdx_sumDyGammaXhat_1];
+    float sumVal_sumDyGammaXhat_1 = (myVal_sumDyGammaXhat_1 + neighborVal_sumDyGammaXhat_1);
+    sumDyGammaXhat[lid] = sumVal_sumDyGammaXhat_1;
+  }
+  barrier();
+  float totalDyGammaXhat = sumDyGammaXhat[0u];
+  float hsF32 = float(hs);
+  float meanDyGammaXhat = (totalDyGammaXhat / hsF32);
+  if ((batchValid && hiddenValid)) {
+    float term1 = dyGamma;
+    float term2 = (xHat * meanDyGammaXhat);
+    float inner = (term1 - term2);
+    float dxF32 = (rs * inner);
+    float16_t dx = float16_t(dxF32);
+    gradInput[globalIdx] = dx;
+    float dyXhat = (dy * xHat);
+    atomicAdd(gradGamma[lid], dyXhat);
+  }
+}

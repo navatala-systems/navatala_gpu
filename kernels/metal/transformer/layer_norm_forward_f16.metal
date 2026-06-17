@@ -1,0 +1,200 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include <metal_stdlib>
+using namespace metal;
+
+kernel void navatala_transformer_layer_norm_forward_f16(device const half* _input [[buffer(0)]], device const half* gamma [[buffer(1)]], device const half* beta [[buffer(2)]], device const float* epsilon [[buffer(3)]], device const uint* batchSize [[buffer(4)]], device const uint* hiddenSize [[buffer(5)]], device half* _output [[buffer(6)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
+  uint lid = ((uint)(int(__tid.x)));
+  uint batchIdx = ((uint)(int(__tgid.x)));
+  uint bs = batchSize[0u];
+  uint hs = hiddenSize[0u];
+  float eps = epsilon[0u];
+  threadgroup float sumBuf[256];
+  threadgroup float sumSqBuf[256];
+  bool batchValid = (batchIdx < bs);
+  bool hiddenValid = (lid < hs);
+  uint globalIdx = ((batchIdx * hs) + lid);
+  half xF16 = (((batchValid && hiddenValid)) ? (_input[globalIdx]) : (half(0.000000)));
+  float x = ((float)(xF16));
+  sumBuf[lid] = ((hiddenValid) ? (x) : (as_type<float>(0x00000000u)));
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sumBuf_128 = (lid < 128u);
+  if (shouldReduce_sumBuf_128) {
+    uint neighborIdx_sumBuf_128 = (lid + 128u);
+    float myVal_sumBuf_128 = sumBuf[lid];
+    float neighborVal_sumBuf_128 = sumBuf[neighborIdx_sumBuf_128];
+    float sumVal_sumBuf_128 = (myVal_sumBuf_128 + neighborVal_sumBuf_128);
+    sumBuf[lid] = sumVal_sumBuf_128;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sumBuf_64 = (lid < 64u);
+  if (shouldReduce_sumBuf_64) {
+    uint neighborIdx_sumBuf_64 = (lid + 64u);
+    float myVal_sumBuf_64 = sumBuf[lid];
+    float neighborVal_sumBuf_64 = sumBuf[neighborIdx_sumBuf_64];
+    float sumVal_sumBuf_64 = (myVal_sumBuf_64 + neighborVal_sumBuf_64);
+    sumBuf[lid] = sumVal_sumBuf_64;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sumBuf_32 = (lid < 32u);
+  if (shouldReduce_sumBuf_32) {
+    uint neighborIdx_sumBuf_32 = (lid + 32u);
+    float myVal_sumBuf_32 = sumBuf[lid];
+    float neighborVal_sumBuf_32 = sumBuf[neighborIdx_sumBuf_32];
+    float sumVal_sumBuf_32 = (myVal_sumBuf_32 + neighborVal_sumBuf_32);
+    sumBuf[lid] = sumVal_sumBuf_32;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sumBuf_16 = (lid < 16u);
+  if (shouldReduce_sumBuf_16) {
+    uint neighborIdx_sumBuf_16 = (lid + 16u);
+    float myVal_sumBuf_16 = sumBuf[lid];
+    float neighborVal_sumBuf_16 = sumBuf[neighborIdx_sumBuf_16];
+    float sumVal_sumBuf_16 = (myVal_sumBuf_16 + neighborVal_sumBuf_16);
+    sumBuf[lid] = sumVal_sumBuf_16;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sumBuf_8 = (lid < 8u);
+  if (shouldReduce_sumBuf_8) {
+    uint neighborIdx_sumBuf_8 = (lid + 8u);
+    float myVal_sumBuf_8 = sumBuf[lid];
+    float neighborVal_sumBuf_8 = sumBuf[neighborIdx_sumBuf_8];
+    float sumVal_sumBuf_8 = (myVal_sumBuf_8 + neighborVal_sumBuf_8);
+    sumBuf[lid] = sumVal_sumBuf_8;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sumBuf_4 = (lid < 4u);
+  if (shouldReduce_sumBuf_4) {
+    uint neighborIdx_sumBuf_4 = (lid + 4u);
+    float myVal_sumBuf_4 = sumBuf[lid];
+    float neighborVal_sumBuf_4 = sumBuf[neighborIdx_sumBuf_4];
+    float sumVal_sumBuf_4 = (myVal_sumBuf_4 + neighborVal_sumBuf_4);
+    sumBuf[lid] = sumVal_sumBuf_4;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sumBuf_2 = (lid < 2u);
+  if (shouldReduce_sumBuf_2) {
+    uint neighborIdx_sumBuf_2 = (lid + 2u);
+    float myVal_sumBuf_2 = sumBuf[lid];
+    float neighborVal_sumBuf_2 = sumBuf[neighborIdx_sumBuf_2];
+    float sumVal_sumBuf_2 = (myVal_sumBuf_2 + neighborVal_sumBuf_2);
+    sumBuf[lid] = sumVal_sumBuf_2;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sumBuf_1 = (lid < 1u);
+  if (shouldReduce_sumBuf_1) {
+    uint neighborIdx_sumBuf_1 = (lid + 1u);
+    float myVal_sumBuf_1 = sumBuf[lid];
+    float neighborVal_sumBuf_1 = sumBuf[neighborIdx_sumBuf_1];
+    float sumVal_sumBuf_1 = (myVal_sumBuf_1 + neighborVal_sumBuf_1);
+    sumBuf[lid] = sumVal_sumBuf_1;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  float totalSum = sumBuf[0u];
+  float hsF32 = ((float)(hs));
+  float mean = (totalSum / hsF32);
+  float xMinusMean = (x - mean);
+  float xMinusMeanSq = (xMinusMean * xMinusMean);
+  sumSqBuf[lid] = ((hiddenValid) ? (xMinusMeanSq) : (as_type<float>(0x00000000u)));
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sumSqBuf_128 = (lid < 128u);
+  if (shouldReduce_sumSqBuf_128) {
+    uint neighborIdx_sumSqBuf_128 = (lid + 128u);
+    float myVal_sumSqBuf_128 = sumSqBuf[lid];
+    float neighborVal_sumSqBuf_128 = sumSqBuf[neighborIdx_sumSqBuf_128];
+    float sumVal_sumSqBuf_128 = (myVal_sumSqBuf_128 + neighborVal_sumSqBuf_128);
+    sumSqBuf[lid] = sumVal_sumSqBuf_128;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sumSqBuf_64 = (lid < 64u);
+  if (shouldReduce_sumSqBuf_64) {
+    uint neighborIdx_sumSqBuf_64 = (lid + 64u);
+    float myVal_sumSqBuf_64 = sumSqBuf[lid];
+    float neighborVal_sumSqBuf_64 = sumSqBuf[neighborIdx_sumSqBuf_64];
+    float sumVal_sumSqBuf_64 = (myVal_sumSqBuf_64 + neighborVal_sumSqBuf_64);
+    sumSqBuf[lid] = sumVal_sumSqBuf_64;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sumSqBuf_32 = (lid < 32u);
+  if (shouldReduce_sumSqBuf_32) {
+    uint neighborIdx_sumSqBuf_32 = (lid + 32u);
+    float myVal_sumSqBuf_32 = sumSqBuf[lid];
+    float neighborVal_sumSqBuf_32 = sumSqBuf[neighborIdx_sumSqBuf_32];
+    float sumVal_sumSqBuf_32 = (myVal_sumSqBuf_32 + neighborVal_sumSqBuf_32);
+    sumSqBuf[lid] = sumVal_sumSqBuf_32;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sumSqBuf_16 = (lid < 16u);
+  if (shouldReduce_sumSqBuf_16) {
+    uint neighborIdx_sumSqBuf_16 = (lid + 16u);
+    float myVal_sumSqBuf_16 = sumSqBuf[lid];
+    float neighborVal_sumSqBuf_16 = sumSqBuf[neighborIdx_sumSqBuf_16];
+    float sumVal_sumSqBuf_16 = (myVal_sumSqBuf_16 + neighborVal_sumSqBuf_16);
+    sumSqBuf[lid] = sumVal_sumSqBuf_16;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sumSqBuf_8 = (lid < 8u);
+  if (shouldReduce_sumSqBuf_8) {
+    uint neighborIdx_sumSqBuf_8 = (lid + 8u);
+    float myVal_sumSqBuf_8 = sumSqBuf[lid];
+    float neighborVal_sumSqBuf_8 = sumSqBuf[neighborIdx_sumSqBuf_8];
+    float sumVal_sumSqBuf_8 = (myVal_sumSqBuf_8 + neighborVal_sumSqBuf_8);
+    sumSqBuf[lid] = sumVal_sumSqBuf_8;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sumSqBuf_4 = (lid < 4u);
+  if (shouldReduce_sumSqBuf_4) {
+    uint neighborIdx_sumSqBuf_4 = (lid + 4u);
+    float myVal_sumSqBuf_4 = sumSqBuf[lid];
+    float neighborVal_sumSqBuf_4 = sumSqBuf[neighborIdx_sumSqBuf_4];
+    float sumVal_sumSqBuf_4 = (myVal_sumSqBuf_4 + neighborVal_sumSqBuf_4);
+    sumSqBuf[lid] = sumVal_sumSqBuf_4;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sumSqBuf_2 = (lid < 2u);
+  if (shouldReduce_sumSqBuf_2) {
+    uint neighborIdx_sumSqBuf_2 = (lid + 2u);
+    float myVal_sumSqBuf_2 = sumSqBuf[lid];
+    float neighborVal_sumSqBuf_2 = sumSqBuf[neighborIdx_sumSqBuf_2];
+    float sumVal_sumSqBuf_2 = (myVal_sumSqBuf_2 + neighborVal_sumSqBuf_2);
+    sumSqBuf[lid] = sumVal_sumSqBuf_2;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sumSqBuf_1 = (lid < 1u);
+  if (shouldReduce_sumSqBuf_1) {
+    uint neighborIdx_sumSqBuf_1 = (lid + 1u);
+    float myVal_sumSqBuf_1 = sumSqBuf[lid];
+    float neighborVal_sumSqBuf_1 = sumSqBuf[neighborIdx_sumSqBuf_1];
+    float sumVal_sumSqBuf_1 = (myVal_sumSqBuf_1 + neighborVal_sumSqBuf_1);
+    sumSqBuf[lid] = sumVal_sumSqBuf_1;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  float totalSumSq = sumSqBuf[0u];
+  float variance = (totalSumSq / hsF32);
+  float varEps = (variance + eps);
+  float std = sqrt(varEps);
+  if ((batchValid && hiddenValid)) {
+    half gF16 = gamma[lid];
+    half bF16 = beta[lid];
+    float g = ((float)(gF16));
+    float b = ((float)(bF16));
+    float xNorm = (xMinusMean / std);
+    float scaled = (g * xNorm);
+    float resultF32 = (scaled + b);
+    half result = ((half)(resultF32));
+    _output[globalIdx] = result;
+  }
+}

@@ -1,0 +1,61 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include <metal_stdlib>
+using namespace metal;
+
+kernel void navatala_dataframe_column_means_f32(device const float* _input [[buffer(0)]], device const uint* nSamples [[buffer(1)]], device const uint* nFeatures [[buffer(2)]], device float* means [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
+  threadgroup float sdata[256];
+  uint gid = ((uint)(int(__gid.x)));
+  uint lid = ((uint)(int(__tid.x)));
+  uint wgid = ((uint)(int(__tgid.x)));
+  uint n = nSamples[0];
+  uint d = nFeatures[0];
+  uint colIdx = wgid;
+  bool colInBounds = (colIdx < d);
+  if (colInBounds) {
+    float partialSum = as_type<float>(0x00000000u);
+    uint rowIdx = lid;
+    bool rowInBounds = (rowIdx < n);
+    uint elemIdx = ((rowIdx * d) + colIdx);
+    if (rowInBounds) {
+      float val = _input[elemIdx];
+      sdata[lid] = val;
+    } else {
+      sdata[lid] = as_type<float>(0x00000000u);
+    }
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+    uint colMeansF32_reductionStride = 128u;
+    for (int colMeansF32_reductionStep = 0; colMeansF32_reductionStep < (int)(8); ++colMeansF32_reductionStep) {
+      uint colMeansF32_stride = colMeansF32_reductionStride;
+      if ((lid < colMeansF32_stride)) {
+        float colMeansF32_other = sdata[(lid + colMeansF32_stride)];
+        float colMeansF32_mine = sdata[lid];
+        float colMeansF32_sum = (colMeansF32_mine + colMeansF32_other);
+        sdata[lid] = colMeansF32_sum;
+      }
+      uint colMeansF32_strideToHalve = colMeansF32_reductionStride;
+      uint colMeansF32_nextStride = (colMeansF32_strideToHalve >> 1u);
+      colMeansF32_reductionStride = colMeansF32_nextStride;
+      threadgroup_barrier(mem_flags::mem_threadgroup);
+    }
+    if ((lid == 0u)) {
+      float totalSum = sdata[0u];
+      float nFloat = ((float)(n));
+      float meanVal = (totalSum / nFloat);
+      means[colIdx] = meanVal;
+    }
+  }
+}

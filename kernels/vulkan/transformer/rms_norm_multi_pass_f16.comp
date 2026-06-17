@@ -1,0 +1,159 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+#extension GL_EXT_shader_explicit_arithmetic_types_float16 : enable
+#extension GL_EXT_shader_16bit_storage : enable
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf__input {
+  float16_t _input[];
+};
+layout(std430, binding = 1) readonly buffer buf_gamma {
+  float16_t gamma[];
+};
+layout(std430, binding = 2) readonly buffer buf_epsilon {
+  float epsilon[];
+};
+layout(std430, binding = 3) readonly buffer buf_batchSize {
+  uint batchSize[];
+};
+layout(std430, binding = 4) readonly buffer buf_hiddenSize {
+  uint hiddenSize[];
+};
+layout(std430, binding = 5) writeonly buffer buf__output {
+  float16_t _output[];
+};
+
+shared float sumSqBuf[256];
+
+// kernel: navatala_transformer_rms_norm_multi_pass_f16
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint lid = uint(int(gl_LocalInvocationID.x));
+  uint batchIdx = uint(int(gl_WorkGroupID.x));
+  uint bs = batchSize[0u];
+  uint hs = hiddenSize[0u];
+  float eps = epsilon[0u];
+  bool batchValid = (batchIdx < bs);
+  uint baseIdx = (batchIdx * hs);
+  float partialSumSq = uintBitsToFloat(0x00000000u);
+  uint iterIdx = lid;
+  uint workgroupSize = 256u;
+  for (int __iter = 0; __iter < 16384; ++__iter) {
+    if (!((iterIdx < hs))) break;
+    uint globalIdx = (baseIdx + iterIdx);
+    float16_t xF16 = ((batchValid) ? (_input[globalIdx]) : (float16_t(0.000000)));
+    float xVal = float(xF16);
+    float xSq = (xVal * xVal);
+    partialSumSq = (partialSumSq + xSq);
+    iterIdx = (iterIdx + workgroupSize);
+  }
+  sumSqBuf[lid] = partialSumSq;
+  barrier();
+  bool shouldReduce_sumSqBuf_128 = (lid < 128u);
+  if (shouldReduce_sumSqBuf_128) {
+    uint neighborIdx_sumSqBuf_128 = (lid + 128u);
+    float myVal_sumSqBuf_128 = sumSqBuf[lid];
+    float neighborVal_sumSqBuf_128 = sumSqBuf[neighborIdx_sumSqBuf_128];
+    float sumVal_sumSqBuf_128 = (myVal_sumSqBuf_128 + neighborVal_sumSqBuf_128);
+    sumSqBuf[lid] = sumVal_sumSqBuf_128;
+  }
+  barrier();
+  bool shouldReduce_sumSqBuf_64 = (lid < 64u);
+  if (shouldReduce_sumSqBuf_64) {
+    uint neighborIdx_sumSqBuf_64 = (lid + 64u);
+    float myVal_sumSqBuf_64 = sumSqBuf[lid];
+    float neighborVal_sumSqBuf_64 = sumSqBuf[neighborIdx_sumSqBuf_64];
+    float sumVal_sumSqBuf_64 = (myVal_sumSqBuf_64 + neighborVal_sumSqBuf_64);
+    sumSqBuf[lid] = sumVal_sumSqBuf_64;
+  }
+  barrier();
+  bool shouldReduce_sumSqBuf_32 = (lid < 32u);
+  if (shouldReduce_sumSqBuf_32) {
+    uint neighborIdx_sumSqBuf_32 = (lid + 32u);
+    float myVal_sumSqBuf_32 = sumSqBuf[lid];
+    float neighborVal_sumSqBuf_32 = sumSqBuf[neighborIdx_sumSqBuf_32];
+    float sumVal_sumSqBuf_32 = (myVal_sumSqBuf_32 + neighborVal_sumSqBuf_32);
+    sumSqBuf[lid] = sumVal_sumSqBuf_32;
+  }
+  barrier();
+  bool shouldReduce_sumSqBuf_16 = (lid < 16u);
+  if (shouldReduce_sumSqBuf_16) {
+    uint neighborIdx_sumSqBuf_16 = (lid + 16u);
+    float myVal_sumSqBuf_16 = sumSqBuf[lid];
+    float neighborVal_sumSqBuf_16 = sumSqBuf[neighborIdx_sumSqBuf_16];
+    float sumVal_sumSqBuf_16 = (myVal_sumSqBuf_16 + neighborVal_sumSqBuf_16);
+    sumSqBuf[lid] = sumVal_sumSqBuf_16;
+  }
+  barrier();
+  bool shouldReduce_sumSqBuf_8 = (lid < 8u);
+  if (shouldReduce_sumSqBuf_8) {
+    uint neighborIdx_sumSqBuf_8 = (lid + 8u);
+    float myVal_sumSqBuf_8 = sumSqBuf[lid];
+    float neighborVal_sumSqBuf_8 = sumSqBuf[neighborIdx_sumSqBuf_8];
+    float sumVal_sumSqBuf_8 = (myVal_sumSqBuf_8 + neighborVal_sumSqBuf_8);
+    sumSqBuf[lid] = sumVal_sumSqBuf_8;
+  }
+  barrier();
+  bool shouldReduce_sumSqBuf_4 = (lid < 4u);
+  if (shouldReduce_sumSqBuf_4) {
+    uint neighborIdx_sumSqBuf_4 = (lid + 4u);
+    float myVal_sumSqBuf_4 = sumSqBuf[lid];
+    float neighborVal_sumSqBuf_4 = sumSqBuf[neighborIdx_sumSqBuf_4];
+    float sumVal_sumSqBuf_4 = (myVal_sumSqBuf_4 + neighborVal_sumSqBuf_4);
+    sumSqBuf[lid] = sumVal_sumSqBuf_4;
+  }
+  barrier();
+  bool shouldReduce_sumSqBuf_2 = (lid < 2u);
+  if (shouldReduce_sumSqBuf_2) {
+    uint neighborIdx_sumSqBuf_2 = (lid + 2u);
+    float myVal_sumSqBuf_2 = sumSqBuf[lid];
+    float neighborVal_sumSqBuf_2 = sumSqBuf[neighborIdx_sumSqBuf_2];
+    float sumVal_sumSqBuf_2 = (myVal_sumSqBuf_2 + neighborVal_sumSqBuf_2);
+    sumSqBuf[lid] = sumVal_sumSqBuf_2;
+  }
+  barrier();
+  bool shouldReduce_sumSqBuf_1 = (lid < 1u);
+  if (shouldReduce_sumSqBuf_1) {
+    uint neighborIdx_sumSqBuf_1 = (lid + 1u);
+    float myVal_sumSqBuf_1 = sumSqBuf[lid];
+    float neighborVal_sumSqBuf_1 = sumSqBuf[neighborIdx_sumSqBuf_1];
+    float sumVal_sumSqBuf_1 = (myVal_sumSqBuf_1 + neighborVal_sumSqBuf_1);
+    sumSqBuf[lid] = sumVal_sumSqBuf_1;
+  }
+  barrier();
+  float totalSumSq = sumSqBuf[0u];
+  float hsF32 = float(hs);
+  float meanSq = (totalSumSq / hsF32);
+  float meanSqEps = (meanSq + eps);
+  float rms = sqrt(meanSqEps);
+  iterIdx = lid;
+  for (int __iter = 0; __iter < 16384; ++__iter) {
+    if (!((iterIdx < hs))) break;
+    if (batchValid) {
+      uint globalIdx2 = (baseIdx + iterIdx);
+      float16_t xF16_2 = _input[globalIdx2];
+      float xVal2 = float(xF16_2);
+      float16_t gF16 = gamma[iterIdx];
+      float g = float(gF16);
+      float xNorm = (xVal2 / rms);
+      float resultF32 = (g * xNorm);
+      float16_t result = float16_t(resultF32);
+      _output[globalIdx2] = result;
+    }
+    iterIdx = (iterIdx + workgroupSize);
+  }
+}

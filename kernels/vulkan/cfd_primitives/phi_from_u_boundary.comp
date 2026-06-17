@@ -1,0 +1,93 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_owner {
+  int owner[];
+};
+layout(std430, binding = 1) readonly buffer buf_weights {
+  float weights[];
+};
+layout(std430, binding = 2) readonly buffer buf_sfX {
+  float sfX[];
+};
+layout(std430, binding = 3) readonly buffer buf_sfY {
+  float sfY[];
+};
+layout(std430, binding = 4) readonly buffer buf_sfZ {
+  float sfZ[];
+};
+layout(std430, binding = 5) readonly buffer buf_ux {
+  float ux[];
+};
+layout(std430, binding = 6) readonly buffer buf_uy {
+  float uy[];
+};
+layout(std430, binding = 7) readonly buffer buf_uz {
+  float uz[];
+};
+layout(std430, binding = 8) readonly buffer buf_bcx {
+  float bcx[];
+};
+layout(std430, binding = 9) readonly buffer buf_bcy {
+  float bcy[];
+};
+layout(std430, binding = 10) readonly buffer buf_bcz {
+  float bcz[];
+};
+layout(std430, binding = 11) readonly buffer buf_bcmask {
+  uint bcmask[];
+};
+layout(std430, binding = 12) readonly buffer buf_params {
+  uint params[];
+};
+layout(std430, binding = 13) buffer buf_outPhi {
+  float outPhi[];
+};
+
+// kernel: navatala_cfd_primitives_phi_from_u_boundary
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  int f = (int(params[1]) + int(gl_GlobalInvocationID.x));
+  if ((f >= int(params[0]))) {
+    return;
+  } else {
+    int o = owner[f];
+    float uox = ux[o];
+    float uoy = uy[o];
+    float uoz = uz[o];
+    float ufx = uox;
+    float ufy = uoy;
+    float ufz = uoz;
+    uint m = bcmask[f];
+    int mInt = int(m);
+    if ((mInt == 1)) {
+      float w = weights[f];
+      float iw = (uintBitsToFloat(0x3f800000u) - w);
+      ufx = ((w * uox) + (iw * bcx[f]));
+      ufy = ((w * uoy) + (iw * bcy[f]));
+      ufz = ((w * uoz) + (iw * bcz[f]));
+    } else {
+      if ((mInt == 2)) {
+        ufx = bcx[f];
+        ufy = bcy[f];
+        ufz = bcz[f];
+      }
+    }
+    outPhi[f] = (((sfX[f] * ufx) + (sfY[f] * ufy)) + (sfZ[f] * ufz));
+  }
+}

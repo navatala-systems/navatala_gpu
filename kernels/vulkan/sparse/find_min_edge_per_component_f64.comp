@@ -1,0 +1,64 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+#extension GL_EXT_shader_atomic_float : enable
+#extension GL_EXT_shader_atomic_float2 : enable
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_srcNodes {
+  uint srcNodes[];
+};
+layout(std430, binding = 1) readonly buffer buf_dstNodes {
+  uint dstNodes[];
+};
+layout(std430, binding = 2) readonly buffer buf_weights {
+  double weights[];
+};
+layout(std430, binding = 3) readonly buffer buf_components {
+  uint components[];
+};
+layout(std430, binding = 4) readonly buffer buf_numEdges {
+  uint numEdges[];
+};
+layout(std430, binding = 5) readonly buffer buf_numNodes {
+  uint numNodes[];
+};
+layout(std430, binding = 6) buffer buf_minEdgeIdx {
+  uint minEdgeIdx[];
+};
+layout(std430, binding = 7) buffer buf_minEdgeWeight {
+  double minEdgeWeight[];
+};
+
+// kernel: navatala_sparse_find_min_edge_per_component_f64
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint edgeIdx = uint(int(gl_GlobalInvocationID.x));
+  if ((edgeIdx < numEdges[0u])) {
+    uint src = srcNodes[edgeIdx];
+    uint dst = dstNodes[edgeIdx];
+    uint srcComp = components[src];
+    uint dstComp = components[dst];
+    if ((srcComp != dstComp)) {
+      double w = weights[edgeIdx];
+      double currWeight = minEdgeWeight[srcComp];
+      if ((w < currWeight)) {
+        atomicMin(minEdgeWeight[srcComp], w);
+        minEdgeIdx[srcComp] = edgeIdx;
+      }
+    }
+  }
+}

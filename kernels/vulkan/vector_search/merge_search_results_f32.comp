@@ -1,0 +1,88 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_ids_a {
+  uint ids_a[];
+};
+layout(std430, binding = 1) readonly buffer buf_dists_a {
+  float dists_a[];
+};
+layout(std430, binding = 2) readonly buffer buf_ids_b {
+  uint ids_b[];
+};
+layout(std430, binding = 3) readonly buffer buf_dists_b {
+  float dists_b[];
+};
+layout(std430, binding = 4) readonly buffer buf_n_queries {
+  uint n_queries[];
+};
+layout(std430, binding = 5) readonly buffer buf_k_a {
+  uint k_a[];
+};
+layout(std430, binding = 6) readonly buffer buf_k_b {
+  uint k_b[];
+};
+layout(std430, binding = 7) readonly buffer buf_k_out {
+  uint k_out[];
+};
+layout(std430, binding = 8) writeonly buffer buf_merged_ids {
+  uint merged_ids[];
+};
+layout(std430, binding = 9) writeonly buffer buf_merged_dists {
+  float merged_dists[];
+};
+
+// kernel: navatala_vector_search_merge_search_results_f32
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint query_id = uint(int(gl_GlobalInvocationID.x));
+  uint nq = n_queries[0];
+  uint ka = k_a[0];
+  uint kb = k_b[0];
+  uint ko = k_out[0];
+  if ((query_id < nq)) {
+    uint ptr_a = 0u;
+    uint ptr_b = 0u;
+    uint out_idx = 0u;
+    for (int _iter = 0; _iter < int(ko); ++_iter) {
+      uint pa = ptr_a;
+      uint pb = ptr_b;
+      uint oi = out_idx;
+      bool a_valid = (pa < ka);
+      bool b_valid = (pb < kb);
+      uint idx_a = ((query_id * ka) + pa);
+      uint idx_b = ((query_id * kb) + pb);
+      float dist_a_raw = dists_a[idx_a];
+      float dist_b_raw = dists_b[idx_b];
+      float dist_a = ((a_valid) ? (dist_a_raw) : (uintBitsToFloat(0x7e967699u)));
+      float dist_b = ((b_valid) ? (dist_b_raw) : (uintBitsToFloat(0x7e967699u)));
+      bool choose_a = (dist_a <= dist_b);
+      uint chosen_id = ((choose_a) ? (ids_a[idx_a]) : (ids_b[idx_b]));
+      float chosen_dist = ((choose_a) ? (dist_a) : (dist_b));
+      uint out_flat = ((query_id * ko) + oi);
+      merged_ids[out_flat] = chosen_id;
+      merged_dists[out_flat] = chosen_dist;
+      if (choose_a) {
+        ptr_a = (pa + 1u);
+      } else {
+        ptr_b = (pb + 1u);
+      }
+      out_idx = (oi + 1u);
+    }
+  }
+}

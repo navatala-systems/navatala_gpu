@@ -1,0 +1,107 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_targets {
+  float targets[];
+};
+layout(std430, binding = 1) readonly buffer buf_sample_indices {
+  uint sample_indices[];
+};
+layout(std430, binding = 2) readonly buffer buf_n_node_samples {
+  uint n_node_samples[];
+};
+layout(std430, binding = 3) writeonly buffer buf_mse {
+  float mse[];
+};
+layout(std430, binding = 4) buffer buf_mean_val {
+  float mean_val[];
+};
+
+shared float sdata[256];
+
+// kernel: navatala_ml_compute_m_s_e_f32
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint gid = uint(int(gl_GlobalInvocationID.x));
+  uint lid = uint(int(gl_LocalInvocationID.x));
+  uint nSamples = n_node_samples[0];
+  bool inBounds = (gid < nSamples);
+  if (inBounds) {
+    uint sampleIdx = sample_indices[gid];
+    float targetVal = targets[sampleIdx];
+    sdata[lid] = targetVal;
+  } else {
+    sdata[lid] = uintBitsToFloat(0x00000000u);
+  }
+  barrier();
+  uint mseF32_reductionStride = 128u;
+  for (int mseF32_reductionStep = 0; mseF32_reductionStep < int(8); ++mseF32_reductionStep) {
+    uint mseF32_stride = mseF32_reductionStride;
+    if ((lid < mseF32_stride)) {
+      uint otherIdx = (lid + mseF32_stride);
+      float mine = sdata[lid];
+      float other = sdata[otherIdx];
+      float combined = (mine + other);
+      sdata[lid] = combined;
+    }
+    uint mseF32_strideToHalve = mseF32_reductionStride;
+    uint mseF32_nextStride = (mseF32_strideToHalve >> 1u);
+    mseF32_reductionStride = mseF32_nextStride;
+    barrier();
+  }
+  bool isFirst = (lid == 0u);
+  if (isFirst) {
+    float totalSum = sdata[0];
+    float nSamplesF = float(nSamples);
+    float meanValue = (totalSum / nSamplesF);
+    mean_val[0] = meanValue;
+  }
+  barrier();
+  float meanForDev = mean_val[0];
+  if (inBounds) {
+    uint sampleIdx2 = sample_indices[gid];
+    float targetVal2 = targets[sampleIdx2];
+    float dev = (targetVal2 - meanForDev);
+    float devSq = (dev * dev);
+    sdata[lid] = devSq;
+  } else {
+    sdata[lid] = uintBitsToFloat(0x00000000u);
+  }
+  barrier();
+  uint mseF32b_reductionStride = 128u;
+  for (int mseF32b_reductionStep = 0; mseF32b_reductionStep < int(8); ++mseF32b_reductionStep) {
+    uint mseF32b_stride = mseF32b_reductionStride;
+    if ((lid < mseF32b_stride)) {
+      uint otherIdx2 = (lid + mseF32b_stride);
+      float mine2 = sdata[lid];
+      float other2 = sdata[otherIdx2];
+      float combined2 = (mine2 + other2);
+      sdata[lid] = combined2;
+    }
+    uint mseF32b_strideToHalve = mseF32b_reductionStride;
+    uint mseF32b_nextStride = (mseF32b_strideToHalve >> 1u);
+    mseF32b_reductionStride = mseF32b_nextStride;
+    barrier();
+  }
+  if (isFirst) {
+    float totalDevSq = sdata[0];
+    float nSamplesF2 = float(nSamples);
+    float mseValue = (totalDevSq / nSamplesF2);
+    mse[0] = mseValue;
+  }
+}

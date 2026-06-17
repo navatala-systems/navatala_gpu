@@ -1,0 +1,54 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include <hip/hip_runtime.h>
+extern "C" __global__ void navatala_ml_vote_majority_f64(const unsigned int* neighborLabels, const unsigned int* q, const unsigned int* k, const unsigned int* numClasses, unsigned int* predictions) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
+  unsigned int qVal = q[0];
+  unsigned int kVal = k[0];
+  unsigned int nClasses = numClasses[0];
+  unsigned int queryIdx = gid;
+  bool inBounds = (queryIdx < qVal);
+  if (inBounds) {
+    unsigned int baseIdx = (queryIdx * kVal);
+    unsigned int bestClass = 0u;
+    unsigned int bestVotes = 0u;
+    for (int classIdx = 0; classIdx < (int)(nClasses); ++classIdx) {
+      unsigned int classIdxU32 = ((unsigned int)(classIdx));
+      unsigned int classVotes = 0u;
+      for (int j = 0; j < (int)(kVal); ++j) {
+        unsigned int jU32 = ((unsigned int)(j));
+        unsigned int labelIdx = (baseIdx + jU32);
+        unsigned int neighborLabel = neighborLabels[labelIdx];
+        bool isMatch = (neighborLabel == classIdxU32);
+        unsigned int increment = ((isMatch) ? (1u) : (0u));
+        unsigned int currentVotes = classVotes;
+        unsigned int newClassVotes = (currentVotes + increment);
+        classVotes = newClassVotes;
+      }
+      unsigned int finalClassVotes = classVotes;
+      unsigned int currentBestVotes = bestVotes;
+      unsigned int currentBestClass = bestClass;
+      bool isBetter = (finalClassVotes > currentBestVotes);
+      unsigned int newBestClass = ((isBetter) ? (classIdxU32) : (currentBestClass));
+      unsigned int newBestVotes = ((isBetter) ? (finalClassVotes) : (currentBestVotes));
+      bestClass = newBestClass;
+      bestVotes = newBestVotes;
+    }
+    unsigned int finalBestClass = bestClass;
+    predictions[queryIdx] = finalBestClass;
+  }
+}

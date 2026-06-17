@@ -1,0 +1,89 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_X {
+  float X[];
+};
+layout(std430, binding = 1) readonly buffer buf_Y {
+  float Y[];
+};
+layout(std430, binding = 2) readonly buffer buf_n {
+  uint n[];
+};
+layout(std430, binding = 3) readonly buffer buf_m {
+  uint m[];
+};
+layout(std430, binding = 4) readonly buffer buf_d {
+  uint d[];
+};
+layout(std430, binding = 5) writeonly buffer buf_D {
+  float D[];
+};
+
+// kernel: navatala_ml_pairwise_cosine_f32
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint gid = uint(int(gl_GlobalInvocationID.x));
+  uint nVal = n[0];
+  uint mVal = m[0];
+  uint dVal = d[0];
+  uint totalElems = (nVal * mVal);
+  bool inBounds = (gid < totalElems);
+  if (inBounds) {
+    uint i = (gid / mVal);
+    uint j = (gid % mVal);
+    uint xBase = (i * dVal);
+    uint yBase = (j * dVal);
+    float dotProduct = uintBitsToFloat(0x00000000u);
+    float normXSq = uintBitsToFloat(0x00000000u);
+    float normYSq = uintBitsToFloat(0x00000000u);
+    for (int k = 0; k < int(dVal); ++k) {
+      uint kU32 = uint(k);
+      uint xIdx = (xBase + kU32);
+      uint yIdx = (yBase + kU32);
+      float xVal = X[xIdx];
+      float yVal = Y[yIdx];
+      float prod = (xVal * yVal);
+      float currentDot = dotProduct;
+      float newDot = (currentDot + prod);
+      dotProduct = newDot;
+      float xSq = (xVal * xVal);
+      float ySq = (yVal * yVal);
+      float currentNormX = normXSq;
+      float newNormX = (currentNormX + xSq);
+      normXSq = newNormX;
+      float currentNormY = normYSq;
+      float newNormY = (currentNormY + ySq);
+      normYSq = newNormY;
+    }
+    float finalDot = dotProduct;
+    float finalNormXSq = normXSq;
+    float finalNormYSq = normYSq;
+    float normX = sqrt(finalNormXSq);
+    float normY = sqrt(finalNormYSq);
+    float normProduct = (normX * normY);
+    bool normIsZero = (normProduct == uintBitsToFloat(0x00000000u));
+    if (normIsZero) {
+      D[gid] = uintBitsToFloat(0x00000000u);
+    } else {
+      float cosineSim = (finalDot / normProduct);
+      float cosineDist = (uintBitsToFloat(0x3f800000u) - cosineSim);
+      D[gid] = cosineDist;
+    }
+  }
+}

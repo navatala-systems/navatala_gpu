@@ -1,0 +1,32 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "navatala_gpu-source-preview",
+  "documentNamespace": "https://navatalasystems.com/spdx/navatala-gpu/0.1.0-alpha",
+  "creationInfo": {
+    "created": "2026-06-17T00:00:00Z",
+    "creators": [
+      "Organization: Navatala Systems (OPC) Pvt Ltd"
+    ]
+  },
+  "packages": [
+    {
+      "name": "navatala_gpu",
+      "SPDXID": "SPDXRef-Package-NavatalaGPU",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "licenseDeclared": "Apache-2.0",
+      "copyrightText": "Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd",
+      "description": "Developer-preview source package containing a cross-platform GPU runtime, kernel corpus, Python facades, tests, and documentation."
+    }
+  ],
+  "relationships": [
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-NavatalaGPU"
+    }
+  ]
+}

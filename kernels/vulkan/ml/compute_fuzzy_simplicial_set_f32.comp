@@ -1,0 +1,107 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_knn_indices {
+  int knn_indices[];
+};
+layout(std430, binding = 1) readonly buffer buf_knn_dists {
+  float knn_dists[];
+};
+layout(std430, binding = 2) readonly buffer buf_n_samples {
+  uint n_samples[];
+};
+layout(std430, binding = 3) readonly buffer buf_n_neighbors {
+  uint n_neighbors[];
+};
+layout(std430, binding = 4) readonly buffer buf_local_connectivity {
+  float local_connectivity[];
+};
+layout(std430, binding = 5) writeonly buffer buf_membership {
+  float membership[];
+};
+layout(std430, binding = 6) writeonly buffer buf_rho {
+  float rho[];
+};
+layout(std430, binding = 7) writeonly buffer buf_sigma {
+  float sigma[];
+};
+
+// kernel: navatala_ml_compute_fuzzy_simplicial_set_f32
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint gid = uint(int(gl_GlobalInvocationID.x));
+  uint nSamples = n_samples[0];
+  uint nNeighbors = n_neighbors[0];
+  float localConn = local_connectivity[0];
+  bool inBounds = (gid < nSamples);
+  if (inBounds) {
+    uint sampleBase = (gid * nNeighbors);
+    uint localConnFloor = uint(localConn);
+    float localConnFrac = (localConn - float(localConnFloor));
+    uint idxFloor = (sampleBase + localConnFloor);
+    uint idxCeil = (idxFloor + 1u);
+    uint maxIdx = ((sampleBase + nNeighbors) - 1u);
+    uint idxCeilClamped = (((idxCeil < maxIdx)) ? (idxCeil) : (maxIdx));
+    float distFloor = knn_dists[idxFloor];
+    float distCeil = knn_dists[idxCeilClamped];
+    float rhoVal = (((uintBitsToFloat(0x3f800000u) - localConnFrac) * distFloor) + (localConnFrac * distCeil));
+    rho[gid] = rhoVal;
+    float nNeighborsF = float(nNeighbors);
+    float targetSum = (log(nNeighborsF) / log(uintBitsToFloat(0x40000000u)));
+    float sigmaLow = uintBitsToFloat(0x2edbe6ffu);
+    float sigmaHigh = uintBitsToFloat(0x447a0000u);
+    float sigmaMid = uintBitsToFloat(0x00000000u);
+    for (int iter = 0; iter < int(64u); ++iter) {
+      float low = sigmaLow;
+      float high = sigmaHigh;
+      float mid = ((low + high) / uintBitsToFloat(0x40000000u));
+      sigmaMid = mid;
+      float membershipSum = uintBitsToFloat(0x00000000u);
+      for (int k = 0; k < int(nNeighbors); ++k) {
+        uint kU32 = uint(k);
+        uint distIdx = (sampleBase + kU32);
+        float dist = knn_dists[distIdx];
+        float distMinusRho = (dist - rhoVal);
+        float negScaled = ((uintBitsToFloat(0x00000000u) - distMinusRho) / mid);
+        float mem = exp(negScaled);
+        float memClamped = (((mem > uintBitsToFloat(0x3f800000u))) ? (uintBitsToFloat(0x3f800000u)) : (mem));
+        float currSum = membershipSum;
+        float newSum = (currSum + memClamped);
+        membershipSum = newSum;
+      }
+      float sum = membershipSum;
+      if ((sum > targetSum)) {
+        sigmaHigh = mid;
+      } else {
+        sigmaLow = mid;
+      }
+    }
+    float finalSigma = sigmaMid;
+    sigma[gid] = finalSigma;
+    for (int k = 0; k < int(nNeighbors); ++k) {
+      uint kU32 = uint(k);
+      uint memIdx = (sampleBase + kU32);
+      float dist = knn_dists[memIdx];
+      float distMinusRho = (dist - rhoVal);
+      float negScaled = ((uintBitsToFloat(0x00000000u) - distMinusRho) / finalSigma);
+      float mem = exp(negScaled);
+      float memClamped = (((mem > uintBitsToFloat(0x3f800000u))) ? (uintBitsToFloat(0x3f800000u)) : (mem));
+      membership[memIdx] = memClamped;
+    }
+  }
+}

@@ -1,0 +1,52 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_X {
+  float X[];
+};
+layout(std430, binding = 1) readonly buffer buf_nSamples {
+  uint nSamples[];
+};
+layout(std430, binding = 2) readonly buffer buf_nFeatures {
+  uint nFeatures[];
+};
+layout(std430, binding = 3) writeonly buffer buf_G {
+  float G[];
+};
+
+// kernel: navatala_ml_compute_gram_matrix_f32
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint gid = uint(int(gl_GlobalInvocationID.x));
+  uint n = nSamples[0];
+  uint p = nFeatures[0];
+  uint totalElems = (p * p);
+  bool inBounds = (gid < totalElems);
+  if (inBounds) {
+    uint i = (gid / p);
+    uint j = (gid % p);
+    float dotProduct = uintBitsToFloat(0x00000000u);
+    uint idx0_i = i;
+    uint idx0_j = j;
+    float x0_i = X[idx0_i];
+    float x0_j = X[idx0_j];
+    float prod0 = (x0_i * x0_j);
+    float sum = prod0;
+    G[gid] = sum;
+  }
+}

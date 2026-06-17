@@ -1,0 +1,272 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include <metal_stdlib>
+using namespace metal;
+
+kernel void navatala_transformer_simple_attention_backward_f32(device const float* gradOutput [[buffer(0)]], device const float* query [[buffer(1)]], device const float* key [[buffer(2)]], device const float* value [[buffer(3)]], device const uint* batchSize [[buffer(4)]], device const uint* seqLen [[buffer(5)]], device const uint* numHeads [[buffer(6)]], device const uint* headDim [[buffer(7)]], device float* gradQuery [[buffer(8)]], device float* gradKey [[buffer(9)]], device float* gradValue [[buffer(10)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
+  uint lid = ((uint)(int(__tid.x)));
+  uint groupId = ((uint)(int(__tgid.x)));
+  uint bs = batchSize[0u];
+  uint sl = seqLen[0u];
+  uint nh = numHeads[0u];
+  uint hd = headDim[0u];
+  uint seqHeads = (sl * nh);
+  uint batchIdx = (groupId / seqHeads);
+  uint remainder = (groupId % seqHeads);
+  uint queryPos = (remainder / nh);
+  uint headIdx = (remainder % nh);
+  float hdF32 = ((float)(hd));
+  float sqrtHd = sqrt(hdF32);
+  float scale = (as_type<float>(0x3f800000u) / sqrtHd);
+  threadgroup float attnScores[256];
+  threadgroup float sumBuf[256];
+  threadgroup float gradBuf[256];
+  bool batchValid = (batchIdx < bs);
+  bool seqValid = (lid < sl);
+  bool valid = (batchValid && seqValid);
+  uint headDimStride = hd;
+  uint headStride = (nh * hd);
+  uint seqStride = (sl * headStride);
+  uint qBase = ((batchIdx * seqStride) + ((queryPos * headStride) + (headIdx * headDimStride)));
+  uint kBase = ((batchIdx * seqStride) + ((lid * headStride) + (headIdx * headDimStride)));
+  if (valid) {
+    float dotProdQK = as_type<float>(0x00000000u);
+    for (int d = 0; d < (int)(hd); ++d) {
+      uint qIdx = (qBase + ((uint)(d)));
+      uint kIdx = (kBase + ((uint)(d)));
+      float qVal = query[qIdx];
+      float kVal = key[kIdx];
+      float prod = (qVal * kVal);
+      float oldDotProdQK = dotProdQK;
+      dotProdQK = (oldDotProdQK + prod);
+    }
+    float finalDotProdQK = dotProdQK;
+    float scaledScore = (finalDotProdQK * scale);
+    attnScores[lid] = scaledScore;
+  } else {
+    attnScores[lid] = as_type<float>(0xf149f2cau);
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_max_p1_attnScores_128 = (lid < 128u);
+  if (shouldReduce_max_p1_attnScores_128) {
+    uint neighborIdx_max_p1_attnScores_128 = (lid + 128u);
+    float myVal_max_p1_attnScores_128 = attnScores[lid];
+    float neighborVal_max_p1_attnScores_128 = attnScores[neighborIdx_max_p1_attnScores_128];
+    bool isGreater_max_p1_attnScores_128 = (neighborVal_max_p1_attnScores_128 > myVal_max_p1_attnScores_128);
+    float maxVal_max_p1_attnScores_128 = ((isGreater_max_p1_attnScores_128) ? (neighborVal_max_p1_attnScores_128) : (myVal_max_p1_attnScores_128));
+    attnScores[lid] = maxVal_max_p1_attnScores_128;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_max_p1_attnScores_64 = (lid < 64u);
+  if (shouldReduce_max_p1_attnScores_64) {
+    uint neighborIdx_max_p1_attnScores_64 = (lid + 64u);
+    float myVal_max_p1_attnScores_64 = attnScores[lid];
+    float neighborVal_max_p1_attnScores_64 = attnScores[neighborIdx_max_p1_attnScores_64];
+    bool isGreater_max_p1_attnScores_64 = (neighborVal_max_p1_attnScores_64 > myVal_max_p1_attnScores_64);
+    float maxVal_max_p1_attnScores_64 = ((isGreater_max_p1_attnScores_64) ? (neighborVal_max_p1_attnScores_64) : (myVal_max_p1_attnScores_64));
+    attnScores[lid] = maxVal_max_p1_attnScores_64;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_max_p1_attnScores_32 = (lid < 32u);
+  if (shouldReduce_max_p1_attnScores_32) {
+    uint neighborIdx_max_p1_attnScores_32 = (lid + 32u);
+    float myVal_max_p1_attnScores_32 = attnScores[lid];
+    float neighborVal_max_p1_attnScores_32 = attnScores[neighborIdx_max_p1_attnScores_32];
+    bool isGreater_max_p1_attnScores_32 = (neighborVal_max_p1_attnScores_32 > myVal_max_p1_attnScores_32);
+    float maxVal_max_p1_attnScores_32 = ((isGreater_max_p1_attnScores_32) ? (neighborVal_max_p1_attnScores_32) : (myVal_max_p1_attnScores_32));
+    attnScores[lid] = maxVal_max_p1_attnScores_32;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_max_p1_attnScores_16 = (lid < 16u);
+  if (shouldReduce_max_p1_attnScores_16) {
+    uint neighborIdx_max_p1_attnScores_16 = (lid + 16u);
+    float myVal_max_p1_attnScores_16 = attnScores[lid];
+    float neighborVal_max_p1_attnScores_16 = attnScores[neighborIdx_max_p1_attnScores_16];
+    bool isGreater_max_p1_attnScores_16 = (neighborVal_max_p1_attnScores_16 > myVal_max_p1_attnScores_16);
+    float maxVal_max_p1_attnScores_16 = ((isGreater_max_p1_attnScores_16) ? (neighborVal_max_p1_attnScores_16) : (myVal_max_p1_attnScores_16));
+    attnScores[lid] = maxVal_max_p1_attnScores_16;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_max_p1_attnScores_8 = (lid < 8u);
+  if (shouldReduce_max_p1_attnScores_8) {
+    uint neighborIdx_max_p1_attnScores_8 = (lid + 8u);
+    float myVal_max_p1_attnScores_8 = attnScores[lid];
+    float neighborVal_max_p1_attnScores_8 = attnScores[neighborIdx_max_p1_attnScores_8];
+    bool isGreater_max_p1_attnScores_8 = (neighborVal_max_p1_attnScores_8 > myVal_max_p1_attnScores_8);
+    float maxVal_max_p1_attnScores_8 = ((isGreater_max_p1_attnScores_8) ? (neighborVal_max_p1_attnScores_8) : (myVal_max_p1_attnScores_8));
+    attnScores[lid] = maxVal_max_p1_attnScores_8;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_max_p1_attnScores_4 = (lid < 4u);
+  if (shouldReduce_max_p1_attnScores_4) {
+    uint neighborIdx_max_p1_attnScores_4 = (lid + 4u);
+    float myVal_max_p1_attnScores_4 = attnScores[lid];
+    float neighborVal_max_p1_attnScores_4 = attnScores[neighborIdx_max_p1_attnScores_4];
+    bool isGreater_max_p1_attnScores_4 = (neighborVal_max_p1_attnScores_4 > myVal_max_p1_attnScores_4);
+    float maxVal_max_p1_attnScores_4 = ((isGreater_max_p1_attnScores_4) ? (neighborVal_max_p1_attnScores_4) : (myVal_max_p1_attnScores_4));
+    attnScores[lid] = maxVal_max_p1_attnScores_4;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_max_p1_attnScores_2 = (lid < 2u);
+  if (shouldReduce_max_p1_attnScores_2) {
+    uint neighborIdx_max_p1_attnScores_2 = (lid + 2u);
+    float myVal_max_p1_attnScores_2 = attnScores[lid];
+    float neighborVal_max_p1_attnScores_2 = attnScores[neighborIdx_max_p1_attnScores_2];
+    bool isGreater_max_p1_attnScores_2 = (neighborVal_max_p1_attnScores_2 > myVal_max_p1_attnScores_2);
+    float maxVal_max_p1_attnScores_2 = ((isGreater_max_p1_attnScores_2) ? (neighborVal_max_p1_attnScores_2) : (myVal_max_p1_attnScores_2));
+    attnScores[lid] = maxVal_max_p1_attnScores_2;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_max_p1_attnScores_1 = (lid < 1u);
+  if (shouldReduce_max_p1_attnScores_1) {
+    uint neighborIdx_max_p1_attnScores_1 = (lid + 1u);
+    float myVal_max_p1_attnScores_1 = attnScores[lid];
+    float neighborVal_max_p1_attnScores_1 = attnScores[neighborIdx_max_p1_attnScores_1];
+    bool isGreater_max_p1_attnScores_1 = (neighborVal_max_p1_attnScores_1 > myVal_max_p1_attnScores_1);
+    float maxVal_max_p1_attnScores_1 = ((isGreater_max_p1_attnScores_1) ? (neighborVal_max_p1_attnScores_1) : (myVal_max_p1_attnScores_1));
+    attnScores[lid] = maxVal_max_p1_attnScores_1;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  float maxScore = attnScores[0u];
+  if (valid) {
+    float myScore = attnScores[lid];
+    float shiftedScore = (myScore - maxScore);
+    float expScore = exp(shiftedScore);
+    sumBuf[lid] = expScore;
+  } else {
+    sumBuf[lid] = as_type<float>(0x00000000u);
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sum_p1_sumBuf_128 = (lid < 128u);
+  if (shouldReduce_sum_p1_sumBuf_128) {
+    uint neighborIdx_sum_p1_sumBuf_128 = (lid + 128u);
+    float myVal_sum_p1_sumBuf_128 = sumBuf[lid];
+    float neighborVal_sum_p1_sumBuf_128 = sumBuf[neighborIdx_sum_p1_sumBuf_128];
+    float sumVal_sum_p1_sumBuf_128 = (myVal_sum_p1_sumBuf_128 + neighborVal_sum_p1_sumBuf_128);
+    sumBuf[lid] = sumVal_sum_p1_sumBuf_128;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sum_p1_sumBuf_64 = (lid < 64u);
+  if (shouldReduce_sum_p1_sumBuf_64) {
+    uint neighborIdx_sum_p1_sumBuf_64 = (lid + 64u);
+    float myVal_sum_p1_sumBuf_64 = sumBuf[lid];
+    float neighborVal_sum_p1_sumBuf_64 = sumBuf[neighborIdx_sum_p1_sumBuf_64];
+    float sumVal_sum_p1_sumBuf_64 = (myVal_sum_p1_sumBuf_64 + neighborVal_sum_p1_sumBuf_64);
+    sumBuf[lid] = sumVal_sum_p1_sumBuf_64;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sum_p1_sumBuf_32 = (lid < 32u);
+  if (shouldReduce_sum_p1_sumBuf_32) {
+    uint neighborIdx_sum_p1_sumBuf_32 = (lid + 32u);
+    float myVal_sum_p1_sumBuf_32 = sumBuf[lid];
+    float neighborVal_sum_p1_sumBuf_32 = sumBuf[neighborIdx_sum_p1_sumBuf_32];
+    float sumVal_sum_p1_sumBuf_32 = (myVal_sum_p1_sumBuf_32 + neighborVal_sum_p1_sumBuf_32);
+    sumBuf[lid] = sumVal_sum_p1_sumBuf_32;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sum_p1_sumBuf_16 = (lid < 16u);
+  if (shouldReduce_sum_p1_sumBuf_16) {
+    uint neighborIdx_sum_p1_sumBuf_16 = (lid + 16u);
+    float myVal_sum_p1_sumBuf_16 = sumBuf[lid];
+    float neighborVal_sum_p1_sumBuf_16 = sumBuf[neighborIdx_sum_p1_sumBuf_16];
+    float sumVal_sum_p1_sumBuf_16 = (myVal_sum_p1_sumBuf_16 + neighborVal_sum_p1_sumBuf_16);
+    sumBuf[lid] = sumVal_sum_p1_sumBuf_16;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sum_p1_sumBuf_8 = (lid < 8u);
+  if (shouldReduce_sum_p1_sumBuf_8) {
+    uint neighborIdx_sum_p1_sumBuf_8 = (lid + 8u);
+    float myVal_sum_p1_sumBuf_8 = sumBuf[lid];
+    float neighborVal_sum_p1_sumBuf_8 = sumBuf[neighborIdx_sum_p1_sumBuf_8];
+    float sumVal_sum_p1_sumBuf_8 = (myVal_sum_p1_sumBuf_8 + neighborVal_sum_p1_sumBuf_8);
+    sumBuf[lid] = sumVal_sum_p1_sumBuf_8;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sum_p1_sumBuf_4 = (lid < 4u);
+  if (shouldReduce_sum_p1_sumBuf_4) {
+    uint neighborIdx_sum_p1_sumBuf_4 = (lid + 4u);
+    float myVal_sum_p1_sumBuf_4 = sumBuf[lid];
+    float neighborVal_sum_p1_sumBuf_4 = sumBuf[neighborIdx_sum_p1_sumBuf_4];
+    float sumVal_sum_p1_sumBuf_4 = (myVal_sum_p1_sumBuf_4 + neighborVal_sum_p1_sumBuf_4);
+    sumBuf[lid] = sumVal_sum_p1_sumBuf_4;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sum_p1_sumBuf_2 = (lid < 2u);
+  if (shouldReduce_sum_p1_sumBuf_2) {
+    uint neighborIdx_sum_p1_sumBuf_2 = (lid + 2u);
+    float myVal_sum_p1_sumBuf_2 = sumBuf[lid];
+    float neighborVal_sum_p1_sumBuf_2 = sumBuf[neighborIdx_sum_p1_sumBuf_2];
+    float sumVal_sum_p1_sumBuf_2 = (myVal_sum_p1_sumBuf_2 + neighborVal_sum_p1_sumBuf_2);
+    sumBuf[lid] = sumVal_sum_p1_sumBuf_2;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sum_p1_sumBuf_1 = (lid < 1u);
+  if (shouldReduce_sum_p1_sumBuf_1) {
+    uint neighborIdx_sum_p1_sumBuf_1 = (lid + 1u);
+    float myVal_sum_p1_sumBuf_1 = sumBuf[lid];
+    float neighborVal_sum_p1_sumBuf_1 = sumBuf[neighborIdx_sum_p1_sumBuf_1];
+    float sumVal_sum_p1_sumBuf_1 = (myVal_sum_p1_sumBuf_1 + neighborVal_sum_p1_sumBuf_1);
+    sumBuf[lid] = sumVal_sum_p1_sumBuf_1;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  float sumExp = sumBuf[0u];
+  if (valid) {
+    float myExpScore = attnScores[lid];
+    float shiftedExp = (myExpScore - maxScore);
+    float expVal = exp(shiftedExp);
+    float attnWeight = (expVal / sumExp);
+    uint vBase = ((batchIdx * seqStride) + ((lid * headStride) + (headIdx * headDimStride)));
+    float dotProdGradAttn = as_type<float>(0x00000000u);
+    for (int d = 0; d < (int)(hd); ++d) {
+      uint gradOutIdx = (qBase + ((uint)(d)));
+      uint vIdx = (vBase + ((uint)(d)));
+      float gradOutVal = gradOutput[gradOutIdx];
+      float vVal = value[vIdx];
+      float prodGradV = (gradOutVal * vVal);
+      float oldDotProdGradAttn = dotProdGradAttn;
+      dotProdGradAttn = (oldDotProdGradAttn + prodGradV);
+      float gradVContrib = (attnWeight * gradOutVal);
+      float oldGradV = gradValue[vIdx];
+      float newGradV = (oldGradV + gradVContrib);
+      gradValue[vIdx] = newGradV;
+    }
+    float finalGradAttn = dotProdGradAttn;
+    gradBuf[lid] = finalGradAttn;
+  } else {
+    gradBuf[lid] = as_type<float>(0x00000000u);
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  if (valid) {
+    float myAttnWeight = (exp((attnScores[lid] - maxScore)) / sumExp);
+    float myGradAttn = gradBuf[lid];
+    float gradScore = (myAttnWeight * myGradAttn);
+    float scaledGradScore = (gradScore * scale);
+    for (int d = 0; d < (int)(hd); ++d) {
+      uint qIdx = (qBase + ((uint)(d)));
+      uint kIdx = (kBase + ((uint)(d)));
+      float kVal = key[kIdx];
+      float qVal = query[qIdx];
+      float gradQContrib = (scaledGradScore * kVal);
+      float oldGradQ = gradQuery[qIdx];
+      float newGradQ = (oldGradQ + gradQContrib);
+      gradQuery[qIdx] = newGradQ;
+      float gradKContrib = (scaledGradScore * qVal);
+      float oldGradK = gradKey[kIdx];
+      float newGradK = (oldGradK + gradKContrib);
+      gradKey[kIdx] = newGradK;
+    }
+  }
+}

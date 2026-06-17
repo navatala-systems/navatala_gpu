@@ -1,0 +1,82 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_phiIn {
+  float phiIn[];
+};
+layout(std430, binding = 1) readonly buffer buf_pCell {
+  float pCell[];
+};
+layout(std430, binding = 2) readonly buffer buf_owner {
+  int owner[];
+};
+layout(std430, binding = 3) readonly buffer buf_magSf {
+  float magSf[];
+};
+layout(std430, binding = 4) readonly buffer buf_deltaCoeffs {
+  float deltaCoeffs[];
+};
+layout(std430, binding = 5) readonly buffer buf_coeff {
+  float coeff[];
+};
+layout(std430, binding = 6) readonly buffer buf_bcVal {
+  float bcVal[];
+};
+layout(std430, binding = 7) readonly buffer buf_bcMask {
+  int bcMask[];
+};
+layout(std430, binding = 8) readonly buffer buf_bcSnGrad {
+  float bcSnGrad[];
+};
+layout(std430, binding = 9) readonly buffer buf_bcSnGradMask {
+  int bcSnGradMask[];
+};
+layout(std430, binding = 10) readonly buffer buf_faceFluxCorrection {
+  float faceFluxCorrection[];
+};
+layout(std430, binding = 11) readonly buffer buf_counts {
+  int counts[];
+};
+layout(std430, binding = 12) readonly buffer buf_paramsF {
+  float paramsF[];
+};
+layout(std430, binding = 13) buffer buf_phiOut {
+  float phiOut[];
+};
+
+// kernel: navatala_cfd_phi_correct_boundary
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  int f = (counts[1] + int(int(gl_GlobalInvocationID.x)));
+  if ((f >= counts[0])) {
+    return;
+  } else {
+    int o = owner[f];
+    float po = pCell[o];
+    float other = po;
+    if ((bcMask[f] != 0)) {
+      other = bcVal[f];
+    }
+    float snGrad = (deltaCoeffs[f] * (other - po));
+    if ((bcSnGradMask[f] != 0)) {
+      snGrad = bcSnGrad[f];
+    }
+    float gradFace = (magSf[f] * snGrad);
+    phiOut[f] = (phiIn[f] - ((paramsF[0] * (coeff[f] * gradFace)) + faceFluxCorrection[f]));
+  }
+}

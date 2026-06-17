@@ -1,0 +1,74 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_vectors {
+  float vectors[];
+};
+layout(std430, binding = 1) readonly buffer buf_centroids {
+  float centroids[];
+};
+layout(std430, binding = 2) readonly buffer buf_n_vectors {
+  uint n_vectors[];
+};
+layout(std430, binding = 3) readonly buffer buf_n_lists {
+  uint n_lists[];
+};
+layout(std430, binding = 4) readonly buffer buf_dim {
+  uint dim[];
+};
+layout(std430, binding = 5) writeonly buffer buf_labels {
+  uint labels[];
+};
+
+// kernel: navatala_vector_search_assign_to_cluster_f32
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint gid = uint(int(gl_GlobalInvocationID.x));
+  uint nv = n_vectors[0];
+  uint nl = n_lists[0];
+  uint d = dim[0];
+  bool inBounds = (gid < nv);
+  if (inBounds) {
+    uint vec_base = (gid * d);
+    float best_dist = uintBitsToFloat(0x7f7fc99eu);
+    uint best_label = 0u;
+    for (int c = 0; c < int(nl); ++c) {
+      uint cent_base = (c * d);
+      float dist_acc = uintBitsToFloat(0x00000000u);
+      for (int k = 0; k < int(d); ++k) {
+        uint v_off = (vec_base + k);
+        uint c_off = (cent_base + k);
+        float v_val = vectors[v_off];
+        float c_val = centroids[c_off];
+        float diff = (v_val - c_val);
+        float sq = (diff * diff);
+        float old_da = dist_acc;
+        dist_acc = (old_da + sq);
+      }
+      float final_da = dist_acc;
+      float cur_best = best_dist;
+      bool better = (final_da < cur_best);
+      if (better) {
+        best_dist = final_da;
+        best_label = c;
+      }
+    }
+    uint final_label = best_label;
+    labels[gid] = final_label;
+  }
+}

@@ -1,0 +1,89 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include <metal_stdlib>
+using namespace metal;
+
+kernel void navatala_ml_spatial_batchnorm_f32(device const float* x [[buffer(0)]], device const float* gamma [[buffer(1)]], device const float* beta [[buffer(2)]], device const uint* N [[buffer(3)]], device const uint* C [[buffer(4)]], device const uint* HW [[buffer(5)]], device const float* eps [[buffer(6)]], device float* _output [[buffer(7)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
+  uint grp = ((uint)(int(__tgid.x)));
+  uint lid = ((uint)(int(__tid.x)));
+  threadgroup float sdata[256];
+  uint Nv = N[0];
+  uint Cv = C[0];
+  uint HWv = HW[0];
+  uint CHW = (Cv * HWv);
+  uint chBase = (grp * HWv);
+  uint countVal = (Nv * HWv);
+  float n = ((float)(countVal));
+  uint numIters = ((countVal + 255u) / 256u);
+  float epsVal = eps[0];
+  float gsM = as_type<float>(0x00000000u);
+  for (int itM = 0; itM < (int)(numIters); ++itM) {
+    if (((lid + (((uint)(itM)) * 256u)) < countVal)) {
+      gsM = (gsM + x[(((((lid + (((uint)(itM)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((uint)(itM)) * 256u)) % HWv))]);
+    }
+  }
+  sdata[lid] = gsM;
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  uint meanStr = 128u;
+  for (int redStep = 0; redStep < (int)(8); ++redStep) {
+    uint stride = meanStr;
+    if ((lid < stride)) {
+      float other = sdata[(lid + stride)];
+      float mine = sdata[lid];
+      float acc = (mine + other);
+      sdata[lid] = acc;
+    }
+    uint strideToHalve = meanStr;
+    uint nextStride = (strideToHalve >> 1u);
+    meanStr = nextStride;
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+  }
+  float mean = (sdata[0] / n);
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  float gsV = as_type<float>(0x00000000u);
+  for (int itV = 0; itV < (int)(numIters); ++itV) {
+    if (((lid + (((uint)(itV)) * 256u)) < countVal)) {
+      gsV = (gsV + ((x[(((((lid + (((uint)(itV)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((uint)(itV)) * 256u)) % HWv))] - mean) * (x[(((((lid + (((uint)(itV)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((uint)(itV)) * 256u)) % HWv))] - mean)));
+    }
+  }
+  sdata[lid] = gsV;
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  uint varStr = 128u;
+  for (int redStep = 0; redStep < (int)(8); ++redStep) {
+    uint stride = varStr;
+    if ((lid < stride)) {
+      float other = sdata[(lid + stride)];
+      float mine = sdata[lid];
+      float acc = (mine + other);
+      sdata[lid] = acc;
+    }
+    uint strideToHalve = varStr;
+    uint nextStride = (strideToHalve >> 1u);
+    varStr = nextStride;
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+  }
+  float var = (sdata[0] / n);
+  float denom = sqrt((var + epsVal));
+  for (int itW = 0; itW < (int)(numIters); ++itW) {
+    if (((lid + (((uint)(itW)) * 256u)) < countVal)) {
+      float gv = gamma[grp];
+      float bv = beta[grp];
+      float xv = x[(((((lid + (((uint)(itW)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((uint)(itW)) * 256u)) % HWv))];
+      float xn = ((xv - mean) / denom);
+      _output[(((((lid + (((uint)(itW)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((uint)(itW)) * 256u)) % HWv))] = ((gv * xn) + bv);
+    }
+  }
+}

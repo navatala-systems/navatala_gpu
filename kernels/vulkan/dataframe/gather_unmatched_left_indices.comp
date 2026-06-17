@@ -1,0 +1,48 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_leftMatched {
+  uint leftMatched[];
+};
+layout(std430, binding = 1) readonly buffer buf_leftRowCount {
+  uint leftRowCount[];
+};
+layout(std430, binding = 2) buffer buf_outputOffset {
+  uint outputOffset[];
+};
+layout(std430, binding = 3) writeonly buffer buf_unmatchedIndices {
+  uint unmatchedIndices[];
+};
+
+// kernel: navatala_dataframe_gather_unmatched_left_indices
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint gid = uint(int(gl_GlobalInvocationID.x));
+  uint n = leftRowCount[0u];
+  bool inBounds = (gid < n);
+  if (inBounds) {
+    uint wordIdx = (gid / 32u);
+    uint bitIdx = (gid % 32u);
+    uint word = leftMatched[wordIdx];
+    uint bit = ((word >> bitIdx) & 1u);
+    bool isMatched = (bit == 1u);
+    if ((isMatched == false)) {
+      unmatchedIndices[gid] = gid;
+    }
+  }
+}

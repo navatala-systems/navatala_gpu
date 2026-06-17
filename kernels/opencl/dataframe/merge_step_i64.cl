@@ -1,0 +1,45 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+__kernel void navatala_dataframe_merge_step_i64(__global const long* _input, __global const uint* count, __global const uint* blockSize, __global long* _output) {
+  int gid0 = (int)get_global_id(0);
+  uint gid = ((uint)((int)(get_global_id(0))));
+  uint n = count[(uint)(0u)];
+  uint bSize = blockSize[(uint)(0u)];
+  bool inBounds = (gid < n);
+  if (inBounds) {
+    uint mergeBlockSize = (bSize * (uint)(2u));
+    uint mergeBlockIdx = (gid / mergeBlockSize);
+    uint posInMerge = (gid % mergeBlockSize);
+    uint leftStart = (mergeBlockIdx * mergeBlockSize);
+    uint rightStart = (leftStart + bSize);
+    uint leftEnd = (((rightStart < n)) ? (rightStart) : (n));
+    uint rightEnd = ((((leftStart + mergeBlockSize) < n)) ? ((leftStart + mergeBlockSize)) : (n));
+    uint leftSize = (leftEnd - leftStart);
+    uint rightSize = (rightEnd - rightStart);
+    bool leftDone = (posInMerge >= leftSize);
+    uint leftIdx = (((posInMerge < leftSize)) ? (posInMerge) : ((leftSize - (uint)(1u))));
+    uint rightIdx = ((leftDone) ? ((posInMerge - leftSize)) : ((uint)(0u)));
+    uint absLeftIdx = (leftStart + leftIdx);
+    uint absRightIdx = (rightStart + rightIdx);
+    long leftVal = _input[absLeftIdx];
+    long rightVal = (((absRightIdx < rightEnd)) ? (_input[absRightIdx]) : (9223372036854775807));
+    bool rightExhausted = (absRightIdx >= rightEnd);
+    bool leftSmaller = (leftVal <= rightVal);
+    bool takeLeft = ((!leftDone) && (rightExhausted || leftSmaller));
+    long outVal = ((takeLeft) ? (leftVal) : (rightVal));
+    _output[gid] = outVal;
+  }
+}

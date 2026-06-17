@@ -1,0 +1,58 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include <hip/hip_runtime.h>
+template <typename T>
+__device__ inline T gpu_warp_reduce_sum(T v) {
+  for (int offset = warpSize / 2; offset > 0; offset >>= 1) {
+    v += __shfl_down(v, offset);
+  }
+  return v;
+}
+extern "C" __global__ void navatala_sparse_cg_fused_update_dot_f64(const double* p, const double* Ap, const double* z, const double* alpha, const unsigned int* n, double* x, double* r, double* rTzPartials) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  int lid = (int)(threadIdx.x);
+  int N = ((int)(n[0]));
+  double a = alpha[0];
+  double pi = (((gid < N)) ? (p[gid]) : (__longlong_as_double(0x0000000000000000ull)));
+  double api = (((gid < N)) ? (Ap[gid]) : (__longlong_as_double(0x0000000000000000ull)));
+  double zi = (((gid < N)) ? (z[gid]) : (__longlong_as_double(0x0000000000000000ull)));
+  if ((gid < N)) {
+    double xi = x[gid];
+    double ri = r[gid];
+    double xnew = (xi + (a * pi));
+    double rnew = (ri - (a * api));
+    x[gid] = xnew;
+    r[gid] = rnew;
+  }
+  double rz = ((r[gid] - (a * api)) * zi);
+  double warpSum = gpu_warp_reduce_sum(rz);
+  __shared__ double sdata[32];
+  int lane = (int)(threadIdx.x % warpSize);
+  if ((lane == 0)) {
+    int warpIdx = (lid / 32);
+    sdata[warpIdx] = warpSum;
+  }
+  __syncthreads();
+  if ((lid < 8)) {
+    double val = sdata[lid];
+    double finalSum = gpu_warp_reduce_sum(val);
+    if ((lid == 0)) {
+      int grpId = (int)(blockIdx.x);
+      rTzPartials[grpId] = finalSum;
+    }
+  }
+}

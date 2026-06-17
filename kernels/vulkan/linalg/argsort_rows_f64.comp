@@ -1,0 +1,99 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_A {
+  double A[];
+};
+layout(std430, binding = 1) readonly buffer buf_m {
+  uint m[];
+};
+layout(std430, binding = 2) readonly buffer buf_n {
+  uint n[];
+};
+layout(std430, binding = 3) writeonly buffer buf__out {
+  uint _out[];
+};
+
+shared double svals[256];
+shared uint sidxs[256];
+
+// kernel: navatala_linalg_argsort_rows_f64
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint gid = uint(int(gl_GlobalInvocationID.x));
+  uint loopMyParity = 0u;
+  bool loopParityMatch = false;
+  bool loopHasPartner = false;
+  bool loopShouldCompare = false;
+  double loopMyVal = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
+  uint loopMyIdx = 0u;
+  uint loopPartnerPos = 0u;
+  double loopPartnerVal = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
+  uint loopPartnerIdx = 0u;
+  uint rowIdx = uint(int(gl_WorkGroupID.x));
+  uint colIdx = uint(int(gl_LocalInvocationID.x));
+  uint mVal = m[0u];
+  uint nVal = n[0u];
+  if ((rowIdx < mVal)) {
+    bool inBounds = (colIdx < nVal);
+    uint linearIdx = ((rowIdx * nVal) + colIdx);
+    if (inBounds) {
+      double val = A[linearIdx];
+      svals[colIdx] = val;
+      sidxs[colIdx] = colIdx;
+    } else {
+      svals[colIdx] = packDouble2x32(uvec2(0xffffffffu, 0x7fefffffu));
+      sidxs[colIdx] = colIdx;
+    }
+    barrier();
+    for (int phase = 0; phase < int(nVal); ++phase) {
+      uint phaseU32 = uint(phase);
+      loopMyParity = (colIdx % 2u);
+      uint myParityVal = loopMyParity;
+      loopParityMatch = (myParityVal == (phaseU32 % 2u));
+      bool parityMatchVal = loopParityMatch;
+      loopHasPartner = ((colIdx + 1u) < nVal);
+      bool hasPartnerVal = loopHasPartner;
+      loopShouldCompare = ((inBounds && parityMatchVal) && hasPartnerVal);
+      bool shouldCompareVal = loopShouldCompare;
+      if (shouldCompareVal) {
+        loopMyVal = svals[colIdx];
+        double myValRead = loopMyVal;
+        loopMyIdx = sidxs[colIdx];
+        uint myIdxRead = loopMyIdx;
+        loopPartnerPos = (colIdx + 1u);
+        uint partnerPosVal = loopPartnerPos;
+        loopPartnerVal = svals[partnerPosVal];
+        double partnerValRead = loopPartnerVal;
+        loopPartnerIdx = sidxs[partnerPosVal];
+        uint partnerIdxRead = loopPartnerIdx;
+        if ((myValRead > partnerValRead)) {
+          svals[colIdx] = partnerValRead;
+          sidxs[colIdx] = partnerIdxRead;
+          svals[partnerPosVal] = myValRead;
+          sidxs[partnerPosVal] = myIdxRead;
+        }
+      }
+      barrier();
+    }
+    if (inBounds) {
+      uint sortedIdx = sidxs[colIdx];
+      _out[linearIdx] = sortedIdx;
+    }
+  }
+}

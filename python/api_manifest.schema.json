@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "navatala_gpu Python API manifest",
+  "type": "object",
+  "required": ["abiVersion", "packageName", "bindings", "generatedBy"],
+  "properties": {
+    "abiVersion": { "type": "integer", "minimum": 1 },
+    "packageName": { "type": "string" },
+    "generatedBy": { "type": "string" },
+    "bindings": { "type": "array" }
+  }
+}

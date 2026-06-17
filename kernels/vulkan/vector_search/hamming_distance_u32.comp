@@ -1,0 +1,74 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_x {
+  uint x[];
+};
+layout(std430, binding = 1) readonly buffer buf_y {
+  uint y[];
+};
+layout(std430, binding = 2) readonly buffer buf_n_x {
+  uint n_x[];
+};
+layout(std430, binding = 3) readonly buffer buf_n_y {
+  uint n_y[];
+};
+layout(std430, binding = 4) readonly buffer buf_dim_words {
+  uint dim_words[];
+};
+layout(std430, binding = 5) writeonly buffer buf_dist {
+  uint dist[];
+};
+
+// kernel: navatala_vector_search_hamming_distance_u32
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint gid_x = uint(int(gl_GlobalInvocationID.x));
+  uint gid_y = uint(int(gl_GlobalInvocationID.y));
+  uint nx = n_x[0];
+  uint ny = n_y[0];
+  uint dw = dim_words[0];
+  bool in_x = (gid_x < nx);
+  bool in_y = (gid_y < ny);
+  bool inBounds = (in_x && in_y);
+  if (inBounds) {
+    uint count = 0u;
+    for (int k = 0; k < int(dw); ++k) {
+      uint x_idx = ((gid_x * dw) + k);
+      uint y_idx = ((gid_y * dw) + k);
+      uint x_val = x[x_idx];
+      uint y_val = y[y_idx];
+      uint xor_val = (x_val ^ y_val);
+      uint v0 = xor_val;
+      uint m1 = 1431655765u;
+      uint m2 = 858993459u;
+      uint m4 = 252645135u;
+      uint v1 = (v0 - ((v0 >> 1u) & m1));
+      uint v2 = ((v1 & m2) + ((v1 >> 2u) & m2));
+      uint v3 = ((v2 + (v2 >> 4u)) & m4);
+      uint v4 = (v3 + (v3 >> 8u));
+      uint v5 = (v4 + (v4 >> 16u));
+      uint popcount = (v5 & 63u);
+      uint old_count = count;
+      count = (old_count + popcount);
+    }
+    uint result = count;
+    uint out_idx = ((gid_x * ny) + gid_y);
+    dist[out_idx] = result;
+  }
+}

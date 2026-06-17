@@ -1,0 +1,116 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+__kernel void navatala_cfd_vof_mules_init(__global const float* alpha, __global const float* alphaF, __global const float* phiBD, __global const float* phiCorr, __global const int* offsets, __global const int* faceIdx, __global const float* sign, __global const int* owner, __global const int* nei, __global const float* vol, __global const int* counts, __global const float* paramsF, __global const float* rSubDeltaT, __global float* psiMaxCap, __global float* psiMinCap, __global float* sumPhip, __global float* mSumPhim) {
+  int gid0 = (int)get_global_id(0);
+  const int nSafeMax = max(counts[0] - 1, 0);
+  const int safeIdx = min(gid0, nSafeMax);
+  if (gid0 >= counts[0]) return;
+  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+    return;
+  } else {
+    float psi = alpha[((int)((int)(get_global_id(0))))];
+    if ((psi < as_float(0x00000000u))) {
+      psi = as_float(0x00000000u);
+    }
+    if ((psi > as_float(0x3f800000u))) {
+      psi = as_float(0x3f800000u);
+    }
+    float maxN = as_float(0x00000000u);
+    float minN = as_float(0x3f800000u);
+    float sumPhiBD = as_float(0x00000000u);
+    float sp = as_float(0x00000000u);
+    float sm = as_float(0x00000000u);
+    int beg = offsets[((int)((int)(get_global_id(0))))];
+    int c1 = (((int)((int)(get_global_id(0)))) + 1);
+    int end = offsets[c1];
+    int len = (end - beg);
+    for (int t = 0; t < (int)(len); ++t) {
+      int k = (beg + t);
+      int f = faceIdx[k];
+      float s = sign[k];
+      float v = as_float(0x00000000u);
+      if ((f < counts[2])) {
+        int nbr = owner[f];
+        if ((s > as_float(0x00000000u))) {
+          nbr = nei[f];
+        }
+        v = alpha[nbr];
+      } else {
+        v = alphaF[f];
+      }
+      if ((v < as_float(0x00000000u))) {
+        v = as_float(0x00000000u);
+      }
+      if ((v > as_float(0x3f800000u))) {
+        v = as_float(0x3f800000u);
+      }
+      if ((v > maxN)) {
+        maxN = v;
+      }
+      if ((v < minN)) {
+        minN = v;
+      }
+      float termBD = (s * phiBD[f]);
+      sumPhiBD = (sumPhiBD + termBD);
+      float pc = phiCorr[f];
+      if ((f < counts[2])) {
+        if ((s > as_float(0x00000000u))) {
+          if ((pc > as_float(0x00000000u))) {
+            sp = (sp + pc);
+          } else {
+            sm = (sm + (-pc));
+          }
+        } else {
+          if ((pc > as_float(0x00000000u))) {
+            sm = (sm + pc);
+          } else {
+            sp = (sp + (-pc));
+          }
+        }
+      } else {
+        if ((pc > as_float(0x00000000u))) {
+          sp = (sp + pc);
+        } else {
+          sm = (sm + (-pc));
+        }
+      }
+    }
+    maxN = (maxN + paramsF[2]);
+    if ((maxN > as_float(0x3f800000u))) {
+      maxN = as_float(0x3f800000u);
+    }
+    minN = (minN - paramsF[2]);
+    if ((minN < as_float(0x00000000u))) {
+      minN = as_float(0x00000000u);
+    }
+    if ((paramsF[3] > as_float(0x00000000u))) {
+      float omSmooth = (as_float(0x3f800000u) - paramsF[3]);
+      maxN = ((paramsF[3] * psi) + (omSmooth * maxN));
+      if ((maxN > as_float(0x3f800000u))) {
+        maxN = as_float(0x3f800000u);
+      }
+      minN = ((paramsF[3] * psi) + (omSmooth * minN));
+      if ((minN < as_float(0x00000000u))) {
+        minN = as_float(0x00000000u);
+      }
+    }
+    sumPhip[((int)((int)(get_global_id(0))))] = sp;
+    mSumPhim[((int)((int)(get_global_id(0))))] = sm;
+    float V = vol[((int)((int)(get_global_id(0))))];
+    psiMaxCap[((int)((int)(get_global_id(0))))] = (((V * rSubDeltaT[((int)((int)(get_global_id(0))))]) * (maxN - psi)) + sumPhiBD);
+    psiMinCap[((int)((int)(get_global_id(0))))] = (((V * rSubDeltaT[((int)((int)(get_global_id(0))))]) * (psi - minN)) - sumPhiBD);
+  }
+}

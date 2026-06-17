@@ -1,0 +1,100 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_Y {
+  float Y[];
+};
+layout(std430, binding = 1) readonly buffer buf_nPoints {
+  uint nPoints[];
+};
+layout(std430, binding = 2) readonly buffer buf_outputDims {
+  uint outputDims[];
+};
+layout(std430, binding = 3) writeonly buffer buf_Q {
+  float Q[];
+};
+layout(std430, binding = 4) buffer buf_sumQ {
+  float sumQ[];
+};
+
+shared float sdata[256];
+
+// kernel: navatala_ml_compute_q_distribution_f32
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint gid = uint(int(gl_GlobalInvocationID.x));
+  uint lid = uint(int(gl_LocalInvocationID.x));
+  uint n = nPoints[0];
+  uint d = outputDims[0];
+  uint totalPairs = (n * n);
+  bool inBounds = (gid < totalPairs);
+  float localQ = uintBitsToFloat(0x00000000u);
+  if (inBounds) {
+    uint i = (gid / n);
+    uint j = (gid % n);
+    uint baseI = (i * d);
+    uint baseJ = (j * d);
+    float distSqAccum = uintBitsToFloat(0x00000000u);
+    for (int k = 0; k < int(d); ++k) {
+      uint kU32 = uint(k);
+      uint idxI = (baseI + kU32);
+      uint idxJ = (baseJ + kU32);
+      float yi_k = Y[idxI];
+      float yj_k = Y[idxJ];
+      float diff = (yi_k - yj_k);
+      float diffSq = (diff * diff);
+      float currentDistSq = distSqAccum;
+      float newDistSq = (currentDistSq + diffSq);
+      distSqAccum = newDistSq;
+    }
+    float distSq = distSqAccum;
+    bool isDiag = (i == j);
+    float onePlusDistSq = (uintBitsToFloat(0x3f800000u) + distSq);
+    float qVal = (uintBitsToFloat(0x3f800000u) / onePlusDistSq);
+    if (isDiag) {
+      Q[gid] = uintBitsToFloat(0x00000000u);
+      sdata[lid] = uintBitsToFloat(0x00000000u);
+    } else {
+      Q[gid] = qVal;
+      sdata[lid] = qVal;
+    }
+  } else {
+    sdata[lid] = uintBitsToFloat(0x00000000u);
+  }
+  barrier();
+  uint qF32ReductionStride = 128u;
+  for (int qF32ReductionStep = 0; qF32ReductionStep < int(8); ++qF32ReductionStep) {
+    uint qF32Stride = qF32ReductionStride;
+    if ((lid < qF32Stride)) {
+      float qF32Other = sdata[(lid + qF32Stride)];
+      float qF32Mine = sdata[lid];
+      float qF32Sum = (qF32Mine + qF32Other);
+      sdata[lid] = qF32Sum;
+    }
+    uint qF32StrideToHalve = qF32ReductionStride;
+    uint qF32NextStride = (qF32StrideToHalve >> 1u);
+    qF32ReductionStride = qF32NextStride;
+    barrier();
+  }
+  if ((lid == 0u)) {
+    float partialSum = sdata[0];
+    float oldSum = sumQ[0];
+    float newSum = (oldSum + partialSum);
+    sumQ[0] = newSum;
+  }
+}

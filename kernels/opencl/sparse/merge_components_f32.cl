@@ -1,0 +1,36 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+__kernel void navatala_sparse_merge_components_f32(__global const uint* srcNodes, __global const uint* dstNodes, __global const uint* minEdgeIdx, __global const uint* numNodes, __global uint* components, __global bool* mstEdges) {
+  int gid0 = (int)get_global_id(0);
+  uint nodeId = ((uint)((int)(get_global_id(0))));
+  if ((nodeId < numNodes[(uint)(0u)])) {
+    uint comp = components[nodeId];
+    if ((comp == nodeId)) {
+      uint edgeIdx = minEdgeIdx[nodeId];
+      if ((edgeIdx != (uint)(4294967295u))) {
+        uint src = srcNodes[edgeIdx];
+        uint dst = dstNodes[edgeIdx];
+        uint dstComp = components[dst];
+        if ((nodeId != dstComp)) {
+          uint smaller = (((nodeId < dstComp)) ? (nodeId) : (dstComp));
+          uint larger = (((nodeId < dstComp)) ? (dstComp) : (nodeId));
+          atomic_min(&components[larger], smaller);
+          mstEdges[edgeIdx] = true;
+        }
+      }
+    }
+  }
+}

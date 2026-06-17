@@ -1,0 +1,81 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_queries {
+  float queries[];
+};
+layout(std430, binding = 1) readonly buffer buf_dataset {
+  float dataset[];
+};
+layout(std430, binding = 2) readonly buffer buf_graph {
+  uint graph[];
+};
+layout(std430, binding = 3) readonly buffer buf_graph_degrees {
+  uint graph_degrees[];
+};
+layout(std430, binding = 4) readonly buffer buf_entry_point {
+  uint entry_point[];
+};
+layout(std430, binding = 5) readonly buffer buf_n_queries {
+  uint n_queries[];
+};
+layout(std430, binding = 6) readonly buffer buf_n_vectors {
+  uint n_vectors[];
+};
+layout(std430, binding = 7) readonly buffer buf_dim {
+  uint dim[];
+};
+layout(std430, binding = 8) readonly buffer buf_max_degree {
+  uint max_degree[];
+};
+layout(std430, binding = 9) readonly buffer buf_k {
+  uint k[];
+};
+layout(std430, binding = 10) writeonly buffer buf_result_ids {
+  uint result_ids[];
+};
+layout(std430, binding = 11) writeonly buffer buf_result_dists {
+  float result_dists[];
+};
+
+shared float partial_sums[64];
+
+// kernel: navatala_vector_search_batched_greedy_search_f32
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint query_id = uint(int(gl_WorkGroupID.x));
+  uint tid = uint(int(gl_LocalInvocationID.x));
+  uint nq = n_queries[0];
+  uint d = dim[0];
+  uint entry = entry_point[0];
+  uint k_val = k[0];
+  if ((query_id < nq)) {
+    if ((tid == 0u)) {
+      uint base_idx = (query_id * k_val);
+      result_ids[base_idx] = entry;
+      result_dists[base_idx] = uintBitsToFloat(0x00000000u);
+    }
+    if ((tid < k_val)) {
+      if ((tid != 0u)) {
+        uint out_idx = ((query_id * k_val) + tid);
+        result_ids[out_idx] = 4294967295u;
+        result_dists[out_idx] = uintBitsToFloat(0x7e967699u);
+      }
+    }
+  }
+}

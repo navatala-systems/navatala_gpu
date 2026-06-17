@@ -1,0 +1,32 @@
+/**
+\page kernel_catalog Kernel Catalog
+
+The kernel catalog is described by \c kernels/manifest.json — the
+authoritative machine-readable index covering kernel names, argument
+metadata, backend availability, launch defaults, and capability
+requirements.
+
+\section kernel_catalog_domains Domains
+
+- Algebraic multigrid: 16 kernels
+- BLAS / dense linear algebra: 2 kernels
+- Distributed communication: 20 kernels
+- Linear solvers: 409 kernels
+- Miscellaneous: 1398 kernels
+- Neural / spectral operators: 12 kernels
+- Parallel primitives: 14 kernels
+- Sparse linear algebra: 52 kernels
+- Volume-of-Fluid CFD: 157 kernels
+
+\section kernel_catalog_usage Usage
+
+Application code should prefer the stable wrapper APIs or the host
+registry over direct per-file source parsing. The raw kernel files are
+still useful for inspection, debugging, or porting to a new backend.
+
+\section kernel_catalog_limitations Limitations
+
+Backend coverage is not uniform. See \c docs/BACKEND_COVERAGE.md for
+the current matrix and \c docs/KERNEL_INDEX.md for the domain index.
+Numerical validation is tracked separately from source coverage.
+*/

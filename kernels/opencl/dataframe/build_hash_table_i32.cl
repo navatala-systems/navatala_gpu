@@ -1,0 +1,54 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+static inline int gpu_atomic_cas_int(volatile __global atomic_int* ptr, int expected, int desired,
+    memory_order success, memory_order failure, memory_scope scope) {
+  int exp = expected;
+  atomic_compare_exchange_strong_explicit(ptr, &exp, desired, success, failure, scope);
+  return exp;
+}
+__kernel void navatala_dataframe_build_hash_table_i32(__global const int* keys, __global const uint* validity, __global const uint* hashes, __global const uint* count, __global const uint* tableSize, __global int* tableKeys, __global uint* tableRowIds) {
+  int gid0 = (int)get_global_id(0);
+  uint gid = ((uint)((int)(get_global_id(0))));
+  uint n = count[(uint)(0u)];
+  uint tSize = tableSize[(uint)(0u)];
+  bool inBounds = (gid < n);
+  if (inBounds) {
+    uint wordIdx = (gid / (uint)(32u));
+    uint bitIdx = (gid % (uint)(32u));
+    uint validWord = validity[wordIdx];
+    uint validBit = ((validWord >> bitIdx) & (uint)(1u));
+    bool isValid = (validBit == (uint)(1u));
+    if (isValid) {
+      int key = keys[gid];
+      uint startIdx = hashes[gid];
+      uint probeIdx = startIdx;
+      bool inserted = false;
+      for (int __iter = 0; __iter < 65536; ++__iter) {
+        if (!((!inserted))) break;
+        uint curIdx = probeIdx;
+        int oldKey = gpu_atomic_cas_int((volatile __global atomic_int*)(&(tableKeys[curIdx])), (int)(2147483647), (int)(key), memory_order_relaxed, memory_order_relaxed, memory_scope_device);
+        bool gotSlot = (oldKey == 2147483647);
+        if (gotSlot) {
+          tableRowIds[curIdx] = gid;
+          inserted = true;
+        } else {
+          uint nextIdx = ((curIdx + (uint)(1u)) % tSize);
+          probeIdx = nextIdx;
+        }
+      }
+    }
+  }
+}

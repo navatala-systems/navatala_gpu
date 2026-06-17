@@ -1,0 +1,62 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_predictions {
+  float predictions[];
+};
+layout(std430, binding = 1) readonly buffer buf_targets {
+  float targets[];
+};
+layout(std430, binding = 2) readonly buffer buf_popSize {
+  uint popSize[];
+};
+layout(std430, binding = 3) readonly buffer buf_nSamples {
+  uint nSamples[];
+};
+layout(std430, binding = 4) writeonly buffer buf_fitness {
+  float fitness[];
+};
+
+// kernel: navatala_ml_evaluate_fitness_f32
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint gid = uint(int(gl_GlobalInvocationID.x));
+  uint popSizeVal = popSize[0];
+  uint nSamplesVal = nSamples[0];
+  bool inBounds = (gid < popSizeVal);
+  if (inBounds) {
+    uint baseIdx = (gid * nSamplesVal);
+    float mseAccum = uintBitsToFloat(0x00000000u);
+    int nSamplesI32 = int(nSamplesVal);
+    for (int j = 0; j < int(nSamplesI32); ++j) {
+      uint jU32 = uint(j);
+      uint predIdx = (baseIdx + jU32);
+      float pred = predictions[predIdx];
+      float target = targets[jU32];
+      float diff = (pred - target);
+      float sqErr = (diff * diff);
+      float currAccum = mseAccum;
+      float newAccum = (currAccum + sqErr);
+      mseAccum = newAccum;
+    }
+    float finalSum = mseAccum;
+    float nSamplesF32 = float(nSamplesVal);
+    float mse = (finalSum / nSamplesF32);
+    fitness[gid] = mse;
+  }
+}

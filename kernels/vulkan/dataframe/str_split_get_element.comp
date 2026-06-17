@@ -1,0 +1,93 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_offsets {
+  int offsets[];
+};
+layout(std430, binding = 1) readonly buffer buf_chars {
+  int chars[];
+};
+layout(std430, binding = 2) readonly buffer buf_validity {
+  uint validity[];
+};
+layout(std430, binding = 3) readonly buffer buf_delimChar {
+  int delimChar[];
+};
+layout(std430, binding = 4) readonly buffer buf_elementIdx {
+  int elementIdx[];
+};
+layout(std430, binding = 5) readonly buffer buf_count {
+  uint count[];
+};
+layout(std430, binding = 6) writeonly buffer buf_elementStart {
+  int elementStart[];
+};
+layout(std430, binding = 7) writeonly buffer buf_elementEnd {
+  int elementEnd[];
+};
+layout(std430, binding = 8) buffer buf_outputValid {
+  uint outputValid[];
+};
+
+// kernel: navatala_dataframe_str_split_get_element
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint gid = uint(int(gl_GlobalInvocationID.x));
+  uint n = count[0u];
+  int delim = delimChar[0u];
+  int elemIdx = elementIdx[0u];
+  bool inBounds = (gid < n);
+  if (inBounds) {
+    uint wordIdx = (gid / 32u);
+    uint bitIdx = (gid % 32u);
+    uint validWord = validity[wordIdx];
+    uint validBit = ((validWord >> bitIdx) & 1u);
+    bool isValid = (validBit == 1u);
+    int startOffset = offsets[gid];
+    uint nextIdx = (gid + 1u);
+    int endOffset = offsets[nextIdx];
+    int length = (endOffset - startOffset);
+    bool wantsFirst = (elemIdx == 0);
+    uint idx0 = uint(startOffset);
+    uint idx1 = (idx0 + 1u);
+    uint idx2 = (idx0 + 2u);
+    uint idx3 = (idx0 + 3u);
+    int c0 = (((length >= 1)) ? (chars[idx0]) : (0));
+    int c1 = (((length >= 2)) ? (chars[idx1]) : (0));
+    int c2 = (((length >= 3)) ? (chars[idx2]) : (0));
+    int c3 = (((length >= 4)) ? (chars[idx3]) : (0));
+    bool isDelim0 = (c0 == delim);
+    bool isDelim1 = (c1 == delim);
+    bool isDelim2 = (c2 == delim);
+    bool isDelim3 = (c3 == delim);
+    int firstDelimPos = ((isDelim0) ? (0) : (((isDelim1) ? (1) : (((isDelim2) ? (2) : (((isDelim3) ? (3) : (-1))))))));
+    bool hasDelim = (firstDelimPos != -1);
+    int elem0Start = startOffset;
+    int elem0End = ((hasDelim) ? ((startOffset + firstDelimPos)) : (endOffset));
+    int elem1Start = ((hasDelim) ? ((elem0End + 1)) : (-1));
+    int elem1End = ((hasDelim) ? (endOffset) : (-1));
+    int elemStart = ((wantsFirst) ? (elem0Start) : (elem1Start));
+    int elemEnd = ((wantsFirst) ? (elem0End) : (elem1End));
+    int outStart = ((isValid) ? (elemStart) : (-1));
+    int outEnd = ((isValid) ? (elemEnd) : (-1));
+    elementStart[gid] = outStart;
+    elementEnd[gid] = outEnd;
+    uint outBit = (validBit << bitIdx);
+    atomicOr(outputValid[wordIdx], outBit);
+  }
+}

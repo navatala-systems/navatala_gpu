@@ -1,0 +1,80 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include <cuda_runtime.h>
+extern "C" __global__ void navatala_dataframe_arg_top_k_per_row_f32(const float* values, const unsigned int* q, const unsigned int* n, const unsigned int* k, unsigned int* outIndices) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
+  unsigned int qVal = q[0];
+  unsigned int nVal = n[0];
+  unsigned int kVal = k[0];
+  unsigned int rowIdx = gid;
+  bool inBounds = (rowIdx < qVal);
+  if (inBounds) {
+    unsigned int inBase = (rowIdx * nVal);
+    unsigned int outBase = (rowIdx * kVal);
+    float topKVal0 = __uint_as_float(0x7f7fc99eu);
+    for (int initIdx = 0; initIdx < (int)(kVal); ++initIdx) {
+      unsigned int initIdxU32 = ((unsigned int)(initIdx));
+      unsigned int outIdx = (outBase + initIdxU32);
+      outIndices[outIdx] = 4294967295u;
+    }
+    for (int col = 0; col < (int)(nVal); ++col) {
+      unsigned int colU32 = ((unsigned int)(col));
+      unsigned int inIdx = (inBase + colU32);
+      float val = values[inIdx];
+      unsigned int lastIdx = (kVal - 1u);
+      unsigned int lastOutIdx = (outBase + lastIdx);
+      unsigned int kthIdx = outIndices[lastOutIdx];
+      bool kthIdxValid = (kthIdx != 4294967295u);
+      unsigned int kthInIdx = (inBase + kthIdx);
+      float kthValIfValid = values[kthInIdx];
+      float kthVal = ((kthIdxValid) ? (kthValIfValid) : (__uint_as_float(0x7f7fc99eu)));
+      bool shouldInsert = (val < kthVal);
+      if (shouldInsert) {
+        unsigned int insertPosAccum = lastIdx;
+        for (int scanIdx = 0; scanIdx < (int)(kVal); ++scanIdx) {
+          unsigned int scanIdxU32 = ((unsigned int)(scanIdx));
+          unsigned int currentInsertPos = insertPosAccum;
+          unsigned int checkPos = (lastIdx - scanIdxU32);
+          unsigned int checkOutIdx = (outBase + checkPos);
+          unsigned int checkIdx = outIndices[checkOutIdx];
+          bool checkIdxValid = (checkIdx != 4294967295u);
+          unsigned int checkInIdx = (inBase + checkIdx);
+          float checkValIfValid = values[checkInIdx];
+          float checkVal = ((checkIdxValid) ? (checkValIfValid) : (__uint_as_float(0x7f7fc99eu)));
+          bool isSmaller = (val < checkVal);
+          unsigned int newInsertPos = ((isSmaller) ? (checkPos) : (currentInsertPos));
+          insertPosAccum = newInsertPos;
+        }
+        unsigned int finalInsertPos = insertPosAccum;
+        for (int shiftIdx = 0; shiftIdx < (int)(kVal); ++shiftIdx) {
+          unsigned int shiftIdxU32 = ((unsigned int)(shiftIdx));
+          unsigned int shiftPos = (lastIdx - shiftIdxU32);
+          bool shouldShift = (shiftPos > finalInsertPos);
+          if (shouldShift) {
+            unsigned int srcPos = (shiftPos - 1u);
+            unsigned int srcOutIdx = (outBase + srcPos);
+            unsigned int dstOutIdx = (outBase + shiftPos);
+            unsigned int srcIdx = outIndices[srcOutIdx];
+            outIndices[dstOutIdx] = srcIdx;
+          }
+        }
+        unsigned int insertOutIdx = (outBase + finalInsertPos);
+        outIndices[insertOutIdx] = colU32;
+      }
+    }
+  }
+}

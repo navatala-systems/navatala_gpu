@@ -1,0 +1,115 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_k {
+  float k[];
+};
+layout(std430, binding = 1) readonly buffer buf_omega {
+  float omega[];
+};
+layout(std430, binding = 2) readonly buffer buf_nut {
+  float nut[];
+};
+layout(std430, binding = 3) readonly buffer buf_nu {
+  float nu[];
+};
+layout(std430, binding = 4) readonly buffer buf_y {
+  float y[];
+};
+layout(std430, binding = 5) readonly buffer buf_gradKx {
+  float gradKx[];
+};
+layout(std430, binding = 6) readonly buffer buf_gradKy {
+  float gradKy[];
+};
+layout(std430, binding = 7) readonly buffer buf_gradKz {
+  float gradKz[];
+};
+layout(std430, binding = 8) readonly buffer buf_gradOmegax {
+  float gradOmegax[];
+};
+layout(std430, binding = 9) readonly buffer buf_gradOmegay {
+  float gradOmegay[];
+};
+layout(std430, binding = 10) readonly buffer buf_gradOmegaz {
+  float gradOmegaz[];
+};
+layout(std430, binding = 11) readonly buffer buf_counts {
+  int counts[];
+};
+layout(std430, binding = 12) writeonly buffer buf_outF1 {
+  float outF1[];
+};
+layout(std430, binding = 13) writeonly buffer buf_outF23 {
+  float outF23[];
+};
+layout(std430, binding = 14) writeonly buffer buf_outCDkOmega {
+  float outCDkOmega[];
+};
+
+// kernel: navatala_cfd_k_omega_s_s_t_blending
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  if ((int(int(gl_GlobalInvocationID.x)) >= counts[0])) {
+    return;
+  } else {
+    float kC = k[int(int(gl_GlobalInvocationID.x))];
+    float omC = omega[int(int(gl_GlobalInvocationID.x))];
+    float nutC = nut[int(int(gl_GlobalInvocationID.x))];
+    float nuC = nu[int(int(gl_GlobalInvocationID.x))];
+    float yC = y[int(int(gl_GlobalInvocationID.x))];
+    float gKx = gradKx[int(int(gl_GlobalInvocationID.x))];
+    float gKy = gradKy[int(int(gl_GlobalInvocationID.x))];
+    float gKz = gradKz[int(int(gl_GlobalInvocationID.x))];
+    float gOx = gradOmegax[int(int(gl_GlobalInvocationID.x))];
+    float gOy = gradOmegay[int(int(gl_GlobalInvocationID.x))];
+    float gOz = gradOmegaz[int(int(gl_GlobalInvocationID.x))];
+    float dotGrad = (((gKx * gOx) + (gKy * gOy)) + (gKz * gOz));
+    float omSafe = (((omC > uintBitsToFloat(0x2edbe6ffu))) ? (omC) : (uintBitsToFloat(0x2edbe6ffu)));
+    float cdkw = ((uintBitsToFloat(0x3fdb22d1u) * dotGrad) / omSafe);
+    float cdkwPlus = (((cdkw > uintBitsToFloat(0x2edbe6ffu))) ? (cdkw) : (uintBitsToFloat(0x2edbe6ffu)));
+    float ySq = (yC * yC);
+    float ySqSafe = (((ySq > uintBitsToFloat(0x1e3ce508u))) ? (ySq) : (uintBitsToFloat(0x1e3ce508u)));
+    float kSafe = (((kC > uintBitsToFloat(0x00000000u))) ? (kC) : (uintBitsToFloat(0x00000000u)));
+    float sqrtK = sqrt(kSafe);
+    float denom1 = (uintBitsToFloat(0x3db851ecu) * (omSafe * yC));
+    float denom1Safe = (((denom1 > uintBitsToFloat(0x2edbe6ffu))) ? (denom1) : (uintBitsToFloat(0x2edbe6ffu)));
+    float term1 = (sqrtK / denom1Safe);
+    float denom2 = (ySqSafe * omSafe);
+    float term2 = ((uintBitsToFloat(0x43fa0000u) * nuC) / denom2);
+    float maxT12 = (((term1 >= term2)) ? (term1) : (term2));
+    float denom3 = (cdkwPlus * ySqSafe);
+    float denom3Safe = (((denom3 > uintBitsToFloat(0x2edbe6ffu))) ? (denom3) : (uintBitsToFloat(0x2edbe6ffu)));
+    float term3 = ((uintBitsToFloat(0x405b22d1u) * kC) / denom3Safe);
+    float minT3 = (((maxT12 <= term3)) ? (maxT12) : (term3));
+    float arg1 = (((minT3 <= uintBitsToFloat(0x41200000u))) ? (minT3) : (uintBitsToFloat(0x41200000u)));
+    float arg1sq = (arg1 * arg1);
+    float arg1p4 = (arg1sq * arg1sq);
+    float arg1p4Safe = (((arg1p4 <= uintBitsToFloat(0x42200000u))) ? (arg1p4) : (uintBitsToFloat(0x42200000u)));
+    float f1Val = tanh(arg1p4Safe);
+    float term2a = ((uintBitsToFloat(0x40000000u) * sqrtK) / denom1Safe);
+    float maxF2 = (((term2a >= term2)) ? (term2a) : (term2));
+    float arg2 = (((maxF2 <= uintBitsToFloat(0x42c80000u))) ? (maxF2) : (uintBitsToFloat(0x42c80000u)));
+    float arg2sq = (arg2 * arg2);
+    float arg2sqSafe = (((arg2sq <= uintBitsToFloat(0x42200000u))) ? (arg2sq) : (uintBitsToFloat(0x42200000u)));
+    float f23Val = tanh(arg2sqSafe);
+    outF1[int(int(gl_GlobalInvocationID.x))] = f1Val;
+    outF23[int(int(gl_GlobalInvocationID.x))] = f23Val;
+    outCDkOmega[int(int(gl_GlobalInvocationID.x))] = cdkw;
+  }
+}

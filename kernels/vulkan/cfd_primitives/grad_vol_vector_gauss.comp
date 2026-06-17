@@ -1,0 +1,189 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_cellUx {
+  float cellUx[];
+};
+layout(std430, binding = 1) readonly buffer buf_cellUy {
+  float cellUy[];
+};
+layout(std430, binding = 2) readonly buffer buf_cellUz {
+  float cellUz[];
+};
+layout(std430, binding = 3) readonly buffer buf_bcX {
+  float bcX[];
+};
+layout(std430, binding = 4) readonly buffer buf_bcY {
+  float bcY[];
+};
+layout(std430, binding = 5) readonly buffer buf_bcZ {
+  float bcZ[];
+};
+layout(std430, binding = 6) readonly buffer buf_bcMask {
+  uint bcMask[];
+};
+layout(std430, binding = 7) readonly buffer buf_owner {
+  int owner[];
+};
+layout(std430, binding = 8) readonly buffer buf_neighbour {
+  int neighbour[];
+};
+layout(std430, binding = 9) readonly buffer buf_weights {
+  float weights[];
+};
+layout(std430, binding = 10) readonly buffer buf_sfX {
+  float sfX[];
+};
+layout(std430, binding = 11) readonly buffer buf_sfY {
+  float sfY[];
+};
+layout(std430, binding = 12) readonly buffer buf_sfZ {
+  float sfZ[];
+};
+layout(std430, binding = 13) readonly buffer buf_offsets {
+  int offsets[];
+};
+layout(std430, binding = 14) readonly buffer buf_faceIdx {
+  int faceIdx[];
+};
+layout(std430, binding = 15) readonly buffer buf_sign {
+  float sign[];
+};
+layout(std430, binding = 16) readonly buffer buf_vol {
+  float vol[];
+};
+layout(std430, binding = 17) readonly buffer buf_params {
+  int params[];
+};
+layout(std430, binding = 18) writeonly buffer buf_outXX {
+  float outXX[];
+};
+layout(std430, binding = 19) writeonly buffer buf_outXY {
+  float outXY[];
+};
+layout(std430, binding = 20) writeonly buffer buf_outXZ {
+  float outXZ[];
+};
+layout(std430, binding = 21) writeonly buffer buf_outYX {
+  float outYX[];
+};
+layout(std430, binding = 22) writeonly buffer buf_outYY {
+  float outYY[];
+};
+layout(std430, binding = 23) writeonly buffer buf_outYZ {
+  float outYZ[];
+};
+layout(std430, binding = 24) writeonly buffer buf_outZX {
+  float outZX[];
+};
+layout(std430, binding = 25) writeonly buffer buf_outZY {
+  float outZY[];
+};
+layout(std430, binding = 26) writeonly buffer buf_outZZ {
+  float outZZ[];
+};
+
+// kernel: navatala_cfd_primitives_grad_vol_vector_gauss
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  if ((int(int(gl_GlobalInvocationID.x)) >= params[0])) {
+    return;
+  } else {
+    float sumXX = uintBitsToFloat(0x00000000u);
+    float sumXY = uintBitsToFloat(0x00000000u);
+    float sumXZ = uintBitsToFloat(0x00000000u);
+    float sumYX = uintBitsToFloat(0x00000000u);
+    float sumYY = uintBitsToFloat(0x00000000u);
+    float sumYZ = uintBitsToFloat(0x00000000u);
+    float sumZX = uintBitsToFloat(0x00000000u);
+    float sumZY = uintBitsToFloat(0x00000000u);
+    float sumZZ = uintBitsToFloat(0x00000000u);
+    int beg = offsets[int(int(gl_GlobalInvocationID.x))];
+    int c1 = (int(int(gl_GlobalInvocationID.x)) + 1);
+    int end = offsets[c1];
+    int len = (end - beg);
+    for (int t = 0; t < int(len); ++t) {
+      int k = (beg + t);
+      int f = faceIdx[k];
+      if ((f < params[1])) {
+        float s = sign[k];
+        int o = owner[f];
+        float uxO = cellUx[o];
+        float uyO = cellUy[o];
+        float uzO = cellUz[o];
+        float uxF = uxO;
+        float uyF = uyO;
+        float uzF = uzO;
+        if ((f < params[2])) {
+          int n = neighbour[f];
+          float uxN = cellUx[n];
+          float uyN = cellUy[n];
+          float uzN = cellUz[n];
+          float ww = weights[f];
+          float iw = (uintBitsToFloat(0x3f800000u) - ww);
+          uxF = ((ww * uxO) + (iw * uxN));
+          uyF = ((ww * uyO) + (iw * uyN));
+          uzF = ((ww * uzO) + (iw * uzN));
+        } else {
+          uint m = bcMask[f];
+          if ((m == 1u)) {
+            float ww = weights[f];
+            float iw = (uintBitsToFloat(0x3f800000u) - ww);
+            uxF = ((ww * uxO) + (iw * bcX[f]));
+            uyF = ((ww * uyO) + (iw * bcY[f]));
+            uzF = ((ww * uzO) + (iw * bcZ[f]));
+          }
+          if ((m == 2u)) {
+            uxF = bcX[f];
+            uyF = bcY[f];
+            uzF = bcZ[f];
+          }
+        }
+        float sfXf = sfX[f];
+        float sfYf = sfY[f];
+        float sfZf = sfZ[f];
+        float wUx = (s * uxF);
+        float wUy = (s * uyF);
+        float wUz = (s * uzF);
+        sumXX = (sumXX + (wUx * sfXf));
+        sumXY = (sumXY + (wUx * sfYf));
+        sumXZ = (sumXZ + (wUx * sfZf));
+        sumYX = (sumYX + (wUy * sfXf));
+        sumYY = (sumYY + (wUy * sfYf));
+        sumYZ = (sumYZ + (wUy * sfZf));
+        sumZX = (sumZX + (wUz * sfXf));
+        sumZY = (sumZY + (wUz * sfYf));
+        sumZZ = (sumZZ + (wUz * sfZf));
+      }
+    }
+    float v = vol[int(int(gl_GlobalInvocationID.x))];
+    float invV = uintBitsToFloat(0x00000000u);
+    if ((v != uintBitsToFloat(0x00000000u))) {
+      invV = (uintBitsToFloat(0x3f800000u) / v);
+    }
+    outXX[int(int(gl_GlobalInvocationID.x))] = (sumXX * invV);
+    outXY[int(int(gl_GlobalInvocationID.x))] = (sumXY * invV);
+    outXZ[int(int(gl_GlobalInvocationID.x))] = (sumXZ * invV);
+    outYX[int(int(gl_GlobalInvocationID.x))] = (sumYX * invV);
+    outYY[int(int(gl_GlobalInvocationID.x))] = (sumYY * invV);
+    outYZ[int(int(gl_GlobalInvocationID.x))] = (sumYZ * invV);
+    outZX[int(int(gl_GlobalInvocationID.x))] = (sumZX * invV);
+    outZY[int(int(gl_GlobalInvocationID.x))] = (sumZY * invV);
+    outZZ[int(int(gl_GlobalInvocationID.x))] = (sumZZ * invV);
+  }
+}

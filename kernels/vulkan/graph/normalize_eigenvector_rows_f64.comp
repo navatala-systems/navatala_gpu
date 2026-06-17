@@ -1,0 +1,88 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_V {
+  double V[];
+};
+layout(std430, binding = 1) readonly buffer buf_n {
+  uint n[];
+};
+layout(std430, binding = 2) readonly buffer buf_k {
+  uint k[];
+};
+layout(std430, binding = 3) writeonly buffer buf_V_norm {
+  double V_norm[];
+};
+
+shared double sdata[256];
+
+// kernel: navatala_graph_normalize_eigenvector_rows_f64
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint lid = uint(int(gl_LocalInvocationID.x));
+  uint wgid = uint(int(gl_WorkGroupID.x));
+  uint nVal = n[0];
+  uint kVal = k[0];
+  uint rowIdx = wgid;
+  bool rowInBounds = (rowIdx < nVal);
+  if (rowInBounds) {
+    uint rowBase = (rowIdx * kVal);
+    bool colInBounds = (lid < kVal);
+    uint elemIdx = (rowBase + lid);
+    if (colInBounds) {
+      double vVal = V[elemIdx];
+      double vSq = (vVal * vVal);
+      sdata[lid] = vSq;
+    } else {
+      sdata[lid] = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
+    }
+    barrier();
+    uint normF64RedStride = 128u;
+    for (int normF64RedStep = 0; normF64RedStep < int(8); ++normF64RedStep) {
+      uint normF64Stride = normF64RedStride;
+      if ((lid < normF64Stride)) {
+        double other = sdata[(lid + normF64Stride)];
+        double mine = sdata[lid];
+        double sum = (mine + other);
+        sdata[lid] = sum;
+      }
+      uint normF64StrideToHalve = normF64RedStride;
+      uint normF64NextStride = (normF64StrideToHalve >> 1u);
+      normF64RedStride = normF64NextStride;
+      barrier();
+    }
+    if ((lid == 0u)) {
+      double sumSq = sdata[0];
+      double normVal = sqrt(sumSq);
+      sdata[0] = normVal;
+    }
+    barrier();
+    if (colInBounds) {
+      double norm = sdata[0];
+      double vVal2 = V[elemIdx];
+      double eps = packDouble2x32(uvec2(0x9ee75616u, 0x3cd203afu));
+      bool normZero = (norm < eps);
+      if (normZero) {
+        V_norm[elemIdx] = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
+      } else {
+        double normalized = (vVal2 / norm);
+        V_norm[elemIdx] = normalized;
+      }
+    }
+  }
+}

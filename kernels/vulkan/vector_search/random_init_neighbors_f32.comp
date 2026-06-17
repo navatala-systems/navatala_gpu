@@ -1,0 +1,61 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_n_vectors {
+  uint n_vectors[];
+};
+layout(std430, binding = 1) readonly buffer buf_max_degree {
+  uint max_degree[];
+};
+layout(std430, binding = 2) readonly buffer buf_init_degree {
+  uint init_degree[];
+};
+layout(std430, binding = 3) readonly buffer buf_seed {
+  uint seed[];
+};
+layout(std430, binding = 4) writeonly buffer buf_graph {
+  uint graph[];
+};
+layout(std430, binding = 5) writeonly buffer buf_graph_degrees {
+  uint graph_degrees[];
+};
+
+// kernel: navatala_vector_search_random_init_neighbors_f32
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint vid = uint(int(gl_GlobalInvocationID.x));
+  uint nv = n_vectors[0];
+  uint md = max_degree[0];
+  uint id = init_degree[0];
+  uint s = seed[0];
+  if ((vid < nv)) {
+    uint rng = (vid + s);
+    for (int i = 0; i < int(id); ++i) {
+      uint old_rng = rng;
+      uint temp1 = (old_rng * 1103515245u);
+      uint temp2 = (temp1 + 12345u);
+      uint new_rng = (temp2 & 2147483647u);
+      rng = new_rng;
+      uint neighbor_raw = (new_rng % nv);
+      uint neighbor = (((neighbor_raw == vid)) ? (((neighbor_raw + 1u) % nv)) : (neighbor_raw));
+      uint graph_idx = ((vid * md) + i);
+      graph[graph_idx] = neighbor;
+    }
+    graph_degrees[vid] = id;
+  }
+}

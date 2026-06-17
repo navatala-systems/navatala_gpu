@@ -1,0 +1,33 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+__kernel void navatala_sparse_find_min_edge_per_component_f32(__global const uint* srcNodes, __global const uint* dstNodes, __global const float* weights, __global const uint* components, __global const uint* numEdges, __global const uint* numNodes, __global uint* minEdgeIdx, __global float* minEdgeWeight) {
+  int gid0 = (int)get_global_id(0);
+  uint edgeIdx = ((uint)((int)(get_global_id(0))));
+  if ((edgeIdx < numEdges[(uint)(0u)])) {
+    uint src = srcNodes[edgeIdx];
+    uint dst = dstNodes[edgeIdx];
+    uint srcComp = components[src];
+    uint dstComp = components[dst];
+    if ((srcComp != dstComp)) {
+      float w = weights[edgeIdx];
+      float currWeight = minEdgeWeight[srcComp];
+      if ((w < currWeight)) {
+        atomic_min(&minEdgeWeight[srcComp], w);
+        minEdgeIdx[srcComp] = edgeIdx;
+      }
+    }
+  }
+}

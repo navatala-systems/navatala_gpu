@@ -1,0 +1,100 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_Y {
+  double Y[];
+};
+layout(std430, binding = 1) readonly buffer buf_nPoints {
+  uint nPoints[];
+};
+layout(std430, binding = 2) readonly buffer buf_outputDims {
+  uint outputDims[];
+};
+layout(std430, binding = 3) writeonly buffer buf_Q {
+  double Q[];
+};
+layout(std430, binding = 4) buffer buf_sumQ {
+  double sumQ[];
+};
+
+shared double sdata[256];
+
+// kernel: navatala_ml_compute_q_distribution_f64
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint gid = uint(int(gl_GlobalInvocationID.x));
+  uint lid = uint(int(gl_LocalInvocationID.x));
+  uint n = nPoints[0];
+  uint d = outputDims[0];
+  uint totalPairs = (n * n);
+  bool inBounds = (gid < totalPairs);
+  double localQ = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
+  if (inBounds) {
+    uint i = (gid / n);
+    uint j = (gid % n);
+    uint baseI = (i * d);
+    uint baseJ = (j * d);
+    double distSqAccum = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
+    for (int k = 0; k < int(d); ++k) {
+      uint kU32 = uint(k);
+      uint idxI = (baseI + kU32);
+      uint idxJ = (baseJ + kU32);
+      double yi_k = Y[idxI];
+      double yj_k = Y[idxJ];
+      double diff = (yi_k - yj_k);
+      double diffSq = (diff * diff);
+      double currentDistSq = distSqAccum;
+      double newDistSq = (currentDistSq + diffSq);
+      distSqAccum = newDistSq;
+    }
+    double distSq = distSqAccum;
+    bool isDiag = (i == j);
+    double onePlusDistSq = (packDouble2x32(uvec2(0x00000000u, 0x3ff00000u)) + distSq);
+    double qVal = (packDouble2x32(uvec2(0x00000000u, 0x3ff00000u)) / onePlusDistSq);
+    if (isDiag) {
+      Q[gid] = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
+      sdata[lid] = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
+    } else {
+      Q[gid] = qVal;
+      sdata[lid] = qVal;
+    }
+  } else {
+    sdata[lid] = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
+  }
+  barrier();
+  uint qF64ReductionStride = 128u;
+  for (int qF64ReductionStep = 0; qF64ReductionStep < int(8); ++qF64ReductionStep) {
+    uint qF64Stride = qF64ReductionStride;
+    if ((lid < qF64Stride)) {
+      double qF64Other = sdata[(lid + qF64Stride)];
+      double qF64Mine = sdata[lid];
+      double qF64Sum = (qF64Mine + qF64Other);
+      sdata[lid] = qF64Sum;
+    }
+    uint qF64StrideToHalve = qF64ReductionStride;
+    uint qF64NextStride = (qF64StrideToHalve >> 1u);
+    qF64ReductionStride = qF64NextStride;
+    barrier();
+  }
+  if ((lid == 0u)) {
+    double partialSum = sdata[0];
+    double oldSum = sumQ[0];
+    double newSum = (oldSum + partialSum);
+    sumQ[0] = newSum;
+  }
+}

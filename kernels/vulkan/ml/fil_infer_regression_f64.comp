@@ -1,0 +1,102 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_X {
+  double X[];
+};
+layout(std430, binding = 1) readonly buffer buf_feature_indices {
+  int feature_indices[];
+};
+layout(std430, binding = 2) readonly buffer buf_thresholds {
+  double thresholds[];
+};
+layout(std430, binding = 3) readonly buffer buf_left_children {
+  int left_children[];
+};
+layout(std430, binding = 4) readonly buffer buf_right_children {
+  int right_children[];
+};
+layout(std430, binding = 5) readonly buffer buf_tree_offsets {
+  int tree_offsets[];
+};
+layout(std430, binding = 6) readonly buffer buf_bias {
+  uint bias[];
+};
+layout(std430, binding = 7) readonly buffer buf_n_samples {
+  uint n_samples[];
+};
+layout(std430, binding = 8) readonly buffer buf_n_features {
+  uint n_features[];
+};
+layout(std430, binding = 9) readonly buffer buf_n_trees {
+  uint n_trees[];
+};
+layout(std430, binding = 10) writeonly buffer buf_predictions {
+  double predictions[];
+};
+
+// kernel: navatala_ml_fil_infer_regression_f64
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint gid = uint(int(gl_GlobalInvocationID.x));
+  uint nSamples = n_samples[0];
+  uint nFeatures = n_features[0];
+  uint nTrees = n_trees[0];
+  double biasVal = double(bias[0]);
+  bool inBounds = (gid < nSamples);
+  if (inBounds) {
+    uint sampleBase = (gid * nFeatures);
+    double sumOutput = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
+    for (int t = 0; t < int(nTrees); ++t) {
+      uint tU32 = uint(t);
+      int treeOffset = tree_offsets[tU32];
+      uint treeOffsetU32 = uint(treeOffset);
+      uint nodeIdx = 0u;
+      for (int depth = 0; depth < int(64u); ++depth) {
+        uint currNode = nodeIdx;
+        uint absNodeIdx = (treeOffsetU32 + currNode);
+        int featureIdx = feature_indices[absNodeIdx];
+        double threshold = thresholds[absNodeIdx];
+        bool isLeaf = (featureIdx == -1);
+        if (isLeaf) {
+          double currSum = sumOutput;
+          double newSum = (currSum + threshold);
+          sumOutput = newSum;
+        } else {
+          uint featureIdxU32 = uint(featureIdx);
+          uint featureAddr = (sampleBase + featureIdxU32);
+          double featureVal = X[featureAddr];
+          bool goLeft = (featureVal <= threshold);
+          if (goLeft) {
+            int leftChild = left_children[absNodeIdx];
+            uint leftChildU32 = uint(leftChild);
+            nodeIdx = leftChildU32;
+          } else {
+            int rightChild = right_children[absNodeIdx];
+            uint rightChildU32 = uint(rightChild);
+            nodeIdx = rightChildU32;
+          }
+        }
+      }
+    }
+    double finalSum = sumOutput;
+    double nTreesF = double(nTrees);
+    double avgPred = ((finalSum / nTreesF) + biasVal);
+    predictions[gid] = avgPred;
+  }
+}

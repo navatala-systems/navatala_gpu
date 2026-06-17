@@ -1,0 +1,35 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+
+PROJECT_NAME           = "Navatala GPU"
+PROJECT_BRIEF          = "Cross-platform GPU runtime and kernel corpus"
+OUTPUT_DIRECTORY       = docs/api
+CREATE_SUBDIRS         = NO
+QUIET                  = YES
+WARN_IF_UNDOCUMENTED   = NO
+WARN_NO_PARAMDOC       = NO
+WARN_AS_ERROR          = NO
+
+INPUT                  = runtime/include \
+                         examples \
+                         docs/doxygen
+RECURSIVE              = YES
+FILE_PATTERNS          = *.h *.hpp *.cpp *.dox
+EXCLUDE_PATTERNS       = */build/* */.git/*
+
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = NO
+EXTRACT_STATIC         = NO
+SORT_MEMBER_DOCS       = YES
+SORT_BRIEF_DOCS        = YES
+
+MARKDOWN_SUPPORT       = YES
+AUTOLINK_SUPPORT       = YES
+BUILTIN_STL_SUPPORT    = YES
+FULL_PATH_NAMES        = NO
+STRIP_FROM_PATH        = .
+
+GENERATE_TREEVIEW      = YES
+HTML_DYNAMIC_MENUS     = YES

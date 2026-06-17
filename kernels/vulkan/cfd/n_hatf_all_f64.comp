@@ -1,0 +1,127 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_gx {
+  double gx[];
+};
+layout(std430, binding = 1) readonly buffer buf_gy {
+  double gy[];
+};
+layout(std430, binding = 2) readonly buffer buf_gz {
+  double gz[];
+};
+layout(std430, binding = 3) readonly buffer buf_sfX {
+  double sfX[];
+};
+layout(std430, binding = 4) readonly buffer buf_sfY {
+  double sfY[];
+};
+layout(std430, binding = 5) readonly buffer buf_sfZ {
+  double sfZ[];
+};
+layout(std430, binding = 6) readonly buffer buf_owner {
+  int owner[];
+};
+layout(std430, binding = 7) readonly buffer buf_nei {
+  int nei[];
+};
+layout(std430, binding = 8) readonly buffer buf_weights {
+  double weights[];
+};
+layout(std430, binding = 9) readonly buffer buf_theta {
+  float theta[];
+};
+layout(std430, binding = 10) readonly buffer buf_thetaMask {
+  uint thetaMask[];
+};
+layout(std430, binding = 11) readonly buffer buf_paramsF {
+  double paramsF[];
+};
+layout(std430, binding = 12) readonly buffer buf_counts {
+  int counts[];
+};
+layout(std430, binding = 13) writeonly buffer buf_contactGrad {
+  double contactGrad[];
+};
+layout(std430, binding = 14) writeonly buffer buf_nHatf {
+  double nHatf[];
+};
+
+// kernel: navatala_cfd_n_hatf_all_f64
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  if ((int(int(gl_GlobalInvocationID.x)) >= counts[1])) {
+    return;
+  } else {
+    int o = owner[int(int(gl_GlobalInvocationID.x))];
+    int n = nei[int(int(gl_GlobalInvocationID.x))];
+    bool isBoundary = (int(int(gl_GlobalInvocationID.x)) >= counts[2]);
+    double w = double(weights[int(int(gl_GlobalInvocationID.x))]);
+    double wm = (packDouble2x32(uvec2(0x00000000u, 0x3ff00000u)) - w);
+    double gfx = ((isBoundary) ? (gx[o]) : (((w * gx[o]) + (wm * gx[n]))));
+    double gfy = ((isBoundary) ? (gy[o]) : (((w * gy[o]) + (wm * gy[n]))));
+    double gfz = ((isBoundary) ? (gz[o]) : (((w * gz[o]) + (wm * gz[n]))));
+    double magg = sqrt((((gfx * gfx) + (gfy * gfy)) + (gfz * gfz)));
+    double inv = (packDouble2x32(uvec2(0x00000000u, 0x3ff00000u)) / (magg + paramsF[0]));
+    double nx = (gfx * inv);
+    double ny = (gfy * inv);
+    double nz = (gfz * inv);
+    contactGrad[int(int(gl_GlobalInvocationID.x))] = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
+    if ((thetaMask[int(int(gl_GlobalInvocationID.x))] != 0u)) {
+      double sfx = double(sfX[int(int(gl_GlobalInvocationID.x))]);
+      double sfy = double(sfY[int(int(gl_GlobalInvocationID.x))]);
+      double sfz = double(sfZ[int(int(gl_GlobalInvocationID.x))]);
+      double magSf = sqrt((((sfx * sfx) + (sfy * sfy)) + (sfz * sfz)));
+      if ((magSf > packDouble2x32(uvec2(0x0c924223u, 0x3bc79ca1u)))) {
+        double nfx = (sfx / magSf);
+        double nfy = (sfy / magSf);
+        double nfz = (sfz / magSf);
+        double a12raw = (((nx * nfx) + (ny * nfy)) + (nz * nfz));
+        double a12 = a12raw;
+        if ((a12 < packDouble2x32(uvec2(0x00000000u, 0xbff00000u)))) {
+          a12 = packDouble2x32(uvec2(0x00000000u, 0xbff00000u));
+        } else {
+          if ((a12 > packDouble2x32(uvec2(0x00000000u, 0x3ff00000u)))) {
+            a12 = packDouble2x32(uvec2(0x00000000u, 0x3ff00000u));
+          }
+        }
+        double th = double(theta[int(int(gl_GlobalInvocationID.x))]);
+        double b1 = double(cos(float(th)));
+        double acosA12 = double(acos(float(a12)));
+        double b2 = double(cos(float((acosA12 - th))));
+        double det = (packDouble2x32(uvec2(0x00000000u, 0x3ff00000u)) - (a12 * a12));
+        if ((det < packDouble2x32(uvec2(0xa0b5ed8du, 0x3eb0c6f7u)))) {
+          det = packDouble2x32(uvec2(0xa0b5ed8du, 0x3eb0c6f7u));
+        }
+        double a = ((b1 - (a12 * b2)) / det);
+        double b = ((b2 - (a12 * b1)) / det);
+        double nx2 = ((a * nfx) + (b * nx));
+        double ny2 = ((a * nfy) + (b * ny));
+        double nz2 = ((a * nfz) + (b * nz));
+        double magN = sqrt((((nx2 * nx2) + (ny2 * ny2)) + (nz2 * nz2)));
+        double invN = (packDouble2x32(uvec2(0x00000000u, 0x3ff00000u)) / (magN + paramsF[0]));
+        nx = (nx2 * invN);
+        ny = (ny2 * invN);
+        nz = (nz2 * invN);
+        double dot = (((nx * nfx) + (ny * nfy)) + (nz * nfz));
+        contactGrad[int(int(gl_GlobalInvocationID.x))] = (dot * magg);
+      }
+    }
+    nHatf[int(int(gl_GlobalInvocationID.x))] = (((nx * double(sfX[int(int(gl_GlobalInvocationID.x))])) + (ny * double(sfY[int(int(gl_GlobalInvocationID.x))]))) + (nz * double(sfZ[int(int(gl_GlobalInvocationID.x))])));
+  }
+}

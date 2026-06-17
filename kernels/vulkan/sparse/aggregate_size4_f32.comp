@@ -1,0 +1,82 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_rowPtr {
+  uint rowPtr[];
+};
+layout(std430, binding = 1) readonly buffer buf_colIdx {
+  uint colIdx[];
+};
+layout(std430, binding = 2) readonly buffer buf_values {
+  float values[];
+};
+layout(std430, binding = 3) readonly buffer buf_strongMask {
+  uint strongMask[];
+};
+layout(std430, binding = 4) readonly buffer buf_nRows {
+  uint nRows[];
+};
+layout(std430, binding = 5) writeonly buffer buf_aggregateId {
+  int aggregateId[];
+};
+layout(std430, binding = 6) buffer buf_nAggregates {
+  uint nAggregates[];
+};
+
+// kernel: navatala_sparse_aggregate_size4_f32
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  int gid = int(gl_GlobalInvocationID.x);
+  int N = int(nRows[0]);
+  if ((gid < N)) {
+    int rs = int(rowPtr[gid]);
+    int re = int(rowPtr[(gid + 1)]);
+    float bestVal_0 = uintBitsToFloat(0x00000000u);
+    int bestCol_0 = -1;
+    float bestVal_1 = uintBitsToFloat(0x00000000u);
+    int bestCol_1 = -1;
+    float bestVal_2 = uintBitsToFloat(0x00000000u);
+    int bestCol_2 = -1;
+    for (int j = 0; j < int((re - rs)); ++j) {
+      int kk = (rs + j);
+      int col = int(colIdx[kk]);
+      uint isStrong = strongMask[kk];
+      if ((isStrong == 1u)) {
+        float a = values[kk];
+        float aAbs = abs(a);
+        float oldVal_0 = bestVal_0;
+        int oldCol_0 = bestCol_0;
+        float oldVal_1 = bestVal_1;
+        int oldCol_1 = bestCol_1;
+        float oldVal_2 = bestVal_2;
+        int oldCol_2 = bestCol_2;
+        bestVal_0 = (((aAbs > oldVal_0)) ? (aAbs) : (oldVal_0));
+        bestCol_0 = (((aAbs > oldVal_0)) ? (col) : (oldCol_0));
+        bestVal_1 = (((aAbs > oldVal_0)) ? (oldVal_0) : ((((aAbs > oldVal_1)) ? (aAbs) : (oldVal_1))));
+        bestCol_1 = (((aAbs > oldVal_0)) ? (oldCol_0) : ((((aAbs > oldVal_1)) ? (col) : (oldCol_1))));
+        bestVal_2 = (((aAbs > oldVal_1)) ? (oldVal_1) : ((((aAbs > oldVal_2)) ? (aAbs) : (oldVal_2))));
+        bestCol_2 = (((aAbs > oldVal_1)) ? (oldCol_1) : ((((aAbs > oldVal_2)) ? (col) : (oldCol_2))));
+      }
+    }
+    int aggId = (((((false || (bestCol_0 >= 0)) || (bestCol_1 >= 0)) || (bestCol_2 >= 0))) ? (((((bestCol_2 >= 0) && (bestCol_2 < ((((bestCol_1 >= 0) && (bestCol_1 < ((((bestCol_0 >= 0) && (bestCol_0 < gid))) ? (bestCol_0) : (gid))))) ? (bestCol_1) : (((((bestCol_0 >= 0) && (bestCol_0 < gid))) ? (bestCol_0) : (gid))))))) ? (bestCol_2) : (((((bestCol_1 >= 0) && (bestCol_1 < ((((bestCol_0 >= 0) && (bestCol_0 < gid))) ? (bestCol_0) : (gid))))) ? (bestCol_1) : (((((bestCol_0 >= 0) && (bestCol_0 < gid))) ? (bestCol_0) : (gid))))))) : (-1));
+    aggregateId[gid] = aggId;
+    if ((aggId == gid)) {
+      uint _naBump = atomicAdd(nAggregates[0], 1u);
+    }
+  }
+}

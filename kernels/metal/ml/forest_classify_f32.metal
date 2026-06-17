@@ -1,0 +1,100 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include <metal_stdlib>
+using namespace metal;
+
+kernel void navatala_ml_forest_classify_f32(device const float* X [[buffer(0)]], device const int* feature_indices [[buffer(1)]], device const float* thresholds [[buffer(2)]], device const int* left_children [[buffer(3)]], device const int* right_children [[buffer(4)]], device const int* leaf_value_indices [[buffer(5)]], device const float* forest_leaves [[buffer(6)]], device const int* tree_offsets [[buffer(7)]], device const int* leaf_offsets [[buffer(8)]], device const uint* n_samples [[buffer(9)]], device const uint* n_features [[buffer(10)]], device const uint* n_trees [[buffer(11)]], device const uint* n_classes [[buffer(12)]], device int* predictions [[buffer(13)]], device uint* vote_counts [[buffer(14)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
+  uint gid = ((uint)(int(__gid.x)));
+  uint nSamples = n_samples[0];
+  uint nFeatures = n_features[0];
+  uint nTrees = n_trees[0];
+  uint nClasses = n_classes[0];
+  bool inBounds = (gid < nSamples);
+  if (inBounds) {
+    uint sampleBase = (gid * nFeatures);
+    uint voteBase = (gid * nClasses);
+    for (int c = 0; c < (int)(nClasses); ++c) {
+      uint cU32 = ((uint)(c));
+      uint voteIdx = (voteBase + cU32);
+      vote_counts[voteIdx] = 0u;
+    }
+    for (int t = 0; t < (int)(nTrees); ++t) {
+      uint tU32 = ((uint)(t));
+      int treeNodeOffset = tree_offsets[tU32];
+      uint treeNodeOffsetU32 = ((uint)(treeNodeOffset));
+      int treeLeafOffset = leaf_offsets[tU32];
+      uint treeLeafOffsetU32 = ((uint)(treeLeafOffset));
+      int currentNode = 0;
+      for (int depth = 0; depth < (int)(64u); ++depth) {
+        int nodeIdx = currentNode;
+        uint nodeIdxU32 = ((uint)(nodeIdx));
+        uint absNodeIdx = (treeNodeOffsetU32 + nodeIdxU32);
+        int featureIdx = feature_indices[absNodeIdx];
+        bool isLeaf = (featureIdx == -1);
+        if (isLeaf) {
+          int leafIdxI32 = leaf_value_indices[absNodeIdx];
+          uint leafIdx = ((uint)(leafIdxI32));
+          uint absLeafBase = (treeLeafOffsetU32 + (leafIdx * nClasses));
+          int bestClass = 0;
+          float bestProb = as_type<float>(0xbf800000u);
+          for (int classIdx = 0; classIdx < (int)(nClasses); ++classIdx) {
+            uint classIdxU32 = ((uint)(classIdx));
+            uint probIdx = (absLeafBase + classIdxU32);
+            float prob = forest_leaves[probIdx];
+            float currBest = bestProb;
+            if ((prob > currBest)) {
+              bestClass = classIdx;
+              bestProb = prob;
+            }
+          }
+          int predictedClass = bestClass;
+          uint predictedClassU32 = ((uint)(predictedClass));
+          uint voteIdx = (voteBase + predictedClassU32);
+          uint currVotes = vote_counts[voteIdx];
+          uint newVotes = (currVotes + 1u);
+          vote_counts[voteIdx] = newVotes;
+        } else {
+          float threshold = thresholds[absNodeIdx];
+          uint featureIdxU32 = ((uint)(featureIdx));
+          uint featureAddr = (sampleBase + featureIdxU32);
+          float featureVal = X[featureAddr];
+          bool goLeft = (featureVal <= threshold);
+          if (goLeft) {
+            int leftChild = left_children[absNodeIdx];
+            currentNode = leftChild;
+          } else {
+            int rightChild = right_children[absNodeIdx];
+            currentNode = rightChild;
+          }
+        }
+      }
+    }
+    int finalClass = 0;
+    uint maxVotes = 0u;
+    for (int c = 0; c < (int)(nClasses); ++c) {
+      uint cU32 = ((uint)(c));
+      uint voteIdx = (voteBase + cU32);
+      uint votes = vote_counts[voteIdx];
+      uint currMax = maxVotes;
+      if ((votes > currMax)) {
+        finalClass = c;
+        maxVotes = votes;
+      }
+    }
+    int result = finalClass;
+    predictions[gid] = result;
+  }
+}

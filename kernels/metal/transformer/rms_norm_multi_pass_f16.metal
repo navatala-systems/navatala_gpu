@@ -1,0 +1,135 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include <metal_stdlib>
+using namespace metal;
+
+kernel void navatala_transformer_rms_norm_multi_pass_f16(device const half* _input [[buffer(0)]], device const half* gamma [[buffer(1)]], device const float* epsilon [[buffer(2)]], device const uint* batchSize [[buffer(3)]], device const uint* hiddenSize [[buffer(4)]], device half* _output [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
+  uint lid = ((uint)(int(__tid.x)));
+  uint batchIdx = ((uint)(int(__tgid.x)));
+  uint bs = batchSize[0u];
+  uint hs = hiddenSize[0u];
+  float eps = epsilon[0u];
+  threadgroup float sumSqBuf[256];
+  bool batchValid = (batchIdx < bs);
+  uint baseIdx = (batchIdx * hs);
+  float partialSumSq = as_type<float>(0x00000000u);
+  uint iterIdx = lid;
+  uint workgroupSize = 256u;
+  for (int __iter = 0; __iter < 16384; ++__iter) {
+    if (!((iterIdx < hs))) break;
+    uint globalIdx = (baseIdx + iterIdx);
+    half xF16 = ((batchValid) ? (_input[globalIdx]) : (half(0.000000)));
+    float xVal = ((float)(xF16));
+    float xSq = (xVal * xVal);
+    partialSumSq = (partialSumSq + xSq);
+    iterIdx = (iterIdx + workgroupSize);
+  }
+  sumSqBuf[lid] = partialSumSq;
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sumSqBuf_128 = (lid < 128u);
+  if (shouldReduce_sumSqBuf_128) {
+    uint neighborIdx_sumSqBuf_128 = (lid + 128u);
+    float myVal_sumSqBuf_128 = sumSqBuf[lid];
+    float neighborVal_sumSqBuf_128 = sumSqBuf[neighborIdx_sumSqBuf_128];
+    float sumVal_sumSqBuf_128 = (myVal_sumSqBuf_128 + neighborVal_sumSqBuf_128);
+    sumSqBuf[lid] = sumVal_sumSqBuf_128;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sumSqBuf_64 = (lid < 64u);
+  if (shouldReduce_sumSqBuf_64) {
+    uint neighborIdx_sumSqBuf_64 = (lid + 64u);
+    float myVal_sumSqBuf_64 = sumSqBuf[lid];
+    float neighborVal_sumSqBuf_64 = sumSqBuf[neighborIdx_sumSqBuf_64];
+    float sumVal_sumSqBuf_64 = (myVal_sumSqBuf_64 + neighborVal_sumSqBuf_64);
+    sumSqBuf[lid] = sumVal_sumSqBuf_64;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sumSqBuf_32 = (lid < 32u);
+  if (shouldReduce_sumSqBuf_32) {
+    uint neighborIdx_sumSqBuf_32 = (lid + 32u);
+    float myVal_sumSqBuf_32 = sumSqBuf[lid];
+    float neighborVal_sumSqBuf_32 = sumSqBuf[neighborIdx_sumSqBuf_32];
+    float sumVal_sumSqBuf_32 = (myVal_sumSqBuf_32 + neighborVal_sumSqBuf_32);
+    sumSqBuf[lid] = sumVal_sumSqBuf_32;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sumSqBuf_16 = (lid < 16u);
+  if (shouldReduce_sumSqBuf_16) {
+    uint neighborIdx_sumSqBuf_16 = (lid + 16u);
+    float myVal_sumSqBuf_16 = sumSqBuf[lid];
+    float neighborVal_sumSqBuf_16 = sumSqBuf[neighborIdx_sumSqBuf_16];
+    float sumVal_sumSqBuf_16 = (myVal_sumSqBuf_16 + neighborVal_sumSqBuf_16);
+    sumSqBuf[lid] = sumVal_sumSqBuf_16;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sumSqBuf_8 = (lid < 8u);
+  if (shouldReduce_sumSqBuf_8) {
+    uint neighborIdx_sumSqBuf_8 = (lid + 8u);
+    float myVal_sumSqBuf_8 = sumSqBuf[lid];
+    float neighborVal_sumSqBuf_8 = sumSqBuf[neighborIdx_sumSqBuf_8];
+    float sumVal_sumSqBuf_8 = (myVal_sumSqBuf_8 + neighborVal_sumSqBuf_8);
+    sumSqBuf[lid] = sumVal_sumSqBuf_8;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sumSqBuf_4 = (lid < 4u);
+  if (shouldReduce_sumSqBuf_4) {
+    uint neighborIdx_sumSqBuf_4 = (lid + 4u);
+    float myVal_sumSqBuf_4 = sumSqBuf[lid];
+    float neighborVal_sumSqBuf_4 = sumSqBuf[neighborIdx_sumSqBuf_4];
+    float sumVal_sumSqBuf_4 = (myVal_sumSqBuf_4 + neighborVal_sumSqBuf_4);
+    sumSqBuf[lid] = sumVal_sumSqBuf_4;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sumSqBuf_2 = (lid < 2u);
+  if (shouldReduce_sumSqBuf_2) {
+    uint neighborIdx_sumSqBuf_2 = (lid + 2u);
+    float myVal_sumSqBuf_2 = sumSqBuf[lid];
+    float neighborVal_sumSqBuf_2 = sumSqBuf[neighborIdx_sumSqBuf_2];
+    float sumVal_sumSqBuf_2 = (myVal_sumSqBuf_2 + neighborVal_sumSqBuf_2);
+    sumSqBuf[lid] = sumVal_sumSqBuf_2;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  bool shouldReduce_sumSqBuf_1 = (lid < 1u);
+  if (shouldReduce_sumSqBuf_1) {
+    uint neighborIdx_sumSqBuf_1 = (lid + 1u);
+    float myVal_sumSqBuf_1 = sumSqBuf[lid];
+    float neighborVal_sumSqBuf_1 = sumSqBuf[neighborIdx_sumSqBuf_1];
+    float sumVal_sumSqBuf_1 = (myVal_sumSqBuf_1 + neighborVal_sumSqBuf_1);
+    sumSqBuf[lid] = sumVal_sumSqBuf_1;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  float totalSumSq = sumSqBuf[0u];
+  float hsF32 = ((float)(hs));
+  float meanSq = (totalSumSq / hsF32);
+  float meanSqEps = (meanSq + eps);
+  float rms = sqrt(meanSqEps);
+  iterIdx = lid;
+  for (int __iter = 0; __iter < 16384; ++__iter) {
+    if (!((iterIdx < hs))) break;
+    if (batchValid) {
+      uint globalIdx2 = (baseIdx + iterIdx);
+      half xF16_2 = _input[globalIdx2];
+      float xVal2 = ((float)(xF16_2));
+      half gF16 = gamma[iterIdx];
+      float g = ((float)(gF16));
+      float xNorm = (xVal2 / rms);
+      float resultF32 = (g * xNorm);
+      half result = ((half)(resultF32));
+      _output[globalIdx2] = result;
+    }
+    iterIdx = (iterIdx + workgroupSize);
+  }
+}

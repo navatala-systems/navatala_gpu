@@ -1,0 +1,73 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_psiMaxCap {
+  float psiMaxCap[];
+};
+layout(std430, binding = 1) readonly buffer buf_psiMinCap {
+  float psiMinCap[];
+};
+layout(std430, binding = 2) readonly buffer buf_sumPhip {
+  float sumPhip[];
+};
+layout(std430, binding = 3) readonly buffer buf_mSumPhim {
+  float mSumPhim[];
+};
+layout(std430, binding = 4) readonly buffer buf_sumlPhip {
+  float sumlPhip[];
+};
+layout(std430, binding = 5) readonly buffer buf_mSumlPhim {
+  float mSumlPhim[];
+};
+layout(std430, binding = 6) readonly buffer buf_counts {
+  int counts[];
+};
+layout(std430, binding = 7) readonly buffer buf_paramsF {
+  float paramsF[];
+};
+layout(std430, binding = 8) writeonly buffer buf_lambdam {
+  float lambdam[];
+};
+layout(std430, binding = 9) writeonly buffer buf_lambdap {
+  float lambdap[];
+};
+
+// kernel: navatala_cfd_vof_mules_cell_lambda
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  if ((int(int(gl_GlobalInvocationID.x)) >= counts[0])) {
+    return;
+  } else {
+    float ld = ((sumlPhip[int(int(gl_GlobalInvocationID.x))] + psiMaxCap[int(int(gl_GlobalInvocationID.x))]) / (mSumPhim[int(int(gl_GlobalInvocationID.x))] + paramsF[1]));
+    float lp = ((mSumlPhim[int(int(gl_GlobalInvocationID.x))] + psiMinCap[int(int(gl_GlobalInvocationID.x))]) / (sumPhip[int(int(gl_GlobalInvocationID.x))] + paramsF[1]));
+    if ((ld < uintBitsToFloat(0x00000000u))) {
+      ld = uintBitsToFloat(0x00000000u);
+    }
+    if ((ld > uintBitsToFloat(0x3f800000u))) {
+      ld = uintBitsToFloat(0x3f800000u);
+    }
+    if ((lp < uintBitsToFloat(0x00000000u))) {
+      lp = uintBitsToFloat(0x00000000u);
+    }
+    if ((lp > uintBitsToFloat(0x3f800000u))) {
+      lp = uintBitsToFloat(0x3f800000u);
+    }
+    lambdam[int(int(gl_GlobalInvocationID.x))] = ld;
+    lambdap[int(int(gl_GlobalInvocationID.x))] = lp;
+  }
+}

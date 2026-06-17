@@ -1,0 +1,90 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_rowPtr {
+  uint rowPtr[];
+};
+layout(std430, binding = 1) readonly buffer buf_colIdx {
+  uint colIdx[];
+};
+layout(std430, binding = 2) readonly buffer buf_values {
+  double values[];
+};
+layout(std430, binding = 3) readonly buffer buf_testVectors {
+  double testVectors[];
+};
+layout(std430, binding = 4) readonly buffer buf_nRows {
+  uint nRows[];
+};
+layout(std430, binding = 5) readonly buffer buf_nTestVectors {
+  uint nTestVectors[];
+};
+layout(std430, binding = 6) readonly buffer buf_theta {
+  double theta[];
+};
+layout(std430, binding = 7) writeonly buffer buf_strongMask {
+  uint strongMask[];
+};
+
+// kernel: navatala_sparse_strength_algebraic_dist_f64
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  int gid = int(gl_GlobalInvocationID.x);
+  int N = int(nRows[0]);
+  if ((gid < N)) {
+    int rs = int(rowPtr[gid]);
+    int re = int(rowPtr[(gid + 1)]);
+    int nTv = int(nTestVectors[0]);
+    double thetaVal = theta[0];
+    double maxDist = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
+    for (int jm = 0; jm < int((re - rs)); ++jm) {
+      int km = (rs + jm);
+      int colM = int(colIdx[km]);
+      if ((colM != gid)) {
+        double distM = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
+        for (int tvM = 0; tvM < int(nTv); ++tvM) {
+          double viM = testVectors[((gid * nTv) + tvM)];
+          double vjM = testVectors[((colM * nTv) + tvM)];
+          distM = (distM + abs((viM - vjM)));
+        }
+        double avgDistM = (distM / double(nTv));
+        maxDist = (((avgDistM > maxDist)) ? (avgDistM) : (maxDist));
+      }
+    }
+    for (int j = 0; j < int((re - rs)); ++j) {
+      int k = (rs + j);
+      int col = int(colIdx[k]);
+      if ((col != gid)) {
+        double dist = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
+        for (int tv = 0; tv < int(nTv); ++tv) {
+          double vi = testVectors[((gid * nTv) + tv)];
+          double vj = testVectors[((col * nTv) + tv)];
+          dist = (dist + abs((vi - vj)));
+        }
+        double avgDist = (dist / double(nTv));
+        uint hasMax = (((maxDist > packDouble2x32(uvec2(0x00000000u, 0x00000000u)))) ? (1u) : (0u));
+        double normDist = (((hasMax == 1u)) ? ((dist / maxDist)) : (packDouble2x32(uvec2(0x00000000u, 0x00000000u))));
+        double _unusedAvg = avgDist;
+        uint isStrong = ((((hasMax == 1u) && (normDist <= thetaVal))) ? (1u) : (0u));
+        strongMask[k] = isStrong;
+      } else {
+        strongMask[k] = 0u;
+      }
+    }
+  }
+}

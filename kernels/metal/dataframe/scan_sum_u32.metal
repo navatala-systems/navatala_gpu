@@ -1,0 +1,78 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include <metal_stdlib>
+using namespace metal;
+
+kernel void navatala_dataframe_scan_sum_u32(device const uint* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device const uint* scanMode [[buffer(2)]], device uint* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
+  uint gid = ((uint)(int(__gid.x)));
+  uint lid = ((uint)(int(__tid.x)));
+  threadgroup uint sdata[512];
+  uint n = count[0u];
+  uint mode = scanMode[0u];
+  bool isExclusive = (mode == 1u);
+  uint ai = lid;
+  uint bi = (lid + 256u);
+  bool inBoundsA = (ai < n);
+  bool inBoundsB = (bi < n);
+  uint valA = ((inBoundsA) ? (_input[ai]) : (0u));
+  uint valB = ((inBoundsB) ? (_input[bi]) : (0u));
+  sdata[ai] = valA;
+  sdata[bi] = valB;
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  for (int offset = 0; offset < (int)(1); ++offset) {
+    uint offsetU32 = ((uint)(offset));
+    uint upMask = ((offsetU32 * 2u) - 1u);
+    bool upShouldWork = ((lid & upMask) == 0u);
+    if (upShouldWork) {
+      uint upAi2 = ((offsetU32 * ((lid * 2u) + 1u)) + (offsetU32 - 1u));
+      uint upBi2 = (upAi2 + offsetU32);
+      uint upVa = sdata[upAi2];
+      uint upVb = sdata[upBi2];
+      sdata[upBi2] = (upVa + upVb);
+    }
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+  }
+  if ((lid == 0u)) {
+    sdata[511u] = 0u;
+  }
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  for (int offset = 0; offset < (int)(256); ++offset) {
+    uint downOffsetU32 = ((uint)(offset));
+    uint downMask = ((downOffsetU32 * 2u) - 1u);
+    bool downShouldWork = ((lid & downMask) == 0u);
+    if (downShouldWork) {
+      uint downAi2 = ((downOffsetU32 * ((lid * 2u) + 1u)) + (downOffsetU32 - 1u));
+      uint downBi2 = (downAi2 + downOffsetU32);
+      uint downT = sdata[downAi2];
+      uint downVb = sdata[downBi2];
+      sdata[downAi2] = downVb;
+      sdata[downBi2] = (downT + downVb);
+    }
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+  }
+  if (inBoundsA) {
+    uint exclusiveResultA = sdata[ai];
+    uint inclusiveResultA = (exclusiveResultA + valA);
+    uint resultA = ((isExclusive) ? (exclusiveResultA) : (inclusiveResultA));
+    _output[ai] = resultA;
+  }
+  if (inBoundsB) {
+    uint exclusiveResultB = sdata[bi];
+    uint inclusiveResultB = (exclusiveResultB + valB);
+    uint resultB = ((isExclusive) ? (exclusiveResultB) : (inclusiveResultB));
+    _output[bi] = resultB;
+  }
+}

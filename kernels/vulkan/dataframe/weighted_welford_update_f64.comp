@@ -1,0 +1,54 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_x {
+  double x[];
+};
+layout(std430, binding = 1) readonly buffer buf_w {
+  double w[];
+};
+layout(std430, binding = 2) buffer buf_weightSum {
+  double weightSum[];
+};
+layout(std430, binding = 3) buffer buf_mean {
+  double mean[];
+};
+layout(std430, binding = 4) buffer buf_M2 {
+  double M2[];
+};
+
+// kernel: navatala_dataframe_weighted_welford_update_f64
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  if ((int(gl_GlobalInvocationID.x) == 0)) {
+    double wOld = weightSum[0];
+    double meanOld = mean[0];
+    double m2Old = M2[0];
+    double xVal = x[0];
+    double wVal = w[0];
+    double wNew = (wOld + wVal);
+    double delta = (xVal - meanOld);
+    double wNewSafe = (((wNew == packDouble2x32(uvec2(0x00000000u, 0x00000000u)))) ? (packDouble2x32(uvec2(0x00000000u, 0x3ff00000u))) : (wNew));
+    double meanNew = (meanOld + ((wVal / wNewSafe) * delta));
+    double delta2 = (xVal - meanNew);
+    double m2New = (m2Old + (wVal * (delta * delta2)));
+    weightSum[0] = wNew;
+    mean[0] = meanNew;
+    M2[0] = m2New;
+  }
+}

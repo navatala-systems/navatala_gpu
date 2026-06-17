@@ -1,0 +1,117 @@
+# SPDX-License-Identifier: Apache-2.0
+# Per #1513 T5: build, package-check, and verify the published wheel does
+# not reintroduce generator-content tells. Local hooks cover the source
+# tree; this workflow covers the artifact.
+name: Wheel-Hygiene
+
+on:
+  push:
+    tags: [ 'v*' ]
+  pull_request:
+    paths:
+      - 'pyproject.toml'
+      - 'python/**'
+      - 'bindings/**'
+      - 'CMakeLists.txt'
+      - 'tools/check_generated_content_tells.sh'
+
+jobs:
+  build-and-check:
+    strategy:
+      matrix:
+        target:
+          - { os: ubuntu-latest, plat: manylinux_2_28_x86_64 }
+          - { os: ubuntu-latest, plat: manylinux_2_28_aarch64 }
+          - { os: macos-14,      plat: macosx_11_0_arm64 }
+      fail-fast: false
+    runs-on: ${{ matrix.target.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install build deps
+        run: |
+          python -m pip install --upgrade pip build twine
+      - name: Build public runtime for wheel link
+        run: |
+          cmake -S . -B build-runtime \
+            -DNAVATALA_GPU_USE_CUDA=OFF \
+            -DNAVATALA_GPU_USE_HIP=OFF \
+            -DNAVATALA_GPU_USE_VULKAN=OFF \
+            -DNAVATALA_GPU_USE_OPENCL=OFF \
+            -DNAVATALA_GPU_USE_METAL=OFF \
+            -DNAVATALA_GPU_BUILD_TESTS=OFF
+          cmake --build build-runtime -j
+          echo "NAVATALA_FFI_INCLUDE_DIR=$PWD/runtime/include" >> "$GITHUB_ENV"
+          if [ -f "$PWD/build-runtime/runtime/libgpu_runtime.so" ]; then
+              echo "NAVATALA_FFI_LIBRARY=$PWD/build-runtime/runtime/libgpu_runtime.so" >> "$GITHUB_ENV"
+          elif [ -f "$PWD/build-runtime/runtime/libgpu_runtime.dylib" ]; then
+              echo "NAVATALA_FFI_LIBRARY=$PWD/build-runtime/runtime/libgpu_runtime.dylib" >> "$GITHUB_ENV"
+          else
+              echo "libgpu_runtime shared library not found" >&2
+              find "$PWD/build-runtime" -name 'libgpu_runtime*' -print >&2
+              exit 1
+          fi
+      - name: Build wheel and sdist
+        run: |
+          cd python
+          python -m build \
+            -Ccmake.define.NAVATALA_FFI_INCLUDE_DIR="$NAVATALA_FFI_INCLUDE_DIR" \
+            -Ccmake.define.NAVATALA_FFI_LIBRARY="$NAVATALA_FFI_LIBRARY"
+      - name: twine check
+        run: |
+          twine check python/dist/*
+      - name: Wheel content hygiene
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          fails=0
+          for whl in python/dist/*.whl; do
+              echo "::group::Inspect $whl"
+              # Use python to list wheel contents portably.
+              python -c "
+import zipfile, sys
+sentinels = ['generated', 'codegen', 'CodeGenGPU', 'GPU.GPUType', 'Calculations_GPU', '__pycache__', '.pyc', '.pytest_cache']
+fails = 0
+with zipfile.ZipFile('$whl') as z:
+    for name in z.namelist():
+        for s in sentinels:
+            if s in name:
+                print(f'FAIL: {name!r} matches sentinel {s!r}', file=sys.stderr)
+                fails += 1
+                break
+sys.exit(1 if fails else 0)
+"
+              echo "::endgroup::"
+          done
+      - name: Install + smoke test in fresh venv
+        run: |
+          set -euo pipefail
+          python -m venv /tmp/whltest-venv
+          source /tmp/whltest-venv/bin/activate
+          pip install --upgrade pip
+          # Release tags must eventually be produced in the declared
+          # manylinux_2_28_x86_64 / manylinux_2_28_aarch64 /
+          # macosx_11_0_arm64 environments. This hygiene job is still useful
+          # before that because it fails on packaging/install/import errors.
+          pip install python/dist/navatala_gpu-*.whl
+          python -c "
+import navatala_gpu
+print('version', navatala_gpu.__version__)
+print('abi_version', navatala_gpu.__abi_version__)
+print('manifest_id', navatala_gpu._meta.manifest_id())
+"
+      - name: Run acceptance checks on installed tree
+        run: |
+          if [ -x tools/check_generated_content_tells.sh ]; then
+              tools/check_generated_content_tells.sh
+          else
+              echo "::warning::tools/check_generated_content_tells.sh not present in checkout — skipped"
+          fi
+          if [ -x tools/check_release_hygiene.py ]; then
+              python tools/check_release_hygiene.py .
+          else
+              echo "::warning::tools/check_release_hygiene.py not present in checkout — skipped"
+          fi

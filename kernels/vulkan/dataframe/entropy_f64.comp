@@ -1,0 +1,66 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_p {
+  double p[];
+};
+layout(std430, binding = 1) readonly buffer buf_n {
+  uint n[];
+};
+layout(std430, binding = 2) writeonly buffer buf_result {
+  double result[];
+};
+
+shared double sdata[256];
+
+// kernel: navatala_dataframe_entropy_f64
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint gid = uint(int(gl_GlobalInvocationID.x));
+  uint lid = uint(int(gl_LocalInvocationID.x));
+  uint nVal = n[0u];
+  bool inBounds = (gid < nVal);
+  double pVal = p[gid];
+  bool pPositive = (pVal > packDouble2x32(uvec2(0x00000000u, 0x00000000u)));
+  double logP = double(log(float(pVal)));
+  double pLogP = (pVal * logP);
+  double contrib = ((pPositive) ? ((packDouble2x32(uvec2(0x00000000u, 0xbff00000u)) * pLogP)) : (packDouble2x32(uvec2(0x00000000u, 0x00000000u))));
+  if (inBounds) {
+    sdata[lid] = contrib;
+  } else {
+    sdata[lid] = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
+  }
+  barrier();
+  uint e64_reductionStride = 128u;
+  for (int e64_reductionStep = 0; e64_reductionStep < int(8); ++e64_reductionStep) {
+    uint e64_stride = e64_reductionStride;
+    if ((lid < e64_stride)) {
+      double e64_other = sdata[(lid + e64_stride)];
+      double e64_mine = sdata[lid];
+      double e64_sum = (e64_mine + e64_other);
+      sdata[lid] = e64_sum;
+    }
+    uint e64_strideToHalve = e64_reductionStride;
+    uint e64_nextStride = (e64_strideToHalve >> 1u);
+    e64_reductionStride = e64_nextStride;
+    barrier();
+  }
+  if ((lid == 0u)) {
+    result[0u] = sdata[0u];
+  }
+}
