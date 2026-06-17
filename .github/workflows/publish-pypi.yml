@@ -18,13 +18,17 @@ permissions:
 
 jobs:
   build:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: ${{ matrix.python-version }}
       - name: Install build deps
         run: |
           python -m pip install --upgrade pip build twine
@@ -48,10 +52,10 @@ jobs:
               find "$PWD/build-runtime" -name 'libgpu_runtime*' -print >&2
               exit 1
           fi
-      - name: Build wheel and sdist
+      - name: Build wheel
         run: |
           cd python
-          python -m build \
+          python -m build --wheel \
             -Ccmake.define.NAVATALA_FFI_INCLUDE_DIR="$NAVATALA_FFI_INCLUDE_DIR" \
             -Ccmake.define.NAVATALA_FFI_LIBRARY="$NAVATALA_FFI_LIBRARY"
       - name: Repair Linux wheel
@@ -83,7 +87,7 @@ jobs:
       - name: Upload dist artifact
         uses: actions/upload-artifact@v4
         with:
-          name: python-dist
+          name: python-dist-${{ matrix.python-version }}
           path: python/dist/*
 
   publish-testpypi:
@@ -97,8 +101,9 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: python-dist
+          pattern: python-dist-*
           path: dist
+          merge-multiple: true
       - name: Publish to TestPyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
@@ -117,8 +122,9 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: python-dist
+          pattern: python-dist-*
           path: dist
+          merge-multiple: true
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:

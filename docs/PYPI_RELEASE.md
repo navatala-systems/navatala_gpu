@@ -49,6 +49,11 @@ It is manual-only:
 4. Install from TestPyPI and run a smoke test.
 5. If the result is acceptable, run again with `target=pypi`.
 
+The publish workflow currently builds and uploads repaired binary wheels for
+CPython 3.9 through 3.13. It intentionally does **not** publish the sdist yet:
+the source distribution requires additional work so it can build the bundled
+runtime without external `NAVATALA_FFI_*` CMake defines.
+
 ## Local Validation
 
 Build the runtime shared library with all optional GPU backends disabled, then
@@ -90,8 +95,9 @@ PY
 
 PyPI/TestPyPI reject raw `linux_x86_64` wheels. The current GitHub workflow
 therefore repairs the Linux wheel with `auditwheel` before `twine check` and
-upload. Before a production PyPI release intended for general users, replace
-the single-runner repair path with a real wheel matrix:
+upload. It publishes wheels only until the sdist can build the bundled runtime
+standalone. Before a production PyPI release intended for general users,
+replace the single-runner repair path with a real wheel matrix:
 
 - `manylinux_2_28_x86_64`
 - `manylinux_2_28_aarch64`
