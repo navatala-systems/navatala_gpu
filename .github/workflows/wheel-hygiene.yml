@@ -17,14 +17,7 @@ on:
 
 jobs:
   build-and-check:
-    strategy:
-      matrix:
-        target:
-          - { os: ubuntu-latest, plat: manylinux_2_28_x86_64 }
-          - { os: ubuntu-latest, plat: manylinux_2_28_aarch64 }
-          - { os: macos-14,      plat: macosx_11_0_arm64 }
-      fail-fast: false
-    runs-on: ${{ matrix.target.os }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
@@ -33,56 +26,31 @@ jobs:
           python-version: '3.11'
       - name: Install build deps
         run: |
-          python -m pip install --upgrade pip build twine
-      - name: Build public runtime for wheel link
+          python -m pip install --upgrade pip build cibuildwheel twine
+      - name: Build manylinux_2_28 wheels
+        env:
+          CIBW_BUILD: "cp39-* cp310-* cp311-* cp312-* cp313-*"
+          CIBW_ARCHS_LINUX: "x86_64"
+          CIBW_MANYLINUX_X86_64_IMAGE: "manylinux_2_28"
+          CIBW_SKIP: "*musllinux*"
+          CIBW_TEST_COMMAND: >
+            python -c "import navatala_gpu;
+            assert navatala_gpu.get_capabilities().get('extension_loaded')"
         run: |
-          cmake -S . -B build-runtime \
-            -DNAVATALA_GPU_USE_CUDA=OFF \
-            -DNAVATALA_GPU_USE_HIP=OFF \
-            -DNAVATALA_GPU_USE_VULKAN=OFF \
-            -DNAVATALA_GPU_USE_OPENCL=OFF \
-            -DNAVATALA_GPU_USE_METAL=OFF \
-            -DNAVATALA_GPU_BUILD_TESTS=OFF
-          cmake --build build-runtime -j
-          echo "NAVATALA_FFI_INCLUDE_DIR=$PWD/runtime/include" >> "$GITHUB_ENV"
-          if [ -f "$PWD/build-runtime/runtime/libgpu_runtime.so" ]; then
-              echo "NAVATALA_FFI_LIBRARY=$PWD/build-runtime/runtime/libgpu_runtime.so" >> "$GITHUB_ENV"
-          elif [ -f "$PWD/build-runtime/runtime/libgpu_runtime.dylib" ]; then
-              echo "NAVATALA_FFI_LIBRARY=$PWD/build-runtime/runtime/libgpu_runtime.dylib" >> "$GITHUB_ENV"
-          else
-              echo "libgpu_runtime shared library not found" >&2
-              find "$PWD/build-runtime" -name 'libgpu_runtime*' -print >&2
-              exit 1
-          fi
-      - name: Build wheel
-        run: |
-          cd python
-          python -m build --wheel \
-            -Ccmake.define.NAVATALA_FFI_INCLUDE_DIR="$NAVATALA_FFI_INCLUDE_DIR" \
-            -Ccmake.define.NAVATALA_FFI_LIBRARY="$NAVATALA_FFI_LIBRARY"
+          python -m cibuildwheel python --output-dir wheelhouse
       - name: Build standalone sdist
         run: |
           cd python
           python -m build --sdist
-      - name: Repair Linux wheel
-        if: ${{ runner.os == 'Linux' }}
-        run: |
-          python -m pip install --upgrade auditwheel
-          sudo apt-get update
-          sudo apt-get install -y patchelf
-          mkdir -p python/repaired
-          auditwheel repair python/dist/*.whl -w python/repaired
-          rm python/dist/*.whl
-          mv python/repaired/*.whl python/dist/
       - name: twine check
         run: |
-          twine check python/dist/*
+          twine check wheelhouse/*.whl python/dist/*.tar.gz
       - name: Wheel content hygiene
         run: |
           set -euo pipefail
           shopt -s nullglob
           fails=0
-          for whl in python/dist/*.whl; do
+          for whl in wheelhouse/*.whl; do
               echo "::group::Inspect $whl"
               # Use python to list wheel contents portably.
               python - "$whl" <<'PY'
@@ -108,11 +76,7 @@ jobs:
           python -m venv /tmp/whltest-venv
           source /tmp/whltest-venv/bin/activate
           pip install --upgrade pip
-          # Release tags must eventually be produced in the declared
-          # manylinux_2_28_x86_64 / manylinux_2_28_aarch64 /
-          # macosx_11_0_arm64 environments. This hygiene job is still useful
-          # before that because it fails on packaging/install/import errors.
-          pip install python/dist/navatala_gpu-*.whl
+          pip install wheelhouse/navatala_gpu-*-cp311-*.whl
           python - <<'PY'
           import navatala_gpu
           print('version', navatala_gpu.__version__)

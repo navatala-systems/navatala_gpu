@@ -17,67 +17,38 @@ permissions:
   contents: read
 
 jobs:
-  build:
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
+  build-wheels:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: '3.11'
       - name: Install build deps
         run: |
-          python -m pip install --upgrade pip build twine
-      - name: Build public runtime for wheel link
+          python -m pip install --upgrade pip cibuildwheel twine
+      - name: Build manylinux_2_28 wheels
+        env:
+          CIBW_BUILD: "cp39-* cp310-* cp311-* cp312-* cp313-*"
+          CIBW_ARCHS_LINUX: "x86_64"
+          CIBW_MANYLINUX_X86_64_IMAGE: "manylinux_2_28"
+          CIBW_SKIP: "*musllinux*"
+          CIBW_TEST_COMMAND: >
+            python -c "import navatala_gpu;
+            assert navatala_gpu.get_capabilities().get('extension_loaded')"
         run: |
-          cmake -S . -B build-runtime \
-            -DNAVATALA_GPU_USE_CUDA=OFF \
-            -DNAVATALA_GPU_USE_HIP=OFF \
-            -DNAVATALA_GPU_USE_VULKAN=OFF \
-            -DNAVATALA_GPU_USE_OPENCL=OFF \
-            -DNAVATALA_GPU_USE_METAL=OFF \
-            -DNAVATALA_GPU_BUILD_TESTS=OFF
-          cmake --build build-runtime -j
-          echo "NAVATALA_FFI_INCLUDE_DIR=$PWD/runtime/include" >> "$GITHUB_ENV"
-          if [ -f "$PWD/build-runtime/runtime/libgpu_runtime.so" ]; then
-              echo "NAVATALA_FFI_LIBRARY=$PWD/build-runtime/runtime/libgpu_runtime.so" >> "$GITHUB_ENV"
-          elif [ -f "$PWD/build-runtime/runtime/libgpu_runtime.dylib" ]; then
-              echo "NAVATALA_FFI_LIBRARY=$PWD/build-runtime/runtime/libgpu_runtime.dylib" >> "$GITHUB_ENV"
-          else
-              echo "libgpu_runtime shared library not found" >&2
-              find "$PWD/build-runtime" -name 'libgpu_runtime*' -print >&2
-              exit 1
-          fi
-      - name: Build wheel
-        run: |
-          cd python
-          python -m build --wheel \
-            -Ccmake.define.NAVATALA_FFI_INCLUDE_DIR="$NAVATALA_FFI_INCLUDE_DIR" \
-            -Ccmake.define.NAVATALA_FFI_LIBRARY="$NAVATALA_FFI_LIBRARY"
-      - name: Repair Linux wheel
-        if: ${{ runner.os == 'Linux' }}
-        run: |
-          python -m pip install --upgrade auditwheel
-          sudo apt-get update
-          sudo apt-get install -y patchelf
-          mkdir -p python/repaired
-          auditwheel repair python/dist/*.whl -w python/repaired
-          rm python/dist/*.whl
-          mv python/repaired/*.whl python/dist/
+          python -m cibuildwheel python --output-dir wheelhouse
       - name: Twine metadata check
         run: |
-          twine check python/dist/*
+          twine check wheelhouse/*
       - name: Install smoke test
         run: |
           set -euo pipefail
           python -m venv /tmp/navatala-gpu-smoke
           source /tmp/navatala-gpu-smoke/bin/activate
           pip install --upgrade pip
-          pip install python/dist/navatala_gpu-*.whl
+          pip install wheelhouse/navatala_gpu-*-cp311-*.whl
           python - <<'PY'
           import navatala_gpu
           print("version", navatala_gpu.__version__)
@@ -87,8 +58,8 @@ jobs:
       - name: Upload dist artifact
         uses: actions/upload-artifact@v4
         with:
-          name: python-dist-${{ matrix.python-version }}
-          path: python/dist/*
+          name: python-wheels-manylinux-2-28-x86-64
+          path: wheelhouse/*.whl
 
   build-sdist:
     runs-on: ubuntu-latest
@@ -126,7 +97,7 @@ jobs:
           path: python/dist/*.tar.gz
 
   publish-testpypi:
-    needs: [build, build-sdist]
+    needs: [build-wheels, build-sdist]
     if: ${{ github.event.inputs.target == 'testpypi' }}
     runs-on: ubuntu-latest
     environment: testpypi
@@ -147,7 +118,7 @@ jobs:
           skip-existing: true
 
   publish-pypi:
-    needs: [build, build-sdist]
+    needs: [build-wheels, build-sdist]
     if: ${{ github.event.inputs.target == 'pypi' }}
     runs-on: ubuntu-latest
     environment: pypi

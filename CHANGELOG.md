@@ -4,7 +4,19 @@ All notable user-visible changes to `navatala_gpu` are recorded here. This
 file follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the
 project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.0] — Pre-alpha (unreleased)
+## [0.1.1] — Pre-alpha (unreleased)
+
+### Packaging
+
+- Python package metadata now describes the package as
+  "Multi-backend GPU kernels and Python bindings".
+- Linux wheels are built with `cibuildwheel` inside the PyPA
+  `manylinux_2_28` x86_64 image instead of building on the GitHub Ubuntu
+  host and repairing to the host glibc baseline.
+- The standalone source distribution path remains supported and continues to
+  build the bundled public runtime in stub mode.
+
+## [0.1.0] — Pre-alpha (2026-06-17)
 
 The initial public developer-preview release. The package is pre-1.0; the
 public surface — module names, C ABI symbols, file layout — may change in

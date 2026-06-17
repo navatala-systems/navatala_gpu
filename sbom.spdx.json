@@ -3,7 +3,7 @@
   "dataLicense": "CC0-1.0",
   "SPDXID": "SPDXRef-DOCUMENT",
   "name": "navatala_gpu-source-preview",
-  "documentNamespace": "https://navatalasystems.com/spdx/navatala-gpu/0.1.0-alpha",
+  "documentNamespace": "https://navatalasystems.com/spdx/navatala-gpu/0.1.1-alpha",
   "creationInfo": {
     "created": "2026-06-17T00:00:00Z",
     "creators": [

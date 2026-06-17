@@ -5,8 +5,8 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "navatala-gpu"
-version = "0.1.0"
-description = "Generated multi-backend GPU kernels and Python bindings"
+version = "0.1.1"
+description = "Multi-backend GPU kernels and Python bindings"
 requires-python = ">=3.9"
 readme = "README.md"
 license = "Apache-2.0"

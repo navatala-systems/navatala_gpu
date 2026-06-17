@@ -7,7 +7,7 @@ Public surface:
 
 Internal modules (underscore-prefixed) are not part of the public API.
 """
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __abi_version__ = 6
 __navatala_ffi_abi_version__ = __abi_version__  # back-compat alias; prefer ``__abi_version__``
 from . import _meta as _meta  # noqa: F401  internal metadata; not in __all__

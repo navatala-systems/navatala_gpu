@@ -8,7 +8,8 @@ the projected `navatala_gpu/` copy of this file directly.
 
 - Distribution name: `navatala-gpu`
 - Import package: `navatala_gpu`
-- Initial version: `0.1.0`
+- Current packaging version: `0.1.1`
+- Initial PyPI version: `0.1.0` (published 2026-06-17)
 - License: Apache-2.0
 - Python: `>=3.9`
 
@@ -49,11 +50,17 @@ It is manual-only:
 4. Install from TestPyPI and run a smoke test.
 5. If the result is acceptable, run again with `target=pypi`.
 
-The publish workflow builds and uploads repaired binary wheels for CPython 3.9
-through 3.13, plus exactly one source distribution. Wheel jobs link against a
-separately built public runtime. The source distribution is intentionally built
-without `NAVATALA_FFI_*` CMake defines so it exercises the bundled-runtime
-fallback path.
+The publish workflow builds and uploads `manylinux_2_28_x86_64` binary wheels
+for CPython 3.9 through 3.13, plus exactly one source distribution. Wheel jobs
+use `cibuildwheel` and the PyPA `manylinux_2_28` image. The source
+distribution is intentionally built without `NAVATALA_FFI_*` CMake defines so
+it exercises the bundled-runtime fallback path.
+
+`auditwheel` may add an older compatible platform tag when the built extension
+does not use newer glibc symbols. For example, a wheel built in the
+`manylinux_2_28` container may be named with both `manylinux_2_27_x86_64` and
+`manylinux_2_28_x86_64`; this is acceptable as long as the build itself ran
+inside the configured `manylinux_2_28` container.
 
 ## Local Validation
 
@@ -80,26 +87,20 @@ PY
 deactivate
 ```
 
-Then build a local wheel. The release workflow builds a runtime library first
-and supplies it to the Python wheel build through explicit CMake defines:
+Then build local `manylinux_2_28_x86_64` wheels. This requires Docker because
+`cibuildwheel` runs the build inside the PyPA manylinux container:
 
 ```bash
 cd ..
-cmake -S . -B /tmp/navatala_gpu_runtime_pypi \
-  -DNAVATALA_GPU_USE_CUDA=OFF \
-  -DNAVATALA_GPU_USE_HIP=OFF \
-  -DNAVATALA_GPU_USE_VULKAN=OFF \
-  -DNAVATALA_GPU_USE_OPENCL=OFF \
-  -DNAVATALA_GPU_USE_METAL=OFF \
-  -DNAVATALA_GPU_BUILD_TESTS=OFF
-cmake --build /tmp/navatala_gpu_runtime_pypi -j
-
-cd python
-rm -rf dist build *.egg-info
-python -m build --wheel \
-  -Ccmake.define.NAVATALA_FFI_INCLUDE_DIR="$PWD/../runtime/include" \
-  -Ccmake.define.NAVATALA_FFI_LIBRARY="/tmp/navatala_gpu_runtime_pypi/runtime/libgpu_runtime.so"
-python -m twine check dist/*
+rm -rf wheelhouse
+python -m pip install --upgrade cibuildwheel twine
+CIBW_BUILD="cp39-* cp310-* cp311-* cp312-* cp313-*" \
+CIBW_ARCHS_LINUX="x86_64" \
+CIBW_MANYLINUX_X86_64_IMAGE="manylinux_2_28" \
+CIBW_SKIP="*musllinux*" \
+CIBW_TEST_COMMAND='python -c "import navatala_gpu; assert navatala_gpu.get_capabilities().get(\"extension_loaded\")"' \
+python -m cibuildwheel python --output-dir wheelhouse
+python -m twine check wheelhouse/*
 ```
 
 Install the built wheel into a clean environment:
@@ -108,7 +109,7 @@ Install the built wheel into a clean environment:
 python -m venv /tmp/navatala_gpu_whltest
 . /tmp/navatala_gpu_whltest/bin/activate
 pip install --upgrade pip
-pip install python/dist/navatala_gpu-*.whl
+pip install wheelhouse/navatala_gpu-*-cp311-*.whl
 python - <<'PY'
 import navatala_gpu
 print(navatala_gpu.__version__)
@@ -119,19 +120,23 @@ PY
 
 ## Wheel Policy
 
-PyPI/TestPyPI reject raw `linux_x86_64` wheels. The current GitHub workflow
-therefore repairs Linux wheels with `auditwheel` before `twine check` and
-upload. Before a production PyPI release intended for general users, replace
-the single-runner repair path with a real wheel matrix:
+PyPI/TestPyPI reject raw `linux_x86_64` wheels. The GitHub workflow therefore
+uses `cibuildwheel` with the PyPA `manylinux_2_28` image for Linux wheels
+instead of building directly on the GitHub Ubuntu host. The active alpha
+release target is:
 
 - `manylinux_2_28_x86_64`
+
+Future platform targets:
+
 - `manylinux_2_28_aarch64`
 - `macosx_11_0_arm64`
 
-Use `cibuildwheel` or an equivalent manylinux container flow so the wheel tags
-match the platform policy. The existing `wheel-hygiene.yml` workflow records
-the intended tags and validates package hygiene, but it is not a complete
-manylinux wheel builder yet.
+For `manylinux_2_28_aarch64`, use either native GitHub ARM runners or QEMU
+via `docker/setup-qemu-action`; QEMU is slower and should be tested separately
+before adding it to the publish workflow. For macOS ARM, add a separate
+`macos-14` cibuildwheel job once the Metal/runtime packaging path is ready for
+public wheels.
 
 ## TestPyPI Install
 
