@@ -88,10 +88,10 @@ PY
 
 ## Wheel Policy
 
-For the first TestPyPI rehearsal, a source distribution and a native Linux
-wheel built on the GitHub runner are acceptable. Before a production PyPI
-release intended for general users, replace the native Linux wheel path with
-a real wheel matrix:
+PyPI/TestPyPI reject raw `linux_x86_64` wheels. The current GitHub workflow
+therefore repairs the Linux wheel with `auditwheel` before `twine check` and
+upload. Before a production PyPI release intended for general users, replace
+the single-runner repair path with a real wheel matrix:
 
 - `manylinux_2_28_x86_64`
 - `manylinux_2_28_aarch64`

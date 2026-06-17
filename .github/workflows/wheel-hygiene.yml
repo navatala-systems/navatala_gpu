@@ -60,6 +60,16 @@ jobs:
           python -m build \
             -Ccmake.define.NAVATALA_FFI_INCLUDE_DIR="$NAVATALA_FFI_INCLUDE_DIR" \
             -Ccmake.define.NAVATALA_FFI_LIBRARY="$NAVATALA_FFI_LIBRARY"
+      - name: Repair Linux wheel
+        if: ${{ runner.os == 'Linux' }}
+        run: |
+          python -m pip install --upgrade auditwheel
+          sudo apt-get update
+          sudo apt-get install -y patchelf
+          mkdir -p python/repaired
+          auditwheel repair python/dist/*.whl -w python/repaired
+          rm python/dist/*.whl
+          mv python/repaired/*.whl python/dist/
       - name: twine check
         run: |
           twine check python/dist/*
