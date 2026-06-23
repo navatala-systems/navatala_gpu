@@ -518,10 +518,12 @@ The gate is not directly evaluable unless both rows are present for the same
 shape in the same-host report.
 
 The intended MFMA runtime policy is shape-aware: CTA64 shared remains the
-medium-shape candidate, while CTA128 is the large tile-divisible candidate. The
-public `navatala_gpu_gemm_f16_f32` wrapper follows that policy for HIP/gfx942
-when `NAVATALA_GPU_GEMM_IMPL` is `auto` or `mfma`; forced MFMA calls fail
-loudly when a shape is outside the current tile-divisible Phase-0 contract.
+medium-shape candidate, while CTA128 is the large-shape candidate. The public
+`navatala_gpu_gemm_f16_f32` wrapper follows that policy for HIP/gfx942 when
+`NAVATALA_GPU_GEMM_IMPL` is `auto` or `mfma`, using the edge-capable
+CTA64/CTA128 kernels for tail tiles, alpha/beta, transpose, and strided-batch
+calls. The benchmark rows above intentionally continue to measure the
+tile-divisible Phase-0 kernels for clean historical comparisons.
 When publishing a CTA128 advancement, include both the timing JSON/report and
 the `profile/mfma_resource_metadata.csv` emitted by
 `./scripts/run_rocm_vendor_benchmarks.sh --matrix cta128-evidence

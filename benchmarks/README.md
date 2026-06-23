@@ -75,11 +75,12 @@ GEMM_F16_PORTABLE_F32OUT.generatedMeanMs / GEMM_F16_MFMA_CTA128.generatedMeanMs
 Only same-host reports containing both rows for the same shape can evaluate
 that gate.
 
-For the current MFMA tuning line, the intended wrapper policy is shape-aware:
-CTA64 shared remains the medium-shape candidate, while CTA128 is the large,
-tile-divisible candidate. The public `navatala_gpu_gemm_f16_f32` wrapper now
-wires that policy for tile-divisible HIP/gfx942 calls; edge tiles, alpha/beta,
-transpose, and batched coverage remain follow-up work.
+For the current MFMA tuning line, the runtime wrapper policy is shape-aware:
+CTA64 shared remains the medium-shape candidate, while CTA128 is the large-shape
+candidate. The public `navatala_gpu_gemm_f16_f32` wrapper dispatches to the
+edge-capable HIP/gfx942 CTA64/CTA128 kernels and covers tail tiles, alpha/beta,
+transpose, and strided batching. The raw benchmark rows remain tile-divisible
+prototype timing rows so they can be compared cleanly against earlier fixtures.
 
 To capture current CTA128 resource metadata alongside a timing report, run:
 

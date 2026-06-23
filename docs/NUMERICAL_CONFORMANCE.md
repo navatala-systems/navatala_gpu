@@ -109,18 +109,19 @@ The near-term GEMM dispatch policy is:
 - `NAVATALA_GPU_GEMM_IMPL=auto|vendor|mfma|portable` is the higher-precedence
   wrapper implementation selector. `vendor` forces BLAS dispatch, `portable`
   forces the fallback/reference path, and contradictory combinations with
-  `NAVATALA_GPU_GEMM_VENDOR_MODE` fail loudly. `mfma` is reserved for the
-  future F16-input/F32-output GEMM wrapper and currently returns
-  `NAVATALA_NOT_IMPLEMENTED` from the Float32 ABI rather than silently using an
-  incompatible path;
+  `NAVATALA_GPU_GEMM_VENDOR_MODE` fail loudly. `mfma` selects the HIP/gfx942
+  F16-input/F32-output MFMA wrapper when that backend registry shard is present;
+  the Float32 ABI still returns `NAVATALA_NOT_IMPLEMENTED` for `mfma` rather
+  than silently using an incompatible path;
 - benchmark reports must label `portable_kernel`, `tuned_kernel`, and
   `vendor_library` paths separately.
-- MFMA runtime dispatch is not yet wired for the public F16-input/F32-output
-  wrapper. Current CTA64/CTA128 rows are benchmark evidence only. The
-  `20260623_mi300x_cta128_evidence` fixture records the current shape-aware
-  policy basis: CTA64 shared for medium tile-divisible shapes and CTA128 for
-  larger tile-divisible shapes, with same-host correctness and `Scratch_Size=0`
-  CTA128 profile evidence.
+- MFMA runtime dispatch is wired for the public F16-input/F32-output wrapper on
+  HIP/gfx942. The wrapper uses edge-capable CTA64/CTA128 kernels with
+  alpha/beta, transpose, and strided-batch correctness coverage. The
+  CTA64/CTA128 benchmark rows remain prototype timing rows; the
+  `20260623_mi300x_cta128_evidence` and
+  `20260624_mi300x_cta128_edge_wrapper` fixtures record the shape-aware policy
+  basis and wrapper validation evidence.
 
 ## Known Gaps Before Beta
 

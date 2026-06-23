@@ -145,8 +145,11 @@ P0 items into active tuning. Updated 2026-06-22 with the ROCm 7.2.4 follow-up ru
   candidate: at 1024^3 it measured `0.053518 ms` versus CTA64 shared at
   `0.060056 ms` and rocBLAS at `0.042751 ms`. CTA64 shared remains the
   medium-shape candidate: at 512^3 it measured `0.020572 ms` versus CTA128 at
-  `0.026223 ms`. The next production step is a public F16-input/F32-output
-  wrapper with shape-aware dispatch, not a blanket replacement of CTA64 shared.
+  `0.026223 ms`. The public F16-input/F32-output wrapper now implements
+  shape-aware HIP/gfx942 MFMA dispatch with edge-tile, alpha/beta, transpose,
+  and strided-batch correctness coverage. The next production work is timing
+  coverage for the edge-capable wrapper path, continued shape-threshold tuning,
+  and any backend-specific expansion beyond HIP/gfx942.
 
 Implementation details and acceptance gates are tracked in the source
 repository design notes. Public release reports should cite the generated JSON
