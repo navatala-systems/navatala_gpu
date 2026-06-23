@@ -139,7 +139,7 @@ __device__ inline void navatala_gpu_wait_direct_lds_copy() {
 #endif
 }
 #endif  // NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
-extern "C" __global__ __launch_bounds__(256) void navatala_transformer_tiled_gemm_f16_mfma_cta64_shared(const __half* a, const __half* b, const unsigned int* kTiles, const unsigned int* kStride, const unsigned int* nStride, float* c) {
+extern "C" __global__ __launch_bounds__(256) void navatala_transformer_tiled_gemm_f16_mfma_cta64_shared(const __half* a, const __half* b, unsigned int kTiles, unsigned int kStride, unsigned int nStride, float* c) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int tid = ((unsigned int)((int)(threadIdx.x)));
   unsigned int waveId = (tid / 64u);
@@ -151,9 +151,9 @@ extern "C" __global__ __launch_bounds__(256) void navatala_transformer_tiled_gem
   unsigned int tileCol = (blockCol + (waveColGroup * 32u));
   unsigned int waveRowLocal = (waveRowGroup * 32u);
   unsigned int waveColLocal = (waveColGroup * 32u);
-  unsigned int kTilesVal = kTiles[0u];
-  unsigned int kStrideVal = kStride[0u];
-  unsigned int nStrideVal = nStride[0u];
+  unsigned int kTilesVal = kTiles;
+  unsigned int kStrideVal = kStride;
+  unsigned int nStrideVal = nStride;
   __shared__ __half tileA[512];
   __shared__ __half tileB[512];
   navatala_mfma_acc_f32_32x32x8 acc = navatala_mfma_zero_acc_f32_32x32x8();

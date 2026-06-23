@@ -46,7 +46,9 @@
 #include "../kernels/hip/transformer/tiled_gemm_f16_mfma_cta64_shared_early_barrier.hip"
 #include "../kernels/hip/transformer/tiled_gemm_f16_mfma_cta64_shared_padded.hip"
 #include "../kernels/hip/transformer/tiled_gemm_f16_mfma_cta64_pipelined.hip"
+#include "../kernels/hip/transformer/tiled_gemm_f16_mfma_cta64_shared_edge.hip"
 #include "../kernels/hip/transformer/tiled_gemm_f16_mfma_cta128.hip"
+#include "../kernels/hip/transformer/tiled_gemm_f16_mfma_cta128_edge.hip"
 #endif
 
 namespace {
@@ -1163,9 +1165,9 @@ Result benchGemmF16MfmaCta64Shared(
                            0,
                            da,
                            db,
-                           dkTiles,
-                           dkStride,
-                           dnStride,
+                           kTiles,
+                           k,
+                           n,
                            dcGenerated);
     });
     check("generated CTA64 shared MFMA GEMM launch", hipGetLastError());
@@ -1651,9 +1653,9 @@ Result benchGemmF16MfmaCta128(
                            0,
                            da,
                            db,
-                           dkBlocks,
-                           dkStride,
-                           dnStride,
+                           kBlocks,
+                           k,
+                           n,
                            dcGenerated);
     });
     check("generated CTA128 MFMA GEMM launch", hipGetLastError());
@@ -1713,6 +1715,165 @@ Result benchGemmF16MfmaCta128(
     result.kernelClass = "mfma_f16";
     result.implementationKind = "tuned_kernel";
     result.tuningPath = "hip_mfma_gfx942_128x128x32_f16_f32_cta128";
+    return result;
+}
+
+Result benchGemmF16MfmaEdge(
+    const Options& options,
+    rocblas_handle blas,
+    std::uint32_t m,
+    std::uint32_t n,
+    std::uint32_t k,
+    bool cta128) {
+    constexpr float alpha = 1.0f;
+    constexpr float beta = 0.0f;
+    constexpr std::uint32_t transA = 0u;
+    constexpr std::uint32_t transB = 0u;
+    const std::size_t aCount = static_cast<std::size_t>(m) * k;
+    const std::size_t bCount = static_cast<std::size_t>(k) * n;
+    const std::size_t cCount = static_cast<std::size_t>(m) * n;
+
+    std::vector<__half> ha(aCount);
+    std::vector<__half> hb(bCount);
+    std::vector<float> hc(cCount, 0.0f);
+    for (std::size_t i = 0; i < ha.size(); ++i) {
+        ha[i] = __float2half(static_cast<float>(static_cast<int>(i % 29) - 14) * 0.025f);
+    }
+    for (std::size_t i = 0; i < hb.size(); ++i) {
+        hb[i] = __float2half(static_cast<float>(static_cast<int>(i % 31) - 15) * 0.02f);
+    }
+
+    __half* da = deviceAlloc<__half>(aCount);
+    __half* db = deviceAlloc<__half>(bCount);
+    float* dcGenerated = deviceAlloc<float>(cCount);
+    float* dcVendor = deviceAlloc<float>(cCount);
+    copyToDevice(da, ha);
+    copyToDevice(db, hb);
+    copyToDevice(dcGenerated, hc);
+    copyToDevice(dcVendor, hc);
+
+    const std::uint32_t kCount = cta128 ? ((k + 31u) / 32u) : ((k + 7u) / 8u);
+    const std::uint32_t aStride = k;
+    const std::uint32_t bStride = n;
+    const std::uint32_t cStride = n;
+    const std::uint32_t aBatchStride = static_cast<std::uint32_t>(aCount);
+    const std::uint32_t bBatchStride = static_cast<std::uint32_t>(bCount);
+    const std::uint32_t cBatchStride = static_cast<std::uint32_t>(cCount);
+    const dim3 block(256);
+    const dim3 grid(
+        cta128 ? ((n + 127u) / 128u) : ((n + 63u) / 64u),
+        cta128 ? ((m + 127u) / 128u) : ((m + 63u) / 64u),
+        1);
+
+    const double generatedMs = measureMs(options.warmup, options.iterations, [&]() {
+        if (cta128) {
+            hipLaunchKernelGGL(navatala_transformer_tiled_gemm_f16_mfma_cta128_edge,
+                               grid,
+                               block,
+                               0,
+                               0,
+                               da,
+                               db,
+                               m,
+                               n,
+                               k,
+                               kCount,
+                               aStride,
+                               bStride,
+                               cStride,
+                               aBatchStride,
+                               bBatchStride,
+                               cBatchStride,
+                               transA,
+                               transB,
+                               alpha,
+                               beta,
+                               dcGenerated);
+        } else {
+            hipLaunchKernelGGL(navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_edge,
+                               grid,
+                               block,
+                               0,
+                               0,
+                               da,
+                               db,
+                               m,
+                               n,
+                               k,
+                               kCount,
+                               aStride,
+                               bStride,
+                               cStride,
+                               aBatchStride,
+                               bBatchStride,
+                               cBatchStride,
+                               transA,
+                               transB,
+                               alpha,
+                               beta,
+                               dcGenerated);
+        }
+    });
+    check(cta128 ? "generated CTA128 edge MFMA GEMM launch" : "generated CTA64 edge MFMA GEMM launch",
+          hipGetLastError());
+
+    check("rocBLAS pointer mode host", rocblas_set_pointer_mode(blas, rocblas_pointer_mode_host));
+    const double vendorMs = measureMs(options.warmup, options.iterations, [&]() {
+        // Row-major C = A*B is column-major C^T = B^T*A^T.
+        check("rocblas_gemm_ex(F16/F32 edge reference)",
+              rocblas_gemm_ex(blas,
+                              rocblas_operation_none,
+                              rocblas_operation_none,
+                              static_cast<rocblas_int>(n),
+                              static_cast<rocblas_int>(m),
+                              static_cast<rocblas_int>(k),
+                              &alpha,
+                              db,
+                              rocblas_datatype_f16_r,
+                              static_cast<rocblas_int>(n),
+                              da,
+                              rocblas_datatype_f16_r,
+                              static_cast<rocblas_int>(k),
+                              &beta,
+                              dcVendor,
+                              rocblas_datatype_f32_r,
+                              static_cast<rocblas_int>(n),
+                              dcVendor,
+                              rocblas_datatype_f32_r,
+                              static_cast<rocblas_int>(n),
+                              rocblas_datatype_f32_r,
+                              rocblas_gemm_algo_standard,
+                              0,
+                              0));
+    });
+
+    auto generated = copyToHost(dcGenerated, cCount);
+    auto vendor = copyToHost(dcVendor, cCount);
+    const double err = maxAbsDiff(generated, vendor);
+
+    releaseHip(da);
+    releaseHip(db);
+    releaseHip(dcGenerated);
+    releaseHip(dcVendor);
+
+    Result result{cta128 ? "GEMM_F16_MFMA_CTA128_EDGE" : "GEMM_F16_MFMA_CTA64_SHARED_EDGE",
+                  "m=" + std::to_string(m) + ",n=" + std::to_string(n) + ",k=" + std::to_string(k) +
+                      ",compute=F32,edge=true",
+                  cta128
+                      ? "generated HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta128_edge"
+                      : "generated HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_edge",
+                  "rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation",
+                  err <= 5.0e-1,
+                  generatedMs,
+                  vendorMs,
+                  vendorMs > 0.0 ? generatedMs / vendorMs : 0.0,
+                  err,
+                  "edge-capable HIP/gfx942 MFMA kernel using by-value scalar ABI; direct-row baseline for public wrapper overhead"};
+    result.kernelClass = "mfma_f16";
+    result.implementationKind = "tuned_kernel";
+    result.tuningPath = cta128
+        ? "hip_mfma_gfx942_128x128x32_f16_f32_cta128_edge"
+        : "hip_mfma_gfx942_64x64x8_f16_f32_cta64_shared_edge";
     return result;
 }
 #endif
@@ -1944,7 +2105,7 @@ Result benchGemmF16F32WrapperMfma(
                       vendorMs,
                       vendorMs > 0.0 ? wrapperMs / vendorMs : 0.0,
                       err,
-                      "public wrapper MFMA dispatch row; edge-capable CTA64/CTA128 runtime path; timing includes wrapper scalar-parameter setup and synchronization"};
+                      "public wrapper MFMA dispatch row; uses full-tile CTA64/CTA128 fast path for aligned alpha=1,beta=0 NN calls and edge-capable fallback otherwise; timing includes wrapper scalar-parameter setup and synchronization"};
         result.implementationKind = "tuned_kernel";
         result.kernelClass = "mfma_f16";
         result.tuningPath = "hip_mfma_gfx942_wrapper_dispatch";
@@ -2746,6 +2907,8 @@ int main(int argc, char** argv) {
             results.push_back(benchGemmF16MfmaCta64Shared(options, blas, m, n, k));
             results.push_back(benchGemmF16MfmaCta64Pipelined(options, blas, m, n, k));
             results.push_back(benchGemmF16MfmaCta128(options, blas, m, n, k));
+            results.push_back(benchGemmF16MfmaEdge(options, blas, m, n, k, false));
+            results.push_back(benchGemmF16MfmaEdge(options, blas, m, n, k, true));
 #if NAVATALA_HAVE_RUNTIME_WRAPPER
             if (options.includeWrapperGemmBenchmark) {
                 results.push_back(benchGemmF16F32WrapperMfma(options, blas, m, n, k));

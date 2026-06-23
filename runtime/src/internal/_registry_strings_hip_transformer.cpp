@@ -10817,7 +10817,7 @@ __device__ inline void navatala_gpu_wait_direct_lds_copy() {
 #endif
 }
 #endif  // NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
-extern "C" __global__ __launch_bounds__(256) void navatala_transformer_tiled_gemm_f16_mfma_cta64_shared(const __half* a, const __half* b, const unsigned int* kTiles, const unsigned int* kStride, const unsigned int* nStride, float* c) {
+extern "C" __global__ __launch_bounds__(256) void navatala_transformer_tiled_gemm_f16_mfma_cta64_shared(const __half* a, const __half* b, unsigned int kTiles, unsigned int kStride, unsigned int nStride, float* c) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int tid = ((unsigned int)((int)(threadIdx.x)));
   unsigned int waveId = (tid / 64u);
@@ -10829,9 +10829,9 @@ extern "C" __global__ __launch_bounds__(256) void navatala_transformer_tiled_gem
   unsigned int tileCol = (blockCol + (waveColGroup * 32u));
   unsigned int waveRowLocal = (waveRowGroup * 32u);
   unsigned int waveColLocal = (waveColGroup * 32u);
-  unsigned int kTilesVal = kTiles[0u];
-  unsigned int kStrideVal = kStride[0u];
-  unsigned int nStrideVal = nStride[0u];
+  unsigned int kTilesVal = kTiles;
+  unsigned int kStrideVal = kStride;
+  unsigned int nStrideVal = nStride;
   __shared__ __half tileA[512];
   __shared__ __half tileB[512];
   navatala_mfma_acc_f32_32x32x8 acc = navatala_mfma_zero_acc_f32_32x32x8();
@@ -10993,7 +10993,7 @@ __device__ inline void navatala_gpu_wait_direct_lds_copy() {
 #endif
 }
 #endif  // NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
-extern "C" __global__ __launch_bounds__(256) void navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_edge(const __half* a, const __half* b, const unsigned int* mDim, const unsigned int* nDim, const unsigned int* kDim, const unsigned int* kTiles, const unsigned int* aStride, const unsigned int* bStride, const unsigned int* cStride, const unsigned int* aBatchStride, const unsigned int* bBatchStride, const unsigned int* cBatchStride, const unsigned int* transA, const unsigned int* transB, const float* alpha, const float* beta, float* c) {
+extern "C" __global__ __launch_bounds__(256) void navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_edge(const __half* a, const __half* b, unsigned int mDim, unsigned int nDim, unsigned int kDim, unsigned int kTiles, unsigned int aStride, unsigned int bStride, unsigned int cStride, unsigned int aBatchStride, unsigned int bBatchStride, unsigned int cBatchStride, unsigned int transA, unsigned int transB, float alpha, float beta, float* c) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int tid = ((unsigned int)((int)(threadIdx.x)));
   unsigned int batchIdx = ((unsigned int)((int)(blockIdx.z)));
@@ -11006,22 +11006,22 @@ extern "C" __global__ __launch_bounds__(256) void navatala_transformer_tiled_gem
   unsigned int tileCol = (blockCol + (waveColGroup * 32u));
   unsigned int waveRowLocal = (waveRowGroup * 32u);
   unsigned int waveColLocal = (waveColGroup * 32u);
-  unsigned int mDimVal = mDim[0u];
-  unsigned int nDimVal = nDim[0u];
-  unsigned int kDimVal = kDim[0u];
-  unsigned int kTilesVal = kTiles[0u];
-  unsigned int aStrideVal = aStride[0u];
-  unsigned int bStrideVal = bStride[0u];
-  unsigned int cStrideVal = cStride[0u];
-  unsigned int aBatchStrideVal = aBatchStride[0u];
-  unsigned int bBatchStrideVal = bBatchStride[0u];
-  unsigned int cBatchStrideVal = cBatchStride[0u];
-  unsigned int transAVal = transA[0u];
-  unsigned int transBVal = transB[0u];
+  unsigned int mDimVal = mDim;
+  unsigned int nDimVal = nDim;
+  unsigned int kDimVal = kDim;
+  unsigned int kTilesVal = kTiles;
+  unsigned int aStrideVal = aStride;
+  unsigned int bStrideVal = bStride;
+  unsigned int cStrideVal = cStride;
+  unsigned int aBatchStrideVal = aBatchStride;
+  unsigned int bBatchStrideVal = bBatchStride;
+  unsigned int cBatchStrideVal = cBatchStride;
+  unsigned int transAVal = transA;
+  unsigned int transBVal = transB;
   bool useTransA = (transAVal != 0u);
   bool useTransB = (transBVal != 0u);
-  float alphaVal = alpha[0u];
-  float betaVal = beta[0u];
+  float alphaVal = alpha;
+  float betaVal = beta;
   unsigned int aBatchBase = (batchIdx * aBatchStrideVal);
   unsigned int bBatchBase = (batchIdx * bBatchStrideVal);
   unsigned int cBatchBase = (batchIdx * cBatchStrideVal);
@@ -11796,7 +11796,7 @@ __device__ inline void navatala_gpu_wait_direct_lds_copy() {
 #endif
 }
 #endif  // NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
-extern "C" __global__ __launch_bounds__(256) void navatala_transformer_tiled_gemm_f16_mfma_cta128(const __half* a, const __half* b, const unsigned int* kBlocks, const unsigned int* kStride, const unsigned int* nStride, float* c) {
+extern "C" __global__ __launch_bounds__(256) void navatala_transformer_tiled_gemm_f16_mfma_cta128(const __half* a, const __half* b, unsigned int kBlocks, unsigned int kStride, unsigned int nStride, float* c) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int tid = ((unsigned int)((int)(threadIdx.x)));
   unsigned int waveId = (tid / 64u);
@@ -11808,9 +11808,9 @@ extern "C" __global__ __launch_bounds__(256) void navatala_transformer_tiled_gem
   unsigned int waveColLocalBase = (waveColGroup * 64u);
   unsigned int waveRowBase = (blockRow + waveRowLocalBase);
   unsigned int waveColBase = (blockCol + waveColLocalBase);
-  unsigned int kBlocksVal = kBlocks[0u];
-  unsigned int kStrideVal = kStride[0u];
-  unsigned int nStrideVal = nStride[0u];
+  unsigned int kBlocksVal = kBlocks;
+  unsigned int kStrideVal = kStride;
+  unsigned int nStrideVal = nStride;
   __shared__ __half tileA[4096];
   __shared__ __half tileB[4096];
   navatala_mfma_acc_f32_32x32x8 acc00 = navatala_mfma_zero_acc_f32_32x32x8();
@@ -11987,7 +11987,7 @@ __device__ inline void navatala_gpu_wait_direct_lds_copy() {
 #endif
 }
 #endif  // NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
-extern "C" __global__ __launch_bounds__(256) void navatala_transformer_tiled_gemm_f16_mfma_cta128_edge(const __half* a, const __half* b, const unsigned int* mDim, const unsigned int* nDim, const unsigned int* kDim, const unsigned int* kBlocks, const unsigned int* aStride, const unsigned int* bStride, const unsigned int* cStride, const unsigned int* aBatchStride, const unsigned int* bBatchStride, const unsigned int* cBatchStride, const unsigned int* transA, const unsigned int* transB, const float* alpha, const float* beta, float* c) {
+extern "C" __global__ __launch_bounds__(256) void navatala_transformer_tiled_gemm_f16_mfma_cta128_edge(const __half* a, const __half* b, unsigned int mDim, unsigned int nDim, unsigned int kDim, unsigned int kBlocks, unsigned int aStride, unsigned int bStride, unsigned int cStride, unsigned int aBatchStride, unsigned int bBatchStride, unsigned int cBatchStride, unsigned int transA, unsigned int transB, float alpha, float beta, float* c) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int tid = ((unsigned int)((int)(threadIdx.x)));
   unsigned int batchIdx = ((unsigned int)((int)(blockIdx.z)));
@@ -12000,22 +12000,22 @@ extern "C" __global__ __launch_bounds__(256) void navatala_transformer_tiled_gem
   unsigned int waveColLocalBase = (waveColGroup * 64u);
   unsigned int waveRowBase = (blockRow + waveRowLocalBase);
   unsigned int waveColBase = (blockCol + waveColLocalBase);
-  unsigned int mDimVal = mDim[0u];
-  unsigned int nDimVal = nDim[0u];
-  unsigned int kDimVal = kDim[0u];
-  unsigned int kBlocksVal = kBlocks[0u];
-  unsigned int aStrideVal = aStride[0u];
-  unsigned int bStrideVal = bStride[0u];
-  unsigned int cStrideVal = cStride[0u];
-  unsigned int aBatchStrideVal = aBatchStride[0u];
-  unsigned int bBatchStrideVal = bBatchStride[0u];
-  unsigned int cBatchStrideVal = cBatchStride[0u];
-  unsigned int transAVal = transA[0u];
-  unsigned int transBVal = transB[0u];
+  unsigned int mDimVal = mDim;
+  unsigned int nDimVal = nDim;
+  unsigned int kDimVal = kDim;
+  unsigned int kBlocksVal = kBlocks;
+  unsigned int aStrideVal = aStride;
+  unsigned int bStrideVal = bStride;
+  unsigned int cStrideVal = cStride;
+  unsigned int aBatchStrideVal = aBatchStride;
+  unsigned int bBatchStrideVal = bBatchStride;
+  unsigned int cBatchStrideVal = cBatchStride;
+  unsigned int transAVal = transA;
+  unsigned int transBVal = transB;
   bool useTransA = (transAVal != 0u);
   bool useTransB = (transBVal != 0u);
-  float alphaVal = alpha[0u];
-  float betaVal = beta[0u];
+  float alphaVal = alpha;
+  float betaVal = beta;
   unsigned int aBatchBase = (batchIdx * aBatchStrideVal);
   unsigned int bBatchBase = (batchIdx * bBatchStrideVal);
   unsigned int cBatchBase = (batchIdx * cBatchStrideVal);

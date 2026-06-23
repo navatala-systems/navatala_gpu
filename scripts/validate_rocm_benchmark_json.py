@@ -58,7 +58,9 @@ KNOWN_TUNING_PATHS = {
     "hip_mfma_gfx942_64x64x8_f16_f32_cta64_shared_early_barrier",
     "hip_mfma_gfx942_64x64x8_f16_f32_cta64_shared_padded",
     "hip_mfma_gfx942_64x64x8_f16_f32_cta64_pipelined",
+    "hip_mfma_gfx942_64x64x8_f16_f32_cta64_shared_edge",
     "hip_mfma_gfx942_128x128x32_f16_f32_cta128",
+    "hip_mfma_gfx942_128x128x32_f16_f32_cta128_edge",
     "hip_mfma_gfx942_wrapper_dispatch",
 }
 TUNING_METADATA_KEYS = {

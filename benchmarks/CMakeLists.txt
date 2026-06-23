@@ -88,7 +88,9 @@ if(NAVATALA_GPU_BUILD_MFMA_BENCHMARK)
         "${CMAKE_CURRENT_SOURCE_DIR}/../kernels/hip/transformer/tiled_gemm_f16_mfma_cta64_shared_early_barrier.hip"
         "${CMAKE_CURRENT_SOURCE_DIR}/../kernels/hip/transformer/tiled_gemm_f16_mfma_cta64_shared_padded.hip"
         "${CMAKE_CURRENT_SOURCE_DIR}/../kernels/hip/transformer/tiled_gemm_f16_mfma_cta64_pipelined.hip"
-        "${CMAKE_CURRENT_SOURCE_DIR}/../kernels/hip/transformer/tiled_gemm_f16_mfma_cta128.hip")
+        "${CMAKE_CURRENT_SOURCE_DIR}/../kernels/hip/transformer/tiled_gemm_f16_mfma_cta64_shared_edge.hip"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../kernels/hip/transformer/tiled_gemm_f16_mfma_cta128.hip"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../kernels/hip/transformer/tiled_gemm_f16_mfma_cta128_edge.hip")
 endif()
 
 foreach(kernel_path IN LISTS NAVATALA_ROCM_BENCHMARK_KERNELS)
