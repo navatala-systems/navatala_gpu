@@ -229,6 +229,7 @@ void printBenchmarkList() {
     std::printf("  GEMM_F16_MFMA_CTA64_SHARED_PADDED: generated navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_padded vs rocBLAS F16/F32 rocblas_gemm_ex (opt-in, gfx942/ROCm 6.2+, low-pressure padded LDS row)\n");
     std::printf("  GEMM_F16_MFMA_CTA64_PIPELINED: generated navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined vs rocBLAS F16/F32 rocblas_gemm_ex (opt-in, gfx942/ROCm 6.2+, R6 two-slot staged-panel row)\n");
     std::printf("  GEMM_F16_MFMA_CTA128: generated navatala_transformer_tiled_gemm_f16_mfma_cta128 vs rocBLAS F16/F32 rocblas_gemm_ex (opt-in, gfx942/ROCm 6.2+, tile-divisible only)\n");
+    std::printf("  GEMM_F16_F32_WRAPPER_MFMA: public C ABI navatala_gpu_gemm_f16_f32 MFMA dispatch vs rocBLAS F16/F32 rocblas_gemm_ex (opt-in, gfx942/ROCm 6.2+, edge-capable wrapper path)\n");
     std::printf("  CSR_SPMV_F32: adaptive generated SpMV (thread-per-row or subgroup-per-row) vs rocSPARSE rocsparse_v2_spmv\n");
     std::printf("  HIPSPARSELT_STRUCTURED_GEMM_F16: hipSPARSELt structured sparse matmul vs rocBLAS dense pruned-A reference (opt-in)\n");
     std::printf("  CSR_SPMV_F32_CFD_FIXTURE: persisted CSR pressure-matrix fixture vs rocSPARSE (fixture mode)\n");
@@ -1824,6 +1825,133 @@ Result benchGemmWrapperVendor(
         return result;
     }
 }
+
+Result benchGemmF16F32WrapperMfma(
+    const Options& options,
+    rocblas_handle blas,
+    std::uint32_t m,
+    std::uint32_t n,
+    std::uint32_t k) {
+    constexpr float alpha = 1.0f;
+    constexpr float beta = 0.0f;
+    const std::size_t aCount = static_cast<std::size_t>(m) * k;
+    const std::size_t bCount = static_cast<std::size_t>(k) * n;
+    const std::size_t cCount = static_cast<std::size_t>(m) * n;
+
+    std::vector<__half> ha(aCount);
+    std::vector<__half> hb(bCount);
+    std::vector<float> hc(cCount, 0.0f);
+    for (std::size_t i = 0; i < ha.size(); ++i) {
+        ha[i] = __float2half(static_cast<float>(static_cast<int>(i % 29) - 14) * 0.025f);
+    }
+    for (std::size_t i = 0; i < hb.size(); ++i) {
+        hb[i] = __float2half(static_cast<float>(static_cast<int>(i % 31) - 15) * 0.02f);
+    }
+
+    NavatalaGpuContext* ctx = nullptr;
+    NavatalaGpuQueue* queue = nullptr;
+    NavatalaGpuBuffer* da = nullptr;
+    NavatalaGpuBuffer* db = nullptr;
+    NavatalaGpuBuffer* dcWrapper = nullptr;
+
+    check("navatala_gpu_create_context(HIP)", navatala_gpu_create_context(NAVATALA_BACKEND_HIP_FFI, 0, &ctx));
+    check("navatala_gpu_create_queue", navatala_gpu_create_queue(ctx, -1, &queue));
+    check("navatala_gpu_create_buffer(F16 A)", navatala_gpu_create_buffer(ctx, ha.size() * sizeof(__half), &da));
+    check("navatala_gpu_create_buffer(F16 B)", navatala_gpu_create_buffer(ctx, hb.size() * sizeof(__half), &db));
+    check("navatala_gpu_create_buffer(F32 C)", navatala_gpu_create_buffer(ctx, hc.size() * sizeof(float), &dcWrapper));
+    check("navatala_gpu_copy_h2d(F16 A)", navatala_gpu_copy_h2d(da, ha.data(), ha.size() * sizeof(__half), queue));
+    check("navatala_gpu_copy_h2d(F16 B)", navatala_gpu_copy_h2d(db, hb.data(), hb.size() * sizeof(__half), queue));
+    check("navatala_gpu_copy_h2d(F32 C)", navatala_gpu_copy_h2d(dcWrapper, hc.data(), hc.size() * sizeof(float), queue));
+    check("navatala_gpu_queue_sync(initial F16/F32 copies)", navatala_gpu_queue_sync(queue));
+
+    uintptr_t streamHandle = 0;
+    std::uint8_t streamSupported = 0;
+    check("navatala_gpu_queue_native_handle", navatala_gpu_queue_native_handle(queue, &streamHandle, &streamSupported));
+    if (!streamSupported || streamHandle == 0) {
+        std::fprintf(stderr, "ERROR: Navatala HIP queue did not expose a native stream handle\n");
+        std::exit(2);
+    }
+    hipStream_t stream = reinterpret_cast<hipStream_t>(streamHandle);
+
+    {
+        ScopedEnv impl("NAVATALA_GPU_GEMM_IMPL", "mfma");
+        ScopedEnv vendorMode("NAVATALA_GPU_GEMM_VENDOR_MODE", "auto");
+        ScopedEnv mfmaMode("NAVATALA_GPU_GEMM_MFMA_MODE", "auto");
+        const double wrapperMs = measureMsOnStream(stream, options.warmup, options.iterations, [&]() {
+            check("navatala_gpu_gemm_f16_f32(mfma)",
+                  navatala_gpu_gemm_f16_f32(da, db, dcWrapper, m, n, k, alpha, beta, queue));
+        });
+        check("navatala_gpu_queue_sync(F16/F32 wrapper GEMM)", navatala_gpu_queue_sync(queue));
+
+        __half* daVendor = deviceAlloc<__half>(aCount);
+        __half* dbVendor = deviceAlloc<__half>(bCount);
+        float* dcVendor = deviceAlloc<float>(cCount);
+        copyToDevice(daVendor, ha);
+        copyToDevice(dbVendor, hb);
+        copyToDevice(dcVendor, hc);
+
+        check("rocBLAS pointer mode host", rocblas_set_pointer_mode(blas, rocblas_pointer_mode_host));
+        const double vendorMs = measureMs(options.warmup, options.iterations, [&]() {
+            // Row-major C = A*B is column-major C^T = B^T*A^T.
+            check("rocblas_gemm_ex(F16/F32 wrapper reference)",
+                  rocblas_gemm_ex(blas,
+                                  rocblas_operation_none,
+                                  rocblas_operation_none,
+                                  static_cast<rocblas_int>(n),
+                                  static_cast<rocblas_int>(m),
+                                  static_cast<rocblas_int>(k),
+                                  &alpha,
+                                  dbVendor,
+                                  rocblas_datatype_f16_r,
+                                  static_cast<rocblas_int>(n),
+                                  daVendor,
+                                  rocblas_datatype_f16_r,
+                                  static_cast<rocblas_int>(k),
+                                  &beta,
+                                  dcVendor,
+                                  rocblas_datatype_f32_r,
+                                  static_cast<rocblas_int>(n),
+                                  dcVendor,
+                                  rocblas_datatype_f32_r,
+                                  static_cast<rocblas_int>(n),
+                                  rocblas_datatype_f32_r,
+                                  rocblas_gemm_algo_standard,
+                                  0,
+                                  0));
+        });
+
+        auto wrapper = std::vector<float>(hc.size());
+        check("navatala_gpu_copy_d2h(F32 C)", navatala_gpu_copy_d2h(dcWrapper, wrapper.data(), wrapper.size() * sizeof(float), queue));
+        check("navatala_gpu_queue_sync(final F16/F32 copy)", navatala_gpu_queue_sync(queue));
+        auto vendor = copyToHost(dcVendor, hc.size());
+        const double err = maxAbsDiff(wrapper, vendor);
+
+        releaseHip(daVendor);
+        releaseHip(dbVendor);
+        releaseHip(dcVendor);
+        navatala_gpu_destroy_buffer(da);
+        navatala_gpu_destroy_buffer(db);
+        navatala_gpu_destroy_buffer(dcWrapper);
+        navatala_gpu_destroy_queue(queue);
+        navatala_gpu_destroy_context(ctx);
+
+        Result result{"GEMM_F16_F32_WRAPPER_MFMA",
+                      "m=" + std::to_string(m) + ",n=" + std::to_string(n) + ",k=" + std::to_string(k) + ",output=F32,compute=F32,wrapper=mfma",
+                      "public C ABI navatala_gpu_gemm_f16_f32 with NAVATALA_GPU_GEMM_IMPL=mfma,NAVATALA_GPU_GEMM_VENDOR_MODE=auto,NAVATALA_GPU_GEMM_MFMA_MODE=auto",
+                      "rocBLAS rocblas_gemm_ex F16 input/F32 output/F32 accumulation",
+                      err <= 5.0e-1,
+                      wrapperMs,
+                      vendorMs,
+                      vendorMs > 0.0 ? wrapperMs / vendorMs : 0.0,
+                      err,
+                      "public wrapper MFMA dispatch row; edge-capable CTA64/CTA128 runtime path; timing includes wrapper scalar-parameter setup and synchronization"};
+        result.implementationKind = "tuned_kernel";
+        result.kernelClass = "mfma_f16";
+        result.tuningPath = "hip_mfma_gfx942_wrapper_dispatch";
+        result.vendorDispatchSelected = false;
+        return result;
+    }
+}
 #endif
 
 Result benchSpmv(
@@ -2583,6 +2711,7 @@ int main(int argc, char** argv) {
 #if NAVATALA_HAVE_RUNTIME_WRAPPER
         if (options.includeWrapperGemmBenchmark) {
             results.push_back(benchGemmWrapperVendor(options, blas, 128u, 128u, 128u));
+            results.push_back(benchGemmF16F32WrapperMfma(options, blas, 127u, 129u, 65u));
         }
 #endif
         results.push_back(benchSpmv(options, props, sparse, 1u << 14, 7u));
@@ -2617,6 +2746,11 @@ int main(int argc, char** argv) {
             results.push_back(benchGemmF16MfmaCta64Shared(options, blas, m, n, k));
             results.push_back(benchGemmF16MfmaCta64Pipelined(options, blas, m, n, k));
             results.push_back(benchGemmF16MfmaCta128(options, blas, m, n, k));
+#if NAVATALA_HAVE_RUNTIME_WRAPPER
+            if (options.includeWrapperGemmBenchmark) {
+                results.push_back(benchGemmF16F32WrapperMfma(options, blas, m, n, k));
+            }
+#endif
         }
 #else
         std::fprintf(stderr, "ERROR: --matrix cta128-evidence requires NAVATALA_GPU_BUILD_MFMA_BENCHMARK=ON\n");
@@ -2662,6 +2796,10 @@ int main(int argc, char** argv) {
             results.push_back(benchGemmWrapperVendor(options, blas, 128u, 128u, 128u));
             results.push_back(benchGemmWrapperVendor(options, blas, 512u, 512u, 512u));
             results.push_back(benchGemmWrapperVendor(options, blas, 1024u, 1024u, 1024u));
+            results.push_back(benchGemmF16F32WrapperMfma(options, blas, 127u, 129u, 65u));
+            results.push_back(benchGemmF16F32WrapperMfma(options, blas, 512u, 512u, 512u));
+            results.push_back(benchGemmF16F32WrapperMfma(options, blas, 1025u, 1023u, 257u));
+            results.push_back(benchGemmF16F32WrapperMfma(options, blas, 1024u, 1024u, 1024u));
         }
 #endif
         results.push_back(benchSpmv(options, props, sparse, 1u << 14, 7u));
@@ -2693,6 +2831,8 @@ int main(int argc, char** argv) {
 #if NAVATALA_HAVE_RUNTIME_WRAPPER
         if (options.includeWrapperGemmBenchmark) {
             results.push_back(benchGemmWrapperVendor(options, blas, 512u, 512u, 512u));
+            results.push_back(benchGemmF16F32WrapperMfma(options, blas, 512u, 512u, 512u));
+            results.push_back(benchGemmF16F32WrapperMfma(options, blas, 513u, 511u, 257u));
         }
 #endif
         results.push_back(benchSpmv(options, props, sparse, 1u << 20, 7u));

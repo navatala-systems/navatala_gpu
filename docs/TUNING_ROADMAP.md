@@ -94,8 +94,9 @@ P0 items into active tuning. Updated 2026-06-22 with the ROCm 7.2.4 follow-up ru
   `portable`/`reference`/`fallback`/`0`/`false`.
   `NAVATALA_GPU_GEMM_IMPL=auto|vendor|mfma|portable` has higher precedence for
   wrapper-level validation runs: `vendor` and `portable` force those paths,
-  contradictory forced modes fail loudly, and `mfma` is reserved for the future
-  public F16/F32 wrapper. The current Float32 ABI returns
+  contradictory forced modes fail loudly, and `mfma` selects the public
+  F16-input/F32-output wrapper on HIP/gfx942 when the runtime transformer
+  registry is present. The current Float32 ABI returns
   `NAVATALA_NOT_IMPLEMENTED` for `GEMM_IMPL=mfma` instead of silently measuring
   the wrong implementation.
 - **Portable GEMM fallback tuning:** scalar/register/tile cleanup is useful for
@@ -147,9 +148,15 @@ P0 items into active tuning. Updated 2026-06-22 with the ROCm 7.2.4 follow-up ru
   medium-shape candidate: at 512^3 it measured `0.020572 ms` versus CTA128 at
   `0.026223 ms`. The public F16-input/F32-output wrapper now implements
   shape-aware HIP/gfx942 MFMA dispatch with edge-tile, alpha/beta, transpose,
-  and strided-batch correctness coverage. The next production work is timing
-  coverage for the edge-capable wrapper path, continued shape-threshold tuning,
-  and any backend-specific expansion beyond HIP/gfx942.
+  and strided-batch correctness coverage. The ROCm benchmark harness now has an
+  opt-in `GEMM_F16_F32_WRAPPER_MFMA` row for timing that edge-capable public
+  wrapper path separately from the raw tile-divisible micro-benchmark rows. The
+  first packed-parameter wrapper fixture on MI300X / ROCm 7.2.4 measured
+  `0.051632 ms` for 512³ (`1.967x` vs rocBLAS) and `0.033700 ms` for the edge
+  shape 513x511x257 (`0.859x` vs rocBLAS), confirming correctness and removing
+  the earlier per-scalar temporary-buffer overhead. The next production work is
+  continued shape-threshold tuning and any backend-specific expansion beyond
+  HIP/gfx942.
 
 Implementation details and acceptance gates are tracked in the source
 repository design notes. Public release reports should cite the generated JSON

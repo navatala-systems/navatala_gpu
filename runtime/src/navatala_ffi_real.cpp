@@ -36,7 +36,9 @@
 #endif
 
 #include <algorithm>
+#include <array>
 #include <cmath>
+#include <cstddef>
 #include <cstdint>
 #include <cstdlib>
 #include <cstring>
@@ -718,6 +720,88 @@ size_t ceil_div_size(size_t value, size_t divisor) {
 }
 
 #if NAVATALA_GPU_HAVE_HIP_TRANSFORMER_REGISTRY
+class DevicePointerViewBuffer final : public GpuRuntime::Buffer {
+public:
+    DevicePointerViewBuffer(void* ptr, size_t size) : ptr_(ptr), size_(size) {}
+
+    size_t sizeBytes() const override { return size_; }
+    GpuRuntime::MemoryKind memoryKind() const override { return GpuRuntime::MemoryKind::Device; }
+    void* getDevicePointer() override { return ptr_; }
+    void* getHostPointer() override { return nullptr; }
+    void map(GpuRuntime::MapMode) override {}
+    void unmap() override {}
+    void* nativeHandle() const override { return ptr_; }
+
+private:
+    void* ptr_ = nullptr;
+    size_t size_ = 0;
+};
+
+struct HipMfmaGemmParamBlock {
+    uint32_t mDim;
+    uint32_t nDim;
+    uint32_t kDim;
+    uint32_t kCount;
+    uint32_t aStride;
+    uint32_t bStride;
+    uint32_t cStride;
+    uint32_t aBatchStride;
+    uint32_t bBatchStride;
+    uint32_t cBatchStride;
+    uint32_t transA;
+    uint32_t transB;
+    float alpha;
+    float beta;
+};
+
+NavatalaErrorCode enqueue_host_to_device_backend(
+    NavatalaGpuContextImpl* ctx,
+    GpuRuntime::Buffer& dst,
+    const void* src,
+    size_t bytes,
+    NavatalaGpuQueue* queue)
+{
+    if (bytes == 0) {
+        return NAVATALA_SUCCESS;
+    }
+    if (!ctx) {
+        return NAVATALA_INVALID_PARAM;
+    }
+    void* dst_ptr = dst.getDevicePointer();
+    if (!dst_ptr) {
+        return NAVATALA_INVALID_HANDLE;
+    }
+
+    void* native = nullptr;
+    NavatalaErrorCode q_status = queue_native_handle_for_context(queue, ctx, &native);
+    if (q_status != NAVATALA_SUCCESS) {
+        return q_status;
+    }
+
+    switch (ctx->backend) {
+#if GPU_RUNTIME_HAVE_HIP
+        case NAVATALA_BACKEND_HIP_FFI: {
+            auto* stream = static_cast<hipStream_t>(native);
+            hipError_t status = stream
+                ? hipMemcpyAsync(dst_ptr, src, bytes, hipMemcpyHostToDevice, stream)
+                : hipMemcpy(dst_ptr, src, bytes, hipMemcpyHostToDevice);
+            return status == hipSuccess ? NAVATALA_SUCCESS : NAVATALA_GPU_ERROR;
+        }
+#endif
+#if GPU_RUNTIME_HAVE_CUDA
+        case NAVATALA_BACKEND_CUDA_FFI: {
+            auto* stream = static_cast<cudaStream_t>(native);
+            cudaError_t status = stream
+                ? cudaMemcpyAsync(dst_ptr, src, bytes, cudaMemcpyHostToDevice, stream)
+                : cudaMemcpy(dst_ptr, src, bytes, cudaMemcpyHostToDevice);
+            return status == cudaSuccess ? NAVATALA_SUCCESS : NAVATALA_GPU_ERROR;
+        }
+#endif
+        default:
+            return NAVATALA_NOT_IMPLEMENTED;
+    }
+}
+
 GpuRuntime::Program* get_or_create_hip_transformer_program(
     NavatalaGpuContextImpl* ctx,
     const char* kernelName)
@@ -750,70 +834,6 @@ GpuRuntime::Program* get_or_create_hip_transformer_program(
     auto* raw = program.get();
     cache.emplace(key, std::move(program));
     return raw;
-}
-
-NavatalaErrorCode make_u32_device_param(
-    NavatalaGpuContextImpl* ctx,
-    uint32_t value,
-    NavatalaGpuQueue* queue,
-    std::vector<std::unique_ptr<NavatalaGpuBufferImpl>>& owned,
-    GpuRuntime::Buffer** out)
-{
-    if (!ctx || !ctx->device || !out) {
-        return NAVATALA_INVALID_PARAM;
-    }
-    auto temp = std::make_unique<NavatalaGpuBufferImpl>();
-    temp->buffer = ctx->device->createBuffer(sizeof(uint32_t), GpuRuntime::MemoryKind::Device);
-    if (!temp->buffer) {
-        return NAVATALA_OUT_OF_MEMORY;
-    }
-    temp->context = ctx;
-    temp->device_ptr = temp->buffer->getDevicePointer();
-    temp->size = sizeof(uint32_t);
-    temp->owning = true;
-    temp->valid = true;
-
-    const NavatalaErrorCode status =
-        copy_host_to_device_backend(temp.get(), 0, &value, sizeof(uint32_t), queue);
-    if (status != NAVATALA_SUCCESS) {
-        return status;
-    }
-
-    *out = temp->buffer.get();
-    owned.push_back(std::move(temp));
-    return NAVATALA_SUCCESS;
-}
-
-NavatalaErrorCode make_f32_device_param(
-    NavatalaGpuContextImpl* ctx,
-    float value,
-    NavatalaGpuQueue* queue,
-    std::vector<std::unique_ptr<NavatalaGpuBufferImpl>>& owned,
-    GpuRuntime::Buffer** out)
-{
-    if (!ctx || !ctx->device || !out) {
-        return NAVATALA_INVALID_PARAM;
-    }
-    auto temp = std::make_unique<NavatalaGpuBufferImpl>();
-    temp->buffer = ctx->device->createBuffer(sizeof(float), GpuRuntime::MemoryKind::Device);
-    if (!temp->buffer) {
-        return NAVATALA_OUT_OF_MEMORY;
-    }
-    temp->context = ctx;
-    temp->device_ptr = temp->buffer->getDevicePointer();
-    temp->size = sizeof(float);
-    temp->owning = true;
-    temp->valid = true;
-
-    const NavatalaErrorCode status =
-        copy_host_to_device_backend(temp.get(), 0, &value, sizeof(float), queue);
-    if (status != NAVATALA_SUCCESS) {
-        return status;
-    }
-
-    *out = temp->buffer.get();
-    owned.push_back(std::move(temp));
-    return NAVATALA_SUCCESS;
 }
 
 NavatalaErrorCode launch_hip_mfma_gemm_f16_f32(
@@ -880,78 +900,61 @@ NavatalaErrorCode launch_hip_mfma_gemm_f16_f32(
         return NAVATALA_NOT_IMPLEMENTED;
     }
 
-    std::vector<std::unique_ptr<NavatalaGpuBufferImpl>> temp_params;
-    GpuRuntime::Buffer* m_dim_buffer = nullptr;
-    GpuRuntime::Buffer* n_dim_buffer = nullptr;
-    GpuRuntime::Buffer* k_dim_buffer = nullptr;
-    GpuRuntime::Buffer* k_count_buffer = nullptr;
-    GpuRuntime::Buffer* a_stride_buffer = nullptr;
-    GpuRuntime::Buffer* b_stride_buffer = nullptr;
-    GpuRuntime::Buffer* c_stride_buffer = nullptr;
-    GpuRuntime::Buffer* a_batch_stride_buffer = nullptr;
-    GpuRuntime::Buffer* b_batch_stride_buffer = nullptr;
-    GpuRuntime::Buffer* c_batch_stride_buffer = nullptr;
-    GpuRuntime::Buffer* trans_a_buffer = nullptr;
-    GpuRuntime::Buffer* trans_b_buffer = nullptr;
-    GpuRuntime::Buffer* alpha_buffer = nullptr;
-    GpuRuntime::Buffer* beta_buffer = nullptr;
-    NavatalaErrorCode status =
-        make_u32_device_param(ctx, m_dim, queue, temp_params, &m_dim_buffer);
+    auto param_buffer = ctx->device->createBuffer(
+        sizeof(HipMfmaGemmParamBlock),
+        GpuRuntime::MemoryKind::Device);
+    if (!param_buffer) {
+        return NAVATALA_OUT_OF_MEMORY;
+    }
+    const HipMfmaGemmParamBlock params{
+        m_dim,
+        n_dim,
+        k_dim,
+        k_count,
+        a_stride,
+        b_stride,
+        c_stride,
+        a_batch_stride,
+        b_batch_stride,
+        c_batch_stride,
+        trans_a_flag,
+        trans_b_flag,
+        alpha,
+        beta
+    };
+    NavatalaErrorCode status = enqueue_host_to_device_backend(
+        ctx,
+        *param_buffer,
+        &params,
+        sizeof(params),
+        queue);
     if (status != NAVATALA_SUCCESS) {
         return status;
     }
-    status = make_u32_device_param(ctx, n_dim, queue, temp_params, &n_dim_buffer);
-    if (status != NAVATALA_SUCCESS) {
-        return status;
+
+    auto* param_base = static_cast<char*>(param_buffer->getDevicePointer());
+    if (!param_base) {
+        return NAVATALA_INVALID_HANDLE;
     }
-    status = make_u32_device_param(ctx, k_dim, queue, temp_params, &k_dim_buffer);
-    if (status != NAVATALA_SUCCESS) {
-        return status;
-    }
-    status = make_u32_device_param(ctx, k_count, queue, temp_params, &k_count_buffer);
-    if (status != NAVATALA_SUCCESS) {
-        return status;
-    }
-    status = make_u32_device_param(ctx, a_stride, queue, temp_params, &a_stride_buffer);
-    if (status != NAVATALA_SUCCESS) {
-        return status;
-    }
-    status = make_u32_device_param(ctx, b_stride, queue, temp_params, &b_stride_buffer);
-    if (status != NAVATALA_SUCCESS) {
-        return status;
-    }
-    status = make_u32_device_param(ctx, c_stride, queue, temp_params, &c_stride_buffer);
-    if (status != NAVATALA_SUCCESS) {
-        return status;
-    }
-    status = make_u32_device_param(ctx, a_batch_stride, queue, temp_params, &a_batch_stride_buffer);
-    if (status != NAVATALA_SUCCESS) {
-        return status;
-    }
-    status = make_u32_device_param(ctx, b_batch_stride, queue, temp_params, &b_batch_stride_buffer);
-    if (status != NAVATALA_SUCCESS) {
-        return status;
-    }
-    status = make_u32_device_param(ctx, c_batch_stride, queue, temp_params, &c_batch_stride_buffer);
-    if (status != NAVATALA_SUCCESS) {
-        return status;
-    }
-    status = make_u32_device_param(ctx, trans_a_flag, queue, temp_params, &trans_a_buffer);
-    if (status != NAVATALA_SUCCESS) {
-        return status;
-    }
-    status = make_u32_device_param(ctx, trans_b_flag, queue, temp_params, &trans_b_buffer);
-    if (status != NAVATALA_SUCCESS) {
-        return status;
-    }
-    status = make_f32_device_param(ctx, alpha, queue, temp_params, &alpha_buffer);
-    if (status != NAVATALA_SUCCESS) {
-        return status;
-    }
-    status = make_f32_device_param(ctx, beta, queue, temp_params, &beta_buffer);
-    if (status != NAVATALA_SUCCESS) {
-        return status;
-    }
+    auto param_ptr = [&](size_t offset) -> void* {
+        return static_cast<void*>(param_base + offset);
+    };
+    std::array<DevicePointerViewBuffer, 14> param_views{{
+        {param_ptr(offsetof(HipMfmaGemmParamBlock, mDim)), sizeof(uint32_t)},
+        {param_ptr(offsetof(HipMfmaGemmParamBlock, nDim)), sizeof(uint32_t)},
+        {param_ptr(offsetof(HipMfmaGemmParamBlock, kDim)), sizeof(uint32_t)},
+        {param_ptr(offsetof(HipMfmaGemmParamBlock, kCount)), sizeof(uint32_t)},
+        {param_ptr(offsetof(HipMfmaGemmParamBlock, aStride)), sizeof(uint32_t)},
+        {param_ptr(offsetof(HipMfmaGemmParamBlock, bStride)), sizeof(uint32_t)},
+        {param_ptr(offsetof(HipMfmaGemmParamBlock, cStride)), sizeof(uint32_t)},
+        {param_ptr(offsetof(HipMfmaGemmParamBlock, aBatchStride)), sizeof(uint32_t)},
+        {param_ptr(offsetof(HipMfmaGemmParamBlock, bBatchStride)), sizeof(uint32_t)},
+        {param_ptr(offsetof(HipMfmaGemmParamBlock, cBatchStride)), sizeof(uint32_t)},
+        {param_ptr(offsetof(HipMfmaGemmParamBlock, transA)), sizeof(uint32_t)},
+        {param_ptr(offsetof(HipMfmaGemmParamBlock, transB)), sizeof(uint32_t)},
+        {param_ptr(offsetof(HipMfmaGemmParamBlock, alpha)), sizeof(float)},
+        {param_ptr(offsetof(HipMfmaGemmParamBlock, beta)), sizeof(float)}
+    }};
 
     std::unique_ptr<GpuRuntime::Queue> temp_queue;
     GpuRuntime::Queue* launch_queue = caller_queue;
@@ -966,26 +969,26 @@ NavatalaErrorCode launch_hip_mfma_gemm_f16_f32(
     std::vector<GpuRuntime::Buffer*> args = {
         a->buffer.get(),
         b->buffer.get(),
-        m_dim_buffer,
-        n_dim_buffer,
-        k_dim_buffer,
-        k_count_buffer,
-        a_stride_buffer,
-        b_stride_buffer,
-        c_stride_buffer,
-        a_batch_stride_buffer,
-        b_batch_stride_buffer,
-        c_batch_stride_buffer,
-        trans_a_buffer,
-        trans_b_buffer,
-        alpha_buffer,
-        beta_buffer,
+        &param_views[0],
+        &param_views[1],
+        &param_views[2],
+        &param_views[3],
+        &param_views[4],
+        &param_views[5],
+        &param_views[6],
+        &param_views[7],
+        &param_views[8],
+        &param_views[9],
+        &param_views[10],
+        &param_views[11],
+        &param_views[12],
+        &param_views[13],
         c->buffer.get()
     };
     launch_queue->submit(*program, args, grid_x, grid_y, grid_z, 256, 1, 1);
     // The current generated ABI represents scalar launch parameters as device
-    // buffers. Keep this wrapper synchronous so the transient parameter buffers
-    // remain alive until the kernel has consumed them.
+    // pointers. Keep this wrapper synchronous so the packed parameter block and
+    // stack-local pointer views remain alive until the kernel has consumed them.
     launch_queue->synchronize();
     return NAVATALA_SUCCESS;
 }

@@ -385,6 +385,32 @@ wrapper changes:
 | --- | ---: | ---: | ---: | ---: | ---: | --- |
 | `navatala_transformer_tiled_gemm_f16_mfma_cta128` | 16384 | 0 | 84 | 68 | 112 | 256x1x1 |
 
+The 2026-06-24 packed-parameter wrapper fixture records the first direct timing
+evidence for the public F16-input/F32-output MFMA wrapper row after the runtime
+was changed to pack scalar launch parameters into a single device buffer:
+
+```bash
+python3 scripts/validate_rocm_benchmark_json.py \
+  benchmarks/fixtures/hardware_runs/20260624_mi300x_wrapper_mfma_packed_params_standard/rocm_vendor_benchmark.json \
+  --require-full
+python3 scripts/render_rocm_benchmark_report.py \
+  benchmarks/fixtures/hardware_runs/20260624_mi300x_wrapper_mfma_packed_params_standard/rocm_vendor_benchmark.json \
+  --output /tmp/rocm_vendor_benchmark_mi300x_wrapper_mfma_packed_params_standard.md
+```
+
+Key wrapper rows from that run:
+
+| Row | Shape | Generated mean ms | Vendor mean ms | Ratio | Max abs error |
+| --- | --- | ---: | ---: | ---: | ---: |
+| `GEMM_F16_F32_WRAPPER_MFMA` | 512³ | 0.051632 | 0.026255 | 1.967x | 1.013279e-06 |
+| `GEMM_F16_F32_WRAPPER_MFMA` | 513x511x257 | 0.033700 | 0.039212 | 0.859x | 7.152557e-07 |
+
+This is wrapper-dispatch evidence, not a raw microkernel row. Timing includes
+the public C ABI dispatch and the final synchronization needed to keep the
+temporary packed parameter block alive. The packed-parameter runtime path
+replaces the earlier per-scalar temporary-buffer implementation, which measured
+about `0.241 ms` for the same 512³ wrapper row in the pre-fix standard run.
+
 The 2026-06-24 broad MFMA + hipSPARSELt fixture keeps the wider AMD-facing
 comparison matrix in one durable artifact:
 
@@ -497,7 +523,11 @@ The public FFI wrapper dispatches different edge-capable kernels for production
 calls: `navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_edge` and
 `navatala_transformer_tiled_gemm_f16_mfma_cta128_edge`. Those kernels cover
 tail tiles, alpha/beta, transpose flags, and batching. They are validated by
-the runtime FFI test, not by the timing rows above.
+the runtime FFI test. The opt-in `GEMM_F16_F32_WRAPPER_MFMA` row additionally
+times the public `navatala_gpu_gemm_f16_f32` C ABI with
+`NAVATALA_GPU_GEMM_IMPL=mfma`; it is wrapper evidence and includes runtime
+scalar-parameter setup/synchronization overhead, so compare it separately from
+the raw tile-divisible micro-benchmark rows above.
 
 The broad matrix emits `GEMM_F16_PORTABLE_F32OUT` at 128³, 512³, and 1024³.
 Those rows run the generated `navatala_transformer_tiled_gemm_f16_f32_out`
@@ -571,7 +601,7 @@ Benchmark reports also record implementation selection metadata:
 {
   "kernelClass": "scalar|mfma_f16|wmma_tf32|vendor_library",
   "implementationKind": "portable_kernel|tuned_kernel|vendor_library",
-  "tuningPath": "thread_per_row|subgroup_per_row|portable_f16_tiled|portable_f16_f32out_tiled|adaptive|vendor_dispatch|hip_mfma_gfx942_32x32x8_f16_f32_k_loop|hip_mfma_gfx942_64x64x8_f16_f32_cta64_direct|hip_mfma_gfx942_64x64x8_f16_f32_cta64_shared|hip_mfma_gfx942_64x64x8_f16_f32_cta64_shared_early_barrier|hip_mfma_gfx942_64x64x8_f16_f32_cta64_shared_padded|hip_mfma_gfx942_64x64x8_f16_f32_cta64_pipelined|hip_mfma_gfx942_128x128x32_f16_f32_cta128",
+  "tuningPath": "thread_per_row|subgroup_per_row|portable_f16_tiled|portable_f16_f32out_tiled|adaptive|vendor_dispatch|hip_mfma_gfx942_32x32x8_f16_f32_k_loop|hip_mfma_gfx942_64x64x8_f16_f32_cta64_direct|hip_mfma_gfx942_64x64x8_f16_f32_cta64_shared|hip_mfma_gfx942_64x64x8_f16_f32_cta64_shared_early_barrier|hip_mfma_gfx942_64x64x8_f16_f32_cta64_shared_padded|hip_mfma_gfx942_64x64x8_f16_f32_cta64_pipelined|hip_mfma_gfx942_128x128x32_f16_f32_cta128|hip_mfma_gfx942_wrapper_dispatch",
   "spmvRowNnzThreshold": 16,
   "vendorDispatchSelected": false
 }
@@ -698,8 +728,8 @@ into the runtime. The current Float32 ABI still returns
 to an incompatible kernel.
 
 Set `NAVATALA_GPU_ROCM_BENCH_INCLUDE_WRAPPER_GEMM=1` or pass
-`--include-wrapper-gemm-benchmark` to add `GEMM_F32_WRAPPER_VENDOR` rows. These
-rows call the public C ABI:
+`--include-wrapper-gemm-benchmark` to add public-wrapper rows. The
+`GEMM_F32_WRAPPER_VENDOR` rows call the public C ABI:
 
 ```text
 navatala_gpu_gemm_f32
@@ -717,6 +747,25 @@ the runtime with `GPU_RUNTIME_NAVATALA_FFI_STUB=OFF`, so the row fails loudly if
 real runtime BLAS dispatch is unavailable instead of silently measuring the
 stub/reference path. The row is distinct from `GEMM_F32`, which measures the
 direct generated portable fallback kernel.
+
+The same flag also adds `GEMM_F16_F32_WRAPPER_MFMA` rows. These call:
+
+```text
+navatala_gpu_gemm_f16_f32
+```
+
+with:
+
+```text
+NAVATALA_GPU_GEMM_IMPL=mfma
+NAVATALA_GPU_GEMM_VENDOR_MODE=auto
+NAVATALA_GPU_GEMM_MFMA_MODE=auto
+```
+
+and compare against `rocblas_gemm_ex` with F16 inputs and F32 output/compute.
+Unlike the raw `GEMM_F16_MFMA_*` rows, this row exercises the user-facing
+runtime wrapper and the edge-capable CTA64/CTA128 dispatch policy. Its timing
+therefore includes wrapper scalar-parameter setup and synchronization overhead.
 
 For versioned ROCm installs on rented hosts, pass the installation root
 explicitly or set `NAVATALA_GPU_ROCM_ROOT`:

@@ -59,6 +59,14 @@ Set `NAVATALA_GPU_ROCM_BENCH_INCLUDE_MFMA=1` or pass
 row. This row is built only when requested because it requires the generated
 matrix-intrinsic HIP kernel and ROCm 6.2+ toolchain support.
 
+Set `NAVATALA_GPU_ROCM_BENCH_INCLUDE_WRAPPER_GEMM=1` or pass
+`--include-wrapper-gemm-benchmark` to add public C ABI wrapper rows. This
+includes the existing F32 vendor-dispatch row and the F16-input/F32-output MFMA
+wrapper row. The latter calls `navatala_gpu_gemm_f16_f32` with
+`NAVATALA_GPU_GEMM_IMPL=mfma`, pins `NAVATALA_GPU_GEMM_VENDOR_MODE=auto`, uses
+the runtime CTA64/CTA128 auto policy, and covers the edge-capable wrapper path
+rather than the raw tile-divisible timing kernels.
+
 The broad matrix emits `GEMM_F16_PORTABLE_F32OUT` at 128³, 512³, and 1024³.
 These rows run the generated `navatala_transformer_tiled_gemm_f16_f32_out`
 kernel and are the apples-to-apples denominator for MFMA speedup tracking:
@@ -180,6 +188,7 @@ the generated `LibraryOp.BLAS_GEMM` route is selected.
 | GEMM F16 MFMA CTA64 shared padded | `navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_padded` | `rocblas_gemm_ex` with F16 inputs/F32 accumulation |
 | GEMM F16 MFMA CTA64 pipelined | `navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined` | `rocblas_gemm_ex` with F16 inputs/F32 accumulation |
 | GEMM F16 MFMA CTA128 | `navatala_transformer_tiled_gemm_f16_mfma_cta128` | `rocblas_gemm_ex` with F16 inputs/F32 accumulation |
+| GEMM F16/F32 wrapper MFMA | `navatala_gpu_gemm_f16_f32` with `NAVATALA_GPU_GEMM_IMPL=mfma` | `rocblas_gemm_ex` with F16 input/F32 output/F32 accumulation |
 | CSR SpMV F32 | adaptive `navatala_graph_spmv_weighted_f32` / `navatala_graph_spmv_weighted_subgroup_f32` | `rocsparse_spmv` |
 | Structured sparse GEMM F16 | `SparseLt_StructuredMatmul` benchmark path | `rocblas_hgemm` pruned-A dense reference |
 
@@ -221,6 +230,13 @@ with `NAVATALA_GPU_GEMM_VENDOR_MODE` fail loudly. `mfma` selects the public
 F16-input/F32-output wrapper (`navatala_gpu_gemm_f16_f32`) when the HIP
 transformer registry shard is built into the runtime; the current Float32 ABI
 returns `NAVATALA_NOT_IMPLEMENTED` for that selector.
+
+The opt-in `GEMM_F16_F32_WRAPPER_MFMA` row is the wrapper-level timing and
+correctness row for that public ABI. It differs from the raw MFMA rows above:
+it dispatches through the runtime registry, uses the edge-capable CTA64/CTA128
+kernels, and its measured time includes wrapper scalar-parameter setup and the
+necessary synchronization points. Treat it as user-facing wrapper evidence, not
+as a replacement for the raw kernel micro-benchmark rows.
 
 The `GEMM_F16_PORTABLE_F32OUT` row is a portable-kernel denominator, not a
 tuned path. It is present so reports can evaluate MFMA speedup without relying

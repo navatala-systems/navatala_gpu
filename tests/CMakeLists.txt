@@ -25,6 +25,13 @@ if(Python3_Interpreter_FOUND)
             "--require-full"
             "--require-hipsparselt")
     add_test(
+        NAME rocm_benchmark_wrapper_mfma_conformance
+        COMMAND
+            "${Python3_EXECUTABLE}"
+            "${CMAKE_CURRENT_SOURCE_DIR}/../scripts/validate_rocm_benchmark_json.py"
+            "${CMAKE_CURRENT_SOURCE_DIR}/../benchmarks/fixtures/hardware_runs/20260624_mi300x_wrapper_mfma_packed_params_standard/rocm_vendor_benchmark.json"
+            "--require-full")
+    add_test(
         NAME rocm_benchmark_report_fixture_render
         COMMAND
             "${Python3_EXECUTABLE}"
@@ -40,6 +47,14 @@ if(Python3_Interpreter_FOUND)
             "${CMAKE_CURRENT_SOURCE_DIR}/../benchmarks/fixtures/rocm_vendor_benchmark_mi300x_20260619.json"
             "--output"
             "${CMAKE_CURRENT_BINARY_DIR}/rocm_vendor_benchmark_mi300x_20260619.md")
+    add_test(
+        NAME rocm_benchmark_wrapper_mfma_render
+        COMMAND
+            "${Python3_EXECUTABLE}"
+            "${CMAKE_CURRENT_SOURCE_DIR}/../scripts/render_rocm_benchmark_report.py"
+            "${CMAKE_CURRENT_SOURCE_DIR}/../benchmarks/fixtures/hardware_runs/20260624_mi300x_wrapper_mfma_packed_params_standard/rocm_vendor_benchmark.json"
+            "--output"
+            "${CMAKE_CURRENT_BINARY_DIR}/rocm_vendor_benchmark_wrapper_mfma.md")
 else()
     message(WARNING "Python3 interpreter not found; manifest_conformance test skipped")
 endif()

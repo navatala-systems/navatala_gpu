@@ -121,7 +121,10 @@ The near-term GEMM dispatch policy is:
   CTA64/CTA128 benchmark rows remain prototype timing rows; the
   `20260623_mi300x_cta128_evidence` and
   `20260624_mi300x_cta128_edge_wrapper` fixtures record the shape-aware policy
-  basis and wrapper validation evidence.
+  basis and wrapper validation evidence. The
+  `20260624_mi300x_wrapper_mfma_packed_params_standard` fixture records the
+  first direct timing rows for the public wrapper after scalar launch
+  parameters were packed into one device buffer.
 
 ## Known Gaps Before Beta
 

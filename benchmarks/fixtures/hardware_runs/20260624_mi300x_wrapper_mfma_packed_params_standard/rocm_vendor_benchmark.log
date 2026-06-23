@@ -1,0 +1,18 @@
+ROCm benchmark device: AMD Instinct MI300X VF, gcnArch=gfx942:sramecc+:xnack-, memory=196288 MiB
+hipSPARSELt detected at build time: yes
+MFMA benchmark built: yes
+operation      shape                    generated_mean_ms vendor_mean_ms ratio        correct    vendor
+AXPY_F32       n=4194304                0.017315     0.018357     0.943        pass       rocBLAS rocblas_saxpy
+GEMM_F32       m=512,n=512,k=512        0.027658     0.008900     3.108        pass       rocBLAS rocblas_sgemm
+GEMM_F16_PORTABLE_F32OUT m=512,n=512,k=512,output=F32,compute=F32 0.027281     0.026327     1.036        pass       rocBLAS rocblas_gemm_ex F16 input/F32 output/F32 accumulation
+GEMM_F16_MFMA  m=512,n=512,k=512,compute=F32 0.019528     0.026051     0.750        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F16_MFMA_CTA64_DIRECT m=512,n=512,k=512,compute=F32,cta=64x64x8,direct_load=true 0.044396     0.026079     1.702        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F16_MFMA_CTA64_SHARED m=512,n=512,k=512,compute=F32,cta=64x64x8,lds_staged=true 0.020727     0.026135     0.793        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F16_MFMA_CTA64_SHARED_EARLY_BARRIER m=512,n=512,k=512,compute=F32,cta=64x64x8,lds_staged=true,early_barrier=true 0.020703     0.025971     0.797        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F16_MFMA_CTA64_SHARED_PADDED m=512,n=512,k=512,compute=F32,cta=64x64x8,lds_staged=true,lds_padded=true 0.027490     0.025978     1.058        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F16_MFMA_CTA64_PIPELINED m=512,n=512,k=512,compute=F32,cta=64x64x8,lds_staged=true,two_slot=true,r6_panel_copy=true 0.022900     0.026067     0.879        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F16_MFMA_CTA128 m=512,n=512,k=512,compute=F32,cta=128x128x32 0.026492     0.025978     1.020        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F32_WRAPPER_VENDOR m=512,n=512,k=512        0.008768     0.008732     1.004        pass       rocBLAS rocblas_sgemm
+GEMM_F16_F32_WRAPPER_MFMA m=512,n=512,k=512,output=F32,compute=F32,wrapper=mfma 0.051632     0.026255     1.967        pass       rocBLAS rocblas_gemm_ex F16 input/F32 output/F32 accumulation
+GEMM_F16_F32_WRAPPER_MFMA m=513,n=511,k=257,output=F32,compute=F32,wrapper=mfma 0.033700     0.039212     0.859        pass       rocBLAS rocblas_gemm_ex F16 input/F32 output/F32 accumulation
+CSR_SPMV_F32   rows=1048576,rowNnz=7,nnz=7340032 0.052013     0.019584     2.656        pass       rocSPARSE rocsparse_v2_spmv
