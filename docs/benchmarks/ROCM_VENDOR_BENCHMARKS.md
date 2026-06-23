@@ -411,6 +411,36 @@ temporary packed parameter block alive. The packed-parameter runtime path
 replaces the earlier per-scalar temporary-buffer implementation, which measured
 about `0.241 ms` for the same 512³ wrapper row in the pre-fix standard run.
 
+The focused CTA128 evidence matrix was rerun with the same public wrapper row
+enabled, producing:
+
+```bash
+python3 scripts/validate_rocm_benchmark_json.py \
+  benchmarks/fixtures/hardware_runs/20260624_mi300x_wrapper_mfma_cta128_evidence/rocm_vendor_benchmark.json \
+  --require-full
+python3 scripts/render_rocm_benchmark_report.py \
+  benchmarks/fixtures/hardware_runs/20260624_mi300x_wrapper_mfma_cta128_evidence/rocm_vendor_benchmark.json \
+  --output /tmp/rocm_vendor_benchmark_mi300x_wrapper_mfma_cta128_evidence.md
+```
+
+Key public-wrapper rows from that focused run:
+
+| Row | Shape | Generated mean ms | Vendor mean ms | Ratio | Max abs error |
+| --- | --- | ---: | ---: | ---: | ---: |
+| `GEMM_F16_F32_WRAPPER_MFMA` | 128³ | 0.027570 | 0.024648 | 1.119x | 1.19209e-07 |
+| `GEMM_F16_F32_WRAPPER_MFMA` | 512³ | 0.048698 | 0.026163 | 1.861x | 1.01328e-06 |
+| `GEMM_F16_F32_WRAPPER_MFMA` | 1024³ | 0.190138 | 0.043639 | 4.357x | 2.14577e-06 |
+| `GEMM_F16_F32_WRAPPER_MFMA` | 1024x512x1024 | 0.141080 | 0.043086 | 3.274x | 1.3113e-06 |
+| `GEMM_F16_F32_WRAPPER_MFMA` | 512x1024x1024 | 0.079857 | 0.042973 | 1.858x | 2.14577e-06 |
+| `GEMM_F16_F32_WRAPPER_MFMA` | 2048x512x1024 | 0.195592 | 0.043495 | 4.497x | 1.3113e-06 |
+
+All focused wrapper rows passed correctness. The larger tile-divisible shapes
+also show that the current public wrapper still carries more overhead than the
+raw MFMA micro-benchmark rows. Treat this fixture as release evidence for
+wrapper correctness and as the baseline for the next runtime optimization pass:
+cached launch/program state, a by-value scalar launch ABI, or an async lifetime
+model that removes the final synchronization around the packed parameter block.
+
 The 2026-06-24 broad MFMA + hipSPARSELt fixture keeps the wider AMD-facing
 comparison matrix in one durable artifact:
 

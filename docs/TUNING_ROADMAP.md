@@ -154,9 +154,15 @@ P0 items into active tuning. Updated 2026-06-22 with the ROCm 7.2.4 follow-up ru
   first packed-parameter wrapper fixture on MI300X / ROCm 7.2.4 measured
   `0.051632 ms` for 512³ (`1.967x` vs rocBLAS) and `0.033700 ms` for the edge
   shape 513x511x257 (`0.859x` vs rocBLAS), confirming correctness and removing
-  the earlier per-scalar temporary-buffer overhead. The next production work is
-  continued shape-threshold tuning and any backend-specific expansion beyond
-  HIP/gfx942.
+  the earlier per-scalar temporary-buffer overhead. A focused CTA128 evidence
+  rerun with the public wrapper enabled passed correctness for 128³, 512³,
+  1024³, 1024x512x1024, 512x1024x1024, and 2048x512x1024. That fixture also
+  shows the remaining wrapper-level cost clearly: large tile-divisible wrapper
+  rows are still slower than the raw MFMA timing rows because the public path
+  includes runtime dispatch, launch setup, packed-parameter lifetime handling,
+  and final synchronization. The next production work is continued
+  shape-threshold tuning, cached/by-value launch-parameter handling to reduce
+  wrapper overhead, and backend-specific expansion beyond HIP/gfx942.
 
 Implementation details and acceptance gates are tracked in the source
 repository design notes. Public release reports should cite the generated JSON

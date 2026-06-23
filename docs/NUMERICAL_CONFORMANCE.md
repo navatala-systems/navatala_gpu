@@ -124,7 +124,14 @@ The near-term GEMM dispatch policy is:
   basis and wrapper validation evidence. The
   `20260624_mi300x_wrapper_mfma_packed_params_standard` fixture records the
   first direct timing rows for the public wrapper after scalar launch
-  parameters were packed into one device buffer.
+  parameters were packed into one device buffer. The companion
+  `20260624_mi300x_wrapper_mfma_cta128_evidence` fixture extends the same
+  public-wrapper correctness evidence over the focused CTA128 shape matrix
+  (128³, 512³, 1024³, and rectangular 1024/2048-class cases). Those rows all
+  pass numerically, but the large-shape timings remain slower than the raw MFMA
+  micro-benchmark rows because the public wrapper still includes runtime
+  dispatch, launch setup, packed-parameter lifetime management, and a final
+  synchronization.
 
 ## Known Gaps Before Beta
 
