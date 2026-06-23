@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_mg_weighted_restrict_f32(const unsign
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int row = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nCoarse[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(RrowPtr[row]));
     int re = ((int)(RrowPtr[(row + 1)]));
     float acc = __uint_as_float(0x00000000u);

@@ -18,7 +18,7 @@ using namespace metal;
 
 kernel void navatala_dataframe_trimmed_mean_f32(device const float* sortedData [[buffer(0)]], device const uint* n [[buffer(1)]], device const float* trimFraction [[buffer(2)]], device float* trimmedMean [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     uint len = n[0];
     float frac = trimFraction[0];
     float lenF = ((float)(len));

@@ -20,7 +20,7 @@ extern "C" __global__ void navatala_vector_search_accumulate_p_q_codebook_i32(co
   unsigned int nv = n_vectors[0];
   unsigned int sd = sub_dim[0];
   float scale = __uint_as_float(0x47800000u);
-  if ((vid < nv)) {
+  if (vid < nv) {
     unsigned int cw = assignments[vid];
     for (int k = 0; k < (int)(sd); ++k) {
       unsigned int src_idx = ((vid * sd) + k);

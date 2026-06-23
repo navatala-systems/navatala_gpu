@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_graph_relax_vertex_pull_f32(const unsigned i
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     unsigned int base = inOffsets[gid];
     unsigned int endv = inOffsets[(gid + 1u)];
     unsigned int deg = (endv - base);
@@ -29,7 +29,7 @@ extern "C" __global__ void navatala_graph_relax_vertex_pull_f32(const unsigned i
       unsigned int u = inSrcs[eidx];
       float w = inWeights[eidx];
       float du = dist[u];
-      if ((du < infV)) {
+      if (du < infV) {
         float cand = (du + w);
         float cur = best;
         best = (((cand < cur)) ? (cand) : (cur));

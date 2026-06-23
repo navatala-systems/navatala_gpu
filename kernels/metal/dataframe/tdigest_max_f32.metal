@@ -18,7 +18,7 @@ using namespace metal;
 
 kernel void navatala_dataframe_tdigest_max_f32(device const float* maxVal [[buffer(0)]], device const uint* centroidCount [[buffer(1)]], device float* maxOut [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     uint count = centroidCount[0];
     float maxV = maxVal[0];
     bool isEmpty = (count == 0u);

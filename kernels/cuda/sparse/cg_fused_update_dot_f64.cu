@@ -31,7 +31,7 @@ extern "C" __global__ void navatala_sparse_cg_fused_update_dot_f64(const double*
   double pi = (((gid < N)) ? (p[gid]) : (__longlong_as_double(0x0000000000000000ull)));
   double api = (((gid < N)) ? (Ap[gid]) : (__longlong_as_double(0x0000000000000000ull)));
   double zi = (((gid < N)) ? (z[gid]) : (__longlong_as_double(0x0000000000000000ull)));
-  if ((gid < N)) {
+  if (gid < N) {
     double xi = x[gid];
     double ri = r[gid];
     double xnew = (xi + (a * pi));
@@ -43,15 +43,15 @@ extern "C" __global__ void navatala_sparse_cg_fused_update_dot_f64(const double*
   double warpSum = gpu_warp_reduce_sum(rz);
   __shared__ double sdata[32];
   int lane = (int)(threadIdx.x % warpSize);
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   __syncthreads();
-  if ((lid < 8)) {
+  if (lid < 8) {
     double val = sdata[lid];
     double finalSum = gpu_warp_reduce_sum(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       int grpId = (int)(blockIdx.x);
       rTzPartials[grpId] = finalSum;
     }

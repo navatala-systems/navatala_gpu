@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_r_a_u_from_u_eqn_approx(const float* rhoCell, const float* muCell, const float* phiFaces, const float* rhoBcVal, const unsigned int* rhoBcMask, const float* muBcVal, const unsigned int* muBcMask, const int* ownerAll, const int* neighbourInt, const float* weightsAll, const float* magSfAll, const float* deltaAll, const unsigned int* offsets, const unsigned int* faceIdx, const int* sign, const float* volCells, const int* counts3, const float* paramsF, float* outRAU) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts3[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts3[0]) {
     return;
   } else {
     float invDt = (__uint_as_float(0x3f800000u) / paramsF[0]);
@@ -34,26 +34,26 @@ extern "C" __global__ void navatala_cfd_primitives_r_a_u_from_u_eqn_approx(const
       int k = (beg + t);
       unsigned int fU = faceIdx[k];
       int f = ((int)(fU));
-      if ((f >= counts3[1])) {
+      if (f >= counts3[1]) {
       } else {
         int s = sign[k];
         int o = ownerAll[f];
         float phi = phiFaces[f];
         float rhoF = __uint_as_float(0x00000000u);
         float muF = __uint_as_float(0x00000000u);
-        if ((f < counts3[2])) {
+        if (f < counts3[2]) {
           int n = neighbourInt[f];
           float w = weightsAll[f];
           float iw = (__uint_as_float(0x3f800000u) - w);
           rhoF = ((w * rhoCell[o]) + (iw * rhoCell[n]));
           muF = ((w * muCell[o]) + (iw * muCell[n]));
         } else {
-          if ((rhoBcMask[f] != 0u)) {
+          if (rhoBcMask[f] != 0u) {
             rhoF = rhoBcVal[f];
           } else {
             rhoF = rhoCell[o];
           }
-          if ((muBcMask[f] != 0u)) {
+          if (muBcMask[f] != 0u) {
             muF = muBcVal[f];
           } else {
             muF = muCell[o];
@@ -61,10 +61,10 @@ extern "C" __global__ void navatala_cfd_primitives_r_a_u_from_u_eqn_approx(const
         }
         float rhoPhi = (rhoF * phi);
         float outFlux = rhoPhi;
-        if ((s < 0)) {
+        if (s < 0) {
           outFlux = (__uint_as_float(0x00000000u) - rhoPhi);
         }
-        if ((outFlux > __uint_as_float(0x00000000u))) {
+        if (outFlux > __uint_as_float(0x00000000u)) {
           conv = (conv + outFlux);
         }
         float diffTerm = (muF * (magSfAll[f] * deltaAll[f]));
@@ -72,7 +72,7 @@ extern "C" __global__ void navatala_cfd_primitives_r_a_u_from_u_eqn_approx(const
       }
     }
     A = (A + ((conv + diff) / V));
-    if ((A != __uint_as_float(0x00000000u))) {
+    if (A != __uint_as_float(0x00000000u)) {
       outRAU[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (__uint_as_float(0x3f800000u) / A);
     } else {
       outRAU[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = __uint_as_float(0x00000000u);

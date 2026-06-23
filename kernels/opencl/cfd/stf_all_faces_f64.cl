@@ -19,7 +19,7 @@ __kernel void navatala_cfd_stf_all_faces_f64(__global const double* divN, __glob
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[1])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[1]) {
     return;
   } else {
     int o = owner[((int)((int)(get_global_id(0))))];
@@ -29,10 +29,10 @@ __kernel void navatala_cfd_stf_all_faces_f64(__global const double* divN, __glob
     double divInterp = ((w * divN[o]) + (wm * divN[n]));
     double Kf = (-divInterp);
     double snGrad = as_double(0x0000000000000000ul);
-    if ((((int)((int)(get_global_id(0)))) < counts[2])) {
+    if (((int)((int)(get_global_id(0)))) < counts[2]) {
       snGrad = (((double)(delta[((int)((int)(get_global_id(0))))])) * (((double)(alpha[n])) - ((double)(alpha[o]))));
     } else {
-      if ((thetaMask[((int)((int)(get_global_id(0))))] != (uint)(0u))) {
+      if (thetaMask[((int)((int)(get_global_id(0))))] != (uint)(0u)) {
         snGrad = contactGrad[((int)((int)(get_global_id(0))))];
       } else {
         snGrad = (((double)(delta[((int)((int)(get_global_id(0))))])) * (((double)(alphaF[((int)((int)(get_global_id(0))))])) - ((double)(alpha[o]))));

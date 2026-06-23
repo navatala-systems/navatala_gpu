@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_vector_search_robust_prune_f32(const unsigne
   unsigned int tid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int nc = n_candidates[0];
   unsigned int md = max_degree[0];
-  if ((tid == 0u)) {
+  if (tid == 0u) {
     unsigned int limit = (((nc < md)) ? (nc) : (md));
     for (int i = 0; i < (int)(limit); ++i) {
       unsigned int cand = candidates[i];

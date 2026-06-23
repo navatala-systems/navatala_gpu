@@ -72,7 +72,7 @@ kernel void navatala_ml_fil_infer_classification_f32(device const float* X [[buf
       uint voteIdx = (voteBase + cU32);
       uint votes = vote_counts[voteIdx];
       uint currMax = maxVotes;
-      if ((votes > currMax)) {
+      if (votes > currMax) {
         finalClass = c;
         maxVotes = votes;
       }

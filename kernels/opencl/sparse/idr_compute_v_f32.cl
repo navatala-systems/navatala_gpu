@@ -18,7 +18,7 @@ __kernel void navatala_sparse_idr_compute_v_f32(__global const float* r, __globa
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
   int S = ((int)(s[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float acc = as_float(0x00000000u);
     for (int k = 0; k < (int)(S); ++k) {
       float ck = c[k];

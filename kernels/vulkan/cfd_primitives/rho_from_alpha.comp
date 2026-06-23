@@ -32,14 +32,14 @@ layout(std430, binding = 3) writeonly buffer buf_outRho {
 // kernel: navatala_cfd_primitives_rho_from_alpha
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= counts[0])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= counts[0]) {
     return;
   } else {
     float a = alpha[int(int(gl_GlobalInvocationID.x))];
-    if ((a < uintBitsToFloat(0x00000000u))) {
+    if (a < uintBitsToFloat(0x00000000u)) {
       a = uintBitsToFloat(0x00000000u);
     }
-    if ((a > uintBitsToFloat(0x3f800000u))) {
+    if (a > uintBitsToFloat(0x3f800000u)) {
       a = uintBitsToFloat(0x3f800000u);
     }
     float invA = (uintBitsToFloat(0x3f800000u) - a);

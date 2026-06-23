@@ -18,7 +18,7 @@ __kernel void navatala_sparse_gmres_normalize_f64(__global const double* w, __gl
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double nm = norm[0];
     double wi = w[gid];
     v[gid] = (wi / nm);

@@ -27,7 +27,7 @@ __kernel void navatala_sparse_compute_residual_norm_f32(__global const float* re
   barrier(CLK_LOCAL_MEM_FENCE);
   for (int s = 0; s < (int)((uint)(128u)); ++s) {
     uint sU32 = ((uint)(s));
-    if ((lid < sU32)) {
+    if (lid < sU32) {
       float other = sdata[(lid + sU32)];
       float mine = sdata[lid];
       float sum = (mine + other);
@@ -35,7 +35,7 @@ __kernel void navatala_sparse_compute_residual_norm_f32(__global const float* re
     }
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     atomic_add(&normSq[(uint)(0u)], sdata[(uint)(0u)]);
   }
 }

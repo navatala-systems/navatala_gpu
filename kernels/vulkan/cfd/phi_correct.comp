@@ -65,23 +65,23 @@ layout(std430, binding = 14) writeonly buffer buf_phiOut {
 // kernel: navatala_cfd_phi_correct
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= counts[0])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= counts[0]) {
     return;
   } else {
     int o = owner[int(int(gl_GlobalInvocationID.x))];
     float po = pCell[o];
     float other = po;
     float snGrad = uintBitsToFloat(0x00000000u);
-    if ((int(int(gl_GlobalInvocationID.x)) < counts[1])) {
+    if (int(int(gl_GlobalInvocationID.x)) < counts[1]) {
       int n = neighbour[int(int(gl_GlobalInvocationID.x))];
       other = pCell[n];
     } else {
-      if ((bcMask[int(int(gl_GlobalInvocationID.x))] != 0)) {
+      if (bcMask[int(int(gl_GlobalInvocationID.x))] != 0) {
         other = bcVal[int(int(gl_GlobalInvocationID.x))];
       }
     }
     snGrad = (deltaCoeffs[int(int(gl_GlobalInvocationID.x))] * (other - po));
-    if ((bcSnGradMask[int(int(gl_GlobalInvocationID.x))] != 0)) {
+    if (bcSnGradMask[int(int(gl_GlobalInvocationID.x))] != 0) {
       snGrad = bcSnGrad[int(int(gl_GlobalInvocationID.x))];
     }
     float gradFace = (magSf[int(int(gl_GlobalInvocationID.x))] * snGrad);

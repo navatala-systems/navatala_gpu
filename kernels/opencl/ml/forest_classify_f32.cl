@@ -53,7 +53,7 @@ __kernel void navatala_ml_forest_classify_f32(__global const float* X, __global 
             uint probIdx = (absLeafBase + classIdxU32);
             float prob = forest_leaves[probIdx];
             float currBest = bestProb;
-            if ((prob > currBest)) {
+            if (prob > currBest) {
               bestClass = classIdx;
               bestProb = prob;
             }
@@ -87,7 +87,7 @@ __kernel void navatala_ml_forest_classify_f32(__global const float* X, __global 
       uint voteIdx = (voteBase + cU32);
       uint votes = vote_counts[voteIdx];
       uint currMax = maxVotes;
-      if ((votes > currMax)) {
+      if (votes > currMax) {
         finalClass = c;
         maxVotes = votes;
       }

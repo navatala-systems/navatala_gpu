@@ -23,7 +23,7 @@ extern "C" __global__ void navatala_graph_l1_diff_f32(const float* a, const floa
   float gsAcc = __uint_as_float(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       float av = a[idx];
       float bv = b[idx];
       float d = abs((av - bv));
@@ -35,7 +35,7 @@ extern "C" __global__ void navatala_graph_l1_diff_f32(const float* a, const floa
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -46,7 +46,7 @@ extern "C" __global__ void navatala_graph_l1_diff_f32(const float* a, const floa
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0] = sdata[0];
   }
 }

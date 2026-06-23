@@ -201,7 +201,7 @@ __kernel void navatala_transformer_top_k_gating_f16(__global const half* routerL
   indexBuf[lid] = lidI32_2;
   barrier(CLK_LOCAL_MEM_FENCE);
   for (int kIter = 0; kIter < (int)(k); ++kIter) {
-    if ((lid == (uint)(0u))) {
+    if (lid == (uint)(0u)) {
       int bestIdx = 0;
       float bestVal = as_float(0xf149f2cau);
       for (int scanIdx = 0; scanIdx < (int)(ne); ++scanIdx) {

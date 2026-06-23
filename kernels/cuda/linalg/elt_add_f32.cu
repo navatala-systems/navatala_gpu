@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_linalg_elt_add_f32(const float* A, const float* B, const unsigned int* n, float* C) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int i = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     float a = A[i];
     float b = B[i];
     C[i] = (a + b);

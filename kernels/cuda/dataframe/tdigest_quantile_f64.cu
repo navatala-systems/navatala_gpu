@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_dataframe_tdigest_quantile_f64(const double* p, const double* centroidMeans, const double* centroidWeights, const unsigned int* centroidCount, const double* totalWeight, const double* minVal, const double* maxVal, double* quantile) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     double pVal = p[0];
     unsigned int count = centroidCount[0];
     double minV = minVal[0];

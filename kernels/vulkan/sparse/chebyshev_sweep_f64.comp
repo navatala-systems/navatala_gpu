@@ -43,7 +43,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int i = int(gl_GlobalInvocationID.x);
   int N = int(n[0]);
-  if ((i < N)) {
+  if (i < N) {
     double cA = coeffA[0];
     double cB = coeffB[0];
     double ri = r[i];

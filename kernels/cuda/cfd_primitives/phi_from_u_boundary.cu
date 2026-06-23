@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_cfd_primitives_phi_from_u_boundary(const int* owner, const float* weights, const float* sfX, const float* sfY, const float* sfZ, const float* ux, const float* uy, const float* uz, const float* bcx, const float* bcy, const float* bcz, const unsigned int* bcmask, const unsigned int* params, float* outPhi) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int f = (((int)(params[1])) + (int)(blockIdx.x * blockDim.x + threadIdx.x));
-  if ((f >= ((int)(params[0])))) {
+  if (f >= ((int)(params[0]))) {
     return;
   } else {
     int o = owner[f];
@@ -29,14 +29,14 @@ extern "C" __global__ void navatala_cfd_primitives_phi_from_u_boundary(const int
     float ufz = uoz;
     unsigned int m = bcmask[f];
     int mInt = ((int)(m));
-    if ((mInt == 1)) {
+    if (mInt == 1) {
       float w = weights[f];
       float iw = (__uint_as_float(0x3f800000u) - w);
       ufx = ((w * uox) + (iw * bcx[f]));
       ufy = ((w * uoy) + (iw * bcy[f]));
       ufz = ((w * uoz) + (iw * bcz[f]));
     } else {
-      if ((mInt == 2)) {
+      if (mInt == 2) {
         ufx = bcx[f];
         ufy = bcy[f];
         ufz = bcz[f];

@@ -16,7 +16,7 @@
 __kernel void navatala_dataframe_mcd_extract_mean_f32(__global const float* robustMeanX, __global const float* robustMeanY, __global float* meanX, __global float* meanY) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     float mx = robustMeanX[0];
     float my = robustMeanY[0];
     meanX[0] = mx;

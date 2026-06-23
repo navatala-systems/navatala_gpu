@@ -18,7 +18,7 @@ __kernel void navatala_cfd_radius_count(__global const float* query, __global co
   int qid = (int)(get_global_id(0));
   int nq = numQuery[0];
   int nr = numRef[0];
-  if ((qid < nq)) {
+  if (qid < nq) {
     float qx = query[((qid)*3 + 0)];
     float qy = query[((qid)*3 + 1)];
     float qz = query[((qid)*3 + 2)];
@@ -33,7 +33,7 @@ __kernel void navatala_cfd_radius_count(__global const float* query, __global co
       float dy = (qy - ry);
       float dz = (qz - rz);
       float d2 = (((dx * dx) + (dy * dy)) + (dz * dz));
-      if ((d2 <= rCmp)) {
+      if (d2 <= rCmp) {
         cnt = (cnt + 1);
       }
     }

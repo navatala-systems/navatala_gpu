@@ -18,9 +18,9 @@ extern "C" __global__ void navatala_sparse_interpolate_f_f_weights_f64(const uns
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int row = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
-    if ((mark == -1)) {
+    if (mark == -1) {
       int rs = ((int)(rowPtr[row]));
       int re = ((int)(rowPtr[(row + 1)]));
       double diagVal = diag[row];
@@ -29,19 +29,19 @@ extern "C" __global__ void navatala_sparse_interpolate_f_f_weights_f64(const uns
       for (int j = 0; j < (int)((re - rs)); ++j) {
         int k = (rs + j);
         unsigned int isStr = strongMask[k];
-        if ((isStr == 1u)) {
+        if (isStr == 1u) {
           int col = ((int)(colIdx[k]));
           int mC = cfMarking[col];
-          if ((mC == 1)) {
+          if (mC == 1) {
             double aij = values[k];
             double numer = aij;
             for (int ff = 0; ff < (int)((re - rs)); ++ff) {
               int kf = (rs + ff);
               unsigned int isStrF = strongMask[kf];
-              if ((isStrF == 1u)) {
+              if (isStrF == 1u) {
                 int colF = ((int)(colIdx[kf]));
                 int mF = cfMarking[colF];
-                if ((mF == -1)) {
+                if (mF == -1) {
                   double aik = values[kf];
                   double diagK = diag[colF];
                   int rsK = ((int)(rowPtr[colF]));
@@ -50,7 +50,7 @@ extern "C" __global__ void navatala_sparse_interpolate_f_f_weights_f64(const uns
                   for (int kn = 0; kn < (int)((reK - rsK)); ++kn) {
                     int knIdx = (rsK + kn);
                     int knCol = ((int)(colIdx[knIdx]));
-                    if ((knCol == col)) {
+                    if (knCol == col) {
                       akj = values[knIdx];
                     }
                   }

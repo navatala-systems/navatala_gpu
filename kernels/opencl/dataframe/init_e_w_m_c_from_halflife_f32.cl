@@ -15,7 +15,7 @@
 
 __kernel void navatala_dataframe_init_e_w_m_c_from_halflife_f32(__global const float* halflife, __global float* alpha, __global float* nEff, __global float* meanX, __global float* meanY, __global float* Cxy, __global float* varX, __global float* varY) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float h = halflife[0];
     float ln2 = as_float(0x3f317215u);
     float a = (ln2 / h);

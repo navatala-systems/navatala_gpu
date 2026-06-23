@@ -47,23 +47,23 @@ layout(std430, binding = 8) writeonly buffer buf_phiCorr {
 // kernel: navatala_cfd_vof_phi_b_d_corr
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= params[0])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= params[0]) {
     return;
   } else {
-    if ((int(int(gl_GlobalInvocationID.x)) < params[1])) {
+    if (int(int(gl_GlobalInvocationID.x)) < params[1]) {
       float ph = phiAll[int(int(gl_GlobalInvocationID.x))];
       int o = owner[int(int(gl_GlobalInvocationID.x))];
       int n = nei[int(int(gl_GlobalInvocationID.x))];
       float a = uintBitsToFloat(0x00000000u);
-      if ((ph >= uintBitsToFloat(0x00000000u))) {
+      if (ph >= uintBitsToFloat(0x00000000u)) {
         a = alpha[o];
       } else {
         a = alpha[n];
       }
-      if ((a < uintBitsToFloat(0x00000000u))) {
+      if (a < uintBitsToFloat(0x00000000u)) {
         a = uintBitsToFloat(0x00000000u);
       }
-      if ((a > uintBitsToFloat(0x3f800000u))) {
+      if (a > uintBitsToFloat(0x3f800000u)) {
         a = uintBitsToFloat(0x3f800000u);
       }
       float pbd = (ph * a);

@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_dataframe_extract_weighted_correlation_f32(device const float* Cxy [[buffer(0)]], device const float* M2x [[buffer(1)]], device const float* M2y [[buffer(2)]], device float* correlation [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) == 0)) {
+  if (int(__gid.x) == 0) {
     float cxyVal = Cxy[0];
     float m2xVal = M2x[0];
     float m2yVal = M2y[0];

@@ -17,7 +17,7 @@
 __kernel void navatala_ml_kde_bandwidth_scott_f64(__global const double* stddev, __global const uint* n, __global double* bandwidth) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     double sigma = stddev[0];
     uint count = n[0];
     double countF = ((double)(count));

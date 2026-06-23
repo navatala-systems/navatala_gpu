@@ -16,23 +16,23 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_cfd_vof_phi_b_d_corr(const float* alpha, const float* phiAll, const int* owner, const int* nei, const float* alphaF, const float* alphaPhiAll, const int* params, float* phiBD, float* phiCorr) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0]) {
     return;
   } else {
-    if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < params[1])) {
+    if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < params[1]) {
       float ph = phiAll[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       int o = owner[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       int n = nei[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       float a = __uint_as_float(0x00000000u);
-      if ((ph >= __uint_as_float(0x00000000u))) {
+      if (ph >= __uint_as_float(0x00000000u)) {
         a = alpha[o];
       } else {
         a = alpha[n];
       }
-      if ((a < __uint_as_float(0x00000000u))) {
+      if (a < __uint_as_float(0x00000000u)) {
         a = __uint_as_float(0x00000000u);
       }
-      if ((a > __uint_as_float(0x3f800000u))) {
+      if (a > __uint_as_float(0x3f800000u)) {
         a = __uint_as_float(0x3f800000u);
       }
       float pbd = (ph * a);

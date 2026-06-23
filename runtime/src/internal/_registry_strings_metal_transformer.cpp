@@ -713,7 +713,7 @@ kernel void navatala_transformer_rms_norm_forward_f32(device const float* _input
   float meanSq = (totalSumSq / hsF32);
   float meanSqEps = (meanSq + eps);
   float rms = sqrt(meanSqEps);
-  if ((batchValid && hiddenValid)) {
+  if (batchValid && hiddenValid) {
     float g = gamma[lid];
     float xNorm = (x / rms);
     float result = (g * xNorm);
@@ -818,7 +818,7 @@ kernel void navatala_transformer_rms_norm_forward_f16(device const half* _input 
   float meanSq = (totalSumSq / hsF32);
   float meanSqEps = (meanSq + eps);
   float rms = sqrt(meanSqEps);
-  if ((batchValid && hiddenValid)) {
+  if (batchValid && hiddenValid) {
     half gF16 = gamma[lid];
     float g = ((float)(gF16));
     float xNorm = (x / rms);
@@ -1002,7 +1002,7 @@ kernel void navatala_transformer_layer_norm_forward_f32(device const float* _inp
   float variance = (totalSumSq / hsF32);
   float varEps = (variance + eps);
   float std = sqrt(varEps);
-  if ((batchValid && hiddenValid)) {
+  if (batchValid && hiddenValid) {
     float g = gamma[lid];
     float b = beta[lid];
     float xNorm = (xMinusMean / std);
@@ -1187,7 +1187,7 @@ kernel void navatala_transformer_layer_norm_forward_f16(device const half* _inpu
   float variance = (totalSumSq / hsF32);
   float varEps = (variance + eps);
   float std = sqrt(varEps);
-  if ((batchValid && hiddenValid)) {
+  if (batchValid && hiddenValid) {
     half gF16 = gamma[lid];
     half bF16 = beta[lid];
     float g = ((float)(gF16));
@@ -1391,7 +1391,7 @@ kernel void navatala_transformer_layer_norm_backward_f32(device const float* _in
   float hsF32 = ((float)(hs));
   float meanDyGamma = (totalDyGamma / hsF32);
   float meanDyGammaXhat = (totalDyGammaXhat / hsF32);
-  if ((batchValid && hiddenValid)) {
+  if (batchValid && hiddenValid) {
     float term1 = dyGamma;
     float term2 = meanDyGamma;
     float term3 = (xHat * meanDyGammaXhat);
@@ -1598,7 +1598,7 @@ kernel void navatala_transformer_layer_norm_backward_f16(device const half* _inp
   float hsF32 = ((float)(hs));
   float meanDyGamma = (totalDyGamma / hsF32);
   float meanDyGammaXhat = (totalDyGammaXhat / hsF32);
-  if ((batchValid && hiddenValid)) {
+  if (batchValid && hiddenValid) {
     float term1 = dyGamma;
     float term2 = meanDyGamma;
     float term3 = (xHat * meanDyGammaXhat);
@@ -1724,7 +1724,7 @@ kernel void navatala_transformer_rms_norm_backward_f32(device const float* _inpu
   float totalDyGammaXhat = sumDyGammaXhat[0u];
   float hsF32 = ((float)(hs));
   float meanDyGammaXhat = (totalDyGammaXhat / hsF32);
-  if ((batchValid && hiddenValid)) {
+  if (batchValid && hiddenValid) {
     float term1 = dyGamma;
     float term2 = (xHat * meanDyGammaXhat);
     float inner = (term1 - term2);
@@ -1850,7 +1850,7 @@ kernel void navatala_transformer_rms_norm_backward_f16(device const half* _input
   float totalDyGammaXhat = sumDyGammaXhat[0u];
   float hsF32 = ((float)(hs));
   float meanDyGammaXhat = (totalDyGammaXhat / hsF32);
-  if ((batchValid && hiddenValid)) {
+  if (batchValid && hiddenValid) {
     float term1 = dyGamma;
     float term2 = (xHat * meanDyGammaXhat);
     float inner = (term1 - term2);
@@ -1882,7 +1882,7 @@ kernel void navatala_transformer_layer_norm_multi_pass_f32(device const float* _
   uint iterIdx = lid;
   uint workgroupSize = 256u;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < hs))) break;
+    if (!(iterIdx < hs)) break;
     uint globalIdx = (baseIdx + iterIdx);
     float xVal = ((batchValid) ? (_input[globalIdx]) : (as_type<float>(0x00000000u)));
     partialSum = (partialSum + xVal);
@@ -2049,7 +2049,7 @@ kernel void navatala_transformer_layer_norm_multi_pass_f32(device const float* _
   float std = sqrt(varEps);
   iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < hs))) break;
+    if (!(iterIdx < hs)) break;
     if (batchValid) {
       uint globalIdx2 = (baseIdx + iterIdx);
       float xVal2 = _input[globalIdx2];
@@ -2084,7 +2084,7 @@ kernel void navatala_transformer_layer_norm_multi_pass_f16(device const half* _i
   uint iterIdx = lid;
   uint workgroupSize = 256u;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < hs))) break;
+    if (!(iterIdx < hs)) break;
     uint globalIdx = (baseIdx + iterIdx);
     half xF16 = ((batchValid) ? (_input[globalIdx]) : (half(0.000000)));
     float xVal = ((float)(xF16));
@@ -2252,7 +2252,7 @@ kernel void navatala_transformer_layer_norm_multi_pass_f16(device const half* _i
   float std = sqrt(varEps);
   iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < hs))) break;
+    if (!(iterIdx < hs)) break;
     if (batchValid) {
       uint globalIdx2 = (baseIdx + iterIdx);
       half xF16_2 = _input[globalIdx2];
@@ -2289,7 +2289,7 @@ kernel void navatala_transformer_rms_norm_multi_pass_f32(device const float* _in
   uint iterIdx = lid;
   uint workgroupSize = 256u;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < hs))) break;
+    if (!(iterIdx < hs)) break;
     uint globalIdx = (baseIdx + iterIdx);
     float xVal = ((batchValid) ? (_input[globalIdx]) : (as_type<float>(0x00000000u)));
     float xSq = (xVal * xVal);
@@ -2377,7 +2377,7 @@ kernel void navatala_transformer_rms_norm_multi_pass_f32(device const float* _in
   float rms = sqrt(meanSqEps);
   iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < hs))) break;
+    if (!(iterIdx < hs)) break;
     if (batchValid) {
       uint globalIdx2 = (baseIdx + iterIdx);
       float xVal2 = _input[globalIdx2];
@@ -2408,7 +2408,7 @@ kernel void navatala_transformer_rms_norm_multi_pass_f16(device const half* _inp
   uint iterIdx = lid;
   uint workgroupSize = 256u;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < hs))) break;
+    if (!(iterIdx < hs)) break;
     uint globalIdx = (baseIdx + iterIdx);
     half xF16 = ((batchValid) ? (_input[globalIdx]) : (half(0.000000)));
     float xVal = ((float)(xF16));
@@ -2497,7 +2497,7 @@ kernel void navatala_transformer_rms_norm_multi_pass_f16(device const half* _inp
   float rms = sqrt(meanSqEps);
   iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < hs))) break;
+    if (!(iterIdx < hs)) break;
     if (batchValid) {
       uint globalIdx2 = (baseIdx + iterIdx);
       half xF16_2 = _input[globalIdx2];
@@ -2690,7 +2690,7 @@ kernel void navatala_transformer_softmax_forward_f32(device const float* _input 
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float sumExp = sumBuf[0u];
-  if ((batchValid && seqValid)) {
+  if (batchValid && seqValid) {
     float result = (expVal / sumExp);
     _output[globalIdx] = result;
   }
@@ -2874,7 +2874,7 @@ kernel void navatala_transformer_softmax_forward_f16(device const half* _input [
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float sumExp = sumBuf[0u];
-  if ((batchValid && seqValid)) {
+  if (batchValid && seqValid) {
     float resultF32 = (expVal / sumExp);
     half result = ((half)(resultF32));
     _output[globalIdx] = result;
@@ -2973,7 +2973,7 @@ kernel void navatala_transformer_softmax_backward_f32(device const float* _outpu
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float dot = dotBuf[0u];
-  if ((batchValid && seqValid)) {
+  if (batchValid && seqValid) {
     float dyMinusDot = (dy - dot);
     float dx = (y * dyMinusDot);
     gradInput[globalIdx] = dx;
@@ -3074,7 +3074,7 @@ kernel void navatala_transformer_softmax_backward_f16(device const half* _output
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float dot = dotBuf[0u];
-  if ((batchValid && seqValid)) {
+  if (batchValid && seqValid) {
     float dyMinusDot = (dy - dot);
     float dxF32 = (y * dyMinusDot);
     half dx = ((half)(dxF32));
@@ -3694,7 +3694,7 @@ kernel void navatala_transformer_softmax_multi_pass_f32(device const float* _inp
   float partialSum = as_type<float>(0x00000000u);
   uint iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < sl))) break;
+    if (!(iterIdx < sl)) break;
     uint globalIdx = (baseIdx + iterIdx);
     float xVal = ((batchValid) ? (_input[globalIdx]) : (as_type<float>(0xf149f2cau)));
     bool isGreater = (xVal > partialMax);
@@ -3786,7 +3786,7 @@ kernel void navatala_transformer_softmax_multi_pass_f32(device const float* _inp
   float globalMax = maxBuf[0u];
   iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < sl))) break;
+    if (!(iterIdx < sl)) break;
     if (batchValid) {
       uint globalIdx2 = (baseIdx + iterIdx);
       float xVal2 = _input[globalIdx2];
@@ -3873,7 +3873,7 @@ kernel void navatala_transformer_softmax_multi_pass_f32(device const float* _inp
   float globalSum = sumBuf[0u];
   iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < sl))) break;
+    if (!(iterIdx < sl)) break;
     if (batchValid) {
       uint globalIdx3 = (baseIdx + iterIdx);
       float xVal3 = _input[globalIdx3];
@@ -3905,7 +3905,7 @@ kernel void navatala_transformer_softmax_multi_pass_f16(device const half* _inpu
   float partialSum = as_type<float>(0x00000000u);
   uint iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < sl))) break;
+    if (!(iterIdx < sl)) break;
     uint globalIdx = (baseIdx + iterIdx);
     half xF16 = ((batchValid) ? (_input[globalIdx]) : (half(0.000000)));
     float xVal = ((float)(xF16));
@@ -3999,7 +3999,7 @@ kernel void navatala_transformer_softmax_multi_pass_f16(device const half* _inpu
   float globalMax = maxBuf[0u];
   iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < sl))) break;
+    if (!(iterIdx < sl)) break;
     if (batchValid) {
       uint globalIdx2 = (baseIdx + iterIdx);
       half xF16_2 = _input[globalIdx2];
@@ -4087,7 +4087,7 @@ kernel void navatala_transformer_softmax_multi_pass_f16(device const half* _inpu
   float globalSum = sumBuf[0u];
   iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < sl))) break;
+    if (!(iterIdx < sl)) break;
     if (batchValid) {
       uint globalIdx3 = (baseIdx + iterIdx);
       half xF16_3 = _input[globalIdx3];
@@ -5166,7 +5166,7 @@ kernel void navatala_transformer_simple_attention_f16(device const half* query [
     sumBuf[lid] = sumVal_sum_p2_sumBuf_1;
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((batchValid && (lid == 0u))) {
+  if (batchValid && (lid == 0u)) {
     float outVal = sumBuf[0u];
     half outF16 = ((half)(outVal));
     uint outIdx = (qBase + 0u);
@@ -5470,7 +5470,7 @@ kernel void navatala_transformer_simple_attention_f32(device const float* query 
     sumBuf[lid] = sumVal_sum_p2_sumBuf_1;
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((batchValid && (lid == 0u))) {
+  if (batchValid && (lid == 0u)) {
     float outVal = sumBuf[0u];
     uint outIdx = (qBase + 0u);
     _output[outIdx] = outVal;
@@ -5775,7 +5775,7 @@ kernel void navatala_transformer_paged_attention_f32(device const float* query [
       sumBuf[lid] = sumVal_sum_p2_sumBuf_1;
     }
     threadgroup_barrier(mem_flags::mem_threadgroup);
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       float outVal = sumBuf[0u];
       uint outIdx = (qBase + outD);
       _output[outIdx] = outVal;
@@ -5814,7 +5814,7 @@ kernel void navatala_transformer_simple_attention_with_mask_f32(device const flo
   uint seqStride = (sl * headStride);
   uint qBase = ((batchIdx * seqStride) + ((queryPos * headStride) + (headIdx * headDimStride)));
   uint kBase = ((batchIdx * seqStride) + ((lid * headStride) + (headIdx * headDimStride)));
-  if ((valid && (!causalMasked))) {
+  if (valid && (!causalMasked)) {
     float dotProd = as_type<float>(0x00000000u);
     for (int d = 0; d < (int)(hd); ++d) {
       uint qIdx = (qBase + ((uint)(d)));
@@ -5913,7 +5913,7 @@ kernel void navatala_transformer_simple_attention_with_mask_f32(device const flo
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float maxScore = attnScores[0u];
-  if ((valid && (!causalMasked))) {
+  if (valid && (!causalMasked)) {
     float myScore = attnScores[lid];
     float shiftedScore = (myScore - maxScore);
     float expScore = exp(shiftedScore);
@@ -5995,7 +5995,7 @@ kernel void navatala_transformer_simple_attention_with_mask_f32(device const flo
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float sumExp = sumBuf[0u];
-  if ((valid && (!causalMasked))) {
+  if (valid && (!causalMasked)) {
     float myExpScore = attnScores[lid];
     float shiftedExp = (myExpScore - maxScore);
     float expVal = exp(shiftedExp);
@@ -6080,7 +6080,7 @@ kernel void navatala_transformer_simple_attention_with_mask_f32(device const flo
     sumBuf[lid] = sumVal_sum_p2_sumBuf_1;
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((batchValid && (lid == 0u))) {
+  if (batchValid && (lid == 0u)) {
     float outVal = sumBuf[0u];
     uint outIdx = (qBase + 0u);
     _output[outIdx] = outVal;
@@ -6118,7 +6118,7 @@ kernel void navatala_transformer_simple_attention_with_mask_f16(device const hal
   uint seqStride = (sl * headStride);
   uint qBase = ((batchIdx * seqStride) + ((queryPos * headStride) + (headIdx * headDimStride)));
   uint kBase = ((batchIdx * seqStride) + ((lid * headStride) + (headIdx * headDimStride)));
-  if ((valid && (!causalMasked))) {
+  if (valid && (!causalMasked)) {
     float dotProd = as_type<float>(0x00000000u);
     for (int d = 0; d < (int)(hd); ++d) {
       uint qIdx = (qBase + ((uint)(d)));
@@ -6219,7 +6219,7 @@ kernel void navatala_transformer_simple_attention_with_mask_f16(device const hal
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float maxScore = attnScores[0u];
-  if ((valid && (!causalMasked))) {
+  if (valid && (!causalMasked)) {
     float myScore = attnScores[lid];
     float shiftedScore = (myScore - maxScore);
     float expScore = exp(shiftedScore);
@@ -6301,7 +6301,7 @@ kernel void navatala_transformer_simple_attention_with_mask_f16(device const hal
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float sumExp = sumBuf[0u];
-  if ((valid && (!causalMasked))) {
+  if (valid && (!causalMasked)) {
     float myExpScore = attnScores[lid];
     float shiftedExp = (myExpScore - maxScore);
     float expVal = exp(shiftedExp);
@@ -6387,7 +6387,7 @@ kernel void navatala_transformer_simple_attention_with_mask_f16(device const hal
     sumBuf[lid] = sumVal_sum_p2_sumBuf_1;
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((batchValid && (lid == 0u))) {
+  if (batchValid && (lid == 0u)) {
     float outVal = sumBuf[0u];
     half outF16 = ((half)(outVal));
     uint outIdx = (qBase + 0u);
@@ -6429,7 +6429,7 @@ kernel void navatala_transformer_simple_attention_with_padding_f32(device const 
   uint seqStride = (sl * headStride);
   uint qBase = ((batchIdx * seqStride) + ((queryPos * headStride) + (headIdx * headDimStride)));
   uint kBase = ((batchIdx * seqStride) + ((lid * headStride) + (headIdx * headDimStride)));
-  if ((valid && (!anyMasked))) {
+  if (valid && (!anyMasked)) {
     float dotProd = as_type<float>(0x00000000u);
     for (int d = 0; d < (int)(hd); ++d) {
       uint qIdx = (qBase + ((uint)(d)));
@@ -6528,7 +6528,7 @@ kernel void navatala_transformer_simple_attention_with_padding_f32(device const 
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float maxScore = attnScores[0u];
-  if ((valid && (!anyMasked))) {
+  if (valid && (!anyMasked)) {
     float myScore = attnScores[lid];
     float shiftedScore = (myScore - maxScore);
     float expScore = exp(shiftedScore);
@@ -6610,7 +6610,7 @@ kernel void navatala_transformer_simple_attention_with_padding_f32(device const 
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float sumExp = sumBuf[0u];
-  if ((valid && (!anyMasked))) {
+  if (valid && (!anyMasked)) {
     float myExpScore = attnScores[lid];
     float shiftedExp = (myExpScore - maxScore);
     float expVal = exp(shiftedExp);
@@ -6695,7 +6695,7 @@ kernel void navatala_transformer_simple_attention_with_padding_f32(device const 
     sumBuf[lid] = sumVal_sum_p2_sumBuf_1;
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((batchValid && (lid == 0u))) {
+  if (batchValid && (lid == 0u)) {
     float outVal = sumBuf[0u];
     uint outIdx = (qBase + 0u);
     _output[outIdx] = outVal;
@@ -6736,7 +6736,7 @@ kernel void navatala_transformer_simple_attention_with_padding_f16(device const 
   uint seqStride = (sl * headStride);
   uint qBase = ((batchIdx * seqStride) + ((queryPos * headStride) + (headIdx * headDimStride)));
   uint kBase = ((batchIdx * seqStride) + ((lid * headStride) + (headIdx * headDimStride)));
-  if ((valid && (!anyMasked))) {
+  if (valid && (!anyMasked)) {
     float dotProd = as_type<float>(0x00000000u);
     for (int d = 0; d < (int)(hd); ++d) {
       uint qIdx = (qBase + ((uint)(d)));
@@ -6837,7 +6837,7 @@ kernel void navatala_transformer_simple_attention_with_padding_f16(device const 
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float maxScore = attnScores[0u];
-  if ((valid && (!anyMasked))) {
+  if (valid && (!anyMasked)) {
     float myScore = attnScores[lid];
     float shiftedScore = (myScore - maxScore);
     float expScore = exp(shiftedScore);
@@ -6919,7 +6919,7 @@ kernel void navatala_transformer_simple_attention_with_padding_f16(device const 
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float sumExp = sumBuf[0u];
-  if ((valid && (!anyMasked))) {
+  if (valid && (!anyMasked)) {
     float myExpScore = attnScores[lid];
     float shiftedExp = (myExpScore - maxScore);
     float expVal = exp(shiftedExp);
@@ -7005,7 +7005,7 @@ kernel void navatala_transformer_simple_attention_with_padding_f16(device const 
     sumBuf[lid] = sumVal_sum_p2_sumBuf_1;
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((batchValid && (lid == 0u))) {
+  if (batchValid && (lid == 0u)) {
     float outVal = sumBuf[0u];
     half outF16 = ((half)(outVal));
     uint outIdx = (qBase + 0u);
@@ -8137,7 +8137,7 @@ kernel void navatala_transformer_multi_tensor_l2_norm_f32(device const float* _i
     sumSq[lid] = sumVal_sumSq_1;
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float partialSum = sumSq[0u];
     partialSums[gid] = partialSum;
   }
@@ -8232,7 +8232,7 @@ kernel void navatala_transformer_multi_tensor_l2_norm_f16(device const half* _in
     sumSq[lid] = sumVal_sumSq_1;
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float partialSum = sumSq[0u];
     partialSums[gid] = partialSum;
   }
@@ -8474,7 +8474,7 @@ kernel void navatala_transformer_top_k_gating_f32(device const float* routerLogi
   indexBuf[lid] = lidI32;
   threadgroup_barrier(mem_flags::mem_threadgroup);
   for (int kIter = 0; kIter < (int)(k); ++kIter) {
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       int bestIdx = 0;
       float bestVal = as_type<float>(0xf149f2cau);
       for (int scanIdx = 0; scanIdx < (int)(ne); ++scanIdx) {
@@ -8690,7 +8690,7 @@ kernel void navatala_transformer_top_k_gating_f16(device const half* routerLogit
   indexBuf[lid] = lidI32_2;
   threadgroup_barrier(mem_flags::mem_threadgroup);
   for (int kIter = 0; kIter < (int)(k); ++kIter) {
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       int bestIdx = 0;
       float bestVal = as_type<float>(0xf149f2cau);
       for (int scanIdx = 0; scanIdx < (int)(ne); ++scanIdx) {
@@ -8743,7 +8743,7 @@ kernel void navatala_transformer_expert_capacity_mask_f32(device const int* expe
   uint cap = capacity[0u];
   threadgroup uint expertCounts[256];
   uint lid = ((uint)(int(__tid.x)));
-  if ((lid < ne)) {
+  if (lid < ne) {
     expertCounts[lid] = 0u;
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
@@ -8791,7 +8791,7 @@ kernel void navatala_transformer_expert_capacity_mask_f16(device const int* expe
   uint cap = capacity[0u];
   threadgroup uint expertCounts[256];
   uint lid = ((uint)(int(__tid.x)));
-  if ((lid < ne)) {
+  if (lid < ne) {
     expertCounts[lid] = 0u;
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
@@ -8844,7 +8844,7 @@ kernel void navatala_transformer_permute_tokens_f32(device const float* hiddenSt
     uint expertIdxU32 = ((uint)(expertIdx));
     bool expertValid = (expertIdxU32 < ne);
     if (expertValid) {
-      if ((lid == 0u)) {
+      if (lid == 0u) {
         uint localPosition = atomic_fetch_add_explicit(((device atomic_uint*)(&(expertCounters[expertIdxU32]))), 1u, memory_order_relaxed);
         uint expertOffset = expertOffsets[expertIdxU32];
         uint destTokenIdx = (expertOffset + localPosition);
@@ -8856,7 +8856,7 @@ kernel void navatala_transformer_permute_tokens_f32(device const float* hiddenSt
       uint destTokenIdx = sharedDestTokenIdx[0u];
       for (int hIter = 0; hIter < (int)(hs); ++hIter) {
         uint hIdx = (lid + (256u * hIter));
-        if ((hIdx < hs)) {
+        if (hIdx < hs) {
           uint srcIdx = ((tokenIdx * hs) + hIdx);
           uint dstIdx = ((destTokenIdx * hs) + hIdx);
           float val = hiddenStates[srcIdx];
@@ -8899,7 +8899,7 @@ kernel void navatala_transformer_permute_tokens_f16(device const half* hiddenSta
     uint expertIdxU32 = ((uint)(expertIdx));
     bool expertValid = (expertIdxU32 < ne);
     if (expertValid) {
-      if ((lid == 0u)) {
+      if (lid == 0u) {
         uint localPosition = atomic_fetch_add_explicit(((device atomic_uint*)(&(expertCounters[expertIdxU32]))), 1u, memory_order_relaxed);
         uint expertOffset = expertOffsets[expertIdxU32];
         uint destTokenIdx = (expertOffset + localPosition);
@@ -8911,7 +8911,7 @@ kernel void navatala_transformer_permute_tokens_f16(device const half* hiddenSta
       uint destTokenIdx = sharedDestTokenIdx[0u];
       for (int hIter = 0; hIter < (int)(hs); ++hIter) {
         uint hIdx = (lid + (256u * hIter));
-        if ((hIdx < hs)) {
+        if (hIdx < hs) {
           uint srcIdx = ((tokenIdx * hs) + hIdx);
           uint dstIdx = ((destTokenIdx * hs) + hIdx);
           half val = hiddenStates[srcIdx];
@@ -8940,7 +8940,7 @@ kernel void navatala_transformer_unpermute_tokens_f32(device const float* permut
     if (origValid) {
       for (int hIter = 0; hIter < (int)(hs); ++hIter) {
         uint hIdx = (lid + (256u * hIter));
-        if ((hIdx < hs)) {
+        if (hIdx < hs) {
           uint srcIdx = ((permutedIdx * hs) + hIdx);
           uint dstIdx = ((origIdx * hs) + hIdx);
           float val = permutedStates[srcIdx];
@@ -8969,7 +8969,7 @@ kernel void navatala_transformer_unpermute_tokens_f16(device const half* permute
     if (origValid) {
       for (int hIter = 0; hIter < (int)(hs); ++hIter) {
         uint hIdx = (lid + (256u * hIter));
-        if ((hIdx < hs)) {
+        if (hIdx < hs) {
           uint srcIdx = ((permutedIdx * hs) + hIdx);
           uint dstIdx = ((origIdx * hs) + hIdx);
           half val = permutedStates[srcIdx];
@@ -9186,7 +9186,7 @@ kernel void navatala_transformer_hadamard_transform_f32(device const float* _inp
   bool batchValid = (batchIdx < bs);
   bool threadValid = (lid < vs);
   uint globalIdx = ((batchIdx * vs) + lid);
-  if ((batchValid && threadValid)) {
+  if (batchValid && threadValid) {
     float val = _input[globalIdx];
     sharedBuf[lid] = val;
   } else {
@@ -9265,7 +9265,7 @@ kernel void navatala_transformer_hadamard_transform_f32(device const float* _inp
   float vsF32 = ((float)(vs));
   float scale = sqrt(vsF32);
   float normalized = (newVal8 / scale);
-  if ((batchValid && threadValid)) {
+  if (batchValid && threadValid) {
     _output[globalIdx] = normalized;
   }
 }
@@ -9284,7 +9284,7 @@ kernel void navatala_transformer_hadamard_transform_f16(device const half* _inpu
   bool batchValid = (batchIdx < bs);
   bool threadValid = (lid < vs);
   uint globalIdx = ((batchIdx * vs) + lid);
-  if ((batchValid && threadValid)) {
+  if (batchValid && threadValid) {
     half valF16 = _input[globalIdx];
     float val = ((float)(valF16));
     sharedBuf[lid] = val;
@@ -9329,7 +9329,7 @@ kernel void navatala_transformer_hadamard_transform_f16(device const half* _inpu
   float scale = sqrt(vsF32);
   float normalized = (newVal4 / scale);
   half resultF16 = ((half)(normalized));
-  if ((batchValid && threadValid)) {
+  if (batchValid && threadValid) {
     _output[globalIdx] = resultF16;
   }
 }

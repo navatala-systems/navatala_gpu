@@ -18,9 +18,9 @@ extern "C" __global__ void navatala_sparse_compute_m_i_s_f64(const unsigned int*
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int cell = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nCells[0]));
-  if ((cell < N)) {
+  if (cell < N) {
     int myAgg = aggregateId[cell];
-    if ((myAgg == -1)) {
+    if (myAgg == -1) {
       unsigned int myPri = randomPriority[cell];
       int rs = ((int)(strongRowPtr[cell]));
       int re = ((int)(strongRowPtr[(cell + 1)]));
@@ -29,29 +29,29 @@ extern "C" __global__ void navatala_sparse_compute_m_i_s_f64(const unsigned int*
         int k = (rs + j);
         int nbr = ((int)(strongColIdx[k]));
         int nbrAgg = aggregateId[nbr];
-        if ((nbrAgg == -1)) {
+        if (nbrAgg == -1) {
           unsigned int nbrPri = randomPriority[nbr];
-          if (((nbrPri > myPri) || ((nbrPri == myPri) && (nbr < cell)))) {
+          if ((nbrPri > myPri) || ((nbrPri == myPri) && (nbr < cell))) {
             isMax = 0;
           }
         }
       }
-      if ((isMax == 1)) {
+      if (isMax == 1) {
         aggregateId[cell] = cell;
       } else {
         int assigned = 0;
         for (int j2 = 0; j2 < (int)((re - rs)); ++j2) {
-          if ((assigned == 0)) {
+          if (assigned == 0) {
             int k2 = (rs + j2);
             int nbr2 = ((int)(strongColIdx[k2]));
             int nbrAgg2 = aggregateId[nbr2];
-            if ((nbrAgg2 >= 0)) {
+            if (nbrAgg2 >= 0) {
               aggregateId[cell] = nbrAgg2;
               assigned = 1;
             }
           }
         }
-        if ((assigned == 0)) {
+        if (assigned == 0) {
           unsigned int _u = atomicAdd(&(nUndecided[0]), 1u);
         }
       }

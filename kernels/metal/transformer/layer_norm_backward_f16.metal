@@ -205,7 +205,7 @@ kernel void navatala_transformer_layer_norm_backward_f16(device const half* _inp
   float hsF32 = ((float)(hs));
   float meanDyGamma = (totalDyGamma / hsF32);
   float meanDyGammaXhat = (totalDyGammaXhat / hsF32);
-  if ((batchValid && hiddenValid)) {
+  if (batchValid && hiddenValid) {
     float term1 = dyGamma;
     float term2 = meanDyGamma;
     float term3 = (xHat * meanDyGammaXhat);

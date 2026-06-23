@@ -15,7 +15,7 @@
 
 __kernel void navatala_cfd_primitives_average_face_scalar_to_cell(__global const float* facePhi, __global const float* magSf, __global const uint* offsets, __global const uint* faceIdx, __global const float* sumMag, __global const int* params, __global float* outCell) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
     uint begU = offsets[((int)((int)(get_global_id(0))))];
@@ -33,7 +33,7 @@ __kernel void navatala_cfd_primitives_average_face_scalar_to_cell(__global const
       acc = (acc + term);
     }
     float den = sumMag[((int)((int)(get_global_id(0))))];
-    if ((den < as_float(0x1e3ce508u))) {
+    if (den < as_float(0x1e3ce508u)) {
       den = as_float(0x1e3ce508u);
     }
     outCell[((int)((int)(get_global_id(0))))] = (acc / den);

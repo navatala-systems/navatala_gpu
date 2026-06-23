@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_dataframe_writeback_sum_u32(const unsigned int* keys, const unsigned int* vals, const int* count, unsigned int* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int j = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((j < count[0u])) {
+  if (j < count[0u]) {
     unsigned int key = keys[j];
     unsigned int val = vals[j];
     unsigned int oldVal = dst[key];

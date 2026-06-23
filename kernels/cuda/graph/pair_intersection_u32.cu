@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_graph_pair_intersection_u32(const unsigned i
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int numP = numPairs[0];
-  if ((gid < numP)) {
+  if (gid < numP) {
     unsigned int a = pairsA[gid];
     unsigned int b = pairsB[gid];
     unsigned int baseU = offsets[a];
@@ -37,7 +37,7 @@ extern "C" __global__ void navatala_graph_pair_intersection_u32(const unsigned i
       for (int _bs = 0; _bs < (int)(32u); ++_bs) {
         unsigned int lo = loAccum;
         unsigned int hi = hiAccum;
-        if ((lo < hi)) {
+        if (lo < hi) {
           unsigned int mid = ((lo + hi) / 2u);
           unsigned int midval = indices[mid];
           bool goRight = (midval < w);
@@ -48,9 +48,9 @@ extern "C" __global__ void navatala_graph_pair_intersection_u32(const unsigned i
         }
       }
       unsigned int lb = loAccum;
-      if ((lb < endV)) {
+      if (lb < endV) {
         unsigned int cand = indices[lb];
-        if ((cand == w)) {
+        if (cand == w) {
           interAccum = (interAccum + 1u);
         }
       }

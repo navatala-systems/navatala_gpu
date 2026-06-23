@@ -38,7 +38,7 @@ kernel void navatala_transformer_expert_capacity_mask_f32(device const int* expe
   uint cap = capacity[0u];
   threadgroup uint expertCounts[256];
   uint lid = ((uint)(int(__tid.x)));
-  if ((lid < ne)) {
+  if (lid < ne) {
     expertCounts[lid] = 0u;
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);

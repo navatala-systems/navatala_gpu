@@ -18,7 +18,7 @@ __kernel void navatala_sparse_ldu_diagonal_fill_f64(__global const double* diago
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nCells[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rEnd = ((int)(rowPtr[(row + 1)]));
     int dPos = (rEnd - 1);
     colInd[dPos] = ((uint)(row));

@@ -19,7 +19,7 @@ __kernel void navatala_vector_search_scalar_quantize_f32_to_i8(__global const fl
   uint nv = n_vectors[0];
   uint d = dim[0];
   uint total = (nv * d);
-  if ((gid < total)) {
+  if (gid < total) {
     uint dim_idx = (gid % d);
     float val = _input[gid];
     float min_val = mins[dim_idx];

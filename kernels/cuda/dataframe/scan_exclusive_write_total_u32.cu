@@ -17,9 +17,9 @@
 extern "C" __global__ void navatala_dataframe_scan_exclusive_write_total_u32(const unsigned int* _input, const unsigned int* count, unsigned int* _output) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int n = count[0u];
-    if ((n == 0u)) {
+    if (n == 0u) {
       _output[0u] = 0u;
     } else {
       unsigned int nMinus1 = (n - 1u);

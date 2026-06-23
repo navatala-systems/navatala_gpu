@@ -71,7 +71,7 @@ layout(std430, binding = 16) writeonly buffer buf_outL {
 // kernel: navatala_cfd_laplacian_scalar_explicit
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= params[0])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= params[0]) {
     return;
   } else {
     float phiC = phiCell[int(int(gl_GlobalInvocationID.x))];
@@ -84,23 +84,23 @@ void main() {
     for (int t = 0; t < int(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < params[1])) {
+      if (f < params[1]) {
         int sgn = sign[k];
         int o = owner[f];
         float phiOther = phiCell[o];
         float muF = muC;
-        if ((sgn > 0)) {
-          if ((f < params[2])) {
+        if (sgn > 0) {
+          if (f < params[2]) {
             int n = neighbour[f];
             phiOther = phiCell[n];
             float w0 = weights[f];
             float iw = (uintBitsToFloat(0x3f800000u) - w0);
             muF = ((w0 * muC) + (iw * muCell[n]));
           } else {
-            if ((bcPhiMask[f] != 0u)) {
+            if (bcPhiMask[f] != 0u) {
               phiOther = bcPhi[f];
             }
-            if ((bcMuMask[f] != 0u)) {
+            if (bcMuMask[f] != 0u) {
               muF = bcMu[f];
             }
           }
@@ -115,7 +115,7 @@ void main() {
     }
     float v = vol[int(int(gl_GlobalInvocationID.x))];
     float invV = uintBitsToFloat(0x00000000u);
-    if ((v != uintBitsToFloat(0x00000000u))) {
+    if (v != uintBitsToFloat(0x00000000u)) {
       invV = (uintBitsToFloat(0x3f800000u) / v);
     }
     outL[int(int(gl_GlobalInvocationID.x))] = (sum * invV);

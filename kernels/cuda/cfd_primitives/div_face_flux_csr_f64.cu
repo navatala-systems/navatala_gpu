@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_div_face_flux_csr_f64(const int* offsets, const int* faceIdx, const float* sign, const double* faceFlux, const double* vol, const int* params, double* outDiv) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0]) {
     return;
   } else {
     int beg = offsets[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];

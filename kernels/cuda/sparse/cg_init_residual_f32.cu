@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_cg_init_residual_f32(const float* b, 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float bi = b[gid];
     float ai = Ax[gid];
     r[gid] = (bi - ai);

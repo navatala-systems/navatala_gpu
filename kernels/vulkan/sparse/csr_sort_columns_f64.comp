@@ -34,7 +34,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int gid = int(gl_GlobalInvocationID.x);
   int N = int(nRows[0]);
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = int(rowPtr[gid]);
     int re = int(rowPtr[(gid + 1)]);
     int len = (re - rs);
@@ -44,7 +44,7 @@ void main() {
         int b = (rs + (j + 1));
         uint ca = colIdx[a];
         uint cb = colIdx[b];
-        if ((ca > cb)) {
+        if (ca > cb) {
           colIdx[a] = cb;
           colIdx[b] = ca;
           double va = values[a];

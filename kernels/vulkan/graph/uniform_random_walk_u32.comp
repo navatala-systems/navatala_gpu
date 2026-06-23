@@ -43,7 +43,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   uint gid = uint(int(gl_GlobalInvocationID.x));
   uint numW = numWalks[0];
-  if ((gid < numW)) {
+  if (gid < numW) {
     uint maxL = maxLen[0];
     uint seedV = seed[0];
     uint rowBase = (gid * maxL);
@@ -59,7 +59,7 @@ void main() {
       uint rng = rngAccum;
       uint rngNext = ((rng * 1103515245u) + 12345u);
       rngAccum = rngNext;
-      if ((deg > 0u)) {
+      if (deg > 0u) {
         uint pick = (rngNext % deg);
         uint nbr = indices[(off + pick)];
         curAccum = nbr;

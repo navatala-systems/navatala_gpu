@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_dataframe_winsorized_mean_f64(const double* sortedData, const unsigned int* n, const double* trimFraction, double* winsorizedMean) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int len = n[0];
     unsigned int midIdx = (len / 2u);
     double midVal = sortedData[midIdx];

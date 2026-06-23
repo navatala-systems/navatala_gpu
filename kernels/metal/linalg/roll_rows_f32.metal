@@ -23,7 +23,7 @@ kernel void navatala_linalg_roll_rows_f32(device const float* A [[buffer(0)]], d
   uint mVal = m[0u];
   uint nVal = n[0u];
   uint totalElems = (mVal * nVal);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     uint row = (idx / nVal);
     uint col = (idx % nVal);
     uint kMod = (kVal % mVal);

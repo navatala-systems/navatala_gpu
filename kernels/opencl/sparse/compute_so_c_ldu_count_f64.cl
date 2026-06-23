@@ -18,7 +18,7 @@ __kernel void navatala_sparse_compute_so_c_ldu_count_f64(__global const uint* ow
   int gid0 = (int)get_global_id(0);
   int cell = (int)(get_global_id(0));
   int N = ((int)(nCells[0]));
-  if ((cell < N)) {
+  if (cell < N) {
     int fStart = ((int)(cellFaceOffsets[cell]));
     int fEnd = ((int)(cellFaceOffsets[(cell + 1)]));
     double maxCoeff = as_double(0x0000000000000000ul);
@@ -27,7 +27,7 @@ __kernel void navatala_sparse_compute_so_c_ldu_count_f64(__global const uint* ow
       int face = ((int)(cellFaceIdx[fIdx]));
       int own = ((int)(owner[face]));
       double coeff = fabs((((cell == own)) ? (upper[face]) : (lower[face])));
-      if ((coeff > maxCoeff)) {
+      if (coeff > maxCoeff) {
         maxCoeff = coeff;
       }
     }
@@ -39,7 +39,7 @@ __kernel void navatala_sparse_compute_so_c_ldu_count_f64(__global const uint* ow
       int face2 = ((int)(cellFaceIdx[fIdx2]));
       int own2 = ((int)(owner[face2]));
       double coeff2 = fabs((((cell == own2)) ? (upper[face2]) : (lower[face2])));
-      if ((coeff2 > threshold)) {
+      if (coeff2 > threshold) {
         count = (count + 1);
       }
     }

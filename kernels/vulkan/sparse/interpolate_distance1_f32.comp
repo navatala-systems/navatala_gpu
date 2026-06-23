@@ -49,21 +49,21 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int row = int(gl_GlobalInvocationID.x);
   int N = int(nRows[0]);
-  if ((row < N)) {
+  if (row < N) {
     int rs = int(rowPtr[row]);
     int re = int(rowPtr[(row + 1)]);
     int mark = cfMarking[row];
     int pStart = int(ProwPtr[row]);
-    if ((mark == 1)) {
+    if (mark == 1) {
       PcolIdx[pStart] = uint(row);
       Pvalues[pStart] = uintBitsToFloat(0x3f800000u);
     } else {
-      if ((mark == -1)) {
+      if (mark == -1) {
         float diag = uintBitsToFloat(0x00000000u);
         for (int jd = 0; jd < int((re - rs)); ++jd) {
           int kd = (rs + jd);
           int colD = int(colIdx[kd]);
-          if ((colD == row)) {
+          if (colD == row) {
             diag = values[kd];
           }
         }
@@ -71,10 +71,10 @@ void main() {
         for (int jw = 0; jw < int((re - rs)); ++jw) {
           int kw = (rs + jw);
           uint isStrW = strongMask[kw];
-          if ((isStrW == 1u)) {
+          if (isStrW == 1u) {
             int colW = int(colIdx[kw]);
             int markW = cfMarking[colW];
-            if ((markW == 1)) {
+            if (markW == 1) {
               float aij = values[kw];
               float w = (-(aij / diag));
               PcolIdx[(pStart + pos)] = uint(colW);

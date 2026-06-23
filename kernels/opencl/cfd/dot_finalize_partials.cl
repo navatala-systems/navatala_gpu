@@ -16,7 +16,7 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_cfd_dot_finalize_partials(__global const double* partials, __global const uint* count, __global double* result) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= 1)) {
+  if ((int)(get_global_id(0)) >= 1) {
     return;
   } else {
     double s = as_double(0x0000000000000000ul);

@@ -17,7 +17,7 @@ __kernel void navatala_sparse_w_cycle_weight_partials_f32(__global const float* 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float ri = r[gid];
     float ei = e[gid];
     float aei = Ae[gid];

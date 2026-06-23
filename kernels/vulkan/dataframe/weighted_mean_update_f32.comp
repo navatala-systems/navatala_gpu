@@ -32,7 +32,7 @@ layout(std430, binding = 3) buffer buf_mean {
 // kernel: navatala_dataframe_weighted_mean_update_f32
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) == 0)) {
+  if (int(gl_GlobalInvocationID.x) == 0) {
     float wOld = weightSum[0];
     float meanOld = mean[0];
     float xVal = x[0];

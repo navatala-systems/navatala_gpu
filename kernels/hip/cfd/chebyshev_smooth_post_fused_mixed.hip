@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_cfd_chebyshev_smooth_post_fused_mixed(const 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     double cA = coeffA[0];
     double cB = coeffB[0];
     double az_i = ((double)(Az[i]));

@@ -16,7 +16,7 @@
 __kernel void navatala_dataframe_tdigest_cdf_f32(__global const float* x, __global const float* centroidMeans, __global const float* centroidWeights, __global const uint* centroidCount, __global const float* totalWeight, __global const float* minVal, __global const float* maxVal, __global float* cdf) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     float xVal = x[0];
     uint count = centroidCount[0];
     float minV = minVal[0];

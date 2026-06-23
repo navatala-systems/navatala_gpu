@@ -24,7 +24,7 @@ __kernel void navatala_sparse_cg_fused_update_dot_f64(__global const double* p, 
   double pi = (((gid < N)) ? (p[gid]) : (as_double(0x0000000000000000ul)));
   double api = (((gid < N)) ? (Ap[gid]) : (as_double(0x0000000000000000ul)));
   double zi = (((gid < N)) ? (z[gid]) : (as_double(0x0000000000000000ul)));
-  if ((gid < N)) {
+  if (gid < N) {
     double xi = x[gid];
     double ri = r[gid];
     double xnew = (xi + (a * pi));
@@ -36,15 +36,15 @@ __kernel void navatala_sparse_cg_fused_update_dot_f64(__global const double* p, 
   double warpSum = sub_group_reduce_add(rz);
   __local double sdata[32];
   int lane = (int)(get_sub_group_local_id());
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < 8)) {
+  if (lid < 8) {
     double val = sdata[lid];
     double finalSum = sub_group_reduce_add(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       int grpId = (int)(get_group_id(0));
       rTzPartials[grpId] = finalSum;
     }

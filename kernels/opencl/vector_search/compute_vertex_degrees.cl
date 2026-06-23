@@ -19,12 +19,12 @@ __kernel void navatala_vector_search_compute_vertex_degrees(__global const uint*
   uint nv = n_vertices[0];
   uint md = max_degree[0];
   uint inv = invalid_id[0];
-  if ((vid < nv)) {
+  if (vid < nv) {
     uint count = (uint)(0u);
     for (int i = 0; i < (int)(md); ++i) {
       uint idx = ((vid * md) + i);
       uint neighbor = graph[idx];
-      if ((neighbor != inv)) {
+      if (neighbor != inv) {
         uint old_cnt = count;
         count = (old_cnt + (uint)(1u));
       }

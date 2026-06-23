@@ -19,17 +19,17 @@ __kernel void navatala_cfd_phi_correct_boundary(__global const float* phiIn, __g
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
   int f = (counts[1] + ((int)((int)(get_global_id(0)))));
-  if ((f >= counts[0])) {
+  if (f >= counts[0]) {
     return;
   } else {
     int o = owner[f];
     float po = pCell[o];
     float other = po;
-    if ((bcMask[f] != 0)) {
+    if (bcMask[f] != 0) {
       other = bcVal[f];
     }
     float snGrad = (deltaCoeffs[f] * (other - po));
-    if ((bcSnGradMask[f] != 0)) {
+    if (bcSnGradMask[f] != 0) {
       snGrad = bcSnGrad[f];
     }
     float gradFace = (magSf[f] * snGrad);

@@ -20,7 +20,7 @@ kernel void navatala_cfd_attention_row_softmax(device const float* scores [[buff
   int qi = int(__gid.x);
   int nq = numQ[0];
   int nk = numK[0];
-  if ((qi < nq)) {
+  if (qi < nq) {
     int rowBase = (qi * nk);
     float maxScore = as_type<float>(0xf149f2cau);
     for (int j = 0; j < (int)(nk); ++j) {

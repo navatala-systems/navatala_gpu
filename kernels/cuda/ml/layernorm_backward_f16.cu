@@ -25,7 +25,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_f16(const __half* x, c
   float epsVal = eps[0];
   float gM = __uint_as_float(0x00000000u);
   for (int itm = 0; itm < (int)(numIters); ++itm) {
-    if (((lid + (((unsigned int)(itm)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itm)) * 256u)) < countVal) {
       gM = (gM + ((float)(x[(lid + (((unsigned int)(itm)) * 256u))])));
     }
   }
@@ -34,7 +34,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_f16(const __half* x, c
   unsigned int mStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = mStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -49,7 +49,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_f16(const __half* x, c
   __syncthreads();
   float gV = __uint_as_float(0x00000000u);
   for (int itv = 0; itv < (int)(numIters); ++itv) {
-    if (((lid + (((unsigned int)(itv)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itv)) * 256u)) < countVal) {
       gV = (gV + ((((float)(x[(lid + (((unsigned int)(itv)) * 256u))])) - mean) * (((float)(x[(lid + (((unsigned int)(itv)) * 256u))])) - mean)));
     }
   }
@@ -58,7 +58,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_f16(const __half* x, c
   unsigned int vStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = vStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -74,7 +74,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_f16(const __half* x, c
   __syncthreads();
   float g1 = __uint_as_float(0x00000000u);
   for (int it1 = 0; it1 < (int)(numIters); ++it1) {
-    if (((lid + (((unsigned int)(it1)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(it1)) * 256u)) < countVal) {
       g1 = (g1 + (((float)(dy[(lid + (((unsigned int)(it1)) * 256u))])) * ((float)(gamma[(lid + (((unsigned int)(it1)) * 256u))]))));
     }
   }
@@ -83,7 +83,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_f16(const __half* x, c
   unsigned int s1Str = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = s1Str;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -98,7 +98,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_f16(const __half* x, c
   __syncthreads();
   float g2 = __uint_as_float(0x00000000u);
   for (int it2 = 0; it2 < (int)(numIters); ++it2) {
-    if (((lid + (((unsigned int)(it2)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(it2)) * 256u)) < countVal) {
       g2 = (g2 + ((((float)(dy[(lid + (((unsigned int)(it2)) * 256u))])) * ((float)(gamma[(lid + (((unsigned int)(it2)) * 256u))]))) * ((((float)(x[(lid + (((unsigned int)(it2)) * 256u))])) - mean) / std)));
     }
   }
@@ -107,7 +107,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_f16(const __half* x, c
   unsigned int s2Str = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = s2Str;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -121,7 +121,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_f16(const __half* x, c
   float m2 = (sdata[0] / n);
   for (int itw = 0; itw < (int)(numIters); ++itw) {
     unsigned int idw = (lid + (((unsigned int)(itw)) * 256u));
-    if ((idw < countVal)) {
+    if (idw < countVal) {
       float xhatw = ((((float)(x[idw])) - mean) / std);
       float dyvw = ((float)(dy[idw]));
       float dxhw = (dyvw * ((float)(gamma[idw])));

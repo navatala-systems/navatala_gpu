@@ -17,7 +17,7 @@ __kernel void navatala_sparse_gmres_arnoldi_project_f32(__global const float* v,
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float c = coeff[0];
     float vi = v[gid];
     float wi = w[gid];

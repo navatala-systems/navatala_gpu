@@ -34,7 +34,7 @@ kernel void navatala_vector_search_mark_visited_batch(device const uint* node_id
   uint tid = ((uint)(int(__gid.x)));
   uint nn = n_nodes[0];
   uint stride = visited_stride[0];
-  if ((tid < nn)) {
+  if (tid < nn) {
     uint node = node_ids[tid];
     uint query = query_ids[tid];
     uint word_idx = (node / 32u);

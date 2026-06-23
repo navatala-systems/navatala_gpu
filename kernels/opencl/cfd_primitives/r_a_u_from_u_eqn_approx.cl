@@ -15,7 +15,7 @@
 
 __kernel void navatala_cfd_primitives_r_a_u_from_u_eqn_approx(__global const float* rhoCell, __global const float* muCell, __global const float* phiFaces, __global const float* rhoBcVal, __global const uint* rhoBcMask, __global const float* muBcVal, __global const uint* muBcMask, __global const int* ownerAll, __global const int* neighbourInt, __global const float* weightsAll, __global const float* magSfAll, __global const float* deltaAll, __global const uint* offsets, __global const uint* faceIdx, __global const int* sign, __global const float* volCells, __global const int* counts3, __global const float* paramsF, __global float* outRAU) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= counts3[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts3[0]) {
     return;
   } else {
     float invDt = (as_float(0x3f800000u) / paramsF[0]);
@@ -33,26 +33,26 @@ __kernel void navatala_cfd_primitives_r_a_u_from_u_eqn_approx(__global const flo
       int k = (beg + t);
       uint fU = faceIdx[k];
       int f = ((int)(fU));
-      if ((f >= counts3[1])) {
+      if (f >= counts3[1]) {
       } else {
         int s = sign[k];
         int o = ownerAll[f];
         float phi = phiFaces[f];
         float rhoF = as_float(0x00000000u);
         float muF = as_float(0x00000000u);
-        if ((f < counts3[2])) {
+        if (f < counts3[2]) {
           int n = neighbourInt[f];
           float w = weightsAll[f];
           float iw = (as_float(0x3f800000u) - w);
           rhoF = ((w * rhoCell[o]) + (iw * rhoCell[n]));
           muF = ((w * muCell[o]) + (iw * muCell[n]));
         } else {
-          if ((rhoBcMask[f] != (uint)(0u))) {
+          if (rhoBcMask[f] != (uint)(0u)) {
             rhoF = rhoBcVal[f];
           } else {
             rhoF = rhoCell[o];
           }
-          if ((muBcMask[f] != (uint)(0u))) {
+          if (muBcMask[f] != (uint)(0u)) {
             muF = muBcVal[f];
           } else {
             muF = muCell[o];
@@ -60,10 +60,10 @@ __kernel void navatala_cfd_primitives_r_a_u_from_u_eqn_approx(__global const flo
         }
         float rhoPhi = (rhoF * phi);
         float outFlux = rhoPhi;
-        if ((s < 0)) {
+        if (s < 0) {
           outFlux = (as_float(0x00000000u) - rhoPhi);
         }
-        if ((outFlux > as_float(0x00000000u))) {
+        if (outFlux > as_float(0x00000000u)) {
           conv = (conv + outFlux);
         }
         float diffTerm = (muF * (magSfAll[f] * deltaAll[f]));
@@ -71,7 +71,7 @@ __kernel void navatala_cfd_primitives_r_a_u_from_u_eqn_approx(__global const flo
       }
     }
     A = (A + ((conv + diff) / V));
-    if ((A != as_float(0x00000000u))) {
+    if (A != as_float(0x00000000u)) {
       outRAU[((int)((int)(get_global_id(0))))] = (as_float(0x3f800000u) / A);
     } else {
       outRAU[((int)((int)(get_global_id(0))))] = as_float(0x00000000u);

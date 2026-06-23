@@ -33,7 +33,7 @@ static inline uint gpu_atomic_cas_uint(device atomic_uint* ptr, uint expected, u
 kernel void navatala_sparse_csr_check_diag_dominance_f32(device const uint* rowPtr [[buffer(0)]], device const uint* colIdx [[buffer(1)]], device const float* values [[buffer(2)]], device const uint* nRows [[buffer(3)]], device uint* isDiagDom [[buffer(4)]], device atomic_uint* allDiagDom [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int gid = int(__gid.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     float diag = as_type<float>(0x00000000u);
@@ -42,7 +42,7 @@ kernel void navatala_sparse_csr_check_diag_dominance_f32(device const uint* rowP
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
       float a = values[k];
-      if ((col == gid)) {
+      if (col == gid) {
         diag = abs(a);
       } else {
         offSum = (offSum + abs(a));

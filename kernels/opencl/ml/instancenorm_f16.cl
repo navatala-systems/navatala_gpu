@@ -29,7 +29,7 @@ __kernel void navatala_ml_instancenorm_f16(__global const half* x, __global cons
   float epsVal = eps[0];
   float gsM = as_float(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((uint)(itM)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itM)) * (uint)(256u))) < countVal) {
       gsM = (gsM + ((float)(x[(base + (lid + (((uint)(itM)) * (uint)(256u))))])));
     }
   }
@@ -38,7 +38,7 @@ __kernel void navatala_ml_instancenorm_f16(__global const half* x, __global cons
   uint meanStr = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -53,7 +53,7 @@ __kernel void navatala_ml_instancenorm_f16(__global const half* x, __global cons
   barrier(CLK_LOCAL_MEM_FENCE);
   float gsV = as_float(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((uint)(itV)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itV)) * (uint)(256u))) < countVal) {
       gsV = (gsV + ((((float)(x[(base + (lid + (((uint)(itV)) * (uint)(256u))))])) - mean) * (((float)(x[(base + (lid + (((uint)(itV)) * (uint)(256u))))])) - mean)));
     }
   }
@@ -62,7 +62,7 @@ __kernel void navatala_ml_instancenorm_f16(__global const half* x, __global cons
   uint varStr = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -76,7 +76,7 @@ __kernel void navatala_ml_instancenorm_f16(__global const half* x, __global cons
   float var = (sdata[0] / n);
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
-    if (((lid + (((uint)(itW)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itW)) * (uint)(256u))) < countVal) {
       float gv = ((float)(gamma[chan]));
       float bv = ((float)(beta[chan]));
       float xv = ((float)(x[(base + (lid + (((uint)(itW)) * (uint)(256u))))]));

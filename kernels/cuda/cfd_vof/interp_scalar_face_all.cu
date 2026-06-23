@@ -16,17 +16,17 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_vof_interp_scalar_face_all(const float* alpha, const int* owner, const int* nei, const float* w, const float* bcAlphaF, const unsigned int* params, float* alphaF) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(params[0])))) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(params[0]))) {
     return;
   } else {
-    if (((int)(blockIdx.x * blockDim.x + threadIdx.x) < ((int)(params[1])))) {
+    if ((int)(blockIdx.x * blockDim.x + threadIdx.x) < ((int)(params[1]))) {
       int o = owner[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
       int n = nei[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
       float wf = w[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
       float wc = (wf * ((float)((wf > __uint_as_float(0x00000000u)))));
       float a = ((wc * alpha[o]) + ((__uint_as_float(0x3f800000u) - wc) * alpha[n]));
       float ac = (a * ((float)((a > __uint_as_float(0x00000000u)))));
-      if ((ac > __uint_as_float(0x3f800000u))) {
+      if (ac > __uint_as_float(0x3f800000u)) {
         alphaF[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = __uint_as_float(0x3f800000u);
       } else {
         alphaF[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = ac;
@@ -34,7 +34,7 @@ extern "C" __global__ void navatala_cfd_vof_interp_scalar_face_all(const float* 
     } else {
       float a = bcAlphaF[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
       float ac = (a * ((float)((a > __uint_as_float(0x00000000u)))));
-      if ((ac > __uint_as_float(0x3f800000u))) {
+      if (ac > __uint_as_float(0x3f800000u)) {
         alphaF[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = __uint_as_float(0x3f800000u);
       } else {
         alphaF[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = ac;

@@ -15,7 +15,7 @@
 
 __kernel void navatala_cfd_mg_prolong_add(__global const float* xCoarse, __global const int* prolongRowOffsets, __global const int* prolongCols, __global const float* prolongVals, __global float* zFine, __global const int* mgCounts) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(mgCounts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(mgCounts[0]))) {
     return;
   } else {
     float accum = as_float(0x00000000u);

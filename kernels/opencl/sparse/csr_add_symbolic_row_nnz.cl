@@ -17,7 +17,7 @@ __kernel void navatala_sparse_csr_add_symbolic_row_nnz(__global const uint* Arow
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int ars = ((int)(ArowPtr[gid]));
     int are = ((int)(ArowPtr[(gid + 1)]));
     int brs = ((int)(BrowPtr[gid]));
@@ -28,15 +28,15 @@ __kernel void navatala_sparse_csr_add_symbolic_row_nnz(__global const uint* Arow
     int ai = 0;
     int bi = 0;
     for (int __iter = 0; __iter < 256; ++__iter) {
-      if (!(((ai < annz) && (bi < bnnz)))) break;
+      if (!((ai < annz) && (bi < bnnz))) break;
       int acol = ((int)(AcolIdx[(ars + ai)]));
       int bcol = ((int)(BcolIdx[(brs + bi)]));
-      if ((acol == bcol)) {
+      if (acol == bcol) {
         count = (count + 1);
         ai = (ai + 1);
         bi = (bi + 1);
       } else {
-        if ((acol < bcol)) {
+        if (acol < bcol) {
           count = (count + 1);
           ai = (ai + 1);
         } else {

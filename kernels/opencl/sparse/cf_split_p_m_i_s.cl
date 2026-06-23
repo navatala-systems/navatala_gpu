@@ -17,7 +17,7 @@ __kernel void navatala_sparse_cf_split_p_m_i_s(__global const uint* rowPtr, __gl
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     uint priority = (((uint)(row)) ^ seed[0]);
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
@@ -25,10 +25,10 @@ __kernel void navatala_sparse_cf_split_p_m_i_s(__global const uint* rowPtr, __gl
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       uint isStrong = strongMask[k];
-      if ((isStrong == (uint)(1u))) {
+      if (isStrong == (uint)(1u)) {
         int nbr = ((int)(colIdx[k]));
         int nbrMark = cfMarking[nbr];
-        if ((nbrMark == 0)) {
+        if (nbrMark == 0) {
           uint nbrPri = (((uint)(nbr)) ^ seed[0]);
           bool outranks = ((nbrPri > priority) || ((nbrPri == priority) && (nbr < row)));
           if (outranks) {
@@ -37,17 +37,17 @@ __kernel void navatala_sparse_cf_split_p_m_i_s(__global const uint* rowPtr, __gl
         }
       }
     }
-    if ((!hasHigherNbr)) {
+    if (!hasHigherNbr) {
       cfMarking[row] = 1;
     } else {
       bool hasCoarseNbr = false;
       for (int j2 = 0; j2 < (int)((re - rs)); ++j2) {
         int k2 = (rs + j2);
         uint isStrong2 = strongMask[k2];
-        if ((isStrong2 == (uint)(1u))) {
+        if (isStrong2 == (uint)(1u)) {
           int nbr2 = ((int)(colIdx[k2]));
           int nbrMark2 = cfMarking[nbr2];
-          if ((nbrMark2 == 1)) {
+          if (nbrMark2 == 1) {
             hasCoarseNbr = true;
           }
         }

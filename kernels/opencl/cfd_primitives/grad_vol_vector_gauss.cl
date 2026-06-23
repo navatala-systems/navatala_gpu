@@ -15,7 +15,7 @@
 
 __kernel void navatala_cfd_primitives_grad_vol_vector_gauss(__global const float* cellUx, __global const float* cellUy, __global const float* cellUz, __global const float* bcX, __global const float* bcY, __global const float* bcZ, __global const uint* bcMask, __global const int* owner, __global const int* neighbour, __global const float* weights, __global const float* sfX, __global const float* sfY, __global const float* sfZ, __global const int* offsets, __global const int* faceIdx, __global const float* sign, __global const float* vol, __global const int* params, __global float* outXX, __global float* outXY, __global float* outXZ, __global float* outYX, __global float* outYY, __global float* outYZ, __global float* outZX, __global float* outZY, __global float* outZZ) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
     float sumXX = as_float(0x00000000u);
@@ -34,7 +34,7 @@ __kernel void navatala_cfd_primitives_grad_vol_vector_gauss(__global const float
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < params[1])) {
+      if (f < params[1]) {
         float s = sign[k];
         int o = owner[f];
         float uxO = cellUx[o];
@@ -43,7 +43,7 @@ __kernel void navatala_cfd_primitives_grad_vol_vector_gauss(__global const float
         float uxF = uxO;
         float uyF = uyO;
         float uzF = uzO;
-        if ((f < params[2])) {
+        if (f < params[2]) {
           int n = neighbour[f];
           float uxN = cellUx[n];
           float uyN = cellUy[n];
@@ -55,14 +55,14 @@ __kernel void navatala_cfd_primitives_grad_vol_vector_gauss(__global const float
           uzF = ((ww * uzO) + (iw * uzN));
         } else {
           uint m = bcMask[f];
-          if ((m == (uint)(1u))) {
+          if (m == (uint)(1u)) {
             float ww = weights[f];
             float iw = (as_float(0x3f800000u) - ww);
             uxF = ((ww * uxO) + (iw * bcX[f]));
             uyF = ((ww * uyO) + (iw * bcY[f]));
             uzF = ((ww * uzO) + (iw * bcZ[f]));
           }
-          if ((m == (uint)(2u))) {
+          if (m == (uint)(2u)) {
             uxF = bcX[f];
             uyF = bcY[f];
             uzF = bcZ[f];
@@ -87,7 +87,7 @@ __kernel void navatala_cfd_primitives_grad_vol_vector_gauss(__global const float
     }
     float v = vol[((int)((int)(get_global_id(0))))];
     float invV = as_float(0x00000000u);
-    if ((v != as_float(0x00000000u))) {
+    if (v != as_float(0x00000000u)) {
       invV = (as_float(0x3f800000u) / v);
     }
     outXX[((int)((int)(get_global_id(0))))] = (sumXX * invV);

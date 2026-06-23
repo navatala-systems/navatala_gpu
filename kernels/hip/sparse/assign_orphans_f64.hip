@@ -18,9 +18,9 @@ extern "C" __global__ void navatala_sparse_assign_orphans_f64(const unsigned int
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int curAgg = aggregateId[gid];
-    if ((curAgg < 0)) {
+    if (curAgg < 0) {
       int rs = ((int)(rowPtr[gid]));
       int re = ((int)(rowPtr[(gid + 1)]));
       int bestAgg = -1;
@@ -29,15 +29,15 @@ extern "C" __global__ void navatala_sparse_assign_orphans_f64(const unsigned int
         int k = (rs + j);
         int col = ((int)(colIdx[k]));
         int neighAgg = aggregateId[col];
-        if ((neighAgg >= 0)) {
+        if (neighAgg >= 0) {
           double a = values[k];
-          if ((abs(a) > bestVal)) {
+          if (abs(a) > bestVal) {
             bestVal = abs(a);
             bestAgg = neighAgg;
           }
         }
       }
-      if ((bestAgg >= 0)) {
+      if (bestAgg >= 0) {
         aggregateId[gid] = bestAgg;
       }
     }

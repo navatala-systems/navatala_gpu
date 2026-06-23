@@ -44,7 +44,7 @@ extern "C" __global__ void navatala_dataframe_scan_sum_f64(const double* _input,
     }
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     sdata[511u] = __longlong_as_double(0x0000000000000000ull);
   }
   __syncthreads();

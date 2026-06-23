@@ -58,7 +58,7 @@ kernel void navatala_ml_compute_objective_f32(device const float* X [[buffer(0)]
   uint obj32RedStride = 128u;
   for (int obj32RedStep = 0; obj32RedStep < (int)(8); ++obj32RedStep) {
     uint obj32RedStrideVal = obj32RedStride;
-    if ((lid < obj32RedStrideVal)) {
+    if (lid < obj32RedStrideVal) {
       float otherMse = sdataMse[(lid + obj32RedStrideVal)];
       float mineMse = sdataMse[lid];
       float sumMse = (mineMse + otherMse);
@@ -73,7 +73,7 @@ kernel void navatala_ml_compute_objective_f32(device const float* X [[buffer(0)]
     obj32RedStride = obj32RedNextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float totalMse = sdataMse[0];
     float totalL1 = sdataL1[0];
     float halfMse = (as_type<float>(0x3f000000u) * totalMse);

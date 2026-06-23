@@ -25,7 +25,7 @@ extern "C" __global__ void navatala_dataframe_count_unmatched_right(const unsign
     unsigned int word = rightMatched[wordIdx];
     unsigned int bit = ((word >> bitIdx) & 1u);
     bool isMatched = (bit == 1u);
-    if ((isMatched == false)) {
+    if (isMatched == false) {
       atomicAdd(&unmatchedCount[0u], 1u);
     }
   }

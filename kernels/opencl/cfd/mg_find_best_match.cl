@@ -18,7 +18,7 @@ __kernel void navatala_cfd_mg_find_best_match(__global const uint* csrOffsets, _
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
     float bestS = as_float(0xbf800000u);
@@ -31,10 +31,10 @@ __kernel void navatala_cfd_mg_find_best_match(__global const uint* csrOffsets, _
       int k = (((int)(beg)) + t);
       uint f = csrFaceIdx[k];
       float s = strength[((int)(f))];
-      if ((s > bestS)) {
+      if (s > bestS) {
         bestS = s;
         int sg = csrSign[k];
-        if ((sg > 0)) {
+        if (sg > 0) {
           bestN = nei[((int)(f))];
         } else {
           bestN = owner[((int)(f))];

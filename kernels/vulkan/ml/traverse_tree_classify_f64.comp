@@ -77,7 +77,7 @@ void main() {
           uint probIdx = (leafBase + cU32);
           double prob = leaf_values[probIdx];
           double currBest = bestProb;
-          if ((prob > currBest)) {
+          if (prob > currBest) {
             bestClass = c;
             bestProb = prob;
           }

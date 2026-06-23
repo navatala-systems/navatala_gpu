@@ -57,7 +57,7 @@ extern "C" __global__ void navatala_ml_compute_objective_f32(const float* X, con
   unsigned int obj32RedStride = 128u;
   for (int obj32RedStep = 0; obj32RedStep < (int)(8); ++obj32RedStep) {
     unsigned int obj32RedStrideVal = obj32RedStride;
-    if ((lid < obj32RedStrideVal)) {
+    if (lid < obj32RedStrideVal) {
       float otherMse = sdataMse[(lid + obj32RedStrideVal)];
       float mineMse = sdataMse[lid];
       float sumMse = (mineMse + otherMse);
@@ -72,7 +72,7 @@ extern "C" __global__ void navatala_ml_compute_objective_f32(const float* X, con
     obj32RedStride = obj32RedNextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float totalMse = sdataMse[0];
     float totalL1 = sdataL1[0];
     float halfMse = (__uint_as_float(0x3f000000u) * totalMse);

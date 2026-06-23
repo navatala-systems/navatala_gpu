@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_csr_max_nnz_per_row_partials(const un
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     partials[gid] = nnzPerRow[gid];
   } else {
     partials[gid] = 0u;

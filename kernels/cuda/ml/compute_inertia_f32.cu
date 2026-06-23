@@ -50,7 +50,7 @@ extern "C" __global__ void navatala_ml_compute_inertia_f32(const float* data, co
   unsigned int inertiaF32RedStride = 128u;
   for (int inertiaF32RedStep = 0; inertiaF32RedStep < (int)(8); ++inertiaF32RedStep) {
     unsigned int inertiaF32Stride = inertiaF32RedStride;
-    if ((lid < inertiaF32Stride)) {
+    if (lid < inertiaF32Stride) {
       float other = sdata[(lid + inertiaF32Stride)];
       float mine = sdata[lid];
       float sum = (mine + other);
@@ -61,7 +61,7 @@ extern "C" __global__ void navatala_ml_compute_inertia_f32(const float* data, co
     inertiaF32RedStride = inertiaF32NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     inertia[0] = sdata[0];
   }
 }

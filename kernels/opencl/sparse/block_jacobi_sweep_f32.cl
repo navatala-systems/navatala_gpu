@@ -17,13 +17,13 @@ __kernel void navatala_sparse_block_jacobi_sweep_f32(__global const uint* rowPtr
   int gid0 = (int)get_global_id(0);
   int blockRow = (int)(get_global_id(0));
   int N = ((int)(nBlockRows[0]));
-  if ((blockRow < N)) {
+  if (blockRow < N) {
     int bdm = ((int)(blockDim[0]));
     int bdm2 = (bdm * bdm);
     int rs = ((int)(rowPtr[blockRow]));
     int re = ((int)(rowPtr[(blockRow + 1)]));
     float om = omega[0];
-    if ((bdm == 4)) {
+    if (bdm == 4) {
       int rowBase4 = (blockRow * 4);
       float offDiag0 = as_float(0x00000000u);
       float offDiag1 = as_float(0x00000000u);
@@ -32,7 +32,7 @@ __kernel void navatala_sparse_block_jacobi_sweep_f32(__global const uint* rowPtr
       for (int jj = 0; jj < (int)((re - rs)); ++jj) {
         int k = (rs + jj);
         int col = ((int)(colIdx[k]));
-        if ((col != blockRow)) {
+        if (col != blockRow) {
           int kBase = (k * 16);
           int colBase4 = (col * 4);
           float xv0 = x[colBase4];
@@ -66,7 +66,7 @@ __kernel void navatala_sparse_block_jacobi_sweep_f32(__global const uint* rowPtr
         for (int jj = 0; jj < (int)((re - rs)); ++jj) {
           int k = (rs + jj);
           int col = ((int)(colIdx[k]));
-          if ((col != blockRow)) {
+          if (col != blockRow) {
             int kBase = (k * bdm2);
             int rowBase = (kBase + (eq * bdm));
             for (int eq2 = 0; eq2 < (int)(bdm); ++eq2) {

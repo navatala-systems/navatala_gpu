@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_nccl_ring_reduce_scatter_step_max_i32(const 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int inVal = incoming[gid];
     int locVal = local_buf[gid];
     bool cmp = (inVal > locVal);

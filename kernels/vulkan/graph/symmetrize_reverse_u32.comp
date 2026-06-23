@@ -37,7 +37,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   uint gid = uint(int(gl_GlobalInvocationID.x));
   uint numE = numEdges[0];
-  if ((gid < numE)) {
+  if (gid < numE) {
     uint u = srcs[gid];
     uint v = dsts[gid];
     outSrcs[gid] = v;

@@ -40,9 +40,9 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int gid = int(gl_GlobalInvocationID.x);
   int N = int(nRows[0]);
-  if ((gid < N)) {
+  if (gid < N) {
     int curAgg = aggregateId[gid];
-    if ((curAgg < 0)) {
+    if (curAgg < 0) {
       int rs = int(rowPtr[gid]);
       int re = int(rowPtr[(gid + 1)]);
       int bestAgg = -1;
@@ -51,15 +51,15 @@ void main() {
         int k = (rs + j);
         int col = int(colIdx[k]);
         int neighAgg = aggregateId[col];
-        if ((neighAgg >= 0)) {
+        if (neighAgg >= 0) {
           float a = values[k];
-          if ((abs(a) > bestVal)) {
+          if (abs(a) > bestVal) {
             bestVal = abs(a);
             bestAgg = neighAgg;
           }
         }
       }
-      if ((bestAgg >= 0)) {
+      if (bestAgg >= 0) {
         aggregateId[gid] = bestAgg;
       }
     }

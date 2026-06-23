@@ -19,14 +19,14 @@ extern "C" __global__ void navatala_cfd_vof_mules_init(const float* alpha, const
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0]) {
     return;
   } else {
     float psi = alpha[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
-    if ((psi < __uint_as_float(0x00000000u))) {
+    if (psi < __uint_as_float(0x00000000u)) {
       psi = __uint_as_float(0x00000000u);
     }
-    if ((psi > __uint_as_float(0x3f800000u))) {
+    if (psi > __uint_as_float(0x3f800000u)) {
       psi = __uint_as_float(0x3f800000u);
     }
     float maxN = __uint_as_float(0x00000000u);
@@ -43,46 +43,46 @@ extern "C" __global__ void navatala_cfd_vof_mules_init(const float* alpha, const
       int f = faceIdx[k];
       float s = sign[k];
       float v = __uint_as_float(0x00000000u);
-      if ((f < counts[2])) {
+      if (f < counts[2]) {
         int nbr = owner[f];
-        if ((s > __uint_as_float(0x00000000u))) {
+        if (s > __uint_as_float(0x00000000u)) {
           nbr = nei[f];
         }
         v = alpha[nbr];
       } else {
         v = alphaF[f];
       }
-      if ((v < __uint_as_float(0x00000000u))) {
+      if (v < __uint_as_float(0x00000000u)) {
         v = __uint_as_float(0x00000000u);
       }
-      if ((v > __uint_as_float(0x3f800000u))) {
+      if (v > __uint_as_float(0x3f800000u)) {
         v = __uint_as_float(0x3f800000u);
       }
-      if ((v > maxN)) {
+      if (v > maxN) {
         maxN = v;
       }
-      if ((v < minN)) {
+      if (v < minN) {
         minN = v;
       }
       float termBD = (s * phiBD[f]);
       sumPhiBD = (sumPhiBD + termBD);
       float pc = phiCorr[f];
-      if ((f < counts[2])) {
-        if ((s > __uint_as_float(0x00000000u))) {
-          if ((pc > __uint_as_float(0x00000000u))) {
+      if (f < counts[2]) {
+        if (s > __uint_as_float(0x00000000u)) {
+          if (pc > __uint_as_float(0x00000000u)) {
             sp = (sp + pc);
           } else {
             sm = (sm + (-pc));
           }
         } else {
-          if ((pc > __uint_as_float(0x00000000u))) {
+          if (pc > __uint_as_float(0x00000000u)) {
             sm = (sm + pc);
           } else {
             sp = (sp + (-pc));
           }
         }
       } else {
-        if ((pc > __uint_as_float(0x00000000u))) {
+        if (pc > __uint_as_float(0x00000000u)) {
           sp = (sp + pc);
         } else {
           sm = (sm + (-pc));
@@ -90,21 +90,21 @@ extern "C" __global__ void navatala_cfd_vof_mules_init(const float* alpha, const
       }
     }
     maxN = (maxN + paramsF[2]);
-    if ((maxN > __uint_as_float(0x3f800000u))) {
+    if (maxN > __uint_as_float(0x3f800000u)) {
       maxN = __uint_as_float(0x3f800000u);
     }
     minN = (minN - paramsF[2]);
-    if ((minN < __uint_as_float(0x00000000u))) {
+    if (minN < __uint_as_float(0x00000000u)) {
       minN = __uint_as_float(0x00000000u);
     }
-    if ((paramsF[3] > __uint_as_float(0x00000000u))) {
+    if (paramsF[3] > __uint_as_float(0x00000000u)) {
       float omSmooth = (__uint_as_float(0x3f800000u) - paramsF[3]);
       maxN = ((paramsF[3] * psi) + (omSmooth * maxN));
-      if ((maxN > __uint_as_float(0x3f800000u))) {
+      if (maxN > __uint_as_float(0x3f800000u)) {
         maxN = __uint_as_float(0x3f800000u);
       }
       minN = ((paramsF[3] * psi) + (omSmooth * minN));
-      if ((minN < __uint_as_float(0x00000000u))) {
+      if (minN < __uint_as_float(0x00000000u)) {
         minN = __uint_as_float(0x00000000u);
       }
     }

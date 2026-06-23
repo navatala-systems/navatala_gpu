@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_mg_zero_vector_f64(const unsigned int
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     v[i] = __longlong_as_double(0x0000000000000000ull);
   }
 }

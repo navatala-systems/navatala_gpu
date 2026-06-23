@@ -34,7 +34,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int row = int(gl_GlobalInvocationID.x);
   int N = int(nRows[0]);
-  if ((row < N)) {
+  if (row < N) {
     int rs = int(rowPtr[row]);
     int re = int(rowPtr[(row + 1)]);
     float sum = uintBitsToFloat(0x00000000u);

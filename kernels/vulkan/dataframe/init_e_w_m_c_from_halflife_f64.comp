@@ -44,7 +44,7 @@ layout(std430, binding = 7) writeonly buffer buf_varY {
 // kernel: navatala_dataframe_init_e_w_m_c_from_halflife_f64
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) == 0)) {
+  if (int(gl_GlobalInvocationID.x) == 0) {
     double h = halflife[0];
     double ln2 = packDouble2x32(uvec2(0xfefa39efu, 0x3fe62e42u));
     double a = (ln2 / h);

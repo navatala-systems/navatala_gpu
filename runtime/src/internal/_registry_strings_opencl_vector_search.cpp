@@ -120,7 +120,7 @@ __kernel void navatala_vector_search_compute_distances_batch_f32(__global const 
   uint gid = ((uint)((int)(get_global_id(0))));
   uint n_cand = n_candidates[0];
   uint d = dim[0];
-  if ((gid < n_cand)) {
+  if (gid < n_cand) {
     uint cand_id = candidate_ids[gid];
     float acc = as_float(0x00000000u);
     for (int k = 0; k < (int)(d); ++k) {
@@ -144,7 +144,7 @@ __kernel void navatala_vector_search_search_layer_greedy_f32(__global const floa
   uint query_id = ((uint)((int)(get_global_id(0))));
   uint nq = n_queries[0];
   uint d = dim[0];
-  if ((query_id < nq)) {
+  if (query_id < nq) {
     uint entry = entry_points[query_id];
     float best_dist = as_float(0x00000000u);
     for (int k = 0; k < (int)(d); ++k) {
@@ -173,7 +173,7 @@ __kernel void navatala_vector_search_select_neighbors_simple_f32(__global const 
   uint tid = ((uint)((int)(get_global_id(0))));
   uint n_cand = n_candidates[0];
   uint m_val = m[0];
-  if ((tid == (uint)(0u))) {
+  if (tid == (uint)(0u)) {
     uint limit = (((n_cand < m_val)) ? (n_cand) : (m_val));
     for (int i = 0; i < (int)(limit); ++i) {
       uint cand = candidates[i];
@@ -192,16 +192,16 @@ __kernel void navatala_vector_search_select_neighbors_heuristic_f32(__global con
   uint m_val = m[0];
   __local uint selected_ids[64];
   __local uint n_sel[1];
-  if ((tid == (uint)(0u))) {
+  if (tid == (uint)(0u)) {
     n_sel[(uint)(0u)] = (uint)(0u);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((tid < n_cand)) {
+  if (tid < n_cand) {
     uint cand_id = candidates[tid];
     selected[tid] = cand_id;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((tid == (uint)(0u))) {
+  if (tid == (uint)(0u)) {
     uint final_count = (((n_cand < m_val)) ? (n_cand) : (m_val));
     n_selected[(uint)(0u)] = final_count;
   }
@@ -217,14 +217,14 @@ __kernel void navatala_vector_search_update_candidate_list_f32(__global uint* ca
   uint ef_val = ef[0];
   __local uint merge_ids[512];
   __local float merge_dists[512];
-  if ((tid < n_curr)) {
+  if (tid < n_curr) {
     uint cid = candidates[tid];
     float cdist = distances[tid];
     merge_ids[tid] = cid;
     merge_dists[tid] = cdist;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((tid < n_new_val)) {
+  if (tid < n_new_val) {
     uint offset = (n_curr + tid);
     uint nid = new_candidates[tid];
     float ndist = new_distances[tid];
@@ -232,7 +232,7 @@ __kernel void navatala_vector_search_update_candidate_list_f32(__global uint* ca
     merge_dists[offset] = ndist;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((tid == (uint)(0u))) {
+  if (tid == (uint)(0u)) {
     uint total = (n_curr + n_new_val);
     uint final_n = (((total < ef_val)) ? (total) : (ef_val));
     n_merged[(uint)(0u)] = final_n;
@@ -248,10 +248,10 @@ __kernel void navatala_vector_search_extract_layer_results_f32(__global const ui
   uint k_val = k[0];
   uint query_id = (gid / k_val);
   uint neighbor_idx = (gid % k_val);
-  if ((query_id < nq)) {
+  if (query_id < nq) {
     uint found = n_found[query_id];
     uint src_idx = ((query_id * k_val) + neighbor_idx);
-    if ((neighbor_idx < found)) {
+    if (neighbor_idx < found) {
       uint cand_id = candidates[src_idx];
       float cand_dist = distances[src_idx];
       result_ids[src_idx] = cand_id;
@@ -271,11 +271,11 @@ __kernel void navatala_vector_search_init_search_state_f32(__global const uint* 
   uint entry = global_entry[0];
   uint nq = n_queries[0];
   uint vs = visited_size[0];
-  if ((gid < nq)) {
+  if (gid < nq) {
     entry_points[gid] = entry;
   }
   uint total_visited = (nq * vs);
-  if ((gid < total_visited)) {
+  if (gid < total_visited) {
     uint q_idx = (gid / vs);
     uint v_idx = (gid % vs);
     uint flat_idx = ((q_idx * vs) + v_idx);
@@ -290,7 +290,7 @@ __kernel void navatala_vector_search_mark_visited_batch(__global const uint* nod
   uint tid = ((uint)((int)(get_global_id(0))));
   uint nn = n_nodes[0];
   uint stride = visited_stride[0];
-  if ((tid < nn)) {
+  if (tid < nn) {
     uint node = node_ids[tid];
     uint query = query_ids[tid];
     uint word_idx = (node / (uint)(32u));
@@ -308,7 +308,7 @@ __kernel void navatala_vector_search_check_visited_batch(__global const uint* no
   uint tid = ((uint)((int)(get_global_id(0))));
   uint nn = n_nodes[0];
   uint stride = visited_stride[0];
-  if ((tid < nn)) {
+  if (tid < nn) {
     uint node = node_ids[tid];
     uint query = query_ids[tid];
     uint word_idx = (node / (uint)(32u));
@@ -331,7 +331,7 @@ __kernel void navatala_vector_search_merge_multi_query_results_f32(__global cons
   uint k_val = k[0];
   uint query_id = (gid / k_val);
   uint k_idx = (gid % k_val);
-  if ((query_id < nq)) {
+  if (query_id < nq) {
     uint flat_idx = ((query_id * k_val) + k_idx);
     uint result_id = layer_results[flat_idx];
     float result_dist = layer_distances[flat_idx];
@@ -347,7 +347,7 @@ __kernel void navatala_vector_search_compute_neighbor_distances_f32(__global con
   uint tid = ((uint)((int)(get_global_id(0))));
   uint nn = n_neighbors[0];
   uint d = dim[0];
-  if ((tid < nn)) {
+  if (tid < nn) {
     uint neighbor_id = neighbor_ids[tid];
     float acc = as_float(0x00000000u);
     for (int k = 0; k < (int)(d); ++k) {
@@ -373,7 +373,7 @@ __kernel void navatala_vector_search_greedy_search_f32(__global const float* que
   uint d = dim[0];
   uint entry = entry_point[0];
   uint ls = search_list_size[0];
-  if ((query_id < nq)) {
+  if (query_id < nq) {
     float entry_dist = as_float(0x00000000u);
     for (int k = 0; k < (int)(d); ++k) {
       uint q_idx = ((query_id * d) + k);
@@ -400,7 +400,7 @@ __kernel void navatala_vector_search_robust_prune_f32(__global const uint* verte
   uint tid = ((uint)((int)(get_global_id(0))));
   uint nc = n_candidates[0];
   uint md = max_degree[0];
-  if ((tid == (uint)(0u))) {
+  if (tid == (uint)(0u)) {
     uint limit = (((nc < md)) ? (nc) : (md));
     for (int i = 0; i < (int)(limit); ++i) {
       uint cand = candidates[i];
@@ -419,12 +419,12 @@ __kernel void navatala_vector_search_insert_vertex_f32(__global const uint* vert
   uint nc = n_candidates[0];
   uint md = max_degree[0];
   uint n_neighbors = (((nc < md)) ? (nc) : (md));
-  if ((tid < n_neighbors)) {
+  if (tid < n_neighbors) {
     uint neighbor = candidates[tid];
     uint graph_idx = ((vid * md) + tid);
     graph[graph_idx] = neighbor;
   }
-  if ((tid == (uint)(0u))) {
+  if (tid == (uint)(0u)) {
     graph_degrees[vid] = n_neighbors;
   }
 }
@@ -438,7 +438,7 @@ __kernel void navatala_vector_search_random_init_neighbors_f32(__global const ui
   uint md = max_degree[0];
   uint id = init_degree[0];
   uint s = seed[0];
-  if ((vid < nv)) {
+  if (vid < nv) {
     uint rng = (vid + s);
     for (int i = 0; i < (int)(id); ++i) {
       uint old_rng = rng;
@@ -465,11 +465,11 @@ __kernel void navatala_vector_search_extract_search_results_f32(__global const u
   uint ls = search_list_size[0];
   uint query_id = (gid / k_val);
   uint k_idx = (gid % k_val);
-  if ((query_id < nq)) {
+  if (query_id < nq) {
     uint nc = n_candidates[query_id];
     uint src_idx = ((query_id * ls) + k_idx);
     uint dst_idx = ((query_id * k_val) + k_idx);
-    if ((k_idx < nc)) {
+    if (k_idx < nc) {
       uint cand_id = candidates[src_idx];
       float cand_dist = candidate_dists[src_idx];
       result_ids[dst_idx] = cand_id;
@@ -492,14 +492,14 @@ __kernel void navatala_vector_search_batched_greedy_search_f32(__global const fl
   uint entry = entry_point[0];
   uint k_val = k[0];
   __local float partial_sums[64];
-  if ((query_id < nq)) {
-    if ((tid == (uint)(0u))) {
+  if (query_id < nq) {
+    if (tid == (uint)(0u)) {
       uint base_idx = (query_id * k_val);
       result_ids[base_idx] = entry;
       result_dists[base_idx] = as_float(0x00000000u);
     }
-    if ((tid < k_val)) {
-      if ((tid != (uint)(0u))) {
+    if (tid < k_val) {
+      if (tid != (uint)(0u)) {
         uint out_idx = ((query_id * k_val) + tid);
         result_ids[out_idx] = (uint)(4294967295u);
         result_dists[out_idx] = as_float(0x7e967699u);
@@ -709,7 +709,7 @@ __kernel void navatala_vector_search_prune_graph_r_n_g_f32(__global const float*
     bool should_prune = false;
     for (int wi = 0; wi < (int)(deg); ++wi) {
       bool is_self_slot = (wi == slot);
-      if ((wi != slot)) {
+      if (wi != slot) {
         uint w_slot = (graph_base + wi);
         uint w = graph[w_slot];
         float d_uw = graph_distances[w_slot];
@@ -781,12 +781,12 @@ __kernel void navatala_vector_search_compute_vertex_degrees(__global const uint*
   uint nv = n_vertices[0];
   uint md = max_degree[0];
   uint inv = invalid_id[0];
-  if ((vid < nv)) {
+  if (vid < nv) {
     uint count = (uint)(0u);
     for (int i = 0; i < (int)(md); ++i) {
       uint idx = ((vid * md) + i);
       uint neighbor = graph[idx];
-      if ((neighbor != inv)) {
+      if (neighbor != inv) {
         uint old_cnt = count;
         count = (old_cnt + (uint)(1u));
       }
@@ -805,11 +805,11 @@ __kernel void navatala_vector_search_prune_excess_degree(__global uint* graph, _
   uint cmd = current_max_degree[0];
   uint tmd = target_max_degree[0];
   uint inv = invalid_id[0];
-  if ((vid < nv)) {
+  if (vid < nv) {
     uint deg = degrees[vid];
-    if ((deg > tmd)) {
+    if (deg > tmd) {
       for (int i = 0; i < (int)(cmd); ++i) {
-        if ((i >= tmd)) {
+        if (i >= tmd) {
           uint idx = ((vid * cmd) + i);
           graph[idx] = inv;
         }
@@ -827,12 +827,12 @@ __kernel void navatala_vector_search_compact_graph_edges(__global uint* graph, _
   uint nv = n_vertices[0];
   uint md = max_degree[0];
   uint inv = invalid_id[0];
-  if ((vid < nv)) {
+  if (vid < nv) {
     uint write_pos = (uint)(0u);
     for (int i = 0; i < (int)(md); ++i) {
       uint read_idx = ((vid * md) + i);
       uint neighbor = graph[read_idx];
-      if ((neighbor != inv)) {
+      if (neighbor != inv) {
         uint wp = write_pos;
         uint write_idx = ((vid * md) + wp);
         graph[write_idx] = neighbor;
@@ -841,7 +841,7 @@ __kernel void navatala_vector_search_compact_graph_edges(__global uint* graph, _
     }
     uint final_wp = write_pos;
     for (int j = 0; j < (int)(md); ++j) {
-      if ((j >= final_wp)) {
+      if (j >= final_wp) {
         uint fill_idx = ((vid * md) + j);
         graph[fill_idx] = inv;
       }
@@ -857,17 +857,17 @@ __kernel void navatala_vector_search_validate_graph_integrity(__global const uin
   uint vid = ((uint)((int)(get_global_id(0))));
   uint nv = n_vertices[0];
   uint md = max_degree[0];
-  if ((vid < nv)) {
+  if (vid < nv) {
     uint errors = (uint)(0u);
     uint deg = degrees[vid];
     for (int i = 0; i < (int)(deg); ++i) {
       uint idx = ((vid * md) + i);
       uint neighbor = graph[idx];
-      if ((neighbor == vid)) {
+      if (neighbor == vid) {
         uint old_err = errors;
         errors = (old_err | (uint)(1u));
       }
-      if ((neighbor >= nv)) {
+      if (neighbor >= nv) {
         uint old_err2 = errors;
         errors = (old_err2 | (uint)(2u));
       }
@@ -889,17 +889,17 @@ __kernel void navatala_vector_search_prune_excess_degree_sorted(__global uint* g
   uint inv = invalid_id[0];
   __local uint shared_ids[128];
   __local float shared_dists[128];
-  if ((vid < nv)) {
+  if (vid < nv) {
     uint deg = degrees[vid];
-    if ((deg > tmd)) {
-      if ((tid < deg)) {
+    if (deg > tmd) {
+      if (tid < deg) {
         uint read_idx = ((vid * cmd) + tid);
         uint neighbor_id = graph[read_idx];
         float neighbor_dist = neighbor_distances[read_idx];
         shared_ids[tid] = neighbor_id;
         shared_dists[tid] = neighbor_dist;
       } else {
-        if ((tid < (uint)(128u))) {
+        if (tid < (uint)(128u)) {
           shared_ids[tid] = inv;
           shared_dists[tid] = as_float(0x7e967699u);
         }
@@ -910,11 +910,11 @@ __kernel void navatala_vector_search_prune_excess_degree_sorted(__global uint* g
           uint half_net = ((uint)(1u) << (stage - substage));
           uint partner = (tid ^ half_net);
           uint direction_bit = ((tid >> (stage + (uint)(1u))) & (uint)(1u));
-          if ((partner < (uint)(128u))) {
+          if (partner < (uint)(128u)) {
             float my_dist = shared_dists[tid];
             float partner_d = shared_dists[partner];
             uint should_swap = (((tid < partner)) ? ((((direction_bit == (uint)(0u))) ? ((((my_dist > partner_d)) ? ((uint)(1u)) : ((uint)(0u)))) : ((((my_dist < partner_d)) ? ((uint)(1u)) : ((uint)(0u)))))) : ((uint)(0u)));
-            if ((should_swap == (uint)(1u))) {
+            if (should_swap == (uint)(1u)) {
               uint my_id = shared_ids[tid];
               uint partner_id = shared_ids[partner];
               shared_ids[tid] = partner_id;
@@ -926,16 +926,16 @@ __kernel void navatala_vector_search_prune_excess_degree_sorted(__global uint* g
           barrier(CLK_LOCAL_MEM_FENCE);
         }
       }
-      if ((tid < cmd)) {
+      if (tid < cmd) {
         uint write_idx = ((vid * cmd) + tid);
-        if ((tid < tmd)) {
+        if (tid < tmd) {
           uint sorted_id = shared_ids[tid];
           graph[write_idx] = sorted_id;
         } else {
           graph[write_idx] = inv;
         }
       }
-      if ((tid == (uint)(0u))) {
+      if (tid == (uint)(0u)) {
         degrees[vid] = tmd;
       }
     }
@@ -951,7 +951,7 @@ __kernel void navatala_vector_search_normalize_p_q_codebook_f32(__global const i
   uint sd = sub_dim[0];
   uint total = (nc * sd);
   float scale = as_float(0x47800000u);
-  if ((tid < total)) {
+  if (tid < total) {
     uint cw = (tid / sd);
     uint count_u32 = codebook_counts[cw];
     int sum_i32 = codebook_sums_i32[tid];
@@ -1445,7 +1445,7 @@ __kernel void navatala_vector_search_reduce_inertia_f32(__global const float* mi
   barrier(CLK_LOCAL_MEM_FENCE);
   uint stride = (uint)(128u);
   for (int __iter = 0; __iter < 8; ++__iter) {
-    if (!((stride > (uint)(0u)))) break;
+    if (!(stride > (uint)(0u))) break;
     uint s = stride;
     bool should_reduce = (lid < s);
     if (should_reduce) {
@@ -1561,7 +1561,7 @@ __kernel void navatala_vector_search_merge_sorted_f32(__global const float* a, _
     uint hi_clamped = (((gid > na)) ? (na) : (gid));
     hi = hi_clamped;
     for (int __iter = 0; __iter < 32; ++__iter) {
-      if (!((lo < hi))) break;
+      if (!(lo < hi)) break;
       uint lo_v = lo;
       uint hi_v = hi;
       uint mid = (lo_v + ((hi_v - lo_v) / (uint)(2u)));
@@ -1598,7 +1598,7 @@ __kernel void navatala_vector_search_rerank_with_exact_distances_f32(__global co
   uint k_val = k[0];
   uint d = dim[0];
   uint total = (nq * k_val);
-  if ((gid < total)) {
+  if (gid < total) {
     uint query_id = (gid / k_val);
     uint k_idx = (gid % k_val);
     uint cand_id = candidate_ids[gid];
@@ -1627,12 +1627,12 @@ __kernel void navatala_vector_search_filter_by_threshold_f32(__global const floa
   uint k_val = k[0];
   float thresh = threshold[0];
   uint inv = invalid_id[0];
-  if ((query_id < nq)) {
+  if (query_id < nq) {
     uint count = (uint)(0u);
     for (int i = 0; i < (int)(k_val); ++i) {
       uint idx = ((query_id * k_val) + i);
       float dist = distances[idx];
-      if ((dist > thresh)) {
+      if (dist > thresh) {
         candidate_ids[idx] = inv;
       } else {
         uint old_cnt = count;
@@ -1653,7 +1653,7 @@ __kernel void navatala_vector_search_merge_search_results_f32(__global const uin
   uint ka = k_a[0];
   uint kb = k_b[0];
   uint ko = k_out[0];
-  if ((query_id < nq)) {
+  if (query_id < nq) {
     uint ptr_a = (uint)(0u);
     uint ptr_b = (uint)(0u);
     uint out_idx = (uint)(0u);
@@ -1692,7 +1692,7 @@ __kernel void navatala_vector_search_compute_recall_f32(__global const uint* app
   uint query_id = ((uint)((int)(get_global_id(0))));
   uint nq = n_queries[0];
   uint k_val = k[0];
-  if ((query_id < nq)) {
+  if (query_id < nq) {
     uint hits = (uint)(0u);
     for (int i = 0; i < (int)(k_val); ++i) {
       uint approx_idx = ((query_id * k_val) + i);
@@ -1701,7 +1701,7 @@ __kernel void navatala_vector_search_compute_recall_f32(__global const uint* app
       for (int j = 0; j < (int)(k_val); ++j) {
         uint gt_idx = ((query_id * k_val) + j);
         uint gt_id = ground_truth_ids[gt_idx];
-        if ((approx_id == gt_id)) {
+        if (approx_id == gt_id) {
           found = (uint)(1u);
         }
       }
@@ -1725,7 +1725,7 @@ __kernel void navatala_vector_search_scalar_quantize_f32_to_i8(__global const fl
   uint nv = n_vectors[0];
   uint d = dim[0];
   uint total = (nv * d);
-  if ((gid < total)) {
+  if (gid < total) {
     uint dim_idx = (gid % d);
     float val = _input[gid];
     float min_val = mins[dim_idx];
@@ -1750,7 +1750,7 @@ __kernel void navatala_vector_search_scalar_dequantize_i8_to_f32(__global const 
   uint nv = n_vectors[0];
   uint d = dim[0];
   uint total = (nv * d);
-  if ((gid < total)) {
+  if (gid < total) {
     uint dim_idx = (gid % d);
     char qval = _input[gid];
     float min_val = mins[dim_idx];
@@ -1807,7 +1807,7 @@ __kernel void navatala_vector_search_encode_p_q_vectors_f32(__global const float
   uint nv = n_vectors[0];
   uint nc = n_codewords[0];
   uint sd = sub_dim[0];
-  if ((vid < nv)) {
+  if (vid < nv) {
     uint best_cw = (uint)(0u);
     float best_dist = as_float(0x7e967699u);
     for (int cw = 0; cw < (int)(nc); ++cw) {
@@ -1824,7 +1824,7 @@ __kernel void navatala_vector_search_encode_p_q_vectors_f32(__global const float
       }
       float cw_dist = dist;
       float curr_best = best_dist;
-      if ((cw_dist < curr_best)) {
+      if (cw_dist < curr_best) {
         best_cw = cw;
         best_dist = cw_dist;
       }
@@ -1843,7 +1843,7 @@ __kernel void navatala_vector_search_decode_p_q_vectors_f32(__global const uchar
   uint nv = n_vectors[0];
   uint sd = sub_dim[0];
   uint total = (nv * sd);
-  if ((gid < total)) {
+  if (gid < total) {
     uint vid = (gid / sd);
     uint k = (gid % sd);
     uchar code = codes[vid];

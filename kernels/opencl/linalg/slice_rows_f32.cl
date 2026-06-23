@@ -22,7 +22,7 @@ __kernel void navatala_linalg_slice_rows_f32(__global const float* A, __global c
   uint n = numCols[(uint)(0u)];
   uint numRows = (re - rs);
   uint totalElems = (numRows * n);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     uint outRow = (idx / n);
     uint outCol = (idx % n);
     uint srcRow = (rs + outRow);

@@ -17,10 +17,10 @@
 extern "C" __global__ void navatala_cfd_mg_coarse_matvec(const int* edgeU, const int* edgeV, const float* edgeCf, const float* diag, const float* x, float* outAx, const int* mgCounts) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int total = (((int)(mgCounts[1])) + ((int)(mgCounts[2])));
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= total)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= total) {
     return;
   } else {
-    if (((int)(blockIdx.x * blockDim.x + threadIdx.x) < ((int)(mgCounts[1])))) {
+    if ((int)(blockIdx.x * blockDim.x + threadIdx.x) < ((int)(mgCounts[1]))) {
       atomicAdd(&outAx[(int)(blockIdx.x * blockDim.x + threadIdx.x)], (diag[(int)(blockIdx.x * blockDim.x + threadIdx.x)] * x[(int)(blockIdx.x * blockDim.x + threadIdx.x)]));
     } else {
       int e = ((int)(blockIdx.x * blockDim.x + threadIdx.x) - ((int)(mgCounts[1])));

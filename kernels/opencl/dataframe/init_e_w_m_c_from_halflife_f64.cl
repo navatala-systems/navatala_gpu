@@ -16,7 +16,7 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_init_e_w_m_c_from_halflife_f64(__global const double* halflife, __global double* alpha, __global double* nEff, __global double* meanX, __global double* meanY, __global double* Cxy, __global double* varX, __global double* varY) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double h = halflife[0];
     double ln2 = as_double(0x3fe62e42fefa39eful);
     double a = (ln2 / h);

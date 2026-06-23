@@ -15,17 +15,17 @@
 
 __kernel void navatala_cfd_vof_alpha_phi_all(__global const float* alphaPhiInt, __global const float* phiAll, __global const float* alphaF, __global const int* params, __global float* alphaPhiAllOut) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
-    if ((((int)((int)(get_global_id(0)))) < params[1])) {
+    if (((int)((int)(get_global_id(0)))) < params[1]) {
       alphaPhiAllOut[((int)((int)(get_global_id(0))))] = alphaPhiInt[((int)((int)(get_global_id(0))))];
     } else {
       float a = alphaF[((int)((int)(get_global_id(0))))];
-      if ((a < as_float(0x00000000u))) {
+      if (a < as_float(0x00000000u)) {
         a = as_float(0x00000000u);
       }
-      if ((a > as_float(0x3f800000u))) {
+      if (a > as_float(0x3f800000u)) {
         a = as_float(0x3f800000u);
       }
       alphaPhiAllOut[((int)((int)(get_global_id(0))))] = (phiAll[((int)((int)(get_global_id(0))))] * a);

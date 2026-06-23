@@ -33,7 +33,7 @@ static inline uint gpu_atomic_cas_uint(device atomic_uint* ptr, uint expected, u
 kernel void navatala_sparse_ldu_to_csr_count_nnz_f64(device const uint* owner [[buffer(0)]], device const uint* neighbour [[buffer(1)]], device const uint* nInternalFaces [[buffer(2)]], device const uint* nCells [[buffer(3)]], device atomic_uint* rowNnz [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int face = int(__gid.x);
   int nFaces = ((int)(nInternalFaces[0]));
-  if ((face < nFaces)) {
+  if (face < nFaces) {
     int own = ((int)(owner[face]));
     int nbr = ((int)(neighbour[face]));
     uint _a = atomic_fetch_add_explicit(((device atomic_uint*)(&(rowNnz[own]))), 1u, memory_order_relaxed);

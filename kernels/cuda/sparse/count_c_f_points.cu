@@ -18,12 +18,12 @@ extern "C" __global__ void navatala_sparse_count_c_f_points(const int* cfMarking
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int mark = cfMarking[gid];
-    if ((mark == 1)) {
+    if (mark == 1) {
       unsigned int _nc = atomicAdd(&(nCoarse[0]), 1u);
     }
-    if ((mark == -1)) {
+    if (mark == -1) {
       unsigned int _nf = atomicAdd(&(nFine[0]), 1u);
     }
   }

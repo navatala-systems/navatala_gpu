@@ -38,7 +38,7 @@ __kernel void navatala_dataframe_column_means_f32(__global const float* _input, 
     uint colMeansF32_reductionStride = (uint)(128u);
     for (int colMeansF32_reductionStep = 0; colMeansF32_reductionStep < (int)(8); ++colMeansF32_reductionStep) {
       uint colMeansF32_stride = colMeansF32_reductionStride;
-      if ((lid < colMeansF32_stride)) {
+      if (lid < colMeansF32_stride) {
         float colMeansF32_other = sdata[(lid + colMeansF32_stride)];
         float colMeansF32_mine = sdata[lid];
         float colMeansF32_sum = (colMeansF32_mine + colMeansF32_other);
@@ -49,7 +49,7 @@ __kernel void navatala_dataframe_column_means_f32(__global const float* _input, 
       colMeansF32_reductionStride = colMeansF32_nextStride;
       barrier(CLK_LOCAL_MEM_FENCE);
     }
-    if ((lid == (uint)(0u))) {
+    if (lid == (uint)(0u)) {
       float totalSum = sdata[(uint)(0u)];
       float nFloat = ((float)(n));
       float meanVal = (totalSum / nFloat);

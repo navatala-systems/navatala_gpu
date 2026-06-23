@@ -22,7 +22,7 @@ extern "C" __global__ void navatala_linalg_gather_cols_f64(const double* A, cons
   unsigned int nVal = n[0u];
   unsigned int kVal = kCount[0u];
   unsigned int totalElems = (mVal * kVal);
-  if ((tid < totalElems)) {
+  if (tid < totalElems) {
     unsigned int rowIdx = (tid / kVal);
     unsigned int outColIdx = (tid % kVal);
     unsigned int srcCol = indices[outColIdx];

@@ -15,7 +15,7 @@
 
 __kernel void navatala_cfd_gamg_dot_finalize(__global const float* partials, __global const uint* count, __global float* result) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= 1)) {
+  if ((int)(get_global_id(0)) >= 1) {
     return;
   } else {
     float s = as_float(0x00000000u);

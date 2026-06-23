@@ -16,7 +16,7 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_weighted_welford_merge_f64(const double* weightSumA, const double* meanA, const double* M2A, const double* weightSumB, const double* meanB, const double* M2B, double* weightSum, double* mean, double* M2) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double wA = weightSumA[0];
     double muA = meanA[0];
     double m2AVal = M2A[0];

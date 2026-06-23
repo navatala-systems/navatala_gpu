@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_graph_unpack_u32(const int* indices, const unsigned int* src, const int* count, unsigned int* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     dst[indices[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]] = src[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
   }
 }

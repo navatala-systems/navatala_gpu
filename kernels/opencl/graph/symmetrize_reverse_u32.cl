@@ -17,7 +17,7 @@ __kernel void navatala_graph_symmetrize_reverse_u32(__global const uint* srcs, _
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint numE = numEdges[0];
-  if ((gid < numE)) {
+  if (gid < numE) {
     uint u = srcs[gid];
     uint v = dsts[gid];
     outSrcs[gid] = v;

@@ -21,14 +21,14 @@ __kernel void navatala_vector_search_update_candidate_list_f32(__global uint* ca
   uint ef_val = ef[0];
   __local uint merge_ids[512];
   __local float merge_dists[512];
-  if ((tid < n_curr)) {
+  if (tid < n_curr) {
     uint cid = candidates[tid];
     float cdist = distances[tid];
     merge_ids[tid] = cid;
     merge_dists[tid] = cdist;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((tid < n_new_val)) {
+  if (tid < n_new_val) {
     uint offset = (n_curr + tid);
     uint nid = new_candidates[tid];
     float ndist = new_distances[tid];
@@ -36,7 +36,7 @@ __kernel void navatala_vector_search_update_candidate_list_f32(__global uint* ca
     merge_dists[offset] = ndist;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((tid == (uint)(0u))) {
+  if (tid == (uint)(0u)) {
     uint total = (n_curr + n_new_val);
     uint final_n = (((total < ef_val)) ? (total) : (ef_val));
     n_merged[(uint)(0u)] = final_n;

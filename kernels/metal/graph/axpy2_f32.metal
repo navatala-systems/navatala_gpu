@@ -19,7 +19,7 @@ using namespace metal;
 kernel void navatala_graph_axpy2_f32(device const float* x [[buffer(0)]], device const float* z [[buffer(1)]], device const float* alpha [[buffer(2)]], device const float* beta [[buffer(3)]], device const uint* count [[buffer(4)]], device float* y [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float alphaV = alpha[0];
     float betaV = beta[0];
     float xv = x[gid];

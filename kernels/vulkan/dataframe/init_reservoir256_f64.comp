@@ -36,7 +36,7 @@ void main() {
   if (inBounds) {
     reservoir[int(gl_GlobalInvocationID.x)] = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
   }
-  if ((int(gl_GlobalInvocationID.x) == 0)) {
+  if (int(gl_GlobalInvocationID.x) == 0) {
     uint initSeed = initialSeed[0];
     count[0] = 0u;
     seed[0] = initSeed;

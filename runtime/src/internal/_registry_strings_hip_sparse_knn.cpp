@@ -30,7 +30,7 @@ extern "C" __global__ void navatala_sparse_knn_sparse_k_n_n_distance_f32(const f
     unsigned int qLen = (qEnd - qStart);
     for (int qLoop = 0; qLoop < (int)(qLen); ++qLoop) {
       unsigned int qPos = qIdxAccum;
-      if ((qPos < qEnd)) {
+      if (qPos < qEnd) {
         float qVal = queryData[qPos];
         float qValSq = (qVal * qVal);
         float currQNorm = queryNormSqAccum;
@@ -47,7 +47,7 @@ extern "C" __global__ void navatala_sparse_knn_sparse_k_n_n_distance_f32(const f
     unsigned int idxLen = (idxEnd - idxStart);
     for (int iLoop = 0; iLoop < (int)(idxLen); ++iLoop) {
       unsigned int iPos = iIdxAccum;
-      if ((iPos < idxEnd)) {
+      if (iPos < idxEnd) {
         float iVal = idxData[iPos];
         float iValSq = (iVal * iVal);
         float currINorm = idxNormSqAccum;
@@ -63,13 +63,13 @@ extern "C" __global__ void navatala_sparse_knn_sparse_k_n_n_distance_f32(const f
     unsigned int qIdx2Accum = qStart;
     for (int dotQLoop = 0; dotQLoop < (int)(qLen); ++dotQLoop) {
       unsigned int qPos2 = qIdx2Accum;
-      if ((qPos2 < qEnd)) {
+      if (qPos2 < qEnd) {
         float qVal2 = queryData[qPos2];
         int qCol = queryIndices[qPos2];
         unsigned int iIdx2Accum = idxStart;
         for (int dotILoop = 0; dotILoop < (int)(idxLen); ++dotILoop) {
           unsigned int iPos2 = iIdx2Accum;
-          if ((iPos2 < idxEnd)) {
+          if (iPos2 < idxEnd) {
             int iCol = idxIndices[iPos2];
             bool colMatch = (qCol == iCol);
             if (colMatch) {
@@ -119,7 +119,7 @@ extern "C" __global__ void navatala_sparse_knn_sparse_k_n_n_distance_f64(const d
     unsigned int qLen = (qEnd - qStart);
     for (int qLoop = 0; qLoop < (int)(qLen); ++qLoop) {
       unsigned int qPos = qIdxAccum;
-      if ((qPos < qEnd)) {
+      if (qPos < qEnd) {
         double qVal = queryData[qPos];
         double qValSq = (qVal * qVal);
         double currQNorm = queryNormSqAccum;
@@ -136,7 +136,7 @@ extern "C" __global__ void navatala_sparse_knn_sparse_k_n_n_distance_f64(const d
     unsigned int idxLen = (idxEnd - idxStart);
     for (int iLoop = 0; iLoop < (int)(idxLen); ++iLoop) {
       unsigned int iPos = iIdxAccum;
-      if ((iPos < idxEnd)) {
+      if (iPos < idxEnd) {
         double iVal = idxData[iPos];
         double iValSq = (iVal * iVal);
         double currINorm = idxNormSqAccum;
@@ -152,13 +152,13 @@ extern "C" __global__ void navatala_sparse_knn_sparse_k_n_n_distance_f64(const d
     unsigned int qIdx2Accum = qStart;
     for (int dotQLoop = 0; dotQLoop < (int)(qLen); ++dotQLoop) {
       unsigned int qPos2 = qIdx2Accum;
-      if ((qPos2 < qEnd)) {
+      if (qPos2 < qEnd) {
         double qVal2 = queryData[qPos2];
         int qCol = queryIndices[qPos2];
         unsigned int iIdx2Accum = idxStart;
         for (int dotILoop = 0; dotILoop < (int)(idxLen); ++dotILoop) {
           unsigned int iPos2 = iIdx2Accum;
-          if ((iPos2 < idxEnd)) {
+          if (iPos2 < idxEnd) {
             int iCol = idxIndices[iPos2];
             bool colMatch = (qCol == iCol);
             if (colMatch) {
@@ -209,13 +209,13 @@ extern "C" __global__ void navatala_sparse_knn_sparse_inner_product_f32(const fl
     unsigned int idxLen = (idxEnd - idxStart);
     for (int qLoop = 0; qLoop < (int)(qLen); ++qLoop) {
       unsigned int qPos = qIdxAccum;
-      if ((qPos < qEnd)) {
+      if (qPos < qEnd) {
         float qVal = queryData[qPos];
         int qCol = queryIndices[qPos];
         unsigned int iIdxAccum = idxStart;
         for (int iLoop = 0; iLoop < (int)(idxLen); ++iLoop) {
           unsigned int iPos = iIdxAccum;
-          if ((iPos < idxEnd)) {
+          if (iPos < idxEnd) {
             int iCol = idxIndices[iPos];
             bool colMatch = (qCol == iCol);
             if (colMatch) {
@@ -263,13 +263,13 @@ extern "C" __global__ void navatala_sparse_knn_sparse_inner_product_f64(const do
     unsigned int idxLen = (idxEnd - idxStart);
     for (int qLoop = 0; qLoop < (int)(qLen); ++qLoop) {
       unsigned int qPos = qIdxAccum;
-      if ((qPos < qEnd)) {
+      if (qPos < qEnd) {
         double qVal = queryData[qPos];
         int qCol = queryIndices[qPos];
         unsigned int iIdxAccum = idxStart;
         for (int iLoop = 0; iLoop < (int)(idxLen); ++iLoop) {
           unsigned int iPos = iIdxAccum;
-          if ((iPos < idxEnd)) {
+          if (iPos < idxEnd) {
             int iCol = idxIndices[iPos];
             bool colMatch = (qCol == iCol);
             if (colMatch) {
@@ -416,7 +416,7 @@ extern "C" __global__ void navatala_sparse_knn_csr_row_distance_f32(const float*
   unsigned int sparseLen = (sEnd - sStart);
   for (int sLoop = 0; sLoop < (int)(sparseLen); ++sLoop) {
     unsigned int sPos = sIdxAccum;
-    if ((sPos < sEnd)) {
+    if (sPos < sEnd) {
       float sVal = sparseData[sPos];
       int sCol = sparseIndices[sPos];
       unsigned int sColU32 = ((unsigned int)(sCol));
@@ -438,7 +438,7 @@ extern "C" __global__ void navatala_sparse_knn_csr_row_distance_f32(const float*
   unsigned int dIdxAccum = 0u;
   for (int dLoop = 0; dLoop < (int)(nColsVal); ++dLoop) {
     unsigned int dPos = dIdxAccum;
-    if ((dPos < nColsVal)) {
+    if (dPos < nColsVal) {
       float dValLoop = denseQuery[dPos];
       float dValSq = (dValLoop * dValLoop);
       float currDNorm = denseNormAccum;
@@ -479,7 +479,7 @@ extern "C" __global__ void navatala_sparse_knn_csr_row_distance_f64(const double
   unsigned int sparseLen = (sEnd - sStart);
   for (int sLoop = 0; sLoop < (int)(sparseLen); ++sLoop) {
     unsigned int sPos = sIdxAccum;
-    if ((sPos < sEnd)) {
+    if (sPos < sEnd) {
       double sVal = sparseData[sPos];
       int sCol = sparseIndices[sPos];
       unsigned int sColU32 = ((unsigned int)(sCol));
@@ -501,7 +501,7 @@ extern "C" __global__ void navatala_sparse_knn_csr_row_distance_f64(const double
   unsigned int dIdxAccum = 0u;
   for (int dLoop = 0; dLoop < (int)(nColsVal); ++dLoop) {
     unsigned int dPos = dIdxAccum;
-    if ((dPos < nColsVal)) {
+    if (dPos < nColsVal) {
       double dValLoop = denseQuery[dPos];
       double dValSq = (dValLoop * dValLoop);
       double currDNorm = denseNormAccum;

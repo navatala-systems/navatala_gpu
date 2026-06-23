@@ -18,7 +18,7 @@ __kernel void navatala_cfd_mul_by_vol_in_place(__global float* b, __global const
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float v = b[((int)((int)(get_global_id(0))))];

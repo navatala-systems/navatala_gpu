@@ -18,7 +18,7 @@ __kernel void navatala_cfd_k_omega_s_s_t_blending(__global const float* k, __glo
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float kC = k[((int)((int)(get_global_id(0))))];

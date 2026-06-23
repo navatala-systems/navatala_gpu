@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_dataframe_init_e_w_m_c_from_halflife_f64(const double* halflife, double* alpha, double* nEff, double* meanX, double* meanY, double* Cxy, double* varX, double* varY) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double h = halflife[0];
     double ln2 = __longlong_as_double(0x3fe62e42fefa39efull);
     double a = (ln2 / h);

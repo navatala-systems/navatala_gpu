@@ -17,9 +17,9 @@ __kernel void navatala_sparse_promote_unmatched_singletons(__global const uint* 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int aggId = aggregateId[gid];
-    if ((aggId < 0)) {
+    if (aggId < 0) {
       aggregateId[gid] = gid;
     }
   }

@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_cfd_k_omega_s_s_t_blending(device const float* k [[buffer(0)]], device const float* omega [[buffer(1)]], device const float* nut [[buffer(2)]], device const float* nu [[buffer(3)]], device const float* y [[buffer(4)]], device const float* gradKx [[buffer(5)]], device const float* gradKy [[buffer(6)]], device const float* gradKz [[buffer(7)]], device const float* gradOmegax [[buffer(8)]], device const float* gradOmegay [[buffer(9)]], device const float* gradOmegaz [[buffer(10)]], device const int* counts [[buffer(11)]], device float* outF1 [[buffer(12)]], device float* outF23 [[buffer(13)]], device float* outCDkOmega [[buffer(14)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     float kC = k[((int)(int(__gid.x)))];

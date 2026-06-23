@@ -340,7 +340,7 @@ void main() {
       sumBuf[lid] = sumVal_sum_p2_sumBuf_1;
     }
     barrier();
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       float outVal = sumBuf[0u];
       uint outIdx = (qBase + outD);
       _output[outIdx] = outVal;

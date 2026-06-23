@@ -20,7 +20,7 @@ kernel void navatala_sparse_lobpcg_rayleigh_ritz_f32(device const float* X [[buf
   int gid = int(__gid.x);
   int N = ((int)(n[0]));
   int kVal = ((int)(k[0]));
-  if ((gid < (kVal * kVal))) {
+  if (gid < (kVal * kVal)) {
     int row = (gid / kVal);
     int col = (gid % kVal);
     float dotAX = as_type<float>(0x00000000u);

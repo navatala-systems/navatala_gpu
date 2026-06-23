@@ -18,12 +18,12 @@ extern "C" __global__ void navatala_sparse_csr_row_nnz_histogram(const unsigned 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int nnz = (re - rs);
     int maxB = ((int)(maxBins[0]));
-    if ((nnz < maxB)) {
+    if (nnz < maxB) {
       unsigned int _aod3 = atomicAdd(&(histogram[nnz]), 1u);
     }
   }

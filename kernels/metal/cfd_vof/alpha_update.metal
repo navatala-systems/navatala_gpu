@@ -17,14 +17,14 @@
 using namespace metal;
 
 kernel void navatala_cfd_vof_alpha_update(device const float* alpha [[buffer(0)]], device const float* divA [[buffer(1)]], device const float* paramsF [[buffer(2)]], device const int* counts [[buffer(3)]], device const float* rSubDeltaT [[buffer(4)]], device float* alphaNew [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     float a = (alpha[((int)(int(__gid.x)))] - (divA[((int)(int(__gid.x)))] / rSubDeltaT[((int)(int(__gid.x)))]));
-    if ((a < as_type<float>(0x00000000u))) {
+    if (a < as_type<float>(0x00000000u)) {
       a = as_type<float>(0x00000000u);
     }
-    if ((a > as_type<float>(0x3f800000u))) {
+    if (a > as_type<float>(0x3f800000u)) {
       a = as_type<float>(0x3f800000u);
     }
     alphaNew[((int)(int(__gid.x)))] = a;

@@ -17,7 +17,7 @@ __kernel void navatala_nccl_reduce_local_max_i32(__global const int* a, __global
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int va = a[gid];
     int vb = b[gid];
     bool aGtB = (va > vb);

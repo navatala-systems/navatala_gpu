@@ -18,7 +18,7 @@ using namespace metal;
 
 kernel void navatala_graph_pack_u32(device const int* indices [[buffer(0)]], device const uint* src [[buffer(1)]], device const int* count [[buffer(2)]], device uint* dst [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int i = ((int)(int(__gid.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     dst[i] = src[indices[((int)(int(__gid.x)))]];
   }
 }

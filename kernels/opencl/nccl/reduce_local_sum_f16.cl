@@ -18,7 +18,7 @@ __kernel void navatala_nccl_reduce_local_sum_f16(__global const half* a, __globa
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half va = a[gid];
     half vb = b[gid];
     half result = (va + vb);

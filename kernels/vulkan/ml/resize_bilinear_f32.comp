@@ -34,7 +34,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   uint gid = uint(int(gl_GlobalInvocationID.x));
   uint outSizeVal = outSize[0];
-  if ((gid < outSizeVal)) {
+  if (gid < outSizeVal) {
     uint inSizeVal = inSize[0];
     uint inM1 = (inSizeVal - 1u);
     uint outM1 = (outSizeVal - 1u);

@@ -24,7 +24,7 @@ extern "C" __global__ void navatala_ml_softmax_bf16(const __nv_bfloat16* _input,
   float gsMax = __uint_as_float(0xff7fc99eu);
   for (int itA = 0; itA < (int)(numIters); ++itA) {
     unsigned int idxA = (lid + (((unsigned int)(itA)) * 256u));
-    if ((idxA < countVal)) {
+    if (idxA < countVal) {
       float xA = ((float)(_input[idxA]));
       gsMax = (((gsMax > xA)) ? (gsMax) : (xA));
     }
@@ -34,7 +34,7 @@ extern "C" __global__ void navatala_ml_softmax_bf16(const __nv_bfloat16* _input,
   unsigned int maxStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = maxStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (((mine > other)) ? (mine) : (other));
@@ -50,7 +50,7 @@ extern "C" __global__ void navatala_ml_softmax_bf16(const __nv_bfloat16* _input,
   float gsSum = __uint_as_float(0x00000000u);
   for (int itB = 0; itB < (int)(numIters); ++itB) {
     unsigned int idxB = (lid + (((unsigned int)(itB)) * 256u));
-    if ((idxB < countVal)) {
+    if (idxB < countVal) {
       float eB = exp((((float)(_input[idxB])) - maxVal));
       gsSum = (gsSum + eB);
     }
@@ -60,7 +60,7 @@ extern "C" __global__ void navatala_ml_softmax_bf16(const __nv_bfloat16* _input,
   unsigned int sumStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = sumStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -74,7 +74,7 @@ extern "C" __global__ void navatala_ml_softmax_bf16(const __nv_bfloat16* _input,
   float sumVal = sdata[0];
   for (int itC = 0; itC < (int)(numIters); ++itC) {
     unsigned int idxC = (lid + (((unsigned int)(itC)) * 256u));
-    if ((idxC < countVal)) {
+    if (idxC < countVal) {
       float eC = exp((((float)(_input[idxC])) - maxVal));
       _output[idxC] = ((__nv_bfloat16)((eC / sumVal)));
     }

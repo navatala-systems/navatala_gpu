@@ -19,7 +19,7 @@ using namespace metal;
 kernel void navatala_sparse_polynomial_sweep_f32(device const float* Ax [[buffer(0)]], device const float* x [[buffer(1)]], device const float* b [[buffer(2)]], device const float* coeffs [[buffer(3)]], device const uint* degree [[buffer(4)]], device const uint* n [[buffer(5)]], device float* xNew [[buffer(6)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int i = int(__gid.x);
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     float ri = (b[i] - Ax[i]);
     float xi = x[i];
     int deg = ((int)(degree[0]));

@@ -15,7 +15,7 @@
 
 __kernel void navatala_dataframe_extract_covariance_f32(__global const uint* count, __global const float* Cxy, __global float* covariance) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint n = count[0];
     float cxyVal = Cxy[0];
     float nf = ((float)(n));

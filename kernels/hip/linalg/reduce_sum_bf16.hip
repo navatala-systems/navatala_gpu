@@ -33,7 +33,7 @@ extern "C" __global__ void navatala_linalg_reduce_sum_bf16(const __hip_bfloat16*
   unsigned int sumBF16ReductionStride = 128u;
   for (int sumBF16ReductionStep = 0; sumBF16ReductionStep < (int)(8); ++sumBF16ReductionStep) {
     unsigned int sumBF16Stride = sumBF16ReductionStride;
-    if ((lid < sumBF16Stride)) {
+    if (lid < sumBF16Stride) {
       float other = sdata[(lid + sumBF16Stride)];
       float mine = sdata[lid];
       float sum = (mine + other);
@@ -44,7 +44,7 @@ extern "C" __global__ void navatala_linalg_reduce_sum_bf16(const __hip_bfloat16*
     sumBF16ReductionStride = sumBF16NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float partialSum = sdata[0];
     result[0] = partialSum;
   }

@@ -18,7 +18,7 @@ __kernel void navatala_sparse_csr_frobenius_partials_f64(__global const double* 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nnz[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double a = values[gid];
     partials[gid] = (a * a);
   }

@@ -24,7 +24,7 @@ __kernel void navatala_dataframe_gather_unmatched_right_indices(__global const u
     uint word = rightMatched[wordIdx];
     uint bit = ((word >> bitIdx) & (uint)(1u));
     bool isMatched = (bit == (uint)(1u));
-    if ((isMatched == false)) {
+    if (isMatched == false) {
       unmatchedIndices[gid] = gid;
     }
   }

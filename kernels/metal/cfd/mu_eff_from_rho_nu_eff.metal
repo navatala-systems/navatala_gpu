@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_cfd_mu_eff_from_rho_nu_eff(device const float* rho [[buffer(0)]], device const float* nuEff [[buffer(1)]], device const int* params [[buffer(2)]], device float* outMuEff [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= params[0])) {
+  if (((int)(int(__gid.x))) >= params[0]) {
     return;
   } else {
     float r = rho[((int)(int(__gid.x)))];

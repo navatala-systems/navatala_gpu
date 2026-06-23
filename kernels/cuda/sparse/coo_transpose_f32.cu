@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_coo_transpose_f32(const unsigned int*
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int i = gid;
-  if ((i < nnz[0u])) {
+  if (i < nnz[0u]) {
     unsigned int col = colInd[i];
     rowInd_out[i] = col;
     unsigned int row = rowInd[i];

@@ -34,7 +34,7 @@ __kernel void navatala_dataframe_variance_f64(__global const double* _input, __g
   uint reductionStride = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint stride = reductionStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       uint partnerIdx = (lid + stride);
       double myVal = sdata[lid];
       double partnerVal = sdata[partnerIdx];
@@ -46,7 +46,7 @@ __kernel void navatala_dataframe_variance_f64(__global const double* _input, __g
     barrier(CLK_LOCAL_MEM_FENCE);
   }
   uint zeroU32 = ((uint)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     double totalSumSq = sdata[0];
     double countFloat = ((double)(countVal));
     double varianceVal = (totalSumSq / countFloat);

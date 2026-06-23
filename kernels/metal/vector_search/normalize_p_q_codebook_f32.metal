@@ -22,7 +22,7 @@ kernel void navatala_vector_search_normalize_p_q_codebook_f32(device const int* 
   uint sd = sub_dim[0];
   uint total = (nc * sd);
   float scale = as_type<float>(0x47800000u);
-  if ((tid < total)) {
+  if (tid < total) {
     uint cw = (tid / sd);
     uint count_u32 = codebook_counts[cw];
     int sum_i32 = codebook_sums_i32[tid];

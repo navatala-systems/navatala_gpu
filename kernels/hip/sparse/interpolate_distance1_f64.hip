@@ -18,21 +18,21 @@ extern "C" __global__ void navatala_sparse_interpolate_distance1_f64(const unsig
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int row = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     int mark = cfMarking[row];
     int pStart = ((int)(ProwPtr[row]));
-    if ((mark == 1)) {
+    if (mark == 1) {
       PcolIdx[pStart] = ((unsigned int)(row));
       Pvalues[pStart] = __longlong_as_double(0x3ff0000000000000ull);
     } else {
-      if ((mark == -1)) {
+      if (mark == -1) {
         double diag = __longlong_as_double(0x0000000000000000ull);
         for (int jd = 0; jd < (int)((re - rs)); ++jd) {
           int kd = (rs + jd);
           int colD = ((int)(colIdx[kd]));
-          if ((colD == row)) {
+          if (colD == row) {
             diag = values[kd];
           }
         }
@@ -40,10 +40,10 @@ extern "C" __global__ void navatala_sparse_interpolate_distance1_f64(const unsig
         for (int jw = 0; jw < (int)((re - rs)); ++jw) {
           int kw = (rs + jw);
           unsigned int isStrW = strongMask[kw];
-          if ((isStrW == 1u)) {
+          if (isStrW == 1u) {
             int colW = ((int)(colIdx[kw]));
             int markW = cfMarking[colW];
-            if ((markW == 1)) {
+            if (markW == 1) {
               double aij = values[kw];
               double w = (-(aij / diag));
               PcolIdx[(pStart + pos)] = ((unsigned int)(colW));

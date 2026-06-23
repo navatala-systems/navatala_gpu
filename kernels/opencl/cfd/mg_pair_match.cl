@@ -18,12 +18,12 @@ __kernel void navatala_cfd_mg_pair_match(__global const int* bestNeighbor, __glo
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
     int n = bestNeighbor[(int)(get_global_id(0))];
-    if ((n >= 0)) {
-      if (((int)(get_global_id(0)) < n)) {
+    if (n >= 0) {
+      if ((int)(get_global_id(0)) < n) {
         aggMap[(int)(get_global_id(0))] = (int)(get_global_id(0));
       } else {
         aggMap[(int)(get_global_id(0))] = n;

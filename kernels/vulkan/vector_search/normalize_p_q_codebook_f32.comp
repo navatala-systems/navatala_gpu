@@ -40,7 +40,7 @@ void main() {
   uint sd = sub_dim[0];
   uint total = (nc * sd);
   float scale = uintBitsToFloat(0x47800000u);
-  if ((tid < total)) {
+  if (tid < total) {
     uint cw = (tid / sd);
     uint count_u32 = codebook_counts[cw];
     int sum_i32 = codebook_sums_i32[tid];

@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_sparse_uniform_random_coloring(const unsigne
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
   int nC = ((int)(nTargetColors[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     colors[gid] = (gid % nC);
   }
 }

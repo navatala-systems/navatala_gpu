@@ -17,7 +17,7 @@ __kernel void navatala_sparse_em_normalize_p_f32(__global const uint* ProwPtr, _
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(ProwPtr[gid]));
     int re = ((int)(ProwPtr[(gid + 1)]));
     float rowSum = as_float(0x00000000u);

@@ -34,7 +34,7 @@ kernel void navatala_sparse_subspace_convergence_f32(device const float* AX [[bu
   int gid = int(__gid.x);
   int N = ((int)(n[0]));
   int kVal = ((int)(k[0]));
-  if ((gid < kVal)) {
+  if (gid < kVal) {
     float norm2 = as_type<float>(0x00000000u);
     for (int i = 0; i < (int)(N); ++i) {
       float ax = AX[((gid * N) + i)];
@@ -44,7 +44,7 @@ kernel void navatala_sparse_subspace_convergence_f32(device const float* AX [[bu
     }
     residNorms[gid] = norm2;
     float tol = tolerance[0];
-    if ((norm2 < (tol * tol))) {
+    if (norm2 < (tol * tol)) {
       uint _aod1 = atomic_fetch_add_explicit(((device atomic_uint*)(&(nConverged[0]))), 1u, memory_order_relaxed);
     }
   }

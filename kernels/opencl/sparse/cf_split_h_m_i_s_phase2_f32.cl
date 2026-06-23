@@ -17,19 +17,19 @@ __kernel void navatala_sparse_cf_split_h_m_i_s_phase2_f32(__global const uint* r
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
-    if ((mark == -1)) {
+    if (mark == -1) {
       int rs = ((int)(rowPtr[row]));
       int re = ((int)(rowPtr[(row + 1)]));
       bool hasCoarseNbr = false;
       for (int j = 0; j < (int)((re - rs)); ++j) {
         int k = (rs + j);
         uint isStrong = strongMask[k];
-        if ((isStrong == (uint)(1u))) {
+        if (isStrong == (uint)(1u)) {
           int nbr = ((int)(colIdx[k]));
           int nbrMark = cfMarking[nbr];
-          if ((nbrMark == 1)) {
+          if (nbrMark == 1) {
             hasCoarseNbr = true;
           }
         }

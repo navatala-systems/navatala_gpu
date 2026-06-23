@@ -35,7 +35,7 @@ kernel void navatala_dataframe_mse_f32(device const float* y_true [[buffer(0)]],
   uint mseF32_reductionStride = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint mseF32_stride = mseF32_reductionStride;
-    if ((lid < mseF32_stride)) {
+    if (lid < mseF32_stride) {
       uint mseF32_partnerIdx = (lid + mseF32_stride);
       float other = sdata[mseF32_partnerIdx];
       float mine = sdata[lid];
@@ -48,7 +48,7 @@ kernel void navatala_dataframe_mse_f32(device const float* y_true [[buffer(0)]],
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
   uint zeroU32 = ((uint)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     float totalSum = sdata[0];
     float countFloat = ((float)(countVal));
     float mseVal = (totalSum / countFloat);

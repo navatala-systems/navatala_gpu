@@ -17,7 +17,7 @@ __kernel void navatala_dataframe_rmse_f32(__global const float* mse, __global fl
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint zeroU32 = ((uint)(0));
-  if ((gid == zeroU32)) {
+  if (gid == zeroU32) {
     float mseVal = mse[0];
     float rmseVal = sqrt(mseVal);
     rmse[0] = rmseVal;

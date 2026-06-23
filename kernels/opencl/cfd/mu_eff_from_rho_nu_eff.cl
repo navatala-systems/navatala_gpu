@@ -15,7 +15,7 @@
 
 __kernel void navatala_cfd_mu_eff_from_rho_nu_eff(__global const float* rho, __global const float* nuEff, __global const int* params, __global float* outMuEff) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
     float r = rho[((int)((int)(get_global_id(0))))];

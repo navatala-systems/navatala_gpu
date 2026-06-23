@@ -19,7 +19,7 @@ using namespace metal;
 kernel void navatala_cfd_layer_norm_forward(device const float* x [[buffer(0)]], device const int* numRows [[buffer(1)]], device const float* gamma [[buffer(2)]], device const float* beta [[buffer(3)]], device float* y [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int row = int(__gid.x);
   int nRows = numRows[0];
-  if ((row < nRows)) {
+  if (row < nRows) {
     int hd = 16;
     int rowBase = (row * hd);
     float sum = as_type<float>(0x00000000u);

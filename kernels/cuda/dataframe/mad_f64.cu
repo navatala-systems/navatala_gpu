@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_dataframe_mad_f64(const double* sortedData, const unsigned int* n, const double* median, double* mad) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int len = n[0];
     double med = median[0];
     unsigned int q1Idx = (len / 4u);

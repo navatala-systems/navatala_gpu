@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_sparse_sparse_abs_f32(const float* valuesA, const int* nnz, float* valuesB) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < nnz[0u])) {
+  if (i < nnz[0u]) {
     float a = valuesA[i];
     valuesB[i] = abs(a);
   }

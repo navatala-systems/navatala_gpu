@@ -20,7 +20,7 @@ kernel void navatala_sparse_uniform_random_coloring(device const uint* nRows [[b
   int gid = int(__gid.x);
   int N = ((int)(nRows[0]));
   int nC = ((int)(nTargetColors[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     colors[gid] = (gid % nC);
   }
 }

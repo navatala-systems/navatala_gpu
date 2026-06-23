@@ -17,15 +17,15 @@ __kernel void navatala_ml_concatenate2_f32(__global const float* a, __global con
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint nAVal = nA[0];
-    if ((gid < nAVal)) {
+    if (gid < nAVal) {
       float v = a[gid];
       _output[gid] = v;
     } else {
       uint srcIdx = (gid - nAVal);
       uint nBVal = nB[0];
-      if ((srcIdx < nBVal)) {
+      if (srcIdx < nBVal) {
         float v = b[srcIdx];
         _output[gid] = v;
       }

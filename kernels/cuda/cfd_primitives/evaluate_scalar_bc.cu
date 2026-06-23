@@ -19,12 +19,12 @@ extern "C" __global__ void navatala_cfd_primitives_evaluate_scalar_bc(const floa
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0])))) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0]))) {
     return;
   } else {
     unsigned int bcType = bcTypeMask[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
     int cell = faceCells[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
-    if ((((int)(bcType)) == 1)) {
+    if (((int)(bcType)) == 1) {
       boundaryOut[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = fixedValues[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
     } else {
       boundaryOut[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = internalField[cell];

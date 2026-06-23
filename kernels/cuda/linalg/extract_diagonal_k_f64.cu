@@ -21,7 +21,7 @@ extern "C" __global__ void navatala_linalg_extract_diagonal_k_f64(const double* 
   unsigned int size = n[0u];
   unsigned int offset = k[0u];
   unsigned int diagLen = (size - offset);
-  if ((idx < diagLen)) {
+  if (idx < diagLen) {
     unsigned int row = idx;
     unsigned int col = (idx + offset);
     unsigned int srcIdx = ((row * size) + col);

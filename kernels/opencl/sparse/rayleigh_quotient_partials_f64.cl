@@ -18,7 +18,7 @@ __kernel void navatala_sparse_rayleigh_quotient_partials_f64(__global const doub
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double vi = v[gid];
     double avi = Av[gid];
     vAvPartials[gid] = (vi * avi);

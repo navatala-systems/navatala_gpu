@@ -17,7 +17,7 @@
 __kernel void navatala_dataframe_tdigest_merge_f64(__global const double* meansA, __global const double* weightsA, __global const uint* countA, __global const double* totalWeightA, __global const double* minA, __global const double* maxA, __global const double* meansB, __global const double* weightsB, __global const uint* countB, __global const double* totalWeightB, __global const double* minB, __global const double* maxB, __global const double* compressionIn, __global double* meansOut, __global double* weightsOut, __global uint* countOut, __global double* totalWeightOut, __global double* minOut, __global double* maxOut, __global double* compressionOut) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint cA = countA[0];
     uint cB = countB[0];
     double twA = totalWeightA[0];

@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_sparse_gmres_store_basis_f64(const double* w
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
   int col = ((int)(colIdx[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double wi = w[gid];
     V[(gid + (col * N))] = wi;
   }

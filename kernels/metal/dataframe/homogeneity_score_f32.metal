@@ -71,7 +71,7 @@ kernel void navatala_dataframe_homogeneity_score_f32(device const float* conting
   threadgroup_barrier(mem_flags::mem_threadgroup);
   for (int stride = 0; stride < (int)(128u); ++stride) {
     uint strideU32 = ((uint)(stride));
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       float otherHYC = hycSum[(lid + strideU32)];
       float mineHYC = hycSum[lid];
       hycSum[lid] = (mineHYC + otherHYC);
@@ -81,7 +81,7 @@ kernel void navatala_dataframe_homogeneity_score_f32(device const float* conting
     }
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float hycFinal = hycSum[0u];
     float hyFinal = hySum[0u];
     bool hyIsZero = (hyFinal == as_type<float>(0x00000000u));

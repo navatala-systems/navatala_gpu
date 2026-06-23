@@ -40,7 +40,7 @@ extern "C" __global__ void navatala_ml_ridge_predict_f32(const float* X, const f
     unsigned int pred32_reductionStride = 128u;
     for (int pred32_reductionStep = 0; pred32_reductionStep < (int)(8); ++pred32_reductionStep) {
       unsigned int pred32_stride = pred32_reductionStride;
-      if ((lid < pred32_stride)) {
+      if (lid < pred32_stride) {
         float pred32_other = sdata[(lid + pred32_stride)];
         float pred32_mine = sdata[lid];
         float pred32_sum = (pred32_mine + pred32_other);
@@ -51,7 +51,7 @@ extern "C" __global__ void navatala_ml_ridge_predict_f32(const float* X, const f
       pred32_reductionStride = pred32_nextStride;
       __syncthreads();
     }
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       float dotProduct = sdata[0];
       yPred[rowIdx] = dotProduct;
     }

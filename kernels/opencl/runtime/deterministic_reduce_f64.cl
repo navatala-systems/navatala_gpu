@@ -31,7 +31,7 @@ __kernel void navatala_runtime_deterministic_reduce_f64(__global const double* _
   uint f64RedStride = (uint)(128u);
   for (int f64RedStep = 0; f64RedStep < (int)(8); ++f64RedStep) {
     uint f64Stride = f64RedStride;
-    if ((lid < f64Stride)) {
+    if (lid < f64Stride) {
       double other = sdata[(lid + f64Stride)];
       double mine = sdata[lid];
       double sum = (mine + other);
@@ -42,7 +42,7 @@ __kernel void navatala_runtime_deterministic_reduce_f64(__global const double* _
     f64RedStride = f64NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     double totalSum = sdata[0];
     result[0] = totalSum;
   }

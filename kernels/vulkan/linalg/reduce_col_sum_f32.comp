@@ -34,7 +34,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   uint gid = uint(int(gl_GlobalInvocationID.x));
   uint col = gid;
-  if ((col < n[0u])) {
+  if (col < n[0u]) {
     float sumAccum = uintBitsToFloat(0x00000000u);
     for (int i = 0; i < int(m[0u]); ++i) {
       uint iU32 = uint(i);

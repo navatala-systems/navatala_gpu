@@ -42,7 +42,7 @@ __kernel void navatala_ml_find_max_correlation_f32(__global const float* correla
   uint maxCorrF32RedStride = (uint)(128u);
   for (int maxCorrF32RedStep = 0; maxCorrF32RedStep < (int)(8); ++maxCorrF32RedStep) {
     uint maxCorrF32Stride = maxCorrF32RedStride;
-    if ((lid < maxCorrF32Stride)) {
+    if (lid < maxCorrF32Stride) {
       otherVal = svals[(lid + maxCorrF32Stride)];
       otherIdx = sidxs[(lid + maxCorrF32Stride)];
       myVal = svals[lid];
@@ -58,7 +58,7 @@ __kernel void navatala_ml_find_max_correlation_f32(__global const float* correla
     maxCorrF32RedStride = maxCorrF32NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     maxValue[0] = svals[0];
     maxIndex[0] = sidxs[0];
   }

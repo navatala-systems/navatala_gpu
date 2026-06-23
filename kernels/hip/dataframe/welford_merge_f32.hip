@@ -16,7 +16,7 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_welford_merge_f32(const unsigned int* countA, const float* meanA, const float* M2A, const unsigned int* countB, const float* meanB, const float* M2B, unsigned int* count, float* mean, float* M2) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int nA = countA[0];
     float muA = meanA[0];
     float m2AVal = M2A[0];

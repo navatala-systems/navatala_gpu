@@ -59,7 +59,7 @@ void main() {
   uint query_id = uint(int(gl_GlobalInvocationID.x));
   uint nq = n_queries[0];
   uint d = dim[0];
-  if ((query_id < nq)) {
+  if (query_id < nq) {
     uint entry = entry_points[query_id];
     float best_dist = uintBitsToFloat(0x00000000u);
     for (int k = 0; k < int(d); ++k) {

@@ -19,7 +19,7 @@ __kernel void navatala_vector_search_encode_p_q_vectors_f32(__global const float
   uint nv = n_vectors[0];
   uint nc = n_codewords[0];
   uint sd = sub_dim[0];
-  if ((vid < nv)) {
+  if (vid < nv) {
     uint best_cw = (uint)(0u);
     float best_dist = as_float(0x7e967699u);
     for (int cw = 0; cw < (int)(nc); ++cw) {
@@ -36,7 +36,7 @@ __kernel void navatala_vector_search_encode_p_q_vectors_f32(__global const float
       }
       float cw_dist = dist;
       float curr_best = best_dist;
-      if ((cw_dist < curr_best)) {
+      if (cw_dist < curr_best) {
         best_cw = cw;
         best_dist = cw_dist;
       }

@@ -26,15 +26,15 @@ __kernel void navatala_sparse_aggregate_serial_f64(__global const uint* rowPtr, 
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       uint isStrong = strongMask[k];
-      if ((isStrong == (uint)(1u))) {
+      if (isStrong == (uint)(1u)) {
         double a = values[k];
-        if ((fabs(a) > bestVal)) {
+        if (fabs(a) > bestVal) {
           bestVal = fabs(a);
           bestCol = ((int)(colIdx[k]));
         }
       }
     }
-    if ((bestCol >= 0)) {
+    if (bestCol >= 0) {
       aggregateId[i] = (((i < bestCol)) ? (i) : (bestCol));
     } else {
       aggregateId[i] = nextAgg;

@@ -21,7 +21,7 @@ extern "C" __global__ void navatala_vector_search_greedy_search_f32(const float*
   unsigned int d = dim[0];
   unsigned int entry = entry_point[0];
   unsigned int ls = search_list_size[0];
-  if ((query_id < nq)) {
+  if (query_id < nq) {
     float entry_dist = __uint_as_float(0x00000000u);
     for (int k = 0; k < (int)(d); ++k) {
       unsigned int q_idx = ((query_id * d) + k);

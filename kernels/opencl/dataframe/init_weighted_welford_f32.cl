@@ -15,7 +15,7 @@
 
 __kernel void navatala_dataframe_init_weighted_welford_f32(__global float* weightSum, __global float* mean, __global float* M2) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     weightSum[0] = as_float(0x00000000u);
     mean[0] = as_float(0x00000000u);
     M2[0] = as_float(0x00000000u);

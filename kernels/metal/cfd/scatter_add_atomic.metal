@@ -33,7 +33,7 @@ static inline uint gpu_atomic_cas_uint(device atomic_uint* ptr, uint expected, u
 kernel void navatala_cfd_scatter_add_atomic(device const int* values [[buffer(0)]], device const int* indices [[buffer(1)]], device const int* numEdges [[buffer(2)]], device const int* featureDim [[buffer(3)]], device atomic_int* dst [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int gid = int(__gid.x);
   int nEdges = numEdges[0];
-  if ((gid < nEdges)) {
+  if (gid < nEdges) {
     int dstIdx = indices[gid];
     int fd = featureDim[0];
     for (int f = 0; f < (int)(fd); ++f) {

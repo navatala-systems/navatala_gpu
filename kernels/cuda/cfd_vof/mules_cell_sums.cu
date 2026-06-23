@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_cfd_vof_mules_cell_sums(const float* phiCorr
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0]) {
     return;
   } else {
     int beg = offsets[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
@@ -33,22 +33,22 @@ extern "C" __global__ void navatala_cfd_vof_mules_cell_sums(const float* phiCorr
       int f = faceIdx[k];
       float lpc = (lambda[f] * phiCorr[f]);
       float s = sign[k];
-      if ((f < counts[2])) {
-        if ((s > __uint_as_float(0x00000000u))) {
-          if ((lpc > __uint_as_float(0x00000000u))) {
+      if (f < counts[2]) {
+        if (s > __uint_as_float(0x00000000u)) {
+          if (lpc > __uint_as_float(0x00000000u)) {
             sp = (sp + lpc);
           } else {
             sm = (sm + (-lpc));
           }
         } else {
-          if ((lpc > __uint_as_float(0x00000000u))) {
+          if (lpc > __uint_as_float(0x00000000u)) {
             sm = (sm + lpc);
           } else {
             sp = (sp + (-lpc));
           }
         }
       } else {
-        if ((lpc > __uint_as_float(0x00000000u))) {
+        if (lpc > __uint_as_float(0x00000000u)) {
           sp = (sp + lpc);
         } else {
           sm = (sm + (-lpc));

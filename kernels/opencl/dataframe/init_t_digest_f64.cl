@@ -17,7 +17,7 @@
 __kernel void navatala_dataframe_init_t_digest_f64(__global const double* compressionIn, __global double* centroidMeans, __global double* centroidWeights, __global uint* centroidCount, __global double* totalWeight, __global double* minVal, __global double* maxVal, __global double* compression) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     double delta = compressionIn[0];
     centroidCount[0] = (uint)(0u);
     totalWeight[0] = as_double(0x0000000000000000ul);

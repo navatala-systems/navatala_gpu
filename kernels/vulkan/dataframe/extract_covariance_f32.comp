@@ -29,7 +29,7 @@ layout(std430, binding = 2) writeonly buffer buf_covariance {
 // kernel: navatala_dataframe_extract_covariance_f32
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) == 0)) {
+  if (int(gl_GlobalInvocationID.x) == 0) {
     uint n = count[0];
     float cxyVal = Cxy[0];
     float nf = float(n);

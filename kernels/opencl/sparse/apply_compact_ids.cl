@@ -17,9 +17,9 @@ __kernel void navatala_sparse_apply_compact_ids(__global const int* compactMap, 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int leader = aggregateId[gid];
-    if ((leader >= 0)) {
+    if (leader >= 0) {
       int compactId = compactMap[leader];
       aggregateId[gid] = compactId;
     }

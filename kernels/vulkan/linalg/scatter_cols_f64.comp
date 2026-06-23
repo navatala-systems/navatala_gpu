@@ -44,7 +44,7 @@ void main() {
   uint kVal = k[0u];
   uint nVal = n[0u];
   uint totalElems = (mVal * kVal);
-  if ((tid < totalElems)) {
+  if (tid < totalElems) {
     uint row = (tid / kVal);
     uint srcColIdx = (tid % kVal);
     uint dstCol = indices[srcColIdx];

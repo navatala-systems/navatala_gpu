@@ -18,7 +18,7 @@ __kernel void navatala_sparse_em_energy_gradient_f64(__global const uint* ArowPt
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(ArowPtr[gid]));
     int re = ((int)(ArowPtr[(gid + 1)]));
     double sum = as_double(0x0000000000000000ul);

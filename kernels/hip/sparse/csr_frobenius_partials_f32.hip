@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_csr_frobenius_partials_f32(const floa
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nnz[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float a = values[gid];
     partials[gid] = (a * a);
   }

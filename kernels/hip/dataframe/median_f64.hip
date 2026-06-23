@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_dataframe_median_f64(const double* sortedInput, const unsigned int* count, double* median) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gidU32 = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gidU32 == 0u)) {
+  if (gidU32 == 0u) {
     unsigned int n = count[0u];
     unsigned int nMinus1 = (n - 1u);
     double nMinus1Float = ((double)(nMinus1));

@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_ml_maxpool_bf16(const __hip_bfloat16* _input
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     unsigned int windowVal = window[0];
     unsigned int strideVal = stride[0];
     unsigned int inCountVal = inCount[0];
@@ -27,7 +27,7 @@ extern "C" __global__ void navatala_ml_maxpool_bf16(const __hip_bfloat16* _input
     float acc = __uint_as_float(0xff7fc99eu);
     for (int w = 0; w < (int)(windowVal); ++w) {
       unsigned int idx = (base + ((unsigned int)(w)));
-      if ((idx < inCountVal)) {
+      if (idx < inCountVal) {
         float v = ((float)(_input[idx]));
         acc = (((acc > v)) ? (acc) : (v));
       }

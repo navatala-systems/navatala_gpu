@@ -43,15 +43,15 @@ void main() {
   double prod = ((inBounds) ? ((w[gid] * vi[gid])) : (packDouble2x32(uvec2(0x00000000u, 0x00000000u))));
   double warpSum = subgroupAdd(prod);
   int lane = int(gl_SubgroupInvocationID);
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier();
-  if ((lid < 8)) {
+  if (lid < 8) {
     double val = sdata[lid];
     double finalSum = subgroupAdd(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       hij[0] = finalSum;
     }
   }

@@ -19,7 +19,7 @@ __kernel void navatala_linalg_extract_diagonal_f64(__global const double* A, __g
   uint gid = ((uint)((int)(get_global_id(0))));
   uint idx = gid;
   uint size = n[(uint)(0u)];
-  if ((idx < size)) {
+  if (idx < size) {
     uint stride = (size + (uint)(1u));
     uint srcIdx = (idx * stride);
     double val = A[srcIdx];

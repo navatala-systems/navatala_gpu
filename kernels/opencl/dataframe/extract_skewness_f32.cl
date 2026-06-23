@@ -15,7 +15,7 @@
 
 __kernel void navatala_dataframe_extract_skewness_f32(__global const uint* n, __global const float* M2, __global const float* M3, __global float* skewness) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint nVal = n[0];
     float m2Val = M2[0];
     float m3Val = M3[0];

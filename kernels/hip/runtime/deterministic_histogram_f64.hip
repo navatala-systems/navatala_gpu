@@ -27,7 +27,7 @@ extern "C" __global__ void navatala_runtime_deterministic_histogram_f64(const do
   double range = (maxValF - minValF);
   double numBinsFloat = ((double)(numBinsVal));
   double binWidth = (range / numBinsFloat);
-  if ((lid < numBinsVal)) {
+  if (lid < numBinsVal) {
     localHist[lid] = 0u;
   }
   bool inBounds = (gid < countVal);
@@ -43,15 +43,15 @@ extern "C" __global__ void navatala_runtime_deterministic_histogram_f64(const do
     binIndices[lid] = numBinsVal;
   }
   __syncthreads();
-  if ((lid < numBinsVal)) {
+  if (lid < numBinsVal) {
     unsigned int myBin = lid;
     unsigned int histF64RedStride = 128u;
     for (int histF64RedStep = 0; histF64RedStep < (int)(8); ++histF64RedStep) {
       unsigned int histF64Stride = histF64RedStride;
-      if ((lid < histF64Stride)) {
+      if (lid < histF64Stride) {
         unsigned int partnerIdx = (lid + histF64Stride);
         unsigned int storedBin = binIndices[partnerIdx];
-        if ((storedBin == myBin)) {
+        if (storedBin == myBin) {
           unsigned int oldCount = localHist[lid];
           unsigned int newCount = (oldCount + 1u);
           localHist[lid] = newCount;
@@ -64,7 +64,7 @@ extern "C" __global__ void navatala_runtime_deterministic_histogram_f64(const do
     }
   }
   __syncthreads();
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     for (int bin = 0; bin < (int)(numBinsVal); ++bin) {
       unsigned int binU32 = ((unsigned int)(bin));
       unsigned int localCount = localHist[binU32];

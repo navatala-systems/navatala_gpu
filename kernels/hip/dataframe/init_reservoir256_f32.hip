@@ -20,7 +20,7 @@ extern "C" __global__ void navatala_dataframe_init_reservoir256_f32(const unsign
   if (inBounds) {
     reservoir[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = __uint_as_float(0x00000000u);
   }
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int initSeed = initialSeed[0];
     count[0] = 0u;
     seed[0] = initSeed;

@@ -62,14 +62,14 @@ layout(std430, binding = 13) writeonly buffer buf_outZ {
 // kernel: navatala_cfd_primitives_interp_vector_face
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= params[0])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= params[0]) {
     return;
   } else {
     int o = owner[int(int(gl_GlobalInvocationID.x))];
     float uxo = cellX[o];
     float uyo = cellY[o];
     float uzo = cellZ[o];
-    if ((int(int(gl_GlobalInvocationID.x)) < params[1])) {
+    if (int(int(gl_GlobalInvocationID.x)) < params[1]) {
       int n = neighbour[int(int(gl_GlobalInvocationID.x))];
       float uxn = cellX[n];
       float uyn = cellY[n];
@@ -81,14 +81,14 @@ void main() {
       outZ[int(int(gl_GlobalInvocationID.x))] = ((w * uzo) + (iw * uzn));
     } else {
       uint m = bcMask[int(int(gl_GlobalInvocationID.x))];
-      if ((m == 1u)) {
+      if (m == 1u) {
         float w = weights[int(int(gl_GlobalInvocationID.x))];
         float iw = (uintBitsToFloat(0x3f800000u) - w);
         outX[int(int(gl_GlobalInvocationID.x))] = ((w * uxo) + (iw * bcX[int(int(gl_GlobalInvocationID.x))]));
         outY[int(int(gl_GlobalInvocationID.x))] = ((w * uyo) + (iw * bcY[int(int(gl_GlobalInvocationID.x))]));
         outZ[int(int(gl_GlobalInvocationID.x))] = ((w * uzo) + (iw * bcZ[int(int(gl_GlobalInvocationID.x))]));
       } else {
-        if ((m == 2u)) {
+        if (m == 2u) {
           outX[int(int(gl_GlobalInvocationID.x))] = bcX[int(int(gl_GlobalInvocationID.x))];
           outY[int(int(gl_GlobalInvocationID.x))] = bcY[int(int(gl_GlobalInvocationID.x))];
           outZ[int(int(gl_GlobalInvocationID.x))] = bcZ[int(int(gl_GlobalInvocationID.x))];

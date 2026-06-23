@@ -15,7 +15,7 @@
 
 __kernel void navatala_cfd_mg_restrict_sum(__global const float* rFine, __global const int* prolongRowOffsets, __global const int* prolongCols, __global const float* prolongVals, __global float* rCoarse, __global const int* mgCounts) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(mgCounts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(mgCounts[0]))) {
     return;
   } else {
     int beg = prolongRowOffsets[(int)(get_global_id(0))];

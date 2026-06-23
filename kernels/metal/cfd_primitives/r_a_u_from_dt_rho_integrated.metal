@@ -17,13 +17,13 @@
 using namespace metal;
 
 kernel void navatala_cfd_primitives_r_a_u_from_dt_rho_integrated(device const float* rho [[buffer(0)]], device const float* vol [[buffer(1)]], device const float* paramsF [[buffer(2)]], device const int* counts [[buffer(3)]], device float* outRAU [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     float r = rho[((int)(int(__gid.x)))];
     float v = vol[((int)(int(__gid.x)))];
     float denom = (r * v);
-    if ((denom != as_type<float>(0x00000000u))) {
+    if (denom != as_type<float>(0x00000000u)) {
       outRAU[((int)(int(__gid.x)))] = (paramsF[0] / denom);
     } else {
       outRAU[((int)(int(__gid.x)))] = as_type<float>(0x00000000u);

@@ -16,7 +16,7 @@
 __kernel void navatala_graph_pack_i32(__global const int* indices, __global const int* src, __global const int* count, __global int* dst) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     dst[i] = src[indices[((int)((int)(get_global_id(0))))]];
   }
 }

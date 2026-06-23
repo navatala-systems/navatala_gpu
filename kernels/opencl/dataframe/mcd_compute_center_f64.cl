@@ -42,7 +42,7 @@ __kernel void navatala_dataframe_mcd_compute_center_f64(__global const double* d
   uint ctr2ReductionStride = (uint)(128u);
   for (int ctr2ReductionStep = 0; ctr2ReductionStep < (int)(8); ++ctr2ReductionStep) {
     uint ctr2Stride = ctr2ReductionStride;
-    if ((lid < ctr2Stride)) {
+    if (lid < ctr2Stride) {
       double otherX = sdataX[(lid + ctr2Stride)];
       double otherY = sdataY[(lid + ctr2Stride)];
       uint otherC = scount[(lid + ctr2Stride)];
@@ -61,7 +61,7 @@ __kernel void navatala_dataframe_mcd_compute_center_f64(__global const double* d
     ctr2ReductionStride = ctr2NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     double totalX = sdataX[0];
     double totalY = sdataY[0];
     uint totalCount = scount[0];

@@ -41,17 +41,17 @@ layout(std430, binding = 6) writeonly buffer buf_alphaF {
 // kernel: navatala_cfd_vof_interp_scalar_face_all
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) >= int(params[0]))) {
+  if (int(gl_GlobalInvocationID.x) >= int(params[0])) {
     return;
   } else {
-    if ((int(gl_GlobalInvocationID.x) < int(params[1]))) {
+    if (int(gl_GlobalInvocationID.x) < int(params[1])) {
       int o = owner[int(gl_GlobalInvocationID.x)];
       int n = nei[int(gl_GlobalInvocationID.x)];
       float wf = w[int(gl_GlobalInvocationID.x)];
       float wc = (wf * float((wf > uintBitsToFloat(0x00000000u))));
       float a = ((wc * alpha[o]) + ((uintBitsToFloat(0x3f800000u) - wc) * alpha[n]));
       float ac = (a * float((a > uintBitsToFloat(0x00000000u))));
-      if ((ac > uintBitsToFloat(0x3f800000u))) {
+      if (ac > uintBitsToFloat(0x3f800000u)) {
         alphaF[int(gl_GlobalInvocationID.x)] = uintBitsToFloat(0x3f800000u);
       } else {
         alphaF[int(gl_GlobalInvocationID.x)] = ac;
@@ -59,7 +59,7 @@ void main() {
     } else {
       float a = bcAlphaF[int(gl_GlobalInvocationID.x)];
       float ac = (a * float((a > uintBitsToFloat(0x00000000u))));
-      if ((ac > uintBitsToFloat(0x3f800000u))) {
+      if (ac > uintBitsToFloat(0x3f800000u)) {
         alphaF[int(gl_GlobalInvocationID.x)] = uintBitsToFloat(0x3f800000u);
       } else {
         alphaF[int(gl_GlobalInvocationID.x)] = ac;

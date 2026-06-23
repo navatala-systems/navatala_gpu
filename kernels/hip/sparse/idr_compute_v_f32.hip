@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_sparse_idr_compute_v_f32(const float* r, con
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
   int S = ((int)(s[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float acc = __uint_as_float(0x00000000u);
     for (int k = 0; k < (int)(S); ++k) {
       float ck = c[k];

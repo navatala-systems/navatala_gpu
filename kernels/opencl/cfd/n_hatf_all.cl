@@ -18,7 +18,7 @@ __kernel void navatala_cfd_n_hatf_all(__global const float* gx, __global const f
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[1])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[1]) {
     return;
   } else {
     int o = owner[((int)((int)(get_global_id(0))))];
@@ -35,21 +35,21 @@ __kernel void navatala_cfd_n_hatf_all(__global const float* gx, __global const f
     float ny = (gfy * inv);
     float nz = (gfz * inv);
     contactGrad[((int)((int)(get_global_id(0))))] = as_float(0x00000000u);
-    if ((thetaMask[((int)((int)(get_global_id(0))))] != (uint)(0u))) {
+    if (thetaMask[((int)((int)(get_global_id(0))))] != (uint)(0u)) {
       float sfx = sfX[((int)((int)(get_global_id(0))))];
       float sfy = sfY[((int)((int)(get_global_id(0))))];
       float sfz = sfZ[((int)((int)(get_global_id(0))))];
       float magSf = sqrt((((sfx * sfx) + (sfy * sfy)) + (sfz * sfz)));
-      if ((magSf > as_float(0x1e3ce508u))) {
+      if (magSf > as_float(0x1e3ce508u)) {
         float nfx = (sfx / magSf);
         float nfy = (sfy / magSf);
         float nfz = (sfz / magSf);
         float a12raw = (((nx * nfx) + (ny * nfy)) + (nz * nfz));
         float a12 = a12raw;
-        if ((a12 < as_float(0xbf800000u))) {
+        if (a12 < as_float(0xbf800000u)) {
           a12 = as_float(0xbf800000u);
         } else {
-          if ((a12 > as_float(0x3f800000u))) {
+          if (a12 > as_float(0x3f800000u)) {
             a12 = as_float(0x3f800000u);
           }
         }
@@ -58,7 +58,7 @@ __kernel void navatala_cfd_n_hatf_all(__global const float* gx, __global const f
         float acosA12 = acos(a12);
         float b2 = cos((acosA12 - th));
         float det = (as_float(0x3f800000u) - (a12 * a12));
-        if ((det < as_float(0x358637bdu))) {
+        if (det < as_float(0x358637bdu)) {
           det = as_float(0x358637bdu);
         }
         float a = ((b1 - (a12 * b2)) / det);

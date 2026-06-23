@@ -17,17 +17,17 @@
 using namespace metal;
 
 kernel void navatala_cfd_vof_alpha_phi_all(device const float* alphaPhiInt [[buffer(0)]], device const float* phiAll [[buffer(1)]], device const float* alphaF [[buffer(2)]], device const int* params [[buffer(3)]], device float* alphaPhiAllOut [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= params[0])) {
+  if (((int)(int(__gid.x))) >= params[0]) {
     return;
   } else {
-    if ((((int)(int(__gid.x))) < params[1])) {
+    if (((int)(int(__gid.x))) < params[1]) {
       alphaPhiAllOut[((int)(int(__gid.x)))] = alphaPhiInt[((int)(int(__gid.x)))];
     } else {
       float a = alphaF[((int)(int(__gid.x)))];
-      if ((a < as_type<float>(0x00000000u))) {
+      if (a < as_type<float>(0x00000000u)) {
         a = as_type<float>(0x00000000u);
       }
-      if ((a > as_type<float>(0x3f800000u))) {
+      if (a > as_type<float>(0x3f800000u)) {
         a = as_type<float>(0x3f800000u);
       }
       alphaPhiAllOut[((int)(int(__gid.x)))] = (phiAll[((int)(int(__gid.x)))] * a);

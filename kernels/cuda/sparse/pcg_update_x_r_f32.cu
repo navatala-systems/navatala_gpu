@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_pcg_update_x_r_f32(const float* z, co
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float a = alpha[0];
     float zi = z[gid];
     float qi = q[gid];

@@ -19,14 +19,14 @@ __kernel void navatala_sparse_compute_residual_f64(__global const uint* rowPtr, 
   uint gid = ((uint)((int)(get_global_id(0))));
   uint i = gid;
   uint nVal = n[(uint)(0u)];
-  if ((i < nVal)) {
+  if (i < nVal) {
     uint rowStart = rowPtr[i];
     uint iPlusOne = (i + (uint)(1u));
     uint rowEnd = rowPtr[iPlusOne];
     double axSumAccum = as_double(0x0000000000000000ul);
     for (int j = 0; j < (int)(rowEnd); ++j) {
       uint jU32 = ((uint)(j));
-      if ((jU32 >= rowStart)) {
+      if (jU32 >= rowStart) {
         uint col = colInd[jU32];
         double aVal = values[jU32];
         double xj = x[col];

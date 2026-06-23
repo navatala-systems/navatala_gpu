@@ -15,7 +15,7 @@
 
 __kernel void navatala_dataframe_weighted_welford_merge_f32(__global const float* weightSumA, __global const float* meanA, __global const float* M2A, __global const float* weightSumB, __global const float* meanB, __global const float* M2B, __global float* weightSum, __global float* mean, __global float* M2) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float wA = weightSumA[0];
     float muA = meanA[0];
     float m2AVal = M2A[0];

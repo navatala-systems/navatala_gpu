@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_mg_zero_coarse(float* x, const int* mgCounts) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(mgCounts[1])))) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(mgCounts[1]))) {
     return;
   } else {
     x[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = __uint_as_float(0x00000000u);

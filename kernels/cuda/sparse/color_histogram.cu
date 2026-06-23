@@ -18,9 +18,9 @@ extern "C" __global__ void navatala_sparse_color_histogram(const int* colors, co
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int c = colors[gid];
-    if ((c >= 0)) {
+    if (c >= 0) {
       unsigned int _aod2 = atomicAdd(&(histogram[c]), 1u);
     }
   }

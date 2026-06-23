@@ -23,7 +23,7 @@ __kernel void navatala_ml_layernorm_backward_f32(__global const float* x, __glob
   float epsVal = eps[0];
   float gM = as_float(0x00000000u);
   for (int itm = 0; itm < (int)(numIters); ++itm) {
-    if (((lid + (((uint)(itm)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itm)) * (uint)(256u))) < countVal) {
       gM = (gM + x[(lid + (((uint)(itm)) * (uint)(256u)))]);
     }
   }
@@ -32,7 +32,7 @@ __kernel void navatala_ml_layernorm_backward_f32(__global const float* x, __glob
   uint mStr = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = mStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -47,7 +47,7 @@ __kernel void navatala_ml_layernorm_backward_f32(__global const float* x, __glob
   barrier(CLK_LOCAL_MEM_FENCE);
   float gV = as_float(0x00000000u);
   for (int itv = 0; itv < (int)(numIters); ++itv) {
-    if (((lid + (((uint)(itv)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itv)) * (uint)(256u))) < countVal) {
       gV = (gV + ((x[(lid + (((uint)(itv)) * (uint)(256u)))] - mean) * (x[(lid + (((uint)(itv)) * (uint)(256u)))] - mean)));
     }
   }
@@ -56,7 +56,7 @@ __kernel void navatala_ml_layernorm_backward_f32(__global const float* x, __glob
   uint vStr = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = vStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -72,7 +72,7 @@ __kernel void navatala_ml_layernorm_backward_f32(__global const float* x, __glob
   barrier(CLK_LOCAL_MEM_FENCE);
   float g1 = as_float(0x00000000u);
   for (int it1 = 0; it1 < (int)(numIters); ++it1) {
-    if (((lid + (((uint)(it1)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(it1)) * (uint)(256u))) < countVal) {
       g1 = (g1 + (dy[(lid + (((uint)(it1)) * (uint)(256u)))] * gamma[(lid + (((uint)(it1)) * (uint)(256u)))]));
     }
   }
@@ -81,7 +81,7 @@ __kernel void navatala_ml_layernorm_backward_f32(__global const float* x, __glob
   uint s1Str = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = s1Str;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -96,7 +96,7 @@ __kernel void navatala_ml_layernorm_backward_f32(__global const float* x, __glob
   barrier(CLK_LOCAL_MEM_FENCE);
   float g2 = as_float(0x00000000u);
   for (int it2 = 0; it2 < (int)(numIters); ++it2) {
-    if (((lid + (((uint)(it2)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(it2)) * (uint)(256u))) < countVal) {
       g2 = (g2 + ((dy[(lid + (((uint)(it2)) * (uint)(256u)))] * gamma[(lid + (((uint)(it2)) * (uint)(256u)))]) * ((x[(lid + (((uint)(it2)) * (uint)(256u)))] - mean) / std)));
     }
   }
@@ -105,7 +105,7 @@ __kernel void navatala_ml_layernorm_backward_f32(__global const float* x, __glob
   uint s2Str = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = s2Str;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -119,7 +119,7 @@ __kernel void navatala_ml_layernorm_backward_f32(__global const float* x, __glob
   float m2 = (sdata[0] / n);
   for (int itw = 0; itw < (int)(numIters); ++itw) {
     uint idw = (lid + (((uint)(itw)) * (uint)(256u)));
-    if ((idw < countVal)) {
+    if (idw < countVal) {
       float xhatw = ((x[idw] - mean) / std);
       float dyvw = dy[idw];
       float dxhw = (dyvw * gamma[idw]);

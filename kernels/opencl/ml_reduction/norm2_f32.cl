@@ -22,7 +22,7 @@ __kernel void navatala_ml_reduction_norm2_f32(__global const float* _input, __gl
   float gsAcc = as_float(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     uint idx = (lid + (((uint)(it)) * (uint)(256u)));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       float raw = _input[idx];
       float v = (raw * raw);
       gsAcc = (gsAcc + v);
@@ -33,7 +33,7 @@ __kernel void navatala_ml_reduction_norm2_f32(__global const float* _input, __gl
   uint redStride = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -44,7 +44,7 @@ __kernel void navatala_ml_reduction_norm2_f32(__global const float* _input, __gl
     redStride = nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = sqrt(reduced);

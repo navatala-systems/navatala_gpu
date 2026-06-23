@@ -19,13 +19,13 @@ extern "C" __global__ void navatala_cfd_primitives_r_a_u_from_dt_rho_integrated(
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0]) {
     return;
   } else {
     float r = rho[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float v = vol[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float denom = (r * v);
-    if ((denom != __uint_as_float(0x00000000u))) {
+    if (denom != __uint_as_float(0x00000000u)) {
       outRAU[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (paramsF[0] / denom);
     } else {
       outRAU[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = __uint_as_float(0x00000000u);

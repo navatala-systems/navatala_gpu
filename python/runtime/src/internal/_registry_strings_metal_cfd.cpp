@@ -16,7 +16,7 @@ using namespace metal;
 kernel void navatala_cfd_boundary_force_partials(device const float* pAllFaces [[buffer(0)]], device const float* sfComponent [[buffer(1)]], device const int* counts [[buffer(2)]], device float* outPartials [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   threadgroup float tmp[256];
   float v = as_type<float>(0x00000000u);
-  if ((((int)(int(__gid.x))) < counts[0])) {
+  if (((int)(int(__gid.x))) < counts[0]) {
     int faceIdx = (counts[1] + ((int)(int(__gid.x))));
     float pVal = pAllFaces[faceIdx];
     float sfVal = sfComponent[faceIdx];
@@ -24,39 +24,39 @@ kernel void navatala_cfd_boundary_force_partials(device const float* pAllFaces [
   }
   tmp[((int)(int(__tid.x)))] = v;
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 128)) {
+  if (((int)(int(__tid.x))) < 128) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 128)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 64)) {
+  if (((int)(int(__tid.x))) < 64) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 64)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 32)) {
+  if (((int)(int(__tid.x))) < 32) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 32)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 16)) {
+  if (((int)(int(__tid.x))) < 16) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 16)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 8)) {
+  if (((int)(int(__tid.x))) < 8) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 8)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 4)) {
+  if (((int)(int(__tid.x))) < 4) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 4)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 2)) {
+  if (((int)(int(__tid.x))) < 2) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 2)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 1)) {
+  if (((int)(int(__tid.x))) < 1) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 1)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) == 0)) {
+  if (((int)(int(__tid.x))) == 0) {
     outPartials[((int)(int(__tgid.x)))] = tmp[0];
   }
 }
@@ -67,7 +67,7 @@ const char* k_metal_navatala_cfd_pack_owner_values = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_pack_owner_values(device const float* x [[buffer(0)]], device const int* owner [[buffer(1)]], device const int* procFaces [[buffer(2)]], device const int* counts [[buffer(3)]], device float* outSend [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= counts[0])) {
+  if (int(__gid.x) >= counts[0]) {
     return;
   } else {
     int face = procFaces[int(__gid.x)];
@@ -83,7 +83,7 @@ const char* k_metal_navatala_cfd_scatter_values_and_mask = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_scatter_values_and_mask(device const int* procFaces [[buffer(0)]], device const float* recv [[buffer(1)]], device const int* counts [[buffer(2)]], device float* bcVal [[buffer(3)]], device int* bcMask [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= counts[0])) {
+  if (int(__gid.x) >= counts[0]) {
     return;
   } else {
     int face = procFaces[int(__gid.x)];
@@ -98,7 +98,7 @@ const char* k_metal_navatala_cfd_pack_mu_grad_owner = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_pack_mu_grad_owner(device const float* muCell [[buffer(0)]], device const float* gXX [[buffer(1)]], device const float* gXY [[buffer(2)]], device const float* gXZ [[buffer(3)]], device const float* gYX [[buffer(4)]], device const float* gYY [[buffer(5)]], device const float* gYZ [[buffer(6)]], device const float* gZX [[buffer(7)]], device const float* gZY [[buffer(8)]], device const float* gZZ [[buffer(9)]], device const int* owner [[buffer(10)]], device const int* procFaces [[buffer(11)]], device const int* counts [[buffer(12)]], device float* outSend [[buffer(13)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(counts[0])))) {
+  if (int(__gid.x) >= ((int)(counts[0]))) {
     return;
   } else {
     int f = procFaces[int(__gid.x)];
@@ -132,7 +132,7 @@ const char* k_metal_navatala_cfd_pack_owner_rho_vec3 = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_pack_owner_rho_vec3(device const float* rhoCell [[buffer(0)]], device const float* ux [[buffer(1)]], device const float* uy [[buffer(2)]], device const float* uz [[buffer(3)]], device const int* owner [[buffer(4)]], device const int* procFaces [[buffer(5)]], device const int* counts [[buffer(6)]], device float* outSend [[buffer(7)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(counts[0])))) {
+  if (int(__gid.x) >= ((int)(counts[0]))) {
     return;
   } else {
     int f = procFaces[int(__gid.x)];
@@ -154,7 +154,7 @@ const char* k_metal_navatala_cfd_pack_owner_vec3 = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_pack_owner_vec3(device const float* x [[buffer(0)]], device const float* y [[buffer(1)]], device const float* z [[buffer(2)]], device const int* owner [[buffer(3)]], device const int* procFaces [[buffer(4)]], device const int* counts [[buffer(5)]], device float* outSend [[buffer(6)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(counts[0])))) {
+  if (int(__gid.x) >= ((int)(counts[0]))) {
     return;
   } else {
     int f = procFaces[int(__gid.x)];
@@ -174,7 +174,7 @@ const char* k_metal_navatala_cfd_pack_owner_vec3_mu = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_pack_owner_vec3_mu(device const float* ux [[buffer(0)]], device const float* uy [[buffer(1)]], device const float* uz [[buffer(2)]], device const float* muCell [[buffer(3)]], device const int* owner [[buffer(4)]], device const int* procFaces [[buffer(5)]], device const int* counts [[buffer(6)]], device float* outSend [[buffer(7)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(counts[0])))) {
+  if (int(__gid.x) >= ((int)(counts[0]))) {
     return;
   } else {
     int f = procFaces[int(__gid.x)];
@@ -196,7 +196,7 @@ const char* k_metal_navatala_cfd_scatter_mu_grad_ghost = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_scatter_mu_grad_ghost(device const float* recvVals [[buffer(0)]], device const int* counts [[buffer(1)]], device float* muCell [[buffer(2)]], device float* gXX [[buffer(3)]], device float* gXY [[buffer(4)]], device float* gXZ [[buffer(5)]], device float* gYX [[buffer(6)]], device float* gYY [[buffer(7)]], device float* gYZ [[buffer(8)]], device float* gZX [[buffer(9)]], device float* gZY [[buffer(10)]], device float* gZZ [[buffer(11)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(counts[0])))) {
+  if (int(__gid.x) >= ((int)(counts[0]))) {
     return;
   } else {
     int idx = (((int)(counts[1])) + int(__gid.x));
@@ -229,7 +229,7 @@ const char* k_metal_navatala_cfd_scatter_rho_vec3_and_mask = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_scatter_rho_vec3_and_mask(device const int* procFaces [[buffer(0)]], device const float* recvVals [[buffer(1)]], device const int* counts [[buffer(2)]], device float* rhoBcVal [[buffer(3)]], device float* uBcX [[buffer(4)]], device float* uBcY [[buffer(5)]], device float* uBcZ [[buffer(6)]], device uint* rhoBcMask [[buffer(7)]], device uint* uBcMask [[buffer(8)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(counts[0])))) {
+  if (int(__gid.x) >= ((int)(counts[0]))) {
     return;
   } else {
     int f = procFaces[int(__gid.x)];
@@ -252,7 +252,7 @@ const char* k_metal_navatala_cfd_scatter_vec3_and_mask = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_scatter_vec3_and_mask(device const int* procFaces [[buffer(0)]], device const float* recvVals [[buffer(1)]], device const int* counts [[buffer(2)]], device float* bcX [[buffer(3)]], device float* bcY [[buffer(4)]], device float* bcZ [[buffer(5)]], device uint* bcMask [[buffer(6)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(counts[0])))) {
+  if (int(__gid.x) >= ((int)(counts[0]))) {
     return;
   } else {
     int f = procFaces[int(__gid.x)];
@@ -272,7 +272,7 @@ const char* k_metal_navatala_cfd_scatter_vec3_mu_and_mask = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_scatter_vec3_mu_and_mask(device const int* procFaces [[buffer(0)]], device const float* recvVals [[buffer(1)]], device const int* counts [[buffer(2)]], device float* bcX [[buffer(3)]], device float* bcY [[buffer(4)]], device float* bcZ [[buffer(5)]], device float* muBc [[buffer(6)]], device uint* bcMask [[buffer(7)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(counts[0])))) {
+  if (int(__gid.x) >= ((int)(counts[0]))) {
     return;
   } else {
     int f = procFaces[int(__gid.x)];
@@ -294,7 +294,7 @@ const char* k_metal_navatala_cfd_add_vol_vector = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_add_vol_vector(device const float* ax [[buffer(0)]], device const float* ay [[buffer(1)]], device const float* az [[buffer(2)]], device const float* bx [[buffer(3)]], device const float* by_ [[buffer(4)]], device const float* bz [[buffer(5)]], device const int* params [[buffer(6)]], device float* outX [[buffer(7)]], device float* outY [[buffer(8)]], device float* outZ [[buffer(9)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= params[0])) {
+  if (((int)(int(__gid.x))) >= params[0]) {
     return;
   } else {
     outX[((int)(int(__gid.x)))] = (ax[((int)(int(__gid.x)))] + bx[((int)(int(__gid.x)))]);
@@ -309,7 +309,7 @@ const char* k_metal_navatala_cfd_div_rho_phi_u_explicit = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_div_rho_phi_u_explicit(device const float* phi [[buffer(0)]], device const float* rhoCell [[buffer(1)]], device const float* ux [[buffer(2)]], device const float* uy [[buffer(3)]], device const float* uz [[buffer(4)]], device const int* owner [[buffer(5)]], device const int* neighbour [[buffer(6)]], device const float* weights [[buffer(7)]], device const int* offsets [[buffer(8)]], device const int* faceIdx [[buffer(9)]], device const float* sign [[buffer(10)]], device const float* vol [[buffer(11)]], device const float* rhoBcVal [[buffer(12)]], device const uint* rhoBcMask [[buffer(13)]], device const float* uBcX [[buffer(14)]], device const float* uBcY [[buffer(15)]], device const float* uBcZ [[buffer(16)]], device const uint* uBcMask [[buffer(17)]], device const int* params [[buffer(18)]], device float* outX [[buffer(19)]], device float* outY [[buffer(20)]], device float* outZ [[buffer(21)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= params[0])) {
+  if (((int)(int(__gid.x))) >= params[0]) {
     return;
   } else {
     float sumX = as_type<float>(0x00000000u);
@@ -322,7 +322,7 @@ kernel void navatala_cfd_div_rho_phi_u_explicit(device const float* phi [[buffer
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < params[1])) {
+      if (f < params[1]) {
         float s = sign[k];
         float flux = phi[f];
         int o = owner[f];
@@ -330,7 +330,7 @@ kernel void navatala_cfd_div_rho_phi_u_explicit(device const float* phi [[buffer
         float ufx = ux[o];
         float ufy = uy[o];
         float ufz = uz[o];
-        if ((f < params[2])) {
+        if (f < params[2]) {
           int n = neighbour[f];
           float w0 = weights[f];
           float iw = (as_type<float>(0x3f800000u) - w0);
@@ -340,23 +340,23 @@ kernel void navatala_cfd_div_rho_phi_u_explicit(device const float* phi [[buffer
           ufz = ((w0 * uz[o]) + (iw * uz[n]));
         } else {
           uint rm = rhoBcMask[f];
-          if ((rm == 1u)) {
+          if (rm == 1u) {
             float w0 = weights[f];
             float iw = (as_type<float>(0x3f800000u) - w0);
             rhoF = ((w0 * rhoCell[o]) + (iw * rhoBcVal[f]));
           }
-          if ((rm == 2u)) {
+          if (rm == 2u) {
             rhoF = rhoBcVal[f];
           }
           uint um = uBcMask[f];
-          if ((um == 1u)) {
+          if (um == 1u) {
             float w0 = weights[f];
             float iw = (as_type<float>(0x3f800000u) - w0);
             ufx = ((w0 * ux[o]) + (iw * uBcX[f]));
             ufy = ((w0 * uy[o]) + (iw * uBcY[f]));
             ufz = ((w0 * uz[o]) + (iw * uBcZ[f]));
           }
-          if ((um == 2u)) {
+          if (um == 2u) {
             ufx = uBcX[f];
             ufy = uBcY[f];
             ufz = uBcZ[f];
@@ -370,7 +370,7 @@ kernel void navatala_cfd_div_rho_phi_u_explicit(device const float* phi [[buffer
     }
     float v = vol[((int)(int(__gid.x)))];
     float invV = as_type<float>(0x00000000u);
-    if ((v != as_type<float>(0x00000000u))) {
+    if (v != as_type<float>(0x00000000u)) {
       invV = (as_type<float>(0x3f800000u) / v);
     }
     outX[((int)(int(__gid.x)))] = (sumX * invV);
@@ -385,18 +385,18 @@ const char* k_metal_navatala_cfd_hby_a_from_u_and_terms = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_hby_a_from_u_and_terms(device const float* ux [[buffer(0)]], device const float* uy [[buffer(1)]], device const float* uz [[buffer(2)]], device const float* lapx [[buffer(3)]], device const float* lapy [[buffer(4)]], device const float* lapz [[buffer(5)]], device const float* divx [[buffer(6)]], device const float* divy [[buffer(7)]], device const float* divz [[buffer(8)]], device const float* extrax [[buffer(9)]], device const float* extray [[buffer(10)]], device const float* extraz [[buffer(11)]], device const float* rau [[buffer(12)]], device const int* counts [[buffer(13)]], device const int* modeBuf [[buffer(14)]], device float* outx [[buffer(15)]], device float* outy [[buffer(16)]], device float* outz [[buffer(17)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     float tx = lapx[((int)(int(__gid.x)))];
     float ty = lapy[((int)(int(__gid.x)))];
     float tz = lapz[((int)(int(__gid.x)))];
-    if (((modeBuf[0] == 1) || (modeBuf[0] == 3))) {
+    if ((modeBuf[0] == 1) || (modeBuf[0] == 3)) {
       tx = (tx - divx[((int)(int(__gid.x)))]);
       ty = (ty - divy[((int)(int(__gid.x)))]);
       tz = (tz - divz[((int)(int(__gid.x)))]);
     }
-    if (((modeBuf[0] == 2) || (modeBuf[0] == 3))) {
+    if ((modeBuf[0] == 2) || (modeBuf[0] == 3)) {
       tx = (tx + extrax[((int)(int(__gid.x)))]);
       ty = (ty + extray[((int)(int(__gid.x)))]);
       tz = (tz + extraz[((int)(int(__gid.x)))]);
@@ -414,7 +414,7 @@ const char* k_metal_navatala_cfd_apply_sp_to_hby_a = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_apply_sp_to_hby_a(device float* hx [[buffer(0)]], device float* hy [[buffer(1)]], device float* hz [[buffer(2)]], device const float* ux [[buffer(3)]], device const float* uy [[buffer(4)]], device const float* uz [[buffer(5)]], device const float* rAU [[buffer(6)]], device const float* sp [[buffer(7)]], device const int* counts [[buffer(8)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     float fac = (sp[((int)(int(__gid.x)))] * rAU[((int)(int(__gid.x)))]);
@@ -430,7 +430,7 @@ const char* k_metal_navatala_cfd_laplacian_scalar_explicit = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_laplacian_scalar_explicit(device const float* muCell [[buffer(0)]], device const float* phiCell [[buffer(1)]], device const int* owner [[buffer(2)]], device const int* neighbour [[buffer(3)]], device const float* weights [[buffer(4)]], device const float* magSf [[buffer(5)]], device const float* deltaCoeffs [[buffer(6)]], device const int* offsets [[buffer(7)]], device const int* faceIdx [[buffer(8)]], device const int* sign [[buffer(9)]], device const float* vol [[buffer(10)]], device const float* bcMu [[buffer(11)]], device const uint* bcMuMask [[buffer(12)]], device const float* bcPhi [[buffer(13)]], device const uint* bcPhiMask [[buffer(14)]], device const int* params [[buffer(15)]], device float* outL [[buffer(16)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= params[0])) {
+  if (((int)(int(__gid.x))) >= params[0]) {
     return;
   } else {
     float phiC = phiCell[((int)(int(__gid.x)))];
@@ -443,23 +443,23 @@ kernel void navatala_cfd_laplacian_scalar_explicit(device const float* muCell [[
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < params[1])) {
+      if (f < params[1]) {
         int sgn = sign[k];
         int o = owner[f];
         float phiOther = phiCell[o];
         float muF = muC;
-        if ((sgn > 0)) {
-          if ((f < params[2])) {
+        if (sgn > 0) {
+          if (f < params[2]) {
             int n = neighbour[f];
             phiOther = phiCell[n];
             float w0 = weights[f];
             float iw = (as_type<float>(0x3f800000u) - w0);
             muF = ((w0 * muC) + (iw * muCell[n]));
           } else {
-            if ((bcPhiMask[f] != 0u)) {
+            if (bcPhiMask[f] != 0u) {
               phiOther = bcPhi[f];
             }
-            if ((bcMuMask[f] != 0u)) {
+            if (bcMuMask[f] != 0u) {
               muF = bcMu[f];
             }
           }
@@ -474,7 +474,7 @@ kernel void navatala_cfd_laplacian_scalar_explicit(device const float* muCell [[
     }
     float v = vol[((int)(int(__gid.x)))];
     float invV = as_type<float>(0x00000000u);
-    if ((v != as_type<float>(0x00000000u))) {
+    if (v != as_type<float>(0x00000000u)) {
       invV = (as_type<float>(0x3f800000u) / v);
     }
     outL[((int)(int(__gid.x)))] = (sum * invV);
@@ -487,7 +487,7 @@ const char* k_metal_navatala_cfd_laplacian_vector_explicit = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_laplacian_vector_explicit(device const float* muCell [[buffer(0)]], device const float* muBc [[buffer(1)]], device const float* ux [[buffer(2)]], device const float* uy [[buffer(3)]], device const float* uz [[buffer(4)]], device const int* owner [[buffer(5)]], device const int* neighbour [[buffer(6)]], device const float* weights [[buffer(7)]], device const float* magSf [[buffer(8)]], device const float* deltaCoeffs [[buffer(9)]], device const float* corrX [[buffer(10)]], device const float* corrY [[buffer(11)]], device const float* corrZ [[buffer(12)]], device const float* gradRow0 [[buffer(13)]], device const float* gradRow1 [[buffer(14)]], device const float* gradRow2 [[buffer(15)]], device const int* offsets [[buffer(16)]], device const int* faceIdx [[buffer(17)]], device const int* sign [[buffer(18)]], device const float* vol [[buffer(19)]], device const float* bcX [[buffer(20)]], device const float* bcY [[buffer(21)]], device const float* bcZ [[buffer(22)]], device const int* bcMask [[buffer(23)]], device const int* params [[buffer(24)]], device float* outX [[buffer(25)]], device float* outY [[buffer(26)]], device float* outZ [[buffer(27)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= params[0])) {
+  if (((int)(int(__gid.x))) >= params[0]) {
     return;
   } else {
     float ucx = ux[((int)(int(__gid.x)))];
@@ -504,15 +504,15 @@ kernel void navatala_cfd_laplacian_vector_explicit(device const float* muCell [[
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < params[1])) {
+      if (f < params[1]) {
         int sgn = sign[k];
         int o = owner[f];
         float otherX = ux[o];
         float otherY = uy[o];
         float otherZ = uz[o];
         float muF = muC;
-        if ((sgn > 0)) {
-          if ((f < params[2])) {
+        if (sgn > 0) {
+          if (f < params[2]) {
             int n = neighbour[f];
             otherX = ux[n];
             otherY = uy[n];
@@ -522,7 +522,7 @@ kernel void navatala_cfd_laplacian_vector_explicit(device const float* muCell [[
             muF = ((w0 * muC) + (iw * muCell[n]));
           } else {
             muF = muBc[f];
-            if ((bcMask[f] == 1)) {
+            if (bcMask[f] == 1) {
               float w0 = weights[f];
               float iw = (as_type<float>(0x3f800000u) - w0);
               muF = ((w0 * muC) + (iw * muBc[f]));
@@ -530,7 +530,7 @@ kernel void navatala_cfd_laplacian_vector_explicit(device const float* muCell [[
               otherY = bcY[f];
               otherZ = bcZ[f];
             } else {
-              if ((bcMask[f] != 0)) {
+              if (bcMask[f] != 0) {
                 otherX = bcX[f];
                 otherY = bcY[f];
                 otherZ = bcZ[f];
@@ -558,7 +558,7 @@ kernel void navatala_cfd_laplacian_vector_explicit(device const float* muCell [[
         float gzxF = gradRow2[((o)*3 + 0)];
         float gzyF = gradRow2[((o)*3 + 1)];
         float gzzF = gradRow2[((o)*3 + 2)];
-        if ((f < params[2])) {
+        if (f < params[2]) {
           int n2 = neighbour[f];
           float w1 = weights[f];
           float iw1 = (as_type<float>(0x3f800000u) - w1);
@@ -584,7 +584,7 @@ kernel void navatala_cfd_laplacian_vector_explicit(device const float* muCell [[
     }
     float v = vol[((int)(int(__gid.x)))];
     float invV = as_type<float>(0x00000000u);
-    if ((v != as_type<float>(0x00000000u))) {
+    if (v != as_type<float>(0x00000000u)) {
       invV = (as_type<float>(0x3f800000u) / v);
     }
     outX[((int)(int(__gid.x)))] = (sumX * invV);
@@ -599,7 +599,7 @@ const char* k_metal_navatala_cfd_predictor_hby_a_from_source = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_predictor_hby_a_from_source(device const float* rAU [[buffer(0)]], device const float* sourceX [[buffer(1)]], device const float* sourceY [[buffer(2)]], device const float* sourceZ [[buffer(3)]], device const int* counts1 [[buffer(4)]], device float* outHbyAX [[buffer(5)]], device float* outHbyAY [[buffer(6)]], device float* outHbyAZ [[buffer(7)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts1[0])) {
+  if (((int)(int(__gid.x))) >= counts1[0]) {
     return;
   } else {
     float r = rAU[((int)(int(__gid.x)))];
@@ -615,11 +615,11 @@ const char* k_metal_navatala_cfd_predictor_inverse_diag = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_predictor_inverse_diag(device const float* inputDiag [[buffer(0)]], device const int* counts1 [[buffer(1)]], device float* outRAU [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts1[0])) {
+  if (((int)(int(__gid.x))) >= counts1[0]) {
     return;
   } else {
     float a = inputDiag[((int)(int(__gid.x)))];
-    if ((a != as_type<float>(0x00000000u))) {
+    if (a != as_type<float>(0x00000000u)) {
       outRAU[((int)(int(__gid.x)))] = (as_type<float>(0x3f800000u) / a);
     } else {
       outRAU[((int)(int(__gid.x)))] = as_type<float>(0x00000000u);
@@ -633,7 +633,7 @@ const char* k_metal_navatala_cfd_predictor_phi_hby_a_fuse = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_predictor_phi_hby_a_fuse(device const float* fluxHbyA [[buffer(0)]], device const float* rhoRauFace [[buffer(1)]], device const float* ddtCorr [[buffer(2)]], device const int* counts1 [[buffer(3)]], device float* outPhiHbyA [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts1[0])) {
+  if (((int)(int(__gid.x))) >= counts1[0]) {
     return;
   } else {
     float f = fluxHbyA[((int)(int(__gid.x)))];
@@ -649,7 +649,7 @@ const char* k_metal_navatala_cfd_axpy_cells = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_axpy_cells(device const float* x [[buffer(0)]], device const int* counts [[buffer(1)]], device const float* paramsF [[buffer(2)]], device float* y [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     float xVal = x[((int)(int(__gid.x)))];
@@ -665,7 +665,7 @@ const char* k_metal_navatala_cfd_ddt_diagonal = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_ddt_diagonal(device const float* rho [[buffer(0)]], device const float* vol [[buffer(1)]], device const int* counts [[buffer(2)]], device const float* paramsF [[buffer(3)]], device float* outDiag [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     float rhoVal = rho[((int)(int(__gid.x)))];
@@ -681,7 +681,7 @@ const char* k_metal_navatala_cfd_div_upwind_coeffs = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_div_upwind_coeffs(device const float* weights [[buffer(0)]], device const float* flux [[buffer(1)]], device const int* counts [[buffer(2)]], device float* outLower [[buffer(3)]], device float* outUpper [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     float w = weights[((int)(int(__gid.x)))];
@@ -699,7 +699,7 @@ const char* k_metal_navatala_cfd_fvm_sp = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_fvm_sp(device const float* sp [[buffer(0)]], device const float* vol [[buffer(1)]], device const int* counts [[buffer(2)]], device float* outDiag [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     float spVal = sp[((int)(int(__gid.x)))];
@@ -717,14 +717,14 @@ const char* k_metal_navatala_cfd_fvm_su_sp = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_fvm_su_sp(device const float* sp [[buffer(0)]], device const float* psi [[buffer(1)]], device const float* vol [[buffer(2)]], device const int* counts [[buffer(3)]], device float* outDiag [[buffer(4)]], device float* outSource [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     float spVal = sp[((int)(int(__gid.x)))];
     float psiVal = psi[((int)(int(__gid.x)))];
     float volVal = vol[((int)(int(__gid.x)))];
     float spVol = (spVal * volVal);
-    if ((spVal >= as_type<float>(0x00000000u))) {
+    if (spVal >= as_type<float>(0x00000000u)) {
       float prevDiag = outDiag[((int)(int(__gid.x)))];
       float newDiag = (prevDiag + spVol);
       outDiag[((int)(int(__gid.x)))] = newDiag;
@@ -743,7 +743,7 @@ const char* k_metal_navatala_cfd_laplacian_coeffs = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_laplacian_coeffs(device const float* gamma [[buffer(0)]], device const int* owner [[buffer(1)]], device const int* neighbour [[buffer(2)]], device const float* weights [[buffer(3)]], device const float* deltaCoeffs [[buffer(4)]], device const float* magSf [[buffer(5)]], device const int* counts [[buffer(6)]], device float* outUpper [[buffer(7)]], device float* outLower [[buffer(8)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     float gammaF = gamma[((int)(int(__gid.x)))];
@@ -759,7 +759,7 @@ const char* k_metal_navatala_cfd_laplacian_coeffs_accum = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_laplacian_coeffs_accum(device const float* gamma [[buffer(0)]], device const float* deltaCoeffs [[buffer(1)]], device const float* magSf [[buffer(2)]], device const int* counts [[buffer(3)]], device float* outUpper [[buffer(4)]], device float* outLower [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     float coeff = (deltaCoeffs[((int)(int(__gid.x)))] * (gamma[((int)(int(__gid.x)))] * magSf[((int)(int(__gid.x)))]));
@@ -776,7 +776,7 @@ const char* k_metal_navatala_cfd_linear_upwind_correction_source = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_linear_upwind_correction_source(device const float* luFaceVals [[buffer(0)]], device const float* flux [[buffer(1)]], device const int* owner [[buffer(2)]], device const int* neighbour [[buffer(3)]], device const float* psi [[buffer(4)]], device const int* offsets [[buffer(5)]], device const int* faceIdx [[buffer(6)]], device const float* signF [[buffer(7)]], device const int* counts [[buffer(8)]], device float* outSource [[buffer(9)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     float sum = as_type<float>(0x00000000u);
@@ -787,7 +787,7 @@ kernel void navatala_cfd_linear_upwind_correction_source(device const float* luF
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < counts[1])) {
+      if (f < counts[1]) {
         float fluxVal = flux[f];
         float luVal = luFaceVals[f];
         float sgnF = signF[k];
@@ -806,7 +806,7 @@ const char* k_metal_navatala_cfd_matrix_relax = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_matrix_relax(device const float* diagOld [[buffer(0)]], device const float* sumOff [[buffer(1)]], device const float* psi [[buffer(2)]], device const int* counts [[buffer(3)]], device const float* paramsF [[buffer(4)]], device float* diag [[buffer(5)]], device float* source [[buffer(6)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     float d0 = diagOld[((int)(int(__gid.x)))];
@@ -830,7 +830,7 @@ const char* k_metal_navatala_cfd_neg_sum_diag = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_neg_sum_diag(device const float* upper [[buffer(0)]], device const float* lower [[buffer(1)]], device const int* offsets [[buffer(2)]], device const int* faceIdx [[buffer(3)]], device const int* sign [[buffer(4)]], device const int* counts [[buffer(5)]], device float* outDiag [[buffer(6)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     float sum = as_type<float>(0x00000000u);
@@ -841,9 +841,9 @@ kernel void navatala_cfd_neg_sum_diag(device const float* upper [[buffer(0)]], d
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < counts[1])) {
+      if (f < counts[1]) {
         int sgn = sign[k];
-        if ((sgn > 0)) {
+        if (sgn > 0) {
           sum = (sum - upper[f]);
         } else {
           sum = (sum - lower[f]);
@@ -861,7 +861,7 @@ const char* k_metal_navatala_cfd_pack_boundary_adjacent_cells = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_pack_boundary_adjacent_cells(device const float* cellField [[buffer(0)]], device const int* indexMap [[buffer(1)]], device const int* counts [[buffer(2)]], device float* outPacked [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     int cellIdx = indexMap[((int)(int(__gid.x)))];
@@ -876,12 +876,12 @@ const char* k_metal_navatala_cfd_scalar_jacobi_clamp_min = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_scalar_jacobi_clamp_min(device const float* lowerBound [[buffer(0)]], device const uint* counts [[buffer(1)]], device float* x [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(counts[0])))) {
+  if (int(__gid.x) >= ((int)(counts[0]))) {
     return;
   } else {
     float lb = lowerBound[0];
     float xi = x[int(__gid.x)];
-    if ((xi > lb)) {
+    if (xi > lb) {
       x[int(__gid.x)] = xi;
     } else {
       x[int(__gid.x)] = lb;
@@ -895,15 +895,15 @@ const char* k_metal_navatala_cfd_scalar_jacobi_update = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_scalar_jacobi_update(device const float* ax [[buffer(0)]], device const float* diag [[buffer(1)]], device const float* rhs [[buffer(2)]], device const float* params [[buffer(3)]], device const uint* counts [[buffer(4)]], device float* x [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(counts[0])))) {
+  if (int(__gid.x) >= ((int)(counts[0]))) {
     return;
   } else {
     float smallDiag = params[0];
     float omega = params[1];
     float d = diag[int(__gid.x)];
     float absD = abs(d);
-    if ((absD < smallDiag)) {
-      if ((d >= as_type<float>(0x00000000u))) {
+    if (absD < smallDiag) {
+      if (d >= as_type<float>(0x00000000u)) {
         d = smallDiag;
       } else {
         d = (-smallDiag);
@@ -921,7 +921,7 @@ const char* k_metal_navatala_cfd_scalar_ldu_mat_vec = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_scalar_ldu_mat_vec(device const float* diag [[buffer(0)]], device const float* upper [[buffer(1)]], device const float* lower [[buffer(2)]], device const float* x [[buffer(3)]], device const int* owner [[buffer(4)]], device const int* neighbour [[buffer(5)]], device const uint* offsets [[buffer(6)]], device const uint* faceIdx [[buffer(7)]], device const int* sign [[buffer(8)]], device const uint* counts [[buffer(9)]], device float* ax [[buffer(10)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(counts[0])))) {
+  if (int(__gid.x) >= ((int)(counts[0]))) {
     return;
   } else {
     float s = (diag[int(__gid.x)] * x[int(__gid.x)]);
@@ -933,8 +933,8 @@ kernel void navatala_cfd_scalar_ldu_mat_vec(device const float* diag [[buffer(0)
       int k = (beg + t);
       uint f = faceIdx[k];
       int sg = sign[k];
-      if ((((int)(f)) < ((int)(counts[1])))) {
-        if ((sg >= 0)) {
+      if (((int)(f)) < ((int)(counts[1]))) {
+        if (sg >= 0) {
           int nb = neighbour[((int)(f))];
           s = (s + (upper[((int)(f))] * x[nb]));
         } else {
@@ -954,7 +954,7 @@ using namespace metal;
 
 kernel void navatala_cfd_scalar_ldu_multi_color_gs_sweep(device const float* diag [[buffer(0)]], device const float* upper [[buffer(1)]], device const float* lower [[buffer(2)]], device const float* rhs [[buffer(3)]], device const int* owner [[buffer(4)]], device const int* neighbour [[buffer(5)]], device const uint* offsets [[buffer(6)]], device const uint* faceIdx [[buffer(7)]], device const int* sign [[buffer(8)]], device const uint* colorOrder [[buffer(9)]], device const uint* colorRange [[buffer(10)]], device const float* params [[buffer(11)]], device const uint* counts [[buffer(12)]], device float* x [[buffer(13)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int colorSize = (((int)(colorRange[1])) - ((int)(colorRange[0])));
-  if ((int(__gid.x) >= colorSize)) {
+  if (int(__gid.x) >= colorSize) {
     return;
   } else {
     int cellIdx = (((int)(colorRange[0])) + int(__gid.x));
@@ -964,8 +964,8 @@ kernel void navatala_cfd_scalar_ldu_multi_color_gs_sweep(device const float* dia
     float omega = params[1];
     float d = diag[ci];
     float absD = abs(d);
-    if ((absD < smallDiag)) {
-      if ((d >= as_type<float>(0x00000000u))) {
+    if (absD < smallDiag) {
+      if (d >= as_type<float>(0x00000000u)) {
         d = smallDiag;
       } else {
         d = (-smallDiag);
@@ -980,8 +980,8 @@ kernel void navatala_cfd_scalar_ldu_multi_color_gs_sweep(device const float* dia
       int k = (beg + t);
       uint f = faceIdx[k];
       int sg = sign[k];
-      if ((((int)(f)) < ((int)(counts[1])))) {
-        if ((sg >= 0)) {
+      if (((int)(f)) < ((int)(counts[1]))) {
+        if (sg >= 0) {
           int nb = neighbour[((int)(f))];
           s = (s + (upper[((int)(f))] * x[nb]));
         } else {
@@ -1000,7 +1000,7 @@ const char* k_metal_navatala_cfd_sum_mag_off_diag = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_sum_mag_off_diag(device const float* upper [[buffer(0)]], device const float* lower [[buffer(1)]], device const int* offsets [[buffer(2)]], device const int* faceIdx [[buffer(3)]], device const int* sign [[buffer(4)]], device const int* counts [[buffer(5)]], device float* outSumOff [[buffer(6)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     float sum = as_type<float>(0x00000000u);
@@ -1011,9 +1011,9 @@ kernel void navatala_cfd_sum_mag_off_diag(device const float* upper [[buffer(0)]
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < counts[1])) {
+      if (f < counts[1]) {
         int sgn = sign[k];
-        if ((sgn > 0)) {
+        if (sgn > 0) {
           float val = upper[f];
           float negVal = (as_type<float>(0x00000000u) - val);
           float absVal = (((val >= as_type<float>(0x00000000u))) ? (val) : (negVal));
@@ -1036,7 +1036,7 @@ const char* k_metal_navatala_cfd_gamg_axpy_in_place = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_gamg_axpy_in_place(device const float* x [[buffer(0)]], device const float* alpha [[buffer(1)]], device const uint* nRows [[buffer(2)]], device float* y [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(nRows[0])))) {
+  if (int(__gid.x) >= ((int)(nRows[0]))) {
     return;
   } else {
     float a = alpha[0];
@@ -1052,13 +1052,13 @@ const char* k_metal_navatala_cfd_gamg_compute_scale_factor = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_gamg_compute_scale_factor(device const float* num [[buffer(0)]], device const float* den [[buffer(1)]], device float* sf [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= 1)) {
+  if (int(__gid.x) >= 1) {
     return;
   } else {
     float n = num[0];
     float d = den[0];
     float dAbs = abs(d);
-    if ((dAbs > as_type<float>(0x0da24260u))) {
+    if (dAbs > as_type<float>(0x0da24260u)) {
       sf[0] = (n / d);
     } else {
       sf[0] = as_type<float>(0x3f800000u);
@@ -1072,7 +1072,7 @@ const char* k_metal_navatala_cfd_gamg_dot_finalize = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_gamg_dot_finalize(device const float* partials [[buffer(0)]], device const uint* count [[buffer(1)]], device float* result [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= 1)) {
+  if (int(__gid.x) >= 1) {
     return;
   } else {
     float s = as_type<float>(0x00000000u);
@@ -1089,7 +1089,7 @@ const char* k_metal_navatala_cfd_gamg_negate_scalar = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_gamg_negate_scalar(device const float* _input [[buffer(0)]], device float* _output [[buffer(1)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= 1)) {
+  if (int(__gid.x) >= 1) {
     return;
   } else {
     float v = _input[0];
@@ -1103,7 +1103,7 @@ const char* k_metal_navatala_cfd_gamg_scale_correction = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_gamg_scale_correction(device const float* z [[buffer(0)]], device const float* r [[buffer(1)]], device const float* Az [[buffer(2)]], device const float* diagInv [[buffer(3)]], device const float* sfPtr [[buffer(4)]], device const uint* nRows [[buffer(5)]], device float* corr [[buffer(6)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(nRows[0])))) {
+  if (int(__gid.x) >= ((int)(nRows[0]))) {
     return;
   } else {
     float sf = sfPtr[0];
@@ -1125,11 +1125,11 @@ const char* k_metal_navatala_cfd_mg_coarse_jacobi = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_mg_coarse_jacobi(device float* x [[buffer(0)]], device const float* r [[buffer(1)]], device const float* diag [[buffer(2)]], device const int* mgCounts [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(mgCounts[1])))) {
+  if (int(__gid.x) >= ((int)(mgCounts[1]))) {
     return;
   } else {
     float d = diag[int(__gid.x)];
-    if ((d == as_type<float>(0x00000000u))) {
+    if (d == as_type<float>(0x00000000u)) {
       return;
     } else {
       float omega = as_type<float>(0x3f4ccccdu);
@@ -1159,10 +1159,10 @@ static inline uint gpu_atomic_cas_uint(device atomic_uint* ptr, uint expected, u
 
 kernel void navatala_cfd_mg_coarse_matvec(device const int* edgeU [[buffer(0)]], device const int* edgeV [[buffer(1)]], device const float* edgeCf [[buffer(2)]], device const float* diag [[buffer(3)]], device const float* x [[buffer(4)]], device float* outAx [[buffer(5)]], device const int* mgCounts [[buffer(6)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int total = (((int)(mgCounts[1])) + ((int)(mgCounts[2])));
-  if ((int(__gid.x) >= total)) {
+  if (int(__gid.x) >= total) {
     return;
   } else {
-    if ((int(__gid.x) < ((int)(mgCounts[1])))) {
+    if (int(__gid.x) < ((int)(mgCounts[1]))) {
       atomic_fetch_add_explicit((device atomic_float*)(&outAx[int(__gid.x)]), (diag[int(__gid.x)] * x[int(__gid.x)]), memory_order_relaxed);
     } else {
       int e = (int(__gid.x) - ((int)(mgCounts[1])));
@@ -1181,7 +1181,7 @@ const char* k_metal_navatala_cfd_mg_coarse_rhs = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_mg_coarse_rhs(device const float* b [[buffer(0)]], device const float* ax [[buffer(1)]], device float* r [[buffer(2)]], device const int* mgCounts [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(mgCounts[1])))) {
+  if (int(__gid.x) >= ((int)(mgCounts[1]))) {
     return;
   } else {
     r[int(__gid.x)] = (b[int(__gid.x)] - ax[int(__gid.x)]);
@@ -1194,7 +1194,7 @@ const char* k_metal_navatala_cfd_mg_find_best_match = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_mg_find_best_match(device const uint* csrOffsets [[buffer(0)]], device const uint* csrFaceIdx [[buffer(1)]], device const int* csrSign [[buffer(2)]], device const float* strength [[buffer(3)]], device const int* owner [[buffer(4)]], device const int* nei [[buffer(5)]], device int* bestNeighbor [[buffer(6)]], device const int* counts [[buffer(7)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(counts[0])))) {
+  if (int(__gid.x) >= ((int)(counts[0]))) {
     return;
   } else {
     float bestS = as_type<float>(0xbf800000u);
@@ -1207,10 +1207,10 @@ kernel void navatala_cfd_mg_find_best_match(device const uint* csrOffsets [[buff
       int k = (((int)(beg)) + t);
       uint f = csrFaceIdx[k];
       float s = strength[((int)(f))];
-      if ((s > bestS)) {
+      if (s > bestS) {
         bestS = s;
         int sg = csrSign[k];
-        if ((sg > 0)) {
+        if (sg > 0) {
           bestN = nei[((int)(f))];
         } else {
           bestN = owner[((int)(f))];
@@ -1227,12 +1227,12 @@ const char* k_metal_navatala_cfd_mg_pair_match = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_mg_pair_match(device const int* bestNeighbor [[buffer(0)]], device int* aggMap [[buffer(1)]], device const int* counts [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(counts[0])))) {
+  if (int(__gid.x) >= ((int)(counts[0]))) {
     return;
   } else {
     int n = bestNeighbor[int(__gid.x)];
-    if ((n >= 0)) {
-      if ((int(__gid.x) < n)) {
+    if (n >= 0) {
+      if (int(__gid.x) < n) {
         aggMap[int(__gid.x)] = int(__gid.x);
       } else {
         aggMap[int(__gid.x)] = n;
@@ -1249,7 +1249,7 @@ const char* k_metal_navatala_cfd_mg_prolong_add = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_mg_prolong_add(device const float* xCoarse [[buffer(0)]], device const int* prolongRowOffsets [[buffer(1)]], device const int* prolongCols [[buffer(2)]], device const float* prolongVals [[buffer(3)]], device float* zFine [[buffer(4)]], device const int* mgCounts [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(mgCounts[0])))) {
+  if (int(__gid.x) >= ((int)(mgCounts[0]))) {
     return;
   } else {
     float accum = as_type<float>(0x00000000u);
@@ -1286,10 +1286,10 @@ static inline uint gpu_atomic_cas_uint(device atomic_uint* ptr, uint expected, u
 }
 
 kernel void navatala_cfd_mg_renumber_aggregates(device int* aggMap [[buffer(0)]], device atomic_int* counter [[buffer(1)]], device const int* counts [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(counts[0])))) {
+  if (int(__gid.x) >= ((int)(counts[0]))) {
     return;
   } else {
-    if ((aggMap[int(__gid.x)] == int(__gid.x))) {
+    if (aggMap[int(__gid.x)] == int(__gid.x)) {
       int oldCount = atomic_fetch_add_explicit(((device atomic_int*)(&(counter[0]))), 1, memory_order_relaxed);
       aggMap[int(__gid.x)] = (-(oldCount + 1));
     }
@@ -1302,15 +1302,15 @@ const char* k_metal_navatala_cfd_mg_renumber_propagate = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_mg_renumber_propagate(device int* aggMap [[buffer(0)]], device const int* counts [[buffer(1)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(counts[0])))) {
+  if (int(__gid.x) >= ((int)(counts[0]))) {
     return;
   } else {
     int root = aggMap[int(__gid.x)];
-    if ((root < 0)) {
+    if (root < 0) {
       aggMap[int(__gid.x)] = (-(root + 1));
     } else {
       int rootVal = aggMap[root];
-      if ((rootVal < 0)) {
+      if (rootVal < 0) {
         aggMap[int(__gid.x)] = (-(rootVal + 1));
       } else {
         aggMap[int(__gid.x)] = rootVal;
@@ -1325,16 +1325,16 @@ const char* k_metal_navatala_cfd_mg_resolve_chains = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_mg_resolve_chains(device int* aggMap [[buffer(0)]], device const int* counts [[buffer(1)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(counts[0])))) {
+  if (int(__gid.x) >= ((int)(counts[0]))) {
     return;
   } else {
     int root = aggMap[int(__gid.x)];
-    if ((root >= 0)) {
-      if ((root < ((int)(counts[0])))) {
-        if ((root != int(__gid.x))) {
+    if (root >= 0) {
+      if (root < ((int)(counts[0]))) {
+        if (root != int(__gid.x)) {
           int next = aggMap[root];
-          if ((next >= 0)) {
-            if ((next < ((int)(counts[0])))) {
+          if (next >= 0) {
+            if (next < ((int)(counts[0]))) {
               aggMap[int(__gid.x)] = next;
             }
           }
@@ -1364,7 +1364,7 @@ static inline uint gpu_atomic_cas_uint(device atomic_uint* ptr, uint expected, u
 }
 
 kernel void navatala_cfd_mg_restrict_sum(device const float* rFine [[buffer(0)]], device const int* prolongRowOffsets [[buffer(1)]], device const int* prolongCols [[buffer(2)]], device const float* prolongVals [[buffer(3)]], device float* rCoarse [[buffer(4)]], device const int* mgCounts [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(mgCounts[0])))) {
+  if (int(__gid.x) >= ((int)(mgCounts[0]))) {
     return;
   } else {
     int beg = prolongRowOffsets[int(__gid.x)];
@@ -1386,7 +1386,7 @@ const char* k_metal_navatala_cfd_mg_strength_of_connection = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_mg_strength_of_connection(device const float* diag [[buffer(0)]], device const float* upper [[buffer(1)]], device const int* owner [[buffer(2)]], device const int* nei [[buffer(3)]], device float* strength [[buffer(4)]], device const int* counts [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(counts[1])))) {
+  if (int(__gid.x) >= ((int)(counts[1]))) {
     return;
   } else {
     int o = owner[int(__gid.x)];
@@ -1394,7 +1394,7 @@ kernel void navatala_cfd_mg_strength_of_connection(device const float* diag [[bu
     float dO = abs(diag[o]);
     float dN = abs(diag[n]);
     float denomSq = (dO * dN);
-    if ((denomSq > as_type<float>(0x0da24260u))) {
+    if (denomSq > as_type<float>(0x0da24260u)) {
       strength[int(__gid.x)] = (abs(upper[int(__gid.x)]) / sqrt(denomSq));
     } else {
       strength[int(__gid.x)] = as_type<float>(0x00000000u);
@@ -1408,7 +1408,7 @@ const char* k_metal_navatala_cfd_mg_zero_coarse = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_mg_zero_coarse(device float* x [[buffer(0)]], device const int* mgCounts [[buffer(1)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(mgCounts[1])))) {
+  if (int(__gid.x) >= ((int)(mgCounts[1]))) {
     return;
   } else {
     x[int(__gid.x)] = as_type<float>(0x00000000u);
@@ -1421,23 +1421,23 @@ const char* k_metal_navatala_cfd_phi_correct = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_phi_correct(device const float* phiIn [[buffer(0)]], device const float* pCell [[buffer(1)]], device const int* owner [[buffer(2)]], device const int* neighbour [[buffer(3)]], device const float* magSf [[buffer(4)]], device const float* deltaCoeffs [[buffer(5)]], device const float* coeff [[buffer(6)]], device const float* bcVal [[buffer(7)]], device const int* bcMask [[buffer(8)]], device const float* bcSnGrad [[buffer(9)]], device const int* bcSnGradMask [[buffer(10)]], device const float* faceFluxCorrection [[buffer(11)]], device const int* counts [[buffer(12)]], device const float* paramsF [[buffer(13)]], device float* phiOut [[buffer(14)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     int o = owner[((int)(int(__gid.x)))];
     float po = pCell[o];
     float other = po;
     float snGrad = as_type<float>(0x00000000u);
-    if ((((int)(int(__gid.x))) < counts[1])) {
+    if (((int)(int(__gid.x))) < counts[1]) {
       int n = neighbour[((int)(int(__gid.x)))];
       other = pCell[n];
     } else {
-      if ((bcMask[((int)(int(__gid.x)))] != 0)) {
+      if (bcMask[((int)(int(__gid.x)))] != 0) {
         other = bcVal[((int)(int(__gid.x)))];
       }
     }
     snGrad = (deltaCoeffs[((int)(int(__gid.x)))] * (other - po));
-    if ((bcSnGradMask[((int)(int(__gid.x)))] != 0)) {
+    if (bcSnGradMask[((int)(int(__gid.x)))] != 0) {
       snGrad = bcSnGrad[((int)(int(__gid.x)))];
     }
     float gradFace = (magSf[((int)(int(__gid.x)))] * snGrad);
@@ -1452,17 +1452,17 @@ using namespace metal;
 
 kernel void navatala_cfd_phi_correct_boundary(device const float* phiIn [[buffer(0)]], device const float* pCell [[buffer(1)]], device const int* owner [[buffer(2)]], device const float* magSf [[buffer(3)]], device const float* deltaCoeffs [[buffer(4)]], device const float* coeff [[buffer(5)]], device const float* bcVal [[buffer(6)]], device const int* bcMask [[buffer(7)]], device const float* bcSnGrad [[buffer(8)]], device const int* bcSnGradMask [[buffer(9)]], device const float* faceFluxCorrection [[buffer(10)]], device const int* counts [[buffer(11)]], device const float* paramsF [[buffer(12)]], device float* phiOut [[buffer(13)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int f = (counts[1] + ((int)(int(__gid.x))));
-  if ((f >= counts[0])) {
+  if (f >= counts[0]) {
     return;
   } else {
     int o = owner[f];
     float po = pCell[o];
     float other = po;
-    if ((bcMask[f] != 0)) {
+    if (bcMask[f] != 0) {
       other = bcVal[f];
     }
     float snGrad = (deltaCoeffs[f] * (other - po));
-    if ((bcSnGradMask[f] != 0)) {
+    if (bcSnGradMask[f] != 0) {
       snGrad = bcSnGrad[f];
     }
     float gradFace = (magSf[f] * snGrad);
@@ -1476,7 +1476,7 @@ const char* k_metal_navatala_cfd_phi_correct_internal = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_phi_correct_internal(device const float* phiIn [[buffer(0)]], device const float* pCell [[buffer(1)]], device const int* owner [[buffer(2)]], device const int* neighbour [[buffer(3)]], device const float* magSf [[buffer(4)]], device const float* deltaCoeffs [[buffer(5)]], device const float* coeff [[buffer(6)]], device const float* faceFluxCorrection [[buffer(7)]], device const int* counts [[buffer(8)]], device const float* paramsF [[buffer(9)]], device float* phiOut [[buffer(10)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[1])) {
+  if (((int)(int(__gid.x))) >= counts[1]) {
     return;
   } else {
     int o = owner[((int)(int(__gid.x)))];
@@ -1495,7 +1495,7 @@ const char* k_metal_navatala_cfd_axpy_in_place = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_axpy_in_place(device const float* x [[buffer(0)]], device float* y [[buffer(1)]], device const int* counts [[buffer(2)]], device const float* paramsF [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= counts[0])) {
+  if (int(__gid.x) >= counts[0]) {
     return;
   } else {
     float yi = y[int(__gid.x)];
@@ -1509,11 +1509,11 @@ const char* k_metal_navatala_cfd_bc_dirichlet_face_flux = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_bc_dirichlet_face_flux(device const float* cf [[buffer(0)]], device const float* bcVal [[buffer(1)]], device const int* bcMask [[buffer(2)]], device const int* counts [[buffer(3)]], device float* outFlux [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[1])) {
+  if (((int)(int(__gid.x))) >= counts[1]) {
     return;
   } else {
     float flux = as_type<float>(0x00000000u);
-    if ((bcMask[((int)(int(__gid.x)))] == 2)) {
+    if (bcMask[((int)(int(__gid.x)))] == 2) {
       flux = (cf[((int)(int(__gid.x)))] * bcVal[((int)(int(__gid.x)))]);
     }
     outFlux[((int)(int(__gid.x)))] = flux;
@@ -1526,14 +1526,14 @@ const char* k_metal_navatala_cfd_bc_sn_grad_face_flux = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_bc_sn_grad_face_flux(device const float* cf [[buffer(0)]], device const float* delta [[buffer(1)]], device const float* bcSnGrad [[buffer(2)]], device const int* bcSnGradMask [[buffer(3)]], device const int* counts [[buffer(4)]], device float* outFlux [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[1])) {
+  if (((int)(int(__gid.x))) >= counts[1]) {
     return;
   } else {
     float d = delta[((int)(int(__gid.x)))];
     float sg = bcSnGrad[((int)(int(__gid.x)))];
     float flux = as_type<float>(0x00000000u);
-    if ((bcSnGradMask[((int)(int(__gid.x)))] != 0)) {
-      if ((d != as_type<float>(0x00000000u))) {
+    if (bcSnGradMask[((int)(int(__gid.x)))] != 0) {
+      if (d != as_type<float>(0x00000000u)) {
         flux = (cf[((int)(int(__gid.x)))] * (sg / d));
       }
     }
@@ -1547,7 +1547,7 @@ const char* k_metal_navatala_cfd_coeff_to_cf_in_place = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_coeff_to_cf_in_place(device float* cf [[buffer(0)]], device const float* magSf [[buffer(1)]], device const float* delta [[buffer(2)]], device const int* counts [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[1])) {
+  if (((int)(int(__gid.x))) >= counts[1]) {
     return;
   } else {
     float v = cf[((int)(int(__gid.x)))];
@@ -1561,7 +1561,7 @@ const char* k_metal_navatala_cfd_diag_from_cf = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_diag_from_cf(device const float* cf [[buffer(0)]], device const int* offsets [[buffer(1)]], device const int* faceIdx [[buffer(2)]], device const float* vol [[buffer(3)]], device const int* counts [[buffer(4)]], device float* diag [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= counts[0])) {
+  if (int(__gid.x) >= counts[0]) {
     return;
   } else {
     int beg = offsets[int(__gid.x)];
@@ -1621,7 +1621,7 @@ kernel void navatala_cfd_dic_build_reciprocal_d(device const float* diag [[buffe
   }
   for (int c2 = 0; c2 < (int)(counts[0]); ++c2) {
     float v = rD[c2];
-    if ((v != as_type<float>(0x00000000u))) {
+    if (v != as_type<float>(0x00000000u)) {
       rD[c2] = (as_type<float>(0x3f800000u) / v);
     } else {
       rD[c2] = as_type<float>(0x00000000u);
@@ -1637,44 +1637,44 @@ using namespace metal;
 kernel void navatala_cfd_dot_partials(device const float* a [[buffer(0)]], device const float* b [[buffer(1)]], device const int* counts [[buffer(2)]], device float* outPartials [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   threadgroup float tmp[256];
   float v = as_type<float>(0x00000000u);
-  if ((((int)(int(__gid.x))) < counts[0])) {
+  if (((int)(int(__gid.x))) < counts[0]) {
     v = (a[((int)(int(__gid.x)))] * b[((int)(int(__gid.x)))]);
   }
   tmp[((int)(int(__tid.x)))] = v;
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 128)) {
+  if (((int)(int(__tid.x))) < 128) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 128)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 64)) {
+  if (((int)(int(__tid.x))) < 64) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 64)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 32)) {
+  if (((int)(int(__tid.x))) < 32) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 32)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 16)) {
+  if (((int)(int(__tid.x))) < 16) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 16)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 8)) {
+  if (((int)(int(__tid.x))) < 8) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 8)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 4)) {
+  if (((int)(int(__tid.x))) < 4) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 4)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 2)) {
+  if (((int)(int(__tid.x))) < 2) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 2)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 1)) {
+  if (((int)(int(__tid.x))) < 1) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 1)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) == 0)) {
+  if (((int)(int(__tid.x))) == 0) {
     outPartials[((int)(int(__tgid.x)))] = tmp[0];
   }
 }
@@ -1685,24 +1685,24 @@ const char* k_metal_navatala_cfd_face_flux = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_face_flux(device const float* x [[buffer(0)]], device const int* owner [[buffer(1)]], device const int* neighbour [[buffer(2)]], device const float* cf [[buffer(3)]], device const float* bcVal [[buffer(4)]], device const int* bcMask [[buffer(5)]], device const int* counts [[buffer(6)]], device float* outFlux [[buffer(7)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[1])) {
+  if (((int)(int(__gid.x))) >= counts[1]) {
     return;
   } else {
     int o = owner[((int)(int(__gid.x)))];
     float xo = x[o];
     float other = xo;
-    if ((((int)(int(__gid.x))) < counts[2])) {
+    if (((int)(int(__gid.x))) < counts[2]) {
       int n = neighbour[((int)(int(__gid.x)))];
       other = x[n];
     } else {
       int m = bcMask[((int)(int(__gid.x)))];
-      if (((m == 1) || (m == 3))) {
+      if ((m == 1) || (m == 3)) {
         other = bcVal[((int)(int(__gid.x)))];
       } else {
-        if ((m == 2)) {
+        if (m == 2) {
           other = as_type<float>(0x00000000u);
         } else {
-          if ((m == 4)) {
+          if (m == 4) {
             outFlux[((int)(int(__gid.x)))] = bcVal[((int)(int(__gid.x)))];
             return;
           }
@@ -1719,12 +1719,12 @@ const char* k_metal_navatala_cfd_inv_diag = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_inv_diag(device const float* r [[buffer(0)]], device const float* diag [[buffer(1)]], device const int* counts [[buffer(2)]], device float* z [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= counts[0])) {
+  if (int(__gid.x) >= counts[0]) {
     return;
   } else {
     float d = diag[int(__gid.x)];
     float v = r[int(__gid.x)];
-    if ((d != as_type<float>(0x00000000u))) {
+    if (d != as_type<float>(0x00000000u)) {
       z[int(__gid.x)] = (v / d);
     } else {
       z[int(__gid.x)] = v;
@@ -1738,7 +1738,7 @@ const char* k_metal_navatala_cfd_laplacian_from_face_flux = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_laplacian_from_face_flux(device const float* faceFlux [[buffer(0)]], device const int* offsets [[buffer(1)]], device const int* faceIdx [[buffer(2)]], device const float* signF [[buffer(3)]], device const float* vol [[buffer(4)]], device const int* counts [[buffer(5)]], device float* outLap [[buffer(6)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= counts[0])) {
+  if (int(__gid.x) >= counts[0]) {
     return;
   } else {
     int beg = offsets[int(__gid.x)];
@@ -1761,7 +1761,7 @@ const char* k_metal_navatala_cfd_mul_by_vol_in_place = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_mul_by_vol_in_place(device float* b [[buffer(0)]], device const float* vol [[buffer(1)]], device const int* counts [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     float v = b[((int)(int(__gid.x)))];
@@ -1776,7 +1776,7 @@ using namespace metal;
 
 kernel void navatala_cfd_ref_add_ax(device const float* diag [[buffer(0)]], device const float* x [[buffer(1)]], device float* outAx [[buffer(2)]], device const int* refCell [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int c = refCell[0];
-  if ((c < 0)) {
+  if (c < 0) {
     return;
   } else {
     float cur = outAx[c];
@@ -1791,7 +1791,7 @@ using namespace metal;
 
 kernel void navatala_cfd_ref_add_b(device const float* diag [[buffer(0)]], device float* b [[buffer(1)]], device const int* refCell [[buffer(2)]], device const float* refVal [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int c = refCell[0];
-  if ((c < 0)) {
+  if (c < 0) {
     return;
   } else {
     float cur = b[c];
@@ -1805,7 +1805,7 @@ const char* k_metal_navatala_cfd_rhs_sub = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_rhs_sub(device const float* b [[buffer(0)]], device const float* ax [[buffer(1)]], device const int* counts [[buffer(2)]], device float* r [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= counts[0])) {
+  if (int(__gid.x) >= counts[0]) {
     return;
   } else {
     r[int(__gid.x)] = (b[int(__gid.x)] - ax[int(__gid.x)]);
@@ -1818,7 +1818,7 @@ const char* k_metal_navatala_cfd_shift_in_place = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_shift_in_place(device float* x [[buffer(0)]], device const int* counts [[buffer(1)]], device const float* paramsF [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     float xi = x[((int)(int(__gid.x)))];
@@ -1834,9 +1834,9 @@ using namespace metal;
 kernel void navatala_cfd_sum_abs_partials(device const float* a [[buffer(0)]], device const int* counts [[buffer(1)]], device float* outPartials [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   threadgroup float tmp[256];
   float v = as_type<float>(0x00000000u);
-  if ((((int)(int(__gid.x))) < counts[0])) {
+  if (((int)(int(__gid.x))) < counts[0]) {
     float ai = a[((int)(int(__gid.x)))];
-    if ((ai >= as_type<float>(0x00000000u))) {
+    if (ai >= as_type<float>(0x00000000u)) {
       v = ai;
     } else {
       v = (as_type<float>(0x00000000u) - ai);
@@ -1844,39 +1844,39 @@ kernel void navatala_cfd_sum_abs_partials(device const float* a [[buffer(0)]], d
   }
   tmp[((int)(int(__tid.x)))] = v;
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 128)) {
+  if (((int)(int(__tid.x))) < 128) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 128)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 64)) {
+  if (((int)(int(__tid.x))) < 64) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 64)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 32)) {
+  if (((int)(int(__tid.x))) < 32) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 32)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 16)) {
+  if (((int)(int(__tid.x))) < 16) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 16)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 8)) {
+  if (((int)(int(__tid.x))) < 8) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 8)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 4)) {
+  if (((int)(int(__tid.x))) < 4) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 4)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 2)) {
+  if (((int)(int(__tid.x))) < 2) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 2)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 1)) {
+  if (((int)(int(__tid.x))) < 1) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 1)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) == 0)) {
+  if (((int)(int(__tid.x))) == 0) {
     outPartials[((int)(int(__tgid.x)))] = tmp[0];
   }
 }
@@ -1887,7 +1887,7 @@ const char* k_metal_navatala_cfd_upper_from_cf = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_upper_from_cf(device const float* cf [[buffer(0)]], device const int* counts [[buffer(1)]], device float* upper [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[2])) {
+  if (((int)(int(__gid.x))) >= counts[2]) {
     return;
   } else {
     upper[((int)(int(__gid.x)))] = cf[((int)(int(__gid.x)))];
@@ -1900,7 +1900,7 @@ const char* k_metal_navatala_cfd_xpay_in_place = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_xpay_in_place(device const float* z [[buffer(0)]], device const float* pIn [[buffer(1)]], device float* pOut [[buffer(2)]], device const int* counts [[buffer(3)]], device const float* paramsF [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= counts[0])) {
+  if (int(__gid.x) >= counts[0]) {
     return;
   } else {
     pOut[int(__gid.x)] = (z[int(__gid.x)] + (paramsF[0] * pIn[int(__gid.x)]));
@@ -1913,7 +1913,7 @@ const char* k_metal_navatala_cfd_negate_scalar = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_negate_scalar(device const float* _input [[buffer(0)]], device float* _output [[buffer(1)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= 1)) {
+  if (int(__gid.x) >= 1) {
     return;
   } else {
     float v = _input[0];
@@ -1927,7 +1927,7 @@ const char* k_metal_navatala_cfd_exact_mat_vec = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_exact_mat_vec(device const float* x [[buffer(0)]], device const int* owner [[buffer(1)]], device const int* neighbour [[buffer(2)]], device const uint* offsets [[buffer(3)]], device const uint* faceIdx [[buffer(4)]], device const int* sign [[buffer(5)]], device const float* upper [[buffer(6)]], device const float* lower [[buffer(7)]], device const float* diag [[buffer(8)]], device const int* counts [[buffer(9)]], device float* outAx [[buffer(10)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(counts[0])))) {
+  if (int(__gid.x) >= ((int)(counts[0]))) {
     return;
   } else {
     float s = (diag[int(__gid.x)] * x[int(__gid.x)]);
@@ -1938,9 +1938,9 @@ kernel void navatala_cfd_exact_mat_vec(device const float* x [[buffer(0)]], devi
     for (int t = 0; t < (int)(len); ++t) {
       int k = (((int)(beg)) + t);
       uint f = faceIdx[k];
-      if ((((int)(f)) < ((int)(counts[2])))) {
+      if (((int)(f)) < ((int)(counts[2]))) {
         int sg = sign[k];
-        if ((sg >= 0)) {
+        if (sg >= 0) {
           int nb = neighbour[((int)(f))];
           s = (s + (upper[((int)(f))] * x[nb]));
         } else {
@@ -1959,7 +1959,7 @@ const char* k_metal_navatala_cfd_face_flux_boundary = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_face_flux_boundary(device const float* x [[buffer(0)]], device const int* owner [[buffer(1)]], device const float* cf [[buffer(2)]], device const float* bcVal [[buffer(3)]], device const uint* bcMask [[buffer(4)]], device const uint* params [[buffer(5)]], device float* faceFlux [[buffer(6)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(params[0])))) {
+  if (int(__gid.x) >= ((int)(params[0]))) {
     return;
   } else {
     int gf = (((int)(params[1])) + int(__gid.x));
@@ -1967,17 +1967,17 @@ kernel void navatala_cfd_face_flux_boundary(device const float* x [[buffer(0)]],
     float xo = x[o];
     uint m = bcMask[gf];
     int mInt = ((int)(m));
-    if ((mInt == 4)) {
+    if (mInt == 4) {
       faceFlux[gf] = bcVal[gf];
     } else {
       float other = xo;
-      if ((mInt == 1)) {
+      if (mInt == 1) {
         other = bcVal[gf];
       } else {
-        if ((mInt == 3)) {
+        if (mInt == 3) {
           other = bcVal[gf];
         } else {
-          if ((mInt == 2)) {
+          if (mInt == 2) {
             other = as_type<float>(0x00000000u);
           }
         }
@@ -1993,7 +1993,7 @@ const char* k_metal_navatala_cfd_face_flux_internal = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_face_flux_internal(device const float* x [[buffer(0)]], device const int* owner [[buffer(1)]], device const int* neighbour [[buffer(2)]], device const float* cf [[buffer(3)]], device const uint* params [[buffer(4)]], device float* faceFlux [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(params[0])))) {
+  if (int(__gid.x) >= ((int)(params[0]))) {
     return;
   } else {
     int o = owner[int(__gid.x)];
@@ -2008,10 +2008,10 @@ const char* k_metal_navatala_cfd_pressure_face_flux_correction_corrected = R"ker
 using namespace metal;
 
 kernel void navatala_cfd_pressure_face_flux_correction_corrected(device const int* owner [[buffer(0)]], device const int* neighbour [[buffer(1)]], device const float* weights [[buffer(2)]], device const float* gradX [[buffer(3)]], device const float* gradY [[buffer(4)]], device const float* gradZ [[buffer(5)]], device const float* magSf [[buffer(6)]], device const float* dCorrX [[buffer(7)]], device const float* dCorrY [[buffer(8)]], device const float* dCorrZ [[buffer(9)]], device const float* rAUf [[buffer(10)]], device const uint* params [[buffer(11)]], device float* outFaceFlux [[buffer(12)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(params[0])))) {
+  if (int(__gid.x) >= ((int)(params[0]))) {
     return;
   } else {
-    if ((int(__gid.x) >= ((int)(params[1])))) {
+    if (int(__gid.x) >= ((int)(params[1]))) {
       outFaceFlux[int(__gid.x)] = as_type<float>(0x00000000u);
     } else {
       int own = owner[int(__gid.x)];
@@ -2033,25 +2033,25 @@ const char* k_metal_navatala_cfd_pressure_sn_grad = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_pressure_sn_grad(device const float* phiHbyA [[buffer(0)]], device const int* ownerAll [[buffer(1)]], device const float* sfX [[buffer(2)]], device const float* sfY [[buffer(3)]], device const float* sfZ [[buffer(4)]], device const float* magSf [[buffer(5)]], device const float* ux [[buffer(6)]], device const float* uy [[buffer(7)]], device const float* uz [[buffer(8)]], device const float* uBcX [[buffer(9)]], device const float* uBcY [[buffer(10)]], device const float* uBcZ [[buffer(11)]], device const uint* uBcMask [[buffer(12)]], device const float* rAUf [[buffer(13)]], device const uint* snGradMask [[buffer(14)]], device const uint* params [[buffer(15)]], device float* outSnGrad [[buffer(16)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(params[1])))) {
+  if (int(__gid.x) >= ((int)(params[1]))) {
     return;
   } else {
     uint mask = snGradMask[int(__gid.x)];
-    if ((((int)(mask)) == 0)) {
+    if (((int)(mask)) == 0) {
       outSnGrad[int(__gid.x)] = as_type<float>(0x00000000u);
     } else {
       int o = ownerAll[int(__gid.x)];
-      if ((o < 0)) {
+      if (o < 0) {
         outSnGrad[int(__gid.x)] = as_type<float>(0x00000000u);
       } else {
-        if ((o >= ((int)(params[0])))) {
+        if (o >= ((int)(params[0]))) {
           outSnGrad[int(__gid.x)] = as_type<float>(0x00000000u);
         } else {
           float uxF = ux[o];
           float uyF = uy[o];
           float uzF = uz[o];
           uint bcm = uBcMask[int(__gid.x)];
-          if ((((int)(bcm)) == 2)) {
+          if (((int)(bcm)) == 2) {
             uxF = uBcX[int(__gid.x)];
             uyF = uBcY[int(__gid.x)];
             uzF = uBcZ[int(__gid.x)];
@@ -2061,7 +2061,7 @@ kernel void navatala_cfd_pressure_sn_grad(device const float* phiHbyA [[buffer(0
           float ms = magSf[int(__gid.x)];
           float denom = (rf * ms);
           float ph = phiHbyA[int(__gid.x)];
-          if ((abs(denom) < as_type<float>(0x1e3ce508u))) {
+          if (abs(denom) < as_type<float>(0x1e3ce508u)) {
             outSnGrad[int(__gid.x)] = as_type<float>(0x00000000u);
           } else {
             outSnGrad[int(__gid.x)] = ((ph - (rf * phiU)) / denom);
@@ -2078,7 +2078,7 @@ const char* k_metal_navatala_cfd_u_correct = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_u_correct(device const float* pCell [[buffer(0)]], device const int* owner [[buffer(1)]], device const int* neighbour [[buffer(2)]], device const float* sfX [[buffer(3)]], device const float* sfY [[buffer(4)]], device const float* sfZ [[buffer(5)]], device const float* bcVal [[buffer(6)]], device const int* bcMask [[buffer(7)]], device const int* offsets [[buffer(8)]], device const int* faceIdx [[buffer(9)]], device const float* sign [[buffer(10)]], device const float* vol [[buffer(11)]], device const float* rAU [[buffer(12)]], device const float* ux [[buffer(13)]], device const float* uy [[buffer(14)]], device const float* uz [[buffer(15)]], device const int* counts [[buffer(16)]], device const float* paramsF [[buffer(17)]], device float* outX [[buffer(18)]], device float* outY [[buffer(19)]], device float* outZ [[buffer(20)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     int beg = offsets[((int)(int(__gid.x)))];
@@ -2093,11 +2093,11 @@ kernel void navatala_cfd_u_correct(device const float* pCell [[buffer(0)]], devi
       int f = faceIdx[k];
       int o = owner[f];
       float pf = pCell[o];
-      if ((f < counts[2])) {
+      if (f < counts[2]) {
         int n = neighbour[f];
         pf = (as_type<float>(0x3f000000u) * (pCell[o] + pCell[n]));
       } else {
-        if ((bcMask[f] != 0)) {
+        if (bcMask[f] != 0) {
           pf = bcVal[f];
         }
       }
@@ -2123,7 +2123,7 @@ const char* k_metal_navatala_cfd_u_correct_reconstruct = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_u_correct_reconstruct(device const float* pCell [[buffer(0)]], device const float* rAU [[buffer(1)]], device const float* hbx [[buffer(2)]], device const float* hby [[buffer(3)]], device const float* hbz [[buffer(4)]], device const float* rAUf [[buffer(5)]], device const float* phig [[buffer(6)]], device const int* owner [[buffer(7)]], device const int* neighbour [[buffer(8)]], device const float* sfX [[buffer(9)]], device const float* sfY [[buffer(10)]], device const float* sfZ [[buffer(11)]], device const float* magSf [[buffer(12)]], device const float* deltaCoeffs [[buffer(13)]], device const int* offsets [[buffer(14)]], device const int* faceIdx [[buffer(15)]], device const float* sign [[buffer(16)]], device const float* vol [[buffer(17)]], device const float* bcVal [[buffer(18)]], device const int* bcMask [[buffer(19)]], device const float* bcSnGrad [[buffer(20)]], device const int* bcSnGradMask [[buffer(21)]], device const float* faceFluxCorrection [[buffer(22)]], device const int* counts [[buffer(23)]], device const float* paramsF [[buffer(24)]], device float* outX [[buffer(25)]], device float* outY [[buffer(26)]], device float* outZ [[buffer(27)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     int beg = offsets[((int)(int(__gid.x)))];
@@ -2145,35 +2145,35 @@ kernel void navatala_cfd_u_correct_reconstruct(device const float* pCell [[buffe
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < counts[1])) {
+      if (f < counts[1]) {
         int o = owner[f];
         float po = pCell[o];
         float other = po;
-        if ((f < counts[2])) {
+        if (f < counts[2]) {
           int n = neighbour[f];
           other = pCell[n];
         } else {
-          if ((bcMask[f] != 0)) {
+          if (bcMask[f] != 0) {
             other = bcVal[f];
           }
         }
         float snGrad = (deltaCoeffs[f] * (other - po));
         float phiTerm = as_type<float>(0x00000000u);
-        if ((bcSnGradMask[f] == 2)) {
+        if (bcSnGradMask[f] == 2) {
           phiTerm = bcSnGrad[f];
         } else {
-          if ((bcSnGradMask[f] == 1)) {
+          if (bcSnGradMask[f] == 1) {
             snGrad = bcSnGrad[f];
           }
           float gradFace = (magSf[f] * snGrad);
           float denom = rAUf[f];
           float pFlux = ((paramsF[0] * (denom * gradFace)) + faceFluxCorrection[f]);
-          if ((denom != as_type<float>(0x00000000u))) {
+          if (denom != as_type<float>(0x00000000u)) {
             phiTerm = ((phig[f] - pFlux) / denom);
           }
         }
         float ms = magSf[f];
-        if ((ms > as_type<float>(0x00000000u))) {
+        if (ms > as_type<float>(0x00000000u)) {
           float nx = (sfX[f] / ms);
           float ny = (sfY[f] / ms);
           float nz = (sfZ[f] / ms);
@@ -2223,7 +2223,7 @@ kernel void navatala_cfd_u_correct_reconstruct(device const float* pCell [[buffe
     float rx = as_type<float>(0x00000000u);
     float ry = as_type<float>(0x00000000u);
     float rz = as_type<float>(0x00000000u);
-    if ((abs(det) >= rootVSmall)) {
+    if (abs(det) >= rootVSmall) {
       float invDet = (as_type<float>(0x3f800000u) / det);
       float i00 = (((w11 * w22) - (w21 * w12)) * invDet);
       float i01 = (((w02 * w21) - (w01 * w22)) * invDet);
@@ -2260,7 +2260,7 @@ const char* k_metal_navatala_cfd_grad_alpha_cell = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_grad_alpha_cell(device const float* alphaF [[buffer(0)]], device const float* sfX [[buffer(1)]], device const float* sfY [[buffer(2)]], device const float* sfZ [[buffer(3)]], device const int* offsets [[buffer(4)]], device const int* faceIdx [[buffer(5)]], device const float* sign [[buffer(6)]], device const float* vol [[buffer(7)]], device const int* counts [[buffer(8)]], device float* gx [[buffer(9)]], device float* gy [[buffer(10)]], device float* gz [[buffer(11)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     int beg = offsets[((int)(int(__gid.x)))];
@@ -2291,7 +2291,7 @@ const char* k_metal_navatala_cfd_n_hatf_all = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_n_hatf_all(device const float* gx [[buffer(0)]], device const float* gy [[buffer(1)]], device const float* gz [[buffer(2)]], device const float* sfX [[buffer(3)]], device const float* sfY [[buffer(4)]], device const float* sfZ [[buffer(5)]], device const int* owner [[buffer(6)]], device const int* nei [[buffer(7)]], device const float* weights [[buffer(8)]], device const float* theta [[buffer(9)]], device const uint* thetaMask [[buffer(10)]], device const float* paramsF [[buffer(11)]], device const int* counts [[buffer(12)]], device float* contactGrad [[buffer(13)]], device float* nHatf [[buffer(14)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[1])) {
+  if (((int)(int(__gid.x))) >= counts[1]) {
     return;
   } else {
     int o = owner[((int)(int(__gid.x)))];
@@ -2308,21 +2308,21 @@ kernel void navatala_cfd_n_hatf_all(device const float* gx [[buffer(0)]], device
     float ny = (gfy * inv);
     float nz = (gfz * inv);
     contactGrad[((int)(int(__gid.x)))] = as_type<float>(0x00000000u);
-    if ((thetaMask[((int)(int(__gid.x)))] != 0u)) {
+    if (thetaMask[((int)(int(__gid.x)))] != 0u) {
       float sfx = sfX[((int)(int(__gid.x)))];
       float sfy = sfY[((int)(int(__gid.x)))];
       float sfz = sfZ[((int)(int(__gid.x)))];
       float magSf = sqrt((((sfx * sfx) + (sfy * sfy)) + (sfz * sfz)));
-      if ((magSf > as_type<float>(0x1e3ce508u))) {
+      if (magSf > as_type<float>(0x1e3ce508u)) {
         float nfx = (sfx / magSf);
         float nfy = (sfy / magSf);
         float nfz = (sfz / magSf);
         float a12raw = (((nx * nfx) + (ny * nfy)) + (nz * nfz));
         float a12 = a12raw;
-        if ((a12 < as_type<float>(0xbf800000u))) {
+        if (a12 < as_type<float>(0xbf800000u)) {
           a12 = as_type<float>(0xbf800000u);
         } else {
-          if ((a12 > as_type<float>(0x3f800000u))) {
+          if (a12 > as_type<float>(0x3f800000u)) {
             a12 = as_type<float>(0x3f800000u);
           }
         }
@@ -2331,7 +2331,7 @@ kernel void navatala_cfd_n_hatf_all(device const float* gx [[buffer(0)]], device
         float acosA12 = acos(a12);
         float b2 = cos((acosA12 - th));
         float det = (as_type<float>(0x3f800000u) - (a12 * a12));
-        if ((det < as_type<float>(0x358637bdu))) {
+        if (det < as_type<float>(0x358637bdu)) {
           det = as_type<float>(0x358637bdu);
         }
         float a = ((b1 - (a12 * b2)) / det);
@@ -2358,7 +2358,7 @@ const char* k_metal_navatala_cfd_stf_all_faces = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_stf_all_faces(device const float* divN [[buffer(0)]], device const float* alpha [[buffer(1)]], device const float* alphaF [[buffer(2)]], device const float* delta [[buffer(3)]], device const int* owner [[buffer(4)]], device const int* nei [[buffer(5)]], device const float* weights [[buffer(6)]], device const float* contactGrad [[buffer(7)]], device const uint* thetaMask [[buffer(8)]], device const float* paramsF [[buffer(9)]], device const int* counts [[buffer(10)]], device float* stf [[buffer(11)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[1])) {
+  if (((int)(int(__gid.x))) >= counts[1]) {
     return;
   } else {
     int o = owner[((int)(int(__gid.x)))];
@@ -2368,10 +2368,10 @@ kernel void navatala_cfd_stf_all_faces(device const float* divN [[buffer(0)]], d
     float divInterp = ((w * divN[o]) + (wm * divN[n]));
     float Kf = (as_type<float>(0xbf800000u) * divInterp);
     float snGrad = as_type<float>(0x00000000u);
-    if ((((int)(int(__gid.x))) < counts[2])) {
+    if (((int)(int(__gid.x))) < counts[2]) {
       snGrad = (delta[((int)(int(__gid.x)))] * (alpha[n] - alpha[o]));
     } else {
-      if ((thetaMask[((int)(int(__gid.x)))] != 0u)) {
+      if (thetaMask[((int)(int(__gid.x)))] != 0u) {
         snGrad = contactGrad[((int)(int(__gid.x)))];
       } else {
         snGrad = (delta[((int)(int(__gid.x)))] * (alphaF[((int)(int(__gid.x)))] - alpha[o]));
@@ -2387,7 +2387,7 @@ const char* k_metal_navatala_cfd_k_omega_s_s_t_blending = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_k_omega_s_s_t_blending(device const float* k [[buffer(0)]], device const float* omega [[buffer(1)]], device const float* nut [[buffer(2)]], device const float* nu [[buffer(3)]], device const float* y [[buffer(4)]], device const float* gradKx [[buffer(5)]], device const float* gradKy [[buffer(6)]], device const float* gradKz [[buffer(7)]], device const float* gradOmegax [[buffer(8)]], device const float* gradOmegay [[buffer(9)]], device const float* gradOmegaz [[buffer(10)]], device const int* counts [[buffer(11)]], device float* outF1 [[buffer(12)]], device float* outF23 [[buffer(13)]], device float* outCDkOmega [[buffer(14)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     float kC = k[((int)(int(__gid.x)))];
@@ -2442,7 +2442,7 @@ const char* k_metal_navatala_cfd_k_omega_s_s_t_nut_compute = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_k_omega_s_s_t_nut_compute(device const float* kVals [[buffer(0)]], device const float* omegaVals [[buffer(1)]], device const float* f23Vals [[buffer(2)]], device const float* s2Vals [[buffer(3)]], device const uint* counts [[buffer(4)]], device const float* params [[buffer(5)]], device float* outNut [[buffer(6)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(counts[0])))) {
+  if (int(__gid.x) >= ((int)(counts[0]))) {
     return;
   } else {
     float a1 = params[0];
@@ -2454,14 +2454,14 @@ kernel void navatala_cfd_k_omega_s_s_t_nut_compute(device const float* kVals [[b
     float denomA = (a1 * om);
     float denomB = ((b1 * f23) * sqrt((s2raw * ((float)((s2raw > as_type<float>(0x00000000u)))))));
     float num = (a1 * k);
-    if ((denomA > denomB)) {
-      if ((denomA > as_type<float>(0x00000000u))) {
+    if (denomA > denomB) {
+      if (denomA > as_type<float>(0x00000000u)) {
         outNut[int(__gid.x)] = (num / denomA);
       } else {
         outNut[int(__gid.x)] = as_type<float>(0x00000000u);
       }
     } else {
-      if ((denomB > as_type<float>(0x00000000u))) {
+      if (denomB > as_type<float>(0x00000000u)) {
         outNut[int(__gid.x)] = (num / denomB);
       } else {
         outNut[int(__gid.x)] = as_type<float>(0x00000000u);
@@ -2476,7 +2476,7 @@ const char* k_metal_navatala_cfd_k_omega_s_s_t_sources = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_k_omega_s_s_t_sources(device const float* k [[buffer(0)]], device const float* omega [[buffer(1)]], device const float* nut [[buffer(2)]], device const float* nu [[buffer(3)]], device const float* alpha [[buffer(4)]], device const float* rho [[buffer(5)]], device const float* F1 [[buffer(6)]], device const float* F23 [[buffer(7)]], device const float* CDkOmega [[buffer(8)]], device const float* S2 [[buffer(9)]], device const float* divU [[buffer(10)]], device const int* counts [[buffer(11)]], device float* outOmegaSp [[buffer(12)]], device float* outOmegaSuSp1 [[buffer(13)]], device float* outOmegaSuSp2 [[buffer(14)]], device float* outOmegaExpl [[buffer(15)]], device float* outKSp [[buffer(16)]], device float* outKSuSp [[buffer(17)]], device float* outKExpl [[buffer(18)]], device float* outDomegaEff [[buffer(19)]], device float* outDkEff [[buffer(20)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     float kC = k[((int)(int(__gid.x)))];
@@ -2534,7 +2534,7 @@ const char* k_metal_navatala_cfd_mu_eff_from_rho_nu_eff = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_mu_eff_from_rho_nu_eff(device const float* rho [[buffer(0)]], device const float* nuEff [[buffer(1)]], device const int* params [[buffer(2)]], device float* outMuEff [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= params[0])) {
+  if (((int)(int(__gid.x))) >= params[0]) {
     return;
   } else {
     float r = rho[((int)(int(__gid.x)))];
@@ -2549,7 +2549,7 @@ const char* k_metal_navatala_cfd_mu_eff_from_rho_nut_and_nu_mix = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_mu_eff_from_rho_nut_and_nu_mix(device const float* rho [[buffer(0)]], device const float* nut [[buffer(1)]], device const float* nuMix [[buffer(2)]], device const uint* params [[buffer(3)]], device float* outMu [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(params[0])))) {
+  if (int(__gid.x) >= ((int)(params[0]))) {
     return;
   } else {
     outMu[int(__gid.x)] = (rho[int(__gid.x)] * (nuMix[int(__gid.x)] + nut[int(__gid.x)]));
@@ -2562,7 +2562,7 @@ const char* k_metal_navatala_cfd_turbulence_add_explicit_source_device = R"kerne
 using namespace metal;
 
 kernel void navatala_cfd_turbulence_add_explicit_source_device(device const float* explicitSrc [[buffer(0)]], device const float* vol [[buffer(1)]], device const uint* counts [[buffer(2)]], device float* outVals [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(counts[0])))) {
+  if (int(__gid.x) >= ((int)(counts[0]))) {
     return;
   } else {
     outVals[int(__gid.x)] = (explicitSrc[int(__gid.x)] * vol[int(__gid.x)]);
@@ -2575,11 +2575,11 @@ const char* k_metal_navatala_cfd_turbulence_dirichlet_cell_source = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_turbulence_dirichlet_cell_source(device const int* constrainedMask [[buffer(0)]], device const float* constrainedValue [[buffer(1)]], device const float* diag [[buffer(2)]], device const int* nCells [[buffer(3)]], device float* source [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= nCells[0])) {
+  if (((int)(int(__gid.x))) >= nCells[0]) {
     return;
   } else {
     int mask = constrainedMask[((int)(int(__gid.x)))];
-    if ((mask == 0)) {
+    if (mask == 0) {
       return;
     } else {
       source[((int)(int(__gid.x)))] = (diag[((int)(int(__gid.x)))] * constrainedValue[((int)(int(__gid.x)))]);
@@ -2607,23 +2607,23 @@ static inline uint gpu_atomic_cas_uint(device atomic_uint* ptr, uint expected, u
 }
 
 kernel void navatala_cfd_turbulence_dirichlet_face_elimination(device const int* owner [[buffer(0)]], device const int* neighbour [[buffer(1)]], device const int* constrainedMask [[buffer(2)]], device const float* constrainedValue [[buffer(3)]], device const int* nIntFaces [[buffer(4)]], device float* upper [[buffer(5)]], device float* lower [[buffer(6)]], device float* source [[buffer(7)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= nIntFaces[0])) {
+  if (((int)(int(__gid.x))) >= nIntFaces[0]) {
     return;
   } else {
     int o = owner[((int)(int(__gid.x)))];
     int n = neighbour[((int)(int(__gid.x)))];
     int oC = constrainedMask[o];
     int nC = constrainedMask[n];
-    if (((oC | nC) == 0)) {
+    if ((oC | nC) == 0) {
       return;
     } else {
       float up = upper[((int)(int(__gid.x)))];
       float lo = lower[((int)(int(__gid.x)))];
-      if ((oC != 0)) {
+      if (oC != 0) {
         float cv = constrainedValue[o];
         atomic_fetch_add_explicit((device atomic_float*)(&source[n]), (-(lo * cv)), memory_order_relaxed);
       }
-      if ((nC != 0)) {
+      if (nC != 0) {
         float cv = constrainedValue[n];
         atomic_fetch_add_explicit((device atomic_float*)(&source[o]), (-(up * cv)), memory_order_relaxed);
       }
@@ -2639,7 +2639,7 @@ const char* k_metal_navatala_cfd_two_mag_sqr_symm_grad_u = R"kernel(
 using namespace metal;
 
 kernel void navatala_cfd_two_mag_sqr_symm_grad_u(device const float* ufX [[buffer(0)]], device const float* ufY [[buffer(1)]], device const float* ufZ [[buffer(2)]], device const float* sfX [[buffer(3)]], device const float* sfY [[buffer(4)]], device const float* sfZ [[buffer(5)]], device const int* offsets [[buffer(6)]], device const int* faceIdx [[buffer(7)]], device const float* sign [[buffer(8)]], device const float* vol [[buffer(9)]], device const int* counts [[buffer(10)]], device float* outS2 [[buffer(11)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     int beg = offsets[((int)(int(__gid.x)))];
@@ -2677,7 +2677,7 @@ kernel void navatala_cfd_two_mag_sqr_symm_grad_u(device const float* ufX [[buffe
     }
     float v = vol[((int)(int(__gid.x)))];
     float invV = as_type<float>(0x00000000u);
-    if ((v != as_type<float>(0x00000000u))) {
+    if (v != as_type<float>(0x00000000u)) {
       invV = (as_type<float>(0x3f800000u) / v);
     }
     g00 = (g00 * invV);
@@ -2716,7 +2716,7 @@ kernel void navatala_cfd_attention_row_softmax(device const float* scores [[buff
   int qi = int(__gid.x);
   int nq = numQ[0];
   int nk = numK[0];
-  if ((qi < nq)) {
+  if (qi < nq) {
     int rowBase = (qi * nk);
     float maxScore = as_type<float>(0xf149f2cau);
     for (int j = 0; j < (int)(nk); ++j) {
@@ -2753,7 +2753,7 @@ kernel void navatala_cfd_attention_value_projection(device const float* weights 
   int nk = numK[0];
   int hd = headDim[0];
   int total = (nq * hd);
-  if ((gid < total)) {
+  if (gid < total) {
     int qi = (gid / hd);
     int d = (gid % hd);
     float acc = as_type<float>(0x00000000u);
@@ -2776,7 +2776,7 @@ using namespace metal;
 kernel void navatala_cfd_gather_mean(device const float* features [[buffer(0)]], device const int* neighbors [[buffer(1)]], device const int* neighborCounts [[buffer(2)]], device const int* numNodes [[buffer(3)]], device const int* featureDim [[buffer(4)]], device float* _out [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int gid = int(__gid.x);
   int nNodes = numNodes[0];
-  if ((gid < nNodes)) {
+  if (gid < nNodes) {
     int cnt = neighborCounts[gid];
     int fd = featureDim[0];
     for (int f = 0; f < (int)(fd); ++f) {
@@ -2804,7 +2804,7 @@ using namespace metal;
 kernel void navatala_cfd_layer_norm_forward(device const float* x [[buffer(0)]], device const int* numRows [[buffer(1)]], device const float* gamma [[buffer(2)]], device const float* beta [[buffer(3)]], device float* y [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int row = int(__gid.x);
   int nRows = numRows[0];
-  if ((row < nRows)) {
+  if (row < nRows) {
     int hd = 16;
     int rowBase = (row * hd);
     float sum = as_type<float>(0x00000000u);
@@ -2845,7 +2845,7 @@ kernel void navatala_cfd_radius_count(device const float* query [[buffer(0)]], d
   int qid = int(__gid.x);
   int nq = numQuery[0];
   int nr = numRef[0];
-  if ((qid < nq)) {
+  if (qid < nq) {
     float qx = query[((qid)*3 + 0)];
     float qy = query[((qid)*3 + 1)];
     float qz = query[((qid)*3 + 2)];
@@ -2860,7 +2860,7 @@ kernel void navatala_cfd_radius_count(device const float* query [[buffer(0)]], d
       float dy = (qy - ry);
       float dz = (qz - rz);
       float d2 = (((dx * dx) + (dy * dy)) + (dz * dz));
-      if ((d2 <= rCmp)) {
+      if (d2 <= rCmp) {
         cnt = (cnt + 1);
       }
     }
@@ -2879,7 +2879,7 @@ kernel void navatala_cfd_scaled_dot_product(device const float* q [[buffer(0)]],
   int nk = numK[0];
   int hd = headDim[0];
   int total = (nq * nk);
-  if ((gid < total)) {
+  if (gid < total) {
     int qi = (gid / nk);
     int kj = (gid % nk);
     float acc = as_type<float>(0x00000000u);
@@ -2916,7 +2916,7 @@ static inline uint gpu_atomic_cas_uint(device atomic_uint* ptr, uint expected, u
 kernel void navatala_cfd_scatter_add_atomic(device const int* values [[buffer(0)]], device const int* indices [[buffer(1)]], device const int* numEdges [[buffer(2)]], device const int* featureDim [[buffer(3)]], device atomic_int* dst [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int gid = int(__gid.x);
   int nEdges = numEdges[0];
-  if ((gid < nEdges)) {
+  if (gid < nEdges) {
     int dstIdx = indices[gid];
     int fd = featureDim[0];
     for (int f = 0; f < (int)(fd); ++f) {
@@ -2936,7 +2936,7 @@ using namespace metal;
 kernel void navatala_cfd_spectral_complex_mul(device const float* x [[buffer(0)]], device const float* w [[buffer(1)]], device const int* n [[buffer(2)]], device float* y [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int gid = int(__gid.x);
   int count = n[0];
-  if ((gid < count)) {
+  if (gid < count) {
     float xr = x[((gid)*2 + 0)];
     float xi = x[((gid)*2 + 1)];
     float wr = w[((gid)*2 + 0)];
@@ -2961,14 +2961,14 @@ kernel void navatala_cfd_spectral_conv1d_mode_sliced(device const float* xFt [[b
   int inCh = 2;
   int m1 = 8;
   int total = ((nb * outCh) * ftw);
-  if ((gid < total)) {
+  if (gid < total) {
     int boc = (gid / ftw);
     int w = (gid % ftw);
     int b = (boc / outCh);
     int oc = (boc % outCh);
     float accR = as_type<float>(0x00000000u);
     float accI = as_type<float>(0x00000000u);
-    if ((w < m1)) {
+    if (w < m1) {
       for (int ic = 0; ic < (int)(inCh); ++ic) {
         int xBase = ((((b * inCh) + ic) * ftw) + w);
         int wBase = ((((oc * inCh) + ic) * m1) + w);
@@ -2981,7 +2981,7 @@ kernel void navatala_cfd_spectral_conv1d_mode_sliced(device const float* xFt [[b
       }
     } else {
       int negStart = (ftw - m1);
-      if ((w >= negStart)) {
+      if (w >= negStart) {
         int wLocal = (w - negStart);
         for (int ic = 0; ic < (int)(inCh); ++ic) {
           int xBase = ((((b * inCh) + ic) * ftw) + w);
@@ -3016,7 +3016,7 @@ kernel void navatala_cfd_spectral_conv2d_mode_sliced(device const float* xFt [[b
   int m2 = 8;
   int plane = (fth * ftw);
   int total = ((nb * outCh) * plane);
-  if ((gid < total)) {
+  if (gid < total) {
     int boc = (gid / plane);
     int hwFlat = (gid % plane);
     int b = (boc / outCh);
@@ -3025,7 +3025,7 @@ kernel void navatala_cfd_spectral_conv2d_mode_sliced(device const float* xFt [[b
     int w = (hwFlat % ftw);
     float accR = as_type<float>(0x00000000u);
     float accI = as_type<float>(0x00000000u);
-    if (((h < m1) && (w < m2))) {
+    if ((h < m1) && (w < m2)) {
       for (int ic = 0; ic < (int)(inCh); ++ic) {
         int xBase = ((((((b * inCh) + ic) * fth) + h) * ftw) + w);
         int wBase = ((((((oc * inCh) + ic) * m1) + h) * m2) + w);
@@ -3038,7 +3038,7 @@ kernel void navatala_cfd_spectral_conv2d_mode_sliced(device const float* xFt [[b
       }
     } else {
       int negStart = (fth - m1);
-      if (((h >= negStart) && (w < m2))) {
+      if ((h >= negStart) && (w < m2)) {
         int hLocal = (h - negStart);
         for (int ic = 0; ic < (int)(inCh); ++ic) {
           int xBase = ((((((b * inCh) + ic) * fth) + h) * ftw) + w);
@@ -3075,7 +3075,7 @@ kernel void navatala_cfd_spectral_conv3d_mode_sliced(device const float* xFt [[b
   int m3 = 4;
   int plane = ((ftd * fth) * ftw);
   int total = ((nb * outCh) * plane);
-  if ((gid < total)) {
+  if (gid < total) {
     int boc = (gid / plane);
     int dhwFlat = (gid % plane);
     int b = (boc / outCh);
@@ -3088,7 +3088,7 @@ kernel void navatala_cfd_spectral_conv3d_mode_sliced(device const float* xFt [[b
     int negStartH = (fth - m2);
     float accR = as_type<float>(0x00000000u);
     float accI = as_type<float>(0x00000000u);
-    if ((((d < m1) && (h < m2)) && (w < m3))) {
+    if (((d < m1) && (h < m2)) && (w < m3)) {
       for (int ic = 0; ic < (int)(inCh); ++ic) {
         int xBase = ((((((((b * inCh) + ic) * ftd) + d) * fth) + h) * ftw) + w);
         int wBase = ((((((((oc * inCh) + ic) * m1) + d) * m2) + h) * m3) + w);
@@ -3100,7 +3100,7 @@ kernel void navatala_cfd_spectral_conv3d_mode_sliced(device const float* xFt [[b
         accI = (accI + ((xr * wi) + (xi * wr)));
       }
     } else {
-      if ((((d >= negStartD) && (h < m2)) && (w < m3))) {
+      if (((d >= negStartD) && (h < m2)) && (w < m3)) {
         for (int ic = 0; ic < (int)(inCh); ++ic) {
           int xBase = ((((((((b * inCh) + ic) * ftd) + d) * fth) + h) * ftw) + w);
           int wBase = ((((((((oc * inCh) + ic) * m1) + (d - negStartD)) * m2) + h) * m3) + w);
@@ -3112,7 +3112,7 @@ kernel void navatala_cfd_spectral_conv3d_mode_sliced(device const float* xFt [[b
           accI = (accI + ((xr * wi) + (xi * wr)));
         }
       } else {
-        if ((((d < m1) && (h >= negStartH)) && (w < m3))) {
+        if (((d < m1) && (h >= negStartH)) && (w < m3)) {
           for (int ic = 0; ic < (int)(inCh); ++ic) {
             int xBase = ((((((((b * inCh) + ic) * ftd) + d) * fth) + h) * ftw) + w);
             int wBase = ((((((((oc * inCh) + ic) * m1) + d) * m2) + (h - negStartH)) * m3) + w);
@@ -3124,7 +3124,7 @@ kernel void navatala_cfd_spectral_conv3d_mode_sliced(device const float* xFt [[b
             accI = (accI + ((xr * wi) + (xi * wr)));
           }
         } else {
-          if ((((d >= negStartD) && (h >= negStartH)) && (w < m3))) {
+          if (((d >= negStartD) && (h >= negStartH)) && (w < m3)) {
             for (int ic = 0; ic < (int)(inCh); ++ic) {
               int xBase = ((((((((b * inCh) + ic) * ftd) + d) * fth) + h) * ftw) + w);
               int wBase = ((((((((oc * inCh) + ic) * m1) + (d - negStartD)) * m2) + (h - negStartH)) * m3) + w);
@@ -3164,7 +3164,7 @@ kernel void navatala_cfd_spectral_conv4d_mode_sliced(device const float* xFt [[b
   int m4 = 2;
   int hyper = (((ftt * ftd) * fth) * ftw);
   int total = ((nb * outCh) * hyper);
-  if ((gid < total)) {
+  if (gid < total) {
     int boc = (gid / hyper);
     int tdhwFlat = (gid % hyper);
     int b = (boc / outCh);
@@ -3180,7 +3180,7 @@ kernel void navatala_cfd_spectral_conv4d_mode_sliced(device const float* xFt [[b
     int negStartH = (fth - m3);
     float accR = as_type<float>(0x00000000u);
     float accI = as_type<float>(0x00000000u);
-    if (((((t < m1) && (d < m2)) && (h < m3)) && (w < m4))) {
+    if ((((t < m1) && (d < m2)) && (h < m3)) && (w < m4)) {
       for (int ic = 0; ic < (int)(inCh); ++ic) {
         int xBase = ((((((((((b * inCh) + ic) * ftt) + t) * ftd) + d) * fth) + h) * ftw) + w);
         int wBase = ((((((((((((oc * inCh) + ic) * m1) + t) * m2) + d) * m3) + h) * m4) + w) * 1) + 0);
@@ -3192,7 +3192,7 @@ kernel void navatala_cfd_spectral_conv4d_mode_sliced(device const float* xFt [[b
         accI = (accI + ((xr * wi) + (xi * wr)));
       }
     } else {
-      if (((((t >= negStartT) && (d < m2)) && (h < m3)) && (w < m4))) {
+      if ((((t >= negStartT) && (d < m2)) && (h < m3)) && (w < m4)) {
         for (int ic = 0; ic < (int)(inCh); ++ic) {
           int xBase = ((((((((((b * inCh) + ic) * ftt) + t) * ftd) + d) * fth) + h) * ftw) + w);
           int wBase = ((((((((((((oc * inCh) + ic) * m1) + (t - negStartT)) * m2) + d) * m3) + h) * m4) + w) * 1) + 0);
@@ -3204,7 +3204,7 @@ kernel void navatala_cfd_spectral_conv4d_mode_sliced(device const float* xFt [[b
           accI = (accI + ((xr * wi) + (xi * wr)));
         }
       } else {
-        if (((((t < m1) && (d >= negStartD)) && (h < m3)) && (w < m4))) {
+        if ((((t < m1) && (d >= negStartD)) && (h < m3)) && (w < m4)) {
           for (int ic = 0; ic < (int)(inCh); ++ic) {
             int xBase = ((((((((((b * inCh) + ic) * ftt) + t) * ftd) + d) * fth) + h) * ftw) + w);
             int wBase = ((((((((((((oc * inCh) + ic) * m1) + t) * m2) + (d - negStartD)) * m3) + h) * m4) + w) * 1) + 0);
@@ -3216,7 +3216,7 @@ kernel void navatala_cfd_spectral_conv4d_mode_sliced(device const float* xFt [[b
             accI = (accI + ((xr * wi) + (xi * wr)));
           }
         } else {
-          if (((((t >= negStartT) && (d >= negStartD)) && (h < m3)) && (w < m4))) {
+          if ((((t >= negStartT) && (d >= negStartD)) && (h < m3)) && (w < m4)) {
             for (int ic = 0; ic < (int)(inCh); ++ic) {
               int xBase = ((((((((((b * inCh) + ic) * ftt) + t) * ftd) + d) * fth) + h) * ftw) + w);
               int wBase = ((((((((((((oc * inCh) + ic) * m1) + (t - negStartT)) * m2) + (d - negStartD)) * m3) + h) * m4) + w) * 1) + 0);
@@ -3228,7 +3228,7 @@ kernel void navatala_cfd_spectral_conv4d_mode_sliced(device const float* xFt [[b
               accI = (accI + ((xr * wi) + (xi * wr)));
             }
           } else {
-            if (((((t < m1) && (d < m2)) && (h >= negStartH)) && (w < m4))) {
+            if ((((t < m1) && (d < m2)) && (h >= negStartH)) && (w < m4)) {
               for (int ic = 0; ic < (int)(inCh); ++ic) {
                 int xBase = ((((((((((b * inCh) + ic) * ftt) + t) * ftd) + d) * fth) + h) * ftw) + w);
                 int wBase = ((((((((((((oc * inCh) + ic) * m1) + t) * m2) + d) * m3) + (h - negStartH)) * m4) + w) * 1) + 0);
@@ -3240,7 +3240,7 @@ kernel void navatala_cfd_spectral_conv4d_mode_sliced(device const float* xFt [[b
                 accI = (accI + ((xr * wi) + (xi * wr)));
               }
             } else {
-              if (((((t >= negStartT) && (d < m2)) && (h >= negStartH)) && (w < m4))) {
+              if ((((t >= negStartT) && (d < m2)) && (h >= negStartH)) && (w < m4)) {
                 for (int ic = 0; ic < (int)(inCh); ++ic) {
                   int xBase = ((((((((((b * inCh) + ic) * ftt) + t) * ftd) + d) * fth) + h) * ftw) + w);
                   int wBase = ((((((((((((oc * inCh) + ic) * m1) + (t - negStartT)) * m2) + d) * m3) + (h - negStartH)) * m4) + w) * 1) + 0);
@@ -3252,7 +3252,7 @@ kernel void navatala_cfd_spectral_conv4d_mode_sliced(device const float* xFt [[b
                   accI = (accI + ((xr * wi) + (xi * wr)));
                 }
               } else {
-                if (((((t < m1) && (d >= negStartD)) && (h >= negStartH)) && (w < m4))) {
+                if ((((t < m1) && (d >= negStartD)) && (h >= negStartH)) && (w < m4)) {
                   for (int ic = 0; ic < (int)(inCh); ++ic) {
                     int xBase = ((((((((((b * inCh) + ic) * ftt) + t) * ftd) + d) * fth) + h) * ftw) + w);
                     int wBase = ((((((((((((oc * inCh) + ic) * m1) + t) * m2) + (d - negStartD)) * m3) + (h - negStartH)) * m4) + w) * 1) + 0);
@@ -3264,7 +3264,7 @@ kernel void navatala_cfd_spectral_conv4d_mode_sliced(device const float* xFt [[b
                     accI = (accI + ((xr * wi) + (xi * wr)));
                   }
                 } else {
-                  if (((((t >= negStartT) && (d >= negStartD)) && (h >= negStartH)) && (w < m4))) {
+                  if ((((t >= negStartT) && (d >= negStartD)) && (h >= negStartH)) && (w < m4)) {
                     for (int ic = 0; ic < (int)(inCh); ++ic) {
                       int xBase = ((((((((((b * inCh) + ic) * ftt) + t) * ftd) + d) * fth) + h) * ftw) + w);
                       int wBase = ((((((((((((oc * inCh) + ic) * m1) + (t - negStartT)) * m2) + (d - negStartD)) * m3) + (h - negStartH)) * m4) + w) * 1) + 0);
@@ -3296,7 +3296,7 @@ using namespace metal;
 kernel void navatala_cfd_compute_face_area_pair_weights_f32(device const float* sfX [[buffer(0)]], device const float* sfY [[buffer(1)]], device const float* sfZ [[buffer(2)]], device const float* magSf [[buffer(3)]], device const uint* nFaces [[buffer(4)]], device float* faceWeight [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int f = int(__gid.x);
   int N = ((int)(nFaces[0]));
-  if ((f < N)) {
+  if (f < N) {
     float sx = sfX[f];
     float sy = sfY[f];
     float sz = sfZ[f];
@@ -3318,7 +3318,7 @@ using namespace metal;
 kernel void navatala_cfd_restrict_by_agglomeration_gather_f32(device const float* fineField [[buffer(0)]], device const uint* coarseToFineOffsets [[buffer(1)]], device const uint* coarseToFineList [[buffer(2)]], device const uint* nCoarseCells [[buffer(3)]], device float* coarseField [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int c = int(__gid.x);
   int N = ((int)(nCoarseCells[0]));
-  if ((c < N)) {
+  if (c < N) {
     int begin = ((int)(coarseToFineOffsets[c]));
     int end = ((int)(coarseToFineOffsets[(c + 1)]));
     float sum = as_type<float>(0x00000000u);
@@ -3340,7 +3340,7 @@ using namespace metal;
 kernel void navatala_cfd_prolongate_by_agglomeration_f32(device const float* coarseField [[buffer(0)]], device const uint* fineToCoarse [[buffer(1)]], device const uint* nFineCells [[buffer(2)]], device float* fineField [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int i = int(__gid.x);
   int N = ((int)(nFineCells[0]));
-  if ((i < N)) {
+  if (i < N) {
     int coarseIdx = ((int)(fineToCoarse[i]));
     float val = coarseField[coarseIdx];
     float cur = fineField[i];
@@ -3356,7 +3356,7 @@ using namespace metal;
 kernel void navatala_cfd_diag_inv_apply_f32(device const float* r [[buffer(0)]], device const float* diagInv [[buffer(1)]], device const uint* n [[buffer(2)]], device float* z [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int i = int(__gid.x);
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     float ri = r[i];
     float di = diagInv[i];
     z[i] = (di * ri);
@@ -3371,7 +3371,7 @@ using namespace metal;
 kernel void navatala_cfd_gamg_proc_pack_f32(device const float* x [[buffer(0)]], device const uint* localCells [[buffer(1)]], device const uint* count [[buffer(2)]], device float* sendVals [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int i = int(__gid.x);
   int N = ((int)(count[0]));
-  if ((i < N)) {
+  if (i < N) {
     int cell = ((int)(localCells[i]));
     float v = x[cell];
     sendVals[i] = v;
@@ -3386,7 +3386,7 @@ using namespace metal;
 kernel void navatala_cfd_gamg_proc_add_gather_f32(device const uint* entryOffsets [[buffer(0)]], device const uint* entryIndices [[buffer(1)]], device const float* coeffs [[buffer(2)]], device const float* recvVals [[buffer(3)]], device const uint* nCells [[buffer(4)]], device float* y [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int c = int(__gid.x);
   int N = ((int)(nCells[0]));
-  if ((c < N)) {
+  if (c < N) {
     int begin = ((int)(entryOffsets[c]));
     int end = ((int)(entryOffsets[(c + 1)]));
     float acc = y[c];

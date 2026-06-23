@@ -20,7 +20,7 @@ extern "C" __global__ void navatala_linalg_diag_to_matrix_f32(const float* v, co
   unsigned int idx = gid;
   unsigned int size = n[0u];
   unsigned int totalElems = (size * size);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     unsigned int row = (idx / size);
     unsigned int col = (idx % size);
     bool isDiag = (row == col);

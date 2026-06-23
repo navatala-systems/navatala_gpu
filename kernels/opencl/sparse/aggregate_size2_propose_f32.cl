@@ -17,7 +17,7 @@ __kernel void navatala_sparse_aggregate_size2_propose_f32(__global const uint* r
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int bestCol = -1;
@@ -26,9 +26,9 @@ __kernel void navatala_sparse_aggregate_size2_propose_f32(__global const uint* r
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
       uint isStrong = strongMask[k];
-      if ((isStrong == (uint)(1u))) {
+      if (isStrong == (uint)(1u)) {
         float a = values[k];
-        if ((fabs(a) > bestVal)) {
+        if (fabs(a) > bestVal) {
           bestVal = fabs(a);
           bestCol = col;
         }

@@ -14,7 +14,7 @@ __kernel void navatala_sparse_mg_restrict_f32(__global const uint* RrowPtr, __gl
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nCoarse[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(RrowPtr[row]));
     int re = ((int)(RrowPtr[(row + 1)]));
     float acc = as_float(0x00000000u);
@@ -36,7 +36,7 @@ __kernel void navatala_sparse_mg_restrict_f64(__global const uint* RrowPtr, __gl
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nCoarse[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(RrowPtr[row]));
     int re = ((int)(RrowPtr[(row + 1)]));
     double acc = as_double(0x0000000000000000ul);
@@ -57,7 +57,7 @@ __kernel void navatala_sparse_mg_prolongate_f32(__global const uint* ProwPtr, __
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nFine[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(ProwPtr[row]));
     int re = ((int)(ProwPtr[(row + 1)]));
     float pe = as_float(0x00000000u);
@@ -80,7 +80,7 @@ __kernel void navatala_sparse_mg_prolongate_f64(__global const uint* ProwPtr, __
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nFine[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(ProwPtr[row]));
     int re = ((int)(ProwPtr[(row + 1)]));
     double pe = as_double(0x0000000000000000ul);
@@ -148,7 +148,7 @@ __kernel void navatala_sparse_mg_compute_residual_f32(__global const float* b, _
   int gid0 = (int)get_global_id(0);
   int i = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     float bi = b[i];
     float axi = Ax[i];
     r[i] = (bi - axi);
@@ -162,7 +162,7 @@ __kernel void navatala_sparse_mg_compute_residual_f64(__global const double* b, 
   int gid0 = (int)get_global_id(0);
   int i = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     double bi = b[i];
     double axi = Ax[i];
     r[i] = (bi - axi);
@@ -175,7 +175,7 @@ __kernel void navatala_sparse_mg_weighted_restrict_f32(__global const uint* Rrow
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nCoarse[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(RrowPtr[row]));
     int re = ((int)(RrowPtr[(row + 1)]));
     float acc = as_float(0x00000000u);
@@ -198,7 +198,7 @@ __kernel void navatala_sparse_mg_weighted_restrict_f64(__global const uint* Rrow
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nCoarse[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(RrowPtr[row]));
     int re = ((int)(RrowPtr[(row + 1)]));
     double acc = as_double(0x0000000000000000ul);
@@ -226,15 +226,15 @@ __kernel void navatala_sparse_mg_error_norm_partials_f32(__global const float* e
   float warpSum = sub_group_reduce_add(sq);
   __local float sdata[32];
   int lane = (int)(get_sub_group_local_id());
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < 8)) {
+  if (lid < 8) {
     float val = sdata[lid];
     float finalSum = sub_group_reduce_add(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       int grpId = (int)(get_group_id(0));
       partials[grpId] = finalSum;
     }
@@ -254,15 +254,15 @@ __kernel void navatala_sparse_mg_error_norm_partials_f64(__global const double* 
   double warpSum = sub_group_reduce_add(sq);
   __local double sdata[32];
   int lane = (int)(get_sub_group_local_id());
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < 8)) {
+  if (lid < 8) {
     double val = sdata[lid];
     double finalSum = sub_group_reduce_add(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       int grpId = (int)(get_group_id(0));
       partials[grpId] = finalSum;
     }
@@ -275,7 +275,7 @@ __kernel void navatala_sparse_mg_zero_vector_f32(__global const uint* n, __globa
   int gid0 = (int)get_global_id(0);
   int i = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     v[i] = as_float(0x00000000u);
   }
 }
@@ -287,7 +287,7 @@ __kernel void navatala_sparse_mg_zero_vector_f64(__global const uint* n, __globa
   int gid0 = (int)get_global_id(0);
   int i = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     v[i] = as_double(0x0000000000000000ul);
   }
 }
@@ -298,7 +298,7 @@ __kernel void navatala_sparse_mg_prolongate_damped_f32(__global const uint* Prow
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nFine[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(ProwPtr[row]));
     int re = ((int)(ProwPtr[(row + 1)]));
     float pe = as_float(0x00000000u);
@@ -322,7 +322,7 @@ __kernel void navatala_sparse_mg_prolongate_damped_f64(__global const uint* Prow
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nFine[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(ProwPtr[row]));
     int re = ((int)(ProwPtr[(row + 1)]));
     double pe = as_double(0x0000000000000000ul);

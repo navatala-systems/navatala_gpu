@@ -40,7 +40,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int gid = int(gl_GlobalInvocationID.x);
   int N = int(nRows[0]);
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = int(rowPtr[gid]);
     int re = int(rowPtr[(gid + 1)]);
     float diag = uintBitsToFloat(0x00000000u);
@@ -49,7 +49,7 @@ void main() {
       int k = (rs + j);
       int col = int(colIdx[k]);
       float a = values[k];
-      if ((col == gid)) {
+      if (col == gid) {
         diag = abs(a);
       } else {
         offSum = (offSum + abs(a));

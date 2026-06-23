@@ -97,7 +97,7 @@ __kernel void navatala_transformer_multi_tensor_l2_norm_f32(__global const float
     sumSq[lid] = sumVal_sumSq_1;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float partialSum = sumSq[(uint)(0u)];
     partialSums[gid] = partialSum;
   }

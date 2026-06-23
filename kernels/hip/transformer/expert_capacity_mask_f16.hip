@@ -24,7 +24,7 @@ extern "C" __global__ void navatala_transformer_expert_capacity_mask_f16(const i
   unsigned int cap = capacity[0u];
   __shared__ unsigned int expertCounts[256];
   unsigned int lid = ((unsigned int)((int)(threadIdx.x)));
-  if ((lid < ne)) {
+  if (lid < ne) {
     expertCounts[lid] = 0u;
   }
   __syncthreads();

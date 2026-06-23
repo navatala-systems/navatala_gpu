@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_linalg_scatter_add_f32(const float* src, con
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int tid = gid;
   unsigned int n = count[0u];
-  if ((tid < n)) {
+  if (tid < n) {
     unsigned int dstIdx = indices[tid];
     float val = src[tid];
     atomicAdd(&A[dstIdx], val);

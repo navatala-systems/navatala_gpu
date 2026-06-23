@@ -29,11 +29,11 @@ layout(std430, binding = 2) writeonly buffer buf_outRAU {
 // kernel: navatala_cfd_predictor_inverse_diag
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= counts1[0])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= counts1[0]) {
     return;
   } else {
     float a = inputDiag[int(int(gl_GlobalInvocationID.x))];
-    if ((a != uintBitsToFloat(0x00000000u))) {
+    if (a != uintBitsToFloat(0x00000000u)) {
       outRAU[int(int(gl_GlobalInvocationID.x))] = (uintBitsToFloat(0x3f800000u) / a);
     } else {
       outRAU[int(int(gl_GlobalInvocationID.x))] = uintBitsToFloat(0x00000000u);

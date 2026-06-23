@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_dataframe_trimmed_mean_f32(const float* sortedData, const unsigned int* n, const float* trimFraction, float* trimmedMean) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int len = n[0];
     float frac = trimFraction[0];
     float lenF = ((float)(len));

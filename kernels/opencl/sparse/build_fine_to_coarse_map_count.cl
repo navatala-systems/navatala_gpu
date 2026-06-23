@@ -17,7 +17,7 @@ __kernel void navatala_sparse_build_fine_to_coarse_map_count(__global const int*
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int mark = cfMarking[gid];
     coarseFlag[gid] = (((mark == 1)) ? ((uint)(1u)) : ((uint)(0u)));
   }

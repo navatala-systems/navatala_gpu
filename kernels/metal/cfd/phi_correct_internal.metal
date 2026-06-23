@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_cfd_phi_correct_internal(device const float* phiIn [[buffer(0)]], device const float* pCell [[buffer(1)]], device const int* owner [[buffer(2)]], device const int* neighbour [[buffer(3)]], device const float* magSf [[buffer(4)]], device const float* deltaCoeffs [[buffer(5)]], device const float* coeff [[buffer(6)]], device const float* faceFluxCorrection [[buffer(7)]], device const int* counts [[buffer(8)]], device const float* paramsF [[buffer(9)]], device float* phiOut [[buffer(10)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[1])) {
+  if (((int)(int(__gid.x))) >= counts[1]) {
     return;
   } else {
     int o = owner[((int)(int(__gid.x)))];

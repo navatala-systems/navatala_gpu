@@ -45,7 +45,7 @@ extern "C" __global__ void navatala_dataframe_scan_min_f32(const float* _input, 
     }
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     sdata[511u] = __uint_as_float(0x7f7fffffu);
   }
   __syncthreads();

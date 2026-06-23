@@ -28,7 +28,7 @@ extern "C" __global__ void navatala_transformer_unpermute_tokens_f32(const float
     if (origValid) {
       for (int hIter = 0; hIter < (int)(hs); ++hIter) {
         unsigned int hIdx = (lid + (256u * hIter));
-        if ((hIdx < hs)) {
+        if (hIdx < hs) {
           unsigned int srcIdx = ((permutedIdx * hs) + hIdx);
           unsigned int dstIdx = ((origIdx * hs) + hIdx);
           float val = permutedStates[srcIdx];

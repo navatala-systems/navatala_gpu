@@ -19,7 +19,7 @@ using namespace metal;
 kernel void navatala_sparse_global_to_local_index_map(device const uint* globalIndices [[buffer(0)]], device const uint* localOffset [[buffer(1)]], device const uint* nLocal [[buffer(2)]], device const uint* nIndices [[buffer(3)]], device uint* localIndices [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int gid = int(__gid.x);
   int N = ((int)(nIndices[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     uint gIdx = globalIndices[gid];
     uint offset = localOffset[0];
     uint nLoc = nLocal[0];

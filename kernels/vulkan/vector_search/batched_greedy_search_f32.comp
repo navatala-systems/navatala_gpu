@@ -64,14 +64,14 @@ void main() {
   uint d = dim[0];
   uint entry = entry_point[0];
   uint k_val = k[0];
-  if ((query_id < nq)) {
-    if ((tid == 0u)) {
+  if (query_id < nq) {
+    if (tid == 0u) {
       uint base_idx = (query_id * k_val);
       result_ids[base_idx] = entry;
       result_dists[base_idx] = uintBitsToFloat(0x00000000u);
     }
-    if ((tid < k_val)) {
-      if ((tid != 0u)) {
+    if (tid < k_val) {
+      if (tid != 0u) {
         uint out_idx = ((query_id * k_val) + tid);
         result_ids[out_idx] = 4294967295u;
         result_dists[out_idx] = uintBitsToFloat(0x7e967699u);

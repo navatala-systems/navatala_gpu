@@ -15,7 +15,7 @@
 
 __kernel void navatala_dataframe_covariance_update_f32(__global const float* x, __global const float* y, __global uint* count, __global float* meanX, __global float* meanY, __global float* Cxy) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint nOld = count[0];
     float muXOld = meanX[0];
     float muYOld = meanY[0];

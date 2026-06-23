@@ -61,7 +61,7 @@ void main() {
     }
     barrier();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     sdata[511u] = 0u;
   }
   barrier();

@@ -19,7 +19,7 @@ __kernel void navatala_sparse_bsr_sp_m_v_mixed_f32_f64(__global const uint* rowP
   int blockRow = (int)(get_global_id(0));
   int N = ((int)(nBlockRows[0]));
   int bd = ((int)(blockDim[0]));
-  if ((blockRow < N)) {
+  if (blockRow < N) {
     int rs = ((int)(rowPtr[blockRow]));
     int re = ((int)(rowPtr[(blockRow + 1)]));
     for (int comp = 0; comp < (int)(bd); ++comp) {

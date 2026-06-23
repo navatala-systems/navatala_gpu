@@ -51,7 +51,7 @@ void main() {
   }
   for (int c2 = 0; c2 < int(counts[0]); ++c2) {
     float v = rD[c2];
-    if ((v != uintBitsToFloat(0x00000000u))) {
+    if (v != uintBitsToFloat(0x00000000u)) {
       rD[c2] = (uintBitsToFloat(0x3f800000u) / v);
     } else {
       rD[c2] = uintBitsToFloat(0x00000000u);

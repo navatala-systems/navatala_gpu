@@ -32,7 +32,7 @@ __kernel void navatala_linalg_reduce_max_f16(__global const half* _input, __glob
   uint maxF16ReductionStride = (uint)(128u);
   for (int maxF16ReductionStep = 0; maxF16ReductionStep < (int)(8); ++maxF16ReductionStep) {
     uint maxF16Stride = maxF16ReductionStride;
-    if ((lid < maxF16Stride)) {
+    if (lid < maxF16Stride) {
       float other = sdata[(lid + maxF16Stride)];
       float mine = sdata[lid];
       bool isGreater = (mine > other);
@@ -44,7 +44,7 @@ __kernel void navatala_linalg_reduce_max_f16(__global const half* _input, __glob
     maxF16ReductionStride = maxF16NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float maxResult = sdata[0];
     result[0] = maxResult;
   }

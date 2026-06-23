@@ -44,7 +44,7 @@ __kernel void navatala_ml_compute_k_l_divergence_f64(__global const double* P, _
   uint klF64ReductionStride = (uint)(128u);
   for (int klF64ReductionStep = 0; klF64ReductionStep < (int)(8); ++klF64ReductionStep) {
     uint klF64Stride = klF64ReductionStride;
-    if ((lid < klF64Stride)) {
+    if (lid < klF64Stride) {
       double klF64Other = sdata[(lid + klF64Stride)];
       double klF64Mine = sdata[lid];
       double klF64Sum = (klF64Mine + klF64Other);
@@ -55,7 +55,7 @@ __kernel void navatala_ml_compute_k_l_divergence_f64(__global const double* P, _
     klF64ReductionStride = klF64NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     double klVal = sdata[0];
     kl_divergence[0] = klVal;
   }

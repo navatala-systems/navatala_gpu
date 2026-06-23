@@ -21,12 +21,12 @@ kernel void navatala_vector_search_compact_graph_edges(device uint* graph [[buff
   uint nv = n_vertices[0];
   uint md = max_degree[0];
   uint inv = invalid_id[0];
-  if ((vid < nv)) {
+  if (vid < nv) {
     uint write_pos = 0u;
     for (int i = 0; i < (int)(md); ++i) {
       uint read_idx = ((vid * md) + i);
       uint neighbor = graph[read_idx];
-      if ((neighbor != inv)) {
+      if (neighbor != inv) {
         uint wp = write_pos;
         uint write_idx = ((vid * md) + wp);
         graph[write_idx] = neighbor;
@@ -35,7 +35,7 @@ kernel void navatala_vector_search_compact_graph_edges(device uint* graph [[buff
     }
     uint final_wp = write_pos;
     for (int j = 0; j < (int)(md); ++j) {
-      if ((j >= final_wp)) {
+      if (j >= final_wp) {
         uint fill_idx = ((vid * md) + j);
         graph[fill_idx] = inv;
       }

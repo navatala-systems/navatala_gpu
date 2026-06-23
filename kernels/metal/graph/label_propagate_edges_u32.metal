@@ -33,7 +33,7 @@ static inline uint gpu_atomic_cas_uint(device atomic_uint* ptr, uint expected, u
 kernel void navatala_graph_label_propagate_edges_u32(device const uint* srcs [[buffer(0)]], device const uint* dsts [[buffer(1)]], device atomic_uint* labels [[buffer(2)]], device const uint* numEdges [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint numE = numEdges[0];
-  if ((gid < numE)) {
+  if (gid < numE) {
     uint u = srcs[gid];
     uint v = dsts[gid];
     uint lu = labels[u];

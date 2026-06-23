@@ -17,9 +17,9 @@ __kernel void navatala_sparse_interpolate_symbolic_row_nnz_f64(__global const ui
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
-    if ((mark == 1)) {
+    if (mark == 1) {
       ProwNnz[row] = (uint)(1u);
     } else {
       int rs = ((int)(rowPtr[row]));
@@ -28,10 +28,10 @@ __kernel void navatala_sparse_interpolate_symbolic_row_nnz_f64(__global const ui
       for (int j = 0; j < (int)((re - rs)); ++j) {
         int k = (rs + j);
         uint isStr = strongMask[k];
-        if ((isStr == (uint)(1u))) {
+        if (isStr == (uint)(1u)) {
           int col = ((int)(colIdx[k]));
           int mC = cfMarking[col];
-          if ((mC == 1)) {
+          if (mC == 1) {
             nnz = (nnz + (uint)(1u));
           }
         }

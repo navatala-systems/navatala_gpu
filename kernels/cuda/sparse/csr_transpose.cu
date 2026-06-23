@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_csr_transpose(const unsigned int* row
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     for (int j = 0; j < (int)((re - rs)); ++j) {

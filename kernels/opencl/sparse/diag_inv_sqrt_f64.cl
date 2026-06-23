@@ -18,7 +18,7 @@ __kernel void navatala_sparse_diag_inv_sqrt_f64(__global const double* diag, __g
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double d = diag[gid];
     dinvsqrt[gid] = (as_double(0x3ff0000000000000ul) / sqrt(d));
   }

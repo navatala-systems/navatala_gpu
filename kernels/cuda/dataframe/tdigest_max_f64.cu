@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_dataframe_tdigest_max_f64(const double* maxVal, const unsigned int* centroidCount, double* maxOut) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int count = centroidCount[0];
     double maxV = maxVal[0];
     bool isEmpty = (count == 0u);

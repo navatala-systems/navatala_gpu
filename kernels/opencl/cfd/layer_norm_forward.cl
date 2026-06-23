@@ -17,7 +17,7 @@ __kernel void navatala_cfd_layer_norm_forward(__global const float* x, __global 
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int nRows = numRows[0];
-  if ((row < nRows)) {
+  if (row < nRows) {
     int hd = 16;
     int rowBase = (row * hd);
     float sum = as_float(0x00000000u);

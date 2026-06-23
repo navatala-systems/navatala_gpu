@@ -16,7 +16,7 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_cfd_gamg_scale_correction(const float* z, const float* r, const float* Az, const float* diagInv, const float* sfPtr, const unsigned int* nRows, float* corr) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(nRows[0])))) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(nRows[0]))) {
     return;
   } else {
     float sf = sfPtr[0];

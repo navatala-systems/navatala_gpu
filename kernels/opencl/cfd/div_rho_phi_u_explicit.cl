@@ -15,7 +15,7 @@
 
 __kernel void navatala_cfd_div_rho_phi_u_explicit(__global const float* phi, __global const float* rhoCell, __global const float* ux, __global const float* uy, __global const float* uz, __global const int* owner, __global const int* neighbour, __global const float* weights, __global const int* offsets, __global const int* faceIdx, __global const float* sign, __global const float* vol, __global const float* rhoBcVal, __global const uint* rhoBcMask, __global const float* uBcX, __global const float* uBcY, __global const float* uBcZ, __global const uint* uBcMask, __global const int* params, __global float* outX, __global float* outY, __global float* outZ) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
     float sumX = as_float(0x00000000u);
@@ -28,7 +28,7 @@ __kernel void navatala_cfd_div_rho_phi_u_explicit(__global const float* phi, __g
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < params[1])) {
+      if (f < params[1]) {
         float s = sign[k];
         float flux = phi[f];
         int o = owner[f];
@@ -36,7 +36,7 @@ __kernel void navatala_cfd_div_rho_phi_u_explicit(__global const float* phi, __g
         float ufx = ux[o];
         float ufy = uy[o];
         float ufz = uz[o];
-        if ((f < params[2])) {
+        if (f < params[2]) {
           int n = neighbour[f];
           float w0 = weights[f];
           float iw = (as_float(0x3f800000u) - w0);
@@ -46,23 +46,23 @@ __kernel void navatala_cfd_div_rho_phi_u_explicit(__global const float* phi, __g
           ufz = ((w0 * uz[o]) + (iw * uz[n]));
         } else {
           uint rm = rhoBcMask[f];
-          if ((rm == (uint)(1u))) {
+          if (rm == (uint)(1u)) {
             float w0 = weights[f];
             float iw = (as_float(0x3f800000u) - w0);
             rhoF = ((w0 * rhoCell[o]) + (iw * rhoBcVal[f]));
           }
-          if ((rm == (uint)(2u))) {
+          if (rm == (uint)(2u)) {
             rhoF = rhoBcVal[f];
           }
           uint um = uBcMask[f];
-          if ((um == (uint)(1u))) {
+          if (um == (uint)(1u)) {
             float w0 = weights[f];
             float iw = (as_float(0x3f800000u) - w0);
             ufx = ((w0 * ux[o]) + (iw * uBcX[f]));
             ufy = ((w0 * uy[o]) + (iw * uBcY[f]));
             ufz = ((w0 * uz[o]) + (iw * uBcZ[f]));
           }
-          if ((um == (uint)(2u))) {
+          if (um == (uint)(2u)) {
             ufx = uBcX[f];
             ufy = uBcY[f];
             ufz = uBcZ[f];
@@ -76,7 +76,7 @@ __kernel void navatala_cfd_div_rho_phi_u_explicit(__global const float* phi, __g
     }
     float v = vol[((int)((int)(get_global_id(0))))];
     float invV = as_float(0x00000000u);
-    if ((v != as_float(0x00000000u))) {
+    if (v != as_float(0x00000000u)) {
       invV = (as_float(0x3f800000u) / v);
     }
     outX[((int)((int)(get_global_id(0))))] = (sumX * invV);

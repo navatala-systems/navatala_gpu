@@ -16,17 +16,17 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_vof_alpha_phi_all(const float* alphaPhiInt, const float* phiAll, const float* alphaF, const int* params, float* alphaPhiAllOut) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0]) {
     return;
   } else {
-    if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < params[1])) {
+    if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < params[1]) {
       alphaPhiAllOut[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = alphaPhiInt[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     } else {
       float a = alphaF[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
-      if ((a < __uint_as_float(0x00000000u))) {
+      if (a < __uint_as_float(0x00000000u)) {
         a = __uint_as_float(0x00000000u);
       }
-      if ((a > __uint_as_float(0x3f800000u))) {
+      if (a > __uint_as_float(0x3f800000u)) {
         a = __uint_as_float(0x3f800000u);
       }
       alphaPhiAllOut[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (phiAll[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] * a);

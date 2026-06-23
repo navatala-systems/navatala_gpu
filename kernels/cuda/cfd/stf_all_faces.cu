@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_cfd_stf_all_faces(const float* divN, const f
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1]) {
     return;
   } else {
     int o = owner[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
@@ -29,10 +29,10 @@ extern "C" __global__ void navatala_cfd_stf_all_faces(const float* divN, const f
     float divInterp = ((w * divN[o]) + (wm * divN[n]));
     float Kf = (__uint_as_float(0xbf800000u) * divInterp);
     float snGrad = __uint_as_float(0x00000000u);
-    if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < counts[2])) {
+    if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < counts[2]) {
       snGrad = (delta[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] * (alpha[n] - alpha[o]));
     } else {
-      if ((thetaMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] != 0u)) {
+      if (thetaMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] != 0u) {
         snGrad = contactGrad[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       } else {
         snGrad = (delta[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] * (alphaF[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] - alpha[o]));

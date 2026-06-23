@@ -17,7 +17,7 @@ __kernel void navatala_sparse_reorder_vector_by_color_f32(__global const float* 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int origIdx = ((int)(reorderPerm[gid]));
     xReordered[gid] = x[origIdx];
   }

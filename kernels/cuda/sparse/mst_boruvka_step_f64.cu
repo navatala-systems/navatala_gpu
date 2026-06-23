@@ -17,15 +17,15 @@
 extern "C" __global__ void navatala_sparse_mst_boruvka_step_f64(const unsigned int* srcNodes, const unsigned int* dstNodes, const double* weights, const unsigned int* numEdges, const unsigned int* numNodes, unsigned int* components, unsigned int* minEdgeIdx, double* minEdgeWeight, bool* mstEdges) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int tid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((tid < numEdges[0u])) {
+  if (tid < numEdges[0u]) {
     unsigned int src = srcNodes[tid];
     unsigned int dst = dstNodes[tid];
     unsigned int srcRoot = components[src];
     unsigned int dstRoot = components[dst];
-    if ((srcRoot != dstRoot)) {
+    if (srcRoot != dstRoot) {
       double w = weights[tid];
       double currMin = minEdgeWeight[srcRoot];
-      if ((w < currMin)) {
+      if (w < currMin) {
         atomicMin(&minEdgeWeight[srcRoot], w);
         minEdgeIdx[srcRoot] = tid;
       }

@@ -17,7 +17,7 @@ __kernel void navatala_sparse_cg_init_residual_f32(__global const float* b, __gl
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float bi = b[gid];
     float ai = Ax[gid];
     r[gid] = (bi - ai);

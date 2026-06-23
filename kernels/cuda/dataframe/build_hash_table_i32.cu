@@ -32,7 +32,7 @@ extern "C" __global__ void navatala_dataframe_build_hash_table_i32(const int* ke
       unsigned int probeIdx = startIdx;
       bool inserted = false;
       for (int __iter = 0; __iter < 65536; ++__iter) {
-        if (!((!inserted))) break;
+        if (!(!inserted)) break;
         unsigned int curIdx = probeIdx;
         int oldKey = atomicCAS((int*)(&(tableKeys[curIdx])), (int)(2147483647), (int)(key));
         bool gotSlot = (oldKey == 2147483647);

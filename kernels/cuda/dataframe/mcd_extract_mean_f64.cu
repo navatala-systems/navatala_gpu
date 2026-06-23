@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_dataframe_mcd_extract_mean_f64(const double* robustMeanX, const double* robustMeanY, double* meanX, double* meanY) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     double mx = robustMeanX[0];
     double my = robustMeanY[0];
     meanX[0] = mx;

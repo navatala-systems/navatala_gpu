@@ -29,12 +29,12 @@ layout(std430, binding = 2) buffer buf_x {
 // kernel: navatala_cfd_scalar_jacobi_clamp_min
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) >= int(counts[0]))) {
+  if (int(gl_GlobalInvocationID.x) >= int(counts[0])) {
     return;
   } else {
     float lb = lowerBound[0];
     float xi = x[int(gl_GlobalInvocationID.x)];
-    if ((xi > lb)) {
+    if (xi > lb) {
       x[int(gl_GlobalInvocationID.x)] = xi;
     } else {
       x[int(gl_GlobalInvocationID.x)] = lb;

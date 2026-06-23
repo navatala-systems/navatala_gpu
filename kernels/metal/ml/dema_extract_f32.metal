@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_ml_dema_extract_f32(device const float* ema1 [[buffer(0)]], device const float* ema2 [[buffer(1)]], device float* result [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) == 0)) {
+  if (int(__gid.x) == 0) {
     float e1 = ema1[0];
     float e2 = ema2[0];
     float t2 = (as_type<float>(0x40000000u) * e1);

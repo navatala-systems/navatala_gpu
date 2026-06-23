@@ -28,7 +28,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int cell = int(gl_GlobalInvocationID.x);
   int N = int(nCells[0]);
-  if ((cell < N)) {
+  if (cell < N) {
     rowNnz[cell] = 1u;
   }
 }

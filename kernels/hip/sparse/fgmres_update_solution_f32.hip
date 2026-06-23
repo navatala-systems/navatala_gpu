@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_sparse_fgmres_update_solution_f32(const floa
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
   int M = ((int)(m[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float acc = __uint_as_float(0x00000000u);
     for (int j = 0; j < (int)(M); ++j) {
       float yj = y[j];

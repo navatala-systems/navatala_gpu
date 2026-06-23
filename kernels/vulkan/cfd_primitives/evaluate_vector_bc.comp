@@ -56,12 +56,12 @@ layout(std430, binding = 11) writeonly buffer buf_outZ {
 // kernel: navatala_cfd_primitives_evaluate_vector_bc
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) >= int(counts[0]))) {
+  if (int(gl_GlobalInvocationID.x) >= int(counts[0])) {
     return;
   } else {
     uint bcType = bcTypeMask[int(gl_GlobalInvocationID.x)];
     int cell = faceCells[int(gl_GlobalInvocationID.x)];
-    if ((int(bcType) == 1)) {
+    if (int(bcType) == 1) {
       outX[int(gl_GlobalInvocationID.x)] = fvX[int(gl_GlobalInvocationID.x)];
       outY[int(gl_GlobalInvocationID.x)] = fvY[int(gl_GlobalInvocationID.x)];
       outZ[int(gl_GlobalInvocationID.x)] = fvZ[int(gl_GlobalInvocationID.x)];

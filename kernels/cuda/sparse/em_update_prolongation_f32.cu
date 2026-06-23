@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_em_update_prolongation_f32(const floa
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nnzP[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float g = gradient[gid];
     float step = stepSize[0];
     float p = Pvalues[gid];

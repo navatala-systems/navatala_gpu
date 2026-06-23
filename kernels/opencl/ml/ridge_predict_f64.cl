@@ -40,7 +40,7 @@ __kernel void navatala_ml_ridge_predict_f64(__global const double* X, __global c
     uint pred64_reductionStride = (uint)(128u);
     for (int pred64_reductionStep = 0; pred64_reductionStep < (int)(8); ++pred64_reductionStep) {
       uint pred64_stride = pred64_reductionStride;
-      if ((lid < pred64_stride)) {
+      if (lid < pred64_stride) {
         double pred64_other = sdata[(lid + pred64_stride)];
         double pred64_mine = sdata[lid];
         double pred64_sum = (pred64_mine + pred64_other);
@@ -51,7 +51,7 @@ __kernel void navatala_ml_ridge_predict_f64(__global const double* X, __global c
       pred64_reductionStride = pred64_nextStride;
       barrier(CLK_LOCAL_MEM_FENCE);
     }
-    if ((lid == (uint)(0u))) {
+    if (lid == (uint)(0u)) {
       double dotProduct = sdata[0];
       yPred[rowIdx] = dotProduct;
     }

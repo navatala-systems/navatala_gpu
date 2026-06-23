@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_csr_truncate_f32(const unsigned int* 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     float rowMax = __uint_as_float(0x00000000u);

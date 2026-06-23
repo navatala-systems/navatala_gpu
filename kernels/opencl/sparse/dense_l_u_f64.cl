@@ -23,13 +23,13 @@ __kernel void navatala_sparse_dense_l_u_f64(__global const uint* n, __global dou
     for (int i = 0; i < (int)((N - k)); ++i) {
       int r = (k + i);
       double v = A[((r * N) + k)];
-      if ((fabs(v) > fabs(maxVal))) {
+      if (fabs(v) > fabs(maxVal)) {
         maxVal = v;
         maxRow = r;
       }
     }
     pivots[k] = ((uint)(maxRow));
-    if ((maxRow != k)) {
+    if (maxRow != k) {
       for (int j = 0; j < (int)(N); ++j) {
         double a = A[((k * N) + j)];
         double b = A[((maxRow * N) + j)];

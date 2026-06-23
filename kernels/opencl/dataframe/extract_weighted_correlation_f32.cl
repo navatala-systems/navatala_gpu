@@ -15,7 +15,7 @@
 
 __kernel void navatala_dataframe_extract_weighted_correlation_f32(__global const float* Cxy, __global const float* M2x, __global const float* M2y, __global float* correlation) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float cxyVal = Cxy[0];
     float m2xVal = M2x[0];
     float m2yVal = M2y[0];

@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_strength_algebraic_dist_f64(const uns
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int nTv = ((int)(nTestVectors[0]));
@@ -27,7 +27,7 @@ extern "C" __global__ void navatala_sparse_strength_algebraic_dist_f64(const uns
     for (int jm = 0; jm < (int)((re - rs)); ++jm) {
       int km = (rs + jm);
       int colM = ((int)(colIdx[km]));
-      if ((colM != gid)) {
+      if (colM != gid) {
         double distM = __longlong_as_double(0x0000000000000000ull);
         for (int tvM = 0; tvM < (int)(nTv); ++tvM) {
           double viM = testVectors[((gid * nTv) + tvM)];
@@ -41,7 +41,7 @@ extern "C" __global__ void navatala_sparse_strength_algebraic_dist_f64(const uns
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != gid)) {
+      if (col != gid) {
         double dist = __longlong_as_double(0x0000000000000000ull);
         for (int tv = 0; tv < (int)(nTv); ++tv) {
           double vi = testVectors[((gid * nTv) + tv)];

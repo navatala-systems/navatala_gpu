@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_build_prolongation_f32(const int* agg
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int row = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     ProwPtr[row] = ((unsigned int)(row));
     int aggId = aggregateId[row];
     PcolIdx[row] = ((unsigned int)(aggId));

@@ -33,7 +33,7 @@ static inline uint gpu_atomic_cas_uint(device atomic_uint* ptr, uint expected, u
 kernel void navatala_sparse_validate_coloring(device const uint* rowPtr [[buffer(0)]], device const uint* colIdx [[buffer(1)]], device const int* colors [[buffer(2)]], device const uint* nRows [[buffer(3)]], device atomic_uint* nConflicts [[buffer(4)]], device uint* conflictFlags [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int gid = int(__gid.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int myColor = colors[gid];
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
@@ -42,12 +42,12 @@ kernel void navatala_sparse_validate_coloring(device const uint* rowPtr [[buffer
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
       int cc = colors[col];
-      if (((col != gid) && (cc == myColor))) {
+      if ((col != gid) && (cc == myColor)) {
         conflict = 1u;
       }
     }
     conflictFlags[gid] = conflict;
-    if ((conflict == 1u)) {
+    if (conflict == 1u) {
       uint _aod1 = atomic_fetch_add_explicit(((device atomic_uint*)(&(nConflicts[0]))), 1u, memory_order_relaxed);
     }
   }

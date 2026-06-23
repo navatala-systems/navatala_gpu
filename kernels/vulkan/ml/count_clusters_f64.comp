@@ -41,7 +41,7 @@ void main() {
   uint countClstF64RedStride = 128u;
   for (int countClstF64RedStep = 0; countClstF64RedStep < int(8); ++countClstF64RedStep) {
     uint countClstF64Stride = countClstF64RedStride;
-    if ((lid < countClstF64Stride)) {
+    if (lid < countClstF64Stride) {
       uint otherIdx = (lid + countClstF64Stride);
       int other = sdata[otherIdx];
       int mine = sdata[lid];
@@ -54,7 +54,7 @@ void main() {
     countClstF64RedStride = countClstF64NextStride;
     barrier();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     int maxLabel = sdata[0];
     int count = (maxLabel + 1);
     numClusters[0] = count;

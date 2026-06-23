@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_nccl_ring_all_reduce_sum_f32(const float* se
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float myVal = sendbuf[gid];
     float peerVal = peer_buf[gid];
     float reduced = (myVal + peerVal);

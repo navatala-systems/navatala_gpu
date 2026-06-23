@@ -45,23 +45,23 @@ layout(std430, binding = 7) buffer buf_source {
 // kernel: navatala_cfd_turbulence_dirichlet_face_elimination
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= nIntFaces[0])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= nIntFaces[0]) {
     return;
   } else {
     int o = owner[int(int(gl_GlobalInvocationID.x))];
     int n = neighbour[int(int(gl_GlobalInvocationID.x))];
     int oC = constrainedMask[o];
     int nC = constrainedMask[n];
-    if (((oC | nC) == 0)) {
+    if ((oC | nC) == 0) {
       return;
     } else {
       float up = upper[int(int(gl_GlobalInvocationID.x))];
       float lo = lower[int(int(gl_GlobalInvocationID.x))];
-      if ((oC != 0)) {
+      if (oC != 0) {
         float cv = constrainedValue[o];
         atomicAdd(source[n], (-(lo * cv)));
       }
-      if ((nC != 0)) {
+      if (nC != 0) {
         float cv = constrainedValue[n];
         atomicAdd(source[o], (-(up * cv)));
       }

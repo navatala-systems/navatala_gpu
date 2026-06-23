@@ -41,7 +41,7 @@ void main() {
   uint tid = uint(int(gl_GlobalInvocationID.x));
   uint nn = n_neighbors[0];
   uint d = dim[0];
-  if ((tid < nn)) {
+  if (tid < nn) {
     uint neighbor_id = neighbor_ids[tid];
     float acc = uintBitsToFloat(0x00000000u);
     for (int k = 0; k < int(d); ++k) {

@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_cf_split_h_m_i_s(const unsigned int* 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int row = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     unsigned int priority = (((unsigned int)(row)) ^ seed[0]);
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
@@ -26,7 +26,7 @@ extern "C" __global__ void navatala_sparse_cf_split_h_m_i_s(const unsigned int* 
     for (int jd = 0; jd < (int)((re - rs)); ++jd) {
       int kd = (rs + jd);
       unsigned int isStr = strongMask[kd];
-      if ((isStr == 1u)) {
+      if (isStr == 1u) {
         deg = (deg + 1u);
       }
     }
@@ -35,10 +35,10 @@ extern "C" __global__ void navatala_sparse_cf_split_h_m_i_s(const unsigned int* 
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       unsigned int isStrong = strongMask[k];
-      if ((isStrong == 1u)) {
+      if (isStrong == 1u) {
         int nbr = ((int)(colIdx[k]));
         int nbrMark = cfMarking[nbr];
-        if ((nbrMark == 0)) {
+        if (nbrMark == 0) {
           unsigned int nbrRs = rowPtr[nbr];
           unsigned int nbrRe = rowPtr[(nbr + 1)];
           unsigned int nbrDeg = (nbrRe - nbrRs);
@@ -50,7 +50,7 @@ extern "C" __global__ void navatala_sparse_cf_split_h_m_i_s(const unsigned int* 
         }
       }
     }
-    if ((!hasHigherNbr)) {
+    if (!hasHigherNbr) {
       cfMarking[row] = 1;
     } else {
       cfMarking[row] = -1;

@@ -18,7 +18,7 @@ __kernel void navatala_sparse_csr_sp_m_v_scaled_f64(__global const uint* rowPtr,
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rowStart = ((int)(rowPtr[row]));
     int rowEnd = ((int)(rowPtr[(row + 1)]));
     double acc = as_double(0x0000000000000000ul);

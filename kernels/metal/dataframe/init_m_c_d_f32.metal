@@ -18,7 +18,7 @@ using namespace metal;
 
 kernel void navatala_dataframe_init_m_c_d_f32(device const float* thresholdIn [[buffer(0)]], device float* robustMeanX [[buffer(1)]], device float* robustMeanY [[buffer(2)]], device float* robustCov [[buffer(3)]], device float* determinant [[buffer(4)]], device float* threshold [[buffer(5)]], device uint* count [[buffer(6)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     float thresh = thresholdIn[0];
     robustMeanX[0] = as_type<float>(0x00000000u);
     robustMeanY[0] = as_type<float>(0x00000000u);

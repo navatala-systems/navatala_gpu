@@ -17,12 +17,12 @@
 using namespace metal;
 
 kernel void navatala_cfd_scalar_jacobi_clamp_min(device const float* lowerBound [[buffer(0)]], device const uint* counts [[buffer(1)]], device float* x [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(counts[0])))) {
+  if (int(__gid.x) >= ((int)(counts[0]))) {
     return;
   } else {
     float lb = lowerBound[0];
     float xi = x[int(__gid.x)];
-    if ((xi > lb)) {
+    if (xi > lb) {
       x[int(__gid.x)] = xi;
     } else {
       x[int(__gid.x)] = lb;

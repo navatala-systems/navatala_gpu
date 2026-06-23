@@ -17,21 +17,21 @@ __kernel void navatala_sparse_interpolate_distance1_f32(__global const uint* row
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     int mark = cfMarking[row];
     int pStart = ((int)(ProwPtr[row]));
-    if ((mark == 1)) {
+    if (mark == 1) {
       PcolIdx[pStart] = ((uint)(row));
       Pvalues[pStart] = as_float(0x3f800000u);
     } else {
-      if ((mark == -1)) {
+      if (mark == -1) {
         float diag = as_float(0x00000000u);
         for (int jd = 0; jd < (int)((re - rs)); ++jd) {
           int kd = (rs + jd);
           int colD = ((int)(colIdx[kd]));
-          if ((colD == row)) {
+          if (colD == row) {
             diag = values[kd];
           }
         }
@@ -39,10 +39,10 @@ __kernel void navatala_sparse_interpolate_distance1_f32(__global const uint* row
         for (int jw = 0; jw < (int)((re - rs)); ++jw) {
           int kw = (rs + jw);
           uint isStrW = strongMask[kw];
-          if ((isStrW == (uint)(1u))) {
+          if (isStrW == (uint)(1u)) {
             int colW = ((int)(colIdx[kw]));
             int markW = cfMarking[colW];
-            if ((markW == 1)) {
+            if (markW == 1) {
               float aij = values[kw];
               float w = (-(aij / diag));
               PcolIdx[(pStart + pos)] = ((uint)(colW));

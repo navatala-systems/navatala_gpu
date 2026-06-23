@@ -34,7 +34,7 @@ extern "C" __global__ void navatala_dataframe_mse_f64(const double* y_true, cons
   unsigned int mseF64_reductionStride = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     unsigned int mseF64_stride = mseF64_reductionStride;
-    if ((lid < mseF64_stride)) {
+    if (lid < mseF64_stride) {
       unsigned int mseF64_partnerIdx = (lid + mseF64_stride);
       double other = sdata[mseF64_partnerIdx];
       double mine = sdata[lid];
@@ -47,7 +47,7 @@ extern "C" __global__ void navatala_dataframe_mse_f64(const double* y_true, cons
     __syncthreads();
   }
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     double totalSum = sdata[0];
     double countFloat = ((double)(countVal));
     double mseVal = (totalSum / countFloat);

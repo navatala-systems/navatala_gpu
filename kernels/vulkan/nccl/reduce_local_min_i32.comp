@@ -34,7 +34,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   uint gid = uint(int(gl_GlobalInvocationID.x));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int va = a[gid];
     int vb = b[gid];
     bool aLtB = (va < vb);

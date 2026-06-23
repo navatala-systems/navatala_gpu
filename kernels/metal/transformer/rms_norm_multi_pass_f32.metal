@@ -29,7 +29,7 @@ kernel void navatala_transformer_rms_norm_multi_pass_f32(device const float* _in
   uint iterIdx = lid;
   uint workgroupSize = 256u;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < hs))) break;
+    if (!(iterIdx < hs)) break;
     uint globalIdx = (baseIdx + iterIdx);
     float xVal = ((batchValid) ? (_input[globalIdx]) : (as_type<float>(0x00000000u)));
     float xSq = (xVal * xVal);
@@ -117,7 +117,7 @@ kernel void navatala_transformer_rms_norm_multi_pass_f32(device const float* _in
   float rms = sqrt(meanSqEps);
   iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < hs))) break;
+    if (!(iterIdx < hs)) break;
     if (batchValid) {
       uint globalIdx2 = (baseIdx + iterIdx);
       float xVal2 = _input[globalIdx2];

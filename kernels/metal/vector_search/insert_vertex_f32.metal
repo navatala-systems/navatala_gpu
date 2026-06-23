@@ -22,12 +22,12 @@ kernel void navatala_vector_search_insert_vertex_f32(device const uint* vertex_i
   uint nc = n_candidates[0];
   uint md = max_degree[0];
   uint n_neighbors = (((nc < md)) ? (nc) : (md));
-  if ((tid < n_neighbors)) {
+  if (tid < n_neighbors) {
     uint neighbor = candidates[tid];
     uint graph_idx = ((vid * md) + tid);
     graph[graph_idx] = neighbor;
   }
-  if ((tid == 0u)) {
+  if (tid == 0u) {
     graph_degrees[vid] = n_neighbors;
   }
 }

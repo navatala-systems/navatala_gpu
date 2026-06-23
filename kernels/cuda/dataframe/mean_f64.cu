@@ -31,7 +31,7 @@ extern "C" __global__ void navatala_dataframe_mean_f64(const double* _input, con
   unsigned int reductionStride = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     unsigned int stride = reductionStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       unsigned int partnerIdx = (lid + stride);
       double myVal = sdata[lid];
       double partnerVal = sdata[partnerIdx];
@@ -43,7 +43,7 @@ extern "C" __global__ void navatala_dataframe_mean_f64(const double* _input, con
     __syncthreads();
   }
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     double totalSum = sdata[0];
     double countFloat = ((double)(countVal));
     double meanVal = (totalSum / countFloat);

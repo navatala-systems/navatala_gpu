@@ -15,7 +15,7 @@
 
 __kernel void navatala_dataframe_init_covariance_state_f32(__global uint* count, __global float* meanX, __global float* meanY, __global float* Cxy) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     count[0] = (uint)(0u);
     meanX[0] = as_float(0x00000000u);
     meanY[0] = as_float(0x00000000u);

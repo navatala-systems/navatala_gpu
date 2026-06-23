@@ -13,7 +13,7 @@ const char* k_opencl_navatala_dataframe_writeback_sum_f32 = R"kernel(
 __kernel void navatala_dataframe_writeback_sum_f32(__global const uint* keys, __global const float* vals, __global const int* count, __global float* dst) {
   int gid0 = (int)get_global_id(0);
   int j = ((int)((int)(get_global_id(0))));
-  if ((j < count[(uint)(0u)])) {
+  if (j < count[(uint)(0u)]) {
     uint key = keys[j];
     float val = vals[j];
     float oldVal = dst[key];
@@ -27,7 +27,7 @@ const char* k_opencl_navatala_dataframe_writeback_sum_f64 = R"kernel(
 __kernel void navatala_dataframe_writeback_sum_f64(__global const uint* keys, __global const double* vals, __global const int* count, __global double* dst) {
   int gid0 = (int)get_global_id(0);
   int j = ((int)((int)(get_global_id(0))));
-  if ((j < count[(uint)(0u)])) {
+  if (j < count[(uint)(0u)]) {
     uint key = keys[j];
     double val = vals[j];
     double oldVal = dst[key];
@@ -40,7 +40,7 @@ const char* k_opencl_navatala_dataframe_writeback_sum_i32 = R"kernel(
 __kernel void navatala_dataframe_writeback_sum_i32(__global const uint* keys, __global const int* vals, __global const int* count, __global int* dst) {
   int gid0 = (int)get_global_id(0);
   int j = ((int)((int)(get_global_id(0))));
-  if ((j < count[(uint)(0u)])) {
+  if (j < count[(uint)(0u)]) {
     uint key = keys[j];
     int val = vals[j];
     int oldVal = dst[key];
@@ -53,7 +53,7 @@ const char* k_opencl_navatala_dataframe_writeback_sum_u32 = R"kernel(
 __kernel void navatala_dataframe_writeback_sum_u32(__global const uint* keys, __global const uint* vals, __global const int* count, __global uint* dst) {
   int gid0 = (int)get_global_id(0);
   int j = ((int)((int)(get_global_id(0))));
-  if ((j < count[(uint)(0u)])) {
+  if (j < count[(uint)(0u)]) {
     uint key = keys[j];
     uint val = vals[j];
     uint oldVal = dst[key];
@@ -66,11 +66,11 @@ const char* k_opencl_navatala_dataframe_writeback_min_f32 = R"kernel(
 __kernel void navatala_dataframe_writeback_min_f32(__global const uint* keys, __global const float* vals, __global const int* count, __global float* dst) {
   int gid0 = (int)get_global_id(0);
   int j = ((int)((int)(get_global_id(0))));
-  if ((j < count[(uint)(0u)])) {
+  if (j < count[(uint)(0u)]) {
     uint key = keys[j];
     float newVal = vals[j];
     float oldVal = dst[key];
-    if ((newVal < oldVal)) {
+    if (newVal < oldVal) {
       dst[key] = newVal;
     }
   }
@@ -82,11 +82,11 @@ const char* k_opencl_navatala_dataframe_writeback_min_f64 = R"kernel(
 __kernel void navatala_dataframe_writeback_min_f64(__global const uint* keys, __global const double* vals, __global const int* count, __global double* dst) {
   int gid0 = (int)get_global_id(0);
   int j = ((int)((int)(get_global_id(0))));
-  if ((j < count[(uint)(0u)])) {
+  if (j < count[(uint)(0u)]) {
     uint key = keys[j];
     double newVal = vals[j];
     double oldVal = dst[key];
-    if ((newVal < oldVal)) {
+    if (newVal < oldVal) {
       dst[key] = newVal;
     }
   }
@@ -97,11 +97,11 @@ const char* k_opencl_navatala_dataframe_writeback_max_f32 = R"kernel(
 __kernel void navatala_dataframe_writeback_max_f32(__global const uint* keys, __global const float* vals, __global const int* count, __global float* dst) {
   int gid0 = (int)get_global_id(0);
   int j = ((int)((int)(get_global_id(0))));
-  if ((j < count[(uint)(0u)])) {
+  if (j < count[(uint)(0u)]) {
     uint key = keys[j];
     float newVal = vals[j];
     float oldVal = dst[key];
-    if ((newVal > oldVal)) {
+    if (newVal > oldVal) {
       dst[key] = newVal;
     }
   }
@@ -113,11 +113,11 @@ const char* k_opencl_navatala_dataframe_writeback_max_f64 = R"kernel(
 __kernel void navatala_dataframe_writeback_max_f64(__global const uint* keys, __global const double* vals, __global const int* count, __global double* dst) {
   int gid0 = (int)get_global_id(0);
   int j = ((int)((int)(get_global_id(0))));
-  if ((j < count[(uint)(0u)])) {
+  if (j < count[(uint)(0u)]) {
     uint key = keys[j];
     double newVal = vals[j];
     double oldVal = dst[key];
-    if ((newVal > oldVal)) {
+    if (newVal > oldVal) {
       dst[key] = newVal;
     }
   }
@@ -127,7 +127,7 @@ __kernel void navatala_dataframe_writeback_max_f64(__global const uint* keys, __
 const char* k_opencl_navatala_dataframe_init_welford_state_f32 = R"kernel(
 __kernel void navatala_dataframe_init_welford_state_f32(__global uint* count, __global float* mean, __global float* M2) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     count[0] = (uint)(0u);
     mean[0] = as_float(0x00000000u);
     M2[0] = as_float(0x00000000u);
@@ -139,7 +139,7 @@ const char* k_opencl_navatala_dataframe_init_welford_state_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_init_welford_state_f64(__global uint* count, __global double* mean, __global double* M2) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     count[0] = (uint)(0u);
     mean[0] = as_double(0x0000000000000000ul);
     M2[0] = as_double(0x0000000000000000ul);
@@ -150,7 +150,7 @@ __kernel void navatala_dataframe_init_welford_state_f64(__global uint* count, __
 const char* k_opencl_navatala_dataframe_welford_update_f32 = R"kernel(
 __kernel void navatala_dataframe_welford_update_f32(__global const float* x, __global uint* count, __global float* mean, __global float* M2) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint nOld = count[0];
     float meanOld = mean[0];
     float m2Old = M2[0];
@@ -172,7 +172,7 @@ const char* k_opencl_navatala_dataframe_welford_update_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_welford_update_f64(__global const double* x, __global uint* count, __global double* mean, __global double* M2) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint nOld = count[0];
     double meanOld = mean[0];
     double m2Old = M2[0];
@@ -193,7 +193,7 @@ __kernel void navatala_dataframe_welford_update_f64(__global const double* x, __
 const char* k_opencl_navatala_dataframe_welford_merge_f32 = R"kernel(
 __kernel void navatala_dataframe_welford_merge_f32(__global const uint* countA, __global const float* meanA, __global const float* M2A, __global const uint* countB, __global const float* meanB, __global const float* M2B, __global uint* count, __global float* mean, __global float* M2) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint nA = countA[0];
     float muA = meanA[0];
     float m2AVal = M2A[0];
@@ -222,7 +222,7 @@ const char* k_opencl_navatala_dataframe_welford_merge_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_welford_merge_f64(__global const uint* countA, __global const double* meanA, __global const double* M2A, __global const uint* countB, __global const double* meanB, __global const double* M2B, __global uint* count, __global double* mean, __global double* M2) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint nA = countA[0];
     double muA = meanA[0];
     double m2AVal = M2A[0];
@@ -250,7 +250,7 @@ __kernel void navatala_dataframe_welford_merge_f64(__global const uint* countA, 
 const char* k_opencl_navatala_dataframe_extract_variance_f32 = R"kernel(
 __kernel void navatala_dataframe_extract_variance_f32(__global const uint* count, __global const float* M2, __global float* variance) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint n = count[0];
     float m2Val = M2[0];
     float nf = ((float)(n));
@@ -264,7 +264,7 @@ const char* k_opencl_navatala_dataframe_extract_variance_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_extract_variance_f64(__global const uint* count, __global const double* M2, __global double* variance) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint n = count[0];
     double m2Val = M2[0];
     double nf = ((double)(n));
@@ -277,7 +277,7 @@ __kernel void navatala_dataframe_extract_variance_f64(__global const uint* count
 const char* k_opencl_navatala_dataframe_extract_sample_variance_f32 = R"kernel(
 __kernel void navatala_dataframe_extract_sample_variance_f32(__global const uint* count, __global const float* M2, __global float* variance) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint n = count[0];
     float m2Val = M2[0];
     uint nMinus1 = (n - (uint)(1u));
@@ -292,7 +292,7 @@ const char* k_opencl_navatala_dataframe_extract_sample_variance_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_extract_sample_variance_f64(__global const uint* count, __global const double* M2, __global double* variance) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint n = count[0];
     double m2Val = M2[0];
     uint nMinus1 = (n - (uint)(1u));
@@ -306,7 +306,7 @@ __kernel void navatala_dataframe_extract_sample_variance_f64(__global const uint
 const char* k_opencl_navatala_dataframe_extract_stddev_f32 = R"kernel(
 __kernel void navatala_dataframe_extract_stddev_f32(__global const uint* count, __global const float* M2, __global float* stddev) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint n = count[0];
     float m2Val = M2[0];
     float nf = ((float)(n));
@@ -321,7 +321,7 @@ const char* k_opencl_navatala_dataframe_extract_stddev_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_extract_stddev_f64(__global const uint* count, __global const double* M2, __global double* stddev) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint n = count[0];
     double m2Val = M2[0];
     double nf = ((double)(n));
@@ -335,7 +335,7 @@ __kernel void navatala_dataframe_extract_stddev_f64(__global const uint* count, 
 const char* k_opencl_navatala_dataframe_init_covariance_state_f32 = R"kernel(
 __kernel void navatala_dataframe_init_covariance_state_f32(__global uint* count, __global float* meanX, __global float* meanY, __global float* Cxy) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     count[0] = (uint)(0u);
     meanX[0] = as_float(0x00000000u);
     meanY[0] = as_float(0x00000000u);
@@ -348,7 +348,7 @@ const char* k_opencl_navatala_dataframe_init_covariance_state_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_init_covariance_state_f64(__global uint* count, __global double* meanX, __global double* meanY, __global double* Cxy) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     count[0] = (uint)(0u);
     meanX[0] = as_double(0x0000000000000000ul);
     meanY[0] = as_double(0x0000000000000000ul);
@@ -360,7 +360,7 @@ __kernel void navatala_dataframe_init_covariance_state_f64(__global uint* count,
 const char* k_opencl_navatala_dataframe_covariance_update_f32 = R"kernel(
 __kernel void navatala_dataframe_covariance_update_f32(__global const float* x, __global const float* y, __global uint* count, __global float* meanX, __global float* meanY, __global float* Cxy) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint nOld = count[0];
     float muXOld = meanX[0];
     float muYOld = meanY[0];
@@ -387,7 +387,7 @@ const char* k_opencl_navatala_dataframe_covariance_update_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_covariance_update_f64(__global const double* x, __global const double* y, __global uint* count, __global double* meanX, __global double* meanY, __global double* Cxy) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint nOld = count[0];
     double muXOld = meanX[0];
     double muYOld = meanY[0];
@@ -413,7 +413,7 @@ __kernel void navatala_dataframe_covariance_update_f64(__global const double* x,
 const char* k_opencl_navatala_dataframe_extract_covariance_f32 = R"kernel(
 __kernel void navatala_dataframe_extract_covariance_f32(__global const uint* count, __global const float* Cxy, __global float* covariance) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint n = count[0];
     float cxyVal = Cxy[0];
     float nf = ((float)(n));
@@ -427,7 +427,7 @@ const char* k_opencl_navatala_dataframe_extract_covariance_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_extract_covariance_f64(__global const uint* count, __global const double* Cxy, __global double* covariance) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint n = count[0];
     double cxyVal = Cxy[0];
     double nf = ((double)(n));
@@ -440,7 +440,7 @@ __kernel void navatala_dataframe_extract_covariance_f64(__global const uint* cou
 const char* k_opencl_navatala_dataframe_extract_correlation_f32 = R"kernel(
 __kernel void navatala_dataframe_extract_correlation_f32(__global const float* Cxy, __global const float* M2x, __global const float* M2y, __global float* correlation) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float cxyVal = Cxy[0];
     float m2xVal = M2x[0];
     float m2yVal = M2y[0];
@@ -456,7 +456,7 @@ const char* k_opencl_navatala_dataframe_extract_correlation_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_extract_correlation_f64(__global const double* Cxy, __global const double* M2x, __global const double* M2y, __global double* correlation) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double cxyVal = Cxy[0];
     double m2xVal = M2x[0];
     double m2yVal = M2y[0];
@@ -471,7 +471,7 @@ __kernel void navatala_dataframe_extract_correlation_f64(__global const double* 
 const char* k_opencl_navatala_dataframe_init_weighted_welford_f32 = R"kernel(
 __kernel void navatala_dataframe_init_weighted_welford_f32(__global float* weightSum, __global float* mean, __global float* M2) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     weightSum[0] = as_float(0x00000000u);
     mean[0] = as_float(0x00000000u);
     M2[0] = as_float(0x00000000u);
@@ -483,7 +483,7 @@ const char* k_opencl_navatala_dataframe_init_weighted_welford_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_init_weighted_welford_f64(__global double* weightSum, __global double* mean, __global double* M2) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     weightSum[0] = as_double(0x0000000000000000ul);
     mean[0] = as_double(0x0000000000000000ul);
     M2[0] = as_double(0x0000000000000000ul);
@@ -494,7 +494,7 @@ __kernel void navatala_dataframe_init_weighted_welford_f64(__global double* weig
 const char* k_opencl_navatala_dataframe_weighted_welford_update_f32 = R"kernel(
 __kernel void navatala_dataframe_weighted_welford_update_f32(__global const float* x, __global const float* w, __global float* weightSum, __global float* mean, __global float* M2) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float wOld = weightSum[0];
     float meanOld = mean[0];
     float m2Old = M2[0];
@@ -517,7 +517,7 @@ const char* k_opencl_navatala_dataframe_weighted_welford_update_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_weighted_welford_update_f64(__global const double* x, __global const double* w, __global double* weightSum, __global double* mean, __global double* M2) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double wOld = weightSum[0];
     double meanOld = mean[0];
     double m2Old = M2[0];
@@ -539,7 +539,7 @@ __kernel void navatala_dataframe_weighted_welford_update_f64(__global const doub
 const char* k_opencl_navatala_dataframe_weighted_welford_merge_f32 = R"kernel(
 __kernel void navatala_dataframe_weighted_welford_merge_f32(__global const float* weightSumA, __global const float* meanA, __global const float* M2A, __global const float* weightSumB, __global const float* meanB, __global const float* M2B, __global float* weightSum, __global float* mean, __global float* M2) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float wA = weightSumA[0];
     float muA = meanA[0];
     float m2AVal = M2A[0];
@@ -565,7 +565,7 @@ const char* k_opencl_navatala_dataframe_weighted_welford_merge_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_weighted_welford_merge_f64(__global const double* weightSumA, __global const double* meanA, __global const double* M2A, __global const double* weightSumB, __global const double* meanB, __global const double* M2B, __global double* weightSum, __global double* mean, __global double* M2) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double wA = weightSumA[0];
     double muA = meanA[0];
     double m2AVal = M2A[0];
@@ -590,7 +590,7 @@ __kernel void navatala_dataframe_weighted_welford_merge_f64(__global const doubl
 const char* k_opencl_navatala_dataframe_extract_weighted_variance_f32 = R"kernel(
 __kernel void navatala_dataframe_extract_weighted_variance_f32(__global const float* weightSum, __global const float* M2, __global float* variance) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float w = weightSum[0];
     float m2Val = M2[0];
     float var = (m2Val / w);
@@ -603,7 +603,7 @@ const char* k_opencl_navatala_dataframe_extract_weighted_variance_f64 = R"kernel
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_extract_weighted_variance_f64(__global const double* weightSum, __global const double* M2, __global double* variance) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double w = weightSum[0];
     double m2Val = M2[0];
     double var = (m2Val / w);
@@ -615,7 +615,7 @@ __kernel void navatala_dataframe_extract_weighted_variance_f64(__global const do
 const char* k_opencl_navatala_dataframe_extract_weighted_reliability_variance_f32 = R"kernel(
 __kernel void navatala_dataframe_extract_weighted_reliability_variance_f32(__global const float* weightSum, __global const float* M2, __global float* variance) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float w = weightSum[0];
     float m2Val = M2[0];
     float wMinus1 = (w - as_float(0x3f800000u));
@@ -629,7 +629,7 @@ const char* k_opencl_navatala_dataframe_extract_weighted_reliability_variance_f6
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_extract_weighted_reliability_variance_f64(__global const double* weightSum, __global const double* M2, __global double* variance) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double w = weightSum[0];
     double m2Val = M2[0];
     double wMinus1 = (w - as_double(0x3ff0000000000000ul));
@@ -642,7 +642,7 @@ __kernel void navatala_dataframe_extract_weighted_reliability_variance_f64(__glo
 const char* k_opencl_navatala_dataframe_extract_weighted_stddev_f32 = R"kernel(
 __kernel void navatala_dataframe_extract_weighted_stddev_f32(__global const float* weightSum, __global const float* M2, __global float* stddev) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float w = weightSum[0];
     float m2Val = M2[0];
     float var = (m2Val / w);
@@ -656,7 +656,7 @@ const char* k_opencl_navatala_dataframe_extract_weighted_stddev_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_extract_weighted_stddev_f64(__global const double* weightSum, __global const double* M2, __global double* stddev) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double w = weightSum[0];
     double m2Val = M2[0];
     double var = (m2Val / w);
@@ -669,7 +669,7 @@ __kernel void navatala_dataframe_extract_weighted_stddev_f64(__global const doub
 const char* k_opencl_navatala_dataframe_init_weighted_covariance_f32 = R"kernel(
 __kernel void navatala_dataframe_init_weighted_covariance_f32(__global float* weightSum, __global float* meanX, __global float* meanY, __global float* Cxy) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     weightSum[0] = as_float(0x00000000u);
     meanX[0] = as_float(0x00000000u);
     meanY[0] = as_float(0x00000000u);
@@ -682,7 +682,7 @@ const char* k_opencl_navatala_dataframe_init_weighted_covariance_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_init_weighted_covariance_f64(__global double* weightSum, __global double* meanX, __global double* meanY, __global double* Cxy) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     weightSum[0] = as_double(0x0000000000000000ul);
     meanX[0] = as_double(0x0000000000000000ul);
     meanY[0] = as_double(0x0000000000000000ul);
@@ -694,7 +694,7 @@ __kernel void navatala_dataframe_init_weighted_covariance_f64(__global double* w
 const char* k_opencl_navatala_dataframe_weighted_covariance_update_f32 = R"kernel(
 __kernel void navatala_dataframe_weighted_covariance_update_f32(__global const float* x, __global const float* y, __global const float* w, __global float* weightSum, __global float* meanX, __global float* meanY, __global float* Cxy) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float wOld = weightSum[0];
     float muXOld = meanX[0];
     float muYOld = meanY[0];
@@ -722,7 +722,7 @@ const char* k_opencl_navatala_dataframe_weighted_covariance_update_f64 = R"kerne
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_weighted_covariance_update_f64(__global const double* x, __global const double* y, __global const double* w, __global double* weightSum, __global double* meanX, __global double* meanY, __global double* Cxy) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double wOld = weightSum[0];
     double muXOld = meanX[0];
     double muYOld = meanY[0];
@@ -749,7 +749,7 @@ __kernel void navatala_dataframe_weighted_covariance_update_f64(__global const d
 const char* k_opencl_navatala_dataframe_extract_weighted_covariance_f32 = R"kernel(
 __kernel void navatala_dataframe_extract_weighted_covariance_f32(__global const float* weightSum, __global const float* Cxy, __global float* covariance) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float w = weightSum[0];
     float cxyVal = Cxy[0];
     float cov = (cxyVal / w);
@@ -762,7 +762,7 @@ const char* k_opencl_navatala_dataframe_extract_weighted_covariance_f64 = R"kern
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_extract_weighted_covariance_f64(__global const double* weightSum, __global const double* Cxy, __global double* covariance) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double w = weightSum[0];
     double cxyVal = Cxy[0];
     double cov = (cxyVal / w);
@@ -774,7 +774,7 @@ __kernel void navatala_dataframe_extract_weighted_covariance_f64(__global const 
 const char* k_opencl_navatala_dataframe_extract_weighted_correlation_f32 = R"kernel(
 __kernel void navatala_dataframe_extract_weighted_correlation_f32(__global const float* Cxy, __global const float* M2x, __global const float* M2y, __global float* correlation) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float cxyVal = Cxy[0];
     float m2xVal = M2x[0];
     float m2yVal = M2y[0];
@@ -790,7 +790,7 @@ const char* k_opencl_navatala_dataframe_extract_weighted_correlation_f64 = R"ker
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_extract_weighted_correlation_f64(__global const double* Cxy, __global const double* M2x, __global const double* M2y, __global double* correlation) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double cxyVal = Cxy[0];
     double m2xVal = M2x[0];
     double m2yVal = M2y[0];
@@ -805,7 +805,7 @@ __kernel void navatala_dataframe_extract_weighted_correlation_f64(__global const
 const char* k_opencl_navatala_dataframe_init_weighted_mean_f32 = R"kernel(
 __kernel void navatala_dataframe_init_weighted_mean_f32(__global float* weightSum, __global float* mean) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     weightSum[0] = as_float(0x00000000u);
     mean[0] = as_float(0x00000000u);
   }
@@ -816,7 +816,7 @@ const char* k_opencl_navatala_dataframe_init_weighted_mean_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_init_weighted_mean_f64(__global double* weightSum, __global double* mean) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     weightSum[0] = as_double(0x0000000000000000ul);
     mean[0] = as_double(0x0000000000000000ul);
   }
@@ -826,7 +826,7 @@ __kernel void navatala_dataframe_init_weighted_mean_f64(__global double* weightS
 const char* k_opencl_navatala_dataframe_weighted_mean_update_f32 = R"kernel(
 __kernel void navatala_dataframe_weighted_mean_update_f32(__global const float* x, __global const float* w, __global float* weightSum, __global float* mean) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float wOld = weightSum[0];
     float meanOld = mean[0];
     float xVal = x[0];
@@ -845,7 +845,7 @@ const char* k_opencl_navatala_dataframe_weighted_mean_update_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_weighted_mean_update_f64(__global const double* x, __global const double* w, __global double* weightSum, __global double* mean) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double wOld = weightSum[0];
     double meanOld = mean[0];
     double xVal = x[0];
@@ -863,7 +863,7 @@ __kernel void navatala_dataframe_weighted_mean_update_f64(__global const double*
 const char* k_opencl_navatala_dataframe_init_p2_state_f32 = R"kernel(
 __kernel void navatala_dataframe_init_p2_state_f32(__global const float* p, __global float* q0, __global float* q1, __global float* q2, __global float* q3, __global float* q4, __global uint* pos0, __global uint* pos1, __global uint* pos2, __global uint* pos3, __global uint* pos4, __global float* targetP, __global uint* count) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float pVal = p[0];
     q0[0] = as_float(0x00000000u);
     q1[0] = as_float(0x00000000u);
@@ -885,7 +885,7 @@ const char* k_opencl_navatala_dataframe_init_p2_state_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_init_p2_state_f64(__global const double* p, __global double* q0, __global double* q1, __global double* q2, __global double* q3, __global double* q4, __global uint* pos0, __global uint* pos1, __global uint* pos2, __global uint* pos3, __global uint* pos4, __global double* targetP, __global uint* count) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double pVal = p[0];
     q0[0] = as_double(0x0000000000000000ul);
     q1[0] = as_double(0x0000000000000000ul);
@@ -906,7 +906,7 @@ __kernel void navatala_dataframe_init_p2_state_f64(__global const double* p, __g
 const char* k_opencl_navatala_dataframe_p2_update_f32 = R"kernel(
 __kernel void navatala_dataframe_p2_update_f32(__global const float* x, __global float* q0, __global float* q1, __global float* q2, __global float* q3, __global float* q4, __global uint* pos0, __global uint* pos1, __global uint* pos2, __global uint* pos3, __global uint* pos4, __global const float* targetP, __global uint* count) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float xVal = x[0];
     uint n = count[0];
     float pVal = targetP[0];
@@ -934,7 +934,7 @@ const char* k_opencl_navatala_dataframe_p2_update_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_p2_update_f64(__global const double* x, __global double* q0, __global double* q1, __global double* q2, __global double* q3, __global double* q4, __global uint* pos0, __global uint* pos1, __global uint* pos2, __global uint* pos3, __global uint* pos4, __global const double* targetP, __global uint* count) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double xVal = x[0];
     uint n = count[0];
     double pVal = targetP[0];
@@ -959,7 +959,7 @@ __kernel void navatala_dataframe_p2_update_f64(__global const double* x, __globa
 const char* k_opencl_navatala_dataframe_p2_extract_f32 = R"kernel(
 __kernel void navatala_dataframe_p2_extract_f32(__global const float* q2, __global float* quantile) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float val = q2[0];
     quantile[0] = val;
   }
@@ -970,7 +970,7 @@ const char* k_opencl_navatala_dataframe_p2_extract_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_p2_extract_f64(__global const double* q2, __global double* quantile) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double val = q2[0];
     quantile[0] = val;
   }
@@ -984,7 +984,7 @@ __kernel void navatala_dataframe_init_reservoir256_f32(__global const uint* init
   if (inBounds) {
     reservoir[(int)(get_global_id(0))] = as_float(0x00000000u);
   }
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint initSeed = initialSeed[0];
     count[0] = (uint)(0u);
     seed[0] = initSeed;
@@ -1000,7 +1000,7 @@ __kernel void navatala_dataframe_init_reservoir256_f64(__global const uint* init
   if (inBounds) {
     reservoir[(int)(get_global_id(0))] = as_double(0x0000000000000000ul);
   }
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint initSeed = initialSeed[0];
     count[0] = (uint)(0u);
     seed[0] = initSeed;
@@ -1011,7 +1011,7 @@ __kernel void navatala_dataframe_init_reservoir256_f64(__global const uint* init
 const char* k_opencl_navatala_dataframe_reservoir_update256_f32 = R"kernel(
 __kernel void navatala_dataframe_reservoir_update256_f32(__global const float* x, __global float* reservoir, __global uint* count, __global uint* seed) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float xVal = x[0];
     uint n = count[0];
     uint s = seed[0];
@@ -1038,7 +1038,7 @@ const char* k_opencl_navatala_dataframe_reservoir_update256_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_reservoir_update256_f64(__global const double* x, __global double* reservoir, __global uint* count, __global uint* seed) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double xVal = x[0];
     uint n = count[0];
     uint s = seed[0];
@@ -1064,7 +1064,7 @@ __kernel void navatala_dataframe_reservoir_update256_f64(__global const double* 
 const char* k_opencl_navatala_dataframe_reservoir_min256_f32 = R"kernel(
 __kernel void navatala_dataframe_reservoir_min256_f32(__global const float* reservoir, __global const uint* count, __global float* minVal) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint n = count[0];
     uint effectiveN = (((n < (uint)(256u))) ? (n) : ((uint)(256u)));
     float min0 = reservoir[0];
@@ -1076,7 +1076,7 @@ __kernel void navatala_dataframe_reservoir_min256_f32(__global const float* rese
 const char* k_opencl_navatala_dataframe_reservoir_max256_f32 = R"kernel(
 __kernel void navatala_dataframe_reservoir_max256_f32(__global const float* reservoir, __global const uint* count, __global float* maxVal) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint n = count[0];
     float max0 = reservoir[0];
     maxVal[0] = max0;
@@ -1088,7 +1088,7 @@ const char* k_opencl_navatala_dataframe_reservoir_min256_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_reservoir_min256_f64(__global const double* reservoir, __global const uint* count, __global double* minVal) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double min0 = reservoir[0];
     minVal[0] = min0;
   }
@@ -1099,7 +1099,7 @@ const char* k_opencl_navatala_dataframe_reservoir_max256_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_reservoir_max256_f64(__global const double* reservoir, __global const uint* count, __global double* maxVal) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double max0 = reservoir[0];
     maxVal[0] = max0;
   }
@@ -1110,7 +1110,7 @@ const char* k_opencl_navatala_dataframe_trimmed_mean_f32 = R"kernel(
 __kernel void navatala_dataframe_trimmed_mean_f32(__global const float* sortedData, __global const uint* n, __global const float* trimFraction, __global float* trimmedMean) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint len = n[0];
     float frac = trimFraction[0];
     float lenF = ((float)(len));
@@ -1130,7 +1130,7 @@ const char* k_opencl_navatala_dataframe_trimmed_mean_f64 = R"kernel(
 __kernel void navatala_dataframe_trimmed_mean_f64(__global const double* sortedData, __global const uint* n, __global const double* trimFraction, __global double* trimmedMean) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint len = n[0];
     double frac = trimFraction[0];
     double lenF = ((double)(len));
@@ -1148,7 +1148,7 @@ const char* k_opencl_navatala_dataframe_iqm_f32 = R"kernel(
 __kernel void navatala_dataframe_iqm_f32(__global const float* sortedData, __global const uint* n, __global float* iqm) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint len = n[0];
     uint q1Idx = (len / (uint)(4u));
     uint q3Idx = (len - q1Idx);
@@ -1164,7 +1164,7 @@ const char* k_opencl_navatala_dataframe_iqm_f64 = R"kernel(
 __kernel void navatala_dataframe_iqm_f64(__global const double* sortedData, __global const uint* n, __global double* iqm) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint len = n[0];
     uint q1Idx = (len / (uint)(4u));
     uint q3Idx = (len - q1Idx);
@@ -1179,7 +1179,7 @@ const char* k_opencl_navatala_dataframe_winsorized_mean_f32 = R"kernel(
 __kernel void navatala_dataframe_winsorized_mean_f32(__global const float* sortedData, __global const uint* n, __global const float* trimFraction, __global float* winsorizedMean) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint len = n[0];
     float frac = trimFraction[0];
     float lenF = ((float)(len));
@@ -1198,7 +1198,7 @@ const char* k_opencl_navatala_dataframe_winsorized_mean_f64 = R"kernel(
 __kernel void navatala_dataframe_winsorized_mean_f64(__global const double* sortedData, __global const uint* n, __global const double* trimFraction, __global double* winsorizedMean) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint len = n[0];
     uint midIdx = (len / (uint)(2u));
     double midVal = sortedData[midIdx];
@@ -1211,7 +1211,7 @@ const char* k_opencl_navatala_dataframe_mad_f32 = R"kernel(
 __kernel void navatala_dataframe_mad_f32(__global const float* sortedData, __global const uint* n, __global const float* median, __global float* mad) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint len = n[0];
     float med = median[0];
     uint q1Idx = (len / (uint)(4u));
@@ -1231,7 +1231,7 @@ const char* k_opencl_navatala_dataframe_mad_f64 = R"kernel(
 __kernel void navatala_dataframe_mad_f64(__global const double* sortedData, __global const uint* n, __global const double* median, __global double* mad) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint len = n[0];
     double med = median[0];
     uint q1Idx = (len / (uint)(4u));
@@ -1250,7 +1250,7 @@ const char* k_opencl_navatala_dataframe_normalized_mad_f32 = R"kernel(
 __kernel void navatala_dataframe_normalized_mad_f32(__global const float* mad, __global float* normalizedMad) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     float m = mad[0];
     float norm = (as_float(0x3fbdc5d6u) * m);
     normalizedMad[0] = norm;
@@ -1263,7 +1263,7 @@ const char* k_opencl_navatala_dataframe_normalized_mad_f64 = R"kernel(
 __kernel void navatala_dataframe_normalized_mad_f64(__global const double* mad, __global double* normalizedMad) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     double m = mad[0];
     double norm = (as_double(0x3ff7b8bac710cb29ul) * m);
     normalizedMad[0] = norm;
@@ -1353,7 +1353,7 @@ const char* k_opencl_navatala_dataframe_init_t_digest_f32 = R"kernel(
 __kernel void navatala_dataframe_init_t_digest_f32(__global const float* compressionIn, __global float* centroidMeans, __global float* centroidWeights, __global uint* centroidCount, __global float* totalWeight, __global float* minVal, __global float* maxVal, __global float* compression) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     float delta = compressionIn[0];
     centroidCount[0] = (uint)(0u);
     totalWeight[0] = as_float(0x00000000u);
@@ -1369,7 +1369,7 @@ const char* k_opencl_navatala_dataframe_init_t_digest_f64 = R"kernel(
 __kernel void navatala_dataframe_init_t_digest_f64(__global const double* compressionIn, __global double* centroidMeans, __global double* centroidWeights, __global uint* centroidCount, __global double* totalWeight, __global double* minVal, __global double* maxVal, __global double* compression) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     double delta = compressionIn[0];
     centroidCount[0] = (uint)(0u);
     totalWeight[0] = as_double(0x0000000000000000ul);
@@ -1384,7 +1384,7 @@ const char* k_opencl_navatala_dataframe_tdigest_add_f32 = R"kernel(
 __kernel void navatala_dataframe_tdigest_add_f32(__global const float* value, __global const float* weight, __global float* centroidMeans, __global float* centroidWeights, __global uint* centroidCount, __global float* totalWeight, __global float* minVal, __global float* maxVal) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     float x = value[0];
     float w = weight[0];
     uint count = centroidCount[0];
@@ -1411,7 +1411,7 @@ const char* k_opencl_navatala_dataframe_tdigest_add_f64 = R"kernel(
 __kernel void navatala_dataframe_tdigest_add_f64(__global const double* value, __global const double* weight, __global double* centroidMeans, __global double* centroidWeights, __global uint* centroidCount, __global double* totalWeight, __global double* minVal, __global double* maxVal) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     double x = value[0];
     double w = weight[0];
     uint count = centroidCount[0];
@@ -1437,7 +1437,7 @@ const char* k_opencl_navatala_dataframe_tdigest_merge_f32 = R"kernel(
 __kernel void navatala_dataframe_tdigest_merge_f32(__global const float* meansA, __global const float* weightsA, __global const uint* countA, __global const float* totalWeightA, __global const float* minA, __global const float* maxA, __global const float* meansB, __global const float* weightsB, __global const uint* countB, __global const float* totalWeightB, __global const float* minB, __global const float* maxB, __global const float* compressionIn, __global float* meansOut, __global float* weightsOut, __global uint* countOut, __global float* totalWeightOut, __global float* minOut, __global float* maxOut, __global float* compressionOut) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint cA = countA[0];
     uint cB = countB[0];
     float twA = totalWeightA[0];
@@ -1465,7 +1465,7 @@ const char* k_opencl_navatala_dataframe_tdigest_merge_f64 = R"kernel(
 __kernel void navatala_dataframe_tdigest_merge_f64(__global const double* meansA, __global const double* weightsA, __global const uint* countA, __global const double* totalWeightA, __global const double* minA, __global const double* maxA, __global const double* meansB, __global const double* weightsB, __global const uint* countB, __global const double* totalWeightB, __global const double* minB, __global const double* maxB, __global const double* compressionIn, __global double* meansOut, __global double* weightsOut, __global uint* countOut, __global double* totalWeightOut, __global double* minOut, __global double* maxOut, __global double* compressionOut) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint cA = countA[0];
     uint cB = countB[0];
     double twA = totalWeightA[0];
@@ -1492,7 +1492,7 @@ const char* k_opencl_navatala_dataframe_tdigest_quantile_f32 = R"kernel(
 __kernel void navatala_dataframe_tdigest_quantile_f32(__global const float* p, __global const float* centroidMeans, __global const float* centroidWeights, __global const uint* centroidCount, __global const float* totalWeight, __global const float* minVal, __global const float* maxVal, __global float* quantile) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     float pVal = p[0];
     uint count = centroidCount[0];
     float minV = minVal[0];
@@ -1511,7 +1511,7 @@ const char* k_opencl_navatala_dataframe_tdigest_quantile_f64 = R"kernel(
 __kernel void navatala_dataframe_tdigest_quantile_f64(__global const double* p, __global const double* centroidMeans, __global const double* centroidWeights, __global const uint* centroidCount, __global const double* totalWeight, __global const double* minVal, __global const double* maxVal, __global double* quantile) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     double pVal = p[0];
     uint count = centroidCount[0];
     double minV = minVal[0];
@@ -1529,7 +1529,7 @@ const char* k_opencl_navatala_dataframe_tdigest_cdf_f32 = R"kernel(
 __kernel void navatala_dataframe_tdigest_cdf_f32(__global const float* x, __global const float* centroidMeans, __global const float* centroidWeights, __global const uint* centroidCount, __global const float* totalWeight, __global const float* minVal, __global const float* maxVal, __global float* cdf) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     float xVal = x[0];
     uint count = centroidCount[0];
     float minV = minVal[0];
@@ -1551,7 +1551,7 @@ const char* k_opencl_navatala_dataframe_tdigest_cdf_f64 = R"kernel(
 __kernel void navatala_dataframe_tdigest_cdf_f64(__global const double* x, __global const double* centroidMeans, __global const double* centroidWeights, __global const uint* centroidCount, __global const double* totalWeight, __global const double* minVal, __global const double* maxVal, __global double* cdf) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     double xVal = x[0];
     uint count = centroidCount[0];
     double minV = minVal[0];
@@ -1572,7 +1572,7 @@ const char* k_opencl_navatala_dataframe_tdigest_mean_f32 = R"kernel(
 __kernel void navatala_dataframe_tdigest_mean_f32(__global const float* centroidMeans, __global const float* centroidWeights, __global const uint* centroidCount, __global const float* totalWeight, __global const float* minVal, __global const float* maxVal, __global float* mean) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint count = centroidCount[0];
     float minV = minVal[0];
     float maxV = maxVal[0];
@@ -1589,7 +1589,7 @@ const char* k_opencl_navatala_dataframe_tdigest_mean_f64 = R"kernel(
 __kernel void navatala_dataframe_tdigest_mean_f64(__global const double* centroidMeans, __global const double* centroidWeights, __global const uint* centroidCount, __global const double* totalWeight, __global const double* minVal, __global const double* maxVal, __global double* mean) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint count = centroidCount[0];
     double minV = minVal[0];
     double maxV = maxVal[0];
@@ -1605,7 +1605,7 @@ const char* k_opencl_navatala_dataframe_tdigest_min_f32 = R"kernel(
 __kernel void navatala_dataframe_tdigest_min_f32(__global const float* minVal, __global const uint* centroidCount, __global float* minOut) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint count = centroidCount[0];
     float minV = minVal[0];
     bool isEmpty = (count == (uint)(0u));
@@ -1620,7 +1620,7 @@ const char* k_opencl_navatala_dataframe_tdigest_min_f64 = R"kernel(
 __kernel void navatala_dataframe_tdigest_min_f64(__global const double* minVal, __global const uint* centroidCount, __global double* minOut) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint count = centroidCount[0];
     double minV = minVal[0];
     bool isEmpty = (count == (uint)(0u));
@@ -1634,7 +1634,7 @@ const char* k_opencl_navatala_dataframe_tdigest_max_f32 = R"kernel(
 __kernel void navatala_dataframe_tdigest_max_f32(__global const float* maxVal, __global const uint* centroidCount, __global float* maxOut) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint count = centroidCount[0];
     float maxV = maxVal[0];
     bool isEmpty = (count == (uint)(0u));
@@ -1649,7 +1649,7 @@ const char* k_opencl_navatala_dataframe_tdigest_max_f64 = R"kernel(
 __kernel void navatala_dataframe_tdigest_max_f64(__global const double* maxVal, __global const uint* centroidCount, __global double* maxOut) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint count = centroidCount[0];
     double maxV = maxVal[0];
     bool isEmpty = (count == (uint)(0u));
@@ -1663,7 +1663,7 @@ const char* k_opencl_navatala_dataframe_tdigest_reset_f32 = R"kernel(
 __kernel void navatala_dataframe_tdigest_reset_f32(__global const float* compression, __global uint* centroidCount, __global float* totalWeight, __global float* minVal, __global float* maxVal) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     centroidCount[0] = (uint)(0u);
     totalWeight[0] = as_float(0x00000000u);
     minVal[0] = as_float(0x7f7ffffdu);
@@ -1677,7 +1677,7 @@ const char* k_opencl_navatala_dataframe_tdigest_reset_f64 = R"kernel(
 __kernel void navatala_dataframe_tdigest_reset_f64(__global const double* compression, __global uint* centroidCount, __global double* totalWeight, __global double* minVal, __global double* maxVal) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     centroidCount[0] = (uint)(0u);
     totalWeight[0] = as_double(0x0000000000000000ul);
     minVal[0] = as_double(0x7feffffffffffffful);
@@ -2987,7 +2987,7 @@ __kernel void navatala_dataframe_arg_max_f32(__global const float* _input, __glo
   uint amf32_reductionStride = (uint)(128u);
   for (int amf32_reductionStep = 0; amf32_reductionStep < (int)(8); ++amf32_reductionStep) {
     uint amf32_stride = amf32_reductionStride;
-    if ((lid < amf32_stride)) {
+    if (lid < amf32_stride) {
       otherVal = svals[(lid + amf32_stride)];
       otherIdx = sidxs[(lid + amf32_stride)];
       myVal = svals[lid];
@@ -3007,7 +3007,7 @@ __kernel void navatala_dataframe_arg_max_f32(__global const float* _input, __glo
     amf32_reductionStride = amf32_nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     maxValue[0] = svals[0];
     maxIndex[0] = sidxs[0];
   }
@@ -3047,7 +3047,7 @@ __kernel void navatala_dataframe_arg_max_f64(__global const double* _input, __gl
   uint amf64_reductionStride = (uint)(128u);
   for (int amf64_reductionStep = 0; amf64_reductionStep < (int)(8); ++amf64_reductionStep) {
     uint amf64_stride = amf64_reductionStride;
-    if ((lid < amf64_stride)) {
+    if (lid < amf64_stride) {
       otherVal = svals[(lid + amf64_stride)];
       otherIdx = sidxs[(lid + amf64_stride)];
       myVal = svals[lid];
@@ -3067,7 +3067,7 @@ __kernel void navatala_dataframe_arg_max_f64(__global const double* _input, __gl
     amf64_reductionStride = amf64_nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     maxValue[0] = svals[0];
     maxIndex[0] = sidxs[0];
   }
@@ -3106,7 +3106,7 @@ __kernel void navatala_dataframe_arg_min_f32(__global const float* _input, __glo
   uint aminf32_reductionStride = (uint)(128u);
   for (int aminf32_reductionStep = 0; aminf32_reductionStep < (int)(8); ++aminf32_reductionStep) {
     uint aminf32_stride = aminf32_reductionStride;
-    if ((lid < aminf32_stride)) {
+    if (lid < aminf32_stride) {
       otherVal = svals[(lid + aminf32_stride)];
       otherIdx = sidxs[(lid + aminf32_stride)];
       myVal = svals[lid];
@@ -3126,7 +3126,7 @@ __kernel void navatala_dataframe_arg_min_f32(__global const float* _input, __glo
     aminf32_reductionStride = aminf32_nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     minValue[0] = svals[0];
     minIndex[0] = sidxs[0];
   }
@@ -3166,7 +3166,7 @@ __kernel void navatala_dataframe_arg_min_f64(__global const double* _input, __gl
   uint aminf64_reductionStride = (uint)(128u);
   for (int aminf64_reductionStep = 0; aminf64_reductionStep < (int)(8); ++aminf64_reductionStep) {
     uint aminf64_stride = aminf64_reductionStride;
-    if ((lid < aminf64_stride)) {
+    if (lid < aminf64_stride) {
       otherVal = svals[(lid + aminf64_stride)];
       otherIdx = sidxs[(lid + aminf64_stride)];
       myVal = svals[lid];
@@ -3186,7 +3186,7 @@ __kernel void navatala_dataframe_arg_min_f64(__global const double* _input, __gl
     aminf64_reductionStride = aminf64_nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     minValue[0] = svals[0];
     minIndex[0] = sidxs[0];
   }
@@ -3224,7 +3224,7 @@ __kernel void navatala_dataframe_scan_sum_f32(__global const float* _input, __gl
     }
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float total = sdata[(uint)(511u)];
     sdata[(uint)(511u)] = as_float(0x00000000u);
   }
@@ -3290,7 +3290,7 @@ __kernel void navatala_dataframe_scan_sum_f64(__global const double* _input, __g
     }
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     sdata[(uint)(511u)] = as_double(0x0000000000000000ul);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
@@ -3354,7 +3354,7 @@ __kernel void navatala_dataframe_scan_sum_u32(__global const uint* _input, __glo
     }
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     sdata[(uint)(511u)] = (uint)(0u);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
@@ -3391,9 +3391,9 @@ const char* k_opencl_navatala_dataframe_scan_exclusive_write_total_u32 = R"kerne
 __kernel void navatala_dataframe_scan_exclusive_write_total_u32(__global const uint* _input, __global const uint* count, __global uint* _output) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint n = count[(uint)(0u)];
-    if ((n == (uint)(0u))) {
+    if (n == (uint)(0u)) {
       _output[(uint)(0u)] = (uint)(0u);
     } else {
       uint nMinus1 = (n - (uint)(1u));
@@ -3437,7 +3437,7 @@ __kernel void navatala_dataframe_scan_max_f32(__global const float* _input, __gl
     }
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     sdata[(uint)(511u)] = as_float(0xff7fffffu);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
@@ -3503,7 +3503,7 @@ __kernel void navatala_dataframe_scan_min_f32(__global const float* _input, __gl
     }
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     sdata[(uint)(511u)] = as_float(0x7f7fffffu);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
@@ -3667,7 +3667,7 @@ __kernel void navatala_dataframe_sum_reduce_f32(__global const float* _input, __
   uint reductionStride = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint stride = reductionStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       uint partnerIdx = (lid + stride);
       float myVal = sdata[lid];
       float partnerVal = sdata[partnerIdx];
@@ -3679,7 +3679,7 @@ __kernel void navatala_dataframe_sum_reduce_f32(__global const float* _input, __
     barrier(CLK_LOCAL_MEM_FENCE);
   }
   uint zeroU32 = ((uint)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     result[0] = sdata[0];
   }
 }
@@ -3704,7 +3704,7 @@ __kernel void navatala_dataframe_sum_reduce_f64(__global const double* _input, _
   uint reductionStride = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint stride = reductionStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       uint partnerIdx = (lid + stride);
       double myVal = sdata[lid];
       double partnerVal = sdata[partnerIdx];
@@ -3716,7 +3716,7 @@ __kernel void navatala_dataframe_sum_reduce_f64(__global const double* _input, _
     barrier(CLK_LOCAL_MEM_FENCE);
   }
   uint zeroU32 = ((uint)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     result[0] = sdata[0];
   }
 }
@@ -3740,7 +3740,7 @@ __kernel void navatala_dataframe_mean_f32(__global const float* _input, __global
   uint reductionStride = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint stride = reductionStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       uint partnerIdx = (lid + stride);
       float myVal = sdata[lid];
       float partnerVal = sdata[partnerIdx];
@@ -3752,7 +3752,7 @@ __kernel void navatala_dataframe_mean_f32(__global const float* _input, __global
     barrier(CLK_LOCAL_MEM_FENCE);
   }
   uint zeroU32 = ((uint)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     float totalSum = sdata[0];
     float countFloat = ((float)(countVal));
     float meanVal = (totalSum / countFloat);
@@ -3780,7 +3780,7 @@ __kernel void navatala_dataframe_mean_f64(__global const double* _input, __globa
   uint reductionStride = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint stride = reductionStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       uint partnerIdx = (lid + stride);
       double myVal = sdata[lid];
       double partnerVal = sdata[partnerIdx];
@@ -3792,7 +3792,7 @@ __kernel void navatala_dataframe_mean_f64(__global const double* _input, __globa
     barrier(CLK_LOCAL_MEM_FENCE);
   }
   uint zeroU32 = ((uint)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     double totalSum = sdata[0];
     double countFloat = ((double)(countVal));
     double meanVal = (totalSum / countFloat);
@@ -3822,7 +3822,7 @@ __kernel void navatala_dataframe_variance_f32(__global const float* _input, __gl
   uint reductionStride = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint stride = reductionStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       uint partnerIdx = (lid + stride);
       float myVal = sdata[lid];
       float partnerVal = sdata[partnerIdx];
@@ -3834,7 +3834,7 @@ __kernel void navatala_dataframe_variance_f32(__global const float* _input, __gl
     barrier(CLK_LOCAL_MEM_FENCE);
   }
   uint zeroU32 = ((uint)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     float totalSumSq = sdata[0];
     float countFloat = ((float)(countVal));
     float varianceVal = (totalSumSq / countFloat);
@@ -3865,7 +3865,7 @@ __kernel void navatala_dataframe_variance_f64(__global const double* _input, __g
   uint reductionStride = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint stride = reductionStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       uint partnerIdx = (lid + stride);
       double myVal = sdata[lid];
       double partnerVal = sdata[partnerIdx];
@@ -3877,7 +3877,7 @@ __kernel void navatala_dataframe_variance_f64(__global const double* _input, __g
     barrier(CLK_LOCAL_MEM_FENCE);
   }
   uint zeroU32 = ((uint)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     double totalSumSq = sdata[0];
     double countFloat = ((double)(countVal));
     double varianceVal = (totalSumSq / countFloat);
@@ -3891,7 +3891,7 @@ __kernel void navatala_dataframe_stddev_f32(__global const float* variance, __gl
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint zeroU32 = ((uint)(0));
-  if ((gid == zeroU32)) {
+  if (gid == zeroU32) {
     float varianceVal = variance[0];
     float stddevVal = sqrt(varianceVal);
     stddev[0] = stddevVal;
@@ -3905,7 +3905,7 @@ __kernel void navatala_dataframe_stddev_f64(__global const double* variance, __g
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint zeroU32 = ((uint)(0));
-  if ((gid == zeroU32)) {
+  if (gid == zeroU32) {
     double varianceVal = variance[0];
     double stddevVal = sqrt(varianceVal);
     stddev[0] = stddevVal;
@@ -4097,7 +4097,7 @@ __kernel void navatala_dataframe_covariance_f32(__global const float* inputX, __
   uint covF32_reductionStride = (uint)(128u);
   for (int covF32_reductionStep = 0; covF32_reductionStep < (int)(8); ++covF32_reductionStep) {
     uint covF32_stride = covF32_reductionStride;
-    if ((lid < covF32_stride)) {
+    if (lid < covF32_stride) {
       float covF32_other = sdata[(lid + covF32_stride)];
       float covF32_mine = sdata[lid];
       float covF32_sum = (covF32_mine + covF32_other);
@@ -4108,7 +4108,7 @@ __kernel void navatala_dataframe_covariance_f32(__global const float* inputX, __
     covF32_reductionStride = covF32_nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float totalSum = sdata[(uint)(0u)];
     float countFloat = ((float)(countVal));
     float covVal = (totalSum / countFloat);
@@ -4142,7 +4142,7 @@ __kernel void navatala_dataframe_covariance_f64(__global const double* inputX, _
   uint covF64_reductionStride = (uint)(128u);
   for (int covF64_reductionStep = 0; covF64_reductionStep < (int)(8); ++covF64_reductionStep) {
     uint covF64_stride = covF64_reductionStride;
-    if ((lid < covF64_stride)) {
+    if (lid < covF64_stride) {
       double covF64_other = sdata[(lid + covF64_stride)];
       double covF64_mine = sdata[lid];
       double covF64_sum = (covF64_mine + covF64_other);
@@ -4153,7 +4153,7 @@ __kernel void navatala_dataframe_covariance_f64(__global const double* inputX, _
     covF64_reductionStride = covF64_nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     double totalSum = sdata[(uint)(0u)];
     double countFloat = ((double)(countVal));
     double covVal = (totalSum / countFloat);
@@ -4256,7 +4256,7 @@ __kernel void navatala_dataframe_column_means_f32(__global const float* _input, 
     uint colMeansF32_reductionStride = (uint)(128u);
     for (int colMeansF32_reductionStep = 0; colMeansF32_reductionStep < (int)(8); ++colMeansF32_reductionStep) {
       uint colMeansF32_stride = colMeansF32_reductionStride;
-      if ((lid < colMeansF32_stride)) {
+      if (lid < colMeansF32_stride) {
         float colMeansF32_other = sdata[(lid + colMeansF32_stride)];
         float colMeansF32_mine = sdata[lid];
         float colMeansF32_sum = (colMeansF32_mine + colMeansF32_other);
@@ -4267,7 +4267,7 @@ __kernel void navatala_dataframe_column_means_f32(__global const float* _input, 
       colMeansF32_reductionStride = colMeansF32_nextStride;
       barrier(CLK_LOCAL_MEM_FENCE);
     }
-    if ((lid == (uint)(0u))) {
+    if (lid == (uint)(0u)) {
       float totalSum = sdata[(uint)(0u)];
       float nFloat = ((float)(n));
       float meanVal = (totalSum / nFloat);
@@ -4304,7 +4304,7 @@ __kernel void navatala_dataframe_column_means_f64(__global const double* _input,
     uint colMeansF64_reductionStride = (uint)(128u);
     for (int colMeansF64_reductionStep = 0; colMeansF64_reductionStep < (int)(8); ++colMeansF64_reductionStep) {
       uint colMeansF64_stride = colMeansF64_reductionStride;
-      if ((lid < colMeansF64_stride)) {
+      if (lid < colMeansF64_stride) {
         double colMeansF64_other = sdata[(lid + colMeansF64_stride)];
         double colMeansF64_mine = sdata[lid];
         double colMeansF64_sum = (colMeansF64_mine + colMeansF64_other);
@@ -4315,7 +4315,7 @@ __kernel void navatala_dataframe_column_means_f64(__global const double* _input,
       colMeansF64_reductionStride = colMeansF64_nextStride;
       barrier(CLK_LOCAL_MEM_FENCE);
     }
-    if ((lid == (uint)(0u))) {
+    if (lid == (uint)(0u)) {
       double totalSum = sdata[(uint)(0u)];
       double nFloat = ((double)(n));
       double meanVal = (totalSum / nFloat);
@@ -4329,7 +4329,7 @@ const char* k_opencl_navatala_dataframe_correlation_f32 = R"kernel(
 __kernel void navatala_dataframe_correlation_f32(__global const float* covariance, __global const float* stddevX, __global const float* stddevY, __global float* correlation) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     float covVal = covariance[0];
     float sigmaX = stddevX[0];
     float sigmaY = stddevY[0];
@@ -4345,7 +4345,7 @@ const char* k_opencl_navatala_dataframe_correlation_f64 = R"kernel(
 __kernel void navatala_dataframe_correlation_f64(__global const double* covariance, __global const double* stddevX, __global const double* stddevY, __global double* correlation) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     double covVal = covariance[0];
     double sigmaX = stddevX[0];
     double sigmaY = stddevY[0];
@@ -4407,7 +4407,7 @@ const char* k_opencl_navatala_dataframe_quantile_f32 = R"kernel(
 __kernel void navatala_dataframe_quantile_f32(__global const float* sortedInput, __global const uint* count, __global const float* quantileP, __global float* result) {
   int gid0 = (int)get_global_id(0);
   uint gidU32 = ((uint)((int)(get_global_id(0))));
-  if ((gidU32 == (uint)(0u))) {
+  if (gidU32 == (uint)(0u)) {
     uint n = count[(uint)(0u)];
     float p = quantileP[(uint)(0u)];
     float pClamped = (((p < as_float(0x00000000u))) ? (as_float(0x00000000u)) : ((((p > as_float(0x3f800000u))) ? (as_float(0x3f800000u)) : (p))));
@@ -4435,7 +4435,7 @@ const char* k_opencl_navatala_dataframe_quantile_f64 = R"kernel(
 __kernel void navatala_dataframe_quantile_f64(__global const double* sortedInput, __global const uint* count, __global const double* quantileP, __global double* result) {
   int gid0 = (int)get_global_id(0);
   uint gidU32 = ((uint)((int)(get_global_id(0))));
-  if ((gidU32 == (uint)(0u))) {
+  if (gidU32 == (uint)(0u)) {
     uint n = count[(uint)(0u)];
     double p = quantileP[(uint)(0u)];
     double pClamped = (((p < as_double(0x0000000000000000ul))) ? (as_double(0x0000000000000000ul)) : ((((p > as_double(0x3ff0000000000000ul))) ? (as_double(0x3ff0000000000000ul)) : (p))));
@@ -4521,7 +4521,7 @@ const char* k_opencl_navatala_dataframe_median_f32 = R"kernel(
 __kernel void navatala_dataframe_median_f32(__global const float* sortedInput, __global const uint* count, __global float* median) {
   int gid0 = (int)get_global_id(0);
   uint gidU32 = ((uint)((int)(get_global_id(0))));
-  if ((gidU32 == (uint)(0u))) {
+  if (gidU32 == (uint)(0u)) {
     uint n = count[(uint)(0u)];
     uint nMinus1 = (n - (uint)(1u));
     float nMinus1Float = ((float)(nMinus1));
@@ -4547,7 +4547,7 @@ const char* k_opencl_navatala_dataframe_median_f64 = R"kernel(
 __kernel void navatala_dataframe_median_f64(__global const double* sortedInput, __global const uint* count, __global double* median) {
   int gid0 = (int)get_global_id(0);
   uint gidU32 = ((uint)((int)(get_global_id(0))));
-  if ((gidU32 == (uint)(0u))) {
+  if (gidU32 == (uint)(0u)) {
     uint n = count[(uint)(0u)];
     uint nMinus1 = (n - (uint)(1u));
     double nMinus1Float = ((double)(nMinus1));
@@ -4572,7 +4572,7 @@ const char* k_opencl_navatala_dataframe_iqr_f32 = R"kernel(
 __kernel void navatala_dataframe_iqr_f32(__global const float* sortedInput, __global const uint* count, __global float* iqr) {
   int gid0 = (int)get_global_id(0);
   uint gidU32 = ((uint)((int)(get_global_id(0))));
-  if ((gidU32 == (uint)(0u))) {
+  if (gidU32 == (uint)(0u)) {
     uint n = count[(uint)(0u)];
     uint nMinus1 = (n - (uint)(1u));
     float nMinus1Float = ((float)(nMinus1));
@@ -4607,7 +4607,7 @@ const char* k_opencl_navatala_dataframe_iqr_f64 = R"kernel(
 __kernel void navatala_dataframe_iqr_f64(__global const double* sortedInput, __global const uint* count, __global double* iqr) {
   int gid0 = (int)get_global_id(0);
   uint gidU32 = ((uint)((int)(get_global_id(0))));
-  if ((gidU32 == (uint)(0u))) {
+  if (gidU32 == (uint)(0u)) {
     uint n = count[(uint)(0u)];
     uint nMinus1 = (n - (uint)(1u));
     double nMinus1Float = ((double)(nMinus1));
@@ -4640,7 +4640,7 @@ __kernel void navatala_dataframe_iqr_f64(__global const double* sortedInput, __g
 const char* k_opencl_navatala_dataframe_init_e_w_m_c_f32 = R"kernel(
 __kernel void navatala_dataframe_init_e_w_m_c_f32(__global const float* alphaIn, __global float* alpha, __global float* nEff, __global float* meanX, __global float* meanY, __global float* Cxy, __global float* varX, __global float* varY) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float a = alphaIn[0];
     alpha[0] = a;
     nEff[0] = as_float(0x00000000u);
@@ -4657,7 +4657,7 @@ const char* k_opencl_navatala_dataframe_init_e_w_m_c_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_init_e_w_m_c_f64(__global const double* alphaIn, __global double* alpha, __global double* nEff, __global double* meanX, __global double* meanY, __global double* Cxy, __global double* varX, __global double* varY) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double a = alphaIn[0];
     alpha[0] = a;
     nEff[0] = as_double(0x0000000000000000ul);
@@ -4673,7 +4673,7 @@ __kernel void navatala_dataframe_init_e_w_m_c_f64(__global const double* alphaIn
 const char* k_opencl_navatala_dataframe_init_e_w_m_c_from_halflife_f32 = R"kernel(
 __kernel void navatala_dataframe_init_e_w_m_c_from_halflife_f32(__global const float* halflife, __global float* alpha, __global float* nEff, __global float* meanX, __global float* meanY, __global float* Cxy, __global float* varX, __global float* varY) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float h = halflife[0];
     float ln2 = as_float(0x3f317215u);
     float a = (ln2 / h);
@@ -4692,7 +4692,7 @@ const char* k_opencl_navatala_dataframe_init_e_w_m_c_from_halflife_f64 = R"kerne
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_init_e_w_m_c_from_halflife_f64(__global const double* halflife, __global double* alpha, __global double* nEff, __global double* meanX, __global double* meanY, __global double* Cxy, __global double* varX, __global double* varY) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double h = halflife[0];
     double ln2 = as_double(0x3fe62e42fefa39eful);
     double a = (ln2 / h);
@@ -4710,7 +4710,7 @@ __kernel void navatala_dataframe_init_e_w_m_c_from_halflife_f64(__global const d
 const char* k_opencl_navatala_dataframe_ewmc_update_f32 = R"kernel(
 __kernel void navatala_dataframe_ewmc_update_f32(__global const float* x, __global const float* y, __global const float* alpha, __global float* nEff, __global float* meanX, __global float* meanY, __global float* Cxy, __global float* varX, __global float* varY) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float xVal = x[0];
     float yVal = y[0];
     float a = alpha[0];
@@ -4757,7 +4757,7 @@ const char* k_opencl_navatala_dataframe_ewmc_update_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_ewmc_update_f64(__global const double* x, __global const double* y, __global const double* alpha, __global double* nEff, __global double* meanX, __global double* meanY, __global double* Cxy, __global double* varX, __global double* varY) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double xVal = x[0];
     double yVal = y[0];
     double a = alpha[0];
@@ -4803,7 +4803,7 @@ __kernel void navatala_dataframe_ewmc_update_f64(__global const double* x, __glo
 const char* k_opencl_navatala_dataframe_ewmc_extract_covariance_f32 = R"kernel(
 __kernel void navatala_dataframe_ewmc_extract_covariance_f32(__global const float* Cxy, __global const float* nEff, __global float* result) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float c = Cxy[0];
     float n = nEff[0];
     float eps = as_float(0x2edbe6ffu);
@@ -4819,7 +4819,7 @@ const char* k_opencl_navatala_dataframe_ewmc_extract_covariance_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_ewmc_extract_covariance_f64(__global const double* Cxy, __global const double* nEff, __global double* result) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double c = Cxy[0];
     double n = nEff[0];
     double eps = as_double(0x3cd203af9ee75616ul);
@@ -4834,7 +4834,7 @@ __kernel void navatala_dataframe_ewmc_extract_covariance_f64(__global const doub
 const char* k_opencl_navatala_dataframe_ewmc_extract_correlation_f32 = R"kernel(
 __kernel void navatala_dataframe_ewmc_extract_correlation_f32(__global const float* Cxy, __global const float* varX, __global const float* varY, __global const float* nEff, __global float* result) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float c = Cxy[0];
     float vx = varX[0];
     float vy = varY[0];
@@ -4854,7 +4854,7 @@ const char* k_opencl_navatala_dataframe_ewmc_extract_correlation_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_ewmc_extract_correlation_f64(__global const double* Cxy, __global const double* varX, __global const double* varY, __global const double* nEff, __global double* result) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double c = Cxy[0];
     double vx = varX[0];
     double vy = varY[0];
@@ -4874,7 +4874,7 @@ const char* k_opencl_navatala_dataframe_init_m_c_d_f32 = R"kernel(
 __kernel void navatala_dataframe_init_m_c_d_f32(__global const float* thresholdIn, __global float* robustMeanX, __global float* robustMeanY, __global float* robustCov, __global float* determinant, __global float* threshold, __global uint* count) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     float thresh = thresholdIn[0];
     robustMeanX[0] = as_float(0x00000000u);
     robustMeanY[0] = as_float(0x00000000u);
@@ -4891,7 +4891,7 @@ const char* k_opencl_navatala_dataframe_init_m_c_d_f64 = R"kernel(
 __kernel void navatala_dataframe_init_m_c_d_f64(__global const double* thresholdIn, __global double* robustMeanX, __global double* robustMeanY, __global double* robustCov, __global double* determinant, __global double* threshold, __global uint* count) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     double thresh = thresholdIn[0];
     robustMeanX[0] = as_double(0x0000000000000000ul);
     robustMeanY[0] = as_double(0x0000000000000000ul);
@@ -4932,7 +4932,7 @@ __kernel void navatala_dataframe_mcd_compute_center_f32(__global const float* da
   uint ctr1ReductionStride = (uint)(128u);
   for (int ctr1ReductionStep = 0; ctr1ReductionStep < (int)(8); ++ctr1ReductionStep) {
     uint ctr1Stride = ctr1ReductionStride;
-    if ((lid < ctr1Stride)) {
+    if (lid < ctr1Stride) {
       float otherX = sdataX[(lid + ctr1Stride)];
       float otherY = sdataY[(lid + ctr1Stride)];
       uint otherC = scount[(lid + ctr1Stride)];
@@ -4951,7 +4951,7 @@ __kernel void navatala_dataframe_mcd_compute_center_f32(__global const float* da
     ctr1ReductionStride = ctr1NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float totalX = sdataX[0];
     float totalY = sdataY[0];
     uint totalCount = scount[0];
@@ -4995,7 +4995,7 @@ __kernel void navatala_dataframe_mcd_compute_center_f64(__global const double* d
   uint ctr2ReductionStride = (uint)(128u);
   for (int ctr2ReductionStep = 0; ctr2ReductionStep < (int)(8); ++ctr2ReductionStep) {
     uint ctr2Stride = ctr2ReductionStride;
-    if ((lid < ctr2Stride)) {
+    if (lid < ctr2Stride) {
       double otherX = sdataX[(lid + ctr2Stride)];
       double otherY = sdataY[(lid + ctr2Stride)];
       uint otherC = scount[(lid + ctr2Stride)];
@@ -5014,7 +5014,7 @@ __kernel void navatala_dataframe_mcd_compute_center_f64(__global const double* d
     ctr2ReductionStride = ctr2NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     double totalX = sdataX[0];
     double totalY = sdataY[0];
     uint totalCount = scount[0];
@@ -5065,7 +5065,7 @@ __kernel void navatala_dataframe_mcd_compute_covariance_f32(__global const float
   uint cov1ReductionStride = (uint)(128u);
   for (int cov1ReductionStep = 0; cov1ReductionStep < (int)(8); ++cov1ReductionStep) {
     uint cov1Stride = cov1ReductionStride;
-    if ((lid < cov1Stride)) {
+    if (lid < cov1Stride) {
       float otherCov = scov[(lid + cov1Stride)];
       float otherVX = svarX[(lid + cov1Stride)];
       float otherVY = svarY[(lid + cov1Stride)];
@@ -5088,7 +5088,7 @@ __kernel void navatala_dataframe_mcd_compute_covariance_f32(__global const float
     cov1ReductionStride = cov1NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float totalCov = scov[0];
     float totalVX = svarX[0];
     float totalVY = svarY[0];
@@ -5144,7 +5144,7 @@ __kernel void navatala_dataframe_mcd_compute_covariance_f64(__global const doubl
   uint cov2ReductionStride = (uint)(128u);
   for (int cov2ReductionStep = 0; cov2ReductionStep < (int)(8); ++cov2ReductionStep) {
     uint cov2Stride = cov2ReductionStride;
-    if ((lid < cov2Stride)) {
+    if (lid < cov2Stride) {
       double otherCov = scov[(lid + cov2Stride)];
       double otherVX = svarX[(lid + cov2Stride)];
       double otherVY = svarY[(lid + cov2Stride)];
@@ -5167,7 +5167,7 @@ __kernel void navatala_dataframe_mcd_compute_covariance_f64(__global const doubl
     cov2ReductionStride = cov2NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     double totalCov = scov[0];
     double totalVX = svarX[0];
     double totalVY = svarY[0];
@@ -5289,7 +5289,7 @@ const char* k_opencl_navatala_dataframe_mcd_extract_mean_f32 = R"kernel(
 __kernel void navatala_dataframe_mcd_extract_mean_f32(__global const float* robustMeanX, __global const float* robustMeanY, __global float* meanX, __global float* meanY) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     float mx = robustMeanX[0];
     float my = robustMeanY[0];
     meanX[0] = mx;
@@ -5303,7 +5303,7 @@ const char* k_opencl_navatala_dataframe_mcd_extract_mean_f64 = R"kernel(
 __kernel void navatala_dataframe_mcd_extract_mean_f64(__global const double* robustMeanX, __global const double* robustMeanY, __global double* meanX, __global double* meanY) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     double mx = robustMeanX[0];
     double my = robustMeanY[0];
     meanX[0] = mx;
@@ -5315,7 +5315,7 @@ __kernel void navatala_dataframe_mcd_extract_mean_f64(__global const double* rob
 const char* k_opencl_navatala_dataframe_init_moments_state_f32 = R"kernel(
 __kernel void navatala_dataframe_init_moments_state_f32(__global uint* n, __global float* M1, __global float* M2, __global float* M3, __global float* M4) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     n[0] = (uint)(0u);
     M1[0] = as_float(0x00000000u);
     M2[0] = as_float(0x00000000u);
@@ -5329,7 +5329,7 @@ const char* k_opencl_navatala_dataframe_init_moments_state_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_init_moments_state_f64(__global uint* n, __global double* M1, __global double* M2, __global double* M3, __global double* M4) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     n[0] = (uint)(0u);
     M1[0] = as_double(0x0000000000000000ul);
     M2[0] = as_double(0x0000000000000000ul);
@@ -5342,7 +5342,7 @@ __kernel void navatala_dataframe_init_moments_state_f64(__global uint* n, __glob
 const char* k_opencl_navatala_dataframe_moments_update_f32 = R"kernel(
 __kernel void navatala_dataframe_moments_update_f32(__global const float* x, __global uint* n, __global float* M1, __global float* M2, __global float* M3, __global float* M4) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint nOld = n[0];
     float m1Old = M1[0];
     float m2Old = M2[0];
@@ -5383,7 +5383,7 @@ const char* k_opencl_navatala_dataframe_moments_update_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_moments_update_f64(__global const double* x, __global uint* n, __global double* M1, __global double* M2, __global double* M3, __global double* M4) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint nOld = n[0];
     double m1Old = M1[0];
     double m2Old = M2[0];
@@ -5423,7 +5423,7 @@ __kernel void navatala_dataframe_moments_update_f64(__global const double* x, __
 const char* k_opencl_navatala_dataframe_moments_merge_f32 = R"kernel(
 __kernel void navatala_dataframe_moments_merge_f32(__global const uint* nA, __global const float* M1A, __global const float* M2A, __global const float* M3A, __global const float* M4A, __global const uint* nB, __global const float* M1B, __global const float* M2B, __global const float* M3B, __global const float* M4B, __global uint* nOut, __global float* M1Out, __global float* M2Out, __global float* M3Out, __global float* M4Out) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint nAVal = nA[0];
     float m1AVal = M1A[0];
     float m2AVal = M2A[0];
@@ -5480,7 +5480,7 @@ const char* k_opencl_navatala_dataframe_moments_merge_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_moments_merge_f64(__global const uint* nA, __global const double* M1A, __global const double* M2A, __global const double* M3A, __global const double* M4A, __global const uint* nB, __global const double* M1B, __global const double* M2B, __global const double* M3B, __global const double* M4B, __global uint* nOut, __global double* M1Out, __global double* M2Out, __global double* M3Out, __global double* M4Out) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint nAVal = nA[0];
     double m1AVal = M1A[0];
     double m2AVal = M2A[0];
@@ -5536,7 +5536,7 @@ __kernel void navatala_dataframe_moments_merge_f64(__global const uint* nA, __gl
 const char* k_opencl_navatala_dataframe_extract_skewness_f32 = R"kernel(
 __kernel void navatala_dataframe_extract_skewness_f32(__global const uint* n, __global const float* M2, __global const float* M3, __global float* skewness) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint nVal = n[0];
     float m2Val = M2[0];
     float m3Val = M3[0];
@@ -5557,7 +5557,7 @@ const char* k_opencl_navatala_dataframe_extract_skewness_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_extract_skewness_f64(__global const uint* n, __global const double* M2, __global const double* M3, __global double* skewness) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint nVal = n[0];
     double m2Val = M2[0];
     double m3Val = M3[0];
@@ -5577,7 +5577,7 @@ __kernel void navatala_dataframe_extract_skewness_f64(__global const uint* n, __
 const char* k_opencl_navatala_dataframe_extract_kurtosis_f32 = R"kernel(
 __kernel void navatala_dataframe_extract_kurtosis_f32(__global const uint* n, __global const float* M2, __global const float* M4, __global float* kurtosis) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint nVal = n[0];
     float m2Val = M2[0];
     float m4Val = M4[0];
@@ -5596,7 +5596,7 @@ const char* k_opencl_navatala_dataframe_extract_kurtosis_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_extract_kurtosis_f64(__global const uint* n, __global const double* M2, __global const double* M4, __global double* kurtosis) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint nVal = n[0];
     double m2Val = M2[0];
     double m4Val = M4[0];
@@ -5614,7 +5614,7 @@ __kernel void navatala_dataframe_extract_kurtosis_f64(__global const uint* n, __
 const char* k_opencl_navatala_dataframe_extract_excess_kurtosis_f32 = R"kernel(
 __kernel void navatala_dataframe_extract_excess_kurtosis_f32(__global const uint* n, __global const float* M2, __global const float* M4, __global float* excessKurtosis) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint nVal = n[0];
     float m2Val = M2[0];
     float m4Val = M4[0];
@@ -5634,7 +5634,7 @@ const char* k_opencl_navatala_dataframe_extract_excess_kurtosis_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_extract_excess_kurtosis_f64(__global const uint* n, __global const double* M2, __global const double* M4, __global double* excessKurtosis) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint nVal = n[0];
     double m2Val = M2[0];
     double m4Val = M4[0];
@@ -5908,7 +5908,7 @@ __kernel void navatala_dataframe_adjusted_rand_index_f32(__global const float* c
   barrier(CLK_LOCAL_MEM_FENCE);
   for (int stride = 0; stride < (int)((uint)(128u)); ++stride) {
     uint strideU32 = ((uint)(stride));
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       float otherNij = sumNij[(lid + strideU32)];
       float mineNij = sumNij[lid];
       sumNij[lid] = (mineNij + otherNij);
@@ -5921,7 +5921,7 @@ __kernel void navatala_dataframe_adjusted_rand_index_f32(__global const float* c
     }
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float sumNijFinal = sumNij[(uint)(0u)];
     float sumAiFinal = sumAi[(uint)(0u)];
     float sumBjFinal = sumBj[(uint)(0u)];
@@ -5999,7 +5999,7 @@ __kernel void navatala_dataframe_adjusted_rand_index_f64(__global const double* 
   barrier(CLK_LOCAL_MEM_FENCE);
   for (int stride = 0; stride < (int)((uint)(128u)); ++stride) {
     uint strideU32 = ((uint)(stride));
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       double otherNij = sumNij[(lid + strideU32)];
       double mineNij = sumNij[lid];
       sumNij[lid] = (mineNij + otherNij);
@@ -6012,7 +6012,7 @@ __kernel void navatala_dataframe_adjusted_rand_index_f64(__global const double* 
     }
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     double sumNijFinal = sumNij[(uint)(0u)];
     double sumAiFinal = sumAi[(uint)(0u)];
     double sumBjFinal = sumBj[(uint)(0u)];
@@ -6107,7 +6107,7 @@ __kernel void navatala_dataframe_normalized_mutual_info_f32(__global const float
   barrier(CLK_LOCAL_MEM_FENCE);
   for (int stride = 0; stride < (int)((uint)(128u)); ++stride) {
     uint strideU32 = ((uint)(stride));
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       float otherMI = miSum[(lid + strideU32)];
       float mineMI = miSum[lid];
       miSum[lid] = (mineMI + otherMI);
@@ -6120,7 +6120,7 @@ __kernel void navatala_dataframe_normalized_mutual_info_f32(__global const float
     }
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float miFinal = miSum[(uint)(0u)];
     float hyFinal = hySum[(uint)(0u)];
     float hcFinal = hcSum[(uint)(0u)];
@@ -6211,7 +6211,7 @@ __kernel void navatala_dataframe_normalized_mutual_info_f64(__global const doubl
   barrier(CLK_LOCAL_MEM_FENCE);
   for (int stride = 0; stride < (int)((uint)(128u)); ++stride) {
     uint strideU32 = ((uint)(stride));
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       double otherMI = miSum[(lid + strideU32)];
       double mineMI = miSum[lid];
       miSum[lid] = (mineMI + otherMI);
@@ -6224,7 +6224,7 @@ __kernel void navatala_dataframe_normalized_mutual_info_f64(__global const doubl
     }
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     double miFinal = miSum[(uint)(0u)];
     double hyFinal = hySum[(uint)(0u)];
     double hcFinal = hcSum[(uint)(0u)];
@@ -6293,7 +6293,7 @@ __kernel void navatala_dataframe_homogeneity_score_f32(__global const float* con
   barrier(CLK_LOCAL_MEM_FENCE);
   for (int stride = 0; stride < (int)((uint)(128u)); ++stride) {
     uint strideU32 = ((uint)(stride));
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       float otherHYC = hycSum[(lid + strideU32)];
       float mineHYC = hycSum[lid];
       hycSum[lid] = (mineHYC + otherHYC);
@@ -6303,7 +6303,7 @@ __kernel void navatala_dataframe_homogeneity_score_f32(__global const float* con
     }
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float hycFinal = hycSum[(uint)(0u)];
     float hyFinal = hySum[(uint)(0u)];
     bool hyIsZero = (hyFinal == as_float(0x00000000u));
@@ -6371,7 +6371,7 @@ __kernel void navatala_dataframe_homogeneity_score_f64(__global const double* co
   barrier(CLK_LOCAL_MEM_FENCE);
   for (int stride = 0; stride < (int)((uint)(128u)); ++stride) {
     uint strideU32 = ((uint)(stride));
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       double otherHYC = hycSum[(lid + strideU32)];
       double mineHYC = hycSum[lid];
       hycSum[lid] = (mineHYC + otherHYC);
@@ -6381,7 +6381,7 @@ __kernel void navatala_dataframe_homogeneity_score_f64(__global const double* co
     }
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     double hycFinal = hycSum[(uint)(0u)];
     double hyFinal = hySum[(uint)(0u)];
     bool hyIsZero = (hyFinal == as_double(0x0000000000000000ul));
@@ -6448,7 +6448,7 @@ __kernel void navatala_dataframe_completeness_score_f32(__global const float* co
   barrier(CLK_LOCAL_MEM_FENCE);
   for (int stride = 0; stride < (int)((uint)(128u)); ++stride) {
     uint strideU32 = ((uint)(stride));
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       float otherHCY = hcySum[(lid + strideU32)];
       float mineHCY = hcySum[lid];
       hcySum[lid] = (mineHCY + otherHCY);
@@ -6458,7 +6458,7 @@ __kernel void navatala_dataframe_completeness_score_f32(__global const float* co
     }
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float hcyFinal = hcySum[(uint)(0u)];
     float hcFinal = hcSum[(uint)(0u)];
     bool hcIsZero = (hcFinal == as_float(0x00000000u));
@@ -6526,7 +6526,7 @@ __kernel void navatala_dataframe_completeness_score_f64(__global const double* c
   barrier(CLK_LOCAL_MEM_FENCE);
   for (int stride = 0; stride < (int)((uint)(128u)); ++stride) {
     uint strideU32 = ((uint)(stride));
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       double otherHCY = hcySum[(lid + strideU32)];
       double mineHCY = hcySum[lid];
       hcySum[lid] = (mineHCY + otherHCY);
@@ -6536,7 +6536,7 @@ __kernel void navatala_dataframe_completeness_score_f64(__global const double* c
     }
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     double hcyFinal = hcySum[(uint)(0u)];
     double hcFinal = hcSum[(uint)(0u)];
     bool hcIsZero = (hcFinal == as_double(0x0000000000000000ul));
@@ -6550,7 +6550,7 @@ const char* k_opencl_navatala_dataframe_v_measure_f32 = R"kernel(
 __kernel void navatala_dataframe_v_measure_f32(__global const float* homogeneity, __global const float* completeness, __global float* vMeasure) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     float h = homogeneity[(uint)(0u)];
     float c = completeness[(uint)(0u)];
     float hPlusC = (h + c);
@@ -6568,7 +6568,7 @@ const char* k_opencl_navatala_dataframe_v_measure_f64 = R"kernel(
 __kernel void navatala_dataframe_v_measure_f64(__global const double* homogeneity, __global const double* completeness, __global double* vMeasure) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     double h = homogeneity[(uint)(0u)];
     double c = completeness[(uint)(0u)];
     double hPlusC = (h + c);
@@ -6608,7 +6608,7 @@ __kernel void navatala_dataframe_r2_score_f32(__global const float* y_true, __gl
   uint r2F32_reductionStride = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint r2F32_stride = r2F32_reductionStride;
-    if ((lid < r2F32_stride)) {
+    if (lid < r2F32_stride) {
       uint r2F32_partnerIdx = (lid + r2F32_stride);
       float otherRes = sdata_res[r2F32_partnerIdx];
       float mineRes = sdata_res[lid];
@@ -6625,7 +6625,7 @@ __kernel void navatala_dataframe_r2_score_f32(__global const float* y_true, __gl
     barrier(CLK_LOCAL_MEM_FENCE);
   }
   uint zeroU32 = ((uint)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     float ssRes = sdata_res[0];
     float ssTot = sdata_tot[0];
     float ratio = (ssRes / ssTot);
@@ -6663,7 +6663,7 @@ __kernel void navatala_dataframe_r2_score_f64(__global const double* y_true, __g
   uint r2F64_reductionStride = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint r2F64_stride = r2F64_reductionStride;
-    if ((lid < r2F64_stride)) {
+    if (lid < r2F64_stride) {
       uint r2F64_partnerIdx = (lid + r2F64_stride);
       double otherRes = sdata_res[r2F64_partnerIdx];
       double mineRes = sdata_res[lid];
@@ -6680,7 +6680,7 @@ __kernel void navatala_dataframe_r2_score_f64(__global const double* y_true, __g
     barrier(CLK_LOCAL_MEM_FENCE);
   }
   uint zeroU32 = ((uint)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     double ssRes = sdata_res[0];
     double ssTot = sdata_tot[0];
     double ratio = (ssRes / ssTot);
@@ -6711,7 +6711,7 @@ __kernel void navatala_dataframe_mse_f32(__global const float* y_true, __global 
   uint mseF32_reductionStride = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint mseF32_stride = mseF32_reductionStride;
-    if ((lid < mseF32_stride)) {
+    if (lid < mseF32_stride) {
       uint mseF32_partnerIdx = (lid + mseF32_stride);
       float other = sdata[mseF32_partnerIdx];
       float mine = sdata[lid];
@@ -6724,7 +6724,7 @@ __kernel void navatala_dataframe_mse_f32(__global const float* y_true, __global 
     barrier(CLK_LOCAL_MEM_FENCE);
   }
   uint zeroU32 = ((uint)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     float totalSum = sdata[0];
     float countFloat = ((float)(countVal));
     float mseVal = (totalSum / countFloat);
@@ -6755,7 +6755,7 @@ __kernel void navatala_dataframe_mse_f64(__global const double* y_true, __global
   uint mseF64_reductionStride = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint mseF64_stride = mseF64_reductionStride;
-    if ((lid < mseF64_stride)) {
+    if (lid < mseF64_stride) {
       uint mseF64_partnerIdx = (lid + mseF64_stride);
       double other = sdata[mseF64_partnerIdx];
       double mine = sdata[lid];
@@ -6768,7 +6768,7 @@ __kernel void navatala_dataframe_mse_f64(__global const double* y_true, __global
     barrier(CLK_LOCAL_MEM_FENCE);
   }
   uint zeroU32 = ((uint)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     double totalSum = sdata[0];
     double countFloat = ((double)(countVal));
     double mseVal = (totalSum / countFloat);
@@ -6782,7 +6782,7 @@ __kernel void navatala_dataframe_rmse_f32(__global const float* mse, __global fl
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint zeroU32 = ((uint)(0));
-  if ((gid == zeroU32)) {
+  if (gid == zeroU32) {
     float mseVal = mse[0];
     float rmseVal = sqrt(mseVal);
     rmse[0] = rmseVal;
@@ -6796,7 +6796,7 @@ __kernel void navatala_dataframe_rmse_f64(__global const double* mse, __global d
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint zeroU32 = ((uint)(0));
-  if ((gid == zeroU32)) {
+  if (gid == zeroU32) {
     double mseVal = mse[0];
     double rmseVal = sqrt(mseVal);
     rmse[0] = rmseVal;
@@ -6825,7 +6825,7 @@ __kernel void navatala_dataframe_mae_f32(__global const float* y_true, __global 
   uint maeF32_reductionStride = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint maeF32_stride = maeF32_reductionStride;
-    if ((lid < maeF32_stride)) {
+    if (lid < maeF32_stride) {
       uint maeF32_partnerIdx = (lid + maeF32_stride);
       float other = sdata[maeF32_partnerIdx];
       float mine = sdata[lid];
@@ -6838,7 +6838,7 @@ __kernel void navatala_dataframe_mae_f32(__global const float* y_true, __global 
     barrier(CLK_LOCAL_MEM_FENCE);
   }
   uint zeroU32 = ((uint)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     float totalSum = sdata[0];
     float countFloat = ((float)(countVal));
     float maeVal = (totalSum / countFloat);
@@ -6869,7 +6869,7 @@ __kernel void navatala_dataframe_mae_f64(__global const double* y_true, __global
   uint maeF64_reductionStride = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint maeF64_stride = maeF64_reductionStride;
-    if ((lid < maeF64_stride)) {
+    if (lid < maeF64_stride) {
       uint maeF64_partnerIdx = (lid + maeF64_stride);
       double other = sdata[maeF64_partnerIdx];
       double mine = sdata[lid];
@@ -6882,7 +6882,7 @@ __kernel void navatala_dataframe_mae_f64(__global const double* y_true, __global
     barrier(CLK_LOCAL_MEM_FENCE);
   }
   uint zeroU32 = ((uint)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     double totalSum = sdata[0];
     double countFloat = ((double)(countVal));
     double maeVal = (totalSum / countFloat);
@@ -6914,7 +6914,7 @@ __kernel void navatala_dataframe_mape_f32(__global const float* y_true, __global
   uint mapeF32_reductionStride = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint mapeF32_stride = mapeF32_reductionStride;
-    if ((lid < mapeF32_stride)) {
+    if (lid < mapeF32_stride) {
       uint mapeF32_partnerIdx = (lid + mapeF32_stride);
       float other = sdata[mapeF32_partnerIdx];
       float mine = sdata[lid];
@@ -6927,7 +6927,7 @@ __kernel void navatala_dataframe_mape_f32(__global const float* y_true, __global
     barrier(CLK_LOCAL_MEM_FENCE);
   }
   uint zeroU32 = ((uint)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     float totalSum = sdata[0];
     float countFloat = ((float)(countVal));
     float avgPctErr = (totalSum / countFloat);
@@ -6961,7 +6961,7 @@ __kernel void navatala_dataframe_mape_f64(__global const double* y_true, __globa
   uint mapeF64_reductionStride = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint mapeF64_stride = mapeF64_reductionStride;
-    if ((lid < mapeF64_stride)) {
+    if (lid < mapeF64_stride) {
       uint mapeF64_partnerIdx = (lid + mapeF64_stride);
       double other = sdata[mapeF64_partnerIdx];
       double mine = sdata[lid];
@@ -6974,7 +6974,7 @@ __kernel void navatala_dataframe_mape_f64(__global const double* y_true, __globa
     barrier(CLK_LOCAL_MEM_FENCE);
   }
   uint zeroU32 = ((uint)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     double totalSum = sdata[0];
     double countFloat = ((double)(countVal));
     double avgPctErr = (totalSum / countFloat);
@@ -7013,7 +7013,7 @@ __kernel void navatala_dataframe_explained_variance_f32(__global const float* y_
   uint evF32_reductionStride = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint evF32_stride = evF32_reductionStride;
-    if ((lid < evF32_stride)) {
+    if (lid < evF32_stride) {
       uint evF32_partnerIdx = (lid + evF32_stride);
       float otherRes = sdata_var_res[evF32_partnerIdx];
       float mineRes = sdata_var_res[lid];
@@ -7030,7 +7030,7 @@ __kernel void navatala_dataframe_explained_variance_f32(__global const float* y_
     barrier(CLK_LOCAL_MEM_FENCE);
   }
   uint zeroU32 = ((uint)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     float sumSqRes = sdata_var_res[0];
     float sumSqTrue = sdata_var_true[0];
     float countFloat = ((float)(countVal));
@@ -7071,7 +7071,7 @@ __kernel void navatala_dataframe_explained_variance_f64(__global const double* y
   uint evF64_reductionStride = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint evF64_stride = evF64_reductionStride;
-    if ((lid < evF64_stride)) {
+    if (lid < evF64_stride) {
       uint evF64_partnerIdx = (lid + evF64_stride);
       double otherRes = sdata_var_res[evF64_partnerIdx];
       double mineRes = sdata_var_res[lid];
@@ -7088,7 +7088,7 @@ __kernel void navatala_dataframe_explained_variance_f64(__global const double* y
     barrier(CLK_LOCAL_MEM_FENCE);
   }
   uint zeroU32 = ((uint)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     double sumSqRes = sdata_var_res[0];
     double sumSqTrue = sdata_var_true[0];
     double countFloat = ((double)(countVal));
@@ -7121,7 +7121,7 @@ __kernel void navatala_dataframe_entropy_f32(__global const float* p, __global c
   uint e32_reductionStride = (uint)(128u);
   for (int e32_reductionStep = 0; e32_reductionStep < (int)(8); ++e32_reductionStep) {
     uint e32_stride = e32_reductionStride;
-    if ((lid < e32_stride)) {
+    if (lid < e32_stride) {
       float e32_other = sdata[(lid + e32_stride)];
       float e32_mine = sdata[lid];
       float e32_sum = (e32_mine + e32_other);
@@ -7132,7 +7132,7 @@ __kernel void navatala_dataframe_entropy_f32(__global const float* p, __global c
     e32_reductionStride = e32_nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     result[(uint)(0u)] = sdata[(uint)(0u)];
   }
 }
@@ -7161,7 +7161,7 @@ __kernel void navatala_dataframe_entropy_f64(__global const double* p, __global 
   uint e64_reductionStride = (uint)(128u);
   for (int e64_reductionStep = 0; e64_reductionStep < (int)(8); ++e64_reductionStep) {
     uint e64_stride = e64_reductionStride;
-    if ((lid < e64_stride)) {
+    if (lid < e64_stride) {
       double e64_other = sdata[(lid + e64_stride)];
       double e64_mine = sdata[lid];
       double e64_sum = (e64_mine + e64_other);
@@ -7172,7 +7172,7 @@ __kernel void navatala_dataframe_entropy_f64(__global const double* p, __global 
     e64_reductionStride = e64_nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     result[(uint)(0u)] = sdata[(uint)(0u)];
   }
 }
@@ -7201,7 +7201,7 @@ __kernel void navatala_dataframe_cross_entropy_f32(__global const float* p, __gl
   uint ce32_reductionStride = (uint)(128u);
   for (int ce32_reductionStep = 0; ce32_reductionStep < (int)(8); ++ce32_reductionStep) {
     uint ce32_stride = ce32_reductionStride;
-    if ((lid < ce32_stride)) {
+    if (lid < ce32_stride) {
       float ce32_other = sdata[(lid + ce32_stride)];
       float ce32_mine = sdata[lid];
       float ce32_sum = (ce32_mine + ce32_other);
@@ -7212,7 +7212,7 @@ __kernel void navatala_dataframe_cross_entropy_f32(__global const float* p, __gl
     ce32_reductionStride = ce32_nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     result[(uint)(0u)] = sdata[(uint)(0u)];
   }
 }
@@ -7242,7 +7242,7 @@ __kernel void navatala_dataframe_cross_entropy_f64(__global const double* p, __g
   uint ce64_reductionStride = (uint)(128u);
   for (int ce64_reductionStep = 0; ce64_reductionStep < (int)(8); ++ce64_reductionStep) {
     uint ce64_stride = ce64_reductionStride;
-    if ((lid < ce64_stride)) {
+    if (lid < ce64_stride) {
       double ce64_other = sdata[(lid + ce64_stride)];
       double ce64_mine = sdata[lid];
       double ce64_sum = (ce64_mine + ce64_other);
@@ -7253,7 +7253,7 @@ __kernel void navatala_dataframe_cross_entropy_f64(__global const double* p, __g
     ce64_reductionStride = ce64_nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     result[(uint)(0u)] = sdata[(uint)(0u)];
   }
 }
@@ -7284,7 +7284,7 @@ __kernel void navatala_dataframe_kl_divergence_f32(__global const float* p, __gl
   uint kl32_reductionStride = (uint)(128u);
   for (int kl32_reductionStep = 0; kl32_reductionStep < (int)(8); ++kl32_reductionStep) {
     uint kl32_stride = kl32_reductionStride;
-    if ((lid < kl32_stride)) {
+    if (lid < kl32_stride) {
       float kl32_other = sdata[(lid + kl32_stride)];
       float kl32_mine = sdata[lid];
       float kl32_sum = (kl32_mine + kl32_other);
@@ -7295,7 +7295,7 @@ __kernel void navatala_dataframe_kl_divergence_f32(__global const float* p, __gl
     kl32_reductionStride = kl32_nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     result[(uint)(0u)] = sdata[(uint)(0u)];
   }
 }
@@ -7327,7 +7327,7 @@ __kernel void navatala_dataframe_kl_divergence_f64(__global const double* p, __g
   uint kl64_reductionStride = (uint)(128u);
   for (int kl64_reductionStep = 0; kl64_reductionStep < (int)(8); ++kl64_reductionStep) {
     uint kl64_stride = kl64_reductionStride;
-    if ((lid < kl64_stride)) {
+    if (lid < kl64_stride) {
       double kl64_other = sdata[(lid + kl64_stride)];
       double kl64_mine = sdata[lid];
       double kl64_sum = (kl64_mine + kl64_other);
@@ -7338,7 +7338,7 @@ __kernel void navatala_dataframe_kl_divergence_f64(__global const double* p, __g
     kl64_reductionStride = kl64_nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     result[(uint)(0u)] = sdata[(uint)(0u)];
   }
 }
@@ -7348,7 +7348,7 @@ const char* k_opencl_navatala_dataframe_mutual_information_f32 = R"kernel(
 __kernel void navatala_dataframe_mutual_information_f32(__global const float* hX, __global const float* hY, __global const float* hXY, __global float* result) {
   int gid0 = (int)get_global_id(0);
   uint gidU32 = ((uint)((int)(get_global_id(0))));
-  if ((gidU32 == (uint)(0u))) {
+  if (gidU32 == (uint)(0u)) {
     float hXVal = hX[(uint)(0u)];
     float hYVal = hY[(uint)(0u)];
     float hXYVal = hXY[(uint)(0u)];
@@ -7364,7 +7364,7 @@ const char* k_opencl_navatala_dataframe_mutual_information_f64 = R"kernel(
 __kernel void navatala_dataframe_mutual_information_f64(__global const double* hX, __global const double* hY, __global const double* hXY, __global double* result) {
   int gid0 = (int)get_global_id(0);
   uint gidU32 = ((uint)((int)(get_global_id(0))));
-  if ((gidU32 == (uint)(0u))) {
+  if (gidU32 == (uint)(0u)) {
     double hXVal = hX[(uint)(0u)];
     double hYVal = hY[(uint)(0u)];
     double hXYVal = hXY[(uint)(0u)];
@@ -7379,7 +7379,7 @@ const char* k_opencl_navatala_dataframe_conditional_entropy_f32 = R"kernel(
 __kernel void navatala_dataframe_conditional_entropy_f32(__global const float* hX, __global const float* hXY, __global float* result) {
   int gid0 = (int)get_global_id(0);
   uint gidU32 = ((uint)((int)(get_global_id(0))));
-  if ((gidU32 == (uint)(0u))) {
+  if (gidU32 == (uint)(0u)) {
     float hXVal = hX[(uint)(0u)];
     float hXYVal = hXY[(uint)(0u)];
     float condH = (hXYVal - hXVal);
@@ -7393,7 +7393,7 @@ const char* k_opencl_navatala_dataframe_conditional_entropy_f64 = R"kernel(
 __kernel void navatala_dataframe_conditional_entropy_f64(__global const double* hX, __global const double* hXY, __global double* result) {
   int gid0 = (int)get_global_id(0);
   uint gidU32 = ((uint)((int)(get_global_id(0))));
-  if ((gidU32 == (uint)(0u))) {
+  if (gidU32 == (uint)(0u)) {
     double hXVal = hX[(uint)(0u)];
     double hXYVal = hXY[(uint)(0u)];
     double condH = (hXYVal - hXVal);
@@ -10993,7 +10993,7 @@ __kernel void navatala_dataframe_build_hash_table_i32(__global const int* keys, 
       uint probeIdx = startIdx;
       bool inserted = false;
       for (int __iter = 0; __iter < 65536; ++__iter) {
-        if (!((!inserted))) break;
+        if (!(!inserted)) break;
         uint curIdx = probeIdx;
         int oldKey = gpu_atomic_cas_int((volatile __global atomic_int*)(&(tableKeys[curIdx])), (int)(2147483647), (int)(key), memory_order_relaxed, memory_order_relaxed, memory_scope_device);
         bool gotSlot = (oldKey == 2147483647);
@@ -11030,7 +11030,7 @@ __kernel void navatala_dataframe_probe_hash_table_i32(__global const int* rightK
     bool done = (!isValid);
     uint matchedRowId = (uint)(0u);
     for (int __iter = 0; __iter < 65536; ++__iter) {
-      if (!((!done))) break;
+      if (!(!done)) break;
       uint curIdx = probeIdx;
       int tableKey = tableKeys[curIdx];
       bool isEmpty = (tableKey == 2147483647);
@@ -11148,7 +11148,7 @@ __kernel void navatala_dataframe_count_unmatched_left(__global const uint* leftM
     uint word = leftMatched[wordIdx];
     uint bit = ((word >> bitIdx) & (uint)(1u));
     bool isMatched = (bit == (uint)(1u));
-    if ((isMatched == false)) {
+    if (isMatched == false) {
       atomic_add(&unmatchedCount[(uint)(0u)], (uint)(1u));
     }
   }
@@ -11167,7 +11167,7 @@ __kernel void navatala_dataframe_gather_unmatched_left_indices(__global const ui
     uint word = leftMatched[wordIdx];
     uint bit = ((word >> bitIdx) & (uint)(1u));
     bool isMatched = (bit == (uint)(1u));
-    if ((isMatched == false)) {
+    if (isMatched == false) {
       unmatchedIndices[gid] = gid;
     }
   }
@@ -11298,7 +11298,7 @@ __kernel void navatala_dataframe_count_unmatched_right(__global const uint* righ
     uint word = rightMatched[wordIdx];
     uint bit = ((word >> bitIdx) & (uint)(1u));
     bool isMatched = (bit == (uint)(1u));
-    if ((isMatched == false)) {
+    if (isMatched == false) {
       atomic_add(&unmatchedCount[(uint)(0u)], (uint)(1u));
     }
   }
@@ -11317,7 +11317,7 @@ __kernel void navatala_dataframe_gather_unmatched_right_indices(__global const u
     uint word = rightMatched[wordIdx];
     uint bit = ((word >> bitIdx) & (uint)(1u));
     bool isMatched = (bit == (uint)(1u));
-    if ((isMatched == false)) {
+    if (isMatched == false) {
       unmatchedIndices[gid] = gid;
     }
   }

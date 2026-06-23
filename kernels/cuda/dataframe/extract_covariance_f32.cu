@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_covariance_f32(const unsigned int* count, const float* Cxy, float* covariance) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int n = count[0];
     float cxyVal = Cxy[0];
     float nf = ((float)(n));

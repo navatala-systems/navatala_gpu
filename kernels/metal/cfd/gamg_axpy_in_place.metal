@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_cfd_gamg_axpy_in_place(device const float* x [[buffer(0)]], device const float* alpha [[buffer(1)]], device const uint* nRows [[buffer(2)]], device float* y [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(nRows[0])))) {
+  if (int(__gid.x) >= ((int)(nRows[0]))) {
     return;
   } else {
     float a = alpha[0];

@@ -16,7 +16,7 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_init_weighted_covariance_f64(double* weightSum, double* meanX, double* meanY, double* Cxy) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     weightSum[0] = __longlong_as_double(0x0000000000000000ull);
     meanX[0] = __longlong_as_double(0x0000000000000000ull);
     meanY[0] = __longlong_as_double(0x0000000000000000ull);

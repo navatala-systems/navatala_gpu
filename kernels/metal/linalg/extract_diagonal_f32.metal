@@ -20,7 +20,7 @@ kernel void navatala_linalg_extract_diagonal_f32(device const float* A [[buffer(
   uint gid = ((uint)(int(__gid.x)));
   uint idx = gid;
   uint size = n[0u];
-  if ((idx < size)) {
+  if (idx < size) {
     uint stride = (size + 1u);
     uint srcIdx = (idx * stride);
     float val = A[srcIdx];

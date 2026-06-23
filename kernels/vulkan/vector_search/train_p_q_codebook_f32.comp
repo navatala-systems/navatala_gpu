@@ -44,7 +44,7 @@ void main() {
   uint vid = uint(int(gl_GlobalInvocationID.x));
   uint nv = n_vectors[0];
   uint sd = sub_dim[0];
-  if ((vid < nv)) {
+  if (vid < nv) {
     uint cw = assignments[vid];
     for (int k = 0; k < int(sd); ++k) {
       uint src_idx = ((vid * sd) + k);

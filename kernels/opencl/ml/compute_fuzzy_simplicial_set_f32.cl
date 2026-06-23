@@ -56,7 +56,7 @@ __kernel void navatala_ml_compute_fuzzy_simplicial_set_f32(__global const int* k
         membershipSum = newSum;
       }
       float sum = membershipSum;
-      if ((sum > targetSum)) {
+      if (sum > targetSum) {
         sigmaHigh = mid;
       } else {
         sigmaLow = mid;

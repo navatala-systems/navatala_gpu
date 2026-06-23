@@ -18,7 +18,7 @@ __kernel void navatala_sparse_gmres_restart_init_f64(__global const double* r, _
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double nm = rNorm[0];
     double ri = r[gid];
     V[gid] = (ri / nm);

@@ -22,16 +22,16 @@ kernel void navatala_vector_search_select_neighbors_heuristic_f32(device const f
   uint m_val = m[0];
   threadgroup uint selected_ids[64];
   threadgroup uint n_sel[1];
-  if ((tid == 0u)) {
+  if (tid == 0u) {
     n_sel[0u] = 0u;
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((tid < n_cand)) {
+  if (tid < n_cand) {
     uint cand_id = candidates[tid];
     selected[tid] = cand_id;
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((tid == 0u)) {
+  if (tid == 0u) {
     uint final_count = (((n_cand < m_val)) ? (n_cand) : (m_val));
     n_selected[0u] = final_count;
   }

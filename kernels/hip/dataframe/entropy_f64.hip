@@ -35,7 +35,7 @@ extern "C" __global__ void navatala_dataframe_entropy_f64(const double* p, const
   unsigned int e64_reductionStride = 128u;
   for (int e64_reductionStep = 0; e64_reductionStep < (int)(8); ++e64_reductionStep) {
     unsigned int e64_stride = e64_reductionStride;
-    if ((lid < e64_stride)) {
+    if (lid < e64_stride) {
       double e64_other = sdata[(lid + e64_stride)];
       double e64_mine = sdata[lid];
       double e64_sum = (e64_mine + e64_other);
@@ -46,7 +46,7 @@ extern "C" __global__ void navatala_dataframe_entropy_f64(const double* p, const
     e64_reductionStride = e64_nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0u] = sdata[0u];
   }
 }

@@ -19,15 +19,15 @@ extern "C" __global__ void navatala_cfd_scalar_jacobi_update(const float* ax, co
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0])))) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0]))) {
     return;
   } else {
     float smallDiag = params[0];
     float omega = params[1];
     float d = diag[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
     float absD = abs(d);
-    if ((absD < smallDiag)) {
-      if ((d >= __uint_as_float(0x00000000u))) {
+    if (absD < smallDiag) {
+      if (d >= __uint_as_float(0x00000000u)) {
         d = smallDiag;
       } else {
         d = (-smallDiag);

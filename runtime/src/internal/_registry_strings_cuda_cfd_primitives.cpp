@@ -13,7 +13,7 @@ const char* k_cuda_navatala_cfd_primitives_average_face_scalar_to_cell = R"kerne
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_average_face_scalar_to_cell(const float* facePhi, const float* magSf, const unsigned int* offsets, const unsigned int* faceIdx, const float* sumMag, const int* params, float* outCell) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0]) {
     return;
   } else {
     unsigned int begU = offsets[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
@@ -31,7 +31,7 @@ extern "C" __global__ void navatala_cfd_primitives_average_face_scalar_to_cell(c
       acc = (acc + term);
     }
     float den = sumMag[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
-    if ((den < __uint_as_float(0x1e3ce508u))) {
+    if (den < __uint_as_float(0x1e3ce508u)) {
       den = __uint_as_float(0x1e3ce508u);
     }
     outCell[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (acc / den);
@@ -46,12 +46,12 @@ extern "C" __global__ void navatala_cfd_primitives_evaluate_scalar_bc(const floa
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0])))) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0]))) {
     return;
   } else {
     unsigned int bcType = bcTypeMask[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
     int cell = faceCells[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
-    if ((((int)(bcType)) == 1)) {
+    if (((int)(bcType)) == 1) {
       boundaryOut[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = fixedValues[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
     } else {
       boundaryOut[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = internalField[cell];
@@ -67,12 +67,12 @@ extern "C" __global__ void navatala_cfd_primitives_evaluate_vector_bc(const floa
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0])))) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0]))) {
     return;
   } else {
     unsigned int bcType = bcTypeMask[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
     int cell = faceCells[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
-    if ((((int)(bcType)) == 1)) {
+    if (((int)(bcType)) == 1) {
       outX[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = fvX[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
       outY[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = fvY[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
       outZ[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = fvZ[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
@@ -89,7 +89,7 @@ const char* k_cuda_navatala_cfd_primitives_div_face_flux_csr = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_div_face_flux_csr(const int* offsets, const int* faceIdx, const float* sign, const float* faceFlux, const float* vol, const int* params, float* outDiv) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0]) {
     return;
   } else {
     int beg = offsets[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
@@ -112,7 +112,7 @@ const char* k_cuda_navatala_cfd_primitives_div_face_flux_csr_f64 = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_div_face_flux_csr_f64(const int* offsets, const int* faceIdx, const float* sign, const double* faceFlux, const double* vol, const int* params, double* outDiv) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0]) {
     return;
   } else {
     int beg = offsets[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
@@ -136,7 +136,7 @@ const char* k_cuda_navatala_cfd_primitives_div_face_flux_vector_csr = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_div_face_flux_vector_csr(const int* offsets, const int* faceIdx, const float* sign, const float* faceFluxX, const float* faceFluxY, const float* faceFluxZ, const float* vol, const int* params, float* outX, float* outY, float* outZ) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0]) {
     return;
   } else {
     int beg = offsets[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
@@ -168,7 +168,7 @@ const char* k_cuda_navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_grad_v2 = R
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_grad_v2(const float* muCell, const float* muBc, const float* gXX, const float* gXY, const float* gXZ, const float* gYX, const float* gYY, const float* gYZ, const float* gZX, const float* gZY, const float* gZZ, const int* owner, const int* neighbour, const float* weights, const float* sfX, const float* sfY, const float* sfZ, const int* offsets, const int* faceIdx, const float* signF, const float* vol, const int* params, float* outX, float* outY, float* outZ) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0]) {
     return;
   } else {
     float sumX = __uint_as_float(0x00000000u);
@@ -181,7 +181,7 @@ extern "C" __global__ void navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_gra
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < params[1])) {
+      if (f < params[1]) {
         float s = signF[k];
         int o = owner[f];
         float muO = muCell[o];
@@ -224,7 +224,7 @@ extern "C" __global__ void navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_gra
         float tauFzy = tauOzy;
         float tauFzz = tauOzz;
         int n = neighbour[f];
-        if ((n >= 0)) {
+        if (n >= 0) {
           float muN = muCell[n];
           float gnXX = gXX[n];
           float gnXY = gXY[n];
@@ -283,7 +283,7 @@ extern "C" __global__ void navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_gra
     }
     float v = vol[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float invV = __uint_as_float(0x00000000u);
-    if ((v != __uint_as_float(0x00000000u))) {
+    if (v != __uint_as_float(0x00000000u)) {
       invV = (__uint_as_float(0x3f800000u) / v);
     }
     outX[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (sumX * invV);
@@ -297,7 +297,7 @@ const char* k_cuda_navatala_cfd_primitives_face_scalar_product = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_face_scalar_product(const float* aAllFaces, const float* bAllFaces, const int* params, float* outProd) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0]) {
     return;
   } else {
     float a = aAllFaces[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
@@ -311,7 +311,7 @@ const char* k_cuda_navatala_cfd_primitives_grad_vol_scalar_gauss = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_grad_vol_scalar_gauss(const float* cellPhi, const float* bcValue, const unsigned int* bcMask, const int* owner, const int* neighbour, const float* weights, const float* sfX, const float* sfY, const float* sfZ, const int* offsets, const int* faceIdx, const float* sign, const float* vol, const int* params, float* outX, float* outY, float* outZ) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0]) {
     return;
   } else {
     float sumX = __uint_as_float(0x00000000u);
@@ -324,12 +324,12 @@ extern "C" __global__ void navatala_cfd_primitives_grad_vol_scalar_gauss(const f
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < params[1])) {
+      if (f < params[1]) {
         float s = sign[k];
         int o = owner[f];
         float po = cellPhi[o];
         float phiF = po;
-        if ((f < params[2])) {
+        if (f < params[2]) {
           int n = neighbour[f];
           float pn = cellPhi[n];
           float ww = weights[f];
@@ -337,12 +337,12 @@ extern "C" __global__ void navatala_cfd_primitives_grad_vol_scalar_gauss(const f
           phiF = ((ww * po) + (iw * pn));
         } else {
           unsigned int m = bcMask[f];
-          if ((m == 1u)) {
+          if (m == 1u) {
             float ww = weights[f];
             float iw = (__uint_as_float(0x3f800000u) - ww);
             phiF = ((ww * po) + (iw * bcValue[f]));
           }
-          if ((m == 2u)) {
+          if (m == 2u) {
             phiF = bcValue[f];
           }
         }
@@ -354,7 +354,7 @@ extern "C" __global__ void navatala_cfd_primitives_grad_vol_scalar_gauss(const f
     }
     float v = vol[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float invV = __uint_as_float(0x00000000u);
-    if ((v != __uint_as_float(0x00000000u))) {
+    if (v != __uint_as_float(0x00000000u)) {
       invV = (__uint_as_float(0x3f800000u) / v);
     }
     outX[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (sumX * invV);
@@ -368,7 +368,7 @@ const char* k_cuda_navatala_cfd_primitives_grad_vol_vector_gauss = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_grad_vol_vector_gauss(const float* cellUx, const float* cellUy, const float* cellUz, const float* bcX, const float* bcY, const float* bcZ, const unsigned int* bcMask, const int* owner, const int* neighbour, const float* weights, const float* sfX, const float* sfY, const float* sfZ, const int* offsets, const int* faceIdx, const float* sign, const float* vol, const int* params, float* outXX, float* outXY, float* outXZ, float* outYX, float* outYY, float* outYZ, float* outZX, float* outZY, float* outZZ) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0]) {
     return;
   } else {
     float sumXX = __uint_as_float(0x00000000u);
@@ -387,7 +387,7 @@ extern "C" __global__ void navatala_cfd_primitives_grad_vol_vector_gauss(const f
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < params[1])) {
+      if (f < params[1]) {
         float s = sign[k];
         int o = owner[f];
         float uxO = cellUx[o];
@@ -396,7 +396,7 @@ extern "C" __global__ void navatala_cfd_primitives_grad_vol_vector_gauss(const f
         float uxF = uxO;
         float uyF = uyO;
         float uzF = uzO;
-        if ((f < params[2])) {
+        if (f < params[2]) {
           int n = neighbour[f];
           float uxN = cellUx[n];
           float uyN = cellUy[n];
@@ -408,14 +408,14 @@ extern "C" __global__ void navatala_cfd_primitives_grad_vol_vector_gauss(const f
           uzF = ((ww * uzO) + (iw * uzN));
         } else {
           unsigned int m = bcMask[f];
-          if ((m == 1u)) {
+          if (m == 1u) {
             float ww = weights[f];
             float iw = (__uint_as_float(0x3f800000u) - ww);
             uxF = ((ww * uxO) + (iw * bcX[f]));
             uyF = ((ww * uyO) + (iw * bcY[f]));
             uzF = ((ww * uzO) + (iw * bcZ[f]));
           }
-          if ((m == 2u)) {
+          if (m == 2u) {
             uxF = bcX[f];
             uyF = bcY[f];
             uzF = bcZ[f];
@@ -440,7 +440,7 @@ extern "C" __global__ void navatala_cfd_primitives_grad_vol_vector_gauss(const f
     }
     float v = vol[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float invV = __uint_as_float(0x00000000u);
-    if ((v != __uint_as_float(0x00000000u))) {
+    if (v != __uint_as_float(0x00000000u)) {
       invV = (__uint_as_float(0x3f800000u) / v);
     }
     outXX[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (sumXX * invV);
@@ -460,24 +460,24 @@ const char* k_cuda_navatala_cfd_primitives_interp_scalar_face = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_interp_scalar_face(const int* owner, const int* neighbour, const float* weights, const float* cellPhi, const float* bcValue, const unsigned int* bcMask, const int* params, float* outPhiF) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0]) {
     return;
   } else {
     int o = owner[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float po = cellPhi[o];
-    if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < params[1])) {
+    if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < params[1]) {
       int n = neighbour[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       float pn = cellPhi[n];
       float w = weights[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       float iw = (__uint_as_float(0x3f800000u) - w);
       outPhiF[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = ((w * po) + (iw * pn));
     } else {
-      if ((bcMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] == 1u)) {
+      if (bcMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] == 1u) {
         float w = weights[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
         float iw = (__uint_as_float(0x3f800000u) - w);
         outPhiF[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = ((w * po) + (iw * bcValue[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]));
       } else {
-        if ((bcMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] == 2u)) {
+        if (bcMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] == 2u) {
           outPhiF[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = bcValue[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
         } else {
           outPhiF[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = po;
@@ -492,36 +492,36 @@ const char* k_cuda_navatala_cfd_primitives_interp_scalar_face_all = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_interp_scalar_face_all(const float* cellPhi, const int* owner, const int* neighbour, const float* weights, const float* bcValue, const int* params, float* outPhiF) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0]) {
     return;
   } else {
-    if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < params[1])) {
+    if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < params[1]) {
       int o = owner[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       int n = neighbour[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       float po = cellPhi[o];
       float pn = cellPhi[n];
       float wf = weights[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
-      if ((wf < __uint_as_float(0x00000000u))) {
+      if (wf < __uint_as_float(0x00000000u)) {
         wf = __uint_as_float(0x00000000u);
       }
-      if ((wf > __uint_as_float(0x3f800000u))) {
+      if (wf > __uint_as_float(0x3f800000u)) {
         wf = __uint_as_float(0x3f800000u);
       }
       float iw = (__uint_as_float(0x3f800000u) - wf);
       float a = ((wf * po) + (iw * pn));
-      if ((a < __uint_as_float(0x00000000u))) {
+      if (a < __uint_as_float(0x00000000u)) {
         a = __uint_as_float(0x00000000u);
       }
-      if ((a > __uint_as_float(0x3f800000u))) {
+      if (a > __uint_as_float(0x3f800000u)) {
         a = __uint_as_float(0x3f800000u);
       }
       outPhiF[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = a;
     } else {
       float a = bcValue[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
-      if ((a < __uint_as_float(0x00000000u))) {
+      if (a < __uint_as_float(0x00000000u)) {
         a = __uint_as_float(0x00000000u);
       }
-      if ((a > __uint_as_float(0x3f800000u))) {
+      if (a > __uint_as_float(0x3f800000u)) {
         a = __uint_as_float(0x3f800000u);
       }
       outPhiF[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = a;
@@ -534,14 +534,14 @@ const char* k_cuda_navatala_cfd_primitives_interp_vector_face = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_interp_vector_face(const int* owner, const int* neighbour, const float* weights, const float* cellX, const float* cellY, const float* cellZ, const float* bcX, const float* bcY, const float* bcZ, const unsigned int* bcMask, const int* params, float* outX, float* outY, float* outZ) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0]) {
     return;
   } else {
     int o = owner[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float uxo = cellX[o];
     float uyo = cellY[o];
     float uzo = cellZ[o];
-    if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < params[1])) {
+    if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < params[1]) {
       int n = neighbour[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       float uxn = cellX[n];
       float uyn = cellY[n];
@@ -553,14 +553,14 @@ extern "C" __global__ void navatala_cfd_primitives_interp_vector_face(const int*
       outZ[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = ((w * uzo) + (iw * uzn));
     } else {
       unsigned int m = bcMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
-      if ((m == 1u)) {
+      if (m == 1u) {
         float w = weights[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
         float iw = (__uint_as_float(0x3f800000u) - w);
         outX[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = ((w * uxo) + (iw * bcX[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]));
         outY[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = ((w * uyo) + (iw * bcY[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]));
         outZ[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = ((w * uzo) + (iw * bcZ[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]));
       } else {
-        if ((m == 2u)) {
+        if (m == 2u) {
           outX[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = bcX[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
           outY[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = bcY[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
           outZ[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = bcZ[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
@@ -579,13 +579,13 @@ const char* k_cuda_navatala_cfd_primitives_linear_upwind_scalar_face = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_linear_upwind_scalar_face(const float* flux, const float* xCell, const float* gradX, const float* gradY, const float* gradZ, const float* limiter, const int* owner, const int* nei, const float* cx, const float* cy, const float* cz, const float* cfx, const float* cfy, const float* cfz, const float* bcValue, const unsigned int* bcMask, const unsigned int* params, float* outFace) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(params[0])))) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(params[0]))) {
     return;
   } else {
     float phif = flux[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
     int own = owner[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
-    if (((int)(blockIdx.x * blockDim.x + threadIdx.x) < ((int)(params[1])))) {
-      if ((phif >= __uint_as_float(0x00000000u))) {
+    if ((int)(blockIdx.x * blockDim.x + threadIdx.x) < ((int)(params[1]))) {
+      if (phif >= __uint_as_float(0x00000000u)) {
         float dx = (cfx[(int)(blockIdx.x * blockDim.x + threadIdx.x)] - cx[own]);
         float dy = (cfy[(int)(blockIdx.x * blockDim.x + threadIdx.x)] - cy[own]);
         float dz = (cfz[(int)(blockIdx.x * blockDim.x + threadIdx.x)] - cz[own]);
@@ -600,11 +600,11 @@ extern "C" __global__ void navatala_cfd_primitives_linear_upwind_scalar_face(con
         outFace[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = (xCell[neiCell] + (limiter[neiCell] * corr));
       }
     } else {
-      if ((phif >= __uint_as_float(0x00000000u))) {
+      if (phif >= __uint_as_float(0x00000000u)) {
         outFace[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = xCell[own];
       } else {
         unsigned int mask = bcMask[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
-        if ((((int)(mask)) == 0)) {
+        if (((int)(mask)) == 0) {
           outFace[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = xCell[own];
         } else {
           outFace[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = bcValue[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
@@ -619,14 +619,14 @@ const char* k_cuda_navatala_cfd_primitives_phi_from_u = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_phi_from_u(const int* owner, const int* neighbour, const float* weights, const float* sfX, const float* sfY, const float* sfZ, const float* ux, const float* uy, const float* uz, const float* bcX, const float* bcY, const float* bcZ, const unsigned int* bcMask, const int* params, float* outPhi) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0]) {
     return;
   } else {
     int o = owner[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float uox = ux[o];
     float uoy = uy[o];
     float uoz = uz[o];
-    if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < params[1])) {
+    if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < params[1]) {
       int n = neighbour[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       float w = weights[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       float iw = (__uint_as_float(0x3f800000u) - w);
@@ -635,7 +635,7 @@ extern "C" __global__ void navatala_cfd_primitives_phi_from_u(const int* owner, 
       float ufz = ((w * uoz) + (iw * uz[n]));
       outPhi[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (((sfX[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] * ufx) + (sfY[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] * ufy)) + (sfZ[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] * ufz));
     } else {
-      if ((bcMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] == 1u)) {
+      if (bcMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] == 1u) {
         float w = weights[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
         float iw = (__uint_as_float(0x3f800000u) - w);
         float ufx = ((w * uox) + (iw * bcX[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]));
@@ -643,7 +643,7 @@ extern "C" __global__ void navatala_cfd_primitives_phi_from_u(const int* owner, 
         float ufz = ((w * uoz) + (iw * bcZ[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]));
         outPhi[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (((sfX[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] * ufx) + (sfY[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] * ufy)) + (sfZ[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] * ufz));
       } else {
-        if ((bcMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] == 2u)) {
+        if (bcMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] == 2u) {
           float ufx = bcX[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
           float ufy = bcY[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
           float ufz = bcZ[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
@@ -662,7 +662,7 @@ const char* k_cuda_navatala_cfd_primitives_phi_from_u_boundary = R"kernel(
 extern "C" __global__ void navatala_cfd_primitives_phi_from_u_boundary(const int* owner, const float* weights, const float* sfX, const float* sfY, const float* sfZ, const float* ux, const float* uy, const float* uz, const float* bcx, const float* bcy, const float* bcz, const unsigned int* bcmask, const unsigned int* params, float* outPhi) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int f = (((int)(params[1])) + (int)(blockIdx.x * blockDim.x + threadIdx.x));
-  if ((f >= ((int)(params[0])))) {
+  if (f >= ((int)(params[0]))) {
     return;
   } else {
     int o = owner[f];
@@ -674,14 +674,14 @@ extern "C" __global__ void navatala_cfd_primitives_phi_from_u_boundary(const int
     float ufz = uoz;
     unsigned int m = bcmask[f];
     int mInt = ((int)(m));
-    if ((mInt == 1)) {
+    if (mInt == 1) {
       float w = weights[f];
       float iw = (__uint_as_float(0x3f800000u) - w);
       ufx = ((w * uox) + (iw * bcx[f]));
       ufy = ((w * uoy) + (iw * bcy[f]));
       ufz = ((w * uoz) + (iw * bcz[f]));
     } else {
-      if ((mInt == 2)) {
+      if (mInt == 2) {
         ufx = bcx[f];
         ufy = bcy[f];
         ufz = bcz[f];
@@ -696,7 +696,7 @@ const char* k_cuda_navatala_cfd_primitives_phi_from_u_internal = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_phi_from_u_internal(const int* owner, const int* neighbour, const float* weights, const float* sfX, const float* sfY, const float* sfZ, const float* ux, const float* uy, const float* uz, const unsigned int* params, float* outPhi) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(params[1])))) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(params[1]))) {
     return;
   } else {
     int o = owner[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
@@ -715,7 +715,7 @@ const char* k_cuda_navatala_cfd_primitives_phig_gravity = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_phig_gravity(const float* ghf, const float* snGradRho, const float* rAUf, const float* magSf, const unsigned int* params, float* outPhig) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(params[0])))) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(params[0]))) {
     return;
   } else {
     outPhig[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = (-((ghf[(int)(blockIdx.x * blockDim.x + threadIdx.x)] * snGradRho[(int)(blockIdx.x * blockDim.x + threadIdx.x)]) * (rAUf[(int)(blockIdx.x * blockDim.x + threadIdx.x)] * magSf[(int)(blockIdx.x * blockDim.x + threadIdx.x)])));
@@ -730,7 +730,7 @@ extern "C" __global__ void navatala_cfd_primitives_r_a_u_from_dt_rho(const float
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0]) {
     return;
   } else {
     float r = rho[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
@@ -746,13 +746,13 @@ extern "C" __global__ void navatala_cfd_primitives_r_a_u_from_dt_rho_integrated(
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0]) {
     return;
   } else {
     float r = rho[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float v = vol[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float denom = (r * v);
-    if ((denom != __uint_as_float(0x00000000u))) {
+    if (denom != __uint_as_float(0x00000000u)) {
       outRAU[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (paramsF[0] / denom);
     } else {
       outRAU[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = __uint_as_float(0x00000000u);
@@ -768,7 +768,7 @@ extern "C" __global__ void navatala_cfd_primitives_r_a_u_from_dt_rho_sp(const fl
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0]) {
     return;
   } else {
     float r = rho[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
@@ -786,14 +786,14 @@ extern "C" __global__ void navatala_cfd_primitives_r_a_u_from_dt_rho_sp_integrat
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0]) {
     return;
   } else {
     float r = rho[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float s = sp[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float v = vol[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float denom = ((r + (paramsF[0] * s)) * v);
-    if ((denom != __uint_as_float(0x00000000u))) {
+    if (denom != __uint_as_float(0x00000000u)) {
       outRAU[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (paramsF[0] / denom);
     } else {
       outRAU[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = __uint_as_float(0x00000000u);
@@ -806,7 +806,7 @@ const char* k_cuda_navatala_cfd_primitives_r_a_u_from_u_eqn_approx = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_r_a_u_from_u_eqn_approx(const float* rhoCell, const float* muCell, const float* phiFaces, const float* rhoBcVal, const unsigned int* rhoBcMask, const float* muBcVal, const unsigned int* muBcMask, const int* ownerAll, const int* neighbourInt, const float* weightsAll, const float* magSfAll, const float* deltaAll, const unsigned int* offsets, const unsigned int* faceIdx, const int* sign, const float* volCells, const int* counts3, const float* paramsF, float* outRAU) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts3[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts3[0]) {
     return;
   } else {
     float invDt = (__uint_as_float(0x3f800000u) / paramsF[0]);
@@ -824,26 +824,26 @@ extern "C" __global__ void navatala_cfd_primitives_r_a_u_from_u_eqn_approx(const
       int k = (beg + t);
       unsigned int fU = faceIdx[k];
       int f = ((int)(fU));
-      if ((f >= counts3[1])) {
+      if (f >= counts3[1]) {
       } else {
         int s = sign[k];
         int o = ownerAll[f];
         float phi = phiFaces[f];
         float rhoF = __uint_as_float(0x00000000u);
         float muF = __uint_as_float(0x00000000u);
-        if ((f < counts3[2])) {
+        if (f < counts3[2]) {
           int n = neighbourInt[f];
           float w = weightsAll[f];
           float iw = (__uint_as_float(0x3f800000u) - w);
           rhoF = ((w * rhoCell[o]) + (iw * rhoCell[n]));
           muF = ((w * muCell[o]) + (iw * muCell[n]));
         } else {
-          if ((rhoBcMask[f] != 0u)) {
+          if (rhoBcMask[f] != 0u) {
             rhoF = rhoBcVal[f];
           } else {
             rhoF = rhoCell[o];
           }
-          if ((muBcMask[f] != 0u)) {
+          if (muBcMask[f] != 0u) {
             muF = muBcVal[f];
           } else {
             muF = muCell[o];
@@ -851,10 +851,10 @@ extern "C" __global__ void navatala_cfd_primitives_r_a_u_from_u_eqn_approx(const
         }
         float rhoPhi = (rhoF * phi);
         float outFlux = rhoPhi;
-        if ((s < 0)) {
+        if (s < 0) {
           outFlux = (__uint_as_float(0x00000000u) - rhoPhi);
         }
-        if ((outFlux > __uint_as_float(0x00000000u))) {
+        if (outFlux > __uint_as_float(0x00000000u)) {
           conv = (conv + outFlux);
         }
         float diffTerm = (muF * (magSfAll[f] * deltaAll[f]));
@@ -862,7 +862,7 @@ extern "C" __global__ void navatala_cfd_primitives_r_a_u_from_u_eqn_approx(const
       }
     }
     A = (A + ((conv + diff) / V));
-    if ((A != __uint_as_float(0x00000000u))) {
+    if (A != __uint_as_float(0x00000000u)) {
       outRAU[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (__uint_as_float(0x3f800000u) / A);
     } else {
       outRAU[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = __uint_as_float(0x00000000u);
@@ -875,7 +875,7 @@ const char* k_cuda_navatala_cfd_primitives_r_a_u_from_u_eqn_approx_sp = R"kernel
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_r_a_u_from_u_eqn_approx_sp(const float* rhoCell, const float* muCell, const float* phiFaces, const float* rhoBcVal, const unsigned int* rhoBcMask, const float* muBcVal, const unsigned int* muBcMask, const int* ownerAll, const int* neighbourInt, const float* weightsAll, const float* magSfAll, const float* deltaAll, const unsigned int* offsets, const unsigned int* faceIdx, const int* sign, const float* volCells, const float* sp, const int* counts3, const float* paramsF, float* outRAU) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts3[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts3[0]) {
     return;
   } else {
     float invDt = (__uint_as_float(0x3f800000u) / paramsF[0]);
@@ -893,26 +893,26 @@ extern "C" __global__ void navatala_cfd_primitives_r_a_u_from_u_eqn_approx_sp(co
       int k = (beg + t);
       unsigned int fU = faceIdx[k];
       int f = ((int)(fU));
-      if ((f >= counts3[1])) {
+      if (f >= counts3[1]) {
       } else {
         int s = sign[k];
         int o = ownerAll[f];
         float phi = phiFaces[f];
         float rhoF = __uint_as_float(0x00000000u);
         float muF = __uint_as_float(0x00000000u);
-        if ((f < counts3[2])) {
+        if (f < counts3[2]) {
           int n = neighbourInt[f];
           float w = weightsAll[f];
           float iw = (__uint_as_float(0x3f800000u) - w);
           rhoF = ((w * rhoCell[o]) + (iw * rhoCell[n]));
           muF = ((w * muCell[o]) + (iw * muCell[n]));
         } else {
-          if ((rhoBcMask[f] != 0u)) {
+          if (rhoBcMask[f] != 0u) {
             rhoF = rhoBcVal[f];
           } else {
             rhoF = rhoCell[o];
           }
-          if ((muBcMask[f] != 0u)) {
+          if (muBcMask[f] != 0u) {
             muF = muBcVal[f];
           } else {
             muF = muCell[o];
@@ -920,10 +920,10 @@ extern "C" __global__ void navatala_cfd_primitives_r_a_u_from_u_eqn_approx_sp(co
         }
         float rhoPhi = (rhoF * phi);
         float outFlux = rhoPhi;
-        if ((s < 0)) {
+        if (s < 0) {
           outFlux = (__uint_as_float(0x00000000u) - rhoPhi);
         }
-        if ((outFlux > __uint_as_float(0x00000000u))) {
+        if (outFlux > __uint_as_float(0x00000000u)) {
           conv = (conv + outFlux);
         }
         float diffTerm = (muF * (magSfAll[f] * deltaAll[f]));
@@ -932,7 +932,7 @@ extern "C" __global__ void navatala_cfd_primitives_r_a_u_from_u_eqn_approx_sp(co
     }
     A = (A + ((conv + diff) / V));
     A = (A + sp[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]);
-    if ((A != __uint_as_float(0x00000000u))) {
+    if (A != __uint_as_float(0x00000000u)) {
       outRAU[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (__uint_as_float(0x3f800000u) / A);
     } else {
       outRAU[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = __uint_as_float(0x00000000u);
@@ -948,14 +948,14 @@ extern "C" __global__ void navatala_cfd_primitives_rho_from_alpha(const float* a
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0]) {
     return;
   } else {
     float a = alpha[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
-    if ((a < __uint_as_float(0x00000000u))) {
+    if (a < __uint_as_float(0x00000000u)) {
       a = __uint_as_float(0x00000000u);
     }
-    if ((a > __uint_as_float(0x3f800000u))) {
+    if (a > __uint_as_float(0x3f800000u)) {
       a = __uint_as_float(0x3f800000u);
     }
     float invA = (__uint_as_float(0x3f800000u) - a);
@@ -969,24 +969,24 @@ const char* k_cuda_navatala_cfd_primitives_rho_phi_from_rho_and_phi = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_rho_phi_from_rho_and_phi(const float* phiAll, const float* rhoCell, const int* owner, const int* neighbour, const float* weights, const float* rhoBcVal, const unsigned int* rhoBcMask, const int* params, float* outRhoPhi) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0]) {
     return;
   } else {
     int o = owner[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float rhoF = rhoCell[o];
-    if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < params[1])) {
+    if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < params[1]) {
       int n = neighbour[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       float w0 = weights[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       float iw = (__uint_as_float(0x3f800000u) - w0);
       rhoF = ((w0 * rhoCell[o]) + (iw * rhoCell[n]));
     } else {
       unsigned int m = rhoBcMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
-      if ((m == 1u)) {
+      if (m == 1u) {
         float w0 = weights[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
         float iw = (__uint_as_float(0x3f800000u) - w0);
         rhoF = ((w0 * rhoCell[o]) + (iw * rhoBcVal[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]));
       }
-      if ((m == 2u)) {
+      if (m == 2u) {
         rhoF = rhoBcVal[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       }
     }
@@ -1000,17 +1000,17 @@ const char* k_cuda_navatala_cfd_primitives_sn_grad_scalar = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_sn_grad_scalar(const float* cellVal, const int* owner, const int* neighbour, const float* delta, const float* faceVal, const unsigned int* faceMask, const int* params, float* outSnGrad) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0]) {
     return;
   } else {
     int o = owner[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float aO = cellVal[o];
-    if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < params[1])) {
+    if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < params[1]) {
       int n = neighbour[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       float aN = cellVal[n];
       outSnGrad[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (delta[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] * (aN - aO));
     } else {
-      if ((faceMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] != 0u)) {
+      if (faceMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] != 0u) {
         float aN = faceVal[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
         outSnGrad[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (delta[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] * (aN - aO));
       } else {

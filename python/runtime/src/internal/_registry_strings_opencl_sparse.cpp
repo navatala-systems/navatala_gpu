@@ -13,7 +13,7 @@ const char* k_opencl_navatala_sparse_sparse_add_f32 = R"kernel(
 __kernel void navatala_sparse_sparse_add_f32(__global const float* valuesA, __global const float* valuesB, __global const int* nnz, __global float* valuesC) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < nnz[(uint)(0u)])) {
+  if (i < nnz[(uint)(0u)]) {
     float a = valuesA[i];
     float b = valuesB[i];
     valuesC[i] = (a + b);
@@ -26,7 +26,7 @@ const char* k_opencl_navatala_sparse_sparse_add_f64 = R"kernel(
 __kernel void navatala_sparse_sparse_add_f64(__global const double* valuesA, __global const double* valuesB, __global const int* nnz, __global double* valuesC) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < nnz[(uint)(0u)])) {
+  if (i < nnz[(uint)(0u)]) {
     double a = valuesA[i];
     double b = valuesB[i];
     valuesC[i] = (a + b);
@@ -38,7 +38,7 @@ const char* k_opencl_navatala_sparse_sparse_sub_f32 = R"kernel(
 __kernel void navatala_sparse_sparse_sub_f32(__global const float* valuesA, __global const float* valuesB, __global const int* nnz, __global float* valuesC) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < nnz[(uint)(0u)])) {
+  if (i < nnz[(uint)(0u)]) {
     float a = valuesA[i];
     float b = valuesB[i];
     valuesC[i] = (a - b);
@@ -51,7 +51,7 @@ const char* k_opencl_navatala_sparse_sparse_sub_f64 = R"kernel(
 __kernel void navatala_sparse_sparse_sub_f64(__global const double* valuesA, __global const double* valuesB, __global const int* nnz, __global double* valuesC) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < nnz[(uint)(0u)])) {
+  if (i < nnz[(uint)(0u)]) {
     double a = valuesA[i];
     double b = valuesB[i];
     valuesC[i] = (a - b);
@@ -64,7 +64,7 @@ __kernel void navatala_sparse_sparse_scale_f32(__global const float* valuesA, __
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
   float alphaVal = alpha[(uint)(0u)];
-  if ((i < nnz[(uint)(0u)])) {
+  if (i < nnz[(uint)(0u)]) {
     float a = valuesA[i];
     valuesB[i] = (alphaVal * a);
   }
@@ -77,7 +77,7 @@ __kernel void navatala_sparse_sparse_scale_f64(__global const double* valuesA, _
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
   double alphaVal = alpha[(uint)(0u)];
-  if ((i < nnz[(uint)(0u)])) {
+  if (i < nnz[(uint)(0u)]) {
     double a = valuesA[i];
     valuesB[i] = (alphaVal * a);
   }
@@ -88,7 +88,7 @@ const char* k_opencl_navatala_sparse_sparse_hadamard_f32 = R"kernel(
 __kernel void navatala_sparse_sparse_hadamard_f32(__global const float* valuesA, __global const float* valuesB, __global const int* nnz, __global float* valuesC) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < nnz[(uint)(0u)])) {
+  if (i < nnz[(uint)(0u)]) {
     float a = valuesA[i];
     float b = valuesB[i];
     valuesC[i] = (a * b);
@@ -101,7 +101,7 @@ const char* k_opencl_navatala_sparse_sparse_hadamard_f64 = R"kernel(
 __kernel void navatala_sparse_sparse_hadamard_f64(__global const double* valuesA, __global const double* valuesB, __global const int* nnz, __global double* valuesC) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < nnz[(uint)(0u)])) {
+  if (i < nnz[(uint)(0u)]) {
     double a = valuesA[i];
     double b = valuesB[i];
     valuesC[i] = (a * b);
@@ -113,7 +113,7 @@ const char* k_opencl_navatala_sparse_sparse_abs_f32 = R"kernel(
 __kernel void navatala_sparse_sparse_abs_f32(__global const float* valuesA, __global const int* nnz, __global float* valuesB) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < nnz[(uint)(0u)])) {
+  if (i < nnz[(uint)(0u)]) {
     float a = valuesA[i];
     valuesB[i] = fabs(a);
   }
@@ -125,7 +125,7 @@ const char* k_opencl_navatala_sparse_sparse_abs_f64 = R"kernel(
 __kernel void navatala_sparse_sparse_abs_f64(__global const double* valuesA, __global const int* nnz, __global double* valuesB) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < nnz[(uint)(0u)])) {
+  if (i < nnz[(uint)(0u)]) {
     double a = valuesA[i];
     valuesB[i] = fabs(a);
   }
@@ -137,7 +137,7 @@ __kernel void navatala_sparse_sparse_threshold_f32(__global const float* valuesA
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
   float thresh = threshold[(uint)(0u)];
-  if ((i < nnz[(uint)(0u)])) {
+  if (i < nnz[(uint)(0u)]) {
     float a = valuesA[i];
     float absA = fabs(a);
     float result = (((absA >= thresh)) ? (a) : (as_float(0x00000000u)));
@@ -152,7 +152,7 @@ __kernel void navatala_sparse_sparse_threshold_f64(__global const double* values
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
   double thresh = threshold[(uint)(0u)];
-  if ((i < nnz[(uint)(0u)])) {
+  if (i < nnz[(uint)(0u)]) {
     double a = valuesA[i];
     double absA = fabs(a);
     double result = (((absA >= thresh)) ? (a) : (as_double(0x0000000000000000ul)));
@@ -166,7 +166,7 @@ __kernel void navatala_sparse_coo_transpose_f32(__global const uint* rowInd, __g
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint i = gid;
-  if ((i < nnz[(uint)(0u)])) {
+  if (i < nnz[(uint)(0u)]) {
     uint col = colInd[i];
     rowInd_out[i] = col;
     uint row = rowInd[i];
@@ -183,7 +183,7 @@ __kernel void navatala_sparse_coo_transpose_f64(__global const uint* rowInd, __g
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint i = gid;
-  if ((i < nnz[(uint)(0u)])) {
+  if (i < nnz[(uint)(0u)]) {
     uint col = colInd[i];
     rowInd_out[i] = col;
     uint row = rowInd[i];
@@ -206,7 +206,7 @@ __kernel void navatala_sparse_sparse_inner_product_f32(__global const float* a, 
   uint gridSize = ((uint)((int)(get_global_size(0))));
   for (int loopIdx = 0; loopIdx < (int)(nnzVal); ++loopIdx) {
     uint currentIdx = idxAccum;
-    if ((currentIdx < nnzVal)) {
+    if (currentIdx < nnzVal) {
       float aVal = a[currentIdx];
       float bVal = b[currentIdx];
       float prod = (aVal * bVal);
@@ -224,7 +224,7 @@ __kernel void navatala_sparse_sparse_inner_product_f32(__global const float* a, 
   uint strideAccum = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint currentStride = strideAccum;
-    if ((lidU32 < currentStride)) {
+    if (lidU32 < currentStride) {
       uint otherIdx = (lidU32 + currentStride);
       float myVal = sdata[lidU32];
       float otherVal = sdata[otherIdx];
@@ -235,7 +235,7 @@ __kernel void navatala_sparse_sparse_inner_product_f32(__global const float* a, 
     strideAccum = nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lidU32 == (uint)(0u))) {
+  if (lidU32 == (uint)(0u)) {
     result[(uint)(0u)] = sdata[(uint)(0u)];
   }
 }
@@ -254,7 +254,7 @@ __kernel void navatala_sparse_sparse_inner_product_f64(__global const double* a,
   uint gridSize = ((uint)((int)(get_global_size(0))));
   for (int loopIdx = 0; loopIdx < (int)(nnzVal); ++loopIdx) {
     uint currentIdx = idxAccum;
-    if ((currentIdx < nnzVal)) {
+    if (currentIdx < nnzVal) {
       double aVal = a[currentIdx];
       double bVal = b[currentIdx];
       double prod = (aVal * bVal);
@@ -272,7 +272,7 @@ __kernel void navatala_sparse_sparse_inner_product_f64(__global const double* a,
   uint strideAccum = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint currentStride = strideAccum;
-    if ((lidU32 < currentStride)) {
+    if (lidU32 < currentStride) {
       uint otherIdx = (lidU32 + currentStride);
       double myVal = sdata[lidU32];
       double otherVal = sdata[otherIdx];
@@ -283,7 +283,7 @@ __kernel void navatala_sparse_sparse_inner_product_f64(__global const double* a,
     strideAccum = nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lidU32 == (uint)(0u))) {
+  if (lidU32 == (uint)(0u)) {
     result[(uint)(0u)] = sdata[(uint)(0u)];
   }
 }
@@ -301,7 +301,7 @@ __kernel void navatala_sparse_sparse_l2_distance_f32(__global const float* a, __
   uint gridSize = ((uint)((int)(get_global_size(0))));
   for (int loopIdx = 0; loopIdx < (int)(nnzVal); ++loopIdx) {
     uint currentIdx = idxAccum;
-    if ((currentIdx < nnzVal)) {
+    if (currentIdx < nnzVal) {
       float aVal = a[currentIdx];
       float bVal = b[currentIdx];
       float diff = (aVal - bVal);
@@ -320,7 +320,7 @@ __kernel void navatala_sparse_sparse_l2_distance_f32(__global const float* a, __
   uint strideAccum = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint currentStride = strideAccum;
-    if ((lidU32 < currentStride)) {
+    if (lidU32 < currentStride) {
       uint otherIdx = (lidU32 + currentStride);
       float myVal = sdata[lidU32];
       float otherVal = sdata[otherIdx];
@@ -331,7 +331,7 @@ __kernel void navatala_sparse_sparse_l2_distance_f32(__global const float* a, __
     strideAccum = nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lidU32 == (uint)(0u))) {
+  if (lidU32 == (uint)(0u)) {
     float sumSq = sdata[(uint)(0u)];
     float dist = sqrt(sumSq);
     result[(uint)(0u)] = dist;
@@ -352,7 +352,7 @@ __kernel void navatala_sparse_sparse_l2_distance_f64(__global const double* a, _
   uint gridSize = ((uint)((int)(get_global_size(0))));
   for (int loopIdx = 0; loopIdx < (int)(nnzVal); ++loopIdx) {
     uint currentIdx = idxAccum;
-    if ((currentIdx < nnzVal)) {
+    if (currentIdx < nnzVal) {
       double aVal = a[currentIdx];
       double bVal = b[currentIdx];
       double diff = (aVal - bVal);
@@ -371,7 +371,7 @@ __kernel void navatala_sparse_sparse_l2_distance_f64(__global const double* a, _
   uint strideAccum = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint currentStride = strideAccum;
-    if ((lidU32 < currentStride)) {
+    if (lidU32 < currentStride) {
       uint otherIdx = (lidU32 + currentStride);
       double myVal = sdata[lidU32];
       double otherVal = sdata[otherIdx];
@@ -382,7 +382,7 @@ __kernel void navatala_sparse_sparse_l2_distance_f64(__global const double* a, _
     strideAccum = nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lidU32 == (uint)(0u))) {
+  if (lidU32 == (uint)(0u)) {
     double sumSq = sdata[(uint)(0u)];
     double dist = sqrt(sumSq);
     result[(uint)(0u)] = dist;
@@ -406,7 +406,7 @@ __kernel void navatala_sparse_sparse_cosine_distance_f32(__global const float* a
   uint gridSize = ((uint)((int)(get_global_size(0))));
   for (int loopIdx = 0; loopIdx < (int)(nnzVal); ++loopIdx) {
     uint currentIdx = idxAccum;
-    if ((currentIdx < nnzVal)) {
+    if (currentIdx < nnzVal) {
       float aVal = a[currentIdx];
       float bVal = b[currentIdx];
       float prod = (aVal * bVal);
@@ -436,7 +436,7 @@ __kernel void navatala_sparse_sparse_cosine_distance_f32(__global const float* a
   uint strideAccum = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint currentStride = strideAccum;
-    if ((lidU32 < currentStride)) {
+    if (lidU32 < currentStride) {
       uint otherIdx = (lidU32 + currentStride);
       float myDot = sdataDot[lidU32];
       float otherDot = sdataDot[otherIdx];
@@ -453,7 +453,7 @@ __kernel void navatala_sparse_sparse_cosine_distance_f32(__global const float* a
     strideAccum = nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lidU32 == (uint)(0u))) {
+  if (lidU32 == (uint)(0u)) {
     float dotProduct = sdataDot[(uint)(0u)];
     float normASq = sdataNormA[(uint)(0u)];
     float normBSq = sdataNormB[(uint)(0u)];
@@ -486,7 +486,7 @@ __kernel void navatala_sparse_sparse_cosine_distance_f64(__global const double* 
   uint gridSize = ((uint)((int)(get_global_size(0))));
   for (int loopIdx = 0; loopIdx < (int)(nnzVal); ++loopIdx) {
     uint currentIdx = idxAccum;
-    if ((currentIdx < nnzVal)) {
+    if (currentIdx < nnzVal) {
       double aVal = a[currentIdx];
       double bVal = b[currentIdx];
       double prod = (aVal * bVal);
@@ -516,7 +516,7 @@ __kernel void navatala_sparse_sparse_cosine_distance_f64(__global const double* 
   uint strideAccum = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint currentStride = strideAccum;
-    if ((lidU32 < currentStride)) {
+    if (lidU32 < currentStride) {
       uint otherIdx = (lidU32 + currentStride);
       double myDot = sdataDot[lidU32];
       double otherDot = sdataDot[otherIdx];
@@ -533,7 +533,7 @@ __kernel void navatala_sparse_sparse_cosine_distance_f64(__global const double* 
     strideAccum = nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lidU32 == (uint)(0u))) {
+  if (lidU32 == (uint)(0u)) {
     double dotProduct = sdataDot[(uint)(0u)];
     double normASq = sdataNormA[(uint)(0u)];
     double normBSq = sdataNormB[(uint)(0u)];
@@ -563,7 +563,7 @@ __kernel void navatala_sparse_sparse_jaccard_distance_f32(__global const float* 
   uint gridSize = ((uint)((int)(get_global_size(0))));
   for (int loopIdx = 0; loopIdx < (int)(nnzVal); ++loopIdx) {
     uint currentIdx = idxAccum;
-    if ((currentIdx < nnzVal)) {
+    if (currentIdx < nnzVal) {
       float aVal = a[currentIdx];
       float bVal = b[currentIdx];
       bool aNonZero = (aVal != as_float(0x00000000u));
@@ -591,7 +591,7 @@ __kernel void navatala_sparse_sparse_jaccard_distance_f32(__global const float* 
   uint strideAccum = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint currentStride = strideAccum;
-    if ((lidU32 < currentStride)) {
+    if (lidU32 < currentStride) {
       uint otherIdx = (lidU32 + currentStride);
       uint myIntersect = sdataIntersect[lidU32];
       uint otherIntersect = sdataIntersect[otherIdx];
@@ -605,7 +605,7 @@ __kernel void navatala_sparse_sparse_jaccard_distance_f32(__global const float* 
     strideAccum = nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lidU32 == (uint)(0u))) {
+  if (lidU32 == (uint)(0u)) {
     uint totalIntersect = sdataIntersect[(uint)(0u)];
     uint totalUnion = sdataUnion[(uint)(0u)];
     bool unionIsZero = (totalUnion == (uint)(0u));
@@ -634,7 +634,7 @@ __kernel void navatala_sparse_sparse_jaccard_distance_f64(__global const double*
   uint gridSize = ((uint)((int)(get_global_size(0))));
   for (int loopIdx = 0; loopIdx < (int)(nnzVal); ++loopIdx) {
     uint currentIdx = idxAccum;
-    if ((currentIdx < nnzVal)) {
+    if (currentIdx < nnzVal) {
       double aVal = a[currentIdx];
       double bVal = b[currentIdx];
       bool aNonZero = (aVal != as_double(0x0000000000000000ul));
@@ -662,7 +662,7 @@ __kernel void navatala_sparse_sparse_jaccard_distance_f64(__global const double*
   uint strideAccum = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint currentStride = strideAccum;
-    if ((lidU32 < currentStride)) {
+    if (lidU32 < currentStride) {
       uint otherIdx = (lidU32 + currentStride);
       uint myIntersect = sdataIntersect[lidU32];
       uint otherIntersect = sdataIntersect[otherIdx];
@@ -676,7 +676,7 @@ __kernel void navatala_sparse_sparse_jaccard_distance_f64(__global const double*
     strideAccum = nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lidU32 == (uint)(0u))) {
+  if (lidU32 == (uint)(0u)) {
     uint totalIntersect = sdataIntersect[(uint)(0u)];
     uint totalUnion = sdataUnion[(uint)(0u)];
     bool unionIsZero = (totalUnion == (uint)(0u));
@@ -696,7 +696,7 @@ __kernel void navatala_sparse_sparse_jacobi_iter_f32(__global const uint* rowPtr
   uint gid = ((uint)((int)(get_global_id(0))));
   uint i = gid;
   uint nVal = n[(uint)(0u)];
-  if ((i < nVal)) {
+  if (i < nVal) {
     uint rowStart = rowPtr[i];
     uint iPlusOne = (i + (uint)(1u));
     uint rowEnd = rowPtr[iPlusOne];
@@ -705,7 +705,7 @@ __kernel void navatala_sparse_sparse_jacobi_iter_f32(__global const uint* rowPtr
     float bi = b[i];
     for (int j = 0; j < (int)(rowEnd); ++j) {
       uint jU32 = ((uint)(j));
-      if ((jU32 >= rowStart)) {
+      if (jU32 >= rowStart) {
         uint col = colInd[jU32];
         float aVal = values[jU32];
         bool isDiag = (col == i);
@@ -736,7 +736,7 @@ __kernel void navatala_sparse_sparse_jacobi_iter_f64(__global const uint* rowPtr
   uint gid = ((uint)((int)(get_global_id(0))));
   uint i = gid;
   uint nVal = n[(uint)(0u)];
-  if ((i < nVal)) {
+  if (i < nVal) {
     uint rowStart = rowPtr[i];
     uint iPlusOne = (i + (uint)(1u));
     uint rowEnd = rowPtr[iPlusOne];
@@ -745,7 +745,7 @@ __kernel void navatala_sparse_sparse_jacobi_iter_f64(__global const uint* rowPtr
     double bi = b[i];
     for (int j = 0; j < (int)(rowEnd); ++j) {
       uint jU32 = ((uint)(j));
-      if ((jU32 >= rowStart)) {
+      if (jU32 >= rowStart) {
         uint col = colInd[jU32];
         double aVal = values[jU32];
         bool isDiag = (col == i);
@@ -775,7 +775,7 @@ __kernel void navatala_sparse_sparse_gauss_seidel_iter_f32(__global const uint* 
   uint gid = ((uint)((int)(get_global_id(0))));
   uint i = gid;
   uint nVal = n[(uint)(0u)];
-  if ((i < nVal)) {
+  if (i < nVal) {
     uint rowStart = rowPtr[i];
     uint iPlusOne = (i + (uint)(1u));
     uint rowEnd = rowPtr[iPlusOne];
@@ -784,7 +784,7 @@ __kernel void navatala_sparse_sparse_gauss_seidel_iter_f32(__global const uint* 
     float bi = b[i];
     for (int j = 0; j < (int)(rowEnd); ++j) {
       uint jU32 = ((uint)(j));
-      if ((jU32 >= rowStart)) {
+      if (jU32 >= rowStart) {
         uint col = colInd[jU32];
         float aVal = values[jU32];
         bool isDiag = (col == i);
@@ -818,7 +818,7 @@ __kernel void navatala_sparse_sparse_gauss_seidel_iter_f64(__global const uint* 
   uint gid = ((uint)((int)(get_global_id(0))));
   uint i = gid;
   uint nVal = n[(uint)(0u)];
-  if ((i < nVal)) {
+  if (i < nVal) {
     uint rowStart = rowPtr[i];
     uint iPlusOne = (i + (uint)(1u));
     uint rowEnd = rowPtr[iPlusOne];
@@ -827,7 +827,7 @@ __kernel void navatala_sparse_sparse_gauss_seidel_iter_f64(__global const uint* 
     double bi = b[i];
     for (int j = 0; j < (int)(rowEnd); ++j) {
       uint jU32 = ((uint)(j));
-      if ((jU32 >= rowStart)) {
+      if (jU32 >= rowStart) {
         uint col = colInd[jU32];
         double aVal = values[jU32];
         bool isDiag = (col == i);
@@ -860,7 +860,7 @@ __kernel void navatala_sparse_sparse_cg_iter_f32(__global const uint* rowPtr, __
   uint gid = ((uint)((int)(get_global_id(0))));
   uint i = gid;
   uint nVal = n[(uint)(0u)];
-  if ((i < nVal)) {
+  if (i < nVal) {
     float alphaVal = alpha[(uint)(0u)];
     float xi = x[i];
     float pi = p[i];
@@ -883,7 +883,7 @@ __kernel void navatala_sparse_sparse_cg_iter_f64(__global const uint* rowPtr, __
   uint gid = ((uint)((int)(get_global_id(0))));
   uint i = gid;
   uint nVal = n[(uint)(0u)];
-  if ((i < nVal)) {
+  if (i < nVal) {
     double alphaVal = alpha[(uint)(0u)];
     double xi = x[i];
     double pi = p[i];
@@ -905,7 +905,7 @@ __kernel void navatala_sparse_sparse_bicgstab_iter_f32(__global const float* x, 
   uint gid = ((uint)((int)(get_global_id(0))));
   uint i = gid;
   uint nVal = n[(uint)(0u)];
-  if ((i < nVal)) {
+  if (i < nVal) {
     float alphaVal = alpha[(uint)(0u)];
     float omegaVal = omega[(uint)(0u)];
     float xi = x[i];
@@ -931,7 +931,7 @@ __kernel void navatala_sparse_sparse_bicgstab_iter_f64(__global const double* x,
   uint gid = ((uint)((int)(get_global_id(0))));
   uint i = gid;
   uint nVal = n[(uint)(0u)];
-  if ((i < nVal)) {
+  if (i < nVal) {
     double alphaVal = alpha[(uint)(0u)];
     double omegaVal = omega[(uint)(0u)];
     double xi = x[i];
@@ -956,14 +956,14 @@ __kernel void navatala_sparse_compute_residual_f32(__global const uint* rowPtr, 
   uint gid = ((uint)((int)(get_global_id(0))));
   uint i = gid;
   uint nVal = n[(uint)(0u)];
-  if ((i < nVal)) {
+  if (i < nVal) {
     uint rowStart = rowPtr[i];
     uint iPlusOne = (i + (uint)(1u));
     uint rowEnd = rowPtr[iPlusOne];
     float axSumAccum = as_float(0x00000000u);
     for (int j = 0; j < (int)(rowEnd); ++j) {
       uint jU32 = ((uint)(j));
-      if ((jU32 >= rowStart)) {
+      if (jU32 >= rowStart) {
         uint col = colInd[jU32];
         float aVal = values[jU32];
         float xj = x[col];
@@ -988,14 +988,14 @@ __kernel void navatala_sparse_compute_residual_f64(__global const uint* rowPtr, 
   uint gid = ((uint)((int)(get_global_id(0))));
   uint i = gid;
   uint nVal = n[(uint)(0u)];
-  if ((i < nVal)) {
+  if (i < nVal) {
     uint rowStart = rowPtr[i];
     uint iPlusOne = (i + (uint)(1u));
     uint rowEnd = rowPtr[iPlusOne];
     double axSumAccum = as_double(0x0000000000000000ul);
     for (int j = 0; j < (int)(rowEnd); ++j) {
       uint jU32 = ((uint)(j));
-      if ((jU32 >= rowStart)) {
+      if (jU32 >= rowStart) {
         uint col = colInd[jU32];
         double aVal = values[jU32];
         double xj = x[col];
@@ -1028,7 +1028,7 @@ __kernel void navatala_sparse_compute_residual_norm_f32(__global const float* re
   barrier(CLK_LOCAL_MEM_FENCE);
   for (int s = 0; s < (int)((uint)(128u)); ++s) {
     uint sU32 = ((uint)(s));
-    if ((lid < sU32)) {
+    if (lid < sU32) {
       float other = sdata[(lid + sU32)];
       float mine = sdata[lid];
       float sum = (mine + other);
@@ -1036,7 +1036,7 @@ __kernel void navatala_sparse_compute_residual_norm_f32(__global const float* re
     }
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     atomic_add(&normSq[(uint)(0u)], sdata[(uint)(0u)]);
   }
 }
@@ -1058,7 +1058,7 @@ __kernel void navatala_sparse_compute_residual_norm_f64(__global const double* r
   barrier(CLK_LOCAL_MEM_FENCE);
   for (int s = 0; s < (int)((uint)(128u)); ++s) {
     uint sU32 = ((uint)(s));
-    if ((lid < sU32)) {
+    if (lid < sU32) {
       double other = sdata[(lid + sU32)];
       double mine = sdata[lid];
       double sum = (mine + other);
@@ -1066,7 +1066,7 @@ __kernel void navatala_sparse_compute_residual_norm_f64(__global const double* r
     }
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     atomic_add(&normSq[(uint)(0u)], sdata[(uint)(0u)]);
   }
 }
@@ -1078,14 +1078,14 @@ __kernel void navatala_sparse_csr_spmv_row_f32(__global const uint* rowPtr, __gl
   uint gid = ((uint)((int)(get_global_id(0))));
   uint i = gid;
   uint nVal = n[(uint)(0u)];
-  if ((i < nVal)) {
+  if (i < nVal) {
     uint rowStart = rowPtr[i];
     uint iPlusOne = (i + (uint)(1u));
     uint rowEnd = rowPtr[iPlusOne];
     float sumAccum = as_float(0x00000000u);
     for (int j = 0; j < (int)(rowEnd); ++j) {
       uint jU32 = ((uint)(j));
-      if ((jU32 >= rowStart)) {
+      if (jU32 >= rowStart) {
         uint col = colInd[jU32];
         float aVal = values[jU32];
         float xj = x[col];
@@ -1106,14 +1106,14 @@ __kernel void navatala_sparse_csr_spmv_row_f64(__global const uint* rowPtr, __gl
   uint gid = ((uint)((int)(get_global_id(0))));
   uint i = gid;
   uint nVal = n[(uint)(0u)];
-  if ((i < nVal)) {
+  if (i < nVal) {
     uint rowStart = rowPtr[i];
     uint iPlusOne = (i + (uint)(1u));
     uint rowEnd = rowPtr[iPlusOne];
     double sumAccum = as_double(0x0000000000000000ul);
     for (int j = 0; j < (int)(rowEnd); ++j) {
       uint jU32 = ((uint)(j));
-      if ((jU32 >= rowStart)) {
+      if (jU32 >= rowStart) {
         uint col = colInd[jU32];
         double aVal = values[jU32];
         double xj = x[col];
@@ -1133,14 +1133,14 @@ __kernel void navatala_sparse_chebyshev_smooth_f32(__global const uint* rowPtr, 
   uint gid = ((uint)((int)(get_global_id(0))));
   uint i = gid;
   uint nVal = n[(uint)(0u)];
-  if ((i < nVal)) {
+  if (i < nVal) {
     uint rowStart = rowPtr[i];
     uint iPlusOne = (i + (uint)(1u));
     uint rowEnd = rowPtr[iPlusOne];
     float sumAccum = as_float(0x00000000u);
     for (int j = 0; j < (int)(rowEnd); ++j) {
       uint jU32 = ((uint)(j));
-      if ((jU32 >= rowStart)) {
+      if (jU32 >= rowStart) {
         uint col = colInd[jU32];
         float aVal = values[jU32];
         float xj = x[col];
@@ -1171,14 +1171,14 @@ __kernel void navatala_sparse_chebyshev_smooth_f64(__global const uint* rowPtr, 
   uint gid = ((uint)((int)(get_global_id(0))));
   uint i = gid;
   uint nVal = n[(uint)(0u)];
-  if ((i < nVal)) {
+  if (i < nVal) {
     uint rowStart = rowPtr[i];
     uint iPlusOne = (i + (uint)(1u));
     uint rowEnd = rowPtr[iPlusOne];
     double sumAccum = as_double(0x0000000000000000ul);
     for (int j = 0; j < (int)(rowEnd); ++j) {
       uint jU32 = ((uint)(j));
-      if ((jU32 >= rowStart)) {
+      if (jU32 >= rowStart) {
         uint col = colInd[jU32];
         double aVal = values[jU32];
         double xj = x[col];
@@ -1206,15 +1206,15 @@ const char* k_opencl_navatala_sparse_find_min_edge_per_component_f32 = R"kernel(
 __kernel void navatala_sparse_find_min_edge_per_component_f32(__global const uint* srcNodes, __global const uint* dstNodes, __global const float* weights, __global const uint* components, __global const uint* numEdges, __global const uint* numNodes, __global uint* minEdgeIdx, __global float* minEdgeWeight) {
   int gid0 = (int)get_global_id(0);
   uint edgeIdx = ((uint)((int)(get_global_id(0))));
-  if ((edgeIdx < numEdges[(uint)(0u)])) {
+  if (edgeIdx < numEdges[(uint)(0u)]) {
     uint src = srcNodes[edgeIdx];
     uint dst = dstNodes[edgeIdx];
     uint srcComp = components[src];
     uint dstComp = components[dst];
-    if ((srcComp != dstComp)) {
+    if (srcComp != dstComp) {
       float w = weights[edgeIdx];
       float currWeight = minEdgeWeight[srcComp];
-      if ((w < currWeight)) {
+      if (w < currWeight) {
         atomic_min(&minEdgeWeight[srcComp], w);
         minEdgeIdx[srcComp] = edgeIdx;
       }
@@ -1228,15 +1228,15 @@ const char* k_opencl_navatala_sparse_find_min_edge_per_component_f64 = R"kernel(
 __kernel void navatala_sparse_find_min_edge_per_component_f64(__global const uint* srcNodes, __global const uint* dstNodes, __global const double* weights, __global const uint* components, __global const uint* numEdges, __global const uint* numNodes, __global uint* minEdgeIdx, __global double* minEdgeWeight) {
   int gid0 = (int)get_global_id(0);
   uint edgeIdx = ((uint)((int)(get_global_id(0))));
-  if ((edgeIdx < numEdges[(uint)(0u)])) {
+  if (edgeIdx < numEdges[(uint)(0u)]) {
     uint src = srcNodes[edgeIdx];
     uint dst = dstNodes[edgeIdx];
     uint srcComp = components[src];
     uint dstComp = components[dst];
-    if ((srcComp != dstComp)) {
+    if (srcComp != dstComp) {
       double w = weights[edgeIdx];
       double currWeight = minEdgeWeight[srcComp];
-      if ((w < currWeight)) {
+      if (w < currWeight) {
         atomic_min(&minEdgeWeight[srcComp], w);
         minEdgeIdx[srcComp] = edgeIdx;
       }
@@ -1249,15 +1249,15 @@ const char* k_opencl_navatala_sparse_merge_components_f32 = R"kernel(
 __kernel void navatala_sparse_merge_components_f32(__global const uint* srcNodes, __global const uint* dstNodes, __global const uint* minEdgeIdx, __global const uint* numNodes, __global uint* components, __global bool* mstEdges) {
   int gid0 = (int)get_global_id(0);
   uint nodeId = ((uint)((int)(get_global_id(0))));
-  if ((nodeId < numNodes[(uint)(0u)])) {
+  if (nodeId < numNodes[(uint)(0u)]) {
     uint comp = components[nodeId];
-    if ((comp == nodeId)) {
+    if (comp == nodeId) {
       uint edgeIdx = minEdgeIdx[nodeId];
-      if ((edgeIdx != (uint)(4294967295u))) {
+      if (edgeIdx != (uint)(4294967295u)) {
         uint src = srcNodes[edgeIdx];
         uint dst = dstNodes[edgeIdx];
         uint dstComp = components[dst];
-        if ((nodeId != dstComp)) {
+        if (nodeId != dstComp) {
           uint smaller = (((nodeId < dstComp)) ? (nodeId) : (dstComp));
           uint larger = (((nodeId < dstComp)) ? (dstComp) : (nodeId));
           atomic_min(&components[larger], smaller);
@@ -1273,15 +1273,15 @@ const char* k_opencl_navatala_sparse_merge_components_f64 = R"kernel(
 __kernel void navatala_sparse_merge_components_f64(__global const uint* srcNodes, __global const uint* dstNodes, __global const uint* minEdgeIdx, __global const uint* numNodes, __global uint* components, __global bool* mstEdges) {
   int gid0 = (int)get_global_id(0);
   uint nodeId = ((uint)((int)(get_global_id(0))));
-  if ((nodeId < numNodes[(uint)(0u)])) {
+  if (nodeId < numNodes[(uint)(0u)]) {
     uint comp = components[nodeId];
-    if ((comp == nodeId)) {
+    if (comp == nodeId) {
       uint edgeIdx = minEdgeIdx[nodeId];
-      if ((edgeIdx != (uint)(4294967295u))) {
+      if (edgeIdx != (uint)(4294967295u)) {
         uint src = srcNodes[edgeIdx];
         uint dst = dstNodes[edgeIdx];
         uint dstComp = components[dst];
-        if ((nodeId != dstComp)) {
+        if (nodeId != dstComp) {
           uint smaller = (((nodeId < dstComp)) ? (nodeId) : (dstComp));
           uint larger = (((nodeId < dstComp)) ? (dstComp) : (nodeId));
           atomic_min(&components[larger], smaller);
@@ -1297,15 +1297,15 @@ const char* k_opencl_navatala_sparse_mst_boruvka_step_f32 = R"kernel(
 __kernel void navatala_sparse_mst_boruvka_step_f32(__global const uint* srcNodes, __global const uint* dstNodes, __global const float* weights, __global const uint* numEdges, __global const uint* numNodes, __global uint* components, __global uint* minEdgeIdx, __global float* minEdgeWeight, __global bool* mstEdges) {
   int gid0 = (int)get_global_id(0);
   uint tid = ((uint)((int)(get_global_id(0))));
-  if ((tid < numEdges[(uint)(0u)])) {
+  if (tid < numEdges[(uint)(0u)]) {
     uint src = srcNodes[tid];
     uint dst = dstNodes[tid];
     uint srcRoot = components[src];
     uint dstRoot = components[dst];
-    if ((srcRoot != dstRoot)) {
+    if (srcRoot != dstRoot) {
       float w = weights[tid];
       float currMin = minEdgeWeight[srcRoot];
-      if ((w < currMin)) {
+      if (w < currMin) {
         atomic_min(&minEdgeWeight[srcRoot], w);
         minEdgeIdx[srcRoot] = tid;
       }
@@ -1319,15 +1319,15 @@ const char* k_opencl_navatala_sparse_mst_boruvka_step_f64 = R"kernel(
 __kernel void navatala_sparse_mst_boruvka_step_f64(__global const uint* srcNodes, __global const uint* dstNodes, __global const double* weights, __global const uint* numEdges, __global const uint* numNodes, __global uint* components, __global uint* minEdgeIdx, __global double* minEdgeWeight, __global bool* mstEdges) {
   int gid0 = (int)get_global_id(0);
   uint tid = ((uint)((int)(get_global_id(0))));
-  if ((tid < numEdges[(uint)(0u)])) {
+  if (tid < numEdges[(uint)(0u)]) {
     uint src = srcNodes[tid];
     uint dst = dstNodes[tid];
     uint srcRoot = components[src];
     uint dstRoot = components[dst];
-    if ((srcRoot != dstRoot)) {
+    if (srcRoot != dstRoot) {
       double w = weights[tid];
       double currMin = minEdgeWeight[srcRoot];
-      if ((w < currMin)) {
+      if (w < currMin) {
         atomic_min(&minEdgeWeight[srcRoot], w);
         minEdgeIdx[srcRoot] = tid;
       }
@@ -1341,7 +1341,7 @@ __kernel void navatala_sparse_csr_sp_m_v_f32(__global const uint* rowPtr, __glob
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rowStart = ((int)(rowPtr[row]));
     int rowEnd = ((int)(rowPtr[(row + 1)]));
     float acc = as_float(0x00000000u);
@@ -1363,7 +1363,7 @@ __kernel void navatala_sparse_csr_sp_m_v_f64(__global const uint* rowPtr, __glob
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rowStart = ((int)(rowPtr[row]));
     int rowEnd = ((int)(rowPtr[(row + 1)]));
     double acc = as_double(0x0000000000000000ul);
@@ -1384,7 +1384,7 @@ __kernel void navatala_sparse_csr_sp_m_v_scaled_f32(__global const uint* rowPtr,
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rowStart = ((int)(rowPtr[row]));
     int rowEnd = ((int)(rowPtr[(row + 1)]));
     float acc = as_float(0x00000000u);
@@ -1409,7 +1409,7 @@ __kernel void navatala_sparse_csr_sp_m_v_scaled_f64(__global const uint* rowPtr,
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rowStart = ((int)(rowPtr[row]));
     int rowEnd = ((int)(rowPtr[(row + 1)]));
     double acc = as_double(0x0000000000000000ul);
@@ -1433,7 +1433,7 @@ __kernel void navatala_sparse_csr_residual_f32(__global const uint* rowPtr, __gl
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rowStart = ((int)(rowPtr[row]));
     int rowEnd = ((int)(rowPtr[(row + 1)]));
     float Ax = as_float(0x00000000u);
@@ -1456,7 +1456,7 @@ __kernel void navatala_sparse_csr_residual_f64(__global const uint* rowPtr, __gl
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rowStart = ((int)(rowPtr[row]));
     int rowEnd = ((int)(rowPtr[(row + 1)]));
     double Ax = as_double(0x0000000000000000ul);
@@ -1478,7 +1478,7 @@ __kernel void navatala_sparse_axpy_f32(__global const float* x, __global const f
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float a = alpha[0];
     float xi = x[gid];
     float yi = y[gid];
@@ -1493,7 +1493,7 @@ __kernel void navatala_sparse_axpy_f64(__global const double* x, __global const 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double a = alpha[0];
     double xi = x[gid];
     double yi = y[gid];
@@ -1507,7 +1507,7 @@ __kernel void navatala_sparse_xpay_f32(__global const float* x, __global const f
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float a = alpha[0];
     float xi = x[gid];
     float yi = y[gid];
@@ -1522,7 +1522,7 @@ __kernel void navatala_sparse_xpay_f64(__global const double* x, __global const 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double a = alpha[0];
     double xi = x[gid];
     double yi = y[gid];
@@ -1542,15 +1542,15 @@ __kernel void navatala_sparse_dot_partials_f32(__global const float* x, __global
   float warpSum = sub_group_reduce_add(prod);
   __local float sdata[32];
   int lane = (int)(get_sub_group_local_id());
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < 8)) {
+  if (lid < 8) {
     float val = sdata[lid];
     float finalSum = sub_group_reduce_add(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       int grpId = (int)(get_group_id(0));
       partials[grpId] = finalSum;
     }
@@ -1570,15 +1570,15 @@ __kernel void navatala_sparse_dot_partials_f64(__global const double* x, __globa
   double warpSum = sub_group_reduce_add(prod);
   __local double sdata[32];
   int lane = (int)(get_sub_group_local_id());
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < 8)) {
+  if (lid < 8) {
     double val = sdata[lid];
     double finalSum = sub_group_reduce_add(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       int grpId = (int)(get_group_id(0));
       partials[grpId] = finalSum;
     }
@@ -1591,7 +1591,7 @@ __kernel void navatala_sparse_scal_f32(__global const float* alpha, __global con
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float a = alpha[0];
     float xi = x[gid];
     x[gid] = (a * xi);
@@ -1605,7 +1605,7 @@ __kernel void navatala_sparse_scal_f64(__global const double* alpha, __global co
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double a = alpha[0];
     double xi = x[gid];
     x[gid] = (a * xi);
@@ -1624,15 +1624,15 @@ __kernel void navatala_sparse_nrm2_partials_f32(__global const float* x, __globa
   float warpSum = sub_group_reduce_add(sq);
   __local float sdata[32];
   int lane = (int)(get_sub_group_local_id());
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < 8)) {
+  if (lid < 8) {
     float val = sdata[lid];
     float finalSum = sub_group_reduce_add(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       int grpId = (int)(get_group_id(0));
       partials[grpId] = finalSum;
     }
@@ -1652,15 +1652,15 @@ __kernel void navatala_sparse_nrm2_partials_f64(__global const double* x, __glob
   double warpSum = sub_group_reduce_add(sq);
   __local double sdata[32];
   int lane = (int)(get_sub_group_local_id());
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < 8)) {
+  if (lid < 8) {
     double val = sdata[lid];
     double finalSum = sub_group_reduce_add(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       int grpId = (int)(get_group_id(0));
       partials[grpId] = finalSum;
     }
@@ -1673,7 +1673,7 @@ __kernel void navatala_sparse_zero_fill_f32(__global const uint* n, __global flo
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     x[gid] = as_float(0x00000000u);
   }
 }
@@ -1685,7 +1685,7 @@ __kernel void navatala_sparse_zero_fill_f64(__global const uint* n, __global dou
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     x[gid] = as_double(0x0000000000000000ul);
   }
 }
@@ -1696,7 +1696,7 @@ __kernel void navatala_sparse_zero_fill_u32(__global const uint* n, __global uin
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     x[gid] = (uint)(0u);
   }
 }
@@ -1706,7 +1706,7 @@ const char* k_opencl_navatala_sparse_zero_scalar_u32 = R"kernel(
 __kernel void navatala_sparse_zero_scalar_u32(__global uint* x) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     x[0] = (uint)(0u);
   }
 }
@@ -1717,7 +1717,7 @@ __kernel void navatala_sparse_fill_neg_one_i32(__global const uint* n, __global 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     x[gid] = -1;
   }
 }
@@ -1728,7 +1728,7 @@ __kernel void navatala_sparse_copy_f32(__global const float* x, __global const u
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     y[gid] = x[gid];
   }
 }
@@ -1740,7 +1740,7 @@ __kernel void navatala_sparse_copy_f64(__global const double* x, __global const 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     y[gid] = x[gid];
   }
 }
@@ -1752,7 +1752,7 @@ __kernel void navatala_sparse_bsr_sp_m_v_f32(__global const uint* rowPtr, __glob
   int blockRow = (int)(get_global_id(0));
   int N = ((int)(nBlockRows[0]));
   int bd = ((int)(blockDim[0]));
-  if ((blockRow < N)) {
+  if (blockRow < N) {
     int rs = ((int)(rowPtr[blockRow]));
     int re = ((int)(rowPtr[(blockRow + 1)]));
     for (int comp = 0; comp < (int)(bd); ++comp) {
@@ -1779,7 +1779,7 @@ __kernel void navatala_sparse_bsr_sp_m_v_f64(__global const uint* rowPtr, __glob
   int blockRow = (int)(get_global_id(0));
   int N = ((int)(nBlockRows[0]));
   int bd = ((int)(blockDim[0]));
-  if ((blockRow < N)) {
+  if (blockRow < N) {
     int rs = ((int)(rowPtr[blockRow]));
     int re = ((int)(rowPtr[(blockRow + 1)]));
     for (int comp = 0; comp < (int)(bd); ++comp) {
@@ -1804,7 +1804,7 @@ __kernel void navatala_sparse_csr_row_norm_l1_f32(__global const uint* rowPtr, _
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     float sum = as_float(0x00000000u);
@@ -1824,7 +1824,7 @@ __kernel void navatala_sparse_csr_row_norm_l1_f64(__global const uint* rowPtr, _
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     double sum = as_double(0x0000000000000000ul);
@@ -1843,7 +1843,7 @@ __kernel void navatala_sparse_csr_row_norm_linf_f32(__global const uint* rowPtr,
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     float mx = as_float(0x00000000u);
@@ -1863,7 +1863,7 @@ __kernel void navatala_sparse_csr_row_norm_linf_f64(__global const uint* rowPtr,
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     double mx = as_double(0x0000000000000000ul);
@@ -1882,7 +1882,7 @@ __kernel void navatala_sparse_csr_frobenius_partials_f32(__global const float* v
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nnz[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float a = values[gid];
     partials[gid] = (a * a);
   }
@@ -1895,7 +1895,7 @@ __kernel void navatala_sparse_csr_frobenius_partials_f64(__global const double* 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nnz[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double a = values[gid];
     partials[gid] = (a * a);
   }
@@ -1907,7 +1907,7 @@ __kernel void navatala_sparse_csr_truncate_f32(__global const uint* rowPtr, __gl
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     float rowMax = as_float(0x00000000u);
@@ -1935,7 +1935,7 @@ __kernel void navatala_sparse_csr_truncate_f64(__global const uint* rowPtr, __gl
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     double rowMax = as_double(0x0000000000000000ul);
@@ -1962,7 +1962,7 @@ __kernel void navatala_sparse_csr_compact_f32(__global const uint* rowPtr, __glo
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int newRs = ((int)(newRowPtr[gid]));
@@ -1970,7 +1970,7 @@ __kernel void navatala_sparse_csr_compact_f32(__global const uint* rowPtr, __glo
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       uint keep = keepMask[k];
-      if ((keep == (uint)(1u))) {
+      if (keep == (uint)(1u)) {
         int tgt = (newRs + pos);
         uint c = colIdx[k];
         float v = values[k];
@@ -1989,7 +1989,7 @@ __kernel void navatala_sparse_csr_compact_f64(__global const uint* rowPtr, __glo
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int newRs = ((int)(newRowPtr[gid]));
@@ -1997,7 +1997,7 @@ __kernel void navatala_sparse_csr_compact_f64(__global const uint* rowPtr, __glo
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       uint keep = keepMask[k];
-      if ((keep == (uint)(1u))) {
+      if (keep == (uint)(1u)) {
         int tgt = (newRs + pos);
         uint c = colIdx[k];
         double v = values[k];
@@ -2015,7 +2015,7 @@ __kernel void navatala_sparse_csr_sort_columns_f32(__global const uint* rowPtr, 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int len = (re - rs);
@@ -2025,7 +2025,7 @@ __kernel void navatala_sparse_csr_sort_columns_f32(__global const uint* rowPtr, 
         int b = (rs + (j + 1));
         uint ca = colIdx[a];
         uint cb = colIdx[b];
-        if ((ca > cb)) {
+        if (ca > cb) {
           colIdx[a] = cb;
           colIdx[b] = ca;
           float va = values[a];
@@ -2045,7 +2045,7 @@ __kernel void navatala_sparse_csr_sort_columns_f64(__global const uint* rowPtr, 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int len = (re - rs);
@@ -2055,7 +2055,7 @@ __kernel void navatala_sparse_csr_sort_columns_f64(__global const uint* rowPtr, 
         int b = (rs + (j + 1));
         uint ca = colIdx[a];
         uint cb = colIdx[b];
-        if ((ca > cb)) {
+        if (ca > cb) {
           colIdx[a] = cb;
           colIdx[b] = ca;
           double va = values[a];
@@ -2074,7 +2074,7 @@ __kernel void navatala_sparse_csr_permute_rows_f32(__global const uint* rowPtr, 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int origRow = ((int)(perm[gid]));
     int rs = ((int)(rowPtr[origRow]));
     int re = ((int)(rowPtr[(origRow + 1)]));
@@ -2097,7 +2097,7 @@ __kernel void navatala_sparse_csr_permute_rows_f64(__global const uint* rowPtr, 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int origRow = ((int)(perm[gid]));
     int rs = ((int)(rowPtr[origRow]));
     int re = ((int)(rowPtr[(origRow + 1)]));
@@ -2124,13 +2124,13 @@ __kernel void navatala_sparse_dense_l_u_f32(__global const uint* n, __global flo
     for (int i = 0; i < (int)((N - k)); ++i) {
       int r = (k + i);
       float v = A[((r * N) + k)];
-      if ((fabs(v) > fabs(maxVal))) {
+      if (fabs(v) > fabs(maxVal)) {
         maxVal = v;
         maxRow = r;
       }
     }
     pivots[k] = ((uint)(maxRow));
-    if ((maxRow != k)) {
+    if (maxRow != k) {
       for (int j = 0; j < (int)(N); ++j) {
         float a = A[((k * N) + j)];
         float b = A[((maxRow * N) + j)];
@@ -2164,13 +2164,13 @@ __kernel void navatala_sparse_dense_l_u_f64(__global const uint* n, __global dou
     for (int i = 0; i < (int)((N - k)); ++i) {
       int r = (k + i);
       double v = A[((r * N) + k)];
-      if ((fabs(v) > fabs(maxVal))) {
+      if (fabs(v) > fabs(maxVal)) {
         maxVal = v;
         maxRow = r;
       }
     }
     pivots[k] = ((uint)(maxRow));
-    if ((maxRow != k)) {
+    if (maxRow != k) {
       for (int j = 0; j < (int)(N); ++j) {
         double a = A[((k * N) + j)];
         double b = A[((maxRow * N) + j)];
@@ -2202,7 +2202,7 @@ __kernel void navatala_sparse_dense_l_u_solve_f32(__global const float* LU, __gl
   }
   for (int k = 0; k < (int)(N); ++k) {
     int pk = ((int)(pivots[k]));
-    if ((pk != k)) {
+    if (pk != k) {
       float tmp = x[k];
       x[k] = x[pk];
       x[pk] = tmp;
@@ -2241,7 +2241,7 @@ __kernel void navatala_sparse_dense_l_u_solve_f64(__global const double* LU, __g
   }
   for (int k = 0; k < (int)(N); ++k) {
     int pk = ((int)(pivots[k]));
-    if ((pk != k)) {
+    if (pk != k) {
       double tmp = x[k];
       x[k] = x[pk];
       x[pk] = tmp;
@@ -2275,7 +2275,7 @@ __kernel void navatala_sparse_csr_replace_values_f32(__global const float* newVa
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nnz[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float v = newValues[gid];
     values[gid] = v;
   }
@@ -2288,7 +2288,7 @@ __kernel void navatala_sparse_csr_replace_values_f64(__global const double* newV
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nnz[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double v = newValues[gid];
     values[gid] = v;
   }
@@ -2301,7 +2301,7 @@ __kernel void navatala_sparse_csr_sp_m_v_mixed_f32_f64(__global const uint* rowP
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     double sum = as_double(0x0000000000000000ul);
@@ -2324,7 +2324,7 @@ __kernel void navatala_sparse_bsr_sp_m_v_mixed_f32_f64(__global const uint* rowP
   int blockRow = (int)(get_global_id(0));
   int N = ((int)(nBlockRows[0]));
   int bd = ((int)(blockDim[0]));
-  if ((blockRow < N)) {
+  if (blockRow < N) {
     int rs = ((int)(rowPtr[blockRow]));
     int re = ((int)(rowPtr[(blockRow + 1)]));
     for (int comp = 0; comp < (int)(bd); ++comp) {
@@ -2349,7 +2349,7 @@ __kernel void navatala_sparse_csr_to_coo_f32(__global const uint* rowPtr, __glob
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     for (int j = 0; j < (int)((re - rs)); ++j) {
@@ -2368,7 +2368,7 @@ __kernel void navatala_sparse_csr_to_coo_f64(__global const uint* rowPtr, __glob
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     for (int j = 0; j < (int)((re - rs)); ++j) {
@@ -2386,13 +2386,13 @@ __kernel void navatala_sparse_csr_to_ell_f32(__global const uint* rowPtr, __glob
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int nnz = (re - rs);
     int maxNnz = ((int)(maxNnzPerRow[0]));
     for (int j = 0; j < (int)(maxNnz); ++j) {
-      if ((j < nnz)) {
+      if (j < nnz) {
         int k = (rs + j);
         ellColIdx[((gid * maxNnz) + j)] = colIdx[k];
         ellValues[((gid * maxNnz) + j)] = values[k];
@@ -2411,13 +2411,13 @@ __kernel void navatala_sparse_csr_to_ell_f64(__global const uint* rowPtr, __glob
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int nnz = (re - rs);
     int maxNnz = ((int)(maxNnzPerRow[0]));
     for (int j = 0; j < (int)(maxNnz); ++j) {
-      if ((j < nnz)) {
+      if (j < nnz) {
         int k = (rs + j);
         ellColIdx[((gid * maxNnz) + j)] = colIdx[k];
         ellValues[((gid * maxNnz) + j)] = values[k];
@@ -2435,13 +2435,13 @@ __kernel void navatala_sparse_ell_sp_m_v_f32(__global const uint* ellColIdx, __g
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int maxNnz = ((int)(maxNnzPerRow[0]));
     float sum = as_float(0x00000000u);
     for (int j = 0; j < (int)(maxNnz); ++j) {
       int ellIdx = ((gid * maxNnz) + j);
       uint col = ellColIdx[ellIdx];
-      if ((col < (uint)(4294967295u))) {
+      if (col < (uint)(4294967295u)) {
         float a = ellValues[ellIdx];
         float xj = x[((int)(col))];
         sum = (sum + (a * xj));
@@ -2458,13 +2458,13 @@ __kernel void navatala_sparse_ell_sp_m_v_f64(__global const uint* ellColIdx, __g
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int maxNnz = ((int)(maxNnzPerRow[0]));
     double sum = as_double(0x0000000000000000ul);
     for (int j = 0; j < (int)(maxNnz); ++j) {
       int ellIdx = ((gid * maxNnz) + j);
       uint col = ellColIdx[ellIdx];
-      if ((col < (uint)(4294967295u))) {
+      if (col < (uint)(4294967295u)) {
         double a = ellValues[ellIdx];
         double xj = x[((int)(col))];
         sum = (sum + (a * xj));
@@ -2480,7 +2480,7 @@ __kernel void navatala_sparse_csr_add_symbolic_row_nnz(__global const uint* Arow
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int ars = ((int)(ArowPtr[gid]));
     int are = ((int)(ArowPtr[(gid + 1)]));
     int brs = ((int)(BrowPtr[gid]));
@@ -2491,15 +2491,15 @@ __kernel void navatala_sparse_csr_add_symbolic_row_nnz(__global const uint* Arow
     int ai = 0;
     int bi = 0;
     for (int __iter = 0; __iter < 256; ++__iter) {
-      if (!(((ai < annz) && (bi < bnnz)))) break;
+      if (!((ai < annz) && (bi < bnnz))) break;
       int acol = ((int)(AcolIdx[(ars + ai)]));
       int bcol = ((int)(BcolIdx[(brs + bi)]));
-      if ((acol == bcol)) {
+      if (acol == bcol) {
         count = (count + 1);
         ai = (ai + 1);
         bi = (bi + 1);
       } else {
-        if ((acol < bcol)) {
+        if (acol < bcol) {
           count = (count + 1);
           ai = (ai + 1);
         } else {
@@ -2520,7 +2520,7 @@ __kernel void navatala_sparse_csr_add_numeric_f32(__global const uint* ArowPtr, 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int ars = ((int)(ArowPtr[gid]));
     int are = ((int)(ArowPtr[(gid + 1)]));
     int brs = ((int)(BrowPtr[gid]));
@@ -2532,10 +2532,10 @@ __kernel void navatala_sparse_csr_add_numeric_f32(__global const uint* ArowPtr, 
     int ai = 0;
     int bi = 0;
     for (int __iter = 0; __iter < 256; ++__iter) {
-      if (!(((ai < (are - ars)) && (bi < (bre - brs))))) break;
+      if (!((ai < (are - ars)) && (bi < (bre - brs)))) break;
       int acol = ((int)(AcolIdx[(ars + ai)]));
       int bcol = ((int)(BcolIdx[(brs + bi)]));
-      if ((acol == bcol)) {
+      if (acol == bcol) {
         int tgt = (crs + ci);
         CcolIdx[tgt] = ((uint)(acol));
         Cvalues[tgt] = ((a * Avalues[(ars + ai)]) + (b * Bvalues[(brs + bi)]));
@@ -2543,7 +2543,7 @@ __kernel void navatala_sparse_csr_add_numeric_f32(__global const uint* ArowPtr, 
         ai = (ai + 1);
         bi = (bi + 1);
       } else {
-        if ((acol < bcol)) {
+        if (acol < bcol) {
           int tgt2 = (crs + ci);
           CcolIdx[tgt2] = ((uint)(acol));
           Cvalues[tgt2] = (a * Avalues[(ars + ai)]);
@@ -2559,7 +2559,7 @@ __kernel void navatala_sparse_csr_add_numeric_f32(__global const uint* ArowPtr, 
       }
     }
     for (int __iter = 0; __iter < 256; ++__iter) {
-      if (!((ai < (are - ars)))) break;
+      if (!(ai < (are - ars))) break;
       int tgt4 = (crs + ci);
       int acol2 = ((int)(AcolIdx[(ars + ai)]));
       CcolIdx[tgt4] = ((uint)(acol2));
@@ -2568,7 +2568,7 @@ __kernel void navatala_sparse_csr_add_numeric_f32(__global const uint* ArowPtr, 
       ai = (ai + 1);
     }
     for (int __iter = 0; __iter < 256; ++__iter) {
-      if (!((bi < (bre - brs)))) break;
+      if (!(bi < (bre - brs))) break;
       int tgt5 = (crs + ci);
       int bcol2 = ((int)(BcolIdx[(brs + bi)]));
       CcolIdx[tgt5] = ((uint)(bcol2));
@@ -2586,7 +2586,7 @@ __kernel void navatala_sparse_csr_add_numeric_f64(__global const uint* ArowPtr, 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int ars = ((int)(ArowPtr[gid]));
     int are = ((int)(ArowPtr[(gid + 1)]));
     int brs = ((int)(BrowPtr[gid]));
@@ -2598,10 +2598,10 @@ __kernel void navatala_sparse_csr_add_numeric_f64(__global const uint* ArowPtr, 
     int ai = 0;
     int bi = 0;
     for (int __iter = 0; __iter < 256; ++__iter) {
-      if (!(((ai < (are - ars)) && (bi < (bre - brs))))) break;
+      if (!((ai < (are - ars)) && (bi < (bre - brs)))) break;
       int acol = ((int)(AcolIdx[(ars + ai)]));
       int bcol = ((int)(BcolIdx[(brs + bi)]));
-      if ((acol == bcol)) {
+      if (acol == bcol) {
         int tgt = (crs + ci);
         CcolIdx[tgt] = ((uint)(acol));
         Cvalues[tgt] = ((a * Avalues[(ars + ai)]) + (b * Bvalues[(brs + bi)]));
@@ -2609,7 +2609,7 @@ __kernel void navatala_sparse_csr_add_numeric_f64(__global const uint* ArowPtr, 
         ai = (ai + 1);
         bi = (bi + 1);
       } else {
-        if ((acol < bcol)) {
+        if (acol < bcol) {
           int tgt2 = (crs + ci);
           CcolIdx[tgt2] = ((uint)(acol));
           Cvalues[tgt2] = (a * Avalues[(ars + ai)]);
@@ -2625,7 +2625,7 @@ __kernel void navatala_sparse_csr_add_numeric_f64(__global const uint* ArowPtr, 
       }
     }
     for (int __iter = 0; __iter < 256; ++__iter) {
-      if (!((ai < (are - ars)))) break;
+      if (!(ai < (are - ars))) break;
       int tgt4 = (crs + ci);
       int acol2 = ((int)(AcolIdx[(ars + ai)]));
       CcolIdx[tgt4] = ((uint)(acol2));
@@ -2634,7 +2634,7 @@ __kernel void navatala_sparse_csr_add_numeric_f64(__global const uint* ArowPtr, 
       ai = (ai + 1);
     }
     for (int __iter = 0; __iter < 256; ++__iter) {
-      if (!((bi < (bre - brs)))) break;
+      if (!(bi < (bre - brs))) break;
       int tgt5 = (crs + ci);
       int bcol2 = ((int)(BcolIdx[(brs + bi)]));
       CcolIdx[tgt5] = ((uint)(bcol2));
@@ -2651,7 +2651,7 @@ __kernel void navatala_sparse_csr_scale_f32(__global const float* alpha, __globa
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nnz[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float v = values[gid];
     float a = alpha[0];
     values[gid] = (a * v);
@@ -2665,7 +2665,7 @@ __kernel void navatala_sparse_csr_scale_f64(__global const double* alpha, __glob
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nnz[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double v = values[gid];
     double a = alpha[0];
     values[gid] = (a * v);
@@ -2678,7 +2678,7 @@ __kernel void navatala_sparse_csr_nnz_per_row(__global const uint* rowPtr, __glo
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     uint rs = rowPtr[gid];
     uint re = rowPtr[(gid + 1)];
     nnzPerRow[gid] = (re - rs);
@@ -2691,7 +2691,7 @@ __kernel void navatala_sparse_csr_max_nnz_per_row_partials(__global const uint* 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     partials[gid] = nnzPerRow[gid];
   } else {
     partials[gid] = (uint)(0u);
@@ -2704,14 +2704,14 @@ __kernel void navatala_sparse_csr_extract_diag_f32(__global const uint* rowPtr, 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     float d = as_float(0x00000000u);
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col == gid)) {
+      if (col == gid) {
         d = values[k];
       }
     }
@@ -2726,14 +2726,14 @@ __kernel void navatala_sparse_csr_extract_diag_f64(__global const uint* rowPtr, 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     double d = as_double(0x0000000000000000ul);
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col == gid)) {
+      if (col == gid) {
         d = values[k];
       }
     }
@@ -2747,7 +2747,7 @@ __kernel void navatala_sparse_csr_permute_cols_f32(__global const uint* colIdx, 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nnz[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     uint c = colIdx[gid];
     uint newC = perm[((int)(c))];
     newColIdx[gid] = newC;
@@ -2762,7 +2762,7 @@ __kernel void navatala_sparse_csr_permute_cols_f64(__global const uint* colIdx, 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nnz[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     uint c = colIdx[gid];
     uint newC = perm[((int)(c))];
     newColIdx[gid] = newC;
@@ -2778,7 +2778,7 @@ __kernel void navatala_sparse_csr_row_slice_f32(__global const uint* rowPtr, __g
   int begin = ((int)(rowBegin[0]));
   int end = ((int)(rowEnd[0]));
   int nRows = (end - begin);
-  if ((gid < nRows)) {
+  if (gid < nRows) {
     int origRow = (begin + gid);
     int rs = ((int)(rowPtr[origRow]));
     int re = ((int)(rowPtr[(origRow + 1)]));
@@ -2801,7 +2801,7 @@ __kernel void navatala_sparse_csr_row_slice_f64(__global const uint* rowPtr, __g
   int begin = ((int)(rowBegin[0]));
   int end = ((int)(rowEnd[0]));
   int nRows = (end - begin);
-  if ((gid < nRows)) {
+  if (gid < nRows) {
     int origRow = (begin + gid);
     int rs = ((int)(rowPtr[origRow]));
     int re = ((int)(rowPtr[(origRow + 1)]));
@@ -2821,7 +2821,7 @@ __kernel void navatala_sparse_cg_update_x_r_f32(__global const float* p, __globa
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float a = alpha[0];
     float pi = p[gid];
     float api = Ap[gid];
@@ -2839,7 +2839,7 @@ __kernel void navatala_sparse_cg_update_x_r_f64(__global const double* p, __glob
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double a = alpha[0];
     double pi = p[gid];
     double api = Ap[gid];
@@ -2856,7 +2856,7 @@ __kernel void navatala_sparse_cg_update_p_f32(__global const float* z, __global 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float b = beta[0];
     float zi = z[gid];
     float pi = p[gid];
@@ -2871,7 +2871,7 @@ __kernel void navatala_sparse_cg_update_p_f64(__global const double* z, __global
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double b = beta[0];
     double zi = z[gid];
     double pi = p[gid];
@@ -2933,7 +2933,7 @@ __kernel void navatala_sparse_cg_fused_update_dot_f32(__global const float* p, _
   float pi = (((gid < N)) ? (p[gid]) : (as_float(0x00000000u)));
   float api = (((gid < N)) ? (Ap[gid]) : (as_float(0x00000000u)));
   float zi = (((gid < N)) ? (z[gid]) : (as_float(0x00000000u)));
-  if ((gid < N)) {
+  if (gid < N) {
     float xi = x[gid];
     float ri = r[gid];
     float xnew = (xi + (a * pi));
@@ -2945,15 +2945,15 @@ __kernel void navatala_sparse_cg_fused_update_dot_f32(__global const float* p, _
   float warpSum = sub_group_reduce_add(rz);
   __local float sdata[32];
   int lane = (int)(get_sub_group_local_id());
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < 8)) {
+  if (lid < 8) {
     float val = sdata[lid];
     float finalSum = sub_group_reduce_add(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       int grpId = (int)(get_group_id(0));
       rTzPartials[grpId] = finalSum;
     }
@@ -2973,7 +2973,7 @@ __kernel void navatala_sparse_cg_fused_update_dot_f64(__global const double* p, 
   double pi = (((gid < N)) ? (p[gid]) : (as_double(0x0000000000000000ul)));
   double api = (((gid < N)) ? (Ap[gid]) : (as_double(0x0000000000000000ul)));
   double zi = (((gid < N)) ? (z[gid]) : (as_double(0x0000000000000000ul)));
-  if ((gid < N)) {
+  if (gid < N) {
     double xi = x[gid];
     double ri = r[gid];
     double xnew = (xi + (a * pi));
@@ -2985,15 +2985,15 @@ __kernel void navatala_sparse_cg_fused_update_dot_f64(__global const double* p, 
   double warpSum = sub_group_reduce_add(rz);
   __local double sdata[32];
   int lane = (int)(get_sub_group_local_id());
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < 8)) {
+  if (lid < 8) {
     double val = sdata[lid];
     double finalSum = sub_group_reduce_add(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       int grpId = (int)(get_group_id(0));
       rTzPartials[grpId] = finalSum;
     }
@@ -3006,7 +3006,7 @@ __kernel void navatala_sparse_cg_init_residual_f32(__global const float* b, __gl
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float bi = b[gid];
     float ai = Ax[gid];
     r[gid] = (bi - ai);
@@ -3020,7 +3020,7 @@ __kernel void navatala_sparse_cg_init_residual_f64(__global const double* b, __g
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double bi = b[gid];
     double ai = Ax[gid];
     r[gid] = (bi - ai);
@@ -3039,15 +3039,15 @@ __kernel void navatala_sparse_cg_residual_norm_partials_f32(__global const float
   float warpSum = sub_group_reduce_add(sq);
   __local float sdata[32];
   int lane = (int)(get_sub_group_local_id());
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < 8)) {
+  if (lid < 8) {
     float val = sdata[lid];
     float finalSum = sub_group_reduce_add(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       int grpId = (int)(get_group_id(0));
       partials[grpId] = finalSum;
     }
@@ -3067,15 +3067,15 @@ __kernel void navatala_sparse_cg_residual_norm_partials_f64(__global const doubl
   double warpSum = sub_group_reduce_add(sq);
   __local double sdata[32];
   int lane = (int)(get_sub_group_local_id());
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < 8)) {
+  if (lid < 8) {
     double val = sdata[lid];
     double finalSum = sub_group_reduce_add(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       int grpId = (int)(get_group_id(0));
       partials[grpId] = finalSum;
     }
@@ -3088,7 +3088,7 @@ __kernel void navatala_sparse_bicgstab_update_p_f32(__global const float* r, __g
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float ri = r[gid];
     float pi = p[gid];
     float vi = v[gid];
@@ -3106,7 +3106,7 @@ __kernel void navatala_sparse_bicgstab_update_p_f64(__global const double* r, __
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double ri = r[gid];
     double pi = p[gid];
     double vi = v[gid];
@@ -3123,7 +3123,7 @@ __kernel void navatala_sparse_bicgstab_update_x_f32(__global const float* phat, 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float xi = x[gid];
     float ph = phat[gid];
     float sh = shat[gid];
@@ -3141,7 +3141,7 @@ __kernel void navatala_sparse_bicgstab_update_x_f64(__global const double* phat,
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double xi = x[gid];
     double ph = phat[gid];
     double sh = shat[gid];
@@ -3204,7 +3204,7 @@ __kernel void navatala_sparse_bicgstab_update_r_f32(__global const float* s, __g
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float om = omega[0];
     float si = s[gid];
     float ti = t[gid];
@@ -3219,7 +3219,7 @@ __kernel void navatala_sparse_bicgstab_update_r_f64(__global const double* s, __
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double om = omega[0];
     double si = s[gid];
     double ti = t[gid];
@@ -3233,7 +3233,7 @@ __kernel void navatala_sparse_bicgstab_compute_s_f32(__global const float* r, __
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float a = alpha[0];
     float ri = r[gid];
     float vi = v[gid];
@@ -3248,7 +3248,7 @@ __kernel void navatala_sparse_bicgstab_compute_s_f64(__global const double* r, _
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double a = alpha[0];
     double ri = r[gid];
     double vi = v[gid];
@@ -3283,7 +3283,7 @@ __kernel void navatala_sparse_bicgstab_fused_update_all_f32(__global const float
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float a = alpha[0];
     float om = omega[0];
     float ph = phat[gid];
@@ -3303,7 +3303,7 @@ __kernel void navatala_sparse_bicgstab_fused_update_all_f64(__global const doubl
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double a = alpha[0];
     double om = omega[0];
     double ph = phat[gid];
@@ -3322,7 +3322,7 @@ __kernel void navatala_sparse_gmres_arnoldi_project_f32(__global const float* v,
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float c = coeff[0];
     float vi = v[gid];
     float wi = w[gid];
@@ -3337,7 +3337,7 @@ __kernel void navatala_sparse_gmres_arnoldi_project_f64(__global const double* v
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double c = coeff[0];
     double vi = v[gid];
     double wi = w[gid];
@@ -3351,7 +3351,7 @@ __kernel void navatala_sparse_gmres_normalize_f32(__global const float* w, __glo
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float nm = norm[0];
     float wi = w[gid];
     v[gid] = (wi / nm);
@@ -3365,7 +3365,7 @@ __kernel void navatala_sparse_gmres_normalize_f64(__global const double* w, __gl
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double nm = norm[0];
     double wi = w[gid];
     v[gid] = (wi / nm);
@@ -3379,7 +3379,7 @@ __kernel void navatala_sparse_gmres_update_solution_f32(__global const float* V,
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
   int M = ((int)(m[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float acc = as_float(0x00000000u);
     for (int j = 0; j < (int)(M); ++j) {
       float yj = y[j];
@@ -3399,7 +3399,7 @@ __kernel void navatala_sparse_gmres_update_solution_f64(__global const double* V
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
   int M = ((int)(m[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double acc = as_double(0x0000000000000000ul);
     for (int j = 0; j < (int)(M); ++j) {
       double yj = y[j];
@@ -3467,7 +3467,7 @@ __kernel void navatala_sparse_gmres_arnoldi_batch_project_f32(__global const flo
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
   int J = ((int)(j[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float acc = as_float(0x00000000u);
     for (int k = 0; k < (int)(J); ++k) {
       float hk = hCol[k];
@@ -3487,7 +3487,7 @@ __kernel void navatala_sparse_gmres_arnoldi_batch_project_f64(__global const dou
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
   int J = ((int)(j[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double acc = as_double(0x0000000000000000ul);
     for (int k = 0; k < (int)(J); ++k) {
       double hk = hCol[k];
@@ -3511,15 +3511,15 @@ __kernel void navatala_sparse_gmres_hessenberg_dot_partials_f32(__global const f
   float warpSum = sub_group_reduce_add(sq);
   __local float sdata[32];
   int lane = (int)(get_sub_group_local_id());
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < 8)) {
+  if (lid < 8) {
     float val = sdata[lid];
     float finalSum = sub_group_reduce_add(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       int grpId = (int)(get_group_id(0));
       partials[grpId] = finalSum;
     }
@@ -3539,15 +3539,15 @@ __kernel void navatala_sparse_gmres_hessenberg_dot_partials_f64(__global const d
   double warpSum = sub_group_reduce_add(sq);
   __local double sdata[32];
   int lane = (int)(get_sub_group_local_id());
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < 8)) {
+  if (lid < 8) {
     double val = sdata[lid];
     double finalSum = sub_group_reduce_add(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       int grpId = (int)(get_group_id(0));
       partials[grpId] = finalSum;
     }
@@ -3560,7 +3560,7 @@ __kernel void navatala_sparse_gmres_restart_init_f32(__global const float* r, __
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float nm = rNorm[0];
     float ri = r[gid];
     V[gid] = (ri / nm);
@@ -3574,7 +3574,7 @@ __kernel void navatala_sparse_gmres_restart_init_f64(__global const double* r, _
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double nm = rNorm[0];
     double ri = r[gid];
     V[gid] = (ri / nm);
@@ -3611,7 +3611,7 @@ __kernel void navatala_sparse_gmres_store_basis_f32(__global const float* w, __g
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
   int col = ((int)(colIdx[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float wi = w[gid];
     V[(gid + (col * N))] = wi;
   }
@@ -3625,7 +3625,7 @@ __kernel void navatala_sparse_gmres_store_basis_f64(__global const double* w, __
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
   int col = ((int)(colIdx[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double wi = w[gid];
     V[(gid + (col * N))] = wi;
   }
@@ -3644,15 +3644,15 @@ __kernel void navatala_sparse_idr_shadow_project_f32(__global const float* P, __
   float warpSum = sub_group_reduce_add(val);
   __local float sdata[32];
   int lane = (int)(get_sub_group_local_id());
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < 8)) {
+  if (lid < 8) {
     float sv = sdata[lid];
     float finalSum = sub_group_reduce_add(sv);
-    if ((lid == 0)) {
+    if (lid == 0) {
       c[k] = finalSum;
     }
   }
@@ -3672,15 +3672,15 @@ __kernel void navatala_sparse_idr_shadow_project_f64(__global const double* P, _
   double warpSum = sub_group_reduce_add(val);
   __local double sdata[32];
   int lane = (int)(get_sub_group_local_id());
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < 8)) {
+  if (lid < 8) {
     double sv = sdata[lid];
     double finalSum = sub_group_reduce_add(sv);
-    if ((lid == 0)) {
+    if (lid == 0) {
       c[k] = finalSum;
     }
   }
@@ -3692,7 +3692,7 @@ __kernel void navatala_sparse_idr_update_x_r_f32(__global const float* t, __glob
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float om = omega[0];
     float ti = t[gid];
     float vi = v[gid];
@@ -3710,7 +3710,7 @@ __kernel void navatala_sparse_idr_update_x_r_f64(__global const double* t, __glo
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double om = omega[0];
     double ti = t[gid];
     double vi = v[gid];
@@ -3727,7 +3727,7 @@ __kernel void navatala_sparse_idr_g_space_update_f32(__global const float* dRj, 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float a = alpha[0];
     float dj = dRj[gid];
     float dk = dRk[gid];
@@ -3742,7 +3742,7 @@ __kernel void navatala_sparse_idr_g_space_update_f64(__global const double* dRj,
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double a = alpha[0];
     double dj = dRj[gid];
     double dk = dRk[gid];
@@ -3779,7 +3779,7 @@ __kernel void navatala_sparse_idr_build_shadow_space_f32(__global const uint* n,
   int N = ((int)(n[0]));
   int S = ((int)(s[0]));
   int total = (N * S);
-  if ((gid < total)) {
+  if (gid < total) {
     int row = (gid % N);
     int col = (gid / N);
     float val = (((row == col)) ? (as_float(0x3f800000u)) : (as_float(0x00000000u)));
@@ -3796,7 +3796,7 @@ __kernel void navatala_sparse_idr_build_shadow_space_f64(__global const uint* n,
   int N = ((int)(n[0]));
   int S = ((int)(s[0]));
   int total = (N * S);
-  if ((gid < total)) {
+  if (gid < total) {
     int row = (gid % N);
     int col = (gid / N);
     double val = (((row == col)) ? (as_double(0x3ff0000000000000ul)) : (as_double(0x0000000000000000ul)));
@@ -3823,15 +3823,15 @@ __kernel void navatala_sparse_idr_m_sync_fused_f32(__global const float* P, __gl
   float warpSum = sub_group_reduce_add(acc);
   __local float sdata[32];
   int lane = (int)(get_sub_group_local_id());
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < 8)) {
+  if (lid < 8) {
     float sv = sdata[lid];
     float finalSum = sub_group_reduce_add(sv);
-    if ((lid == 0)) {
+    if (lid == 0) {
       c[k] = finalSum;
     }
   }
@@ -3857,15 +3857,15 @@ __kernel void navatala_sparse_idr_m_sync_fused_f64(__global const double* P, __g
   double warpSum = sub_group_reduce_add(acc);
   __local double sdata[32];
   int lane = (int)(get_sub_group_local_id());
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < 8)) {
+  if (lid < 8) {
     double sv = sdata[lid];
     double finalSum = sub_group_reduce_add(sv);
-    if ((lid == 0)) {
+    if (lid == 0) {
       c[k] = finalSum;
     }
   }
@@ -3878,7 +3878,7 @@ __kernel void navatala_sparse_idr_compute_v_f32(__global const float* r, __globa
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
   int S = ((int)(s[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float acc = as_float(0x00000000u);
     for (int k = 0; k < (int)(S); ++k) {
       float ck = c[k];
@@ -3898,7 +3898,7 @@ __kernel void navatala_sparse_idr_compute_v_f64(__global const double* r, __glob
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
   int S = ((int)(s[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double acc = as_double(0x0000000000000000ul);
     for (int k = 0; k < (int)(S); ++k) {
       double ck = c[k];
@@ -3917,7 +3917,7 @@ __kernel void navatala_sparse_idr_store_d_r_column_f32(__global const float* rNe
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
   int col = ((int)(colIdx[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float rn = rNew[gid];
     float ro = rOld[gid];
     dR[(gid + (col * N))] = (rn - ro);
@@ -3932,7 +3932,7 @@ __kernel void navatala_sparse_idr_store_d_r_column_f64(__global const double* rN
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
   int col = ((int)(colIdx[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double rn = rNew[gid];
     double ro = rOld[gid];
     dR[(gid + (col * N))] = (rn - ro);
@@ -3945,7 +3945,7 @@ __kernel void navatala_sparse_pcg_update_x_r_f32(__global const float* z, __glob
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float a = alpha[0];
     float zi = z[gid];
     float qi = q[gid];
@@ -3963,7 +3963,7 @@ __kernel void navatala_sparse_pcg_update_x_r_f64(__global const double* z, __glo
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double a = alpha[0];
     double zi = z[gid];
     double qi = q[gid];
@@ -3980,7 +3980,7 @@ __kernel void navatala_sparse_pcgf_update_p_f32(__global const float* z, __globa
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float b = beta[0];
     float zi = z[gid];
     float pi = p[gid];
@@ -3995,7 +3995,7 @@ __kernel void navatala_sparse_pcgf_update_p_f64(__global const double* z, __glob
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double b = beta[0];
     double zi = z[gid];
     double pi = p[gid];
@@ -4009,7 +4009,7 @@ __kernel void navatala_sparse_pbicgstab_fused_s_f32(__global const float* r, __g
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float a = alpha[0];
     float ri = r[gid];
     float vi = v[gid];
@@ -4024,7 +4024,7 @@ __kernel void navatala_sparse_pbicgstab_fused_s_f64(__global const double* r, __
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double a = alpha[0];
     double ri = r[gid];
     double vi = v[gid];
@@ -4052,20 +4052,20 @@ __kernel void navatala_sparse_pbicgstab_triple_dot_partials_f32(__global const f
   __local float sd1[32];
   __local float sd2[32];
   int lane = (int)(get_sub_group_local_id());
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sd0[warpIdx] = ws0;
     sd1[warpIdx] = ws1;
     sd2[warpIdx] = ws2;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < 8)) {
+  if (lid < 8) {
     int grpId = (int)(get_group_id(0));
     int base = (grpId * 3);
     float f0 = sub_group_reduce_add(sd0[lid]);
     float f1 = sub_group_reduce_add(sd1[lid]);
     float f2 = sub_group_reduce_add(sd2[lid]);
-    if ((lid == 0)) {
+    if (lid == 0) {
       partials[base] = f0;
       partials[(base + 1)] = f1;
       partials[(base + 2)] = f2;
@@ -4094,20 +4094,20 @@ __kernel void navatala_sparse_pbicgstab_triple_dot_partials_f64(__global const d
   __local double sd1[32];
   __local double sd2[32];
   int lane = (int)(get_sub_group_local_id());
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sd0[warpIdx] = ws0;
     sd1[warpIdx] = ws1;
     sd2[warpIdx] = ws2;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < 8)) {
+  if (lid < 8) {
     int grpId = (int)(get_group_id(0));
     int base = (grpId * 3);
     double f0 = sub_group_reduce_add(sd0[lid]);
     double f1 = sub_group_reduce_add(sd1[lid]);
     double f2 = sub_group_reduce_add(sd2[lid]);
-    if ((lid == 0)) {
+    if (lid == 0) {
       partials[base] = f0;
       partials[(base + 1)] = f1;
       partials[(base + 2)] = f2;
@@ -4122,7 +4122,7 @@ __kernel void navatala_sparse_fgmres_store_z_f32(__global const float* z, __glob
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
   int col = ((int)(colIdx[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float zi = z[gid];
     Z[(gid + (col * N))] = zi;
   }
@@ -4136,7 +4136,7 @@ __kernel void navatala_sparse_fgmres_store_z_f64(__global const double* z, __glo
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
   int col = ((int)(colIdx[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double zi = z[gid];
     Z[(gid + (col * N))] = zi;
   }
@@ -4149,7 +4149,7 @@ __kernel void navatala_sparse_fgmres_update_solution_f32(__global const float* Z
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
   int M = ((int)(m[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float acc = as_float(0x00000000u);
     for (int j = 0; j < (int)(M); ++j) {
       float yj = y[j];
@@ -4169,7 +4169,7 @@ __kernel void navatala_sparse_fgmres_update_solution_f64(__global const double* 
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
   int M = ((int)(m[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double acc = as_double(0x0000000000000000ul);
     for (int j = 0; j < (int)(M); ++j) {
       double yj = y[j];
@@ -4206,15 +4206,15 @@ __kernel void navatala_sparse_pipe_c_g_fused_f32(__global const float* p, __glob
   float warpSum = sub_group_reduce_add(sq);
   __local float sdata[32];
   int lane = (int)(get_sub_group_local_id());
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < 8)) {
+  if (lid < 8) {
     float val = sdata[lid];
     float finalSum = sub_group_reduce_add(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       int grpId = (int)(get_group_id(0));
       partials[grpId] = finalSum;
     }
@@ -4247,15 +4247,15 @@ __kernel void navatala_sparse_pipe_c_g_fused_f64(__global const double* p, __glo
   double warpSum = sub_group_reduce_add(sq);
   __local double sdata[32];
   int lane = (int)(get_sub_group_local_id());
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < 8)) {
+  if (lid < 8) {
     double val = sdata[lid];
     double finalSum = sub_group_reduce_add(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       int grpId = (int)(get_group_id(0));
       partials[grpId] = finalSum;
     }
@@ -4302,15 +4302,15 @@ __kernel void navatala_sparse_fgmres_m_g_s_project_f32(__global const float* vi,
   float warpSum = sub_group_reduce_add(prod);
   __local float sdata[32];
   int lane = (int)(get_sub_group_local_id());
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < 8)) {
+  if (lid < 8) {
     float val = sdata[lid];
     float finalSum = sub_group_reduce_add(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       hij[0] = finalSum;
     }
   }
@@ -4330,15 +4330,15 @@ __kernel void navatala_sparse_fgmres_m_g_s_project_f64(__global const double* vi
   double warpSum = sub_group_reduce_add(prod);
   __local double sdata[32];
   int lane = (int)(get_sub_group_local_id());
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < 8)) {
+  if (lid < 8) {
     double val = sdata[lid];
     double finalSum = sub_group_reduce_add(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       hij[0] = finalSum;
     }
   }
@@ -4369,15 +4369,15 @@ __kernel void navatala_sparse_pbicgstab_fused_update_conv_f32(__global const flo
   float warpSum = sub_group_reduce_add(sq);
   __local float sdata[32];
   int lane = (int)(get_sub_group_local_id());
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < 8)) {
+  if (lid < 8) {
     float val = sdata[lid];
     float finalSum = sub_group_reduce_add(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       int grpId = (int)(get_group_id(0));
       rrPartials[grpId] = finalSum;
     }
@@ -4410,15 +4410,15 @@ __kernel void navatala_sparse_pbicgstab_fused_update_conv_f64(__global const dou
   double warpSum = sub_group_reduce_add(sq);
   __local double sdata[32];
   int lane = (int)(get_sub_group_local_id());
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < 8)) {
+  if (lid < 8) {
     double val = sdata[lid];
     double finalSum = sub_group_reduce_add(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       int grpId = (int)(get_group_id(0));
       rrPartials[grpId] = finalSum;
     }
@@ -4431,14 +4431,14 @@ __kernel void navatala_sparse_jacobi_sweep_f32(__global const uint* rowPtr, __gl
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     float offDiag = as_float(0x00000000u);
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != row)) {
+      if (col != row) {
         float a = values[k];
         float xj = x[col];
         offDiag = (offDiag + (a * xj));
@@ -4459,14 +4459,14 @@ __kernel void navatala_sparse_jacobi_sweep_f64(__global const uint* rowPtr, __gl
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     double offDiag = as_double(0x0000000000000000ul);
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != row)) {
+      if (col != row) {
         double a = values[k];
         double xj = x[col];
         offDiag = (offDiag + (a * xj));
@@ -4486,7 +4486,7 @@ __kernel void navatala_sparse_jacobi_l1_sweep_f32(__global const uint* rowPtr, _
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     float offDiag = as_float(0x00000000u);
@@ -4496,7 +4496,7 @@ __kernel void navatala_sparse_jacobi_l1_sweep_f32(__global const uint* rowPtr, _
       int col = ((int)(colIdx[k]));
       float a = values[k];
       l1Norm = (l1Norm + fabs(a));
-      if ((col != row)) {
+      if (col != row) {
         float xj = x[col];
         offDiag = (offDiag + (a * xj));
       }
@@ -4515,7 +4515,7 @@ __kernel void navatala_sparse_jacobi_l1_sweep_f64(__global const uint* rowPtr, _
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     double offDiag = as_double(0x0000000000000000ul);
@@ -4525,7 +4525,7 @@ __kernel void navatala_sparse_jacobi_l1_sweep_f64(__global const uint* rowPtr, _
       int col = ((int)(colIdx[k]));
       double a = values[k];
       l1Norm = (l1Norm + fabs(a));
-      if ((col != row)) {
+      if (col != row) {
         double xj = x[col];
         offDiag = (offDiag + (a * xj));
       }
@@ -4543,13 +4543,13 @@ __kernel void navatala_sparse_extract_diagonal_f32(__global const uint* rowPtr, 
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col == row)) {
+      if (col == row) {
         diag[row] = values[k];
       }
     }
@@ -4563,13 +4563,13 @@ __kernel void navatala_sparse_extract_diagonal_f64(__global const uint* rowPtr, 
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col == row)) {
+      if (col == row) {
         diag[row] = values[k];
       }
     }
@@ -4582,13 +4582,13 @@ __kernel void navatala_sparse_block_jacobi_sweep_f32(__global const uint* rowPtr
   int gid0 = (int)get_global_id(0);
   int blockRow = (int)(get_global_id(0));
   int N = ((int)(nBlockRows[0]));
-  if ((blockRow < N)) {
+  if (blockRow < N) {
     int bdm = ((int)(blockDim[0]));
     int bdm2 = (bdm * bdm);
     int rs = ((int)(rowPtr[blockRow]));
     int re = ((int)(rowPtr[(blockRow + 1)]));
     float om = omega[0];
-    if ((bdm == 4)) {
+    if (bdm == 4) {
       int rowBase4 = (blockRow * 4);
       float offDiag0 = as_float(0x00000000u);
       float offDiag1 = as_float(0x00000000u);
@@ -4597,7 +4597,7 @@ __kernel void navatala_sparse_block_jacobi_sweep_f32(__global const uint* rowPtr
       for (int jj = 0; jj < (int)((re - rs)); ++jj) {
         int k = (rs + jj);
         int col = ((int)(colIdx[k]));
-        if ((col != blockRow)) {
+        if (col != blockRow) {
           int kBase = (k * 16);
           int colBase4 = (col * 4);
           float xv0 = x[colBase4];
@@ -4631,7 +4631,7 @@ __kernel void navatala_sparse_block_jacobi_sweep_f32(__global const uint* rowPtr
         for (int jj = 0; jj < (int)((re - rs)); ++jj) {
           int k = (rs + jj);
           int col = ((int)(colIdx[k]));
-          if ((col != blockRow)) {
+          if (col != blockRow) {
             int kBase = (k * bdm2);
             int rowBase = (kBase + (eq * bdm));
             for (int eq2 = 0; eq2 < (int)(bdm); ++eq2) {
@@ -4659,13 +4659,13 @@ __kernel void navatala_sparse_block_jacobi_sweep_f64(__global const uint* rowPtr
   int gid0 = (int)get_global_id(0);
   int blockRow = (int)(get_global_id(0));
   int N = ((int)(nBlockRows[0]));
-  if ((blockRow < N)) {
+  if (blockRow < N) {
     int bdm = ((int)(blockDim[0]));
     int bdm2 = (bdm * bdm);
     int rs = ((int)(rowPtr[blockRow]));
     int re = ((int)(rowPtr[(blockRow + 1)]));
     double om = omega[0];
-    if ((bdm == 4)) {
+    if (bdm == 4) {
       int rowBase4 = (blockRow * 4);
       double offDiag0 = as_double(0x0000000000000000ul);
       double offDiag1 = as_double(0x0000000000000000ul);
@@ -4674,7 +4674,7 @@ __kernel void navatala_sparse_block_jacobi_sweep_f64(__global const uint* rowPtr
       for (int jj = 0; jj < (int)((re - rs)); ++jj) {
         int k = (rs + jj);
         int col = ((int)(colIdx[k]));
-        if ((col != blockRow)) {
+        if (col != blockRow) {
           int kBase = (k * 16);
           int colBase4 = (col * 4);
           double xv0 = x[colBase4];
@@ -4708,7 +4708,7 @@ __kernel void navatala_sparse_block_jacobi_sweep_f64(__global const uint* rowPtr
         for (int jj = 0; jj < (int)((re - rs)); ++jj) {
           int k = (rs + jj);
           int col = ((int)(colIdx[k]));
-          if ((col != blockRow)) {
+          if (col != blockRow) {
             int kBase = (k * bdm2);
             int rowBase = (kBase + (eq * bdm));
             for (int eq2 = 0; eq2 < (int)(bdm); ++eq2) {
@@ -4735,14 +4735,14 @@ __kernel void navatala_sparse_cf_jacobi_sweep_f32(__global const uint* rowPtr, _
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     float offDiag = as_float(0x00000000u);
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != row)) {
+      if (col != row) {
         float a = values[k];
         float xj = x[col];
         offDiag = (offDiag + (a * xj));
@@ -4764,14 +4764,14 @@ __kernel void navatala_sparse_cf_jacobi_sweep_f64(__global const uint* rowPtr, _
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     double offDiag = as_double(0x0000000000000000ul);
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != row)) {
+      if (col != row) {
         double a = values[k];
         double xj = x[col];
         offDiag = (offDiag + (a * xj));
@@ -4792,7 +4792,7 @@ __kernel void navatala_sparse_multicolor_gs_forward_f32(__global const uint* row
   int gid0 = (int)get_global_id(0);
   int localIdx = (int)(get_global_id(0));
   int N = ((int)(nRowsThisColor[0]));
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int start = ((int)(colorOffsets[0]));
     int row = (start + localIdx);
     int rs = ((int)(rowPtr[row]));
@@ -4801,7 +4801,7 @@ __kernel void navatala_sparse_multicolor_gs_forward_f32(__global const uint* row
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != row)) {
+      if (col != row) {
         float a = values[k];
         float xj = x[col];
         sum = (sum + (a * xj));
@@ -4820,7 +4820,7 @@ __kernel void navatala_sparse_multicolor_gs_forward_f64(__global const uint* row
   int gid0 = (int)get_global_id(0);
   int localIdx = (int)(get_global_id(0));
   int N = ((int)(nRowsThisColor[0]));
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int start = ((int)(colorOffsets[0]));
     int row = (start + localIdx);
     int rs = ((int)(rowPtr[row]));
@@ -4829,7 +4829,7 @@ __kernel void navatala_sparse_multicolor_gs_forward_f64(__global const uint* row
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != row)) {
+      if (col != row) {
         double a = values[k];
         double xj = x[col];
         sum = (sum + (a * xj));
@@ -4847,7 +4847,7 @@ __kernel void navatala_sparse_multicolor_gs_backward_f32(__global const uint* ro
   int gid0 = (int)get_global_id(0);
   int localIdx = (int)(get_global_id(0));
   int N = ((int)(nRowsThisColor[0]));
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int start = ((int)(colorOffsets[0]));
     int row = (start + localIdx);
     int rs = ((int)(rowPtr[row]));
@@ -4856,7 +4856,7 @@ __kernel void navatala_sparse_multicolor_gs_backward_f32(__global const uint* ro
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != row)) {
+      if (col != row) {
         float a = values[k];
         float xj = x[col];
         sum = (sum + (a * xj));
@@ -4875,7 +4875,7 @@ __kernel void navatala_sparse_multicolor_gs_backward_f64(__global const uint* ro
   int gid0 = (int)get_global_id(0);
   int localIdx = (int)(get_global_id(0));
   int N = ((int)(nRowsThisColor[0]));
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int start = ((int)(colorOffsets[0]));
     int row = (start + localIdx);
     int rs = ((int)(rowPtr[row]));
@@ -4884,7 +4884,7 @@ __kernel void navatala_sparse_multicolor_gs_backward_f64(__global const uint* ro
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != row)) {
+      if (col != row) {
         double a = values[k];
         double xj = x[col];
         sum = (sum + (a * xj));
@@ -4902,7 +4902,7 @@ __kernel void navatala_sparse_fixcolor_gs_forward_f32(__global const uint* rowPt
   int gid0 = (int)get_global_id(0);
   int localIdx = (int)(get_global_id(0));
   int N = ((int)(nRowsThisColor[0]));
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int start = ((int)(colorOffsets[0]));
     int permIdx = (start + localIdx);
     int row = ((int)(reorderPerm[permIdx]));
@@ -4912,7 +4912,7 @@ __kernel void navatala_sparse_fixcolor_gs_forward_f32(__global const uint* rowPt
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != row)) {
+      if (col != row) {
         float a = values[k];
         float xj = x[col];
         sum = (sum + (a * xj));
@@ -4931,7 +4931,7 @@ __kernel void navatala_sparse_fixcolor_gs_forward_f64(__global const uint* rowPt
   int gid0 = (int)get_global_id(0);
   int localIdx = (int)(get_global_id(0));
   int N = ((int)(nRowsThisColor[0]));
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int start = ((int)(colorOffsets[0]));
     int permIdx = (start + localIdx);
     int row = ((int)(reorderPerm[permIdx]));
@@ -4941,7 +4941,7 @@ __kernel void navatala_sparse_fixcolor_gs_forward_f64(__global const uint* rowPt
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != row)) {
+      if (col != row) {
         double a = values[k];
         double xj = x[col];
         sum = (sum + (a * xj));
@@ -4959,7 +4959,7 @@ __kernel void navatala_sparse_fixcolor_gs_backward_f32(__global const uint* rowP
   int gid0 = (int)get_global_id(0);
   int localIdx = (int)(get_global_id(0));
   int N = ((int)(nRowsThisColor[0]));
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int start = ((int)(colorOffsets[0]));
     int permIdx = (start + localIdx);
     int row = ((int)(reorderPerm[permIdx]));
@@ -4969,7 +4969,7 @@ __kernel void navatala_sparse_fixcolor_gs_backward_f32(__global const uint* rowP
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != row)) {
+      if (col != row) {
         float a = values[k];
         float xj = x[col];
         sum = (sum + (a * xj));
@@ -4988,7 +4988,7 @@ __kernel void navatala_sparse_fixcolor_gs_backward_f64(__global const uint* rowP
   int gid0 = (int)get_global_id(0);
   int localIdx = (int)(get_global_id(0));
   int N = ((int)(nRowsThisColor[0]));
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int start = ((int)(colorOffsets[0]));
     int permIdx = (start + localIdx);
     int row = ((int)(reorderPerm[permIdx]));
@@ -4998,7 +4998,7 @@ __kernel void navatala_sparse_fixcolor_gs_backward_f64(__global const uint* rowP
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != row)) {
+      if (col != row) {
         double a = values[k];
         double xj = x[col];
         sum = (sum + (a * xj));
@@ -5016,7 +5016,7 @@ __kernel void navatala_sparse_ilu_factor_color_f32(__global const uint* rowPtr, 
   int gid0 = (int)get_global_id(0);
   int localIdx = (int)(get_global_id(0));
   int N = ((int)(nRowsThisColor[0]));
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int offset = ((int)(colorOffsets[0]));
     int row = (offset + localIdx);
     int rs = ((int)(rowPtr[row]));
@@ -5024,7 +5024,7 @@ __kernel void navatala_sparse_ilu_factor_color_f32(__global const uint* rowPtr, 
     for (int jj = 0; jj < (int)((re - rs)); ++jj) {
       int k = (rs + jj);
       int col = ((int)(colIdx[k]));
-      if ((col < row)) {
+      if (col < row) {
         int colDiagPos = ((int)(diagIdx[col]));
         float diagVal = values[colDiagPos];
         float lFactor = (values[k] / diagVal);
@@ -5037,7 +5037,7 @@ __kernel void navatala_sparse_ilu_factor_color_f32(__global const uint* rowPtr, 
           for (int pp = 0; pp < (int)((colRe - colRs)); ++pp) {
             int p = (colRs + pp);
             int pcol = ((int)(colIdx[p]));
-            if ((pcol == mcol)) {
+            if (pcol == mcol) {
               float uVal = values[p];
               float aim = values[m];
               values[m] = (aim - (lFactor * uVal));
@@ -5056,7 +5056,7 @@ __kernel void navatala_sparse_ilu_factor_color_f64(__global const uint* rowPtr, 
   int gid0 = (int)get_global_id(0);
   int localIdx = (int)(get_global_id(0));
   int N = ((int)(nRowsThisColor[0]));
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int offset = ((int)(colorOffsets[0]));
     int row = (offset + localIdx);
     int rs = ((int)(rowPtr[row]));
@@ -5064,7 +5064,7 @@ __kernel void navatala_sparse_ilu_factor_color_f64(__global const uint* rowPtr, 
     for (int jj = 0; jj < (int)((re - rs)); ++jj) {
       int k = (rs + jj);
       int col = ((int)(colIdx[k]));
-      if ((col < row)) {
+      if (col < row) {
         int colDiagPos = ((int)(diagIdx[col]));
         double diagVal = values[colDiagPos];
         double lFactor = (values[k] / diagVal);
@@ -5077,7 +5077,7 @@ __kernel void navatala_sparse_ilu_factor_color_f64(__global const uint* rowPtr, 
           for (int pp = 0; pp < (int)((colRe - colRs)); ++pp) {
             int p = (colRs + pp);
             int pcol = ((int)(colIdx[p]));
-            if ((pcol == mcol)) {
+            if (pcol == mcol) {
               double uVal = values[p];
               double aim = values[m];
               values[m] = (aim - (lFactor * uVal));
@@ -5095,7 +5095,7 @@ __kernel void navatala_sparse_ilu_forward_sweep_f32(__global const uint* rowPtr,
   int gid0 = (int)get_global_id(0);
   int localIdx = (int)(get_global_id(0));
   int N = ((int)(nRowsThisColor[0]));
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int offset = ((int)(colorOffsets[0]));
     int row = (offset + localIdx);
     int rs = ((int)(rowPtr[row]));
@@ -5105,7 +5105,7 @@ __kernel void navatala_sparse_ilu_forward_sweep_f32(__global const uint* rowPtr,
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col < row)) {
+      if (col < row) {
         float a = luValues[k];
         float yj = y[col];
         sum = (sum + (a * yj));
@@ -5122,7 +5122,7 @@ __kernel void navatala_sparse_ilu_forward_sweep_f64(__global const uint* rowPtr,
   int gid0 = (int)get_global_id(0);
   int localIdx = (int)(get_global_id(0));
   int N = ((int)(nRowsThisColor[0]));
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int offset = ((int)(colorOffsets[0]));
     int row = (offset + localIdx);
     int rs = ((int)(rowPtr[row]));
@@ -5132,7 +5132,7 @@ __kernel void navatala_sparse_ilu_forward_sweep_f64(__global const uint* rowPtr,
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col < row)) {
+      if (col < row) {
         double a = luValues[k];
         double yj = y[col];
         sum = (sum + (a * yj));
@@ -5148,7 +5148,7 @@ __kernel void navatala_sparse_ilu_backward_sweep_f32(__global const uint* rowPtr
   int gid0 = (int)get_global_id(0);
   int localIdx = (int)(get_global_id(0));
   int N = ((int)(nRowsThisColor[0]));
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int offset = ((int)(colorOffsets[0]));
     int row = (offset + localIdx);
     int rs = ((int)(rowPtr[row]));
@@ -5158,7 +5158,7 @@ __kernel void navatala_sparse_ilu_backward_sweep_f32(__global const uint* rowPtr
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col > row)) {
+      if (col > row) {
         float a = luValues[k];
         float xj = x[col];
         sum = (sum + (a * xj));
@@ -5177,7 +5177,7 @@ __kernel void navatala_sparse_ilu_backward_sweep_f64(__global const uint* rowPtr
   int gid0 = (int)get_global_id(0);
   int localIdx = (int)(get_global_id(0));
   int N = ((int)(nRowsThisColor[0]));
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int offset = ((int)(colorOffsets[0]));
     int row = (offset + localIdx);
     int rs = ((int)(rowPtr[row]));
@@ -5187,7 +5187,7 @@ __kernel void navatala_sparse_ilu_backward_sweep_f64(__global const uint* rowPtr
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col > row)) {
+      if (col > row) {
         double a = luValues[k];
         double xj = x[col];
         sum = (sum + (a * xj));
@@ -5205,7 +5205,7 @@ __kernel void navatala_sparse_dilu_build_reciprocal_d_f32(__global const uint* r
   int gid0 = (int)get_global_id(0);
   int localIdx = (int)(get_global_id(0));
   int N = ((int)(nRowsThisColor[0]));
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int offset = ((int)(colorOffsets[0]));
     int row = (offset + localIdx);
     int rs = ((int)(rowPtr[row]));
@@ -5214,7 +5214,7 @@ __kernel void navatala_sparse_dilu_build_reciprocal_d_f32(__global const uint* r
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col == row)) {
+      if (col == row) {
         diag = values[k];
       }
     }
@@ -5222,7 +5222,7 @@ __kernel void navatala_sparse_dilu_build_reciprocal_d_f32(__global const uint* r
     for (int j2 = 0; j2 < (int)((re - rs)); ++j2) {
       int k2 = (rs + j2);
       int col2 = ((int)(colIdx[k2]));
-      if ((col2 < row)) {
+      if (col2 < row) {
         float aij = values[k2];
         float rdj = recipD[col2];
         int jrs = ((int)(rowPtr[col2]));
@@ -5231,7 +5231,7 @@ __kernel void navatala_sparse_dilu_build_reciprocal_d_f32(__global const uint* r
         for (int pp = 0; pp < (int)((jre - jrs)); ++pp) {
           int p = (jrs + pp);
           int pcol = ((int)(colIdx[p]));
-          if ((pcol == row)) {
+          if (pcol == row) {
             aji = values[p];
           }
         }
@@ -5249,7 +5249,7 @@ __kernel void navatala_sparse_dilu_build_reciprocal_d_f64(__global const uint* r
   int gid0 = (int)get_global_id(0);
   int localIdx = (int)(get_global_id(0));
   int N = ((int)(nRowsThisColor[0]));
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int offset = ((int)(colorOffsets[0]));
     int row = (offset + localIdx);
     int rs = ((int)(rowPtr[row]));
@@ -5258,7 +5258,7 @@ __kernel void navatala_sparse_dilu_build_reciprocal_d_f64(__global const uint* r
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col == row)) {
+      if (col == row) {
         diag = values[k];
       }
     }
@@ -5266,7 +5266,7 @@ __kernel void navatala_sparse_dilu_build_reciprocal_d_f64(__global const uint* r
     for (int j2 = 0; j2 < (int)((re - rs)); ++j2) {
       int k2 = (rs + j2);
       int col2 = ((int)(colIdx[k2]));
-      if ((col2 < row)) {
+      if (col2 < row) {
         double aij = values[k2];
         double rdj = recipD[col2];
         int jrs = ((int)(rowPtr[col2]));
@@ -5275,7 +5275,7 @@ __kernel void navatala_sparse_dilu_build_reciprocal_d_f64(__global const uint* r
         for (int pp = 0; pp < (int)((jre - jrs)); ++pp) {
           int p = (jrs + pp);
           int pcol = ((int)(colIdx[p]));
-          if ((pcol == row)) {
+          if (pcol == row) {
             aji = values[p];
           }
         }
@@ -5292,7 +5292,7 @@ __kernel void navatala_sparse_dilu_apply_f32(__global const uint* rowPtr, __glob
   int gid0 = (int)get_global_id(0);
   int localIdx = (int)(get_global_id(0));
   int N = ((int)(nRowsThisColor[0]));
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int offset = ((int)(colorOffsets[0]));
     int row = (offset + localIdx);
     int rs = ((int)(rowPtr[row]));
@@ -5302,7 +5302,7 @@ __kernel void navatala_sparse_dilu_apply_f32(__global const uint* rowPtr, __glob
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != row)) {
+      if (col != row) {
         float a = values[k];
         float xj = x[col];
         sum = (sum + (a * xj));
@@ -5320,7 +5320,7 @@ __kernel void navatala_sparse_dilu_apply_f64(__global const uint* rowPtr, __glob
   int gid0 = (int)get_global_id(0);
   int localIdx = (int)(get_global_id(0));
   int N = ((int)(nRowsThisColor[0]));
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int offset = ((int)(colorOffsets[0]));
     int row = (offset + localIdx);
     int rs = ((int)(rowPtr[row]));
@@ -5330,7 +5330,7 @@ __kernel void navatala_sparse_dilu_apply_f64(__global const uint* rowPtr, __glob
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != row)) {
+      if (col != row) {
         double a = values[k];
         double xj = x[col];
         sum = (sum + (a * xj));
@@ -5347,7 +5347,7 @@ __kernel void navatala_sparse_multicolor_dilu_forward_f32(__global const uint* r
   int gid0 = (int)get_global_id(0);
   int localIdx = (int)(get_global_id(0));
   int N = ((int)(nRowsThisColor[0]));
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int offset = ((int)(colorOffsets[0]));
     int row = (offset + localIdx);
     int rs = ((int)(rowPtr[row]));
@@ -5357,7 +5357,7 @@ __kernel void navatala_sparse_multicolor_dilu_forward_f32(__global const uint* r
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col < row)) {
+      if (col < row) {
         float a = values[k];
         float xj = x[col];
         sum = (sum + (a * xj));
@@ -5375,7 +5375,7 @@ __kernel void navatala_sparse_multicolor_dilu_forward_f64(__global const uint* r
   int gid0 = (int)get_global_id(0);
   int localIdx = (int)(get_global_id(0));
   int N = ((int)(nRowsThisColor[0]));
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int offset = ((int)(colorOffsets[0]));
     int row = (offset + localIdx);
     int rs = ((int)(rowPtr[row]));
@@ -5385,7 +5385,7 @@ __kernel void navatala_sparse_multicolor_dilu_forward_f64(__global const uint* r
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col < row)) {
+      if (col < row) {
         double a = values[k];
         double xj = x[col];
         sum = (sum + (a * xj));
@@ -5402,7 +5402,7 @@ __kernel void navatala_sparse_multicolor_dilu_backward_f32(__global const uint* 
   int gid0 = (int)get_global_id(0);
   int localIdx = (int)(get_global_id(0));
   int N = ((int)(nRowsThisColor[0]));
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int offset = ((int)(colorOffsets[0]));
     int row = (offset + localIdx);
     int rs = ((int)(rowPtr[row]));
@@ -5411,7 +5411,7 @@ __kernel void navatala_sparse_multicolor_dilu_backward_f32(__global const uint* 
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col > row)) {
+      if (col > row) {
         float a = values[k];
         float xj = x[col];
         sum = (sum + (a * xj));
@@ -5430,7 +5430,7 @@ __kernel void navatala_sparse_multicolor_dilu_backward_f64(__global const uint* 
   int gid0 = (int)get_global_id(0);
   int localIdx = (int)(get_global_id(0));
   int N = ((int)(nRowsThisColor[0]));
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int offset = ((int)(colorOffsets[0]));
     int row = (offset + localIdx);
     int rs = ((int)(rowPtr[row]));
@@ -5439,7 +5439,7 @@ __kernel void navatala_sparse_multicolor_dilu_backward_f64(__global const uint* 
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col > row)) {
+      if (col > row) {
         double a = values[k];
         double xj = x[col];
         sum = (sum + (a * xj));
@@ -5457,7 +5457,7 @@ __kernel void navatala_sparse_chebyshev_sweep_f32(__global const float* r, __glo
   int gid0 = (int)get_global_id(0);
   int i = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     float cA = coeffA[0];
     float cB = coeffB[0];
     float ri = r[i];
@@ -5476,7 +5476,7 @@ __kernel void navatala_sparse_chebyshev_sweep_f64(__global const double* r, __gl
   int gid0 = (int)get_global_id(0);
   int i = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     double cA = coeffA[0];
     double cB = coeffB[0];
     double ri = r[i];
@@ -5529,7 +5529,7 @@ __kernel void navatala_sparse_polynomial_sweep_f32(__global const float* Ax, __g
   int gid0 = (int)get_global_id(0);
   int i = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     float ri = (b[i] - Ax[i]);
     float xi = x[i];
     int deg = ((int)(degree[0]));
@@ -5551,7 +5551,7 @@ __kernel void navatala_sparse_polynomial_sweep_f64(__global const double* Ax, __
   int gid0 = (int)get_global_id(0);
   int i = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     double ri = (b[i] - Ax[i]);
     double xi = x[i];
     int deg = ((int)(degree[0]));
@@ -5572,7 +5572,7 @@ __kernel void navatala_sparse_kpz_polynomial_sweep_f32(__global const float* Ax,
   int gid0 = (int)get_global_id(0);
   int i = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     float ri = (b[i] - Ax[i]);
     float xi = x[i];
     int deg = ((int)(degree[0]));
@@ -5594,7 +5594,7 @@ __kernel void navatala_sparse_kpz_polynomial_sweep_f64(__global const double* Ax
   int gid0 = (int)get_global_id(0);
   int i = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     double ri = (b[i] - Ax[i]);
     double xi = x[i];
     int deg = ((int)(degree[0]));
@@ -5615,7 +5615,7 @@ __kernel void navatala_sparse_kaczmarz_row_norm_sq_f32(__global const uint* rowP
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     float acc = as_float(0x00000000u);
@@ -5635,7 +5635,7 @@ __kernel void navatala_sparse_kaczmarz_row_norm_sq_f64(__global const uint* rowP
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     double acc = as_double(0x0000000000000000ul);
@@ -5654,14 +5654,14 @@ __kernel void navatala_sparse_strength_of_connection_f32(__global const uint* ro
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     float maxOff = as_float(0x00000000u);
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != gid)) {
+      if (col != gid) {
         float a = values[k];
         maxOff = (((fabs(a) > maxOff)) ? (fabs(a)) : (maxOff));
       }
@@ -5684,14 +5684,14 @@ __kernel void navatala_sparse_strength_of_connection_f64(__global const uint* ro
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     double maxOff = as_double(0x0000000000000000ul);
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != gid)) {
+      if (col != gid) {
         double a = values[k];
         maxOff = (((fabs(a) > maxOff)) ? (fabs(a)) : (maxOff));
       }
@@ -5713,7 +5713,7 @@ __kernel void navatala_sparse_aggregate_size2_propose_f32(__global const uint* r
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int bestCol = -1;
@@ -5722,9 +5722,9 @@ __kernel void navatala_sparse_aggregate_size2_propose_f32(__global const uint* r
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
       uint isStrong = strongMask[k];
-      if ((isStrong == (uint)(1u))) {
+      if (isStrong == (uint)(1u)) {
         float a = values[k];
-        if ((fabs(a) > bestVal)) {
+        if (fabs(a) > bestVal) {
           bestVal = fabs(a);
           bestCol = col;
         }
@@ -5741,7 +5741,7 @@ __kernel void navatala_sparse_aggregate_size2_propose_f64(__global const uint* r
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int bestCol = -1;
@@ -5750,9 +5750,9 @@ __kernel void navatala_sparse_aggregate_size2_propose_f64(__global const uint* r
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
       uint isStrong = strongMask[k];
-      if ((isStrong == (uint)(1u))) {
+      if (isStrong == (uint)(1u)) {
         double a = values[k];
-        if ((fabs(a) > bestVal)) {
+        if (fabs(a) > bestVal) {
           bestVal = fabs(a);
           bestCol = col;
         }
@@ -5768,9 +5768,9 @@ __kernel void navatala_sparse_promote_unmatched_singletons(__global const uint* 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int aggId = aggregateId[gid];
-    if ((aggId < 0)) {
+    if (aggId < 0) {
       aggregateId[gid] = gid;
     }
   }
@@ -5782,7 +5782,7 @@ __kernel void navatala_sparse_aggregate_parallel_greedy_f32(__global const uint*
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int bestCol = -1;
@@ -5790,15 +5790,15 @@ __kernel void navatala_sparse_aggregate_parallel_greedy_f32(__global const uint*
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       uint isStrong = strongMask[k];
-      if ((isStrong == (uint)(1u))) {
+      if (isStrong == (uint)(1u)) {
         float a = values[k];
-        if ((fabs(a) > bestVal)) {
+        if (fabs(a) > bestVal) {
           bestVal = fabs(a);
           bestCol = ((int)(colIdx[k]));
         }
       }
     }
-    if ((bestCol >= 0)) {
+    if (bestCol >= 0) {
       int aggVal = (((gid < bestCol)) ? (gid) : (bestCol));
       aggregateId[gid] = aggVal;
       aggregateId[bestCol] = aggVal;
@@ -5815,7 +5815,7 @@ __kernel void navatala_sparse_aggregate_parallel_greedy_f64(__global const uint*
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int bestCol = -1;
@@ -5823,15 +5823,15 @@ __kernel void navatala_sparse_aggregate_parallel_greedy_f64(__global const uint*
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       uint isStrong = strongMask[k];
-      if ((isStrong == (uint)(1u))) {
+      if (isStrong == (uint)(1u)) {
         double a = values[k];
-        if ((fabs(a) > bestVal)) {
+        if (fabs(a) > bestVal) {
           bestVal = fabs(a);
           bestCol = ((int)(colIdx[k]));
         }
       }
     }
-    if ((bestCol >= 0)) {
+    if (bestCol >= 0) {
       int aggVal = (((gid < bestCol)) ? (gid) : (bestCol));
       aggregateId[gid] = aggVal;
       aggregateId[bestCol] = aggVal;
@@ -5847,9 +5847,9 @@ __kernel void navatala_sparse_apply_compact_ids(__global const int* compactMap, 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int leader = aggregateId[gid];
-    if ((leader >= 0)) {
+    if (leader >= 0) {
       int compactId = compactMap[leader];
       aggregateId[gid] = compactId;
     }
@@ -5862,7 +5862,7 @@ __kernel void navatala_sparse_build_prolongation_f32(__global const int* aggrega
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     ProwPtr[row] = ((uint)(row));
     int aggId = aggregateId[row];
     PcolIdx[row] = ((uint)(aggId));
@@ -5877,7 +5877,7 @@ __kernel void navatala_sparse_build_prolongation_f64(__global const int* aggrega
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     ProwPtr[gid] = ((uint)(gid));
     int aggId = aggregateId[gid];
     PcolIdx[gid] = ((uint)(aggId));
@@ -5890,7 +5890,7 @@ const char* k_opencl_navatala_sparse_build_prolongation_terminator = R"kernel(
 __kernel void navatala_sparse_build_prolongation_terminator(__global const uint* nRows, __global uint* ProwPtr) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint N = nRows[0];
     ProwPtr[N] = N;
   }
@@ -5902,7 +5902,7 @@ __kernel void navatala_sparse_spgemm_symbolic_row_nnz(__global const uint* ArowP
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRowsA[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int ars = ((int)(ArowPtr[gid]));
     int are = ((int)(ArowPtr[(gid + 1)]));
     int count = 0;
@@ -5923,7 +5923,7 @@ __kernel void navatala_sparse_spgemm_numeric_f32(__global const uint* ArowPtr, _
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRowsA[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int ars = ((int)(ArowPtr[gid]));
     int are = ((int)(ArowPtr[(gid + 1)]));
     int crs = ((int)(CrowPtr[gid]));
@@ -5954,7 +5954,7 @@ __kernel void navatala_sparse_spgemm_numeric_f64(__global const uint* ArowPtr, _
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRowsA[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int ars = ((int)(ArowPtr[gid]));
     int are = ((int)(ArowPtr[(gid + 1)]));
     int crs = ((int)(CrowPtr[gid]));
@@ -5984,7 +5984,7 @@ __kernel void navatala_sparse_csr_transpose(__global const uint* rowPtr, __globa
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     for (int j = 0; j < (int)((re - rs)); ++j) {
@@ -6005,7 +6005,7 @@ __kernel void navatala_sparse_aggregate_adaptive_f32(__global const uint* rowPtr
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int degree = (re - rs);
@@ -6015,15 +6015,15 @@ __kernel void navatala_sparse_aggregate_adaptive_f32(__global const uint* rowPtr
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       uint isStrong = strongMask[k];
-      if ((isStrong == (uint)(1u))) {
+      if (isStrong == (uint)(1u)) {
         float a = values[k];
-        if ((fabs(a) > bestVal)) {
+        if (fabs(a) > bestVal) {
           bestVal = fabs(a);
           bestCol = ((int)(colIdx[k]));
         }
       }
     }
-    if ((bestCol >= 0)) {
+    if (bestCol >= 0) {
       aggregateId[gid] = (((gid < bestCol)) ? (gid) : (bestCol));
     } else {
       aggregateId[gid] = gid;
@@ -6038,7 +6038,7 @@ __kernel void navatala_sparse_aggregate_adaptive_f64(__global const uint* rowPtr
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int degree = (re - rs);
@@ -6048,15 +6048,15 @@ __kernel void navatala_sparse_aggregate_adaptive_f64(__global const uint* rowPtr
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       uint isStrong = strongMask[k];
-      if ((isStrong == (uint)(1u))) {
+      if (isStrong == (uint)(1u)) {
         double a = values[k];
-        if ((fabs(a) > bestVal)) {
+        if (fabs(a) > bestVal) {
           bestVal = fabs(a);
           bestCol = ((int)(colIdx[k]));
         }
       }
     }
-    if ((bestCol >= 0)) {
+    if (bestCol >= 0) {
       aggregateId[gid] = (((gid < bestCol)) ? (gid) : (bestCol));
     } else {
       aggregateId[gid] = gid;
@@ -6070,9 +6070,9 @@ __kernel void navatala_sparse_aggregate_multi_pairwise_f32(__global const uint* 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int curAgg = aggregateId[gid];
-    if ((curAgg < 0)) {
+    if (curAgg < 0) {
       int rs = ((int)(rowPtr[gid]));
       int re = ((int)(rowPtr[(gid + 1)]));
       int bestCol = -1;
@@ -6080,15 +6080,15 @@ __kernel void navatala_sparse_aggregate_multi_pairwise_f32(__global const uint* 
       for (int j = 0; j < (int)((re - rs)); ++j) {
         int k = (rs + j);
         uint isStrong = strongMask[k];
-        if ((isStrong == (uint)(1u))) {
+        if (isStrong == (uint)(1u)) {
           float a = values[k];
-          if ((fabs(a) > bestVal)) {
+          if (fabs(a) > bestVal) {
             bestVal = fabs(a);
             bestCol = ((int)(colIdx[k]));
           }
         }
       }
-      if ((bestCol >= 0)) {
+      if (bestCol >= 0) {
         aggregateId[gid] = (((gid < bestCol)) ? (gid) : (bestCol));
       } else {
         aggregateId[gid] = gid;
@@ -6104,9 +6104,9 @@ __kernel void navatala_sparse_aggregate_multi_pairwise_f64(__global const uint* 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int curAgg = aggregateId[gid];
-    if ((curAgg < 0)) {
+    if (curAgg < 0) {
       int rs = ((int)(rowPtr[gid]));
       int re = ((int)(rowPtr[(gid + 1)]));
       int bestCol = -1;
@@ -6114,15 +6114,15 @@ __kernel void navatala_sparse_aggregate_multi_pairwise_f64(__global const uint* 
       for (int j = 0; j < (int)((re - rs)); ++j) {
         int k = (rs + j);
         uint isStrong = strongMask[k];
-        if ((isStrong == (uint)(1u))) {
+        if (isStrong == (uint)(1u)) {
           double a = values[k];
-          if ((fabs(a) > bestVal)) {
+          if (fabs(a) > bestVal) {
             bestVal = fabs(a);
             bestCol = ((int)(colIdx[k]));
           }
         }
       }
-      if ((bestCol >= 0)) {
+      if (bestCol >= 0) {
         aggregateId[gid] = (((gid < bestCol)) ? (gid) : (bestCol));
       } else {
         aggregateId[gid] = gid;
@@ -6137,7 +6137,7 @@ __kernel void navatala_sparse_aggregate_geometric_f32(__global const float* coor
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float r = radius[0];
     aggregateId[gid] = gid;
   }
@@ -6150,7 +6150,7 @@ __kernel void navatala_sparse_aggregate_geometric_f64(__global const double* coo
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double r = radius[0];
     aggregateId[gid] = gid;
   }
@@ -6170,15 +6170,15 @@ __kernel void navatala_sparse_aggregate_serial_f32(__global const uint* rowPtr, 
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       uint isStrong = strongMask[k];
-      if ((isStrong == (uint)(1u))) {
+      if (isStrong == (uint)(1u)) {
         float a = values[k];
-        if ((fabs(a) > bestVal)) {
+        if (fabs(a) > bestVal) {
           bestVal = fabs(a);
           bestCol = ((int)(colIdx[k]));
         }
       }
     }
-    if ((bestCol >= 0)) {
+    if (bestCol >= 0) {
       aggregateId[i] = (((i < bestCol)) ? (i) : (bestCol));
     } else {
       aggregateId[i] = nextAgg;
@@ -6203,15 +6203,15 @@ __kernel void navatala_sparse_aggregate_serial_f64(__global const uint* rowPtr, 
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       uint isStrong = strongMask[k];
-      if ((isStrong == (uint)(1u))) {
+      if (isStrong == (uint)(1u)) {
         double a = values[k];
-        if ((fabs(a) > bestVal)) {
+        if (fabs(a) > bestVal) {
           bestVal = fabs(a);
           bestCol = ((int)(colIdx[k]));
         }
       }
     }
-    if ((bestCol >= 0)) {
+    if (bestCol >= 0) {
       aggregateId[i] = (((i < bestCol)) ? (i) : (bestCol));
     } else {
       aggregateId[i] = nextAgg;
@@ -6227,7 +6227,7 @@ __kernel void navatala_sparse_aggregate_low_degree_first_propose_f32(__global co
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int bestCol = -1;
@@ -6236,9 +6236,9 @@ __kernel void navatala_sparse_aggregate_low_degree_first_propose_f32(__global co
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
       uint isStrong = strongMask[k];
-      if ((isStrong == (uint)(1u))) {
+      if (isStrong == (uint)(1u)) {
         float a = values[k];
-        if ((fabs(a) > bestVal)) {
+        if (fabs(a) > bestVal) {
           bestVal = fabs(a);
           bestCol = col;
         }
@@ -6255,7 +6255,7 @@ __kernel void navatala_sparse_aggregate_low_degree_first_propose_f64(__global co
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int bestCol = -1;
@@ -6264,9 +6264,9 @@ __kernel void navatala_sparse_aggregate_low_degree_first_propose_f64(__global co
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
       uint isStrong = strongMask[k];
-      if ((isStrong == (uint)(1u))) {
+      if (isStrong == (uint)(1u)) {
         double a = values[k];
-        if ((fabs(a) > bestVal)) {
+        if (fabs(a) > bestVal) {
           bestVal = fabs(a);
           bestCol = col;
         }
@@ -6282,9 +6282,9 @@ __kernel void navatala_sparse_assign_orphans_f32(__global const uint* rowPtr, __
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int curAgg = aggregateId[gid];
-    if ((curAgg < 0)) {
+    if (curAgg < 0) {
       int rs = ((int)(rowPtr[gid]));
       int re = ((int)(rowPtr[(gid + 1)]));
       int bestAgg = -1;
@@ -6293,15 +6293,15 @@ __kernel void navatala_sparse_assign_orphans_f32(__global const uint* rowPtr, __
         int k = (rs + j);
         int col = ((int)(colIdx[k]));
         int neighAgg = aggregateId[col];
-        if ((neighAgg >= 0)) {
+        if (neighAgg >= 0) {
           float a = values[k];
-          if ((fabs(a) > bestVal)) {
+          if (fabs(a) > bestVal) {
             bestVal = fabs(a);
             bestAgg = neighAgg;
           }
         }
       }
-      if ((bestAgg >= 0)) {
+      if (bestAgg >= 0) {
         aggregateId[gid] = bestAgg;
       }
     }
@@ -6315,9 +6315,9 @@ __kernel void navatala_sparse_assign_orphans_f64(__global const uint* rowPtr, __
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int curAgg = aggregateId[gid];
-    if ((curAgg < 0)) {
+    if (curAgg < 0) {
       int rs = ((int)(rowPtr[gid]));
       int re = ((int)(rowPtr[(gid + 1)]));
       int bestAgg = -1;
@@ -6326,15 +6326,15 @@ __kernel void navatala_sparse_assign_orphans_f64(__global const uint* rowPtr, __
         int k = (rs + j);
         int col = ((int)(colIdx[k]));
         int neighAgg = aggregateId[col];
-        if ((neighAgg >= 0)) {
+        if (neighAgg >= 0) {
           double a = values[k];
-          if ((fabs(a) > bestVal)) {
+          if (fabs(a) > bestVal) {
             bestVal = fabs(a);
             bestAgg = neighAgg;
           }
         }
       }
-      if ((bestAgg >= 0)) {
+      if (bestAgg >= 0) {
         aggregateId[gid] = bestAgg;
       }
     }
@@ -6347,7 +6347,7 @@ __kernel void navatala_sparse_spgemm_numeric_hash_f32(__global const uint* ArowP
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRowsA[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int ars = ((int)(ArowPtr[gid]));
     int are = ((int)(ArowPtr[(gid + 1)]));
     int crs = ((int)(CrowPtr[gid]));
@@ -6378,7 +6378,7 @@ __kernel void navatala_sparse_spgemm_numeric_hash_f64(__global const uint* ArowP
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRowsA[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int ars = ((int)(ArowPtr[gid]));
     int are = ((int)(ArowPtr[(gid + 1)]));
     int crs = ((int)(CrowPtr[gid]));
@@ -6463,7 +6463,7 @@ __kernel void navatala_sparse_build_smoothed_prolongation_f32(__global const uin
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     uint myAgg = PcolIdx[row];
     float myPval = Pvalues[row];
     int aStart = ((int)(ArowPtr[row]));
@@ -6474,7 +6474,7 @@ __kernel void navatala_sparse_build_smoothed_prolongation_f32(__global const uin
       int col = ((int)(AcolIdx[idx]));
       float aVal = Avalues[idx];
       uint colAgg = PcolIdx[col];
-      if ((colAgg == myAgg)) {
+      if (colAgg == myAgg) {
         sumAP = (sumAP + aVal);
       }
     }
@@ -6492,7 +6492,7 @@ __kernel void navatala_sparse_build_smoothed_prolongation_f64(__global const uin
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     uint myAgg = PcolIdx[gid];
     double myPval = Pvalues[gid];
     int aStart = ((int)(ArowPtr[gid]));
@@ -6503,7 +6503,7 @@ __kernel void navatala_sparse_build_smoothed_prolongation_f64(__global const uin
       int col = ((int)(AcolIdx[idx]));
       double aVal = Avalues[idx];
       uint colAgg = PcolIdx[col];
-      if ((colAgg == myAgg)) {
+      if (colAgg == myAgg) {
         sumAP = (sumAP + aVal);
       }
     }
@@ -6529,7 +6529,7 @@ __kernel void navatala_sparse_cf_split_p_m_i_s(__global const uint* rowPtr, __gl
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     uint priority = (((uint)(row)) ^ seed[0]);
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
@@ -6537,10 +6537,10 @@ __kernel void navatala_sparse_cf_split_p_m_i_s(__global const uint* rowPtr, __gl
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       uint isStrong = strongMask[k];
-      if ((isStrong == (uint)(1u))) {
+      if (isStrong == (uint)(1u)) {
         int nbr = ((int)(colIdx[k]));
         int nbrMark = cfMarking[nbr];
-        if ((nbrMark == 0)) {
+        if (nbrMark == 0) {
           uint nbrPri = (((uint)(nbr)) ^ seed[0]);
           bool outranks = ((nbrPri > priority) || ((nbrPri == priority) && (nbr < row)));
           if (outranks) {
@@ -6549,17 +6549,17 @@ __kernel void navatala_sparse_cf_split_p_m_i_s(__global const uint* rowPtr, __gl
         }
       }
     }
-    if ((!hasHigherNbr)) {
+    if (!hasHigherNbr) {
       cfMarking[row] = 1;
     } else {
       bool hasCoarseNbr = false;
       for (int j2 = 0; j2 < (int)((re - rs)); ++j2) {
         int k2 = (rs + j2);
         uint isStrong2 = strongMask[k2];
-        if ((isStrong2 == (uint)(1u))) {
+        if (isStrong2 == (uint)(1u)) {
           int nbr2 = ((int)(colIdx[k2]));
           int nbrMark2 = cfMarking[nbr2];
-          if ((nbrMark2 == 1)) {
+          if (nbrMark2 == 1) {
             hasCoarseNbr = true;
           }
         }
@@ -6577,7 +6577,7 @@ __kernel void navatala_sparse_cf_split_h_m_i_s(__global const uint* rowPtr, __gl
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     uint priority = (((uint)(row)) ^ seed[0]);
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
@@ -6585,7 +6585,7 @@ __kernel void navatala_sparse_cf_split_h_m_i_s(__global const uint* rowPtr, __gl
     for (int jd = 0; jd < (int)((re - rs)); ++jd) {
       int kd = (rs + jd);
       uint isStr = strongMask[kd];
-      if ((isStr == (uint)(1u))) {
+      if (isStr == (uint)(1u)) {
         deg = (deg + (uint)(1u));
       }
     }
@@ -6594,10 +6594,10 @@ __kernel void navatala_sparse_cf_split_h_m_i_s(__global const uint* rowPtr, __gl
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       uint isStrong = strongMask[k];
-      if ((isStrong == (uint)(1u))) {
+      if (isStrong == (uint)(1u)) {
         int nbr = ((int)(colIdx[k]));
         int nbrMark = cfMarking[nbr];
-        if ((nbrMark == 0)) {
+        if (nbrMark == 0) {
           uint nbrRs = rowPtr[nbr];
           uint nbrRe = rowPtr[(nbr + 1)];
           uint nbrDeg = (nbrRe - nbrRs);
@@ -6609,7 +6609,7 @@ __kernel void navatala_sparse_cf_split_h_m_i_s(__global const uint* rowPtr, __gl
         }
       }
     }
-    if ((!hasHigherNbr)) {
+    if (!hasHigherNbr) {
       cfMarking[row] = 1;
     } else {
       cfMarking[row] = -1;
@@ -6623,19 +6623,19 @@ __kernel void navatala_sparse_cf_split_h_m_i_s_phase2_f32(__global const uint* r
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
-    if ((mark == -1)) {
+    if (mark == -1) {
       int rs = ((int)(rowPtr[row]));
       int re = ((int)(rowPtr[(row + 1)]));
       bool hasCoarseNbr = false;
       for (int j = 0; j < (int)((re - rs)); ++j) {
         int k = (rs + j);
         uint isStrong = strongMask[k];
-        if ((isStrong == (uint)(1u))) {
+        if (isStrong == (uint)(1u)) {
           int nbr = ((int)(colIdx[k]));
           int nbrMark = cfMarking[nbr];
-          if ((nbrMark == 1)) {
+          if (nbrMark == 1) {
             hasCoarseNbr = true;
           }
         }
@@ -6653,7 +6653,7 @@ const char* k_opencl_navatala_sparse_cf_split_r_s = R"kernel(
 __kernel void navatala_sparse_cf_split_r_s(__global const uint* rowPtr, __global const uint* colIdx, __global const uint* strongMask, __global const uint* nRows, __global int* cfMarking) {
   int gid0 = (int)get_global_id(0);
   int N = ((int)(nRows[0]));
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     for (int row = 0; row < (int)(N); ++row) {
       int rs = ((int)(rowPtr[row]));
       int re = ((int)(rowPtr[(row + 1)]));
@@ -6661,15 +6661,15 @@ __kernel void navatala_sparse_cf_split_r_s(__global const uint* rowPtr, __global
       for (int j = 0; j < (int)((re - rs)); ++j) {
         int k = (rs + j);
         uint isStrong = strongMask[k];
-        if ((isStrong == (uint)(1u))) {
+        if (isStrong == (uint)(1u)) {
           int nbr = ((int)(colIdx[k]));
           int nbrMark = cfMarking[nbr];
-          if ((nbrMark == 1)) {
+          if (nbrMark == 1) {
             nStrongC = (nStrongC + (uint)(1u));
           }
         }
       }
-      if ((nStrongC == (uint)(0u))) {
+      if (nStrongC == (uint)(0u)) {
         cfMarking[row] = 1;
       } else {
         cfMarking[row] = -1;
@@ -6684,22 +6684,22 @@ __kernel void navatala_sparse_interpolate_distance1_count_f32(__global const uin
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
-    if ((mark == 1)) {
+    if (mark == 1) {
       nnzPerRow[row] = (uint)(1u);
     } else {
-      if ((mark == -1)) {
+      if (mark == -1) {
         int rs = ((int)(rowPtr[row]));
         int re = ((int)(rowPtr[(row + 1)]));
         uint nnz = (uint)(0u);
         for (int jc = 0; jc < (int)((re - rs)); ++jc) {
           int kc = (rs + jc);
           uint isStr = strongMask[kc];
-          if ((isStr == (uint)(1u))) {
+          if (isStr == (uint)(1u)) {
             int colC = ((int)(colIdx[kc]));
             int markC = cfMarking[colC];
-            if ((markC == 1)) {
+            if (markC == 1) {
               nnz = (nnz + (uint)(1u));
             }
           }
@@ -6718,22 +6718,22 @@ __kernel void navatala_sparse_interpolate_distance1_count_f64(__global const uin
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
-    if ((mark == 1)) {
+    if (mark == 1) {
       nnzPerRow[row] = (uint)(1u);
     } else {
-      if ((mark == -1)) {
+      if (mark == -1) {
         int rs = ((int)(rowPtr[row]));
         int re = ((int)(rowPtr[(row + 1)]));
         uint nnz = (uint)(0u);
         for (int jc = 0; jc < (int)((re - rs)); ++jc) {
           int kc = (rs + jc);
           uint isStr = strongMask[kc];
-          if ((isStr == (uint)(1u))) {
+          if (isStr == (uint)(1u)) {
             int colC = ((int)(colIdx[kc]));
             int markC = cfMarking[colC];
-            if ((markC == 1)) {
+            if (markC == 1) {
               nnz = (nnz + (uint)(1u));
             }
           }
@@ -6752,21 +6752,21 @@ __kernel void navatala_sparse_interpolate_distance1_f32(__global const uint* row
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     int mark = cfMarking[row];
     int pStart = ((int)(ProwPtr[row]));
-    if ((mark == 1)) {
+    if (mark == 1) {
       PcolIdx[pStart] = ((uint)(row));
       Pvalues[pStart] = as_float(0x3f800000u);
     } else {
-      if ((mark == -1)) {
+      if (mark == -1) {
         float diag = as_float(0x00000000u);
         for (int jd = 0; jd < (int)((re - rs)); ++jd) {
           int kd = (rs + jd);
           int colD = ((int)(colIdx[kd]));
-          if ((colD == row)) {
+          if (colD == row) {
             diag = values[kd];
           }
         }
@@ -6774,10 +6774,10 @@ __kernel void navatala_sparse_interpolate_distance1_f32(__global const uint* row
         for (int jw = 0; jw < (int)((re - rs)); ++jw) {
           int kw = (rs + jw);
           uint isStrW = strongMask[kw];
-          if ((isStrW == (uint)(1u))) {
+          if (isStrW == (uint)(1u)) {
             int colW = ((int)(colIdx[kw]));
             int markW = cfMarking[colW];
-            if ((markW == 1)) {
+            if (markW == 1) {
               float aij = values[kw];
               float w = (-(aij / diag));
               PcolIdx[(pStart + pos)] = ((uint)(colW));
@@ -6798,21 +6798,21 @@ __kernel void navatala_sparse_interpolate_distance1_f64(__global const uint* row
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     int mark = cfMarking[row];
     int pStart = ((int)(ProwPtr[row]));
-    if ((mark == 1)) {
+    if (mark == 1) {
       PcolIdx[pStart] = ((uint)(row));
       Pvalues[pStart] = as_double(0x3ff0000000000000ul);
     } else {
-      if ((mark == -1)) {
+      if (mark == -1) {
         double diag = as_double(0x0000000000000000ul);
         for (int jd = 0; jd < (int)((re - rs)); ++jd) {
           int kd = (rs + jd);
           int colD = ((int)(colIdx[kd]));
-          if ((colD == row)) {
+          if (colD == row) {
             diag = values[kd];
           }
         }
@@ -6820,10 +6820,10 @@ __kernel void navatala_sparse_interpolate_distance1_f64(__global const uint* row
         for (int jw = 0; jw < (int)((re - rs)); ++jw) {
           int kw = (rs + jw);
           uint isStrW = strongMask[kw];
-          if ((isStrW == (uint)(1u))) {
+          if (isStrW == (uint)(1u)) {
             int colW = ((int)(colIdx[kw]));
             int markW = cfMarking[colW];
-            if ((markW == 1)) {
+            if (markW == 1) {
               double aij = values[kw];
               double w = (-(aij / diag));
               PcolIdx[(pStart + pos)] = ((uint)(colW));
@@ -6843,34 +6843,34 @@ __kernel void navatala_sparse_interpolate_distance2_count_f32(__global const uin
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
-    if ((mark == 1)) {
+    if (mark == 1) {
       nnzPerRow[row] = (uint)(1u);
     } else {
-      if ((mark == -1)) {
+      if (mark == -1) {
         int rs = ((int)(rowPtr[row]));
         int re = ((int)(rowPtr[(row + 1)]));
         uint nnz = (uint)(0u);
         for (int j1 = 0; j1 < (int)((re - rs)); ++j1) {
           int k1 = (rs + j1);
           uint isStr1 = strongMask[k1];
-          if ((isStr1 == (uint)(1u))) {
+          if (isStr1 == (uint)(1u)) {
             int nbr1 = ((int)(colIdx[k1]));
             int m1 = cfMarking[nbr1];
-            if ((m1 == 1)) {
+            if (m1 == 1) {
               nnz = (nnz + (uint)(1u));
             } else {
-              if ((m1 == -1)) {
+              if (m1 == -1) {
                 int rs2 = ((int)(rowPtr[nbr1]));
                 int re2 = ((int)(rowPtr[(nbr1 + 1)]));
                 for (int j2 = 0; j2 < (int)((re2 - rs2)); ++j2) {
                   int k2 = (rs2 + j2);
                   uint isStr2 = strongMask[k2];
-                  if ((isStr2 == (uint)(1u))) {
+                  if (isStr2 == (uint)(1u)) {
                     int nbr2 = ((int)(colIdx[k2]));
                     int m2 = cfMarking[nbr2];
-                    if ((m2 == 1)) {
+                    if (m2 == 1) {
                       nnz = (nnz + (uint)(1u));
                     }
                   }
@@ -6893,34 +6893,34 @@ __kernel void navatala_sparse_interpolate_distance2_count_f64(__global const uin
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
-    if ((mark == 1)) {
+    if (mark == 1) {
       nnzPerRow[row] = (uint)(1u);
     } else {
-      if ((mark == -1)) {
+      if (mark == -1) {
         int rs = ((int)(rowPtr[row]));
         int re = ((int)(rowPtr[(row + 1)]));
         uint nnz = (uint)(0u);
         for (int j1 = 0; j1 < (int)((re - rs)); ++j1) {
           int k1 = (rs + j1);
           uint isStr1 = strongMask[k1];
-          if ((isStr1 == (uint)(1u))) {
+          if (isStr1 == (uint)(1u)) {
             int nbr1 = ((int)(colIdx[k1]));
             int m1 = cfMarking[nbr1];
-            if ((m1 == 1)) {
+            if (m1 == 1) {
               nnz = (nnz + (uint)(1u));
             } else {
-              if ((m1 == -1)) {
+              if (m1 == -1) {
                 int rs2 = ((int)(rowPtr[nbr1]));
                 int re2 = ((int)(rowPtr[(nbr1 + 1)]));
                 for (int j2 = 0; j2 < (int)((re2 - rs2)); ++j2) {
                   int k2 = (rs2 + j2);
                   uint isStr2 = strongMask[k2];
-                  if ((isStr2 == (uint)(1u))) {
+                  if (isStr2 == (uint)(1u)) {
                     int nbr2 = ((int)(colIdx[k2]));
                     int m2 = cfMarking[nbr2];
-                    if ((m2 == 1)) {
+                    if (m2 == 1) {
                       nnz = (nnz + (uint)(1u));
                     }
                   }
@@ -6943,26 +6943,26 @@ __kernel void navatala_sparse_interpolate_distance2_f32(__global const uint* row
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     int pStart = ((int)(ProwPtr[row]));
-    if ((mark == 1)) {
+    if (mark == 1) {
       PcolIdx[pStart] = ((uint)(row));
       Pvalues[pStart] = as_float(0x3f800000u);
     } else {
-      if ((mark == -1)) {
+      if (mark == -1) {
         int iDiagPos = ((int)(diagIdx[row]));
         float diagI = values[iDiagPos];
         int pos = 0;
         for (int jw = 0; jw < (int)((re - rs)); ++jw) {
           int kw = (rs + jw);
           uint isStrW = strongMask[kw];
-          if ((isStrW == (uint)(1u))) {
+          if (isStrW == (uint)(1u)) {
             int colW = ((int)(colIdx[kw]));
             int mW = cfMarking[colW];
-            if ((mW == 1)) {
+            if (mW == 1) {
               float aij = values[kw];
               float w = (-(aij / diagI));
               PcolIdx[(pStart + pos)] = ((uint)(colW));
@@ -6974,10 +6974,10 @@ __kernel void navatala_sparse_interpolate_distance2_f32(__global const uint* row
         for (int jf = 0; jf < (int)((re - rs)); ++jf) {
           int kf = (rs + jf);
           uint isStrF = strongMask[kf];
-          if ((isStrF == (uint)(1u))) {
+          if (isStrF == (uint)(1u)) {
             int nbrF = ((int)(colIdx[kf]));
             int mF = cfMarking[nbrF];
-            if ((mF == -1)) {
+            if (mF == -1) {
               float aij = values[kf];
               int jDiagPos = ((int)(diagIdx[nbrF]));
               float diagJ = values[jDiagPos];
@@ -6986,10 +6986,10 @@ __kernel void navatala_sparse_interpolate_distance2_f32(__global const uint* row
               for (int j2 = 0; j2 < (int)((re2 - rs2)); ++j2) {
                 int k2 = (rs2 + j2);
                 uint isStr2 = strongMask[k2];
-                if ((isStr2 == (uint)(1u))) {
+                if (isStr2 == (uint)(1u)) {
                   int nbr2 = ((int)(colIdx[k2]));
                   int m2 = cfMarking[nbr2];
-                  if ((m2 == 1)) {
+                  if (m2 == 1) {
                     float ajk = values[k2];
                     float prod = (aij * (ajk / diagJ));
                     float wff = (-(prod / diagI));
@@ -7014,26 +7014,26 @@ __kernel void navatala_sparse_interpolate_distance2_f64(__global const uint* row
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     int pStart = ((int)(ProwPtr[row]));
-    if ((mark == 1)) {
+    if (mark == 1) {
       PcolIdx[pStart] = ((uint)(row));
       Pvalues[pStart] = as_double(0x3ff0000000000000ul);
     } else {
-      if ((mark == -1)) {
+      if (mark == -1) {
         int iDiagPos = ((int)(diagIdx[row]));
         double diagI = values[iDiagPos];
         int pos = 0;
         for (int jw = 0; jw < (int)((re - rs)); ++jw) {
           int kw = (rs + jw);
           uint isStrW = strongMask[kw];
-          if ((isStrW == (uint)(1u))) {
+          if (isStrW == (uint)(1u)) {
             int colW = ((int)(colIdx[kw]));
             int mW = cfMarking[colW];
-            if ((mW == 1)) {
+            if (mW == 1) {
               double aij = values[kw];
               double w = (-(aij / diagI));
               PcolIdx[(pStart + pos)] = ((uint)(colW));
@@ -7045,10 +7045,10 @@ __kernel void navatala_sparse_interpolate_distance2_f64(__global const uint* row
         for (int jf = 0; jf < (int)((re - rs)); ++jf) {
           int kf = (rs + jf);
           uint isStrF = strongMask[kf];
-          if ((isStrF == (uint)(1u))) {
+          if (isStrF == (uint)(1u)) {
             int nbrF = ((int)(colIdx[kf]));
             int mF = cfMarking[nbrF];
-            if ((mF == -1)) {
+            if (mF == -1) {
               double aij = values[kf];
               int jDiagPos = ((int)(diagIdx[nbrF]));
               double diagJ = values[jDiagPos];
@@ -7057,10 +7057,10 @@ __kernel void navatala_sparse_interpolate_distance2_f64(__global const uint* row
               for (int j2 = 0; j2 < (int)((re2 - rs2)); ++j2) {
                 int k2 = (rs2 + j2);
                 uint isStr2 = strongMask[k2];
-                if ((isStr2 == (uint)(1u))) {
+                if (isStr2 == (uint)(1u)) {
                   int nbr2 = ((int)(colIdx[k2]));
                   int m2 = cfMarking[nbr2];
-                  if ((m2 == 1)) {
+                  if (m2 == 1) {
                     double ajk = values[k2];
                     double prod = (aij * (ajk / diagJ));
                     double wff = (-(prod / diagI));
@@ -7084,7 +7084,7 @@ __kernel void navatala_sparse_truncate_interpolation_count_f32(__global const ui
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(ProwPtr[row]));
     int re = ((int)(ProwPtr[(row + 1)]));
     float maxAbs = as_float(0x00000000u);
@@ -7098,7 +7098,7 @@ __kernel void navatala_sparse_truncate_interpolation_count_f32(__global const ui
     for (int j2 = 0; j2 < (int)((re - rs)); ++j2) {
       int k2 = (rs + j2);
       float v2 = Pvalues[k2];
-      if ((fabs(v2) >= thresh)) {
+      if (fabs(v2) >= thresh) {
         nnz = (nnz + (uint)(1u));
       }
     }
@@ -7113,7 +7113,7 @@ __kernel void navatala_sparse_truncate_interpolation_count_f64(__global const ui
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(ProwPtr[row]));
     int re = ((int)(ProwPtr[(row + 1)]));
     double maxAbs = as_double(0x0000000000000000ul);
@@ -7127,7 +7127,7 @@ __kernel void navatala_sparse_truncate_interpolation_count_f64(__global const ui
     for (int j2 = 0; j2 < (int)((re - rs)); ++j2) {
       int k2 = (rs + j2);
       double v2 = Pvalues[k2];
-      if ((fabs(v2) >= thresh)) {
+      if (fabs(v2) >= thresh) {
         nnz = (nnz + (uint)(1u));
       }
     }
@@ -7141,7 +7141,7 @@ __kernel void navatala_sparse_truncate_interpolation_f32(__global const uint* Pr
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(ProwPtr[row]));
     int re = ((int)(ProwPtr[(row + 1)]));
     int pStart = ((int)(ProwPtrOut[row]));
@@ -7156,7 +7156,7 @@ __kernel void navatala_sparse_truncate_interpolation_f32(__global const uint* Pr
     for (int j3 = 0; j3 < (int)((re - rs)); ++j3) {
       int k3 = (rs + j3);
       float v3 = Pvalues[k3];
-      if ((fabs(v3) >= thresh)) {
+      if (fabs(v3) >= thresh) {
         PcolIdxOut[(pStart + pos)] = PcolIdx[k3];
         PvaluesOut[(pStart + pos)] = v3;
         pos = (pos + 1);
@@ -7172,7 +7172,7 @@ __kernel void navatala_sparse_truncate_interpolation_f64(__global const uint* Pr
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(ProwPtr[row]));
     int re = ((int)(ProwPtr[(row + 1)]));
     int pStart = ((int)(ProwPtrOut[row]));
@@ -7187,7 +7187,7 @@ __kernel void navatala_sparse_truncate_interpolation_f64(__global const uint* Pr
     for (int j3 = 0; j3 < (int)((re - rs)); ++j3) {
       int k3 = (rs + j3);
       double v3 = Pvalues[k3];
-      if ((fabs(v3) >= thresh)) {
+      if (fabs(v3) >= thresh) {
         PcolIdxOut[(pStart + pos)] = PcolIdx[k3];
         PvaluesOut[(pStart + pos)] = v3;
         pos = (pos + 1);
@@ -7202,9 +7202,9 @@ __kernel void navatala_sparse_cf_split_aggressive_p_m_i_s(__global const uint* r
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int prevMark = cfMarkingPrev[row];
-    if ((prevMark == 1)) {
+    if (prevMark == 1) {
       uint priority = (((uint)(row)) ^ seed[0]);
       int rs = ((int)(rowPtr[row]));
       int re = ((int)(rowPtr[(row + 1)]));
@@ -7212,10 +7212,10 @@ __kernel void navatala_sparse_cf_split_aggressive_p_m_i_s(__global const uint* r
       for (int j = 0; j < (int)((re - rs)); ++j) {
         int k = (rs + j);
         uint isStr = strongMask[k];
-        if ((isStr == (uint)(1u))) {
+        if (isStr == (uint)(1u)) {
           int nbr = ((int)(colIdx[k]));
           int nbrPrev = cfMarkingPrev[nbr];
-          if ((nbrPrev == 1)) {
+          if (nbrPrev == 1) {
             uint nbrPri = (((uint)(nbr)) ^ seed[0]);
             bool outranks = ((nbrPri > priority) || ((nbrPri == priority) && (nbr < row)));
             if (outranks) {
@@ -7224,7 +7224,7 @@ __kernel void navatala_sparse_cf_split_aggressive_p_m_i_s(__global const uint* r
           }
         }
       }
-      if ((!hasHigherNbr)) {
+      if (!hasHigherNbr) {
         cfMarking[row] = 1;
       } else {
         cfMarking[row] = -1;
@@ -7241,19 +7241,19 @@ __kernel void navatala_sparse_cf_split_aggressive_h_m_i_s(__global const uint* r
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int prevMark = cfMarkingPrev[row];
-    if ((prevMark == 1)) {
+    if (prevMark == 1) {
       int rs = ((int)(rowPtr[row]));
       int re = ((int)(rowPtr[(row + 1)]));
       uint deg = (uint)(0u);
       for (int jd = 0; jd < (int)((re - rs)); ++jd) {
         int kd = (rs + jd);
         uint isStr = strongMask[kd];
-        if ((isStr == (uint)(1u))) {
+        if (isStr == (uint)(1u)) {
           int nbrD = ((int)(colIdx[kd]));
           int nbrPD = cfMarkingPrev[nbrD];
-          if ((nbrPD == 1)) {
+          if (nbrPD == 1) {
             deg = (deg + (uint)(1u));
           }
         }
@@ -7263,10 +7263,10 @@ __kernel void navatala_sparse_cf_split_aggressive_h_m_i_s(__global const uint* r
       for (int j = 0; j < (int)((re - rs)); ++j) {
         int k = (rs + j);
         uint isStr = strongMask[k];
-        if ((isStr == (uint)(1u))) {
+        if (isStr == (uint)(1u)) {
           int nbr = ((int)(colIdx[k]));
           int nbrP = cfMarkingPrev[nbr];
-          if ((nbrP == 1)) {
+          if (nbrP == 1) {
             uint nbrRs = rowPtr[nbr];
             uint nbrRe = rowPtr[(nbr + 1)];
             uint nbrDeg = (nbrRe - nbrRs);
@@ -7278,7 +7278,7 @@ __kernel void navatala_sparse_cf_split_aggressive_h_m_i_s(__global const uint* r
           }
         }
       }
-      if ((!hasHigherNbr)) {
+      if (!hasHigherNbr) {
         cfMarking[row] = 1;
       } else {
         cfMarking[row] = -1;
@@ -7295,9 +7295,9 @@ __kernel void navatala_sparse_cf_split_c_r_f32(__global const uint* rowPtr, __gl
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
-    if ((mark == 0)) {
+    if (mark == 0) {
       int rs = ((int)(rowPtr[row]));
       int re = ((int)(rowPtr[(row + 1)]));
       float diag = as_float(0x00000000u);
@@ -7306,7 +7306,7 @@ __kernel void navatala_sparse_cf_split_c_r_f32(__global const uint* rowPtr, __gl
         int k = (rs + j);
         int col = ((int)(colIdx[k]));
         float a = values[k];
-        if ((col == row)) {
+        if (col == row) {
           diag = a;
         } else {
           offDiagSum = (offDiagSum + a);
@@ -7314,17 +7314,17 @@ __kernel void navatala_sparse_cf_split_c_r_f32(__global const uint* rowPtr, __gl
       }
       float crVal = fabs((offDiagSum / diag));
       float crThresh = crThreshold[0];
-      if ((crVal > crThresh)) {
+      if (crVal > crThresh) {
         cfMarking[row] = 1;
       } else {
         bool hasC = false;
         for (int j2 = 0; j2 < (int)((re - rs)); ++j2) {
           int k2 = (rs + j2);
           uint isStr = strongMask[k2];
-          if ((isStr == (uint)(1u))) {
+          if (isStr == (uint)(1u)) {
             int nbr = ((int)(colIdx[k2]));
             int nbrM = cfMarking[nbr];
-            if ((nbrM == 1)) {
+            if (nbrM == 1) {
               hasC = true;
             }
           }
@@ -7344,9 +7344,9 @@ __kernel void navatala_sparse_cf_split_c_r_f64(__global const uint* rowPtr, __gl
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
-    if ((mark == 0)) {
+    if (mark == 0) {
       int rs = ((int)(rowPtr[row]));
       int re = ((int)(rowPtr[(row + 1)]));
       double diag = as_double(0x0000000000000000ul);
@@ -7355,7 +7355,7 @@ __kernel void navatala_sparse_cf_split_c_r_f64(__global const uint* rowPtr, __gl
         int k = (rs + j);
         int col = ((int)(colIdx[k]));
         double a = values[k];
-        if ((col == row)) {
+        if (col == row) {
           diag = a;
         } else {
           offDiagSum = (offDiagSum + a);
@@ -7363,17 +7363,17 @@ __kernel void navatala_sparse_cf_split_c_r_f64(__global const uint* rowPtr, __gl
       }
       double crVal = fabs((offDiagSum / diag));
       double crThresh = crThreshold[0];
-      if ((crVal > crThresh)) {
+      if (crVal > crThresh) {
         cfMarking[row] = 1;
       } else {
         bool hasC = false;
         for (int j2 = 0; j2 < (int)((re - rs)); ++j2) {
           int k2 = (rs + j2);
           uint isStr = strongMask[k2];
-          if ((isStr == (uint)(1u))) {
+          if (isStr == (uint)(1u)) {
             int nbr = ((int)(colIdx[k2]));
             int nbrM = cfMarking[nbr];
-            if ((nbrM == 1)) {
+            if (nbrM == 1) {
               hasC = true;
             }
           }
@@ -7392,7 +7392,7 @@ __kernel void navatala_sparse_cf_split_c_l_j_p(__global const uint* rowPtr, __gl
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     uint hash = (((uint)(row)) ^ seed[0]);
     float w = weights[row];
     uint priority = (hash + ((uint)(w)));
@@ -7402,12 +7402,12 @@ __kernel void navatala_sparse_cf_split_c_l_j_p(__global const uint* rowPtr, __gl
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       uint isStr = strongMask[k];
-      if ((isStr == (uint)(1u))) {
+      if (isStr == (uint)(1u)) {
         int nbr = ((int)(colIdx[k]));
         uint nbrHash = (((uint)(nbr)) ^ seed[0]);
         float nbrW = weights[nbr];
         uint nbrPri = (nbrHash + ((uint)(nbrW)));
-        if ((nbrPri > priority)) {
+        if (nbrPri > priority) {
           isHighest = false;
         }
       }
@@ -7419,10 +7419,10 @@ __kernel void navatala_sparse_cf_split_c_l_j_p(__global const uint* rowPtr, __gl
       for (int j2 = 0; j2 < (int)((re - rs)); ++j2) {
         int k2 = (rs + j2);
         uint isStr2 = strongMask[k2];
-        if ((isStr2 == (uint)(1u))) {
+        if (isStr2 == (uint)(1u)) {
           int nbr2 = ((int)(colIdx[k2]));
           int nbrM = cfMarking[nbr2];
-          if ((nbrM == 1)) {
+          if (nbrM == 1) {
             hasCoarse = true;
           }
         }
@@ -7440,34 +7440,34 @@ __kernel void navatala_sparse_interpolate_multipass_count_f32(__global const uin
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
-    if ((mark == 1)) {
+    if (mark == 1) {
       nnzPerRow[row] = (uint)(1u);
     } else {
-      if ((mark == -1)) {
+      if (mark == -1) {
         int rs = ((int)(rowPtr[row]));
         int re = ((int)(rowPtr[(row + 1)]));
         uint nnz = (uint)(0u);
         for (int j1 = 0; j1 < (int)((re - rs)); ++j1) {
           int k1 = (rs + j1);
           uint isStr1 = strongMask[k1];
-          if ((isStr1 == (uint)(1u))) {
+          if (isStr1 == (uint)(1u)) {
             int nbr1 = ((int)(colIdx[k1]));
             int m1 = cfMarking[nbr1];
-            if ((m1 == 1)) {
+            if (m1 == 1) {
               nnz = (nnz + (uint)(1u));
             } else {
-              if ((m1 == -1)) {
+              if (m1 == -1) {
                 int rs2 = ((int)(rowPtr[nbr1]));
                 int re2 = ((int)(rowPtr[(nbr1 + 1)]));
                 for (int j2 = 0; j2 < (int)((re2 - rs2)); ++j2) {
                   int k2 = (rs2 + j2);
                   uint isStr2 = strongMask[k2];
-                  if ((isStr2 == (uint)(1u))) {
+                  if (isStr2 == (uint)(1u)) {
                     int nbr2 = ((int)(colIdx[k2]));
                     int m2 = cfMarking[nbr2];
-                    if ((m2 == 1)) {
+                    if (m2 == 1) {
                       nnz = (nnz + (uint)(1u));
                     }
                   }
@@ -7490,34 +7490,34 @@ __kernel void navatala_sparse_interpolate_multipass_count_f64(__global const uin
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
-    if ((mark == 1)) {
+    if (mark == 1) {
       nnzPerRow[row] = (uint)(1u);
     } else {
-      if ((mark == -1)) {
+      if (mark == -1) {
         int rs = ((int)(rowPtr[row]));
         int re = ((int)(rowPtr[(row + 1)]));
         uint nnz = (uint)(0u);
         for (int j1 = 0; j1 < (int)((re - rs)); ++j1) {
           int k1 = (rs + j1);
           uint isStr1 = strongMask[k1];
-          if ((isStr1 == (uint)(1u))) {
+          if (isStr1 == (uint)(1u)) {
             int nbr1 = ((int)(colIdx[k1]));
             int m1 = cfMarking[nbr1];
-            if ((m1 == 1)) {
+            if (m1 == 1) {
               nnz = (nnz + (uint)(1u));
             } else {
-              if ((m1 == -1)) {
+              if (m1 == -1) {
                 int rs2 = ((int)(rowPtr[nbr1]));
                 int re2 = ((int)(rowPtr[(nbr1 + 1)]));
                 for (int j2 = 0; j2 < (int)((re2 - rs2)); ++j2) {
                   int k2 = (rs2 + j2);
                   uint isStr2 = strongMask[k2];
-                  if ((isStr2 == (uint)(1u))) {
+                  if (isStr2 == (uint)(1u)) {
                     int nbr2 = ((int)(colIdx[k2]));
                     int m2 = cfMarking[nbr2];
-                    if ((m2 == 1)) {
+                    if (m2 == 1) {
                       nnz = (nnz + (uint)(1u));
                     }
                   }
@@ -7540,26 +7540,26 @@ __kernel void navatala_sparse_interpolate_multipass_f32(__global const uint* row
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     int pStart = ((int)(ProwPtr[row]));
-    if ((mark == 1)) {
+    if (mark == 1) {
       PcolIdx[pStart] = ((uint)(row));
       Pvalues[pStart] = as_float(0x3f800000u);
     } else {
-      if ((mark == -1)) {
+      if (mark == -1) {
         int iDiagPos = ((int)(diagIdx[row]));
         float diagI = values[iDiagPos];
         int pos = 0;
         for (int jw = 0; jw < (int)((re - rs)); ++jw) {
           int kw = (rs + jw);
           uint isStrW = strongMask[kw];
-          if ((isStrW == (uint)(1u))) {
+          if (isStrW == (uint)(1u)) {
             int colW = ((int)(colIdx[kw]));
             int mW = cfMarking[colW];
-            if ((mW == 1)) {
+            if (mW == 1) {
               float aij = values[kw];
               float w = (-(aij / diagI));
               PcolIdx[(pStart + pos)] = ((uint)(colW));
@@ -7571,10 +7571,10 @@ __kernel void navatala_sparse_interpolate_multipass_f32(__global const uint* row
         for (int jf = 0; jf < (int)((re - rs)); ++jf) {
           int kf = (rs + jf);
           uint isStrF = strongMask[kf];
-          if ((isStrF == (uint)(1u))) {
+          if (isStrF == (uint)(1u)) {
             int nbrF = ((int)(colIdx[kf]));
             int mF = cfMarking[nbrF];
-            if ((mF == -1)) {
+            if (mF == -1) {
               float aij = values[kf];
               int jDiagPos = ((int)(diagIdx[nbrF]));
               float diagJ = values[jDiagPos];
@@ -7583,10 +7583,10 @@ __kernel void navatala_sparse_interpolate_multipass_f32(__global const uint* row
               for (int j2 = 0; j2 < (int)((re2 - rs2)); ++j2) {
                 int k2 = (rs2 + j2);
                 uint isStr2 = strongMask[k2];
-                if ((isStr2 == (uint)(1u))) {
+                if (isStr2 == (uint)(1u)) {
                   int nbr2 = ((int)(colIdx[k2]));
                   int m2 = cfMarking[nbr2];
-                  if ((m2 == 1)) {
+                  if (m2 == 1) {
                     float ajk = values[k2];
                     float prod = (aij * (ajk / diagJ));
                     float wff = (-(prod / diagI));
@@ -7611,26 +7611,26 @@ __kernel void navatala_sparse_interpolate_multipass_f64(__global const uint* row
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     int pStart = ((int)(ProwPtr[row]));
-    if ((mark == 1)) {
+    if (mark == 1) {
       PcolIdx[pStart] = ((uint)(row));
       Pvalues[pStart] = as_double(0x3ff0000000000000ul);
     } else {
-      if ((mark == -1)) {
+      if (mark == -1) {
         int iDiagPos = ((int)(diagIdx[row]));
         double diagI = values[iDiagPos];
         int pos = 0;
         for (int jw = 0; jw < (int)((re - rs)); ++jw) {
           int kw = (rs + jw);
           uint isStrW = strongMask[kw];
-          if ((isStrW == (uint)(1u))) {
+          if (isStrW == (uint)(1u)) {
             int colW = ((int)(colIdx[kw]));
             int mW = cfMarking[colW];
-            if ((mW == 1)) {
+            if (mW == 1) {
               double aij = values[kw];
               double w = (-(aij / diagI));
               PcolIdx[(pStart + pos)] = ((uint)(colW));
@@ -7642,10 +7642,10 @@ __kernel void navatala_sparse_interpolate_multipass_f64(__global const uint* row
         for (int jf = 0; jf < (int)((re - rs)); ++jf) {
           int kf = (rs + jf);
           uint isStrF = strongMask[kf];
-          if ((isStrF == (uint)(1u))) {
+          if (isStrF == (uint)(1u)) {
             int nbrF = ((int)(colIdx[kf]));
             int mF = cfMarking[nbrF];
-            if ((mF == -1)) {
+            if (mF == -1) {
               double aij = values[kf];
               int jDiagPos = ((int)(diagIdx[nbrF]));
               double diagJ = values[jDiagPos];
@@ -7654,10 +7654,10 @@ __kernel void navatala_sparse_interpolate_multipass_f64(__global const uint* row
               for (int j2 = 0; j2 < (int)((re2 - rs2)); ++j2) {
                 int k2 = (rs2 + j2);
                 uint isStr2 = strongMask[k2];
-                if ((isStr2 == (uint)(1u))) {
+                if (isStr2 == (uint)(1u)) {
                   int nbr2 = ((int)(colIdx[k2]));
                   int m2 = cfMarking[nbr2];
-                  if ((m2 == 1)) {
+                  if (m2 == 1) {
                     double ajk = values[k2];
                     double prod = (aij * (ajk / diagJ));
                     double wff = (-(prod / diagI));
@@ -7681,7 +7681,7 @@ __kernel void navatala_sparse_strength_symmetric_f32(__global const uint* rowPtr
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int iDiagPos = ((int)(diagIdx[gid]));
@@ -7710,7 +7710,7 @@ __kernel void navatala_sparse_strength_symmetric_f64(__global const uint* rowPtr
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int iDiagPos = ((int)(diagIdx[gid]));
@@ -7738,7 +7738,7 @@ __kernel void navatala_sparse_strength_algebraic_dist_f32(__global const uint* r
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int nTv = ((int)(nTestVectors[0]));
@@ -7747,7 +7747,7 @@ __kernel void navatala_sparse_strength_algebraic_dist_f32(__global const uint* r
     for (int jm = 0; jm < (int)((re - rs)); ++jm) {
       int km = (rs + jm);
       int colM = ((int)(colIdx[km]));
-      if ((colM != gid)) {
+      if (colM != gid) {
         float distM = as_float(0x00000000u);
         for (int tvM = 0; tvM < (int)(nTv); ++tvM) {
           float viM = testVectors[((gid * nTv) + tvM)];
@@ -7761,7 +7761,7 @@ __kernel void navatala_sparse_strength_algebraic_dist_f32(__global const uint* r
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != gid)) {
+      if (col != gid) {
         float dist = as_float(0x00000000u);
         for (int tv = 0; tv < (int)(nTv); ++tv) {
           float vi = testVectors[((gid * nTv) + tv)];
@@ -7788,7 +7788,7 @@ __kernel void navatala_sparse_strength_algebraic_dist_f64(__global const uint* r
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int nTv = ((int)(nTestVectors[0]));
@@ -7797,7 +7797,7 @@ __kernel void navatala_sparse_strength_algebraic_dist_f64(__global const uint* r
     for (int jm = 0; jm < (int)((re - rs)); ++jm) {
       int km = (rs + jm);
       int colM = ((int)(colIdx[km]));
-      if ((colM != gid)) {
+      if (colM != gid) {
         double distM = as_double(0x0000000000000000ul);
         for (int tvM = 0; tvM < (int)(nTv); ++tvM) {
           double viM = testVectors[((gid * nTv) + tvM)];
@@ -7811,7 +7811,7 @@ __kernel void navatala_sparse_strength_algebraic_dist_f64(__global const uint* r
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != gid)) {
+      if (col != gid) {
         double dist = as_double(0x0000000000000000ul);
         for (int tv = 0; tv < (int)(nTv); ++tv) {
           double vi = testVectors[((gid * nTv) + tv)];
@@ -7837,14 +7837,14 @@ __kernel void navatala_sparse_strength_affinity_f32(__global const uint* rowPtr,
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     float diag = as_float(0x00000000u);
     for (int jd = 0; jd < (int)((re - rs)); ++jd) {
       int kd = (rs + jd);
       int colD = ((int)(colIdx[kd]));
-      if ((colD == gid)) {
+      if (colD == gid) {
         diag = values[kd];
       }
     }
@@ -7868,14 +7868,14 @@ __kernel void navatala_sparse_strength_affinity_f64(__global const uint* rowPtr,
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     double diag = as_double(0x0000000000000000ul);
     for (int jd = 0; jd < (int)((re - rs)); ++jd) {
       int kd = (rs + jd);
       int colD = ((int)(colIdx[kd]));
-      if ((colD == gid)) {
+      if (colD == gid) {
         diag = values[kd];
       }
     }
@@ -7896,7 +7896,7 @@ __kernel void navatala_sparse_strength_affinity_f64(__global const uint* rowPtr,
 const char* k_opencl_navatala_sparse_compute_grid_complexity = R"kernel(
 __kernel void navatala_sparse_compute_grid_complexity(__global const uint* levelNnz, __global const uint* nLevels, __global float* gridComplexity) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     int nLev = ((int)(nLevels[0]));
     uint finestNnz = levelNnz[0];
     float total = as_float(0x00000000u);
@@ -7913,7 +7913,7 @@ __kernel void navatala_sparse_compute_grid_complexity(__global const uint* level
 const char* k_opencl_navatala_sparse_compute_operator_complexity = R"kernel(
 __kernel void navatala_sparse_compute_operator_complexity(__global const uint* levelNnz, __global const uint* levelRows, __global const uint* nLevels, __global float* operatorComplexity) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     int nLev = ((int)(nLevels[0]));
     uint finestNnz = levelNnz[0];
     float total = as_float(0x00000000u);
@@ -7932,34 +7932,34 @@ __kernel void navatala_sparse_interpolate_ext_no_i_count_f32(__global const uint
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
-    if ((mark == 1)) {
+    if (mark == 1) {
       nnzPerRow[row] = (uint)(1u);
     } else {
-      if ((mark == -1)) {
+      if (mark == -1) {
         int rs = ((int)(rowPtr[row]));
         int re = ((int)(rowPtr[(row + 1)]));
         uint nnz = (uint)(0u);
         for (int j1 = 0; j1 < (int)((re - rs)); ++j1) {
           int k1 = (rs + j1);
           uint isStr1 = strongMask[k1];
-          if ((isStr1 == (uint)(1u))) {
+          if (isStr1 == (uint)(1u)) {
             int nbr1 = ((int)(colIdx[k1]));
             int m1 = cfMarking[nbr1];
-            if ((m1 == 1)) {
+            if (m1 == 1) {
               nnz = (nnz + (uint)(1u));
             } else {
-              if ((m1 == -1)) {
+              if (m1 == -1) {
                 int rs2 = ((int)(rowPtr[nbr1]));
                 int re2 = ((int)(rowPtr[(nbr1 + 1)]));
                 for (int j2 = 0; j2 < (int)((re2 - rs2)); ++j2) {
                   int k2 = (rs2 + j2);
                   uint isStr2 = strongMask[k2];
-                  if ((isStr2 == (uint)(1u))) {
+                  if (isStr2 == (uint)(1u)) {
                     int nbr2 = ((int)(colIdx[k2]));
                     int m2 = cfMarking[nbr2];
-                    if ((m2 == 1)) {
+                    if (m2 == 1) {
                       nnz = (nnz + (uint)(1u));
                     }
                   }
@@ -7982,34 +7982,34 @@ __kernel void navatala_sparse_interpolate_ext_no_i_count_f64(__global const uint
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
-    if ((mark == 1)) {
+    if (mark == 1) {
       nnzPerRow[row] = (uint)(1u);
     } else {
-      if ((mark == -1)) {
+      if (mark == -1) {
         int rs = ((int)(rowPtr[row]));
         int re = ((int)(rowPtr[(row + 1)]));
         uint nnz = (uint)(0u);
         for (int j1 = 0; j1 < (int)((re - rs)); ++j1) {
           int k1 = (rs + j1);
           uint isStr1 = strongMask[k1];
-          if ((isStr1 == (uint)(1u))) {
+          if (isStr1 == (uint)(1u)) {
             int nbr1 = ((int)(colIdx[k1]));
             int m1 = cfMarking[nbr1];
-            if ((m1 == 1)) {
+            if (m1 == 1) {
               nnz = (nnz + (uint)(1u));
             } else {
-              if ((m1 == -1)) {
+              if (m1 == -1) {
                 int rs2 = ((int)(rowPtr[nbr1]));
                 int re2 = ((int)(rowPtr[(nbr1 + 1)]));
                 for (int j2 = 0; j2 < (int)((re2 - rs2)); ++j2) {
                   int k2 = (rs2 + j2);
                   uint isStr2 = strongMask[k2];
-                  if ((isStr2 == (uint)(1u))) {
+                  if (isStr2 == (uint)(1u)) {
                     int nbr2 = ((int)(colIdx[k2]));
                     int m2 = cfMarking[nbr2];
-                    if ((m2 == 1)) {
+                    if (m2 == 1) {
                       nnz = (nnz + (uint)(1u));
                     }
                   }
@@ -8032,26 +8032,26 @@ __kernel void navatala_sparse_interpolate_ext_no_i_f32(__global const uint* rowP
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     int pStart = ((int)(ProwPtr[row]));
-    if ((mark == 1)) {
+    if (mark == 1) {
       PcolIdx[pStart] = ((uint)(row));
       Pvalues[pStart] = as_float(0x3f800000u);
     } else {
-      if ((mark == -1)) {
+      if (mark == -1) {
         int iDiagPos = ((int)(diagIdx[row]));
         float diagI = values[iDiagPos];
         int pos = 0;
         for (int jw = 0; jw < (int)((re - rs)); ++jw) {
           int kw = (rs + jw);
           uint isStrW = strongMask[kw];
-          if ((isStrW == (uint)(1u))) {
+          if (isStrW == (uint)(1u)) {
             int colW = ((int)(colIdx[kw]));
             int mW = cfMarking[colW];
-            if ((mW == 1)) {
+            if (mW == 1) {
               float aij = values[kw];
               float w = (-(aij / diagI));
               PcolIdx[(pStart + pos)] = ((uint)(colW));
@@ -8063,10 +8063,10 @@ __kernel void navatala_sparse_interpolate_ext_no_i_f32(__global const uint* rowP
         for (int jf = 0; jf < (int)((re - rs)); ++jf) {
           int kf = (rs + jf);
           uint isStrF = strongMask[kf];
-          if ((isStrF == (uint)(1u))) {
+          if (isStrF == (uint)(1u)) {
             int nbrF = ((int)(colIdx[kf]));
             int mF = cfMarking[nbrF];
-            if ((mF == -1)) {
+            if (mF == -1) {
               float aij = values[kf];
               int jDiagPos = ((int)(diagIdx[nbrF]));
               float diagJ = values[jDiagPos];
@@ -8075,10 +8075,10 @@ __kernel void navatala_sparse_interpolate_ext_no_i_f32(__global const uint* rowP
               for (int j2 = 0; j2 < (int)((re2 - rs2)); ++j2) {
                 int k2 = (rs2 + j2);
                 uint isStr2 = strongMask[k2];
-                if ((isStr2 == (uint)(1u))) {
+                if (isStr2 == (uint)(1u)) {
                   int nbr2 = ((int)(colIdx[k2]));
                   int m2 = cfMarking[nbr2];
-                  if ((m2 == 1)) {
+                  if (m2 == 1) {
                     float ajk = values[k2];
                     float prod = (aij * (ajk / diagJ));
                     float wff = (-(prod / diagI));
@@ -8103,26 +8103,26 @@ __kernel void navatala_sparse_interpolate_ext_no_i_f64(__global const uint* rowP
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     int pStart = ((int)(ProwPtr[row]));
-    if ((mark == 1)) {
+    if (mark == 1) {
       PcolIdx[pStart] = ((uint)(row));
       Pvalues[pStart] = as_double(0x3ff0000000000000ul);
     } else {
-      if ((mark == -1)) {
+      if (mark == -1) {
         int iDiagPos = ((int)(diagIdx[row]));
         double diagI = values[iDiagPos];
         int pos = 0;
         for (int jw = 0; jw < (int)((re - rs)); ++jw) {
           int kw = (rs + jw);
           uint isStrW = strongMask[kw];
-          if ((isStrW == (uint)(1u))) {
+          if (isStrW == (uint)(1u)) {
             int colW = ((int)(colIdx[kw]));
             int mW = cfMarking[colW];
-            if ((mW == 1)) {
+            if (mW == 1) {
               double aij = values[kw];
               double w = (-(aij / diagI));
               PcolIdx[(pStart + pos)] = ((uint)(colW));
@@ -8134,10 +8134,10 @@ __kernel void navatala_sparse_interpolate_ext_no_i_f64(__global const uint* rowP
         for (int jf = 0; jf < (int)((re - rs)); ++jf) {
           int kf = (rs + jf);
           uint isStrF = strongMask[kf];
-          if ((isStrF == (uint)(1u))) {
+          if (isStrF == (uint)(1u)) {
             int nbrF = ((int)(colIdx[kf]));
             int mF = cfMarking[nbrF];
-            if ((mF == -1)) {
+            if (mF == -1) {
               double aij = values[kf];
               int jDiagPos = ((int)(diagIdx[nbrF]));
               double diagJ = values[jDiagPos];
@@ -8146,10 +8146,10 @@ __kernel void navatala_sparse_interpolate_ext_no_i_f64(__global const uint* rowP
               for (int j2 = 0; j2 < (int)((re2 - rs2)); ++j2) {
                 int k2 = (rs2 + j2);
                 uint isStr2 = strongMask[k2];
-                if ((isStr2 == (uint)(1u))) {
+                if (isStr2 == (uint)(1u)) {
                   int nbr2 = ((int)(colIdx[k2]));
                   int m2 = cfMarking[nbr2];
-                  if ((m2 == 1)) {
+                  if (m2 == 1) {
                     double ajk = values[k2];
                     double prod = (aij * (ajk / diagJ));
                     double wff = (-(prod / diagI));
@@ -8173,9 +8173,9 @@ __kernel void navatala_sparse_interpolate_f_f_weights_f32(__global const uint* r
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
-    if ((mark == -1)) {
+    if (mark == -1) {
       int rs = ((int)(rowPtr[row]));
       int re = ((int)(rowPtr[(row + 1)]));
       float diagVal = diag[row];
@@ -8184,19 +8184,19 @@ __kernel void navatala_sparse_interpolate_f_f_weights_f32(__global const uint* r
       for (int j = 0; j < (int)((re - rs)); ++j) {
         int k = (rs + j);
         uint isStr = strongMask[k];
-        if ((isStr == (uint)(1u))) {
+        if (isStr == (uint)(1u)) {
           int col = ((int)(colIdx[k]));
           int mC = cfMarking[col];
-          if ((mC == 1)) {
+          if (mC == 1) {
             float aij = values[k];
             float numer = aij;
             for (int ff = 0; ff < (int)((re - rs)); ++ff) {
               int kf = (rs + ff);
               uint isStrF = strongMask[kf];
-              if ((isStrF == (uint)(1u))) {
+              if (isStrF == (uint)(1u)) {
                 int colF = ((int)(colIdx[kf]));
                 int mF = cfMarking[colF];
-                if ((mF == -1)) {
+                if (mF == -1) {
                   float aik = values[kf];
                   float diagK = diag[colF];
                   int rsK = ((int)(rowPtr[colF]));
@@ -8205,7 +8205,7 @@ __kernel void navatala_sparse_interpolate_f_f_weights_f32(__global const uint* r
                   for (int kn = 0; kn < (int)((reK - rsK)); ++kn) {
                     int knIdx = (rsK + kn);
                     int knCol = ((int)(colIdx[knIdx]));
-                    if ((knCol == col)) {
+                    if (knCol == col) {
                       akj = values[knIdx];
                     }
                   }
@@ -8230,9 +8230,9 @@ __kernel void navatala_sparse_interpolate_f_f_weights_f64(__global const uint* r
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
-    if ((mark == -1)) {
+    if (mark == -1) {
       int rs = ((int)(rowPtr[row]));
       int re = ((int)(rowPtr[(row + 1)]));
       double diagVal = diag[row];
@@ -8241,19 +8241,19 @@ __kernel void navatala_sparse_interpolate_f_f_weights_f64(__global const uint* r
       for (int j = 0; j < (int)((re - rs)); ++j) {
         int k = (rs + j);
         uint isStr = strongMask[k];
-        if ((isStr == (uint)(1u))) {
+        if (isStr == (uint)(1u)) {
           int col = ((int)(colIdx[k]));
           int mC = cfMarking[col];
-          if ((mC == 1)) {
+          if (mC == 1) {
             double aij = values[k];
             double numer = aij;
             for (int ff = 0; ff < (int)((re - rs)); ++ff) {
               int kf = (rs + ff);
               uint isStrF = strongMask[kf];
-              if ((isStrF == (uint)(1u))) {
+              if (isStrF == (uint)(1u)) {
                 int colF = ((int)(colIdx[kf]));
                 int mF = cfMarking[colF];
-                if ((mF == -1)) {
+                if (mF == -1) {
                   double aik = values[kf];
                   double diagK = diag[colF];
                   int rsK = ((int)(rowPtr[colF]));
@@ -8262,7 +8262,7 @@ __kernel void navatala_sparse_interpolate_f_f_weights_f64(__global const uint* r
                   for (int kn = 0; kn < (int)((reK - rsK)); ++kn) {
                     int knIdx = (rsK + kn);
                     int knCol = ((int)(colIdx[knIdx]));
-                    if ((knCol == col)) {
+                    if (knCol == col) {
                       akj = values[knIdx];
                     }
                   }
@@ -8286,9 +8286,9 @@ __kernel void navatala_sparse_interpolate_symbolic_row_nnz_f32(__global const ui
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
-    if ((mark == 1)) {
+    if (mark == 1) {
       ProwNnz[row] = (uint)(1u);
     } else {
       int rs = ((int)(rowPtr[row]));
@@ -8297,10 +8297,10 @@ __kernel void navatala_sparse_interpolate_symbolic_row_nnz_f32(__global const ui
       for (int j = 0; j < (int)((re - rs)); ++j) {
         int k = (rs + j);
         uint isStr = strongMask[k];
-        if ((isStr == (uint)(1u))) {
+        if (isStr == (uint)(1u)) {
           int col = ((int)(colIdx[k]));
           int mC = cfMarking[col];
-          if ((mC == 1)) {
+          if (mC == 1) {
             nnz = (nnz + (uint)(1u));
           }
         }
@@ -8316,9 +8316,9 @@ __kernel void navatala_sparse_interpolate_symbolic_row_nnz_f64(__global const ui
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
-    if ((mark == 1)) {
+    if (mark == 1) {
       ProwNnz[row] = (uint)(1u);
     } else {
       int rs = ((int)(rowPtr[row]));
@@ -8327,10 +8327,10 @@ __kernel void navatala_sparse_interpolate_symbolic_row_nnz_f64(__global const ui
       for (int j = 0; j < (int)((re - rs)); ++j) {
         int k = (rs + j);
         uint isStr = strongMask[k];
-        if ((isStr == (uint)(1u))) {
+        if (isStr == (uint)(1u)) {
           int col = ((int)(colIdx[k]));
           int mC = cfMarking[col];
-          if ((mC == 1)) {
+          if (mC == 1) {
             nnz = (nnz + (uint)(1u));
           }
         }
@@ -8346,9 +8346,9 @@ __kernel void navatala_sparse_build_coarse_to_fine_map(__global const int* cfMar
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int mark = cfMarking[gid];
-    if ((mark == 1)) {
+    if (mark == 1) {
       uint cIdx = coarseOffset[gid];
       coarseToFine[cIdx] = ((uint)(gid));
     }
@@ -8361,7 +8361,7 @@ __kernel void navatala_sparse_build_fine_to_coarse_map_count(__global const int*
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int mark = cfMarking[gid];
     coarseFlag[gid] = (((mark == 1)) ? ((uint)(1u)) : ((uint)(0u)));
   }
@@ -8373,9 +8373,9 @@ __kernel void navatala_sparse_build_fine_to_coarse_map(__global const int* cfMar
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int mark = cfMarking[gid];
-    if ((mark == 1)) {
+    if (mark == 1) {
       uint cIdx = coarseOffset[gid];
       fineToCoarse[gid] = ((int)(cIdx));
     } else {
@@ -8390,13 +8390,13 @@ __kernel void navatala_sparse_em_initial_prolongation_f32(__global const int* ag
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int aggId = aggregateId[gid];
     ProwPtr[gid] = ((uint)(gid));
     PcolIdx[gid] = ((uint)(aggId));
     Pvalues[gid] = as_float(0x3f800000u);
   }
-  if ((gid == N)) {
+  if (gid == N) {
     ProwPtr[N] = ((uint)(N));
   }
 }
@@ -8408,13 +8408,13 @@ __kernel void navatala_sparse_em_initial_prolongation_f64(__global const int* ag
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int aggId = aggregateId[gid];
     ProwPtr[gid] = ((uint)(gid));
     PcolIdx[gid] = ((uint)(aggId));
     Pvalues[gid] = as_double(0x3ff0000000000000ul);
   }
-  if ((gid == N)) {
+  if (gid == N) {
     ProwPtr[N] = ((uint)(N));
   }
 }
@@ -8425,7 +8425,7 @@ __kernel void navatala_sparse_em_energy_gradient_f32(__global const uint* ArowPt
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(ArowPtr[gid]));
     int re = ((int)(ArowPtr[(gid + 1)]));
     float sum = as_float(0x00000000u);
@@ -8452,7 +8452,7 @@ __kernel void navatala_sparse_em_energy_gradient_f64(__global const uint* ArowPt
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(ArowPtr[gid]));
     int re = ((int)(ArowPtr[(gid + 1)]));
     double sum = as_double(0x0000000000000000ul);
@@ -8478,7 +8478,7 @@ __kernel void navatala_sparse_em_update_prolongation_f32(__global const float* g
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nnzP[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float g = gradient[gid];
     float step = stepSize[0];
     float p = Pvalues[gid];
@@ -8493,7 +8493,7 @@ __kernel void navatala_sparse_em_update_prolongation_f64(__global const double* 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nnzP[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double g = gradient[gid];
     double step = stepSize[0];
     double p = Pvalues[gid];
@@ -8507,7 +8507,7 @@ __kernel void navatala_sparse_em_normalize_p_f32(__global const uint* ProwPtr, _
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(ProwPtr[gid]));
     int re = ((int)(ProwPtr[(gid + 1)]));
     float rowSum = as_float(0x00000000u);
@@ -8530,7 +8530,7 @@ __kernel void navatala_sparse_em_normalize_p_f64(__global const uint* ProwPtr, _
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(ProwPtr[gid]));
     int re = ((int)(ProwPtr[(gid + 1)]));
     double rowSum = as_double(0x0000000000000000ul);
@@ -8552,7 +8552,7 @@ __kernel void navatala_sparse_em_energy_eval_partials_f32(__global const float* 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nnzP[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float ap = APvalues[gid];
     float p = Pvalues[gid];
     numPartials[gid] = (p * ap);
@@ -8567,7 +8567,7 @@ __kernel void navatala_sparse_em_energy_eval_partials_f64(__global const double*
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nnzP[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double ap = APvalues[gid];
     double p = Pvalues[gid];
     numPartials[gid] = (p * ap);
@@ -8581,9 +8581,9 @@ __kernel void navatala_sparse_parallel_greedy_coloring(__global const uint* rowP
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int myColor = colors[gid];
-    if ((myColor < 0)) {
+    if (myColor < 0) {
       int seedI = ((int)(seed[0]));
       int myHash = (((((((gid ^ seedI) + 2127912214) ^ ((gid ^ seedI) << 12)) ^ 3345072700) + ((((gid ^ seedI) + 2127912214) ^ ((gid ^ seedI) << 12)) >> 7)) + 374761393) ^ ((((((gid ^ seedI) + 2127912214) ^ ((gid ^ seedI) << 12)) ^ 3345072700) + ((((gid ^ seedI) + 2127912214) ^ ((gid ^ seedI) << 12)) >> 7)) << 5));
       int rs = ((int)(rowPtr[gid]));
@@ -8593,22 +8593,22 @@ __kernel void navatala_sparse_parallel_greedy_coloring(__global const uint* rowP
       for (int j = 0; j < (int)((re - rs)); ++j) {
         int k = (rs + j);
         int col = ((int)(colIdx[k]));
-        if ((col != gid)) {
+        if (col != gid) {
           int cc = colors[col];
-          if ((cc >= 0)) {
+          if (cc >= 0) {
             usedMask = (usedMask | (1 << cc));
           } else {
             int nHash = (((((((col ^ seedI) + 2127912214) ^ ((col ^ seedI) << 12)) ^ 3345072700) + ((((col ^ seedI) + 2127912214) ^ ((col ^ seedI) << 12)) >> 7)) + 374761393) ^ ((((((col ^ seedI) + 2127912214) ^ ((col ^ seedI) << 12)) ^ 3345072700) + ((((col ^ seedI) + 2127912214) ^ ((col ^ seedI) << 12)) >> 7)) << 5));
-            if ((nHash >= myHash)) {
+            if (nHash >= myHash) {
               isMax = 0;
             }
           }
         }
       }
-      if ((isMax == 1)) {
+      if (isMax == 1) {
         int myC = 0;
         for (int c = 0; c < (int)(32); ++c) {
-          if (((usedMask & (1 << myC)) == 0)) {
+          if ((usedMask & (1 << myC)) == 0) {
           } else {
             myC = (myC + 1);
           }
@@ -8625,9 +8625,9 @@ __kernel void navatala_sparse_min_max_coloring(__global const uint* rowPtr, __gl
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int myColor = colors[gid];
-    if ((myColor < 0)) {
+    if (myColor < 0) {
       int myHash = (((((((gid ^ 0) + 2127912214) ^ ((gid ^ 0) << 12)) ^ 3345072700) + ((((gid ^ 0) + 2127912214) ^ ((gid ^ 0) << 12)) >> 7)) + 374761393) ^ ((((((gid ^ 0) + 2127912214) ^ ((gid ^ 0) << 12)) ^ 3345072700) + ((((gid ^ 0) + 2127912214) ^ ((gid ^ 0) << 12)) >> 7)) << 5));
       int rs = ((int)(rowPtr[gid]));
       int re = ((int)(rowPtr[(gid + 1)]));
@@ -8636,24 +8636,24 @@ __kernel void navatala_sparse_min_max_coloring(__global const uint* rowPtr, __gl
       for (int j = 0; j < (int)((re - rs)); ++j) {
         int k = (rs + j);
         int col = ((int)(colIdx[k]));
-        if (((col != gid) && (col < N))) {
+        if ((col != gid) && (col < N)) {
           int cc = colors[col];
-          if ((cc < 0)) {
+          if (cc < 0) {
             int nHash = (((((((col ^ 0) + 2127912214) ^ ((col ^ 0) << 12)) ^ 3345072700) + ((((col ^ 0) + 2127912214) ^ ((col ^ 0) << 12)) >> 7)) + 374761393) ^ ((((((col ^ 0) + 2127912214) ^ ((col ^ 0) << 12)) ^ 3345072700) + ((((col ^ 0) + 2127912214) ^ ((col ^ 0) << 12)) >> 7)) << 5));
-            if ((nHash >= myHash)) {
+            if (nHash >= myHash) {
               isMax = 0;
             }
-            if ((nHash <= myHash)) {
+            if (nHash <= myHash) {
               isMin = 0;
             }
           }
         }
       }
       int round = ((int)(nColors[0]));
-      if ((isMax == 1)) {
+      if (isMax == 1) {
         colors[gid] = (2 * round);
       } else {
-        if ((isMin == 1)) {
+        if (isMin == 1) {
           colors[gid] = ((2 * round) + 1);
         }
       }
@@ -8667,9 +8667,9 @@ __kernel void navatala_sparse_min_max2_ring_coloring(__global const uint* rowPtr
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int myColor = colors[gid];
-    if ((myColor < 0)) {
+    if (myColor < 0) {
       int myHash = (((((((gid ^ 0) + 2127912214) ^ ((gid ^ 0) << 12)) ^ 3345072700) + ((((gid ^ 0) + 2127912214) ^ ((gid ^ 0) << 12)) >> 7)) + 374761393) ^ ((((((gid ^ 0) + 2127912214) ^ ((gid ^ 0) << 12)) ^ 3345072700) + ((((gid ^ 0) + 2127912214) ^ ((gid ^ 0) << 12)) >> 7)) << 5));
       int rs = ((int)(rowPtr[gid]));
       int re = ((int)(rowPtr[(gid + 1)]));
@@ -8678,14 +8678,14 @@ __kernel void navatala_sparse_min_max2_ring_coloring(__global const uint* rowPtr
       for (int j = 0; j < (int)((re - rs)); ++j) {
         int k = (rs + j);
         int col = ((int)(colIdx[k]));
-        if (((col != gid) && (col < N))) {
+        if ((col != gid) && (col < N)) {
           int cc = colors[col];
-          if ((cc < 0)) {
+          if (cc < 0) {
             int nHash = (((((((col ^ 0) + 2127912214) ^ ((col ^ 0) << 12)) ^ 3345072700) + ((((col ^ 0) + 2127912214) ^ ((col ^ 0) << 12)) >> 7)) + 374761393) ^ ((((((col ^ 0) + 2127912214) ^ ((col ^ 0) << 12)) ^ 3345072700) + ((((col ^ 0) + 2127912214) ^ ((col ^ 0) << 12)) >> 7)) << 5));
-            if ((nHash >= myHash)) {
+            if (nHash >= myHash) {
               isMax = 0;
             }
-            if ((nHash <= myHash)) {
+            if (nHash <= myHash) {
               isMin = 0;
             }
           }
@@ -8694,14 +8694,14 @@ __kernel void navatala_sparse_min_max2_ring_coloring(__global const uint* rowPtr
           for (int j2 = 0; j2 < (int)((re2 - rs2)); ++j2) {
             int k2 = (rs2 + j2);
             int col2 = ((int)(colIdx[k2]));
-            if (((col2 != gid) && (col2 < N))) {
+            if ((col2 != gid) && (col2 < N)) {
               int cc2 = colors[col2];
-              if ((cc2 < 0)) {
+              if (cc2 < 0) {
                 int n2Hash = (((((((col2 ^ 0) + 2127912214) ^ ((col2 ^ 0) << 12)) ^ 3345072700) + ((((col2 ^ 0) + 2127912214) ^ ((col2 ^ 0) << 12)) >> 7)) + 374761393) ^ ((((((col2 ^ 0) + 2127912214) ^ ((col2 ^ 0) << 12)) ^ 3345072700) + ((((col2 ^ 0) + 2127912214) ^ ((col2 ^ 0) << 12)) >> 7)) << 5));
-                if ((n2Hash >= myHash)) {
+                if (n2Hash >= myHash) {
                   isMax = 0;
                 }
-                if ((n2Hash <= myHash)) {
+                if (n2Hash <= myHash) {
                   isMin = 0;
                 }
               }
@@ -8710,10 +8710,10 @@ __kernel void navatala_sparse_min_max2_ring_coloring(__global const uint* rowPtr
         }
       }
       int round = ((int)(nColors[0]));
-      if ((isMax == 1)) {
+      if (isMax == 1) {
         colors[gid] = (2 * round);
       } else {
-        if ((isMin == 1)) {
+        if (isMin == 1) {
           colors[gid] = ((2 * round) + 1);
         }
       }
@@ -8727,9 +8727,9 @@ __kernel void navatala_sparse_multi_hash_coloring(__global const uint* rowPtr, _
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int myColor = colors[gid];
-    if ((myColor < 0)) {
+    if (myColor < 0) {
       int K = ((int)(nHashFunctions[0]));
       int h0 = (((((((gid ^ 0) + 2127912214) ^ ((gid ^ 0) << 12)) ^ 3345072700) + ((((gid ^ 0) + 2127912214) ^ ((gid ^ 0) << 12)) >> 7)) + 374761393) ^ ((((((gid ^ 0) + 2127912214) ^ ((gid ^ 0) << 12)) ^ 3345072700) + ((((gid ^ 0) + 2127912214) ^ ((gid ^ 0) << 12)) >> 7)) << 5));
       int h1 = (((((((gid ^ 1043) + 2127912214) ^ ((gid ^ 1043) << 12)) ^ 3345072700) + ((((gid ^ 1043) + 2127912214) ^ ((gid ^ 1043) << 12)) >> 7)) + 374761393) ^ ((((((gid ^ 1043) + 2127912214) ^ ((gid ^ 1043) << 12)) ^ 3345072700) + ((((gid ^ 1043) + 2127912214) ^ ((gid ^ 1043) << 12)) >> 7)) << 5));
@@ -8742,40 +8742,40 @@ __kernel void navatala_sparse_multi_hash_coloring(__global const uint* rowPtr, _
       for (int j = 0; j < (int)((re - rs)); ++j) {
         int k = (rs + j);
         int col = ((int)(colIdx[k]));
-        if (((col != gid) && (col < N))) {
+        if ((col != gid) && (col < N)) {
           int cc = colors[col];
-          if ((cc < 0)) {
+          if (cc < 0) {
             int j0 = (((((((col ^ 0) + 2127912214) ^ ((col ^ 0) << 12)) ^ 3345072700) + ((((col ^ 0) + 2127912214) ^ ((col ^ 0) << 12)) >> 7)) + 374761393) ^ ((((((col ^ 0) + 2127912214) ^ ((col ^ 0) << 12)) ^ 3345072700) + ((((col ^ 0) + 2127912214) ^ ((col ^ 0) << 12)) >> 7)) << 5));
-            if ((j0 >= h0)) {
+            if (j0 >= h0) {
               notMax = (notMax | 1);
             }
-            if ((j0 <= h0)) {
+            if (j0 <= h0) {
               notMin = (notMin | 1);
             }
-            if ((K > 1)) {
+            if (K > 1) {
               int j1 = (((((((col ^ 1043) + 2127912214) ^ ((col ^ 1043) << 12)) ^ 3345072700) + ((((col ^ 1043) + 2127912214) ^ ((col ^ 1043) << 12)) >> 7)) + 374761393) ^ ((((((col ^ 1043) + 2127912214) ^ ((col ^ 1043) << 12)) ^ 3345072700) + ((((col ^ 1043) + 2127912214) ^ ((col ^ 1043) << 12)) >> 7)) << 5));
-              if ((j1 >= h1)) {
+              if (j1 >= h1) {
                 notMax = (notMax | 2);
               }
-              if ((j1 <= h1)) {
+              if (j1 <= h1) {
                 notMin = (notMin | 2);
               }
             }
-            if ((K > 2)) {
+            if (K > 2) {
               int j2 = (((((((col ^ 2086) + 2127912214) ^ ((col ^ 2086) << 12)) ^ 3345072700) + ((((col ^ 2086) + 2127912214) ^ ((col ^ 2086) << 12)) >> 7)) + 374761393) ^ ((((((col ^ 2086) + 2127912214) ^ ((col ^ 2086) << 12)) ^ 3345072700) + ((((col ^ 2086) + 2127912214) ^ ((col ^ 2086) << 12)) >> 7)) << 5));
-              if ((j2 >= h2)) {
+              if (j2 >= h2) {
                 notMax = (notMax | 4);
               }
-              if ((j2 <= h2)) {
+              if (j2 <= h2) {
                 notMin = (notMin | 4);
               }
             }
-            if ((K > 3)) {
+            if (K > 3) {
               int j3 = (((((((col ^ 3129) + 2127912214) ^ ((col ^ 3129) << 12)) ^ 3345072700) + ((((col ^ 3129) + 2127912214) ^ ((col ^ 3129) << 12)) >> 7)) + 374761393) ^ ((((((col ^ 3129) + 2127912214) ^ ((col ^ 3129) << 12)) ^ 3345072700) + ((((col ^ 3129) + 2127912214) ^ ((col ^ 3129) << 12)) >> 7)) << 5));
-              if ((j3 >= h3)) {
+              if (j3 >= h3) {
                 notMax = (notMax | 8);
               }
-              if ((j3 <= h3)) {
+              if (j3 <= h3) {
                 notMin = (notMin | 8);
               }
             }
@@ -8783,37 +8783,37 @@ __kernel void navatala_sparse_multi_hash_coloring(__global const uint* rowPtr, _
         }
       }
       int picked = -1;
-      if (((notMin & 1) == 0)) {
+      if ((notMin & 1) == 0) {
         picked = 0;
       }
-      if (((picked == -1) && ((notMax & 1) == 0))) {
+      if ((picked == -1) && ((notMax & 1) == 0)) {
         picked = 1;
       }
-      if (((picked == -1) && (K > 1))) {
-        if (((notMin & 2) == 0)) {
+      if ((picked == -1) && (K > 1)) {
+        if ((notMin & 2) == 0) {
           picked = 2;
         }
-        if (((picked == -1) && ((notMax & 2) == 0))) {
+        if ((picked == -1) && ((notMax & 2) == 0)) {
           picked = 3;
         }
       }
-      if (((picked == -1) && (K > 2))) {
-        if (((notMin & 4) == 0)) {
+      if ((picked == -1) && (K > 2)) {
+        if ((notMin & 4) == 0) {
           picked = 4;
         }
-        if (((picked == -1) && ((notMax & 4) == 0))) {
+        if ((picked == -1) && ((notMax & 4) == 0)) {
           picked = 5;
         }
       }
-      if (((picked == -1) && (K > 3))) {
-        if (((notMin & 8) == 0)) {
+      if ((picked == -1) && (K > 3)) {
+        if ((notMin & 8) == 0) {
           picked = 6;
         }
-        if (((picked == -1) && ((notMax & 8) == 0))) {
+        if ((picked == -1) && ((notMax & 8) == 0)) {
           picked = 7;
         }
       }
-      if ((picked >= 0)) {
+      if (picked >= 0) {
         colors[gid] = picked;
       }
     }
@@ -8826,7 +8826,7 @@ __kernel void navatala_sparse_reorder_c_s_r_by_color(__global const uint* rowPtr
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int origRow = ((int)(reorderPerm[gid]));
     int rs = ((int)(rowPtr[origRow]));
     int re = ((int)(rowPtr[(origRow + 1)]));
@@ -8847,7 +8847,7 @@ __kernel void navatala_sparse_round_robin_coloring(__global const uint* rowPtr, 
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
   int nC = ((int)(nTargetColors[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     colors[gid] = (gid % nC);
   }
 }
@@ -8858,16 +8858,16 @@ __kernel void navatala_sparse_bfs_coloring(__global const uint* rowPtr, __global
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int minColor = 0;
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != gid)) {
+      if (col != gid) {
         int cc = colors[col];
-        if ((cc == minColor)) {
+        if (cc == minColor) {
           minColor = (minColor + 1);
         }
       }
@@ -8882,16 +8882,16 @@ __kernel void navatala_sparse_locally_downwind_coloring(__global const uint* row
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int minColor = 0;
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != gid)) {
+      if (col != gid) {
         int cc = colors[col];
-        if ((cc == minColor)) {
+        if (cc == minColor) {
           minColor = (minColor + 1);
         }
       }
@@ -8906,16 +8906,16 @@ __kernel void navatala_sparse_greedy_recolor_f32(__global const uint* rowPtr, __
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int minColor = 0;
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != gid)) {
+      if (col != gid) {
         int cc = colors[col];
-        if ((cc == minColor)) {
+        if (cc == minColor) {
           minColor = (minColor + 1);
         }
       }
@@ -8930,16 +8930,16 @@ __kernel void navatala_sparse_greedy_recolor_f64(__global const uint* rowPtr, __
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int minColor = 0;
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != gid)) {
+      if (col != gid) {
         int cc = colors[col];
-        if ((cc == minColor)) {
+        if (cc == minColor) {
           minColor = (minColor + 1);
         }
       }
@@ -8955,7 +8955,7 @@ __kernel void navatala_sparse_reorder_c_s_r_by_color_f64(__global const uint* ro
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int origRow = ((int)(reorderPerm[gid]));
     int rs = ((int)(rowPtr[origRow]));
     int re = ((int)(rowPtr[(origRow + 1)]));
@@ -8976,7 +8976,7 @@ __kernel void navatala_sparse_uniform_random_coloring(__global const uint* nRows
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
   int nC = ((int)(nTargetColors[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     colors[gid] = (gid % nC);
   }
 }
@@ -8987,16 +8987,16 @@ __kernel void navatala_sparse_saturation_coloring(__global const uint* rowPtr, _
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int minColor = 0;
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != gid)) {
+      if (col != gid) {
         int cc = colors[col];
-        if ((cc == minColor)) {
+        if (cc == minColor) {
           minColor = (minColor + 1);
         }
       }
@@ -9011,7 +9011,7 @@ __kernel void navatala_sparse_reorder_vector_by_color_f32(__global const float* 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int origIdx = ((int)(reorderPerm[gid]));
     xReordered[gid] = x[origIdx];
   }
@@ -9024,7 +9024,7 @@ __kernel void navatala_sparse_reorder_vector_by_color_f64(__global const double*
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int origIdx = ((int)(reorderPerm[gid]));
     xReordered[gid] = x[origIdx];
   }
@@ -9036,7 +9036,7 @@ __kernel void navatala_sparse_diag_inv_sqrt_f32(__global const float* diag, __gl
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float d = diag[gid];
     dinvsqrt[gid] = (as_float(0x3f800000u) / sqrt(d));
   }
@@ -9049,7 +9049,7 @@ __kernel void navatala_sparse_diag_inv_sqrt_f64(__global const double* diag, __g
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double d = diag[gid];
     dinvsqrt[gid] = (as_double(0x3ff0000000000000ul) / sqrt(d));
   }
@@ -9061,7 +9061,7 @@ __kernel void navatala_sparse_apply_diag_sym_scale_f32(__global const uint* rowP
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     float di = dinvsqrt[row];
@@ -9082,7 +9082,7 @@ __kernel void navatala_sparse_apply_diag_sym_scale_f64(__global const uint* rowP
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     double di = dinvsqrt[row];
@@ -9102,7 +9102,7 @@ __kernel void navatala_sparse_binorm_row_scale_f32(__global const uint* rowPtr, 
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     float sum = as_float(0x00000000u);
@@ -9122,7 +9122,7 @@ __kernel void navatala_sparse_binorm_row_scale_f64(__global const uint* rowPtr, 
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     double sum = as_double(0x0000000000000000ul);
@@ -9141,7 +9141,7 @@ __kernel void navatala_sparse_shifted_sp_m_v_f32(__global const uint* rowPtr, __
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     float acc = as_float(0x00000000u);
@@ -9165,7 +9165,7 @@ __kernel void navatala_sparse_shifted_sp_m_v_f64(__global const uint* rowPtr, __
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     double acc = as_double(0x0000000000000000ul);
@@ -9188,7 +9188,7 @@ __kernel void navatala_sparse_deflated_project_f32(__global const float* x, __gl
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float xi = x[gid];
     float proj = as_float(0x00000000u);
     int kVal = ((int)(k[0]));
@@ -9208,7 +9208,7 @@ __kernel void navatala_sparse_deflated_project_f64(__global const double* x, __g
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double xi = x[gid];
     double proj = as_double(0x0000000000000000ul);
     int kVal = ((int)(k[0]));
@@ -9227,7 +9227,7 @@ __kernel void navatala_sparse_page_rank_iter_f32(__global const float* Ax, __glo
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float axi = Ax[gid];
     float d = damping[0];
     float nInv = (as_float(0x3f800000u) / ((float)(N)));
@@ -9242,7 +9242,7 @@ __kernel void navatala_sparse_page_rank_iter_f64(__global const double* Ax, __gl
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double axi = Ax[gid];
     double d = damping[0];
     double nInv = (as_double(0x3ff0000000000000ul) / ((double)(N)));
@@ -9256,7 +9256,7 @@ __kernel void navatala_sparse_w_cycle_weight_partials_f32(__global const float* 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float ri = r[gid];
     float ei = e[gid];
     float aei = Ae[gid];
@@ -9272,7 +9272,7 @@ __kernel void navatala_sparse_w_cycle_weight_partials_f64(__global const double*
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double ri = r[gid];
     double ei = e[gid];
     double aei = Ae[gid];
@@ -9306,7 +9306,7 @@ __kernel void navatala_sparse_block_gram_schmidt_f32(__global const float* X, __
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int jVal = ((int)(j[0]));
     float xij = X[((jVal * N) + gid)];
     float v = xij;
@@ -9327,7 +9327,7 @@ __kernel void navatala_sparse_block_gram_schmidt_f64(__global const double* X, _
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int jVal = ((int)(j[0]));
     double xij = X[((jVal * N) + gid)];
     double v = xij;
@@ -9388,7 +9388,7 @@ __kernel void navatala_sparse_lanczos_step_f32(__global const float* Av, __globa
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float avi = Av[gid];
     float vc = vCurrent[gid];
     float vp = vPrevious[gid];
@@ -9407,7 +9407,7 @@ __kernel void navatala_sparse_lanczos_step_f64(__global const double* Av, __glob
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double avi = Av[gid];
     double vc = vCurrent[gid];
     double vp = vPrevious[gid];
@@ -9425,7 +9425,7 @@ __kernel void navatala_sparse_arnoldi_step_f32(__global const float* Av, __globa
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float avi = Av[gid];
     float w = avi;
     int jVal = ((int)(j[0]));
@@ -9447,7 +9447,7 @@ __kernel void navatala_sparse_arnoldi_step_f64(__global const double* Av, __glob
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double avi = Av[gid];
     double w = avi;
     int jVal = ((int)(j[0]));
@@ -9469,7 +9469,7 @@ __kernel void navatala_sparse_lobpcg_rayleigh_ritz_f32(__global const float* X, 
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
   int kVal = ((int)(k[0]));
-  if ((gid < (kVal * kVal))) {
+  if (gid < (kVal * kVal)) {
     int row = (gid / kVal);
     int col = (gid % kVal);
     float dotAX = as_float(0x00000000u);
@@ -9494,7 +9494,7 @@ __kernel void navatala_sparse_lobpcg_rayleigh_ritz_f64(__global const double* X,
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
   int kVal = ((int)(k[0]));
-  if ((gid < (kVal * kVal))) {
+  if (gid < (kVal * kVal)) {
     int row = (gid / kVal);
     int col = (gid % kVal);
     double dotAX = as_double(0x0000000000000000ul);
@@ -9519,7 +9519,7 @@ __kernel void navatala_sparse_lobpcg_residual_f32(__global const float* AX, __gl
   int N = ((int)(n[0]));
   int kVal = ((int)(k[0]));
   int total = (N * kVal);
-  if ((gid < total)) {
+  if (gid < total) {
     int vecIdx = (gid / N);
     int elemIdx = (gid % N);
     float ax = AX[gid];
@@ -9538,7 +9538,7 @@ __kernel void navatala_sparse_lobpcg_residual_f64(__global const double* AX, __g
   int N = ((int)(n[0]));
   int kVal = ((int)(k[0]));
   int total = (N * kVal);
-  if ((gid < total)) {
+  if (gid < total) {
     int vecIdx = (gid / N);
     int elemIdx = (gid % N);
     double ax = AX[gid];
@@ -9554,7 +9554,7 @@ __kernel void navatala_sparse_power_iteration_normalize_f32(__global const float
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float avi = Av[gid];
     float nrm = norm[0];
     v[gid] = (avi / nrm);
@@ -9568,7 +9568,7 @@ __kernel void navatala_sparse_power_iteration_normalize_f64(__global const doubl
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double avi = Av[gid];
     double nrm = norm[0];
     v[gid] = (avi / nrm);
@@ -9581,7 +9581,7 @@ __kernel void navatala_sparse_rayleigh_quotient_partials_f32(__global const floa
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float vi = v[gid];
     float avi = Av[gid];
     vAvPartials[gid] = (vi * avi);
@@ -9596,7 +9596,7 @@ __kernel void navatala_sparse_rayleigh_quotient_partials_f64(__global const doub
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double vi = v[gid];
     double avi = Av[gid];
     vAvPartials[gid] = (vi * avi);
@@ -9610,7 +9610,7 @@ __kernel void navatala_sparse_jacobi_davidson_correction_f32(__global const floa
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float ri = r[gid];
     float th = theta[0];
     float negR = (-ri);
@@ -9629,7 +9629,7 @@ __kernel void navatala_sparse_jacobi_davidson_correction_f64(__global const doub
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double ri = r[gid];
     double th = theta[0];
     double negR = (-ri);
@@ -9647,7 +9647,7 @@ __kernel void navatala_sparse_jd_subspace_expand_f32(__global const float* V, __
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float ti = t[gid];
     float w = ti;
     int kVal = ((int)(k[0]));
@@ -9666,7 +9666,7 @@ __kernel void navatala_sparse_jd_subspace_expand_f64(__global const double* V, _
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double ti = t[gid];
     double w = ti;
     int kVal = ((int)(k[0]));
@@ -9686,7 +9686,7 @@ __kernel void navatala_sparse_subspace_orthogonalize_f32(__global const uint* n,
   int N = ((int)(n[0]));
   int kVal = ((int)(k[0]));
   for (int j = 0; j < (int)(kVal); ++j) {
-    if ((gid < N)) {
+    if (gid < N) {
       float xij = X[((j * N) + gid)];
       float v = xij;
       for (int ii = 0; ii < (int)(j); ++ii) {
@@ -9707,7 +9707,7 @@ __kernel void navatala_sparse_subspace_orthogonalize_f64(__global const uint* n,
   int N = ((int)(n[0]));
   int kVal = ((int)(k[0]));
   for (int j = 0; j < (int)(kVal); ++j) {
-    if ((gid < N)) {
+    if (gid < N) {
       double xij = X[((j * N) + gid)];
       double v = xij;
       for (int ii = 0; ii < (int)(j); ++ii) {
@@ -9726,7 +9726,7 @@ __kernel void navatala_sparse_block_sp_m_v_f32(__global const uint* rowPtr, __gl
   int gid = (int)(get_global_id(0));
   int total = (((int)(nRows[0])) * ((int)(k[0])));
   int nR = ((int)(nRows[0]));
-  if ((gid < total)) {
+  if (gid < total) {
     int row = (gid % nR);
     int vecIdx = (gid / nR);
     int rs = ((int)(rowPtr[row]));
@@ -9751,7 +9751,7 @@ __kernel void navatala_sparse_block_sp_m_v_f64(__global const uint* rowPtr, __gl
   int gid = (int)(get_global_id(0));
   int total = (((int)(nRows[0])) * ((int)(k[0])));
   int nR = ((int)(nRows[0]));
-  if ((gid < total)) {
+  if (gid < total) {
     int row = (gid % nR);
     int vecIdx = (gid / nR);
     int rs = ((int)(rowPtr[row]));
@@ -9776,7 +9776,7 @@ __kernel void navatala_sparse_multi_vec_norm_partials_f32(__global const float* 
   int N = ((int)(n[0]));
   int kVal = ((int)(k[0]));
   int total = (N * kVal);
-  if ((gid < total)) {
+  if (gid < total) {
     float x = X[gid];
     partials[gid] = (x * x);
   }
@@ -9791,7 +9791,7 @@ __kernel void navatala_sparse_multi_vec_norm_partials_f64(__global const double*
   int N = ((int)(n[0]));
   int kVal = ((int)(k[0]));
   int total = (N * kVal);
-  if ((gid < total)) {
+  if (gid < total) {
     double x = X[gid];
     partials[gid] = (x * x);
   }
@@ -9805,7 +9805,7 @@ __kernel void navatala_sparse_multi_vec_scale_f32(__global const float* norms, _
   int N = ((int)(n[0]));
   int kVal = ((int)(k[0]));
   int total = (N * kVal);
-  if ((gid < total)) {
+  if (gid < total) {
     int vecIdx = (gid / N);
     float x = X[gid];
     float nrm = norms[vecIdx];
@@ -9822,7 +9822,7 @@ __kernel void navatala_sparse_multi_vec_scale_f64(__global const double* norms, 
   int N = ((int)(n[0]));
   int kVal = ((int)(k[0]));
   int total = (N * kVal);
-  if ((gid < total)) {
+  if (gid < total) {
     int vecIdx = (gid / N);
     double x = X[gid];
     double nrm = norms[vecIdx];
@@ -10068,7 +10068,7 @@ __kernel void navatala_sparse_halo_pack_f32(__global const float* x, __global co
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(sendCount[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int idx = ((int)(sendMap[gid]));
     float val = x[idx];
     sendBuf[gid] = val;
@@ -10082,7 +10082,7 @@ __kernel void navatala_sparse_halo_pack_f64(__global const double* x, __global c
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(sendCount[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int idx = ((int)(sendMap[gid]));
     double val = x[idx];
     sendBuf[gid] = val;
@@ -10095,7 +10095,7 @@ __kernel void navatala_sparse_halo_unpack_f32(__global const float* recvBuf, __g
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(recvCount[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int idx = ((int)(recvMap[gid]));
     float val = recvBuf[gid];
     xHalo[idx] = val;
@@ -10109,7 +10109,7 @@ __kernel void navatala_sparse_halo_unpack_f64(__global const double* recvBuf, __
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(recvCount[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int idx = ((int)(recvMap[gid]));
     double val = recvBuf[gid];
     xHalo[idx] = val;
@@ -10123,7 +10123,7 @@ __kernel void navatala_sparse_halo_pack_b_s_r_f32(__global const float* x, __glo
   int gid = (int)(get_global_id(0));
   int N = ((int)(sendCount[0]));
   int bd = ((int)(blockDim[0]));
-  if ((gid < (N * bd))) {
+  if (gid < (N * bd)) {
     int entry = (gid / bd);
     int comp = (gid % bd);
     int idx = ((((int)(sendMap[entry])) * bd) + comp);
@@ -10140,7 +10140,7 @@ __kernel void navatala_sparse_halo_pack_b_s_r_f64(__global const double* x, __gl
   int gid = (int)(get_global_id(0));
   int N = ((int)(sendCount[0]));
   int bd = ((int)(blockDim[0]));
-  if ((gid < (N * bd))) {
+  if (gid < (N * bd)) {
     int entry = (gid / bd);
     int comp = (gid % bd);
     int idx = ((((int)(sendMap[entry])) * bd) + comp);
@@ -10155,7 +10155,7 @@ __kernel void navatala_sparse_partition_reorder_f32(__global const uint* rowPtr,
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int origRow = ((int)(perm[gid]));
     int rs = ((int)(rowPtr[origRow]));
     int re = ((int)(rowPtr[(origRow + 1)]));
@@ -10179,7 +10179,7 @@ __kernel void navatala_sparse_partition_reorder_f64(__global const uint* rowPtr,
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int origRow = ((int)(perm[gid]));
     int rs = ((int)(rowPtr[origRow]));
     int re = ((int)(rowPtr[(origRow + 1)]));
@@ -10202,7 +10202,7 @@ __kernel void navatala_sparse_global_to_local_index_map(__global const uint* glo
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nIndices[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     uint gIdx = globalIndices[gid];
     uint offset = localOffset[0];
     uint nLoc = nLocal[0];
@@ -10218,7 +10218,7 @@ __kernel void navatala_sparse_distributed_sp_m_v_halo_f32(__global const uint* r
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     float sum = as_float(0x00000000u);
@@ -10240,7 +10240,7 @@ __kernel void navatala_sparse_distributed_sp_m_v_halo_f64(__global const uint* r
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     double sum = as_double(0x0000000000000000ul);
@@ -10261,7 +10261,7 @@ __kernel void navatala_sparse_merge_local_halo_result_f32(__global const float* 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float yl = yLocal[gid];
     float yh = yHalo[gid];
     y[gid] = (yl + yh);
@@ -10275,7 +10275,7 @@ __kernel void navatala_sparse_merge_local_halo_result_f64(__global const double*
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double yl = yLocal[gid];
     double yh = yHalo[gid];
     y[gid] = (yl + yh);
@@ -10288,7 +10288,7 @@ __kernel void navatala_sparse_ldu_to_csr_init_diagonal_count_f32(__global const 
   int gid0 = (int)get_global_id(0);
   int cell = (int)(get_global_id(0));
   int N = ((int)(nCells[0]));
-  if ((cell < N)) {
+  if (cell < N) {
     rowNnz[cell] = (uint)(1u);
   }
 }
@@ -10299,7 +10299,7 @@ __kernel void navatala_sparse_ldu_to_csr_init_diagonal_count_f64(__global const 
   int gid0 = (int)get_global_id(0);
   int cell = (int)(get_global_id(0));
   int N = ((int)(nCells[0]));
-  if ((cell < N)) {
+  if (cell < N) {
     rowNnz[cell] = (uint)(1u);
   }
 }
@@ -10310,7 +10310,7 @@ __kernel void navatala_sparse_ldu_diagonal_fill_f32(__global const float* diagon
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nCells[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rEnd = ((int)(rowPtr[(row + 1)]));
     int dPos = (rEnd - 1);
     colInd[dPos] = ((uint)(row));
@@ -10325,7 +10325,7 @@ __kernel void navatala_sparse_ldu_diagonal_fill_f64(__global const double* diago
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nCells[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rEnd = ((int)(rowPtr[(row + 1)]));
     int dPos = (rEnd - 1);
     colInd[dPos] = ((uint)(row));
@@ -10339,7 +10339,7 @@ __kernel void navatala_sparse_compute_so_c_ldu_count_f32(__global const uint* ow
   int gid0 = (int)get_global_id(0);
   int cell = (int)(get_global_id(0));
   int N = ((int)(nCells[0]));
-  if ((cell < N)) {
+  if (cell < N) {
     int fStart = ((int)(cellFaceOffsets[cell]));
     int fEnd = ((int)(cellFaceOffsets[(cell + 1)]));
     float maxCoeff = as_float(0x00000000u);
@@ -10348,7 +10348,7 @@ __kernel void navatala_sparse_compute_so_c_ldu_count_f32(__global const uint* ow
       int face = ((int)(cellFaceIdx[fIdx]));
       int own = ((int)(owner[face]));
       float coeff = fabs((((cell == own)) ? (upper[face]) : (lower[face])));
-      if ((coeff > maxCoeff)) {
+      if (coeff > maxCoeff) {
         maxCoeff = coeff;
       }
     }
@@ -10360,7 +10360,7 @@ __kernel void navatala_sparse_compute_so_c_ldu_count_f32(__global const uint* ow
       int face2 = ((int)(cellFaceIdx[fIdx2]));
       int own2 = ((int)(owner[face2]));
       float coeff2 = fabs((((cell == own2)) ? (upper[face2]) : (lower[face2])));
-      if ((coeff2 > threshold)) {
+      if (coeff2 > threshold) {
         count = (count + 1);
       }
     }
@@ -10375,7 +10375,7 @@ __kernel void navatala_sparse_compute_so_c_ldu_count_f64(__global const uint* ow
   int gid0 = (int)get_global_id(0);
   int cell = (int)(get_global_id(0));
   int N = ((int)(nCells[0]));
-  if ((cell < N)) {
+  if (cell < N) {
     int fStart = ((int)(cellFaceOffsets[cell]));
     int fEnd = ((int)(cellFaceOffsets[(cell + 1)]));
     double maxCoeff = as_double(0x0000000000000000ul);
@@ -10384,7 +10384,7 @@ __kernel void navatala_sparse_compute_so_c_ldu_count_f64(__global const uint* ow
       int face = ((int)(cellFaceIdx[fIdx]));
       int own = ((int)(owner[face]));
       double coeff = fabs((((cell == own)) ? (upper[face]) : (lower[face])));
-      if ((coeff > maxCoeff)) {
+      if (coeff > maxCoeff) {
         maxCoeff = coeff;
       }
     }
@@ -10396,7 +10396,7 @@ __kernel void navatala_sparse_compute_so_c_ldu_count_f64(__global const uint* ow
       int face2 = ((int)(cellFaceIdx[fIdx2]));
       int own2 = ((int)(owner[face2]));
       double coeff2 = fabs((((cell == own2)) ? (upper[face2]) : (lower[face2])));
-      if ((coeff2 > threshold)) {
+      if (coeff2 > threshold) {
         count = (count + 1);
       }
     }
@@ -10410,7 +10410,7 @@ __kernel void navatala_sparse_compute_so_c_ldu_fill_f32(__global const uint* own
   int gid0 = (int)get_global_id(0);
   int cell = (int)(get_global_id(0));
   int N = ((int)(nCells[0]));
-  if ((cell < N)) {
+  if (cell < N) {
     int fStart = ((int)(cellFaceOffsets[cell]));
     int fEnd = ((int)(cellFaceOffsets[(cell + 1)]));
     float maxCoeff = as_float(0x00000000u);
@@ -10419,7 +10419,7 @@ __kernel void navatala_sparse_compute_so_c_ldu_fill_f32(__global const uint* own
       int face = ((int)(cellFaceIdx[fIdx]));
       int own = ((int)(owner[face]));
       float coeff = fabs((((cell == own)) ? (upper[face]) : (lower[face])));
-      if ((coeff > maxCoeff)) {
+      if (coeff > maxCoeff) {
         maxCoeff = coeff;
       }
     }
@@ -10432,7 +10432,7 @@ __kernel void navatala_sparse_compute_so_c_ldu_fill_f32(__global const uint* own
       int face2 = ((int)(cellFaceIdx[fIdx2]));
       int own2 = ((int)(owner[face2]));
       float coeff2 = fabs((((cell == own2)) ? (upper[face2]) : (lower[face2])));
-      if ((coeff2 > threshold)) {
+      if (coeff2 > threshold) {
         int nbr2 = ((int)((((cell == own2)) ? (neighbour[face2]) : (owner[face2]))));
         strongColIdx[(rowStart + off)] = ((uint)(nbr2));
         off = (off + 1);
@@ -10448,7 +10448,7 @@ __kernel void navatala_sparse_compute_so_c_ldu_fill_f64(__global const uint* own
   int gid0 = (int)get_global_id(0);
   int cell = (int)(get_global_id(0));
   int N = ((int)(nCells[0]));
-  if ((cell < N)) {
+  if (cell < N) {
     int fStart = ((int)(cellFaceOffsets[cell]));
     int fEnd = ((int)(cellFaceOffsets[(cell + 1)]));
     double maxCoeff = as_double(0x0000000000000000ul);
@@ -10457,7 +10457,7 @@ __kernel void navatala_sparse_compute_so_c_ldu_fill_f64(__global const uint* own
       int face = ((int)(cellFaceIdx[fIdx]));
       int own = ((int)(owner[face]));
       double coeff = fabs((((cell == own)) ? (upper[face]) : (lower[face])));
-      if ((coeff > maxCoeff)) {
+      if (coeff > maxCoeff) {
         maxCoeff = coeff;
       }
     }
@@ -10470,7 +10470,7 @@ __kernel void navatala_sparse_compute_so_c_ldu_fill_f64(__global const uint* own
       int face2 = ((int)(cellFaceIdx[fIdx2]));
       int own2 = ((int)(owner[face2]));
       double coeff2 = fabs((((cell == own2)) ? (upper[face2]) : (lower[face2])));
-      if ((coeff2 > threshold)) {
+      if (coeff2 > threshold) {
         int nbr2 = ((int)((((cell == own2)) ? (neighbour[face2]) : (owner[face2]))));
         strongColIdx[(rowStart + off)] = ((uint)(nbr2));
         off = (off + 1);
@@ -10485,7 +10485,7 @@ __kernel void navatala_sparse_csr_sort_after_ldu_fill_f32(__global const uint* r
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int start = ((int)(rowPtr[row]));
     int end = ((int)(rowPtr[(row + 1)]));
     int count = (end - start);
@@ -10495,7 +10495,7 @@ __kernel void navatala_sparse_csr_sort_after_ldu_fill_f32(__global const uint* r
       float keyVal = values[pos];
       int j = i;
       for (int __iter = 0; __iter < 64; ++__iter) {
-        if (!(((j > 0) && (colInd[((start + j) - 1)] > keyCol)))) break;
+        if (!((j > 0) && (colInd[((start + j) - 1)] > keyCol))) break;
         colInd[(start + j)] = colInd[((start + j) - 1)];
         values[(start + j)] = values[((start + j) - 1)];
         j = (j - 1);
@@ -10513,7 +10513,7 @@ __kernel void navatala_sparse_csr_sort_after_ldu_fill_f64(__global const uint* r
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int start = ((int)(rowPtr[row]));
     int end = ((int)(rowPtr[(row + 1)]));
     int count = (end - start);
@@ -10523,7 +10523,7 @@ __kernel void navatala_sparse_csr_sort_after_ldu_fill_f64(__global const uint* r
       double keyVal = values[pos];
       int j = i;
       for (int __iter = 0; __iter < 64; ++__iter) {
-        if (!(((j > 0) && (colInd[((start + j) - 1)] > keyCol)))) break;
+        if (!((j > 0) && (colInd[((start + j) - 1)] > keyCol))) break;
         colInd[(start + j)] = colInd[((start + j) - 1)];
         values[(start + j)] = values[((start + j) - 1)];
         j = (j - 1);

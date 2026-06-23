@@ -29,7 +29,7 @@ extern "C" __global__ void navatala_sparse_knn_csr_row_distance_f64(const double
   unsigned int sparseLen = (sEnd - sStart);
   for (int sLoop = 0; sLoop < (int)(sparseLen); ++sLoop) {
     unsigned int sPos = sIdxAccum;
-    if ((sPos < sEnd)) {
+    if (sPos < sEnd) {
       double sVal = sparseData[sPos];
       int sCol = sparseIndices[sPos];
       unsigned int sColU32 = ((unsigned int)(sCol));
@@ -51,7 +51,7 @@ extern "C" __global__ void navatala_sparse_knn_csr_row_distance_f64(const double
   unsigned int dIdxAccum = 0u;
   for (int dLoop = 0; dLoop < (int)(nColsVal); ++dLoop) {
     unsigned int dPos = dIdxAccum;
-    if ((dPos < nColsVal)) {
+    if (dPos < nColsVal) {
       double dValLoop = denseQuery[dPos];
       double dValSq = (dValLoop * dValLoop);
       double currDNorm = denseNormAccum;

@@ -57,7 +57,7 @@ extern "C" __global__ void navatala_ml_compute_objective_f64(const double* X, co
   unsigned int obj64RedStride = 128u;
   for (int obj64RedStep = 0; obj64RedStep < (int)(8); ++obj64RedStep) {
     unsigned int obj64RedStrideVal = obj64RedStride;
-    if ((lid < obj64RedStrideVal)) {
+    if (lid < obj64RedStrideVal) {
       double otherMse = sdataMse[(lid + obj64RedStrideVal)];
       double mineMse = sdataMse[lid];
       double sumMse = (mineMse + otherMse);
@@ -72,7 +72,7 @@ extern "C" __global__ void navatala_ml_compute_objective_f64(const double* X, co
     obj64RedStride = obj64RedNextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double totalMse = sdataMse[0];
     double totalL1 = sdataL1[0];
     double halfMse = (__longlong_as_double(0x3fe0000000000000ull) * totalMse);

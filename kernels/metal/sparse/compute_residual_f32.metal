@@ -20,14 +20,14 @@ kernel void navatala_sparse_compute_residual_f32(device const uint* rowPtr [[buf
   uint gid = ((uint)(int(__gid.x)));
   uint i = gid;
   uint nVal = n[0u];
-  if ((i < nVal)) {
+  if (i < nVal) {
     uint rowStart = rowPtr[i];
     uint iPlusOne = (i + 1u);
     uint rowEnd = rowPtr[iPlusOne];
     float axSumAccum = as_type<float>(0x00000000u);
     for (int j = 0; j < (int)(rowEnd); ++j) {
       uint jU32 = ((uint)(j));
-      if ((jU32 >= rowStart)) {
+      if (jU32 >= rowStart) {
         uint col = colInd[jU32];
         float aVal = values[jU32];
         float xj = x[col];

@@ -25,7 +25,7 @@ kernel void navatala_transformer_hadamard_transform_f16(device const half* _inpu
   bool batchValid = (batchIdx < bs);
   bool threadValid = (lid < vs);
   uint globalIdx = ((batchIdx * vs) + lid);
-  if ((batchValid && threadValid)) {
+  if (batchValid && threadValid) {
     half valF16 = _input[globalIdx];
     float val = ((float)(valF16));
     sharedBuf[lid] = val;
@@ -70,7 +70,7 @@ kernel void navatala_transformer_hadamard_transform_f16(device const half* _inpu
   float scale = sqrt(vsF32);
   float normalized = (newVal4 / scale);
   half resultF16 = ((half)(normalized));
-  if ((batchValid && threadValid)) {
+  if (batchValid && threadValid) {
     _output[globalIdx] = resultF16;
   }
 }

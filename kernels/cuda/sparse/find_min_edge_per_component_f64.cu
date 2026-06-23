@@ -17,15 +17,15 @@
 extern "C" __global__ void navatala_sparse_find_min_edge_per_component_f64(const unsigned int* srcNodes, const unsigned int* dstNodes, const double* weights, const unsigned int* components, const unsigned int* numEdges, const unsigned int* numNodes, unsigned int* minEdgeIdx, double* minEdgeWeight) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int edgeIdx = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((edgeIdx < numEdges[0u])) {
+  if (edgeIdx < numEdges[0u]) {
     unsigned int src = srcNodes[edgeIdx];
     unsigned int dst = dstNodes[edgeIdx];
     unsigned int srcComp = components[src];
     unsigned int dstComp = components[dst];
-    if ((srcComp != dstComp)) {
+    if (srcComp != dstComp) {
       double w = weights[edgeIdx];
       double currWeight = minEdgeWeight[srcComp];
-      if ((w < currWeight)) {
+      if (w < currWeight) {
         atomicMin(&minEdgeWeight[srcComp], w);
         minEdgeIdx[srcComp] = edgeIdx;
       }

@@ -16,7 +16,7 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_welford_merge_f64(__global const uint* countA, __global const double* meanA, __global const double* M2A, __global const uint* countB, __global const double* meanB, __global const double* M2B, __global uint* count, __global double* mean, __global double* M2) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint nA = countA[0];
     double muA = meanA[0];
     double m2AVal = M2A[0];

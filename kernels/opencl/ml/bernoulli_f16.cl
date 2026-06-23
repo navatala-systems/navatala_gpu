@@ -19,7 +19,7 @@ __kernel void navatala_ml_bernoulli_f16(__global const uint* count, __global con
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
   uint seedVal = seed[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint uk0 = ((seedVal + (gid * (uint)(2654435769u))) + (uint)(0u));
     uint uk1 = ((uk0 ^ (uk0 >> (uint)(16u))) * (uint)(2246822519u));
     uint uk2 = ((uk1 ^ (uk1 >> (uint)(13u))) * (uint)(3266489917u));

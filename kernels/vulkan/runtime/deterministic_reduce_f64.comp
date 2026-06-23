@@ -45,7 +45,7 @@ void main() {
   uint f64RedStride = 128u;
   for (int f64RedStep = 0; f64RedStep < int(8); ++f64RedStep) {
     uint f64Stride = f64RedStride;
-    if ((lid < f64Stride)) {
+    if (lid < f64Stride) {
       double other = sdata[(lid + f64Stride)];
       double mine = sdata[lid];
       double sum = (mine + other);
@@ -56,7 +56,7 @@ void main() {
     f64RedStride = f64NextStride;
     barrier();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double totalSum = sdata[0];
     result[0] = totalSum;
   }

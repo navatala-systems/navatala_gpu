@@ -43,7 +43,7 @@ void main() {
   barrier();
   for (int s = 0; s < int(128u); ++s) {
     uint sU32 = uint(s);
-    if ((lid < sU32)) {
+    if (lid < sU32) {
       float other = sdata[(lid + sU32)];
       float mine = sdata[lid];
       float sum = (mine + other);
@@ -51,7 +51,7 @@ void main() {
     }
     barrier();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     atomicAdd(normSq[0u], sdata[0u]);
   }
 }

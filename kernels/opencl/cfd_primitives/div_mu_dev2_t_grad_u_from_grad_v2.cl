@@ -15,7 +15,7 @@
 
 __kernel void navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_grad_v2(__global const float* muCell, __global const float* muBc, __global const float* gXX, __global const float* gXY, __global const float* gXZ, __global const float* gYX, __global const float* gYY, __global const float* gYZ, __global const float* gZX, __global const float* gZY, __global const float* gZZ, __global const int* owner, __global const int* neighbour, __global const float* weights, __global const float* sfX, __global const float* sfY, __global const float* sfZ, __global const int* offsets, __global const int* faceIdx, __global const float* signF, __global const float* vol, __global const int* params, __global float* outX, __global float* outY, __global float* outZ) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
     float sumX = as_float(0x00000000u);
@@ -28,7 +28,7 @@ __kernel void navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_grad_v2(__global
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < params[1])) {
+      if (f < params[1]) {
         float s = signF[k];
         int o = owner[f];
         float muO = muCell[o];
@@ -71,7 +71,7 @@ __kernel void navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_grad_v2(__global
         float tauFzy = tauOzy;
         float tauFzz = tauOzz;
         int n = neighbour[f];
-        if ((n >= 0)) {
+        if (n >= 0) {
           float muN = muCell[n];
           float gnXX = gXX[n];
           float gnXY = gXY[n];
@@ -130,7 +130,7 @@ __kernel void navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_grad_v2(__global
     }
     float v = vol[((int)((int)(get_global_id(0))))];
     float invV = as_float(0x00000000u);
-    if ((v != as_float(0x00000000u))) {
+    if (v != as_float(0x00000000u)) {
       invV = (as_float(0x3f800000u) / v);
     }
     outX[((int)((int)(get_global_id(0))))] = (sumX * invV);

@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_vector_search_train_p_q_codebook_f32(const f
   unsigned int vid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int nv = n_vectors[0];
   unsigned int sd = sub_dim[0];
-  if ((vid < nv)) {
+  if (vid < nv) {
     unsigned int cw = assignments[vid];
     for (int k = 0; k < (int)(sd); ++k) {
       unsigned int src_idx = ((vid * sd) + k);

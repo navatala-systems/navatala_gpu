@@ -17,7 +17,7 @@ __kernel void navatala_nccl_linear_broadcast_f32(__global const float* src, __gl
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float val = src[gid];
     dst[gid] = val;
   }

@@ -17,7 +17,7 @@
 __kernel void navatala_dataframe_normalized_mad_f64(__global const double* mad, __global double* normalizedMad) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     double m = mad[0];
     double norm = (as_double(0x3ff7b8bac710cb29ul) * m);
     normalizedMad[0] = norm;

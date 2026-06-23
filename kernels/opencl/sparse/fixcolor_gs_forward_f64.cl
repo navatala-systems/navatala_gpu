@@ -18,7 +18,7 @@ __kernel void navatala_sparse_fixcolor_gs_forward_f64(__global const uint* rowPt
   int gid0 = (int)get_global_id(0);
   int localIdx = (int)(get_global_id(0));
   int N = ((int)(nRowsThisColor[0]));
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int start = ((int)(colorOffsets[0]));
     int permIdx = (start + localIdx);
     int row = ((int)(reorderPerm[permIdx]));
@@ -28,7 +28,7 @@ __kernel void navatala_sparse_fixcolor_gs_forward_f64(__global const uint* rowPt
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != row)) {
+      if (col != row) {
         double a = values[k];
         double xj = x[col];
         sum = (sum + (a * xj));

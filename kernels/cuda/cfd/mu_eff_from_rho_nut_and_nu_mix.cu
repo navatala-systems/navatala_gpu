@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_mu_eff_from_rho_nut_and_nu_mix(const float* rho, const float* nut, const float* nuMix, const unsigned int* params, float* outMu) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(params[0])))) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(params[0]))) {
     return;
   } else {
     outMu[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = (rho[(int)(blockIdx.x * blockDim.x + threadIdx.x)] * (nuMix[(int)(blockIdx.x * blockDim.x + threadIdx.x)] + nut[(int)(blockIdx.x * blockDim.x + threadIdx.x)]));

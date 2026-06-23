@@ -59,7 +59,7 @@ void main() {
   uint gid = uint(int(gl_GlobalInvocationID.x));
   uint i = gid;
   uint nVal = n[0u];
-  if ((i < nVal)) {
+  if (i < nVal) {
     float alphaVal = alpha[0u];
     float xi = x[i];
     float pi = p[i];

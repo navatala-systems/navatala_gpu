@@ -32,15 +32,15 @@ static inline uint gpu_atomic_cas_uint(device atomic_uint* ptr, uint expected, u
 
 kernel void navatala_sparse_merge_components_f64(device const uint* srcNodes [[buffer(0)]], device const uint* dstNodes [[buffer(1)]], device const uint* minEdgeIdx [[buffer(2)]], device const uint* numNodes [[buffer(3)]], device uint* components [[buffer(4)]], device bool* mstEdges [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint nodeId = ((uint)(int(__gid.x)));
-  if ((nodeId < numNodes[0u])) {
+  if (nodeId < numNodes[0u]) {
     uint comp = components[nodeId];
-    if ((comp == nodeId)) {
+    if (comp == nodeId) {
       uint edgeIdx = minEdgeIdx[nodeId];
-      if ((edgeIdx != 4294967295u)) {
+      if (edgeIdx != 4294967295u) {
         uint src = srcNodes[edgeIdx];
         uint dst = dstNodes[edgeIdx];
         uint dstComp = components[dst];
-        if ((nodeId != dstComp)) {
+        if (nodeId != dstComp) {
           uint smaller = (((nodeId < dstComp)) ? (nodeId) : (dstComp));
           uint larger = (((nodeId < dstComp)) ? (dstComp) : (nodeId));
           atomic_fetch_min_explicit((device atomic_uint*)(&components[larger]), smaller, memory_order_relaxed);

@@ -19,16 +19,16 @@ extern "C" __global__ void navatala_cfd_mg_resolve_chains(int* aggMap, const int
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0])))) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0]))) {
     return;
   } else {
     int root = aggMap[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
-    if ((root >= 0)) {
-      if ((root < ((int)(counts[0])))) {
-        if ((root != (int)(blockIdx.x * blockDim.x + threadIdx.x))) {
+    if (root >= 0) {
+      if (root < ((int)(counts[0]))) {
+        if (root != (int)(blockIdx.x * blockDim.x + threadIdx.x)) {
           int next = aggMap[root];
-          if ((next >= 0)) {
-            if ((next < ((int)(counts[0])))) {
+          if (next >= 0) {
+            if (next < ((int)(counts[0]))) {
               aggMap[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = next;
             }
           }

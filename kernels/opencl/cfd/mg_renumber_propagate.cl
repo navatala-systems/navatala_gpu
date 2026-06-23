@@ -18,15 +18,15 @@ __kernel void navatala_cfd_mg_renumber_propagate(__global int* aggMap, __global 
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
     int root = aggMap[(int)(get_global_id(0))];
-    if ((root < 0)) {
+    if (root < 0) {
       aggMap[(int)(get_global_id(0))] = (-(root + 1));
     } else {
       int rootVal = aggMap[root];
-      if ((rootVal < 0)) {
+      if (rootVal < 0) {
         aggMap[(int)(get_global_id(0))] = (-(rootVal + 1));
       } else {
         aggMap[(int)(get_global_id(0))] = rootVal;

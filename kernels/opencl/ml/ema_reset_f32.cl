@@ -15,7 +15,7 @@
 
 __kernel void navatala_ml_ema_reset_f32(__global float* ema, __global uint* count) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     ema[0] = as_float(0x00000000u);
     count[0] = (uint)(0u);
   }

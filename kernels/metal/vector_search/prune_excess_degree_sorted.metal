@@ -25,17 +25,17 @@ kernel void navatala_vector_search_prune_excess_degree_sorted(device uint* graph
   uint inv = invalid_id[0];
   threadgroup uint shared_ids[128];
   threadgroup float shared_dists[128];
-  if ((vid < nv)) {
+  if (vid < nv) {
     uint deg = degrees[vid];
-    if ((deg > tmd)) {
-      if ((tid < deg)) {
+    if (deg > tmd) {
+      if (tid < deg) {
         uint read_idx = ((vid * cmd) + tid);
         uint neighbor_id = graph[read_idx];
         float neighbor_dist = neighbor_distances[read_idx];
         shared_ids[tid] = neighbor_id;
         shared_dists[tid] = neighbor_dist;
       } else {
-        if ((tid < 128u)) {
+        if (tid < 128u) {
           shared_ids[tid] = inv;
           shared_dists[tid] = as_type<float>(0x7e967699u);
         }
@@ -46,11 +46,11 @@ kernel void navatala_vector_search_prune_excess_degree_sorted(device uint* graph
           uint half_net = (1u << (stage - substage));
           uint partner = (tid ^ half_net);
           uint direction_bit = ((tid >> (stage + 1u)) & 1u);
-          if ((partner < 128u)) {
+          if (partner < 128u) {
             float my_dist = shared_dists[tid];
             float partner_d = shared_dists[partner];
             uint should_swap = (((tid < partner)) ? ((((direction_bit == 0u)) ? ((((my_dist > partner_d)) ? (1u) : (0u))) : ((((my_dist < partner_d)) ? (1u) : (0u))))) : (0u));
-            if ((should_swap == 1u)) {
+            if (should_swap == 1u) {
               uint my_id = shared_ids[tid];
               uint partner_id = shared_ids[partner];
               shared_ids[tid] = partner_id;
@@ -62,16 +62,16 @@ kernel void navatala_vector_search_prune_excess_degree_sorted(device uint* graph
           threadgroup_barrier(mem_flags::mem_threadgroup);
         }
       }
-      if ((tid < cmd)) {
+      if (tid < cmd) {
         uint write_idx = ((vid * cmd) + tid);
-        if ((tid < tmd)) {
+        if (tid < tmd) {
           uint sorted_id = shared_ids[tid];
           graph[write_idx] = sorted_id;
         } else {
           graph[write_idx] = inv;
         }
       }
-      if ((tid == 0u)) {
+      if (tid == 0u) {
         degrees[vid] = tmd;
       }
     }

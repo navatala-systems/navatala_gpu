@@ -18,7 +18,7 @@ __kernel void navatala_cfd_grad_alpha_cell(__global const float* alphaF, __globa
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     int beg = offsets[((int)((int)(get_global_id(0))))];

@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_dataframe_v_measure_f64(const double* homogeneity, const double* completeness, double* vMeasure) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     double h = homogeneity[0u];
     double c = completeness[0u];
     double hPlusC = (h + c);

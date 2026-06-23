@@ -19,15 +19,15 @@ extern "C" __global__ void navatala_ml_concatenate2_bf16(const __hip_bfloat16* a
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     unsigned int nAVal = nA[0];
-    if ((gid < nAVal)) {
+    if (gid < nAVal) {
       __hip_bfloat16 v = a[gid];
       _output[gid] = v;
     } else {
       unsigned int srcIdx = (gid - nAVal);
       unsigned int nBVal = nB[0];
-      if ((srcIdx < nBVal)) {
+      if (srcIdx < nBVal) {
         __hip_bfloat16 v = b[srcIdx];
         _output[gid] = v;
       }

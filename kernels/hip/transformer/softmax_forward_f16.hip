@@ -189,7 +189,7 @@ extern "C" __global__ void navatala_transformer_softmax_forward_f16(const __half
   }
   __syncthreads();
   float sumExp = sumBuf[0u];
-  if ((batchValid && seqValid)) {
+  if (batchValid && seqValid) {
     float resultF32 = (expVal / sumExp);
     __half result = ((__half)(resultF32));
     _output[globalIdx] = result;

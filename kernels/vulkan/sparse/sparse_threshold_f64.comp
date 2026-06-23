@@ -34,7 +34,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int i = int(int(gl_GlobalInvocationID.x));
   double thresh = threshold[0u];
-  if ((i < nnz[0u])) {
+  if (i < nnz[0u]) {
     double a = valuesA[i];
     double absA = abs(a);
     double result = (((absA >= thresh)) ? (a) : (packDouble2x32(uvec2(0x00000000u, 0x00000000u))));

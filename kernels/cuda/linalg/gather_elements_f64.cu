@@ -20,7 +20,7 @@ extern "C" __global__ void navatala_linalg_gather_elements_f64(const double* A, 
   unsigned int tid = gid;
   unsigned int countVal = count[0u];
   unsigned int nVal = n[0u];
-  if ((tid < countVal)) {
+  if (tid < countVal) {
     unsigned int row = rowIdx[tid];
     unsigned int col = colIdx[tid];
     unsigned int srcIdx = ((row * nVal) + col);

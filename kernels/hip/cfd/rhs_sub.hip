@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_cfd_rhs_sub(const float* b, const float* ax,
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= counts[0])) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= counts[0]) {
     return;
   } else {
     r[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = (b[(int)(blockIdx.x * blockDim.x + threadIdx.x)] - ax[(int)(blockIdx.x * blockDim.x + threadIdx.x)]);

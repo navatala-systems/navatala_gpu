@@ -28,7 +28,7 @@ extern "C" __global__ void navatala_transformer_permute_tokens_f32(const float* 
     unsigned int expertIdxU32 = ((unsigned int)(expertIdx));
     bool expertValid = (expertIdxU32 < ne);
     if (expertValid) {
-      if ((lid == 0u)) {
+      if (lid == 0u) {
         unsigned int localPosition = atomicAdd(&(expertCounters[expertIdxU32]), 1u);
         unsigned int expertOffset = expertOffsets[expertIdxU32];
         unsigned int destTokenIdx = (expertOffset + localPosition);
@@ -40,7 +40,7 @@ extern "C" __global__ void navatala_transformer_permute_tokens_f32(const float* 
       unsigned int destTokenIdx = sharedDestTokenIdx[0u];
       for (int hIter = 0; hIter < (int)(hs); ++hIter) {
         unsigned int hIdx = (lid + (256u * hIter));
-        if ((hIdx < hs)) {
+        if (hIdx < hs) {
           unsigned int srcIdx = ((tokenIdx * hs) + hIdx);
           unsigned int dstIdx = ((destTokenIdx * hs) + hIdx);
           float val = hiddenStates[srcIdx];

@@ -18,7 +18,7 @@ __kernel void navatala_ml_resize_nearest_f16(__global const half* _input, __glob
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint outSizeVal = outSize[0];
-  if ((gid < outSizeVal)) {
+  if (gid < outSizeVal) {
     uint inSizeVal = inSize[0];
     uint idx = ((gid * inSizeVal) / outSizeVal);
     half v = _input[idx];

@@ -35,7 +35,7 @@ layout(std430, binding = 4) writeonly buffer buf_result {
 // kernel: navatala_dataframe_ewmc_extract_correlation_f64
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) == 0)) {
+  if (int(gl_GlobalInvocationID.x) == 0) {
     double c = Cxy[0];
     double vx = varX[0];
     double vy = varY[0];

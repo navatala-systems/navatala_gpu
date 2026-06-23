@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_sparse_threshold_f32(const float* val
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   float thresh = threshold[0u];
-  if ((i < nnz[0u])) {
+  if (i < nnz[0u]) {
     float a = valuesA[i];
     float absA = abs(a);
     float result = (((absA >= thresh)) ? (a) : (__uint_as_float(0x00000000u)));

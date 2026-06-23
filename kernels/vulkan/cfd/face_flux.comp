@@ -44,24 +44,24 @@ layout(std430, binding = 7) writeonly buffer buf_outFlux {
 // kernel: navatala_cfd_face_flux
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= counts[1])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= counts[1]) {
     return;
   } else {
     int o = owner[int(int(gl_GlobalInvocationID.x))];
     float xo = x[o];
     float other = xo;
-    if ((int(int(gl_GlobalInvocationID.x)) < counts[2])) {
+    if (int(int(gl_GlobalInvocationID.x)) < counts[2]) {
       int n = neighbour[int(int(gl_GlobalInvocationID.x))];
       other = x[n];
     } else {
       int m = bcMask[int(int(gl_GlobalInvocationID.x))];
-      if (((m == 1) || (m == 3))) {
+      if ((m == 1) || (m == 3)) {
         other = bcVal[int(int(gl_GlobalInvocationID.x))];
       } else {
-        if ((m == 2)) {
+        if (m == 2) {
           other = uintBitsToFloat(0x00000000u);
         } else {
-          if ((m == 4)) {
+          if (m == 4) {
             outFlux[int(int(gl_GlobalInvocationID.x))] = bcVal[int(int(gl_GlobalInvocationID.x))];
             return;
           }

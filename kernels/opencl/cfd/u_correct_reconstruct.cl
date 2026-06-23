@@ -18,7 +18,7 @@ __kernel void navatala_cfd_u_correct_reconstruct(__global const float* pCell, __
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     int beg = offsets[((int)((int)(get_global_id(0))))];
@@ -40,35 +40,35 @@ __kernel void navatala_cfd_u_correct_reconstruct(__global const float* pCell, __
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < counts[1])) {
+      if (f < counts[1]) {
         int o = owner[f];
         float po = pCell[o];
         float other = po;
-        if ((f < counts[2])) {
+        if (f < counts[2]) {
           int n = neighbour[f];
           other = pCell[n];
         } else {
-          if ((bcMask[f] != 0)) {
+          if (bcMask[f] != 0) {
             other = bcVal[f];
           }
         }
         float snGrad = (deltaCoeffs[f] * (other - po));
         float phiTerm = as_float(0x00000000u);
-        if ((bcSnGradMask[f] == 2)) {
+        if (bcSnGradMask[f] == 2) {
           phiTerm = bcSnGrad[f];
         } else {
-          if ((bcSnGradMask[f] == 1)) {
+          if (bcSnGradMask[f] == 1) {
             snGrad = bcSnGrad[f];
           }
           float gradFace = (magSf[f] * snGrad);
           float denom = rAUf[f];
           float pFlux = ((paramsF[0] * (denom * gradFace)) + faceFluxCorrection[f]);
-          if ((denom != as_float(0x00000000u))) {
+          if (denom != as_float(0x00000000u)) {
             phiTerm = ((phig[f] - pFlux) / denom);
           }
         }
         float ms = magSf[f];
-        if ((ms > as_float(0x00000000u))) {
+        if (ms > as_float(0x00000000u)) {
           float nx = (sfX[f] / ms);
           float ny = (sfY[f] / ms);
           float nz = (sfZ[f] / ms);
@@ -118,7 +118,7 @@ __kernel void navatala_cfd_u_correct_reconstruct(__global const float* pCell, __
     float rx = as_float(0x00000000u);
     float ry = as_float(0x00000000u);
     float rz = as_float(0x00000000u);
-    if ((fabs(det) >= rootVSmall)) {
+    if (fabs(det) >= rootVSmall) {
       float invDet = (as_float(0x3f800000u) / det);
       float i00 = (((w11 * w22) - (w21 * w12)) * invDet);
       float i01 = (((w02 * w21) - (w01 * w22)) * invDet);

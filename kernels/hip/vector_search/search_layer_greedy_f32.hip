@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_vector_search_search_layer_greedy_f32(const 
   unsigned int query_id = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int nq = n_queries[0];
   unsigned int d = dim[0];
-  if ((query_id < nq)) {
+  if (query_id < nq) {
     unsigned int entry = entry_points[query_id];
     float best_dist = __uint_as_float(0x00000000u);
     for (int k = 0; k < (int)(d); ++k) {

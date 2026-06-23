@@ -17,7 +17,7 @@ __kernel void navatala_sparse_global_to_local_index_map(__global const uint* glo
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nIndices[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     uint gIdx = globalIndices[gid];
     uint offset = localOffset[0];
     uint nLoc = nLocal[0];

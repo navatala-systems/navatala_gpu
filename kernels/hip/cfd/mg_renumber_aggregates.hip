@@ -19,10 +19,10 @@ extern "C" __global__ void navatala_cfd_mg_renumber_aggregates(int* aggMap, int*
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0])))) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0]))) {
     return;
   } else {
-    if ((aggMap[(int)(blockIdx.x * blockDim.x + threadIdx.x)] == (int)(blockIdx.x * blockDim.x + threadIdx.x))) {
+    if (aggMap[(int)(blockIdx.x * blockDim.x + threadIdx.x)] == (int)(blockIdx.x * blockDim.x + threadIdx.x)) {
       int oldCount = atomicAdd(&(counter[0]), 1);
       aggMap[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = (-(oldCount + 1));
     }

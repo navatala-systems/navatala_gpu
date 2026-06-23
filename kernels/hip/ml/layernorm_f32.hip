@@ -24,7 +24,7 @@ extern "C" __global__ void navatala_ml_layernorm_f32(const float* x, const float
   float epsVal = eps[0];
   float gsM = __uint_as_float(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((unsigned int)(itM)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itM)) * 256u)) < countVal) {
       gsM = (gsM + x[(lid + (((unsigned int)(itM)) * 256u))]);
     }
   }
@@ -33,7 +33,7 @@ extern "C" __global__ void navatala_ml_layernorm_f32(const float* x, const float
   unsigned int meanStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -48,7 +48,7 @@ extern "C" __global__ void navatala_ml_layernorm_f32(const float* x, const float
   __syncthreads();
   float gsV = __uint_as_float(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((unsigned int)(itV)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itV)) * 256u)) < countVal) {
       gsV = (gsV + ((x[(lid + (((unsigned int)(itV)) * 256u))] - mean) * (x[(lid + (((unsigned int)(itV)) * 256u))] - mean)));
     }
   }
@@ -57,7 +57,7 @@ extern "C" __global__ void navatala_ml_layernorm_f32(const float* x, const float
   unsigned int varStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -72,7 +72,7 @@ extern "C" __global__ void navatala_ml_layernorm_f32(const float* x, const float
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
     unsigned int idxW = (lid + (((unsigned int)(itW)) * 256u));
-    if ((idxW < countVal)) {
+    if (idxW < countVal) {
       float xnW = ((x[idxW] - mean) / denom);
       float outF = ((gamma[idxW] * xnW) + beta[idxW]);
       _output[idxW] = outF;

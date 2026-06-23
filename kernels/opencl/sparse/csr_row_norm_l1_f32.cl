@@ -17,7 +17,7 @@ __kernel void navatala_sparse_csr_row_norm_l1_f32(__global const uint* rowPtr, _
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     float sum = as_float(0x00000000u);

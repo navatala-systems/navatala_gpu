@@ -74,13 +74,13 @@ layout(std430, binding = 17) writeonly buffer buf_outFace {
 // kernel: navatala_cfd_primitives_linear_upwind_scalar_face
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) >= int(params[0]))) {
+  if (int(gl_GlobalInvocationID.x) >= int(params[0])) {
     return;
   } else {
     float phif = flux[int(gl_GlobalInvocationID.x)];
     int own = owner[int(gl_GlobalInvocationID.x)];
-    if ((int(gl_GlobalInvocationID.x) < int(params[1]))) {
-      if ((phif >= uintBitsToFloat(0x00000000u))) {
+    if (int(gl_GlobalInvocationID.x) < int(params[1])) {
+      if (phif >= uintBitsToFloat(0x00000000u)) {
         float dx = (cfx[int(gl_GlobalInvocationID.x)] - cx[own]);
         float dy = (cfy[int(gl_GlobalInvocationID.x)] - cy[own]);
         float dz = (cfz[int(gl_GlobalInvocationID.x)] - cz[own]);
@@ -95,11 +95,11 @@ void main() {
         outFace[int(gl_GlobalInvocationID.x)] = (xCell[neiCell] + (limiter[neiCell] * corr));
       }
     } else {
-      if ((phif >= uintBitsToFloat(0x00000000u))) {
+      if (phif >= uintBitsToFloat(0x00000000u)) {
         outFace[int(gl_GlobalInvocationID.x)] = xCell[own];
       } else {
         uint mask = bcMask[int(gl_GlobalInvocationID.x)];
-        if ((int(mask) == 0)) {
+        if (int(mask) == 0) {
           outFace[int(gl_GlobalInvocationID.x)] = xCell[own];
         } else {
           outFace[int(gl_GlobalInvocationID.x)] = bcValue[int(gl_GlobalInvocationID.x)];

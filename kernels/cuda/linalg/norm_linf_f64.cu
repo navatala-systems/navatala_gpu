@@ -31,7 +31,7 @@ extern "C" __global__ void navatala_linalg_norm_linf_f64(const double* _input, c
   unsigned int linfF64RedStride = 128u;
   for (int linfF64RedStep = 0; linfF64RedStep < (int)(8); ++linfF64RedStep) {
     unsigned int linfF64Stride = linfF64RedStride;
-    if ((lid < linfF64Stride)) {
+    if (lid < linfF64Stride) {
       double other = sdata[(lid + linfF64Stride)];
       double mine = sdata[lid];
       bool mineGtOther = (mine > other);
@@ -43,7 +43,7 @@ extern "C" __global__ void navatala_linalg_norm_linf_f64(const double* _input, c
     linfF64RedStride = linfF64NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0] = sdata[0];
   }
 }

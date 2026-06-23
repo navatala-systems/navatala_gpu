@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_chebyshev_sweep_f32(const float* r, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     float cA = coeffA[0];
     float cB = coeffB[0];
     float ri = r[i];

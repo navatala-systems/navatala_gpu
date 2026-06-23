@@ -48,7 +48,7 @@ void main() {
   uint maxF16ReductionStride = 128u;
   for (int maxF16ReductionStep = 0; maxF16ReductionStep < int(8); ++maxF16ReductionStep) {
     uint maxF16Stride = maxF16ReductionStride;
-    if ((lid < maxF16Stride)) {
+    if (lid < maxF16Stride) {
       float other = sdata[(lid + maxF16Stride)];
       float mine = sdata[lid];
       bool isGreater = (mine > other);
@@ -60,7 +60,7 @@ void main() {
     maxF16ReductionStride = maxF16NextStride;
     barrier();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float maxResult = sdata[0];
     result[0] = maxResult;
   }

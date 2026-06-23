@@ -117,7 +117,7 @@ void main() {
   barrier();
   for (int stride = 0; stride < int(128u); ++stride) {
     uint strideU32 = uint(stride);
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       float otherMI = miSum[(lid + strideU32)];
       float mineMI = miSum[lid];
       miSum[lid] = (mineMI + otherMI);
@@ -130,7 +130,7 @@ void main() {
     }
     barrier();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float miFinal = miSum[0u];
     float hyFinal = hySum[0u];
     float hcFinal = hcSum[0u];

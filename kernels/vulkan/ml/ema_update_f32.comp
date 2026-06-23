@@ -32,7 +32,7 @@ layout(std430, binding = 3) buffer buf_count {
 // kernel: navatala_ml_ema_update_f32
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) == 0)) {
+  if (int(gl_GlobalInvocationID.x) == 0) {
     float xVal = x[0];
     float a = alpha[0];
     float oldEma = ema[0];

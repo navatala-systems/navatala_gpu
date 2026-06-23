@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_sparse_sparse_add_f64(const double* valuesA, const double* valuesB, const int* nnz, double* valuesC) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < nnz[0u])) {
+  if (i < nnz[0u]) {
     double a = valuesA[i];
     double b = valuesB[i];
     valuesC[i] = (a + b);

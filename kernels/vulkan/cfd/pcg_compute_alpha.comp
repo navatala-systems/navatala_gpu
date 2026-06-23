@@ -29,12 +29,12 @@ layout(std430, binding = 2) writeonly buffer buf_alpha {
 // kernel: navatala_cfd_pcg_compute_alpha
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) >= 1)) {
+  if (int(gl_GlobalInvocationID.x) >= 1) {
     return;
   } else {
     double rz_val = rz[0];
     double pAp_val = pAp[0];
-    if ((pAp_val != packDouble2x32(uvec2(0x00000000u, 0x00000000u)))) {
+    if (pAp_val != packDouble2x32(uvec2(0x00000000u, 0x00000000u))) {
       alpha[0] = float((rz_val / pAp_val));
     } else {
       alpha[0] = uintBitsToFloat(0x00000000u);

@@ -19,7 +19,7 @@ using namespace metal;
 kernel void navatala_cfd_restrict_by_agglomeration_gather_f32(device const float* fineField [[buffer(0)]], device const uint* coarseToFineOffsets [[buffer(1)]], device const uint* coarseToFineList [[buffer(2)]], device const uint* nCoarseCells [[buffer(3)]], device float* coarseField [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int c = int(__gid.x);
   int N = ((int)(nCoarseCells[0]));
-  if ((c < N)) {
+  if (c < N) {
     int begin = ((int)(coarseToFineOffsets[c]));
     int end = ((int)(coarseToFineOffsets[(c + 1)]));
     float sum = as_type<float>(0x00000000u);

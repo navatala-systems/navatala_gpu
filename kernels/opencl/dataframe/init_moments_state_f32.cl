@@ -15,7 +15,7 @@
 
 __kernel void navatala_dataframe_init_moments_state_f32(__global uint* n, __global float* M1, __global float* M2, __global float* M3, __global float* M4) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     n[0] = (uint)(0u);
     M1[0] = as_float(0x00000000u);
     M2[0] = as_float(0x00000000u);

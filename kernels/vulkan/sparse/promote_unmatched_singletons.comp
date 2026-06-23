@@ -28,9 +28,9 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int gid = int(gl_GlobalInvocationID.x);
   int N = int(nRows[0]);
-  if ((gid < N)) {
+  if (gid < N) {
     int aggId = aggregateId[gid];
-    if ((aggId < 0)) {
+    if (aggId < 0) {
       aggregateId[gid] = gid;
     }
   }

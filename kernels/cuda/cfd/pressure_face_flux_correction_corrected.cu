@@ -16,10 +16,10 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_pressure_face_flux_correction_corrected(const int* owner, const int* neighbour, const float* weights, const float* gradX, const float* gradY, const float* gradZ, const float* magSf, const float* dCorrX, const float* dCorrY, const float* dCorrZ, const float* rAUf, const unsigned int* params, float* outFaceFlux) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(params[0])))) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(params[0]))) {
     return;
   } else {
-    if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(params[1])))) {
+    if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(params[1]))) {
       outFaceFlux[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = __uint_as_float(0x00000000u);
     } else {
       int own = owner[(int)(blockIdx.x * blockDim.x + threadIdx.x)];

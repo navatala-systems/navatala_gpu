@@ -17,14 +17,14 @@
 using namespace metal;
 
 kernel void navatala_cfd_primitives_rho_from_alpha(device const float* alpha [[buffer(0)]], device const float* paramsF [[buffer(1)]], device const int* counts [[buffer(2)]], device float* outRho [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     float a = alpha[((int)(int(__gid.x)))];
-    if ((a < as_type<float>(0x00000000u))) {
+    if (a < as_type<float>(0x00000000u)) {
       a = as_type<float>(0x00000000u);
     }
-    if ((a > as_type<float>(0x3f800000u))) {
+    if (a > as_type<float>(0x3f800000u)) {
       a = as_type<float>(0x3f800000u);
     }
     float invA = (as_type<float>(0x3f800000u) - a);

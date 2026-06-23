@@ -34,7 +34,7 @@ kernel void navatala_vector_search_reorder_vertices_by_degree(device const uint*
   uint vid = ((uint)(int(__gid.x)));
   uint nv = n_vertices[0];
   uint nb = n_bins[0];
-  if ((vid < nv)) {
+  if (vid < nv) {
     uint deg = degrees[vid];
     uint bin = (((deg >= nb)) ? ((nb - 1u)) : (deg));
     uint new_id = atomic_fetch_add_explicit(((device atomic_uint*)(&(prefix_sums[bin]))), 1u, memory_order_relaxed);

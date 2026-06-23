@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_kaczmarz_sweep_f64(const unsigned int
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int row = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     double dot = __longlong_as_double(0x0000000000000000ull);

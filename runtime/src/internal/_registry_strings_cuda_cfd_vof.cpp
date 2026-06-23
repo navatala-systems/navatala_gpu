@@ -13,17 +13,17 @@ const char* k_cuda_navatala_cfd_vof_alpha_phi_all = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_vof_alpha_phi_all(const float* alphaPhiInt, const float* phiAll, const float* alphaF, const int* params, float* alphaPhiAllOut) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0]) {
     return;
   } else {
-    if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < params[1])) {
+    if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < params[1]) {
       alphaPhiAllOut[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = alphaPhiInt[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     } else {
       float a = alphaF[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
-      if ((a < __uint_as_float(0x00000000u))) {
+      if (a < __uint_as_float(0x00000000u)) {
         a = __uint_as_float(0x00000000u);
       }
-      if ((a > __uint_as_float(0x3f800000u))) {
+      if (a > __uint_as_float(0x3f800000u)) {
         a = __uint_as_float(0x3f800000u);
       }
       alphaPhiAllOut[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (phiAll[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] * a);
@@ -36,29 +36,29 @@ const char* k_cuda_navatala_cfd_vof_alpha_phi_int = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_vof_alpha_phi_int(const float* alpha, const float* phi, const int* owner, const int* nei, const float* phir, const float* alphaF, const int* faceParams, float* outAlphaPhi) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= faceParams[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= faceParams[0]) {
     return;
   } else {
     float ph = phi[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     int o = owner[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     int n = nei[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float a = __uint_as_float(0x00000000u);
-    if ((ph >= __uint_as_float(0x00000000u))) {
+    if (ph >= __uint_as_float(0x00000000u)) {
       a = alpha[o];
     } else {
       a = alpha[n];
     }
-    if ((a < __uint_as_float(0x00000000u))) {
+    if (a < __uint_as_float(0x00000000u)) {
       a = __uint_as_float(0x00000000u);
     }
-    if ((a > __uint_as_float(0x3f800000u))) {
+    if (a > __uint_as_float(0x3f800000u)) {
       a = __uint_as_float(0x3f800000u);
     }
     float ac = alphaF[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
-    if ((ac < __uint_as_float(0x00000000u))) {
+    if (ac < __uint_as_float(0x00000000u)) {
       ac = __uint_as_float(0x00000000u);
     }
-    if ((ac > __uint_as_float(0x3f800000u))) {
+    if (ac > __uint_as_float(0x3f800000u)) {
       ac = __uint_as_float(0x3f800000u);
     }
     float oneMinus = (__uint_as_float(0x3f800000u) - ac);
@@ -75,7 +75,7 @@ extern "C" __global__ void navatala_cfd_vof_average_face_scalar_to_cell(const fl
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0])))) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0]))) {
     return;
   } else {
     float s = __uint_as_float(0x00000000u);
@@ -89,7 +89,7 @@ extern "C" __global__ void navatala_cfd_vof_average_face_scalar_to_cell(const fl
       s = (s + (magSf[((int)(f))] * alphaF[((int)(f))]));
     }
     float d = sumMag[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
-    if ((d < __uint_as_float(0x1e3ce508u))) {
+    if (d < __uint_as_float(0x1e3ce508u)) {
       outAlpha[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = (s / __uint_as_float(0x1e3ce508u));
     } else {
       outAlpha[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = (s / d);
@@ -102,17 +102,17 @@ const char* k_cuda_navatala_cfd_vof_interp_scalar_face_all = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_vof_interp_scalar_face_all(const float* alpha, const int* owner, const int* nei, const float* w, const float* bcAlphaF, const unsigned int* params, float* alphaF) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(params[0])))) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(params[0]))) {
     return;
   } else {
-    if (((int)(blockIdx.x * blockDim.x + threadIdx.x) < ((int)(params[1])))) {
+    if ((int)(blockIdx.x * blockDim.x + threadIdx.x) < ((int)(params[1]))) {
       int o = owner[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
       int n = nei[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
       float wf = w[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
       float wc = (wf * ((float)((wf > __uint_as_float(0x00000000u)))));
       float a = ((wc * alpha[o]) + ((__uint_as_float(0x3f800000u) - wc) * alpha[n]));
       float ac = (a * ((float)((a > __uint_as_float(0x00000000u)))));
-      if ((ac > __uint_as_float(0x3f800000u))) {
+      if (ac > __uint_as_float(0x3f800000u)) {
         alphaF[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = __uint_as_float(0x3f800000u);
       } else {
         alphaF[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = ac;
@@ -120,7 +120,7 @@ extern "C" __global__ void navatala_cfd_vof_interp_scalar_face_all(const float* 
     } else {
       float a = bcAlphaF[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
       float ac = (a * ((float)((a > __uint_as_float(0x00000000u)))));
-      if ((ac > __uint_as_float(0x3f800000u))) {
+      if (ac > __uint_as_float(0x3f800000u)) {
         alphaF[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = __uint_as_float(0x3f800000u);
       } else {
         alphaF[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = ac;
@@ -137,14 +137,14 @@ extern "C" __global__ void navatala_cfd_vof_alpha_update(const float* alpha, con
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0]) {
     return;
   } else {
     float a = (alpha[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] - (divA[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] / rSubDeltaT[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]));
-    if ((a < __uint_as_float(0x00000000u))) {
+    if (a < __uint_as_float(0x00000000u)) {
       a = __uint_as_float(0x00000000u);
     }
-    if ((a > __uint_as_float(0x3f800000u))) {
+    if (a > __uint_as_float(0x3f800000u)) {
       a = __uint_as_float(0x3f800000u);
     }
     alphaNew[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = a;
@@ -159,7 +159,7 @@ extern "C" __global__ void navatala_cfd_vof_mules_apply(const float* phiBD, cons
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1]) {
     return;
   } else {
     alphaPhi[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (phiBD[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] + (lambda[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] * phiCorr[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]));
@@ -174,21 +174,21 @@ extern "C" __global__ void navatala_cfd_vof_mules_cell_lambda(const float* psiMa
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0]) {
     return;
   } else {
     float ld = ((sumlPhip[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] + psiMaxCap[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]) / (mSumPhim[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] + paramsF[1]));
     float lp = ((mSumlPhim[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] + psiMinCap[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]) / (sumPhip[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] + paramsF[1]));
-    if ((ld < __uint_as_float(0x00000000u))) {
+    if (ld < __uint_as_float(0x00000000u)) {
       ld = __uint_as_float(0x00000000u);
     }
-    if ((ld > __uint_as_float(0x3f800000u))) {
+    if (ld > __uint_as_float(0x3f800000u)) {
       ld = __uint_as_float(0x3f800000u);
     }
-    if ((lp < __uint_as_float(0x00000000u))) {
+    if (lp < __uint_as_float(0x00000000u)) {
       lp = __uint_as_float(0x00000000u);
     }
-    if ((lp > __uint_as_float(0x3f800000u))) {
+    if (lp > __uint_as_float(0x3f800000u)) {
       lp = __uint_as_float(0x3f800000u);
     }
     lambdam[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = ld;
@@ -204,7 +204,7 @@ extern "C" __global__ void navatala_cfd_vof_mules_cell_sums(const float* phiCorr
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0]) {
     return;
   } else {
     int beg = offsets[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
@@ -218,22 +218,22 @@ extern "C" __global__ void navatala_cfd_vof_mules_cell_sums(const float* phiCorr
       int f = faceIdx[k];
       float lpc = (lambda[f] * phiCorr[f]);
       float s = sign[k];
-      if ((f < counts[2])) {
-        if ((s > __uint_as_float(0x00000000u))) {
-          if ((lpc > __uint_as_float(0x00000000u))) {
+      if (f < counts[2]) {
+        if (s > __uint_as_float(0x00000000u)) {
+          if (lpc > __uint_as_float(0x00000000u)) {
             sp = (sp + lpc);
           } else {
             sm = (sm + (-lpc));
           }
         } else {
-          if ((lpc > __uint_as_float(0x00000000u))) {
+          if (lpc > __uint_as_float(0x00000000u)) {
             sm = (sm + lpc);
           } else {
             sp = (sp + (-lpc));
           }
         }
       } else {
-        if ((lpc > __uint_as_float(0x00000000u))) {
+        if (lpc > __uint_as_float(0x00000000u)) {
           sp = (sp + lpc);
         } else {
           sm = (sm + (-lpc));
@@ -253,7 +253,7 @@ extern "C" __global__ void navatala_cfd_vof_mules_face_update(const float* phiCo
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[2])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[2]) {
     return;
   } else {
     float pc = phiCorr[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
@@ -262,21 +262,21 @@ extern "C" __global__ void navatala_cfd_vof_mules_face_update(const float* phiCo
     float a0 = lambdam[o];
     float b0 = lambdap[n];
     float lim = a0;
-    if ((lim > b0)) {
+    if (lim > b0) {
       lim = b0;
     }
-    if ((pc > __uint_as_float(0x00000000u))) {
+    if (pc > __uint_as_float(0x00000000u)) {
       float a1 = lambdap[o];
       float b1 = lambdam[n];
       float lim1 = a1;
-      if ((lim1 > b1)) {
+      if (lim1 > b1) {
         lim1 = b1;
       }
       lim = lim1;
     }
     float cur = lambda[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float _out = cur;
-    if ((_out > lim)) {
+    if (_out > lim) {
       _out = lim;
     }
     lambda[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = _out;
@@ -291,7 +291,7 @@ extern "C" __global__ void navatala_cfd_vof_mules_fill_lambda(const int* counts,
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1]) {
     return;
   } else {
     lambda[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = __uint_as_float(0x3f800000u);
@@ -306,14 +306,14 @@ extern "C" __global__ void navatala_cfd_vof_mules_init(const float* alpha, const
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0]) {
     return;
   } else {
     float psi = alpha[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
-    if ((psi < __uint_as_float(0x00000000u))) {
+    if (psi < __uint_as_float(0x00000000u)) {
       psi = __uint_as_float(0x00000000u);
     }
-    if ((psi > __uint_as_float(0x3f800000u))) {
+    if (psi > __uint_as_float(0x3f800000u)) {
       psi = __uint_as_float(0x3f800000u);
     }
     float maxN = __uint_as_float(0x00000000u);
@@ -330,46 +330,46 @@ extern "C" __global__ void navatala_cfd_vof_mules_init(const float* alpha, const
       int f = faceIdx[k];
       float s = sign[k];
       float v = __uint_as_float(0x00000000u);
-      if ((f < counts[2])) {
+      if (f < counts[2]) {
         int nbr = owner[f];
-        if ((s > __uint_as_float(0x00000000u))) {
+        if (s > __uint_as_float(0x00000000u)) {
           nbr = nei[f];
         }
         v = alpha[nbr];
       } else {
         v = alphaF[f];
       }
-      if ((v < __uint_as_float(0x00000000u))) {
+      if (v < __uint_as_float(0x00000000u)) {
         v = __uint_as_float(0x00000000u);
       }
-      if ((v > __uint_as_float(0x3f800000u))) {
+      if (v > __uint_as_float(0x3f800000u)) {
         v = __uint_as_float(0x3f800000u);
       }
-      if ((v > maxN)) {
+      if (v > maxN) {
         maxN = v;
       }
-      if ((v < minN)) {
+      if (v < minN) {
         minN = v;
       }
       float termBD = (s * phiBD[f]);
       sumPhiBD = (sumPhiBD + termBD);
       float pc = phiCorr[f];
-      if ((f < counts[2])) {
-        if ((s > __uint_as_float(0x00000000u))) {
-          if ((pc > __uint_as_float(0x00000000u))) {
+      if (f < counts[2]) {
+        if (s > __uint_as_float(0x00000000u)) {
+          if (pc > __uint_as_float(0x00000000u)) {
             sp = (sp + pc);
           } else {
             sm = (sm + (-pc));
           }
         } else {
-          if ((pc > __uint_as_float(0x00000000u))) {
+          if (pc > __uint_as_float(0x00000000u)) {
             sm = (sm + pc);
           } else {
             sp = (sp + (-pc));
           }
         }
       } else {
-        if ((pc > __uint_as_float(0x00000000u))) {
+        if (pc > __uint_as_float(0x00000000u)) {
           sp = (sp + pc);
         } else {
           sm = (sm + (-pc));
@@ -377,21 +377,21 @@ extern "C" __global__ void navatala_cfd_vof_mules_init(const float* alpha, const
       }
     }
     maxN = (maxN + paramsF[2]);
-    if ((maxN > __uint_as_float(0x3f800000u))) {
+    if (maxN > __uint_as_float(0x3f800000u)) {
       maxN = __uint_as_float(0x3f800000u);
     }
     minN = (minN - paramsF[2]);
-    if ((minN < __uint_as_float(0x00000000u))) {
+    if (minN < __uint_as_float(0x00000000u)) {
       minN = __uint_as_float(0x00000000u);
     }
-    if ((paramsF[3] > __uint_as_float(0x00000000u))) {
+    if (paramsF[3] > __uint_as_float(0x00000000u)) {
       float omSmooth = (__uint_as_float(0x3f800000u) - paramsF[3]);
       maxN = ((paramsF[3] * psi) + (omSmooth * maxN));
-      if ((maxN > __uint_as_float(0x3f800000u))) {
+      if (maxN > __uint_as_float(0x3f800000u)) {
         maxN = __uint_as_float(0x3f800000u);
       }
       minN = ((paramsF[3] * psi) + (omSmooth * minN));
-      if ((minN < __uint_as_float(0x00000000u))) {
+      if (minN < __uint_as_float(0x00000000u)) {
         minN = __uint_as_float(0x00000000u);
       }
     }
@@ -408,23 +408,23 @@ const char* k_cuda_navatala_cfd_vof_phi_b_d_corr = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_vof_phi_b_d_corr(const float* alpha, const float* phiAll, const int* owner, const int* nei, const float* alphaF, const float* alphaPhiAll, const int* params, float* phiBD, float* phiCorr) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0]) {
     return;
   } else {
-    if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < params[1])) {
+    if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < params[1]) {
       float ph = phiAll[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       int o = owner[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       int n = nei[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       float a = __uint_as_float(0x00000000u);
-      if ((ph >= __uint_as_float(0x00000000u))) {
+      if (ph >= __uint_as_float(0x00000000u)) {
         a = alpha[o];
       } else {
         a = alpha[n];
       }
-      if ((a < __uint_as_float(0x00000000u))) {
+      if (a < __uint_as_float(0x00000000u)) {
         a = __uint_as_float(0x00000000u);
       }
-      if ((a > __uint_as_float(0x3f800000u))) {
+      if (a > __uint_as_float(0x3f800000u)) {
         a = __uint_as_float(0x3f800000u);
       }
       float pbd = (ph * a);
@@ -442,10 +442,10 @@ const char* k_cuda_navatala_cfd_vof_phir = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_vof_phir(const float* gx, const float* gy, const float* gz, const float* sfX, const float* sfY, const float* sfZ, const float* phi, const float* magSf, const int* owner, const int* nei, const int* faceParams, const float* paramsF, float* outPhir) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= faceParams[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= faceParams[0]) {
     return;
   } else {
-    if ((paramsF[0] == __uint_as_float(0x00000000u))) {
+    if (paramsF[0] == __uint_as_float(0x00000000u)) {
       outPhir[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = __uint_as_float(0x00000000u);
       return;
     }
@@ -476,7 +476,7 @@ extern "C" __global__ void navatala_cfd_vof_rho_phi_accumulate(const float* alph
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1]) {
     return;
   } else {
     float acc = rhoPhi[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];

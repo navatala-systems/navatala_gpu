@@ -18,16 +18,16 @@ extern "C" __global__ void navatala_sparse_aggregate_size2_confirm(const int* pi
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int myPick = pickArray[gid];
-    if ((myPick < 0)) {
+    if (myPick < 0) {
       aggregateId[gid] = -1;
     } else {
       int peerPick = pickArray[myPick];
-      if ((peerPick == gid)) {
+      if (peerPick == gid) {
         int leader = (((gid < myPick)) ? (gid) : (myPick));
         aggregateId[gid] = leader;
-        if ((gid < myPick)) {
+        if (gid < myPick) {
           unsigned int _naBump = atomicAdd(&(nAggregates[0]), 1u);
         }
       } else {

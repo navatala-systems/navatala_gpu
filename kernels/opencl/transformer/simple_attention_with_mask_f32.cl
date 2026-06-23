@@ -40,7 +40,7 @@ __kernel void navatala_transformer_simple_attention_with_mask_f32(__global const
   uint seqStride = (sl * headStride);
   uint qBase = ((batchIdx * seqStride) + ((queryPos * headStride) + (headIdx * headDimStride)));
   uint kBase = ((batchIdx * seqStride) + ((lid * headStride) + (headIdx * headDimStride)));
-  if ((valid && (!causalMasked))) {
+  if (valid && (!causalMasked)) {
     float dotProd = as_float(0x00000000u);
     for (int d = 0; d < (int)(hd); ++d) {
       uint qIdx = (qBase + ((uint)(d)));
@@ -139,7 +139,7 @@ __kernel void navatala_transformer_simple_attention_with_mask_f32(__global const
   }
   barrier(CLK_LOCAL_MEM_FENCE);
   float maxScore = attnScores[(uint)(0u)];
-  if ((valid && (!causalMasked))) {
+  if (valid && (!causalMasked)) {
     float myScore = attnScores[lid];
     float shiftedScore = (myScore - maxScore);
     float expScore = exp(shiftedScore);
@@ -221,7 +221,7 @@ __kernel void navatala_transformer_simple_attention_with_mask_f32(__global const
   }
   barrier(CLK_LOCAL_MEM_FENCE);
   float sumExp = sumBuf[(uint)(0u)];
-  if ((valid && (!causalMasked))) {
+  if (valid && (!causalMasked)) {
     float myExpScore = attnScores[lid];
     float shiftedExp = (myExpScore - maxScore);
     float expVal = exp(shiftedExp);
@@ -306,7 +306,7 @@ __kernel void navatala_transformer_simple_attention_with_mask_f32(__global const
     sumBuf[lid] = sumVal_sum_p2_sumBuf_1;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((batchValid && (lid == (uint)(0u)))) {
+  if (batchValid && (lid == (uint)(0u))) {
     float outVal = sumBuf[(uint)(0u)];
     uint outIdx = (qBase + (uint)(0u));
     _output[outIdx] = outVal;

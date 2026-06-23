@@ -37,7 +37,7 @@ __kernel void navatala_dataframe_build_hash_table_i32(__global const int* keys, 
       uint probeIdx = startIdx;
       bool inserted = false;
       for (int __iter = 0; __iter < 65536; ++__iter) {
-        if (!((!inserted))) break;
+        if (!(!inserted)) break;
         uint curIdx = probeIdx;
         int oldKey = gpu_atomic_cas_int((volatile __global atomic_int*)(&(tableKeys[curIdx])), (int)(2147483647), (int)(key), memory_order_relaxed, memory_order_relaxed, memory_scope_device);
         bool gotSlot = (oldKey == 2147483647);

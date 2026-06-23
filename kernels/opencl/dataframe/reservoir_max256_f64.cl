@@ -16,7 +16,7 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_reservoir_max256_f64(__global const double* reservoir, __global const uint* count, __global double* maxVal) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double max0 = reservoir[0];
     maxVal[0] = max0;
   }

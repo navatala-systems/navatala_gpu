@@ -33,7 +33,7 @@ static inline uint gpu_atomic_cas_uint(device atomic_uint* ptr, uint expected, u
 kernel void navatala_sparse_aggregate_size4_f32(device const uint* rowPtr [[buffer(0)]], device const uint* colIdx [[buffer(1)]], device const float* values [[buffer(2)]], device const uint* strongMask [[buffer(3)]], device const uint* nRows [[buffer(4)]], device int* aggregateId [[buffer(5)]], device atomic_uint* nAggregates [[buffer(6)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int gid = int(__gid.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     float bestVal_0 = as_type<float>(0x00000000u);
@@ -46,7 +46,7 @@ kernel void navatala_sparse_aggregate_size4_f32(device const uint* rowPtr [[buff
       int kk = (rs + j);
       int col = ((int)(colIdx[kk]));
       uint isStrong = strongMask[kk];
-      if ((isStrong == 1u)) {
+      if (isStrong == 1u) {
         float a = values[kk];
         float aAbs = abs(a);
         float oldVal_0 = bestVal_0;
@@ -65,7 +65,7 @@ kernel void navatala_sparse_aggregate_size4_f32(device const uint* rowPtr [[buff
     }
     int aggId = (((((false || (bestCol_0 >= 0)) || (bestCol_1 >= 0)) || (bestCol_2 >= 0))) ? (((((bestCol_2 >= 0) && (bestCol_2 < ((((bestCol_1 >= 0) && (bestCol_1 < ((((bestCol_0 >= 0) && (bestCol_0 < gid))) ? (bestCol_0) : (gid))))) ? (bestCol_1) : (((((bestCol_0 >= 0) && (bestCol_0 < gid))) ? (bestCol_0) : (gid))))))) ? (bestCol_2) : (((((bestCol_1 >= 0) && (bestCol_1 < ((((bestCol_0 >= 0) && (bestCol_0 < gid))) ? (bestCol_0) : (gid))))) ? (bestCol_1) : (((((bestCol_0 >= 0) && (bestCol_0 < gid))) ? (bestCol_0) : (gid))))))) : (-1));
     aggregateId[gid] = aggId;
-    if ((aggId == gid)) {
+    if (aggId == gid) {
       uint _naBump = atomic_fetch_add_explicit(((device atomic_uint*)(&(nAggregates[0]))), 1u, memory_order_relaxed);
     }
   }

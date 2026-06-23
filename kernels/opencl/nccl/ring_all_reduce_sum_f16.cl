@@ -18,7 +18,7 @@ __kernel void navatala_nccl_ring_all_reduce_sum_f16(__global const half* sendbuf
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half myVal = sendbuf[gid];
     half peerVal = peer_buf[gid];
     half reduced = (myVal + peerVal);

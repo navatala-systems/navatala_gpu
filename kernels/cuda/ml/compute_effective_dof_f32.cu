@@ -34,7 +34,7 @@ extern "C" __global__ void navatala_ml_compute_effective_dof_f32(const float* ei
   unsigned int dof32_reductionStride = 128u;
   for (int dof32_reductionStep = 0; dof32_reductionStep < (int)(8); ++dof32_reductionStep) {
     unsigned int dof32_stride = dof32_reductionStride;
-    if ((lid < dof32_stride)) {
+    if (lid < dof32_stride) {
       float dof32_other = sdata[(lid + dof32_stride)];
       float dof32_mine = sdata[lid];
       float dof32_sum = (dof32_mine + dof32_other);
@@ -45,7 +45,7 @@ extern "C" __global__ void navatala_ml_compute_effective_dof_f32(const float* ei
     dof32_reductionStride = dof32_nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float dofVal = sdata[0];
     dof[0] = dofVal;
   }

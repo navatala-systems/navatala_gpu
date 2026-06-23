@@ -37,7 +37,7 @@ extern "C" __global__ void navatala_dataframe_covariance_f64(const double* input
   unsigned int covF64_reductionStride = 128u;
   for (int covF64_reductionStep = 0; covF64_reductionStep < (int)(8); ++covF64_reductionStep) {
     unsigned int covF64_stride = covF64_reductionStride;
-    if ((lid < covF64_stride)) {
+    if (lid < covF64_stride) {
       double covF64_other = sdata[(lid + covF64_stride)];
       double covF64_mine = sdata[lid];
       double covF64_sum = (covF64_mine + covF64_other);
@@ -48,7 +48,7 @@ extern "C" __global__ void navatala_dataframe_covariance_f64(const double* input
     covF64_reductionStride = covF64_nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double totalSum = sdata[0u];
     double countFloat = ((double)(countVal));
     double covVal = (totalSum / countFloat);

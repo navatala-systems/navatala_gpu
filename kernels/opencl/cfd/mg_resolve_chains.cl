@@ -18,16 +18,16 @@ __kernel void navatala_cfd_mg_resolve_chains(__global int* aggMap, __global cons
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
     int root = aggMap[(int)(get_global_id(0))];
-    if ((root >= 0)) {
-      if ((root < ((int)(counts[0])))) {
-        if ((root != (int)(get_global_id(0)))) {
+    if (root >= 0) {
+      if (root < ((int)(counts[0]))) {
+        if (root != (int)(get_global_id(0))) {
           int next = aggMap[root];
-          if ((next >= 0)) {
-            if ((next < ((int)(counts[0])))) {
+          if (next >= 0) {
+            if (next < ((int)(counts[0]))) {
               aggMap[(int)(get_global_id(0))] = next;
             }
           }

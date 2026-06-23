@@ -32,7 +32,7 @@ __kernel void navatala_linalg_argsort_cols_f64(__global const double* A, __globa
   uint rowIdx = ((uint)((int)(get_local_id(0))));
   uint mVal = m[(uint)(0u)];
   uint nVal = n[(uint)(0u)];
-  if ((colIdx < nVal)) {
+  if (colIdx < nVal) {
     bool inBounds = (rowIdx < mVal);
     uint linearIdx = ((rowIdx * nVal) + colIdx);
     if (inBounds) {
@@ -65,7 +65,7 @@ __kernel void navatala_linalg_argsort_cols_f64(__global const double* A, __globa
         double partnerValRead = loopPartnerVal;
         loopPartnerIdx = sidxs[partnerPosVal];
         uint partnerIdxRead = loopPartnerIdx;
-        if ((myValRead > partnerValRead)) {
+        if (myValRead > partnerValRead) {
           svals[rowIdx] = partnerValRead;
           sidxs[rowIdx] = partnerIdxRead;
           svals[partnerPosVal] = myValRead;

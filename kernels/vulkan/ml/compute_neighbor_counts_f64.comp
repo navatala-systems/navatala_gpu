@@ -61,7 +61,7 @@ void main() {
         distSqAccum = newDistSq;
       }
       double finalDistSq = distSqAccum;
-      if ((finalDistSq < epsSq)) {
+      if (finalDistSq < epsSq) {
         uint currentCount = countAccum;
         uint newCount = (currentCount + 1u);
         countAccum = newCount;

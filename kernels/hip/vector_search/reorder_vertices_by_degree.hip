@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_vector_search_reorder_vertices_by_degree(con
   unsigned int vid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int nv = n_vertices[0];
   unsigned int nb = n_bins[0];
-  if ((vid < nv)) {
+  if (vid < nv) {
     unsigned int deg = degrees[vid];
     unsigned int bin = (((deg >= nb)) ? ((nb - 1u)) : (deg));
     unsigned int new_id = atomicAdd(&(prefix_sums[bin]), 1u);

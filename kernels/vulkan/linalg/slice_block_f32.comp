@@ -51,7 +51,7 @@ void main() {
   uint outRows = (re - rs);
   uint outCols = (ce - cs);
   uint totalElems = (outRows * outCols);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     uint outRow = (idx / outCols);
     uint outCol = (idx % outCols);
     uint srcRow = (rs + outRow);

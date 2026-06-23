@@ -26,7 +26,7 @@ kernel void navatala_sparse_sparse_l2_distance_f32(device const float* a [[buffe
   uint gridSize = ((uint)(int(__grid_size.x)));
   for (int loopIdx = 0; loopIdx < (int)(nnzVal); ++loopIdx) {
     uint currentIdx = idxAccum;
-    if ((currentIdx < nnzVal)) {
+    if (currentIdx < nnzVal) {
       float aVal = a[currentIdx];
       float bVal = b[currentIdx];
       float diff = (aVal - bVal);
@@ -45,7 +45,7 @@ kernel void navatala_sparse_sparse_l2_distance_f32(device const float* a [[buffe
   uint strideAccum = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint currentStride = strideAccum;
-    if ((lidU32 < currentStride)) {
+    if (lidU32 < currentStride) {
       uint otherIdx = (lidU32 + currentStride);
       float myVal = sdata[lidU32];
       float otherVal = sdata[otherIdx];
@@ -56,7 +56,7 @@ kernel void navatala_sparse_sparse_l2_distance_f32(device const float* a [[buffe
     strideAccum = nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lidU32 == 0u)) {
+  if (lidU32 == 0u) {
     float sumSq = sdata[0u];
     float dist = sqrt(sumSq);
     result[0u] = dist;

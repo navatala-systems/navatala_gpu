@@ -20,7 +20,7 @@ extern "C" __global__ void navatala_sparse_multi_vec_scale_f64(const double* nor
   int N = ((int)(n[0]));
   int kVal = ((int)(k[0]));
   int total = (N * kVal);
-  if ((gid < total)) {
+  if (gid < total) {
     int vecIdx = (gid / N);
     double x = X[gid];
     double nrm = norms[vecIdx];

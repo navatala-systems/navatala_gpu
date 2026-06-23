@@ -21,7 +21,7 @@ __kernel void navatala_linalg_shift_rows_f32(__global const float* A, __global c
   uint mVal = m[(uint)(0u)];
   uint nVal = n[(uint)(0u)];
   uint totalElems = (mVal * nVal);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     uint row = (idx / nVal);
     uint col = (idx % nVal);
     bool inBounds = (row >= kVal);

@@ -17,7 +17,7 @@ __kernel void navatala_cfd_spectral_complex_mul(__global const float* x, __globa
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int count = n[0];
-  if ((gid < count)) {
+  if (gid < count) {
     float xr = x[((gid)*2 + 0)];
     float xi = x[((gid)*2 + 1)];
     float wr = w[((gid)*2 + 0)];

@@ -18,12 +18,12 @@ __kernel void navatala_cfd_primitives_evaluate_scalar_bc(__global const float* i
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
     uint bcType = bcTypeMask[(int)(get_global_id(0))];
     int cell = faceCells[(int)(get_global_id(0))];
-    if ((((int)(bcType)) == 1)) {
+    if (((int)(bcType)) == 1) {
       boundaryOut[(int)(get_global_id(0))] = fixedValues[(int)(get_global_id(0))];
     } else {
       boundaryOut[(int)(get_global_id(0))] = internalField[cell];

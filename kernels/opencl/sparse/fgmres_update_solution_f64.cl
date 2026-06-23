@@ -19,7 +19,7 @@ __kernel void navatala_sparse_fgmres_update_solution_f64(__global const double* 
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
   int M = ((int)(m[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double acc = as_double(0x0000000000000000ul);
     for (int j = 0; j < (int)(M); ++j) {
       double yj = y[j];

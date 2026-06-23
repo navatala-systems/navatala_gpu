@@ -32,15 +32,15 @@ extern "C" __global__ void navatala_sparse_idr_shadow_project_f32(const float* P
   float warpSum = gpu_warp_reduce_sum(val);
   __shared__ float sdata[32];
   int lane = (int)(threadIdx.x % warpSize);
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   __syncthreads();
-  if ((lid < 8)) {
+  if (lid < 8) {
     float sv = sdata[lid];
     float finalSum = gpu_warp_reduce_sum(sv);
-    if ((lid == 0)) {
+    if (lid == 0) {
       c[k] = finalSum;
     }
   }

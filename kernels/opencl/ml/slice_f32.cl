@@ -17,7 +17,7 @@ __kernel void navatala_ml_slice_f32(__global const float* _input, __global const
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     uint offsetVal = offset[0];
     uint srcIdx = (offsetVal + gid);
     float v = _input[srcIdx];

@@ -42,7 +42,7 @@ __kernel void navatala_ml_compute_neighbor_counts_f64(__global const double* poi
         distSqAccum = newDistSq;
       }
       double finalDistSq = distSqAccum;
-      if ((finalDistSq < epsSq)) {
+      if (finalDistSq < epsSq) {
         uint currentCount = countAccum;
         uint newCount = (currentCount + (uint)(1u));
         countAccum = newCount;

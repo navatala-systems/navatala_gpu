@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_dataframe_ewmc_update_f32(device const float* x [[buffer(0)]], device const float* y [[buffer(1)]], device const float* alpha [[buffer(2)]], device float* nEff [[buffer(3)]], device float* meanX [[buffer(4)]], device float* meanY [[buffer(5)]], device float* Cxy [[buffer(6)]], device float* varX [[buffer(7)]], device float* varY [[buffer(8)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) == 0)) {
+  if (int(__gid.x) == 0) {
     float xVal = x[0];
     float yVal = y[0];
     float a = alpha[0];

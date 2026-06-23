@@ -17,7 +17,7 @@ __kernel void navatala_graph_copy_u32(__global const uint* x, __global const uin
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint xv = x[gid];
     y[gid] = xv;
   }

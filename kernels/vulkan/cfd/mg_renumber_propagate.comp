@@ -26,15 +26,15 @@ layout(std430, binding = 1) readonly buffer buf_counts {
 // kernel: navatala_cfd_mg_renumber_propagate
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) >= int(counts[0]))) {
+  if (int(gl_GlobalInvocationID.x) >= int(counts[0])) {
     return;
   } else {
     int root = aggMap[int(gl_GlobalInvocationID.x)];
-    if ((root < 0)) {
+    if (root < 0) {
       aggMap[int(gl_GlobalInvocationID.x)] = (-(root + 1));
     } else {
       int rootVal = aggMap[root];
-      if ((rootVal < 0)) {
+      if (rootVal < 0) {
         aggMap[int(gl_GlobalInvocationID.x)] = (-(rootVal + 1));
       } else {
         aggMap[int(gl_GlobalInvocationID.x)] = rootVal;

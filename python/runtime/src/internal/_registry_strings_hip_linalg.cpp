@@ -28,7 +28,7 @@ extern "C" __global__ void navatala_linalg_norm_linf_f32(const float* _input, co
   unsigned int linfF32RedStride = 128u;
   for (int linfF32RedStep = 0; linfF32RedStep < (int)(8); ++linfF32RedStep) {
     unsigned int linfF32Stride = linfF32RedStride;
-    if ((lid < linfF32Stride)) {
+    if (lid < linfF32Stride) {
       float other = sdata[(lid + linfF32Stride)];
       float mine = sdata[lid];
       bool mineGtOther = (mine > other);
@@ -40,7 +40,7 @@ extern "C" __global__ void navatala_linalg_norm_linf_f32(const float* _input, co
     linfF32RedStride = linfF32NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0] = sdata[0];
   }
 }
@@ -65,7 +65,7 @@ extern "C" __global__ void navatala_linalg_norm_linf_f64(const double* _input, c
   unsigned int linfF64RedStride = 128u;
   for (int linfF64RedStep = 0; linfF64RedStep < (int)(8); ++linfF64RedStep) {
     unsigned int linfF64Stride = linfF64RedStride;
-    if ((lid < linfF64Stride)) {
+    if (lid < linfF64Stride) {
       double other = sdata[(lid + linfF64Stride)];
       double mine = sdata[lid];
       bool mineGtOther = (mine > other);
@@ -77,7 +77,7 @@ extern "C" __global__ void navatala_linalg_norm_linf_f64(const double* _input, c
     linfF64RedStride = linfF64NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0] = sdata[0];
   }
 }
@@ -284,7 +284,7 @@ extern "C" __global__ void navatala_linalg_reduce_sum_f16(const __half* _input, 
   unsigned int sumF16ReductionStride = 128u;
   for (int sumF16ReductionStep = 0; sumF16ReductionStep < (int)(8); ++sumF16ReductionStep) {
     unsigned int sumF16Stride = sumF16ReductionStride;
-    if ((lid < sumF16Stride)) {
+    if (lid < sumF16Stride) {
       float other = sdata[(lid + sumF16Stride)];
       float mine = sdata[lid];
       float sum = (mine + other);
@@ -295,7 +295,7 @@ extern "C" __global__ void navatala_linalg_reduce_sum_f16(const __half* _input, 
     sumF16ReductionStride = sumF16NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float partialSum = sdata[0];
     result[0] = partialSum;
   }
@@ -323,7 +323,7 @@ extern "C" __global__ void navatala_linalg_reduce_sum_bf16(const __hip_bfloat16*
   unsigned int sumBF16ReductionStride = 128u;
   for (int sumBF16ReductionStep = 0; sumBF16ReductionStep < (int)(8); ++sumBF16ReductionStep) {
     unsigned int sumBF16Stride = sumBF16ReductionStride;
-    if ((lid < sumBF16Stride)) {
+    if (lid < sumBF16Stride) {
       float other = sdata[(lid + sumBF16Stride)];
       float mine = sdata[lid];
       float sum = (mine + other);
@@ -334,7 +334,7 @@ extern "C" __global__ void navatala_linalg_reduce_sum_bf16(const __hip_bfloat16*
     sumBF16ReductionStride = sumBF16NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float partialSum = sdata[0];
     result[0] = partialSum;
   }
@@ -362,7 +362,7 @@ extern "C" __global__ void navatala_linalg_reduce_max_f16(const __half* _input, 
   unsigned int maxF16ReductionStride = 128u;
   for (int maxF16ReductionStep = 0; maxF16ReductionStep < (int)(8); ++maxF16ReductionStep) {
     unsigned int maxF16Stride = maxF16ReductionStride;
-    if ((lid < maxF16Stride)) {
+    if (lid < maxF16Stride) {
       float other = sdata[(lid + maxF16Stride)];
       float mine = sdata[lid];
       bool isGreater = (mine > other);
@@ -374,7 +374,7 @@ extern "C" __global__ void navatala_linalg_reduce_max_f16(const __half* _input, 
     maxF16ReductionStride = maxF16NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float maxResult = sdata[0];
     result[0] = maxResult;
   }
@@ -402,7 +402,7 @@ extern "C" __global__ void navatala_linalg_reduce_max_bf16(const __hip_bfloat16*
   unsigned int maxBF16ReductionStride = 128u;
   for (int maxBF16ReductionStep = 0; maxBF16ReductionStep < (int)(8); ++maxBF16ReductionStep) {
     unsigned int maxBF16Stride = maxBF16ReductionStride;
-    if ((lid < maxBF16Stride)) {
+    if (lid < maxBF16Stride) {
       float other = sdata[(lid + maxBF16Stride)];
       float mine = sdata[lid];
       bool isGreater = (mine > other);
@@ -414,7 +414,7 @@ extern "C" __global__ void navatala_linalg_reduce_max_bf16(const __hip_bfloat16*
     maxBF16ReductionStride = maxBF16NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float maxResult = sdata[0];
     result[0] = maxResult;
   }
@@ -426,7 +426,7 @@ const char* k_hip_navatala_linalg_elt_add_f32 = R"kernel(
 extern "C" __global__ void navatala_linalg_elt_add_f32(const float* A, const float* B, const unsigned int* n, float* C) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int i = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     float a = A[i];
     float b = B[i];
     C[i] = (a + b);
@@ -439,7 +439,7 @@ const char* k_hip_navatala_linalg_elt_add_f64 = R"kernel(
 extern "C" __global__ void navatala_linalg_elt_add_f64(const double* A, const double* B, const unsigned int* n, double* C) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int i = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     double a = A[i];
     double b = B[i];
     C[i] = (a + b);
@@ -452,7 +452,7 @@ const char* k_hip_navatala_linalg_elt_sub_f32 = R"kernel(
 extern "C" __global__ void navatala_linalg_elt_sub_f32(const float* A, const float* B, const unsigned int* n, float* C) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int i = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     float a = A[i];
     float b = B[i];
     C[i] = (a - b);
@@ -465,7 +465,7 @@ const char* k_hip_navatala_linalg_elt_sub_f64 = R"kernel(
 extern "C" __global__ void navatala_linalg_elt_sub_f64(const double* A, const double* B, const unsigned int* n, double* C) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int i = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     double a = A[i];
     double b = B[i];
     C[i] = (a - b);
@@ -478,7 +478,7 @@ const char* k_hip_navatala_linalg_elt_mul_f32 = R"kernel(
 extern "C" __global__ void navatala_linalg_elt_mul_f32(const float* A, const float* B, const unsigned int* n, float* C) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int i = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     float a = A[i];
     float b = B[i];
     C[i] = (a * b);
@@ -491,7 +491,7 @@ const char* k_hip_navatala_linalg_elt_mul_f64 = R"kernel(
 extern "C" __global__ void navatala_linalg_elt_mul_f64(const double* A, const double* B, const unsigned int* n, double* C) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int i = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     double a = A[i];
     double b = B[i];
     C[i] = (a * b);
@@ -504,7 +504,7 @@ const char* k_hip_navatala_linalg_elt_div_f32 = R"kernel(
 extern "C" __global__ void navatala_linalg_elt_div_f32(const float* A, const float* B, const unsigned int* n, float* C) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int i = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     float a = A[i];
     float b = B[i];
     C[i] = (a / b);
@@ -517,7 +517,7 @@ const char* k_hip_navatala_linalg_elt_div_f64 = R"kernel(
 extern "C" __global__ void navatala_linalg_elt_div_f64(const double* A, const double* B, const unsigned int* n, double* C) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int i = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     double a = A[i];
     double b = B[i];
     C[i] = (a / b);
@@ -531,7 +531,7 @@ extern "C" __global__ void navatala_linalg_elt_pow_f32(const float* A, const flo
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int i = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   float pVal = p[0u];
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     float a = A[i];
     float logA = log(a);
     float pLogA = (pVal * logA);
@@ -546,7 +546,7 @@ extern "C" __global__ void navatala_linalg_elt_pow_f64(const double* A, const do
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int i = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   double pVal = p[0u];
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     double a = A[i];
     double logA = log(a);
     double pLogA = (pVal * logA);
@@ -560,7 +560,7 @@ const char* k_hip_navatala_linalg_elt_sqrt_f32 = R"kernel(
 extern "C" __global__ void navatala_linalg_elt_sqrt_f32(const float* A, const unsigned int* n, float* C) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int i = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     float a = A[i];
     C[i] = sqrt(a);
   }
@@ -572,7 +572,7 @@ const char* k_hip_navatala_linalg_elt_sqrt_f64 = R"kernel(
 extern "C" __global__ void navatala_linalg_elt_sqrt_f64(const double* A, const unsigned int* n, double* C) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int i = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     double a = A[i];
     C[i] = sqrt(a);
   }
@@ -584,7 +584,7 @@ const char* k_hip_navatala_linalg_elt_exp_f32 = R"kernel(
 extern "C" __global__ void navatala_linalg_elt_exp_f32(const float* A, const unsigned int* n, float* C) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int i = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     float a = A[i];
     C[i] = exp(a);
   }
@@ -596,7 +596,7 @@ const char* k_hip_navatala_linalg_elt_exp_f64 = R"kernel(
 extern "C" __global__ void navatala_linalg_elt_exp_f64(const double* A, const unsigned int* n, double* C) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int i = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     double a = A[i];
     C[i] = exp(a);
   }
@@ -608,7 +608,7 @@ const char* k_hip_navatala_linalg_elt_log_f32 = R"kernel(
 extern "C" __global__ void navatala_linalg_elt_log_f32(const float* A, const unsigned int* n, float* C) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int i = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     float a = A[i];
     C[i] = log(a);
   }
@@ -620,7 +620,7 @@ const char* k_hip_navatala_linalg_elt_log_f64 = R"kernel(
 extern "C" __global__ void navatala_linalg_elt_log_f64(const double* A, const unsigned int* n, double* C) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int i = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     double a = A[i];
     C[i] = log(a);
   }
@@ -632,7 +632,7 @@ const char* k_hip_navatala_linalg_elt_abs_f32 = R"kernel(
 extern "C" __global__ void navatala_linalg_elt_abs_f32(const float* A, const unsigned int* n, float* C) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int i = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     float a = A[i];
     C[i] = abs(a);
   }
@@ -644,7 +644,7 @@ const char* k_hip_navatala_linalg_elt_abs_f64 = R"kernel(
 extern "C" __global__ void navatala_linalg_elt_abs_f64(const double* A, const unsigned int* n, double* C) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int i = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     double a = A[i];
     C[i] = abs(a);
   }
@@ -656,7 +656,7 @@ const char* k_hip_navatala_linalg_elt_sign_f32 = R"kernel(
 extern "C" __global__ void navatala_linalg_elt_sign_f32(const float* A, const unsigned int* n, float* C) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int i = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     float a = A[i];
     bool isNeg = (a < __uint_as_float(0x00000000u));
     float negOrZero = ((isNeg) ? (__uint_as_float(0xbf800000u)) : (__uint_as_float(0x00000000u)));
@@ -672,7 +672,7 @@ const char* k_hip_navatala_linalg_elt_sign_f64 = R"kernel(
 extern "C" __global__ void navatala_linalg_elt_sign_f64(const double* A, const unsigned int* n, double* C) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int i = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     double a = A[i];
     bool isNeg = (a < __longlong_as_double(0x0000000000000000ull));
     double negOrZero = ((isNeg) ? (__longlong_as_double(0xbff0000000000000ull)) : (__longlong_as_double(0x0000000000000000ull)));
@@ -835,7 +835,7 @@ extern "C" __global__ void navatala_linalg_map_f32(const float* A, const unsigne
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int idx = gid;
-  if ((idx < (m[0u] * n[0u]))) {
+  if (idx < (m[0u] * n[0u])) {
     float val = A[idx];
     result[idx] = val;
   }
@@ -848,7 +848,7 @@ extern "C" __global__ void navatala_linalg_map_f64(const double* A, const unsign
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int idx = gid;
-  if ((idx < (m[0u] * n[0u]))) {
+  if (idx < (m[0u] * n[0u])) {
     double val = A[idx];
     result[idx] = val;
   }
@@ -861,7 +861,7 @@ extern "C" __global__ void navatala_linalg_reduce_row_sum_f32(const float* A, co
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int row = gid;
-  if ((row < m[0u])) {
+  if (row < m[0u]) {
     float sumAccum = __uint_as_float(0x00000000u);
     for (int j = 0; j < (int)(n[0u]); ++j) {
       unsigned int jU32 = ((unsigned int)(j));
@@ -883,7 +883,7 @@ extern "C" __global__ void navatala_linalg_reduce_row_sum_f64(const double* A, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int row = gid;
-  if ((row < m[0u])) {
+  if (row < m[0u]) {
     double sumAccum = __longlong_as_double(0x0000000000000000ull);
     for (int j = 0; j < (int)(n[0u]); ++j) {
       unsigned int jU32 = ((unsigned int)(j));
@@ -905,7 +905,7 @@ extern "C" __global__ void navatala_linalg_reduce_col_sum_f32(const float* A, co
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int col = gid;
-  if ((col < n[0u])) {
+  if (col < n[0u]) {
     float sumAccum = __uint_as_float(0x00000000u);
     for (int i = 0; i < (int)(m[0u]); ++i) {
       unsigned int iU32 = ((unsigned int)(i));
@@ -927,7 +927,7 @@ extern "C" __global__ void navatala_linalg_reduce_col_sum_f64(const double* A, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int col = gid;
-  if ((col < n[0u])) {
+  if (col < n[0u]) {
     double sumAccum = __longlong_as_double(0x0000000000000000ull);
     for (int i = 0; i < (int)(m[0u]); ++i) {
       unsigned int iU32 = ((unsigned int)(i));
@@ -949,7 +949,7 @@ extern "C" __global__ void navatala_linalg_reduce_row_max_f32(const float* A, co
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int row = gid;
-  if ((row < m[0u])) {
+  if (row < m[0u]) {
     unsigned int firstIdx = (row * n[0u]);
     float initMaxVal = A[firstIdx];
     float maxAccum = initMaxVal;
@@ -973,7 +973,7 @@ extern "C" __global__ void navatala_linalg_reduce_row_max_f64(const double* A, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int row = gid;
-  if ((row < m[0u])) {
+  if (row < m[0u]) {
     unsigned int firstIdx = (row * n[0u]);
     double initMaxVal = A[firstIdx];
     double maxAccum = initMaxVal;
@@ -997,7 +997,7 @@ extern "C" __global__ void navatala_linalg_reduce_col_max_f32(const float* A, co
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int col = gid;
-  if ((col < n[0u])) {
+  if (col < n[0u]) {
     float initMaxVal = A[col];
     float maxAccum = initMaxVal;
     for (int i = 0; i < (int)(m[0u]); ++i) {
@@ -1020,7 +1020,7 @@ extern "C" __global__ void navatala_linalg_reduce_col_max_f64(const double* A, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int col = gid;
-  if ((col < n[0u])) {
+  if (col < n[0u]) {
     double initMaxVal = A[col];
     double maxAccum = initMaxVal;
     for (int i = 0; i < (int)(m[0u]); ++i) {
@@ -1043,7 +1043,7 @@ extern "C" __global__ void navatala_linalg_map_reduce_sum_f32(const float* A, co
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int idx = gid;
-  if ((idx < (m[0u] * n[0u]))) {
+  if (idx < (m[0u] * n[0u])) {
     float val = A[idx];
     atomicAdd(&result[0u], val);
   }
@@ -1056,7 +1056,7 @@ extern "C" __global__ void navatala_linalg_map_reduce_sum_f64(const double* A, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int idx = gid;
-  if ((idx < (m[0u] * n[0u]))) {
+  if (idx < (m[0u] * n[0u])) {
     double val = A[idx];
     atomicAdd(&result[0u], val);
   }
@@ -1266,7 +1266,7 @@ extern "C" __global__ void navatala_linalg_extract_upper_f32(const float* A, con
   unsigned int idx = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int nVal = n[0u];
   unsigned int totalElements = (nVal * nVal);
-  if ((idx < totalElements)) {
+  if (idx < totalElements) {
     unsigned int i = (idx / nVal);
     unsigned int j = (idx % nVal);
     float aVal = A[idx];
@@ -1284,7 +1284,7 @@ extern "C" __global__ void navatala_linalg_extract_upper_f64(const double* A, co
   unsigned int idx = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int nVal = n[0u];
   unsigned int totalElements = (nVal * nVal);
-  if ((idx < totalElements)) {
+  if (idx < totalElements) {
     unsigned int i = (idx / nVal);
     unsigned int j = (idx % nVal);
     double aVal = A[idx];
@@ -1302,7 +1302,7 @@ extern "C" __global__ void navatala_linalg_extract_lower_f32(const float* A, con
   unsigned int idx = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int nVal = n[0u];
   unsigned int totalElements = (nVal * nVal);
-  if ((idx < totalElements)) {
+  if (idx < totalElements) {
     unsigned int i = (idx / nVal);
     unsigned int j = (idx % nVal);
     float aVal = A[idx];
@@ -1320,7 +1320,7 @@ extern "C" __global__ void navatala_linalg_extract_lower_f64(const double* A, co
   unsigned int idx = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int nVal = n[0u];
   unsigned int totalElements = (nVal * nVal);
-  if ((idx < totalElements)) {
+  if (idx < totalElements) {
     unsigned int i = (idx / nVal);
     unsigned int j = (idx % nVal);
     double aVal = A[idx];
@@ -1339,7 +1339,7 @@ extern "C" __global__ void navatala_linalg_set_upper_f32(const float* val, const
   unsigned int nVal = n[0u];
   float fillVal = val[0u];
   unsigned int totalElements = (nVal * nVal);
-  if ((idx < totalElements)) {
+  if (idx < totalElements) {
     unsigned int i = (idx / nVal);
     unsigned int j = (idx % nVal);
     bool isStrictUpper = (i < j);
@@ -1358,7 +1358,7 @@ extern "C" __global__ void navatala_linalg_set_upper_f64(const double* val, cons
   unsigned int nVal = n[0u];
   double fillVal = val[0u];
   unsigned int totalElements = (nVal * nVal);
-  if ((idx < totalElements)) {
+  if (idx < totalElements) {
     unsigned int i = (idx / nVal);
     unsigned int j = (idx % nVal);
     bool isStrictUpper = (i < j);
@@ -1377,7 +1377,7 @@ extern "C" __global__ void navatala_linalg_set_lower_f32(const float* val, const
   unsigned int nVal = n[0u];
   float fillVal = val[0u];
   unsigned int totalElements = (nVal * nVal);
-  if ((idx < totalElements)) {
+  if (idx < totalElements) {
     unsigned int i = (idx / nVal);
     unsigned int j = (idx % nVal);
     bool isStrictLower = (i > j);
@@ -1396,7 +1396,7 @@ extern "C" __global__ void navatala_linalg_set_lower_f64(const double* val, cons
   unsigned int nVal = n[0u];
   double fillVal = val[0u];
   unsigned int totalElements = (nVal * nVal);
-  if ((idx < totalElements)) {
+  if (idx < totalElements) {
     unsigned int i = (idx / nVal);
     unsigned int j = (idx % nVal);
     bool isStrictLower = (i > j);
@@ -1416,7 +1416,7 @@ extern "C" __global__ void navatala_linalg_gather_rows_f32(const float* A, const
   unsigned int kVal = k[0u];
   unsigned int nVal = n[0u];
   unsigned int totalElems = (kVal * nVal);
-  if ((tid < totalElems)) {
+  if (tid < totalElems) {
     unsigned int rowIdx = (tid / nVal);
     unsigned int colIdx = (tid % nVal);
     unsigned int srcRow = indices[rowIdx];
@@ -1436,7 +1436,7 @@ extern "C" __global__ void navatala_linalg_gather_rows_f64(const double* A, cons
   unsigned int kVal = k[0u];
   unsigned int nVal = n[0u];
   unsigned int totalElems = (kVal * nVal);
-  if ((tid < totalElems)) {
+  if (tid < totalElems) {
     unsigned int rowIdx = (tid / nVal);
     unsigned int colIdx = (tid % nVal);
     unsigned int srcRow = indices[rowIdx];
@@ -1457,7 +1457,7 @@ extern "C" __global__ void navatala_linalg_gather_cols_f32(const float* A, const
   unsigned int nVal = n[0u];
   unsigned int kVal = kCount[0u];
   unsigned int totalElems = (mVal * kVal);
-  if ((tid < totalElems)) {
+  if (tid < totalElems) {
     unsigned int rowIdx = (tid / kVal);
     unsigned int outColIdx = (tid % kVal);
     unsigned int srcCol = indices[outColIdx];
@@ -1478,7 +1478,7 @@ extern "C" __global__ void navatala_linalg_gather_cols_f64(const double* A, cons
   unsigned int nVal = n[0u];
   unsigned int kVal = kCount[0u];
   unsigned int totalElems = (mVal * kVal);
-  if ((tid < totalElems)) {
+  if (tid < totalElems) {
     unsigned int rowIdx = (tid / kVal);
     unsigned int outColIdx = (tid % kVal);
     unsigned int srcCol = indices[outColIdx];
@@ -1497,7 +1497,7 @@ extern "C" __global__ void navatala_linalg_gather_elements_f32(const float* A, c
   unsigned int tid = gid;
   unsigned int countVal = count[0u];
   unsigned int nVal = n[0u];
-  if ((tid < countVal)) {
+  if (tid < countVal) {
     unsigned int row = rowIdx[tid];
     unsigned int col = colIdx[tid];
     unsigned int srcIdx = ((row * nVal) + col);
@@ -1515,7 +1515,7 @@ extern "C" __global__ void navatala_linalg_gather_elements_f64(const double* A, 
   unsigned int tid = gid;
   unsigned int countVal = count[0u];
   unsigned int nVal = n[0u];
-  if ((tid < countVal)) {
+  if (tid < countVal) {
     unsigned int row = rowIdx[tid];
     unsigned int col = colIdx[tid];
     unsigned int srcIdx = ((row * nVal) + col);
@@ -1537,7 +1537,7 @@ extern "C" __global__ void navatala_linalg_gather_batched_f32(const float* A, co
   unsigned int kVal = kCount[0u];
   unsigned int outBatchStride = (kVal * nVal);
   unsigned int totalElems = (batchVal * outBatchStride);
-  if ((tid < totalElems)) {
+  if (tid < totalElems) {
     unsigned int batchIdx = (tid / outBatchStride);
     unsigned int withinBatch = (tid % outBatchStride);
     unsigned int rowIdx = (withinBatch / nVal);
@@ -1564,7 +1564,7 @@ extern "C" __global__ void navatala_linalg_gather_batched_f64(const double* A, c
   unsigned int kVal = kCount[0u];
   unsigned int outBatchStride = (kVal * nVal);
   unsigned int totalElems = (batchVal * outBatchStride);
-  if ((tid < totalElems)) {
+  if (tid < totalElems) {
     unsigned int batchIdx = (tid / outBatchStride);
     unsigned int withinBatch = (tid % outBatchStride);
     unsigned int rowIdx = (withinBatch / nVal);
@@ -1588,7 +1588,7 @@ extern "C" __global__ void navatala_linalg_scatter_rows_f32(const float* src, co
   unsigned int kVal = k[0u];
   unsigned int nVal = n[0u];
   unsigned int totalElems = (kVal * nVal);
-  if ((tid < totalElems)) {
+  if (tid < totalElems) {
     unsigned int rowIdx = (tid / nVal);
     unsigned int colIdx = (tid % nVal);
     unsigned int dstRow = indices[rowIdx];
@@ -1608,7 +1608,7 @@ extern "C" __global__ void navatala_linalg_scatter_rows_f64(const double* src, c
   unsigned int kVal = k[0u];
   unsigned int nVal = n[0u];
   unsigned int totalElems = (kVal * nVal);
-  if ((tid < totalElems)) {
+  if (tid < totalElems) {
     unsigned int rowIdx = (tid / nVal);
     unsigned int colIdx = (tid % nVal);
     unsigned int dstRow = indices[rowIdx];
@@ -1629,7 +1629,7 @@ extern "C" __global__ void navatala_linalg_scatter_cols_f32(const float* src, co
   unsigned int kVal = k[0u];
   unsigned int nVal = n[0u];
   unsigned int totalElems = (mVal * kVal);
-  if ((tid < totalElems)) {
+  if (tid < totalElems) {
     unsigned int row = (tid / kVal);
     unsigned int srcColIdx = (tid % kVal);
     unsigned int dstCol = indices[srcColIdx];
@@ -1650,7 +1650,7 @@ extern "C" __global__ void navatala_linalg_scatter_cols_f64(const double* src, c
   unsigned int kVal = k[0u];
   unsigned int nVal = n[0u];
   unsigned int totalElems = (mVal * kVal);
-  if ((tid < totalElems)) {
+  if (tid < totalElems) {
     unsigned int row = (tid / kVal);
     unsigned int srcColIdx = (tid % kVal);
     unsigned int dstCol = indices[srcColIdx];
@@ -1668,7 +1668,7 @@ extern "C" __global__ void navatala_linalg_scatter_add_f32(const float* src, con
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int tid = gid;
   unsigned int n = count[0u];
-  if ((tid < n)) {
+  if (tid < n) {
     unsigned int dstIdx = indices[tid];
     float val = src[tid];
     atomicAdd(&A[dstIdx], val);
@@ -1683,7 +1683,7 @@ extern "C" __global__ void navatala_linalg_scatter_add_f64(const double* src, co
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int tid = gid;
   unsigned int n = count[0u];
-  if ((tid < n)) {
+  if (tid < n) {
     unsigned int dstIdx = indices[tid];
     double val = src[tid];
     atomicAdd(&A[dstIdx], val);
@@ -1698,7 +1698,7 @@ extern "C" __global__ void navatala_linalg_scatter_max_f32(const float* src, con
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int tid = gid;
   unsigned int n = count[0u];
-  if ((tid < n)) {
+  if (tid < n) {
     unsigned int dstIdx = indices[tid];
     float val = src[tid];
     atomicMax(&A[dstIdx], val);
@@ -1713,7 +1713,7 @@ extern "C" __global__ void navatala_linalg_scatter_max_f64(const double* src, co
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int tid = gid;
   unsigned int n = count[0u];
-  if ((tid < n)) {
+  if (tid < n) {
     unsigned int dstIdx = indices[tid];
     double val = src[tid];
     atomicMax(&A[dstIdx], val);
@@ -1732,7 +1732,7 @@ extern "C" __global__ void navatala_linalg_slice_rows_f32(const float* A, const 
   unsigned int n = numCols[0u];
   unsigned int numRows = (re - rs);
   unsigned int totalElems = (numRows * n);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     unsigned int outRow = (idx / n);
     unsigned int outCol = (idx % n);
     unsigned int srcRow = (rs + outRow);
@@ -1754,7 +1754,7 @@ extern "C" __global__ void navatala_linalg_slice_rows_f64(const double* A, const
   unsigned int n = numCols[0u];
   unsigned int numRows = (re - rs);
   unsigned int totalElems = (numRows * n);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     unsigned int outRow = (idx / n);
     unsigned int outCol = (idx % n);
     unsigned int srcRow = (rs + outRow);
@@ -1777,7 +1777,7 @@ extern "C" __global__ void navatala_linalg_slice_cols_f32(const float* A, const 
   unsigned int n = srcCols[0u];
   unsigned int outCols = (ce - cs);
   unsigned int totalElems = (m * outCols);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     unsigned int outRow = (idx / outCols);
     unsigned int outCol = (idx % outCols);
     unsigned int srcCol = (cs + outCol);
@@ -1800,7 +1800,7 @@ extern "C" __global__ void navatala_linalg_slice_cols_f64(const double* A, const
   unsigned int n = srcCols[0u];
   unsigned int outCols = (ce - cs);
   unsigned int totalElems = (m * outCols);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     unsigned int outRow = (idx / outCols);
     unsigned int outCol = (idx % outCols);
     unsigned int srcCol = (cs + outCol);
@@ -1825,7 +1825,7 @@ extern "C" __global__ void navatala_linalg_slice_block_f32(const float* A, const
   unsigned int outRows = (re - rs);
   unsigned int outCols = (ce - cs);
   unsigned int totalElems = (outRows * outCols);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     unsigned int outRow = (idx / outCols);
     unsigned int outCol = (idx % outCols);
     unsigned int srcRow = (rs + outRow);
@@ -1851,7 +1851,7 @@ extern "C" __global__ void navatala_linalg_slice_block_f64(const double* A, cons
   unsigned int outRows = (re - rs);
   unsigned int outCols = (ce - cs);
   unsigned int totalElems = (outRows * outCols);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     unsigned int outRow = (idx / outCols);
     unsigned int outCol = (idx % outCols);
     unsigned int srcRow = (rs + outRow);
@@ -1872,7 +1872,7 @@ extern "C" __global__ void navatala_linalg_strided_slice_f32(const float* A, con
   unsigned int s = start[0u];
   unsigned int st = stride[0u];
   unsigned int n = count[0u];
-  if ((idx < n)) {
+  if (idx < n) {
     unsigned int srcIdx = (s + (idx * st));
     float val = A[srcIdx];
     _out[idx] = val;
@@ -1889,7 +1889,7 @@ extern "C" __global__ void navatala_linalg_strided_slice_f64(const double* A, co
   unsigned int s = start[0u];
   unsigned int st = stride[0u];
   unsigned int n = count[0u];
-  if ((idx < n)) {
+  if (idx < n) {
     unsigned int srcIdx = (s + (idx * st));
     double val = A[srcIdx];
     _out[idx] = val;
@@ -1904,7 +1904,7 @@ extern "C" __global__ void navatala_linalg_extract_diagonal_f32(const float* A, 
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int idx = gid;
   unsigned int size = n[0u];
-  if ((idx < size)) {
+  if (idx < size) {
     unsigned int stride = (size + 1u);
     unsigned int srcIdx = (idx * stride);
     float val = A[srcIdx];
@@ -1920,7 +1920,7 @@ extern "C" __global__ void navatala_linalg_extract_diagonal_f64(const double* A,
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int idx = gid;
   unsigned int size = n[0u];
-  if ((idx < size)) {
+  if (idx < size) {
     unsigned int stride = (size + 1u);
     unsigned int srcIdx = (idx * stride);
     double val = A[srcIdx];
@@ -1938,7 +1938,7 @@ extern "C" __global__ void navatala_linalg_extract_diagonal_k_f32(const float* A
   unsigned int size = n[0u];
   unsigned int offset = k[0u];
   unsigned int diagLen = (size - offset);
-  if ((idx < diagLen)) {
+  if (idx < diagLen) {
     unsigned int row = idx;
     unsigned int col = (idx + offset);
     unsigned int srcIdx = ((row * size) + col);
@@ -1957,7 +1957,7 @@ extern "C" __global__ void navatala_linalg_extract_diagonal_k_f64(const double* 
   unsigned int size = n[0u];
   unsigned int offset = k[0u];
   unsigned int diagLen = (size - offset);
-  if ((idx < diagLen)) {
+  if (idx < diagLen) {
     unsigned int row = idx;
     unsigned int col = (idx + offset);
     unsigned int srcIdx = ((row * size) + col);
@@ -1974,7 +1974,7 @@ extern "C" __global__ void navatala_linalg_set_diagonal_f32(const float* val, co
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int idx = gid;
   unsigned int size = n[0u];
-  if ((idx < size)) {
+  if (idx < size) {
     unsigned int stride = (size + 1u);
     unsigned int destIdx = (idx * stride);
     float v = val[idx];
@@ -1990,7 +1990,7 @@ extern "C" __global__ void navatala_linalg_set_diagonal_f64(const double* val, c
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int idx = gid;
   unsigned int size = n[0u];
-  if ((idx < size)) {
+  if (idx < size) {
     unsigned int stride = (size + 1u);
     unsigned int destIdx = (idx * stride);
     double v = val[idx];
@@ -2007,7 +2007,7 @@ extern "C" __global__ void navatala_linalg_diag_to_matrix_f32(const float* v, co
   unsigned int idx = gid;
   unsigned int size = n[0u];
   unsigned int totalElems = (size * size);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     unsigned int row = (idx / size);
     unsigned int col = (idx % size);
     bool isDiag = (row == col);
@@ -2026,7 +2026,7 @@ extern "C" __global__ void navatala_linalg_diag_to_matrix_f64(const double* v, c
   unsigned int idx = gid;
   unsigned int size = n[0u];
   unsigned int totalElems = (size * size);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     unsigned int row = (idx / size);
     unsigned int col = (idx % size);
     bool isDiag = (row == col);
@@ -2047,7 +2047,7 @@ extern "C" __global__ void navatala_linalg_shift_rows_f32(const float* A, const 
   unsigned int mVal = m[0u];
   unsigned int nVal = n[0u];
   unsigned int totalElems = (mVal * nVal);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     unsigned int row = (idx / nVal);
     unsigned int col = (idx % nVal);
     bool inBounds = (row >= kVal);
@@ -2070,7 +2070,7 @@ extern "C" __global__ void navatala_linalg_shift_rows_f64(const double* A, const
   unsigned int mVal = m[0u];
   unsigned int nVal = n[0u];
   unsigned int totalElems = (mVal * nVal);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     unsigned int row = (idx / nVal);
     unsigned int col = (idx % nVal);
     bool inBounds = (row >= kVal);
@@ -2093,7 +2093,7 @@ extern "C" __global__ void navatala_linalg_shift_cols_f32(const float* A, const 
   unsigned int mVal = m[0u];
   unsigned int nVal = n[0u];
   unsigned int totalElems = (mVal * nVal);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     unsigned int row = (idx / nVal);
     unsigned int col = (idx % nVal);
     bool inBounds = (col >= kVal);
@@ -2116,7 +2116,7 @@ extern "C" __global__ void navatala_linalg_shift_cols_f64(const double* A, const
   unsigned int mVal = m[0u];
   unsigned int nVal = n[0u];
   unsigned int totalElems = (mVal * nVal);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     unsigned int row = (idx / nVal);
     unsigned int col = (idx % nVal);
     bool inBounds = (col >= kVal);
@@ -2139,7 +2139,7 @@ extern "C" __global__ void navatala_linalg_roll_rows_f32(const float* A, const u
   unsigned int mVal = m[0u];
   unsigned int nVal = n[0u];
   unsigned int totalElems = (mVal * nVal);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     unsigned int row = (idx / nVal);
     unsigned int col = (idx % nVal);
     unsigned int kMod = (kVal % mVal);
@@ -2163,7 +2163,7 @@ extern "C" __global__ void navatala_linalg_roll_rows_f64(const double* A, const 
   unsigned int mVal = m[0u];
   unsigned int nVal = n[0u];
   unsigned int totalElems = (mVal * nVal);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     unsigned int row = (idx / nVal);
     unsigned int col = (idx % nVal);
     unsigned int kMod = (kVal % mVal);
@@ -2187,7 +2187,7 @@ extern "C" __global__ void navatala_linalg_roll_cols_f32(const float* A, const u
   unsigned int mVal = m[0u];
   unsigned int nVal = n[0u];
   unsigned int totalElems = (mVal * nVal);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     unsigned int row = (idx / nVal);
     unsigned int col = (idx % nVal);
     unsigned int kMod = (kVal % nVal);
@@ -2211,7 +2211,7 @@ extern "C" __global__ void navatala_linalg_roll_cols_f64(const double* A, const 
   unsigned int mVal = m[0u];
   unsigned int nVal = n[0u];
   unsigned int totalElems = (mVal * nVal);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     unsigned int row = (idx / nVal);
     unsigned int col = (idx % nVal);
     unsigned int kMod = (kVal % nVal);
@@ -2242,7 +2242,7 @@ extern "C" __global__ void navatala_linalg_sort_rows_f32(const float* A, const u
   unsigned int colIdx = ((unsigned int)((int)(threadIdx.x)));
   unsigned int mVal = m[0u];
   unsigned int nVal = n[0u];
-  if ((rowIdx < mVal)) {
+  if (rowIdx < mVal) {
     bool inBounds = (colIdx < nVal);
     unsigned int linearIdx = ((rowIdx * nVal) + colIdx);
     if (inBounds) {
@@ -2269,7 +2269,7 @@ extern "C" __global__ void navatala_linalg_sort_rows_f32(const float* A, const u
         unsigned int partnerIdxVal = loopPartnerIdx;
         loopPartnerVal = svals[partnerIdxVal];
         float partnerValRead = loopPartnerVal;
-        if ((myValRead > partnerValRead)) {
+        if (myValRead > partnerValRead) {
           svals[colIdx] = partnerValRead;
           svals[partnerIdxVal] = myValRead;
         }
@@ -2301,7 +2301,7 @@ extern "C" __global__ void navatala_linalg_sort_rows_f64(const double* A, const 
   unsigned int colIdx = ((unsigned int)((int)(threadIdx.x)));
   unsigned int mVal = m[0u];
   unsigned int nVal = n[0u];
-  if ((rowIdx < mVal)) {
+  if (rowIdx < mVal) {
     bool inBounds = (colIdx < nVal);
     unsigned int linearIdx = ((rowIdx * nVal) + colIdx);
     if (inBounds) {
@@ -2328,7 +2328,7 @@ extern "C" __global__ void navatala_linalg_sort_rows_f64(const double* A, const 
         unsigned int partnerIdxVal = loopPartnerIdx;
         loopPartnerVal = svals[partnerIdxVal];
         double partnerValRead = loopPartnerVal;
-        if ((myValRead > partnerValRead)) {
+        if (myValRead > partnerValRead) {
           svals[colIdx] = partnerValRead;
           svals[partnerIdxVal] = myValRead;
         }
@@ -2360,7 +2360,7 @@ extern "C" __global__ void navatala_linalg_sort_cols_f32(const float* A, const u
   unsigned int rowIdx = ((unsigned int)((int)(threadIdx.x)));
   unsigned int mVal = m[0u];
   unsigned int nVal = n[0u];
-  if ((colIdx < nVal)) {
+  if (colIdx < nVal) {
     bool inBounds = (rowIdx < mVal);
     unsigned int linearIdx = ((rowIdx * nVal) + colIdx);
     if (inBounds) {
@@ -2387,7 +2387,7 @@ extern "C" __global__ void navatala_linalg_sort_cols_f32(const float* A, const u
         unsigned int partnerIdxVal = loopPartnerIdx;
         loopPartnerVal = svals[partnerIdxVal];
         float partnerValRead = loopPartnerVal;
-        if ((myValRead > partnerValRead)) {
+        if (myValRead > partnerValRead) {
           svals[rowIdx] = partnerValRead;
           svals[partnerIdxVal] = myValRead;
         }
@@ -2419,7 +2419,7 @@ extern "C" __global__ void navatala_linalg_sort_cols_f64(const double* A, const 
   unsigned int rowIdx = ((unsigned int)((int)(threadIdx.x)));
   unsigned int mVal = m[0u];
   unsigned int nVal = n[0u];
-  if ((colIdx < nVal)) {
+  if (colIdx < nVal) {
     bool inBounds = (rowIdx < mVal);
     unsigned int linearIdx = ((rowIdx * nVal) + colIdx);
     if (inBounds) {
@@ -2446,7 +2446,7 @@ extern "C" __global__ void navatala_linalg_sort_cols_f64(const double* A, const 
         unsigned int partnerIdxVal = loopPartnerIdx;
         loopPartnerVal = svals[partnerIdxVal];
         double partnerValRead = loopPartnerVal;
-        if ((myValRead > partnerValRead)) {
+        if (myValRead > partnerValRead) {
           svals[rowIdx] = partnerValRead;
           svals[partnerIdxVal] = myValRead;
         }
@@ -2481,7 +2481,7 @@ extern "C" __global__ void navatala_linalg_argsort_rows_f32(const float* A, cons
   unsigned int colIdx = ((unsigned int)((int)(threadIdx.x)));
   unsigned int mVal = m[0u];
   unsigned int nVal = n[0u];
-  if ((rowIdx < mVal)) {
+  if (rowIdx < mVal) {
     bool inBounds = (colIdx < nVal);
     unsigned int linearIdx = ((rowIdx * nVal) + colIdx);
     if (inBounds) {
@@ -2514,7 +2514,7 @@ extern "C" __global__ void navatala_linalg_argsort_rows_f32(const float* A, cons
         float partnerValRead = loopPartnerVal;
         loopPartnerIdx = sidxs[partnerPosVal];
         unsigned int partnerIdxRead = loopPartnerIdx;
-        if ((myValRead > partnerValRead)) {
+        if (myValRead > partnerValRead) {
           svals[colIdx] = partnerValRead;
           sidxs[colIdx] = partnerIdxRead;
           svals[partnerPosVal] = myValRead;
@@ -2551,7 +2551,7 @@ extern "C" __global__ void navatala_linalg_argsort_rows_f64(const double* A, con
   unsigned int colIdx = ((unsigned int)((int)(threadIdx.x)));
   unsigned int mVal = m[0u];
   unsigned int nVal = n[0u];
-  if ((rowIdx < mVal)) {
+  if (rowIdx < mVal) {
     bool inBounds = (colIdx < nVal);
     unsigned int linearIdx = ((rowIdx * nVal) + colIdx);
     if (inBounds) {
@@ -2584,7 +2584,7 @@ extern "C" __global__ void navatala_linalg_argsort_rows_f64(const double* A, con
         double partnerValRead = loopPartnerVal;
         loopPartnerIdx = sidxs[partnerPosVal];
         unsigned int partnerIdxRead = loopPartnerIdx;
-        if ((myValRead > partnerValRead)) {
+        if (myValRead > partnerValRead) {
           svals[colIdx] = partnerValRead;
           sidxs[colIdx] = partnerIdxRead;
           svals[partnerPosVal] = myValRead;
@@ -2621,7 +2621,7 @@ extern "C" __global__ void navatala_linalg_argsort_cols_f32(const float* A, cons
   unsigned int rowIdx = ((unsigned int)((int)(threadIdx.x)));
   unsigned int mVal = m[0u];
   unsigned int nVal = n[0u];
-  if ((colIdx < nVal)) {
+  if (colIdx < nVal) {
     bool inBounds = (rowIdx < mVal);
     unsigned int linearIdx = ((rowIdx * nVal) + colIdx);
     if (inBounds) {
@@ -2654,7 +2654,7 @@ extern "C" __global__ void navatala_linalg_argsort_cols_f32(const float* A, cons
         float partnerValRead = loopPartnerVal;
         loopPartnerIdx = sidxs[partnerPosVal];
         unsigned int partnerIdxRead = loopPartnerIdx;
-        if ((myValRead > partnerValRead)) {
+        if (myValRead > partnerValRead) {
           svals[rowIdx] = partnerValRead;
           sidxs[rowIdx] = partnerIdxRead;
           svals[partnerPosVal] = myValRead;
@@ -2691,7 +2691,7 @@ extern "C" __global__ void navatala_linalg_argsort_cols_f64(const double* A, con
   unsigned int rowIdx = ((unsigned int)((int)(threadIdx.x)));
   unsigned int mVal = m[0u];
   unsigned int nVal = n[0u];
-  if ((colIdx < nVal)) {
+  if (colIdx < nVal) {
     bool inBounds = (rowIdx < mVal);
     unsigned int linearIdx = ((rowIdx * nVal) + colIdx);
     if (inBounds) {
@@ -2724,7 +2724,7 @@ extern "C" __global__ void navatala_linalg_argsort_cols_f64(const double* A, con
         double partnerValRead = loopPartnerVal;
         loopPartnerIdx = sidxs[partnerPosVal];
         unsigned int partnerIdxRead = loopPartnerIdx;
-        if ((myValRead > partnerValRead)) {
+        if (myValRead > partnerValRead) {
           svals[rowIdx] = partnerValRead;
           sidxs[rowIdx] = partnerIdxRead;
           svals[partnerPosVal] = myValRead;

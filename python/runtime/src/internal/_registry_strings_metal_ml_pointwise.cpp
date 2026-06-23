@@ -16,7 +16,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_neg_f32(device const float* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device float* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = (-x);
@@ -33,7 +33,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_abs_f32(device const float* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device float* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = abs(x);
@@ -50,7 +50,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_sqrt_f32(device const float* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device float* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = sqrt(x);
@@ -67,7 +67,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_rsqrt_f32(device const float* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device float* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = (as_type<float>(0x3f800000u) / sqrt(x));
@@ -84,7 +84,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_reciprocal_f32(device const float* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device float* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = (as_type<float>(0x3f800000u) / x);
@@ -101,7 +101,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_exp_f32(device const float* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device float* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = exp(x);
@@ -118,7 +118,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_log_f32(device const float* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device float* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = log(x);
@@ -135,7 +135,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_sin_f32(device const float* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device float* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = sin(x);
@@ -152,7 +152,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_cos_f32(device const float* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device float* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = cos(x);
@@ -169,7 +169,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_tan_f32(device const float* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device float* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = (sin(x) / cos(x));
@@ -186,7 +186,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_floor_f32(device const float* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device float* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = floor(x);
@@ -203,7 +203,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_ceil_f32(device const float* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device float* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = ceil(x);
@@ -220,7 +220,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_round_f32(device const float* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device float* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = round(x);
@@ -237,7 +237,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_relu_f32(device const float* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device float* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = (((x > as_type<float>(0x00000000u))) ? (x) : (as_type<float>(0x00000000u)));
@@ -254,7 +254,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_leaky_relu_f32(device const float* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device float* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = (((x > as_type<float>(0x00000000u))) ? (x) : ((as_type<float>(0x3c23d70au) * x)));
@@ -271,7 +271,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_elu_f32(device const float* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device float* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = (((x > as_type<float>(0x00000000u))) ? (x) : ((exp(x) - as_type<float>(0x3f800000u))));
@@ -288,7 +288,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_tanh_f32(device const float* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device float* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = tanh(x);
@@ -305,7 +305,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_sigmoid_f32(device const float* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device float* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = (as_type<float>(0x3f800000u) / (as_type<float>(0x3f800000u) + exp((-x))));
@@ -322,7 +322,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_softplus_f32(device const float* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device float* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = log((as_type<float>(0x3f800000u) + exp(x)));
@@ -339,7 +339,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_swish_f32(device const float* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device float* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = (x * (as_type<float>(0x3f800000u) / (as_type<float>(0x3f800000u) + exp((-x)))));
@@ -356,7 +356,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_gelu_tanh_f32(device const float* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device float* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = ((as_type<float>(0x3f000000u) * x) * (as_type<float>(0x3f800000u) + tanh((as_type<float>(0x3f4c422au) * (x + (as_type<float>(0x3d372713u) * (x * (x * x))))))));
@@ -373,7 +373,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_add_f32(device const float* a [[buffer(0)]], device const float* b [[buffer(1)]], device const uint* count [[buffer(2)]], device float* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -392,7 +392,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_sub_f32(device const float* a [[buffer(0)]], device const float* b [[buffer(1)]], device const uint* count [[buffer(2)]], device float* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -411,7 +411,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_mul_f32(device const float* a [[buffer(0)]], device const float* b [[buffer(1)]], device const uint* count [[buffer(2)]], device float* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -430,7 +430,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_div_f32(device const float* a [[buffer(0)]], device const float* b [[buffer(1)]], device const uint* count [[buffer(2)]], device float* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -449,7 +449,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_max_f32(device const float* a [[buffer(0)]], device const float* b [[buffer(1)]], device const uint* count [[buffer(2)]], device float* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -468,7 +468,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_min_f32(device const float* a [[buffer(0)]], device const float* b [[buffer(1)]], device const uint* count [[buffer(2)]], device float* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -487,7 +487,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_cmp_eq_f32(device const float* a [[buffer(0)]], device const float* b [[buffer(1)]], device const uint* count [[buffer(2)]], device float* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -506,7 +506,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_cmp_ne_f32(device const float* a [[buffer(0)]], device const float* b [[buffer(1)]], device const uint* count [[buffer(2)]], device float* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -525,7 +525,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_cmp_lt_f32(device const float* a [[buffer(0)]], device const float* b [[buffer(1)]], device const uint* count [[buffer(2)]], device float* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -544,7 +544,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_cmp_le_f32(device const float* a [[buffer(0)]], device const float* b [[buffer(1)]], device const uint* count [[buffer(2)]], device float* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -563,7 +563,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_cmp_gt_f32(device const float* a [[buffer(0)]], device const float* b [[buffer(1)]], device const uint* count [[buffer(2)]], device float* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -582,7 +582,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_cmp_ge_f32(device const float* a [[buffer(0)]], device const float* b [[buffer(1)]], device const uint* count [[buffer(2)]], device float* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -601,7 +601,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_relu_bwd_f32(device const float* a [[buffer(0)]], device const float* b [[buffer(1)]], device const uint* count [[buffer(2)]], device float* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -620,7 +620,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_sigmoid_bwd_f32(device const float* a [[buffer(0)]], device const float* b [[buffer(1)]], device const uint* count [[buffer(2)]], device float* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -639,7 +639,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_tanh_bwd_f32(device const float* a [[buffer(0)]], device const float* b [[buffer(1)]], device const uint* count [[buffer(2)]], device float* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -658,7 +658,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_neg_f16(device const half* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device half* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (-x);
@@ -675,7 +675,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_abs_f16(device const half* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device half* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = abs(x);
@@ -692,7 +692,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_sqrt_f16(device const half* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device half* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = sqrt(x);
@@ -709,7 +709,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_rsqrt_f16(device const half* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device half* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (as_type<float>(0x3f800000u) / sqrt(x));
@@ -726,7 +726,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_reciprocal_f16(device const half* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device half* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (as_type<float>(0x3f800000u) / x);
@@ -743,7 +743,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_exp_f16(device const half* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device half* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = exp(x);
@@ -760,7 +760,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_log_f16(device const half* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device half* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = log(x);
@@ -777,7 +777,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_sin_f16(device const half* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device half* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = sin(x);
@@ -794,7 +794,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_cos_f16(device const half* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device half* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = cos(x);
@@ -811,7 +811,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_tan_f16(device const half* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device half* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (sin(x) / cos(x));
@@ -828,7 +828,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_floor_f16(device const half* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device half* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = floor(x);
@@ -845,7 +845,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_ceil_f16(device const half* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device half* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = ceil(x);
@@ -862,7 +862,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_round_f16(device const half* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device half* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = round(x);
@@ -879,7 +879,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_relu_f16(device const half* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device half* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (((x > as_type<float>(0x00000000u))) ? (x) : (as_type<float>(0x00000000u)));
@@ -896,7 +896,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_leaky_relu_f16(device const half* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device half* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (((x > as_type<float>(0x00000000u))) ? (x) : ((as_type<float>(0x3c23d70au) * x)));
@@ -913,7 +913,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_elu_f16(device const half* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device half* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (((x > as_type<float>(0x00000000u))) ? (x) : ((exp(x) - as_type<float>(0x3f800000u))));
@@ -930,7 +930,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_tanh_f16(device const half* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device half* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = tanh(x);
@@ -947,7 +947,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_sigmoid_f16(device const half* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device half* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (as_type<float>(0x3f800000u) / (as_type<float>(0x3f800000u) + exp((-x))));
@@ -964,7 +964,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_softplus_f16(device const half* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device half* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = log((as_type<float>(0x3f800000u) + exp(x)));
@@ -981,7 +981,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_swish_f16(device const half* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device half* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (x * (as_type<float>(0x3f800000u) / (as_type<float>(0x3f800000u) + exp((-x)))));
@@ -998,7 +998,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_gelu_tanh_f16(device const half* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device half* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = ((as_type<float>(0x3f000000u) * x) * (as_type<float>(0x3f800000u) + tanh((as_type<float>(0x3f4c422au) * (x + (as_type<float>(0x3d372713u) * (x * (x * x))))))));
@@ -1015,7 +1015,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_add_f16(device const half* a [[buffer(0)]], device const half* b [[buffer(1)]], device const uint* count [[buffer(2)]], device half* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1034,7 +1034,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_sub_f16(device const half* a [[buffer(0)]], device const half* b [[buffer(1)]], device const uint* count [[buffer(2)]], device half* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1053,7 +1053,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_mul_f16(device const half* a [[buffer(0)]], device const half* b [[buffer(1)]], device const uint* count [[buffer(2)]], device half* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1072,7 +1072,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_div_f16(device const half* a [[buffer(0)]], device const half* b [[buffer(1)]], device const uint* count [[buffer(2)]], device half* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1091,7 +1091,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_max_f16(device const half* a [[buffer(0)]], device const half* b [[buffer(1)]], device const uint* count [[buffer(2)]], device half* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1110,7 +1110,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_min_f16(device const half* a [[buffer(0)]], device const half* b [[buffer(1)]], device const uint* count [[buffer(2)]], device half* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1129,7 +1129,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_cmp_eq_f16(device const half* a [[buffer(0)]], device const half* b [[buffer(1)]], device const uint* count [[buffer(2)]], device half* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1148,7 +1148,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_cmp_ne_f16(device const half* a [[buffer(0)]], device const half* b [[buffer(1)]], device const uint* count [[buffer(2)]], device half* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1167,7 +1167,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_cmp_lt_f16(device const half* a [[buffer(0)]], device const half* b [[buffer(1)]], device const uint* count [[buffer(2)]], device half* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1186,7 +1186,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_cmp_le_f16(device const half* a [[buffer(0)]], device const half* b [[buffer(1)]], device const uint* count [[buffer(2)]], device half* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1205,7 +1205,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_cmp_gt_f16(device const half* a [[buffer(0)]], device const half* b [[buffer(1)]], device const uint* count [[buffer(2)]], device half* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1224,7 +1224,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_cmp_ge_f16(device const half* a [[buffer(0)]], device const half* b [[buffer(1)]], device const uint* count [[buffer(2)]], device half* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1243,7 +1243,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_relu_bwd_f16(device const half* a [[buffer(0)]], device const half* b [[buffer(1)]], device const uint* count [[buffer(2)]], device half* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1262,7 +1262,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_sigmoid_bwd_f16(device const half* a [[buffer(0)]], device const half* b [[buffer(1)]], device const uint* count [[buffer(2)]], device half* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1281,7 +1281,7 @@ using namespace metal;
 kernel void navatala_ml_pointwise_tanh_bwd_f16(device const half* a [[buffer(0)]], device const half* b [[buffer(1)]], device const uint* count [[buffer(2)]], device half* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));

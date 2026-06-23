@@ -43,7 +43,7 @@ kernel void navatala_dataframe_mcd_compute_center_f32(device const float* dataX 
   uint ctr1ReductionStride = 128u;
   for (int ctr1ReductionStep = 0; ctr1ReductionStep < (int)(8); ++ctr1ReductionStep) {
     uint ctr1Stride = ctr1ReductionStride;
-    if ((lid < ctr1Stride)) {
+    if (lid < ctr1Stride) {
       float otherX = sdataX[(lid + ctr1Stride)];
       float otherY = sdataY[(lid + ctr1Stride)];
       uint otherC = scount[(lid + ctr1Stride)];
@@ -62,7 +62,7 @@ kernel void navatala_dataframe_mcd_compute_center_f32(device const float* dataX 
     ctr1ReductionStride = ctr1NextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float totalX = sdataX[0];
     float totalY = sdataY[0];
     uint totalCount = scount[0];

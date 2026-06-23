@@ -17,7 +17,7 @@ __kernel void navatala_sparse_csr_scale_f32(__global const float* alpha, __globa
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nnz[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float v = values[gid];
     float a = alpha[0];
     values[gid] = (a * v);

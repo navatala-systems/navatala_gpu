@@ -34,7 +34,7 @@ extern "C" __global__ void navatala_ml_knn_regress_median_f64(const unsigned int
     for (int i = 0; i < (int)(kVal); ++i) {
       unsigned int iU32 = ((unsigned int)(i));
       unsigned int zeroU32 = ((unsigned int)(0));
-      if ((iU32 > zeroU32)) {
+      if (iU32 > zeroU32) {
         double key = sortBuf[iU32];
         unsigned int initialJIdx = (iU32 - 1u);
         jIdxAccum = initialJIdx;

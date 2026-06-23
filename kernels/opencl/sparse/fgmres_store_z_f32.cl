@@ -18,7 +18,7 @@ __kernel void navatala_sparse_fgmres_store_z_f32(__global const float* z, __glob
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
   int col = ((int)(colIdx[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float zi = z[gid];
     Z[(gid + (col * N))] = zi;
   }

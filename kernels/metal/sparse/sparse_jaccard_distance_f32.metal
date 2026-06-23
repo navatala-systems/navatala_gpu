@@ -28,7 +28,7 @@ kernel void navatala_sparse_sparse_jaccard_distance_f32(device const float* a [[
   uint gridSize = ((uint)(int(__grid_size.x)));
   for (int loopIdx = 0; loopIdx < (int)(nnzVal); ++loopIdx) {
     uint currentIdx = idxAccum;
-    if ((currentIdx < nnzVal)) {
+    if (currentIdx < nnzVal) {
       float aVal = a[currentIdx];
       float bVal = b[currentIdx];
       bool aNonZero = (aVal != as_type<float>(0x00000000u));
@@ -56,7 +56,7 @@ kernel void navatala_sparse_sparse_jaccard_distance_f32(device const float* a [[
   uint strideAccum = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint currentStride = strideAccum;
-    if ((lidU32 < currentStride)) {
+    if (lidU32 < currentStride) {
       uint otherIdx = (lidU32 + currentStride);
       uint myIntersect = sdataIntersect[lidU32];
       uint otherIntersect = sdataIntersect[otherIdx];
@@ -70,7 +70,7 @@ kernel void navatala_sparse_sparse_jaccard_distance_f32(device const float* a [[
     strideAccum = nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lidU32 == 0u)) {
+  if (lidU32 == 0u) {
     uint totalIntersect = sdataIntersect[0u];
     uint totalUnion = sdataUnion[0u];
     bool unionIsZero = (totalUnion == 0u);

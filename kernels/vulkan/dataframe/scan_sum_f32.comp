@@ -61,7 +61,7 @@ void main() {
     }
     barrier();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float total = sdata[511u];
     sdata[511u] = uintBitsToFloat(0x00000000u);
   }

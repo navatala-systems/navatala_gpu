@@ -52,7 +52,7 @@ kernel void navatala_ml_expand_cluster_step_f32(device const float* points [[buf
             distSqAccum = newDistSq;
           }
           float finalDistSq = distSqAccum;
-          if ((finalDistSq < epsSq)) {
+          if (finalDistSq < epsSq) {
             newLabelAccum = jLabel;
           }
         }

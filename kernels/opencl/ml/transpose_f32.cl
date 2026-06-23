@@ -17,7 +17,7 @@ __kernel void navatala_ml_transpose_f32(__global const float* _input, __global c
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint ncolsVal = ncols[0];
     uint nrowsVal = nrows[0];
     uint r = (gid / ncolsVal);

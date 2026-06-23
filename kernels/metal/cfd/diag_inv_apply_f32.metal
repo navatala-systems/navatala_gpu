@@ -19,7 +19,7 @@ using namespace metal;
 kernel void navatala_cfd_diag_inv_apply_f32(device const float* r [[buffer(0)]], device const float* diagInv [[buffer(1)]], device const uint* n [[buffer(2)]], device float* z [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int i = int(__gid.x);
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     float ri = r[i];
     float di = diagInv[i];
     z[i] = (di * ri);

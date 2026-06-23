@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_gmres_restart_init_f32(const float* r
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float nm = rNorm[0];
     float ri = r[gid];
     V[gid] = (ri / nm);

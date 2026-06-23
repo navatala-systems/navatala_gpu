@@ -31,7 +31,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   uint gid = uint(int(gl_GlobalInvocationID.x));
   uint numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     uint hi = offsets[(gid + 1u)];
     uint lo = offsets[gid];
     uint deg = (hi - lo);

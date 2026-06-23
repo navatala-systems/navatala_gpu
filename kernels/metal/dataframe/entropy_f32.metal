@@ -36,7 +36,7 @@ kernel void navatala_dataframe_entropy_f32(device const float* p [[buffer(0)]], 
   uint e32_reductionStride = 128u;
   for (int e32_reductionStep = 0; e32_reductionStep < (int)(8); ++e32_reductionStep) {
     uint e32_stride = e32_reductionStride;
-    if ((lid < e32_stride)) {
+    if (lid < e32_stride) {
       float e32_other = sdata[(lid + e32_stride)];
       float e32_mine = sdata[lid];
       float e32_sum = (e32_mine + e32_other);
@@ -47,7 +47,7 @@ kernel void navatala_dataframe_entropy_f32(device const float* p [[buffer(0)]], 
     e32_reductionStride = e32_nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0u] = sdata[0u];
   }
 }

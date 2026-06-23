@@ -20,12 +20,12 @@ extern "C" __global__ void navatala_vector_search_compact_graph_edges(unsigned i
   unsigned int nv = n_vertices[0];
   unsigned int md = max_degree[0];
   unsigned int inv = invalid_id[0];
-  if ((vid < nv)) {
+  if (vid < nv) {
     unsigned int write_pos = 0u;
     for (int i = 0; i < (int)(md); ++i) {
       unsigned int read_idx = ((vid * md) + i);
       unsigned int neighbor = graph[read_idx];
-      if ((neighbor != inv)) {
+      if (neighbor != inv) {
         unsigned int wp = write_pos;
         unsigned int write_idx = ((vid * md) + wp);
         graph[write_idx] = neighbor;
@@ -34,7 +34,7 @@ extern "C" __global__ void navatala_vector_search_compact_graph_edges(unsigned i
     }
     unsigned int final_wp = write_pos;
     for (int j = 0; j < (int)(md); ++j) {
-      if ((j >= final_wp)) {
+      if (j >= final_wp) {
         unsigned int fill_idx = ((vid * md) + j);
         graph[fill_idx] = inv;
       }

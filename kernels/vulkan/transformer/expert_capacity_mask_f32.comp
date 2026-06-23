@@ -46,7 +46,7 @@ void main() {
   uint k = topK[0u];
   uint cap = capacity[0u];
   uint lid = uint(int(gl_LocalInvocationID.x));
-  if ((lid < ne)) {
+  if (lid < ne) {
     expertCounts[lid] = 0u;
   }
   barrier();

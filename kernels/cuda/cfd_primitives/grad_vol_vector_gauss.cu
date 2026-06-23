@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_grad_vol_vector_gauss(const float* cellUx, const float* cellUy, const float* cellUz, const float* bcX, const float* bcY, const float* bcZ, const unsigned int* bcMask, const int* owner, const int* neighbour, const float* weights, const float* sfX, const float* sfY, const float* sfZ, const int* offsets, const int* faceIdx, const float* sign, const float* vol, const int* params, float* outXX, float* outXY, float* outXZ, float* outYX, float* outYY, float* outYZ, float* outZX, float* outZY, float* outZZ) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0]) {
     return;
   } else {
     float sumXX = __uint_as_float(0x00000000u);
@@ -35,7 +35,7 @@ extern "C" __global__ void navatala_cfd_primitives_grad_vol_vector_gauss(const f
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < params[1])) {
+      if (f < params[1]) {
         float s = sign[k];
         int o = owner[f];
         float uxO = cellUx[o];
@@ -44,7 +44,7 @@ extern "C" __global__ void navatala_cfd_primitives_grad_vol_vector_gauss(const f
         float uxF = uxO;
         float uyF = uyO;
         float uzF = uzO;
-        if ((f < params[2])) {
+        if (f < params[2]) {
           int n = neighbour[f];
           float uxN = cellUx[n];
           float uyN = cellUy[n];
@@ -56,14 +56,14 @@ extern "C" __global__ void navatala_cfd_primitives_grad_vol_vector_gauss(const f
           uzF = ((ww * uzO) + (iw * uzN));
         } else {
           unsigned int m = bcMask[f];
-          if ((m == 1u)) {
+          if (m == 1u) {
             float ww = weights[f];
             float iw = (__uint_as_float(0x3f800000u) - ww);
             uxF = ((ww * uxO) + (iw * bcX[f]));
             uyF = ((ww * uyO) + (iw * bcY[f]));
             uzF = ((ww * uzO) + (iw * bcZ[f]));
           }
-          if ((m == 2u)) {
+          if (m == 2u) {
             uxF = bcX[f];
             uyF = bcY[f];
             uzF = bcZ[f];
@@ -88,7 +88,7 @@ extern "C" __global__ void navatala_cfd_primitives_grad_vol_vector_gauss(const f
     }
     float v = vol[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float invV = __uint_as_float(0x00000000u);
-    if ((v != __uint_as_float(0x00000000u))) {
+    if (v != __uint_as_float(0x00000000u)) {
       invV = (__uint_as_float(0x3f800000u) / v);
     }
     outXX[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (sumXX * invV);

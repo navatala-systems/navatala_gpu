@@ -24,7 +24,7 @@ kernel void navatala_sparse_cg_fused_update_dot_f32(device const float* p [[buff
   float pi = (((gid < N)) ? (p[gid]) : (as_type<float>(0x00000000u)));
   float api = (((gid < N)) ? (Ap[gid]) : (as_type<float>(0x00000000u)));
   float zi = (((gid < N)) ? (z[gid]) : (as_type<float>(0x00000000u)));
-  if ((gid < N)) {
+  if (gid < N) {
     float xi = x[gid];
     float ri = r[gid];
     float xnew = (xi + (a * pi));
@@ -36,15 +36,15 @@ kernel void navatala_sparse_cg_fused_update_dot_f32(device const float* p [[buff
   float warpSum = simd_sum(rz);
   threadgroup float sdata[32];
   int lane = int(__lane);
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((lid < 8)) {
+  if (lid < 8) {
     float val = sdata[lid];
     float finalSum = simd_sum(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       int grpId = int(__tgid.x);
       rTzPartials[grpId] = finalSum;
     }

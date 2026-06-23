@@ -12,7 +12,7 @@
 const char* k_opencl_navatala_ml_init_ema_f32 = R"kernel(
 __kernel void navatala_ml_init_ema_f32(__global const float* alphaIn, __global float* ema, __global float* alpha, __global uint* count) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float a = alphaIn[0];
     ema[0] = as_float(0x00000000u);
     alpha[0] = a;
@@ -25,7 +25,7 @@ const char* k_opencl_navatala_ml_init_ema_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_ml_init_ema_f64(__global const double* alphaIn, __global double* ema, __global double* alpha, __global uint* count) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double a = alphaIn[0];
     ema[0] = as_double(0x0000000000000000ul);
     alpha[0] = a;
@@ -37,7 +37,7 @@ __kernel void navatala_ml_init_ema_f64(__global const double* alphaIn, __global 
 const char* k_opencl_navatala_ml_init_ema_from_span_f32 = R"kernel(
 __kernel void navatala_ml_init_ema_from_span_f32(__global const float* span, __global float* ema, __global float* alpha, __global uint* count) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float s = span[0];
     float spanPlus1 = (s + as_float(0x3f800000u));
     float a = (as_float(0x40000000u) / spanPlus1);
@@ -52,7 +52,7 @@ const char* k_opencl_navatala_ml_init_ema_from_span_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_ml_init_ema_from_span_f64(__global const double* span, __global double* ema, __global double* alpha, __global uint* count) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double s = span[0];
     double spanPlus1 = (s + as_double(0x3ff0000000000000ul));
     double a = (as_double(0x4000000000000000ul) / spanPlus1);
@@ -66,7 +66,7 @@ __kernel void navatala_ml_init_ema_from_span_f64(__global const double* span, __
 const char* k_opencl_navatala_ml_ema_update_f32 = R"kernel(
 __kernel void navatala_ml_ema_update_f32(__global const float* x, __global const float* alpha, __global float* ema, __global uint* count) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float xVal = x[0];
     float a = alpha[0];
     float oldEma = ema[0];
@@ -87,7 +87,7 @@ const char* k_opencl_navatala_ml_ema_update_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_ml_ema_update_f64(__global const double* x, __global const double* alpha, __global double* ema, __global uint* count) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double xVal = x[0];
     double a = alpha[0];
     double oldEma = ema[0];
@@ -107,7 +107,7 @@ __kernel void navatala_ml_ema_update_f64(__global const double* x, __global cons
 const char* k_opencl_navatala_ml_ema_extract_f32 = R"kernel(
 __kernel void navatala_ml_ema_extract_f32(__global const float* ema, __global float* result) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float v = ema[0];
     result[0] = v;
   }
@@ -118,7 +118,7 @@ const char* k_opencl_navatala_ml_ema_extract_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_ml_ema_extract_f64(__global const double* ema, __global double* result) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double v = ema[0];
     result[0] = v;
   }
@@ -128,7 +128,7 @@ __kernel void navatala_ml_ema_extract_f64(__global const double* ema, __global d
 const char* k_opencl_navatala_ml_ema_reset_f32 = R"kernel(
 __kernel void navatala_ml_ema_reset_f32(__global float* ema, __global uint* count) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     ema[0] = as_float(0x00000000u);
     count[0] = (uint)(0u);
   }
@@ -139,7 +139,7 @@ const char* k_opencl_navatala_ml_ema_reset_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_ml_ema_reset_f64(__global double* ema, __global uint* count) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     ema[0] = as_double(0x0000000000000000ul);
     count[0] = (uint)(0u);
   }
@@ -149,7 +149,7 @@ __kernel void navatala_ml_ema_reset_f64(__global double* ema, __global uint* cou
 const char* k_opencl_navatala_ml_init_dema_f32 = R"kernel(
 __kernel void navatala_ml_init_dema_f32(__global const float* alphaIn, __global float* ema1, __global float* ema2, __global float* alpha, __global uint* count) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float a = alphaIn[0];
     ema1[0] = as_float(0x00000000u);
     ema2[0] = as_float(0x00000000u);
@@ -163,7 +163,7 @@ const char* k_opencl_navatala_ml_init_dema_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_ml_init_dema_f64(__global const double* alphaIn, __global double* ema1, __global double* ema2, __global double* alpha, __global uint* count) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double a = alphaIn[0];
     ema1[0] = as_double(0x0000000000000000ul);
     ema2[0] = as_double(0x0000000000000000ul);
@@ -176,7 +176,7 @@ __kernel void navatala_ml_init_dema_f64(__global const double* alphaIn, __global
 const char* k_opencl_navatala_ml_dema_update_f32 = R"kernel(
 __kernel void navatala_ml_dema_update_f32(__global const float* x, __global const float* alpha, __global float* ema1, __global float* ema2, __global uint* count) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float xVal = x[0];
     float a = alpha[0];
     float old1 = ema1[0];
@@ -203,7 +203,7 @@ const char* k_opencl_navatala_ml_dema_update_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_ml_dema_update_f64(__global const double* x, __global const double* alpha, __global double* ema1, __global double* ema2, __global uint* count) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double xVal = x[0];
     double a = alpha[0];
     double old1 = ema1[0];
@@ -229,7 +229,7 @@ __kernel void navatala_ml_dema_update_f64(__global const double* x, __global con
 const char* k_opencl_navatala_ml_dema_extract_f32 = R"kernel(
 __kernel void navatala_ml_dema_extract_f32(__global const float* ema1, __global const float* ema2, __global float* result) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float e1 = ema1[0];
     float e2 = ema2[0];
     float t2 = (as_float(0x40000000u) * e1);
@@ -243,7 +243,7 @@ const char* k_opencl_navatala_ml_dema_extract_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_ml_dema_extract_f64(__global const double* ema1, __global const double* ema2, __global double* result) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double e1 = ema1[0];
     double e2 = ema2[0];
     double t2 = (as_double(0x4000000000000000ul) * e1);
@@ -258,7 +258,7 @@ __kernel void navatala_ml_maxpool_f32(__global const float* _input, __global con
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     uint windowVal = window[0];
     uint strideVal = stride[0];
     uint inCountVal = inCount[0];
@@ -266,7 +266,7 @@ __kernel void navatala_ml_maxpool_f32(__global const float* _input, __global con
     float acc = as_float(0xff7fc99eu);
     for (int w = 0; w < (int)(windowVal); ++w) {
       uint idx = (base + ((uint)(w)));
-      if ((idx < inCountVal)) {
+      if (idx < inCountVal) {
         float v = _input[idx];
         acc = (((acc > v)) ? (acc) : (v));
       }
@@ -281,7 +281,7 @@ __kernel void navatala_ml_avgpool_exclude_pad_f32(__global const float* _input, 
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     uint windowVal = window[0];
     uint strideVal = stride[0];
     uint inCountVal = inCount[0];
@@ -290,7 +290,7 @@ __kernel void navatala_ml_avgpool_exclude_pad_f32(__global const float* _input, 
     float cnt = as_float(0x00000000u);
     for (int w = 0; w < (int)(windowVal); ++w) {
       uint idx = (base + ((uint)(w)));
-      if ((idx < inCountVal)) {
+      if (idx < inCountVal) {
         float v = _input[idx];
         sum = (sum + v);
         cnt = (cnt + as_float(0x3f800000u));
@@ -306,7 +306,7 @@ __kernel void navatala_ml_avgpool_include_pad_f32(__global const float* _input, 
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     uint windowVal = window[0];
     uint strideVal = stride[0];
     uint inCountVal = inCount[0];
@@ -315,7 +315,7 @@ __kernel void navatala_ml_avgpool_include_pad_f32(__global const float* _input, 
     float cnt = as_float(0x00000000u);
     for (int w = 0; w < (int)(windowVal); ++w) {
       uint idx = (base + ((uint)(w)));
-      if ((idx < inCountVal)) {
+      if (idx < inCountVal) {
         float v = _input[idx];
         sum = (sum + v);
         cnt = (cnt + as_float(0x3f800000u));
@@ -331,7 +331,7 @@ __kernel void navatala_ml_resize_nearest_f32(__global const float* _input, __glo
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint outSizeVal = outSize[0];
-  if ((gid < outSizeVal)) {
+  if (gid < outSizeVal) {
     uint inSizeVal = inSize[0];
     uint idx = ((gid * inSizeVal) / outSizeVal);
     float v = _input[idx];
@@ -345,7 +345,7 @@ __kernel void navatala_ml_resize_bilinear_f32(__global const float* _input, __gl
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint outSizeVal = outSize[0];
-  if ((gid < outSizeVal)) {
+  if (gid < outSizeVal) {
     uint inSizeVal = inSize[0];
     uint inM1 = (inSizeVal - (uint)(1u));
     uint outM1 = (outSizeVal - (uint)(1u));
@@ -369,7 +369,7 @@ __kernel void navatala_ml_maxpool_f16(__global const half* _input, __global cons
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     uint windowVal = window[0];
     uint strideVal = stride[0];
     uint inCountVal = inCount[0];
@@ -377,7 +377,7 @@ __kernel void navatala_ml_maxpool_f16(__global const half* _input, __global cons
     float acc = as_float(0xff7fc99eu);
     for (int w = 0; w < (int)(windowVal); ++w) {
       uint idx = (base + ((uint)(w)));
-      if ((idx < inCountVal)) {
+      if (idx < inCountVal) {
         float v = ((float)(_input[idx]));
         acc = (((acc > v)) ? (acc) : (v));
       }
@@ -393,7 +393,7 @@ __kernel void navatala_ml_avgpool_exclude_pad_f16(__global const half* _input, _
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     uint windowVal = window[0];
     uint strideVal = stride[0];
     uint inCountVal = inCount[0];
@@ -402,7 +402,7 @@ __kernel void navatala_ml_avgpool_exclude_pad_f16(__global const half* _input, _
     float cnt = as_float(0x00000000u);
     for (int w = 0; w < (int)(windowVal); ++w) {
       uint idx = (base + ((uint)(w)));
-      if ((idx < inCountVal)) {
+      if (idx < inCountVal) {
         float v = ((float)(_input[idx]));
         sum = (sum + v);
         cnt = (cnt + as_float(0x3f800000u));
@@ -419,7 +419,7 @@ __kernel void navatala_ml_avgpool_include_pad_f16(__global const half* _input, _
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     uint windowVal = window[0];
     uint strideVal = stride[0];
     uint inCountVal = inCount[0];
@@ -428,7 +428,7 @@ __kernel void navatala_ml_avgpool_include_pad_f16(__global const half* _input, _
     float cnt = as_float(0x00000000u);
     for (int w = 0; w < (int)(windowVal); ++w) {
       uint idx = (base + ((uint)(w)));
-      if ((idx < inCountVal)) {
+      if (idx < inCountVal) {
         float v = ((float)(_input[idx]));
         sum = (sum + v);
         cnt = (cnt + as_float(0x3f800000u));
@@ -445,7 +445,7 @@ __kernel void navatala_ml_resize_nearest_f16(__global const half* _input, __glob
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint outSizeVal = outSize[0];
-  if ((gid < outSizeVal)) {
+  if (gid < outSizeVal) {
     uint inSizeVal = inSize[0];
     uint idx = ((gid * inSizeVal) / outSizeVal);
     half v = _input[idx];
@@ -460,7 +460,7 @@ __kernel void navatala_ml_resize_bilinear_f16(__global const half* _input, __glo
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint outSizeVal = outSize[0];
-  if ((gid < outSizeVal)) {
+  if (gid < outSizeVal) {
     uint inSizeVal = inSize[0];
     uint inM1 = (inSizeVal - (uint)(1u));
     uint outM1 = (outSizeVal - (uint)(1u));
@@ -483,7 +483,7 @@ __kernel void navatala_ml_reshape_f32(__global const float* _input, __global con
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float v = _input[gid];
     _output[gid] = v;
   }
@@ -495,7 +495,7 @@ __kernel void navatala_ml_slice_f32(__global const float* _input, __global const
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     uint offsetVal = offset[0];
     uint srcIdx = (offsetVal + gid);
     float v = _input[srcIdx];
@@ -509,7 +509,7 @@ __kernel void navatala_ml_transpose_f32(__global const float* _input, __global c
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint ncolsVal = ncols[0];
     uint nrowsVal = nrows[0];
     uint r = (gid / ncolsVal);
@@ -526,15 +526,15 @@ __kernel void navatala_ml_concatenate2_f32(__global const float* a, __global con
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint nAVal = nA[0];
-    if ((gid < nAVal)) {
+    if (gid < nAVal) {
       float v = a[gid];
       _output[gid] = v;
     } else {
       uint srcIdx = (gid - nAVal);
       uint nBVal = nB[0];
-      if ((srcIdx < nBVal)) {
+      if (srcIdx < nBVal) {
         float v = b[srcIdx];
         _output[gid] = v;
       }
@@ -549,7 +549,7 @@ __kernel void navatala_ml_reshape_f16(__global const half* _input, __global cons
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half v = _input[gid];
     _output[gid] = v;
   }
@@ -562,7 +562,7 @@ __kernel void navatala_ml_slice_f16(__global const half* _input, __global const 
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     uint offsetVal = offset[0];
     uint srcIdx = (offsetVal + gid);
     half v = _input[srcIdx];
@@ -577,7 +577,7 @@ __kernel void navatala_ml_transpose_f16(__global const half* _input, __global co
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint ncolsVal = ncols[0];
     uint nrowsVal = nrows[0];
     uint r = (gid / ncolsVal);
@@ -595,15 +595,15 @@ __kernel void navatala_ml_concatenate2_f16(__global const half* a, __global cons
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint nAVal = nA[0];
-    if ((gid < nAVal)) {
+    if (gid < nAVal) {
       half v = a[gid];
       _output[gid] = v;
     } else {
       uint srcIdx = (gid - nAVal);
       uint nBVal = nB[0];
-      if ((srcIdx < nBVal)) {
+      if (srcIdx < nBVal) {
         half v = b[srcIdx];
         _output[gid] = v;
       }
@@ -622,7 +622,7 @@ __kernel void navatala_ml_softmax_f32(__global const float* _input, __global con
   float gsMax = as_float(0xff7fc99eu);
   for (int itA = 0; itA < (int)(numIters); ++itA) {
     uint idxA = (lid + (((uint)(itA)) * (uint)(256u)));
-    if ((idxA < countVal)) {
+    if (idxA < countVal) {
       float xA = _input[idxA];
       gsMax = (((gsMax > xA)) ? (gsMax) : (xA));
     }
@@ -632,7 +632,7 @@ __kernel void navatala_ml_softmax_f32(__global const float* _input, __global con
   uint maxStride = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = maxStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (((mine > other)) ? (mine) : (other));
@@ -648,7 +648,7 @@ __kernel void navatala_ml_softmax_f32(__global const float* _input, __global con
   float gsSum = as_float(0x00000000u);
   for (int itB = 0; itB < (int)(numIters); ++itB) {
     uint idxB = (lid + (((uint)(itB)) * (uint)(256u)));
-    if ((idxB < countVal)) {
+    if (idxB < countVal) {
       float eB = exp((_input[idxB] - maxVal));
       gsSum = (gsSum + eB);
     }
@@ -658,7 +658,7 @@ __kernel void navatala_ml_softmax_f32(__global const float* _input, __global con
   uint sumStride = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = sumStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -672,7 +672,7 @@ __kernel void navatala_ml_softmax_f32(__global const float* _input, __global con
   float sumVal = sdata[0];
   for (int itC = 0; itC < (int)(numIters); ++itC) {
     uint idxC = (lid + (((uint)(itC)) * (uint)(256u)));
-    if ((idxC < countVal)) {
+    if (idxC < countVal) {
       float eC = exp((_input[idxC] - maxVal));
       _output[idxC] = (eC / sumVal);
     }
@@ -691,7 +691,7 @@ __kernel void navatala_ml_softmax_f16(__global const half* _input, __global cons
   float gsMax = as_float(0xff7fc99eu);
   for (int itA = 0; itA < (int)(numIters); ++itA) {
     uint idxA = (lid + (((uint)(itA)) * (uint)(256u)));
-    if ((idxA < countVal)) {
+    if (idxA < countVal) {
       float xA = ((float)(_input[idxA]));
       gsMax = (((gsMax > xA)) ? (gsMax) : (xA));
     }
@@ -701,7 +701,7 @@ __kernel void navatala_ml_softmax_f16(__global const half* _input, __global cons
   uint maxStride = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = maxStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (((mine > other)) ? (mine) : (other));
@@ -717,7 +717,7 @@ __kernel void navatala_ml_softmax_f16(__global const half* _input, __global cons
   float gsSum = as_float(0x00000000u);
   for (int itB = 0; itB < (int)(numIters); ++itB) {
     uint idxB = (lid + (((uint)(itB)) * (uint)(256u)));
-    if ((idxB < countVal)) {
+    if (idxB < countVal) {
       float eB = exp((((float)(_input[idxB])) - maxVal));
       gsSum = (gsSum + eB);
     }
@@ -727,7 +727,7 @@ __kernel void navatala_ml_softmax_f16(__global const half* _input, __global cons
   uint sumStride = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = sumStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -741,7 +741,7 @@ __kernel void navatala_ml_softmax_f16(__global const half* _input, __global cons
   float sumVal = sdata[0];
   for (int itC = 0; itC < (int)(numIters); ++itC) {
     uint idxC = (lid + (((uint)(itC)) * (uint)(256u)));
-    if ((idxC < countVal)) {
+    if (idxC < countVal) {
       float eC = exp((((float)(_input[idxC])) - maxVal));
       _output[idxC] = ((half)((eC / sumVal)));
     }
@@ -760,7 +760,7 @@ __kernel void navatala_ml_layernorm_f32(__global const float* x, __global const 
   float epsVal = eps[0];
   float gsM = as_float(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((uint)(itM)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itM)) * (uint)(256u))) < countVal) {
       gsM = (gsM + x[(lid + (((uint)(itM)) * (uint)(256u)))]);
     }
   }
@@ -769,7 +769,7 @@ __kernel void navatala_ml_layernorm_f32(__global const float* x, __global const 
   uint meanStr = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -784,7 +784,7 @@ __kernel void navatala_ml_layernorm_f32(__global const float* x, __global const 
   barrier(CLK_LOCAL_MEM_FENCE);
   float gsV = as_float(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((uint)(itV)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itV)) * (uint)(256u))) < countVal) {
       gsV = (gsV + ((x[(lid + (((uint)(itV)) * (uint)(256u)))] - mean) * (x[(lid + (((uint)(itV)) * (uint)(256u)))] - mean)));
     }
   }
@@ -793,7 +793,7 @@ __kernel void navatala_ml_layernorm_f32(__global const float* x, __global const 
   uint varStr = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -808,7 +808,7 @@ __kernel void navatala_ml_layernorm_f32(__global const float* x, __global const 
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
     uint idxW = (lid + (((uint)(itW)) * (uint)(256u)));
-    if ((idxW < countVal)) {
+    if (idxW < countVal) {
       float xnW = ((x[idxW] - mean) / denom);
       float outF = ((gamma[idxW] * xnW) + beta[idxW]);
       _output[idxW] = outF;
@@ -834,7 +834,7 @@ __kernel void navatala_ml_spatial_batchnorm_f32(__global const float* x, __globa
   float epsVal = eps[0];
   float gsM = as_float(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((uint)(itM)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itM)) * (uint)(256u))) < countVal) {
       gsM = (gsM + x[(((((lid + (((uint)(itM)) * (uint)(256u))) / HWv) * CHW) + chBase) + ((lid + (((uint)(itM)) * (uint)(256u))) % HWv))]);
     }
   }
@@ -843,7 +843,7 @@ __kernel void navatala_ml_spatial_batchnorm_f32(__global const float* x, __globa
   uint meanStr = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -858,7 +858,7 @@ __kernel void navatala_ml_spatial_batchnorm_f32(__global const float* x, __globa
   barrier(CLK_LOCAL_MEM_FENCE);
   float gsV = as_float(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((uint)(itV)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itV)) * (uint)(256u))) < countVal) {
       gsV = (gsV + ((x[(((((lid + (((uint)(itV)) * (uint)(256u))) / HWv) * CHW) + chBase) + ((lid + (((uint)(itV)) * (uint)(256u))) % HWv))] - mean) * (x[(((((lid + (((uint)(itV)) * (uint)(256u))) / HWv) * CHW) + chBase) + ((lid + (((uint)(itV)) * (uint)(256u))) % HWv))] - mean)));
     }
   }
@@ -867,7 +867,7 @@ __kernel void navatala_ml_spatial_batchnorm_f32(__global const float* x, __globa
   uint varStr = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -881,7 +881,7 @@ __kernel void navatala_ml_spatial_batchnorm_f32(__global const float* x, __globa
   float var = (sdata[0] / n);
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
-    if (((lid + (((uint)(itW)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itW)) * (uint)(256u))) < countVal) {
       float gv = gamma[grp];
       float bv = beta[grp];
       float xv = x[(((((lid + (((uint)(itW)) * (uint)(256u))) / HWv) * CHW) + chBase) + ((lid + (((uint)(itW)) * (uint)(256u))) % HWv))];
@@ -908,7 +908,7 @@ __kernel void navatala_ml_instancenorm_f32(__global const float* x, __global con
   float epsVal = eps[0];
   float gsM = as_float(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((uint)(itM)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itM)) * (uint)(256u))) < countVal) {
       gsM = (gsM + x[(base + (lid + (((uint)(itM)) * (uint)(256u))))]);
     }
   }
@@ -917,7 +917,7 @@ __kernel void navatala_ml_instancenorm_f32(__global const float* x, __global con
   uint meanStr = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -932,7 +932,7 @@ __kernel void navatala_ml_instancenorm_f32(__global const float* x, __global con
   barrier(CLK_LOCAL_MEM_FENCE);
   float gsV = as_float(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((uint)(itV)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itV)) * (uint)(256u))) < countVal) {
       gsV = (gsV + ((x[(base + (lid + (((uint)(itV)) * (uint)(256u))))] - mean) * (x[(base + (lid + (((uint)(itV)) * (uint)(256u))))] - mean)));
     }
   }
@@ -941,7 +941,7 @@ __kernel void navatala_ml_instancenorm_f32(__global const float* x, __global con
   uint varStr = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -955,7 +955,7 @@ __kernel void navatala_ml_instancenorm_f32(__global const float* x, __global con
   float var = (sdata[0] / n);
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
-    if (((lid + (((uint)(itW)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itW)) * (uint)(256u))) < countVal) {
       float gv = gamma[chan];
       float bv = beta[chan];
       float xv = x[(base + (lid + (((uint)(itW)) * (uint)(256u))))];
@@ -971,7 +971,7 @@ __kernel void navatala_ml_batchnorm_inference_f32(__global const float* x, __glo
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float epsVal = eps[0];
     float d = (x[gid] - mean[gid]);
     float denom = sqrt((var[gid] + epsVal));
@@ -993,7 +993,7 @@ __kernel void navatala_ml_layernorm_backward_f32(__global const float* x, __glob
   float epsVal = eps[0];
   float gM = as_float(0x00000000u);
   for (int itm = 0; itm < (int)(numIters); ++itm) {
-    if (((lid + (((uint)(itm)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itm)) * (uint)(256u))) < countVal) {
       gM = (gM + x[(lid + (((uint)(itm)) * (uint)(256u)))]);
     }
   }
@@ -1002,7 +1002,7 @@ __kernel void navatala_ml_layernorm_backward_f32(__global const float* x, __glob
   uint mStr = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = mStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1017,7 +1017,7 @@ __kernel void navatala_ml_layernorm_backward_f32(__global const float* x, __glob
   barrier(CLK_LOCAL_MEM_FENCE);
   float gV = as_float(0x00000000u);
   for (int itv = 0; itv < (int)(numIters); ++itv) {
-    if (((lid + (((uint)(itv)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itv)) * (uint)(256u))) < countVal) {
       gV = (gV + ((x[(lid + (((uint)(itv)) * (uint)(256u)))] - mean) * (x[(lid + (((uint)(itv)) * (uint)(256u)))] - mean)));
     }
   }
@@ -1026,7 +1026,7 @@ __kernel void navatala_ml_layernorm_backward_f32(__global const float* x, __glob
   uint vStr = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = vStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1042,7 +1042,7 @@ __kernel void navatala_ml_layernorm_backward_f32(__global const float* x, __glob
   barrier(CLK_LOCAL_MEM_FENCE);
   float g1 = as_float(0x00000000u);
   for (int it1 = 0; it1 < (int)(numIters); ++it1) {
-    if (((lid + (((uint)(it1)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(it1)) * (uint)(256u))) < countVal) {
       g1 = (g1 + (dy[(lid + (((uint)(it1)) * (uint)(256u)))] * gamma[(lid + (((uint)(it1)) * (uint)(256u)))]));
     }
   }
@@ -1051,7 +1051,7 @@ __kernel void navatala_ml_layernorm_backward_f32(__global const float* x, __glob
   uint s1Str = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = s1Str;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1066,7 +1066,7 @@ __kernel void navatala_ml_layernorm_backward_f32(__global const float* x, __glob
   barrier(CLK_LOCAL_MEM_FENCE);
   float g2 = as_float(0x00000000u);
   for (int it2 = 0; it2 < (int)(numIters); ++it2) {
-    if (((lid + (((uint)(it2)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(it2)) * (uint)(256u))) < countVal) {
       g2 = (g2 + ((dy[(lid + (((uint)(it2)) * (uint)(256u)))] * gamma[(lid + (((uint)(it2)) * (uint)(256u)))]) * ((x[(lid + (((uint)(it2)) * (uint)(256u)))] - mean) / std)));
     }
   }
@@ -1075,7 +1075,7 @@ __kernel void navatala_ml_layernorm_backward_f32(__global const float* x, __glob
   uint s2Str = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = s2Str;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1089,7 +1089,7 @@ __kernel void navatala_ml_layernorm_backward_f32(__global const float* x, __glob
   float m2 = (sdata[0] / n);
   for (int itw = 0; itw < (int)(numIters); ++itw) {
     uint idw = (lid + (((uint)(itw)) * (uint)(256u)));
-    if ((idw < countVal)) {
+    if (idw < countVal) {
       float xhatw = ((x[idw] - mean) / std);
       float dyvw = dy[idw];
       float dxhw = (dyvw * gamma[idw]);
@@ -1114,7 +1114,7 @@ __kernel void navatala_ml_layernorm_f16(__global const half* x, __global const h
   float epsVal = eps[0];
   float gsM = as_float(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((uint)(itM)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itM)) * (uint)(256u))) < countVal) {
       gsM = (gsM + ((float)(x[(lid + (((uint)(itM)) * (uint)(256u)))])));
     }
   }
@@ -1123,7 +1123,7 @@ __kernel void navatala_ml_layernorm_f16(__global const half* x, __global const h
   uint meanStr = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1138,7 +1138,7 @@ __kernel void navatala_ml_layernorm_f16(__global const half* x, __global const h
   barrier(CLK_LOCAL_MEM_FENCE);
   float gsV = as_float(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((uint)(itV)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itV)) * (uint)(256u))) < countVal) {
       gsV = (gsV + ((((float)(x[(lid + (((uint)(itV)) * (uint)(256u)))])) - mean) * (((float)(x[(lid + (((uint)(itV)) * (uint)(256u)))])) - mean)));
     }
   }
@@ -1147,7 +1147,7 @@ __kernel void navatala_ml_layernorm_f16(__global const half* x, __global const h
   uint varStr = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1162,7 +1162,7 @@ __kernel void navatala_ml_layernorm_f16(__global const half* x, __global const h
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
     uint idxW = (lid + (((uint)(itW)) * (uint)(256u)));
-    if ((idxW < countVal)) {
+    if (idxW < countVal) {
       float xnW = ((((float)(x[idxW])) - mean) / denom);
       float outF = ((((float)(gamma[idxW])) * xnW) + ((float)(beta[idxW])));
       _output[idxW] = ((half)(outF));
@@ -1189,7 +1189,7 @@ __kernel void navatala_ml_spatial_batchnorm_f16(__global const half* x, __global
   float epsVal = eps[0];
   float gsM = as_float(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((uint)(itM)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itM)) * (uint)(256u))) < countVal) {
       gsM = (gsM + ((float)(x[(((((lid + (((uint)(itM)) * (uint)(256u))) / HWv) * CHW) + chBase) + ((lid + (((uint)(itM)) * (uint)(256u))) % HWv))])));
     }
   }
@@ -1198,7 +1198,7 @@ __kernel void navatala_ml_spatial_batchnorm_f16(__global const half* x, __global
   uint meanStr = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1213,7 +1213,7 @@ __kernel void navatala_ml_spatial_batchnorm_f16(__global const half* x, __global
   barrier(CLK_LOCAL_MEM_FENCE);
   float gsV = as_float(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((uint)(itV)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itV)) * (uint)(256u))) < countVal) {
       gsV = (gsV + ((((float)(x[(((((lid + (((uint)(itV)) * (uint)(256u))) / HWv) * CHW) + chBase) + ((lid + (((uint)(itV)) * (uint)(256u))) % HWv))])) - mean) * (((float)(x[(((((lid + (((uint)(itV)) * (uint)(256u))) / HWv) * CHW) + chBase) + ((lid + (((uint)(itV)) * (uint)(256u))) % HWv))])) - mean)));
     }
   }
@@ -1222,7 +1222,7 @@ __kernel void navatala_ml_spatial_batchnorm_f16(__global const half* x, __global
   uint varStr = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1236,7 +1236,7 @@ __kernel void navatala_ml_spatial_batchnorm_f16(__global const half* x, __global
   float var = (sdata[0] / n);
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
-    if (((lid + (((uint)(itW)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itW)) * (uint)(256u))) < countVal) {
       float gv = ((float)(gamma[grp]));
       float bv = ((float)(beta[grp]));
       float xv = ((float)(x[(((((lid + (((uint)(itW)) * (uint)(256u))) / HWv) * CHW) + chBase) + ((lid + (((uint)(itW)) * (uint)(256u))) % HWv))]));
@@ -1264,7 +1264,7 @@ __kernel void navatala_ml_instancenorm_f16(__global const half* x, __global cons
   float epsVal = eps[0];
   float gsM = as_float(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((uint)(itM)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itM)) * (uint)(256u))) < countVal) {
       gsM = (gsM + ((float)(x[(base + (lid + (((uint)(itM)) * (uint)(256u))))])));
     }
   }
@@ -1273,7 +1273,7 @@ __kernel void navatala_ml_instancenorm_f16(__global const half* x, __global cons
   uint meanStr = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1288,7 +1288,7 @@ __kernel void navatala_ml_instancenorm_f16(__global const half* x, __global cons
   barrier(CLK_LOCAL_MEM_FENCE);
   float gsV = as_float(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((uint)(itV)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itV)) * (uint)(256u))) < countVal) {
       gsV = (gsV + ((((float)(x[(base + (lid + (((uint)(itV)) * (uint)(256u))))])) - mean) * (((float)(x[(base + (lid + (((uint)(itV)) * (uint)(256u))))])) - mean)));
     }
   }
@@ -1297,7 +1297,7 @@ __kernel void navatala_ml_instancenorm_f16(__global const half* x, __global cons
   uint varStr = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1311,7 +1311,7 @@ __kernel void navatala_ml_instancenorm_f16(__global const half* x, __global cons
   float var = (sdata[0] / n);
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
-    if (((lid + (((uint)(itW)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itW)) * (uint)(256u))) < countVal) {
       float gv = ((float)(gamma[chan]));
       float bv = ((float)(beta[chan]));
       float xv = ((float)(x[(base + (lid + (((uint)(itW)) * (uint)(256u))))]));
@@ -1328,7 +1328,7 @@ __kernel void navatala_ml_batchnorm_inference_f16(__global const half* x, __glob
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float epsVal = eps[0];
     float d = (((float)(x[gid])) - ((float)(mean[gid])));
     float denom = sqrt((((float)(var[gid])) + epsVal));
@@ -1351,7 +1351,7 @@ __kernel void navatala_ml_layernorm_backward_f16(__global const half* x, __globa
   float epsVal = eps[0];
   float gM = as_float(0x00000000u);
   for (int itm = 0; itm < (int)(numIters); ++itm) {
-    if (((lid + (((uint)(itm)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itm)) * (uint)(256u))) < countVal) {
       gM = (gM + ((float)(x[(lid + (((uint)(itm)) * (uint)(256u)))])));
     }
   }
@@ -1360,7 +1360,7 @@ __kernel void navatala_ml_layernorm_backward_f16(__global const half* x, __globa
   uint mStr = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = mStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1375,7 +1375,7 @@ __kernel void navatala_ml_layernorm_backward_f16(__global const half* x, __globa
   barrier(CLK_LOCAL_MEM_FENCE);
   float gV = as_float(0x00000000u);
   for (int itv = 0; itv < (int)(numIters); ++itv) {
-    if (((lid + (((uint)(itv)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itv)) * (uint)(256u))) < countVal) {
       gV = (gV + ((((float)(x[(lid + (((uint)(itv)) * (uint)(256u)))])) - mean) * (((float)(x[(lid + (((uint)(itv)) * (uint)(256u)))])) - mean)));
     }
   }
@@ -1384,7 +1384,7 @@ __kernel void navatala_ml_layernorm_backward_f16(__global const half* x, __globa
   uint vStr = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = vStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1400,7 +1400,7 @@ __kernel void navatala_ml_layernorm_backward_f16(__global const half* x, __globa
   barrier(CLK_LOCAL_MEM_FENCE);
   float g1 = as_float(0x00000000u);
   for (int it1 = 0; it1 < (int)(numIters); ++it1) {
-    if (((lid + (((uint)(it1)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(it1)) * (uint)(256u))) < countVal) {
       g1 = (g1 + (((float)(dy[(lid + (((uint)(it1)) * (uint)(256u)))])) * ((float)(gamma[(lid + (((uint)(it1)) * (uint)(256u)))]))));
     }
   }
@@ -1409,7 +1409,7 @@ __kernel void navatala_ml_layernorm_backward_f16(__global const half* x, __globa
   uint s1Str = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = s1Str;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1424,7 +1424,7 @@ __kernel void navatala_ml_layernorm_backward_f16(__global const half* x, __globa
   barrier(CLK_LOCAL_MEM_FENCE);
   float g2 = as_float(0x00000000u);
   for (int it2 = 0; it2 < (int)(numIters); ++it2) {
-    if (((lid + (((uint)(it2)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(it2)) * (uint)(256u))) < countVal) {
       g2 = (g2 + ((((float)(dy[(lid + (((uint)(it2)) * (uint)(256u)))])) * ((float)(gamma[(lid + (((uint)(it2)) * (uint)(256u)))]))) * ((((float)(x[(lid + (((uint)(it2)) * (uint)(256u)))])) - mean) / std)));
     }
   }
@@ -1433,7 +1433,7 @@ __kernel void navatala_ml_layernorm_backward_f16(__global const half* x, __globa
   uint s2Str = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = s2Str;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1447,7 +1447,7 @@ __kernel void navatala_ml_layernorm_backward_f16(__global const half* x, __globa
   float m2 = (sdata[0] / n);
   for (int itw = 0; itw < (int)(numIters); ++itw) {
     uint idw = (lid + (((uint)(itw)) * (uint)(256u)));
-    if ((idw < countVal)) {
+    if (idw < countVal) {
       float xhatw = ((((float)(x[idw])) - mean) / std);
       float dyvw = ((float)(dy[idw]));
       float dxhw = (dyvw * ((float)(gamma[idw])));
@@ -1466,7 +1466,7 @@ __kernel void navatala_ml_uniform_f32(__global const uint* count, __global const
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
   uint seedVal = seed[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint uk0 = ((seedVal + (gid * (uint)(2654435769u))) + (uint)(0u));
     uint uk1 = ((uk0 ^ (uk0 >> (uint)(16u))) * (uint)(2246822519u));
     uint uk2 = ((uk1 ^ (uk1 >> (uint)(13u))) * (uint)(3266489917u));
@@ -1484,7 +1484,7 @@ __kernel void navatala_ml_bernoulli_f32(__global const uint* count, __global con
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
   uint seedVal = seed[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint uk0 = ((seedVal + (gid * (uint)(2654435769u))) + (uint)(0u));
     uint uk1 = ((uk0 ^ (uk0 >> (uint)(16u))) * (uint)(2246822519u));
     uint uk2 = ((uk1 ^ (uk1 >> (uint)(13u))) * (uint)(3266489917u));
@@ -1504,7 +1504,7 @@ __kernel void navatala_ml_normal_f32(__global const uint* count, __global const 
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
   uint seedVal = seed[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint ak0 = ((seedVal + (gid * (uint)(2654435769u))) + (uint)(0u));
     uint ak1 = ((ak0 ^ (ak0 >> (uint)(16u))) * (uint)(2246822519u));
     uint ak2 = ((ak1 ^ (ak1 >> (uint)(13u))) * (uint)(3266489917u));
@@ -1531,7 +1531,7 @@ __kernel void navatala_ml_uniform_f16(__global const uint* count, __global const
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
   uint seedVal = seed[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint uk0 = ((seedVal + (gid * (uint)(2654435769u))) + (uint)(0u));
     uint uk1 = ((uk0 ^ (uk0 >> (uint)(16u))) * (uint)(2246822519u));
     uint uk2 = ((uk1 ^ (uk1 >> (uint)(13u))) * (uint)(3266489917u));
@@ -1550,7 +1550,7 @@ __kernel void navatala_ml_bernoulli_f16(__global const uint* count, __global con
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
   uint seedVal = seed[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint uk0 = ((seedVal + (gid * (uint)(2654435769u))) + (uint)(0u));
     uint uk1 = ((uk0 ^ (uk0 >> (uint)(16u))) * (uint)(2246822519u));
     uint uk2 = ((uk1 ^ (uk1 >> (uint)(13u))) * (uint)(3266489917u));
@@ -1571,7 +1571,7 @@ __kernel void navatala_ml_normal_f16(__global const uint* count, __global const 
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
   uint seedVal = seed[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint ak0 = ((seedVal + (gid * (uint)(2654435769u))) + (uint)(0u));
     uint ak1 = ((ak0 ^ (ak0 >> (uint)(16u))) * (uint)(2246822519u));
     uint ak2 = ((ak1 ^ (ak1 >> (uint)(13u))) * (uint)(3266489917u));
@@ -1595,7 +1595,7 @@ const char* k_opencl_navatala_ml_kde_bandwidth_silverman_f32 = R"kernel(
 __kernel void navatala_ml_kde_bandwidth_silverman_f32(__global const float* stddev, __global const uint* n, __global float* bandwidth) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     float sigma = stddev[0];
     uint count = n[0];
     float countF = ((float)(count));
@@ -1613,7 +1613,7 @@ const char* k_opencl_navatala_ml_kde_bandwidth_silverman_f64 = R"kernel(
 __kernel void navatala_ml_kde_bandwidth_silverman_f64(__global const double* stddev, __global const uint* n, __global double* bandwidth) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     double sigma = stddev[0];
     uint count = n[0];
     double countF = ((double)(count));
@@ -1630,7 +1630,7 @@ const char* k_opencl_navatala_ml_kde_bandwidth_scott_f32 = R"kernel(
 __kernel void navatala_ml_kde_bandwidth_scott_f32(__global const float* stddev, __global const uint* n, __global float* bandwidth) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     float sigma = stddev[0];
     uint count = n[0];
     float countF = ((float)(count));
@@ -1648,7 +1648,7 @@ const char* k_opencl_navatala_ml_kde_bandwidth_scott_f64 = R"kernel(
 __kernel void navatala_ml_kde_bandwidth_scott_f64(__global const double* stddev, __global const uint* n, __global double* bandwidth) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     double sigma = stddev[0];
     uint count = n[0];
     double countF = ((double)(count));
@@ -1801,7 +1801,7 @@ const char* k_opencl_navatala_ml_kde_find_mode_f32 = R"kernel(
 __kernel void navatala_ml_kde_find_mode_f32(__global const float* densities, __global const float* queryPoints, __global const uint* m, __global float* modeValue, __global float* modeLocation) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint numPoints = m[0];
     float maxDensity = densities[0];
     float maxLocation = queryPoints[0];
@@ -1830,7 +1830,7 @@ const char* k_opencl_navatala_ml_kde_find_mode_f64 = R"kernel(
 __kernel void navatala_ml_kde_find_mode_f64(__global const double* densities, __global const double* queryPoints, __global const uint* m, __global double* modeValue, __global double* modeLocation) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint numPoints = m[0];
     double maxDensity = densities[0];
     double maxLocation = queryPoints[0];
@@ -2372,7 +2372,7 @@ __kernel void navatala_ml_assign_to_centroids_f32(__global const float* data, __
       }
       float distSum = distSumAccum;
       float bestDist = bestDistAccum;
-      if ((distSum < bestDist)) {
+      if (distSum < bestDist) {
         bestDistAccum = distSum;
         bestClusterAccum = cU32;
       }
@@ -2415,7 +2415,7 @@ __kernel void navatala_ml_assign_to_centroids_f64(__global const double* data, _
       }
       double distSum = distSumAccum;
       double bestDist = bestDistAccum;
-      if ((distSum < bestDist)) {
+      if (distSum < bestDist) {
         bestDistAccum = distSum;
         bestClusterAccum = cU32;
       }
@@ -2555,7 +2555,7 @@ __kernel void navatala_ml_compute_inertia_f32(__global const float* data, __glob
   uint inertiaF32RedStride = (uint)(128u);
   for (int inertiaF32RedStep = 0; inertiaF32RedStep < (int)(8); ++inertiaF32RedStep) {
     uint inertiaF32Stride = inertiaF32RedStride;
-    if ((lid < inertiaF32Stride)) {
+    if (lid < inertiaF32Stride) {
       float other = sdata[(lid + inertiaF32Stride)];
       float mine = sdata[lid];
       float sum = (mine + other);
@@ -2566,7 +2566,7 @@ __kernel void navatala_ml_compute_inertia_f32(__global const float* data, __glob
     inertiaF32RedStride = inertiaF32NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     inertia[0] = sdata[0];
   }
 }
@@ -2610,7 +2610,7 @@ __kernel void navatala_ml_compute_inertia_f64(__global const double* data, __glo
   uint inertiaF64RedStride = (uint)(128u);
   for (int inertiaF64RedStep = 0; inertiaF64RedStep < (int)(8); ++inertiaF64RedStep) {
     uint inertiaF64Stride = inertiaF64RedStride;
-    if ((lid < inertiaF64Stride)) {
+    if (lid < inertiaF64Stride) {
       double other = sdata[(lid + inertiaF64Stride)];
       double mine = sdata[lid];
       double sum = (mine + other);
@@ -2621,7 +2621,7 @@ __kernel void navatala_ml_compute_inertia_f64(__global const double* data, __glo
     inertiaF64RedStride = inertiaF64NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     inertia[0] = sdata[0];
   }
 }
@@ -3083,7 +3083,7 @@ const char* k_opencl_navatala_ml_compute_log_likelihood_f32 = R"kernel(
 __kernel void navatala_ml_compute_log_likelihood_f32(__global const float* logPdf, __global const float* weights, __global const uint* n, __global const uint* k, __global float* logLikelihood) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint numN = n[0];
     uint numK = k[0];
     float totalLLAccum = as_float(0x00000000u);
@@ -3137,7 +3137,7 @@ const char* k_opencl_navatala_ml_compute_log_likelihood_f64 = R"kernel(
 __kernel void navatala_ml_compute_log_likelihood_f64(__global const double* logPdf, __global const double* weights, __global const uint* n, __global const uint* k, __global double* logLikelihood) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint numN = n[0];
     uint numK = k[0];
     double totalLLAccum = as_double(0x0000000000000000ul);
@@ -3260,7 +3260,7 @@ __kernel void navatala_ml_compute_xt_y_f32(__global const float* X, __global con
     uint xtyF32Stride = (uint)(128u);
     for (int reductionStep1 = 0; reductionStep1 < (int)(8); ++reductionStep1) {
       uint stride1 = xtyF32Stride;
-      if ((lid < stride1)) {
+      if (lid < stride1) {
         float other = sdata[(lid + stride1)];
         float mine = sdata[lid];
         float sum = (mine + other);
@@ -3271,7 +3271,7 @@ __kernel void navatala_ml_compute_xt_y_f32(__global const float* X, __global con
       xtyF32Stride = nextStride1;
       barrier(CLK_LOCAL_MEM_FENCE);
     }
-    if ((lid == (uint)(0u))) {
+    if (lid == (uint)(0u)) {
       float totalSum = sdata[0];
       Xty[featureIdx] = totalSum;
     }
@@ -3307,7 +3307,7 @@ __kernel void navatala_ml_compute_xt_y_f64(__global const double* X, __global co
     uint xtyF64Stride = (uint)(128u);
     for (int reductionStep2 = 0; reductionStep2 < (int)(8); ++reductionStep2) {
       uint stride2 = xtyF64Stride;
-      if ((lid < stride2)) {
+      if (lid < stride2) {
         double other = sdata[(lid + stride2)];
         double mine = sdata[lid];
         double sum = (mine + other);
@@ -3318,7 +3318,7 @@ __kernel void navatala_ml_compute_xt_y_f64(__global const double* X, __global co
       xtyF64Stride = nextStride2;
       barrier(CLK_LOCAL_MEM_FENCE);
     }
-    if ((lid == (uint)(0u))) {
+    if (lid == (uint)(0u)) {
       double totalSum = sdata[0];
       Xty[featureIdx] = totalSum;
     }
@@ -3421,7 +3421,7 @@ __kernel void navatala_ml_compute_r_squared_f32(__global const float* y, __globa
   uint r2F32Stride = (uint)(128u);
   for (int reductionStep3 = 0; reductionStep3 < (int)(8); ++reductionStep3) {
     uint stride3 = r2F32Stride;
-    if ((lid < stride3)) {
+    if (lid < stride3) {
       float otherRes = sdataRes[(lid + stride3)];
       float mineRes = sdataRes[lid];
       float sumRes = (mineRes + otherRes);
@@ -3436,7 +3436,7 @@ __kernel void navatala_ml_compute_r_squared_f32(__global const float* y, __globa
     r2F32Stride = nextStride3;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float ssRes = sdataRes[0];
     float ssTot = sdataTot[0];
     float ratio = (ssRes / ssTot);
@@ -3474,7 +3474,7 @@ __kernel void navatala_ml_compute_r_squared_f64(__global const double* y, __glob
   uint r2F64Stride = (uint)(128u);
   for (int reductionStep4 = 0; reductionStep4 < (int)(8); ++reductionStep4) {
     uint stride4 = r2F64Stride;
-    if ((lid < stride4)) {
+    if (lid < stride4) {
       double otherRes = sdataRes[(lid + stride4)];
       double mineRes = sdataRes[lid];
       double sumRes = (mineRes + otherRes);
@@ -3489,7 +3489,7 @@ __kernel void navatala_ml_compute_r_squared_f64(__global const double* y, __glob
     r2F64Stride = nextStride4;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     double ssRes = sdataRes[0];
     double ssTot = sdataTot[0];
     double ratio = (ssRes / ssTot);
@@ -3517,7 +3517,7 @@ __kernel void navatala_ml_compute_mean_f32(__global const float* y, __global con
   uint meanF32Stride = (uint)(128u);
   for (int reductionStep5 = 0; reductionStep5 < (int)(8); ++reductionStep5) {
     uint stride5 = meanF32Stride;
-    if ((lid < stride5)) {
+    if (lid < stride5) {
       float other = sdata[(lid + stride5)];
       float mine = sdata[lid];
       float sum = (mine + other);
@@ -3528,7 +3528,7 @@ __kernel void navatala_ml_compute_mean_f32(__global const float* y, __global con
     meanF32Stride = nextStride5;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float totalSum = sdata[0];
     float nFloat = ((float)(n));
     float meanVal = (totalSum / nFloat);
@@ -3556,7 +3556,7 @@ __kernel void navatala_ml_compute_mean_f64(__global const double* y, __global co
   uint meanF64Stride = (uint)(128u);
   for (int reductionStep6 = 0; reductionStep6 < (int)(8); ++reductionStep6) {
     uint stride6 = meanF64Stride;
-    if ((lid < stride6)) {
+    if (lid < stride6) {
       double other = sdata[(lid + stride6)];
       double mine = sdata[lid];
       double sum = (mine + other);
@@ -3567,7 +3567,7 @@ __kernel void navatala_ml_compute_mean_f64(__global const double* y, __global co
     meanF64Stride = nextStride6;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     double totalSum = sdata[0];
     double nFloat = ((double)(n));
     double meanVal = (totalSum / nFloat);
@@ -3636,7 +3636,7 @@ __kernel void navatala_ml_ridge_predict_f32(__global const float* X, __global co
     uint pred32_reductionStride = (uint)(128u);
     for (int pred32_reductionStep = 0; pred32_reductionStep < (int)(8); ++pred32_reductionStep) {
       uint pred32_stride = pred32_reductionStride;
-      if ((lid < pred32_stride)) {
+      if (lid < pred32_stride) {
         float pred32_other = sdata[(lid + pred32_stride)];
         float pred32_mine = sdata[lid];
         float pred32_sum = (pred32_mine + pred32_other);
@@ -3647,7 +3647,7 @@ __kernel void navatala_ml_ridge_predict_f32(__global const float* X, __global co
       pred32_reductionStride = pred32_nextStride;
       barrier(CLK_LOCAL_MEM_FENCE);
     }
-    if ((lid == (uint)(0u))) {
+    if (lid == (uint)(0u)) {
       float dotProduct = sdata[0];
       yPred[rowIdx] = dotProduct;
     }
@@ -3683,7 +3683,7 @@ __kernel void navatala_ml_ridge_predict_f64(__global const double* X, __global c
     uint pred64_reductionStride = (uint)(128u);
     for (int pred64_reductionStep = 0; pred64_reductionStep < (int)(8); ++pred64_reductionStep) {
       uint pred64_stride = pred64_reductionStride;
-      if ((lid < pred64_stride)) {
+      if (lid < pred64_stride) {
         double pred64_other = sdata[(lid + pred64_stride)];
         double pred64_mine = sdata[lid];
         double pred64_sum = (pred64_mine + pred64_other);
@@ -3694,7 +3694,7 @@ __kernel void navatala_ml_ridge_predict_f64(__global const double* X, __global c
       pred64_reductionStride = pred64_nextStride;
       barrier(CLK_LOCAL_MEM_FENCE);
     }
-    if ((lid == (uint)(0u))) {
+    if (lid == (uint)(0u)) {
       double dotProduct = sdata[0];
       yPred[rowIdx] = dotProduct;
     }
@@ -3724,7 +3724,7 @@ __kernel void navatala_ml_compute_gcv_score_f32(__global const float* y, __globa
   uint gcv32_reductionStride = (uint)(128u);
   for (int gcv32_reductionStep = 0; gcv32_reductionStep < (int)(8); ++gcv32_reductionStep) {
     uint gcv32_stride = gcv32_reductionStride;
-    if ((lid < gcv32_stride)) {
+    if (lid < gcv32_stride) {
       float gcv32_other = sdata[(lid + gcv32_stride)];
       float gcv32_mine = sdata[lid];
       float gcv32_sum = (gcv32_mine + gcv32_other);
@@ -3735,7 +3735,7 @@ __kernel void navatala_ml_compute_gcv_score_f32(__global const float* y, __globa
     gcv32_reductionStride = gcv32_nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float rss = sdata[0];
     float nFloat = ((float)(nVal));
     float traceHOverN = (traceHVal / nFloat);
@@ -3771,7 +3771,7 @@ __kernel void navatala_ml_compute_gcv_score_f64(__global const double* y, __glob
   uint gcv64_reductionStride = (uint)(128u);
   for (int gcv64_reductionStep = 0; gcv64_reductionStep < (int)(8); ++gcv64_reductionStep) {
     uint gcv64_stride = gcv64_reductionStride;
-    if ((lid < gcv64_stride)) {
+    if (lid < gcv64_stride) {
       double gcv64_other = sdata[(lid + gcv64_stride)];
       double gcv64_mine = sdata[lid];
       double gcv64_sum = (gcv64_mine + gcv64_other);
@@ -3782,7 +3782,7 @@ __kernel void navatala_ml_compute_gcv_score_f64(__global const double* y, __glob
     gcv64_reductionStride = gcv64_nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     double rss = sdata[0];
     double nFloat = ((double)(nVal));
     double traceHOverN = (traceHVal / nFloat);
@@ -3816,7 +3816,7 @@ __kernel void navatala_ml_compute_effective_dof_f32(__global const float* eigenv
   uint dof32_reductionStride = (uint)(128u);
   for (int dof32_reductionStep = 0; dof32_reductionStep < (int)(8); ++dof32_reductionStep) {
     uint dof32_stride = dof32_reductionStride;
-    if ((lid < dof32_stride)) {
+    if (lid < dof32_stride) {
       float dof32_other = sdata[(lid + dof32_stride)];
       float dof32_mine = sdata[lid];
       float dof32_sum = (dof32_mine + dof32_other);
@@ -3827,7 +3827,7 @@ __kernel void navatala_ml_compute_effective_dof_f32(__global const float* eigenv
     dof32_reductionStride = dof32_nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float dofVal = sdata[0];
     dof[0] = dofVal;
   }
@@ -3856,7 +3856,7 @@ __kernel void navatala_ml_compute_effective_dof_f64(__global const double* eigen
   uint dof64_reductionStride = (uint)(128u);
   for (int dof64_reductionStep = 0; dof64_reductionStep < (int)(8); ++dof64_reductionStep) {
     uint dof64_stride = dof64_reductionStride;
-    if ((lid < dof64_stride)) {
+    if (lid < dof64_stride) {
       double dof64_other = sdata[(lid + dof64_stride)];
       double dof64_mine = sdata[lid];
       double dof64_sum = (dof64_mine + dof64_other);
@@ -3867,7 +3867,7 @@ __kernel void navatala_ml_compute_effective_dof_f64(__global const double* eigen
     dof64_reductionStride = dof64_nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     double dofVal = sdata[0];
     dof[0] = dofVal;
   }
@@ -4049,7 +4049,7 @@ __kernel void navatala_ml_coordinate_update_f32(__global const float* X, __globa
   uint cu32RedStride = (uint)(128u);
   for (int cu32RedStep = 0; cu32RedStep < (int)(8); ++cu32RedStep) {
     uint cu32RedStrideVal = cu32RedStride;
-    if ((lid < cu32RedStrideVal)) {
+    if (lid < cu32RedStrideVal) {
       float otherDot = sdataDot[(lid + cu32RedStrideVal)];
       float mineDot = sdataDot[lid];
       float sumDot = (mineDot + otherDot);
@@ -4064,7 +4064,7 @@ __kernel void navatala_ml_coordinate_update_f32(__global const float* X, __globa
     cu32RedStride = cu32RedNextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float totalDot = sdataDot[0];
     float totalNorm = sdataNorm[0];
     float rho = (totalDot / totalNorm);
@@ -4110,7 +4110,7 @@ __kernel void navatala_ml_coordinate_update_f64(__global const double* X, __glob
   uint cu64RedStride = (uint)(128u);
   for (int cu64RedStep = 0; cu64RedStep < (int)(8); ++cu64RedStep) {
     uint cu64RedStrideVal = cu64RedStride;
-    if ((lid < cu64RedStrideVal)) {
+    if (lid < cu64RedStrideVal) {
       double otherDot = sdataDot[(lid + cu64RedStrideVal)];
       double mineDot = sdataDot[lid];
       double sumDot = (mineDot + otherDot);
@@ -4125,7 +4125,7 @@ __kernel void navatala_ml_coordinate_update_f64(__global const double* X, __glob
     cu64RedStride = cu64RedNextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     double totalDot = sdataDot[0];
     double totalNorm = sdataNorm[0];
     double rho = (totalDot / totalNorm);
@@ -4186,7 +4186,7 @@ __kernel void navatala_ml_compute_objective_f32(__global const float* X, __globa
   uint obj32RedStride = (uint)(128u);
   for (int obj32RedStep = 0; obj32RedStep < (int)(8); ++obj32RedStep) {
     uint obj32RedStrideVal = obj32RedStride;
-    if ((lid < obj32RedStrideVal)) {
+    if (lid < obj32RedStrideVal) {
       float otherMse = sdataMse[(lid + obj32RedStrideVal)];
       float mineMse = sdataMse[lid];
       float sumMse = (mineMse + otherMse);
@@ -4201,7 +4201,7 @@ __kernel void navatala_ml_compute_objective_f32(__global const float* X, __globa
     obj32RedStride = obj32RedNextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float totalMse = sdataMse[0];
     float totalL1 = sdataL1[0];
     float halfMse = (as_float(0x3f000000u) * totalMse);
@@ -4257,7 +4257,7 @@ __kernel void navatala_ml_compute_objective_f64(__global const double* X, __glob
   uint obj64RedStride = (uint)(128u);
   for (int obj64RedStep = 0; obj64RedStep < (int)(8); ++obj64RedStep) {
     uint obj64RedStrideVal = obj64RedStride;
-    if ((lid < obj64RedStrideVal)) {
+    if (lid < obj64RedStrideVal) {
       double otherMse = sdataMse[(lid + obj64RedStrideVal)];
       double mineMse = sdataMse[lid];
       double sumMse = (mineMse + otherMse);
@@ -4272,7 +4272,7 @@ __kernel void navatala_ml_compute_objective_f64(__global const double* X, __glob
     obj64RedStride = obj64RedNextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     double totalMse = sdataMse[0];
     double totalL1 = sdataL1[0];
     double halfMse = (as_double(0x3fe0000000000000ul) * totalMse);
@@ -4498,7 +4498,7 @@ __kernel void navatala_ml_explained_variance_ratio_f32(__global const float* eig
   uint varRatioF32RedStride = (uint)(128u);
   for (int varRatioF32RedStep = 0; varRatioF32RedStep < (int)(8); ++varRatioF32RedStep) {
     uint varRatioF32Stride = varRatioF32RedStride;
-    if ((lid < varRatioF32Stride)) {
+    if (lid < varRatioF32Stride) {
       float other = sdata[(lid + varRatioF32Stride)];
       float mine = sdata[lid];
       float sumVal = (mine + other);
@@ -4540,7 +4540,7 @@ __kernel void navatala_ml_explained_variance_ratio_f64(__global const double* ei
   uint varRatioF64RedStride = (uint)(128u);
   for (int varRatioF64RedStep = 0; varRatioF64RedStep < (int)(8); ++varRatioF64RedStep) {
     uint varRatioF64Stride = varRatioF64RedStride;
-    if ((lid < varRatioF64Stride)) {
+    if (lid < varRatioF64Stride) {
       double other = sdata[(lid + varRatioF64Stride)];
       double mine = sdata[lid];
       double sumVal = (mine + other);
@@ -4800,7 +4800,7 @@ __kernel void navatala_ml_compute_q_distribution_f32(__global const float* Y, __
   uint qF32ReductionStride = (uint)(128u);
   for (int qF32ReductionStep = 0; qF32ReductionStep < (int)(8); ++qF32ReductionStep) {
     uint qF32Stride = qF32ReductionStride;
-    if ((lid < qF32Stride)) {
+    if (lid < qF32Stride) {
       float qF32Other = sdata[(lid + qF32Stride)];
       float qF32Mine = sdata[lid];
       float qF32Sum = (qF32Mine + qF32Other);
@@ -4811,7 +4811,7 @@ __kernel void navatala_ml_compute_q_distribution_f32(__global const float* Y, __
     qF32ReductionStride = qF32NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float partialSum = sdata[0];
     float oldSum = sumQ[0];
     float newSum = (oldSum + partialSum);
@@ -4868,7 +4868,7 @@ __kernel void navatala_ml_compute_q_distribution_f64(__global const double* Y, _
   uint qF64ReductionStride = (uint)(128u);
   for (int qF64ReductionStep = 0; qF64ReductionStep < (int)(8); ++qF64ReductionStep) {
     uint qF64Stride = qF64ReductionStride;
-    if ((lid < qF64Stride)) {
+    if (lid < qF64Stride) {
       double qF64Other = sdata[(lid + qF64Stride)];
       double qF64Mine = sdata[lid];
       double qF64Sum = (qF64Mine + qF64Other);
@@ -4879,7 +4879,7 @@ __kernel void navatala_ml_compute_q_distribution_f64(__global const double* Y, _
     qF64ReductionStride = qF64NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     double partialSum = sdata[0];
     double oldSum = sumQ[0];
     double newSum = (oldSum + partialSum);
@@ -5075,7 +5075,7 @@ __kernel void navatala_ml_compute_k_l_divergence_f32(__global const float* P, __
   uint klF32ReductionStride = (uint)(128u);
   for (int klF32ReductionStep = 0; klF32ReductionStep < (int)(8); ++klF32ReductionStep) {
     uint klF32Stride = klF32ReductionStride;
-    if ((lid < klF32Stride)) {
+    if (lid < klF32Stride) {
       float klF32Other = sdata[(lid + klF32Stride)];
       float klF32Mine = sdata[lid];
       float klF32Sum = (klF32Mine + klF32Other);
@@ -5086,7 +5086,7 @@ __kernel void navatala_ml_compute_k_l_divergence_f32(__global const float* P, __
     klF32ReductionStride = klF32NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float klVal = sdata[0];
     kl_divergence[0] = klVal;
   }
@@ -5125,7 +5125,7 @@ __kernel void navatala_ml_compute_k_l_divergence_f64(__global const double* P, _
   uint klF64ReductionStride = (uint)(128u);
   for (int klF64ReductionStep = 0; klF64ReductionStep < (int)(8); ++klF64ReductionStep) {
     uint klF64Stride = klF64ReductionStride;
-    if ((lid < klF64Stride)) {
+    if (lid < klF64Stride) {
       double klF64Other = sdata[(lid + klF64Stride)];
       double klF64Mine = sdata[lid];
       double klF64Sum = (klF64Mine + klF64Other);
@@ -5136,7 +5136,7 @@ __kernel void navatala_ml_compute_k_l_divergence_f64(__global const double* P, _
     klF64ReductionStride = klF64NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     double klVal = sdata[0];
     kl_divergence[0] = klVal;
   }
@@ -5383,7 +5383,7 @@ __kernel void navatala_ml_compute_neighbor_counts_f32(__global const float* poin
         distSqAccum = newDistSq;
       }
       float finalDistSq = distSqAccum;
-      if ((finalDistSq < epsSq)) {
+      if (finalDistSq < epsSq) {
         uint currentCount = countAccum;
         uint newCount = (currentCount + (uint)(1u));
         countAccum = newCount;
@@ -5425,7 +5425,7 @@ __kernel void navatala_ml_compute_neighbor_counts_f64(__global const double* poi
         distSqAccum = newDistSq;
       }
       double finalDistSq = distSqAccum;
-      if ((finalDistSq < epsSq)) {
+      if (finalDistSq < epsSq) {
         uint currentCount = countAccum;
         uint newCount = (currentCount + (uint)(1u));
         countAccum = newCount;
@@ -5531,7 +5531,7 @@ __kernel void navatala_ml_expand_cluster_step_f32(__global const float* points, 
             distSqAccum = newDistSq;
           }
           float finalDistSq = distSqAccum;
-          if ((finalDistSq < epsSq)) {
+          if (finalDistSq < epsSq) {
             newLabelAccum = jLabel;
           }
         }
@@ -5582,7 +5582,7 @@ __kernel void navatala_ml_expand_cluster_step_f64(__global const double* points,
             distSqAccum = newDistSq;
           }
           double finalDistSq = distSqAccum;
-          if ((finalDistSq < epsSq)) {
+          if (finalDistSq < epsSq) {
             newLabelAccum = jLabel;
           }
         }
@@ -5757,7 +5757,7 @@ __kernel void navatala_ml_count_clusters_f32(__global const int* labels, __globa
   uint countClstF32RedStride = (uint)(128u);
   for (int countClstF32RedStep = 0; countClstF32RedStep < (int)(8); ++countClstF32RedStep) {
     uint countClstF32Stride = countClstF32RedStride;
-    if ((lid < countClstF32Stride)) {
+    if (lid < countClstF32Stride) {
       uint otherIdx = (lid + countClstF32Stride);
       int other = sdata[otherIdx];
       int mine = sdata[lid];
@@ -5770,7 +5770,7 @@ __kernel void navatala_ml_count_clusters_f32(__global const int* labels, __globa
     countClstF32RedStride = countClstF32NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     int maxLabel = sdata[0];
     int count = (maxLabel + 1);
     numClusters[0] = count;
@@ -5792,7 +5792,7 @@ __kernel void navatala_ml_count_clusters_f64(__global const int* labels, __globa
   uint countClstF64RedStride = (uint)(128u);
   for (int countClstF64RedStep = 0; countClstF64RedStep < (int)(8); ++countClstF64RedStep) {
     uint countClstF64Stride = countClstF64RedStride;
-    if ((lid < countClstF64Stride)) {
+    if (lid < countClstF64Stride) {
       uint otherIdx = (lid + countClstF64Stride);
       int other = sdata[otherIdx];
       int mine = sdata[lid];
@@ -5805,7 +5805,7 @@ __kernel void navatala_ml_count_clusters_f64(__global const int* labels, __globa
     countClstF64RedStride = countClstF64NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     int maxLabel = sdata[0];
     int count = (maxLabel + 1);
     numClusters[0] = count;
@@ -7748,7 +7748,7 @@ __kernel void navatala_ml_knn_regress_median_f32(__global const uint* neighborIn
     for (int i = 0; i < (int)(kVal); ++i) {
       uint iU32 = ((uint)(i));
       uint zeroU32 = ((uint)(0));
-      if ((iU32 > zeroU32)) {
+      if (iU32 > zeroU32) {
         float key = sortBuf[iU32];
         uint initialJIdx = (iU32 - (uint)(1u));
         jIdxAccum = initialJIdx;
@@ -7804,7 +7804,7 @@ __kernel void navatala_ml_knn_regress_median_f64(__global const uint* neighborIn
     for (int i = 0; i < (int)(kVal); ++i) {
       uint iU32 = ((uint)(i));
       uint zeroU32 = ((uint)(0));
-      if ((iU32 > zeroU32)) {
+      if (iU32 > zeroU32) {
         double key = sortBuf[iU32];
         uint initialJIdx = (iU32 - (uint)(1u));
         jIdxAccum = initialJIdx;
@@ -7865,7 +7865,7 @@ __kernel void navatala_ml_traverse_tree_classify_f32(__global const float* X, __
           uint probIdx = (leafBase + cU32);
           float prob = leaf_values[probIdx];
           float currBest = bestProb;
-          if ((prob > currBest)) {
+          if (prob > currBest) {
             bestClass = c;
             bestProb = prob;
           }
@@ -7919,7 +7919,7 @@ __kernel void navatala_ml_traverse_tree_classify_f64(__global const double* X, _
           uint probIdx = (leafBase + cU32);
           double prob = leaf_values[probIdx];
           double currBest = bestProb;
-          if ((prob > currBest)) {
+          if (prob > currBest) {
             bestClass = c;
             bestProb = prob;
           }
@@ -8119,7 +8119,7 @@ __kernel void navatala_ml_compute_m_s_e_f32(__global const float* targets, __glo
   uint mseF32_reductionStride = (uint)(128u);
   for (int mseF32_reductionStep = 0; mseF32_reductionStep < (int)(8); ++mseF32_reductionStep) {
     uint mseF32_stride = mseF32_reductionStride;
-    if ((lid < mseF32_stride)) {
+    if (lid < mseF32_stride) {
       uint otherIdx = (lid + mseF32_stride);
       float mine = sdata[lid];
       float other = sdata[otherIdx];
@@ -8153,7 +8153,7 @@ __kernel void navatala_ml_compute_m_s_e_f32(__global const float* targets, __glo
   uint mseF32b_reductionStride = (uint)(128u);
   for (int mseF32b_reductionStep = 0; mseF32b_reductionStep < (int)(8); ++mseF32b_reductionStep) {
     uint mseF32b_stride = mseF32b_reductionStride;
-    if ((lid < mseF32b_stride)) {
+    if (lid < mseF32b_stride) {
       uint otherIdx2 = (lid + mseF32b_stride);
       float mine2 = sdata[lid];
       float other2 = sdata[otherIdx2];
@@ -8194,7 +8194,7 @@ __kernel void navatala_ml_compute_m_s_e_f64(__global const double* targets, __gl
   uint mseF64_reductionStride = (uint)(128u);
   for (int mseF64_reductionStep = 0; mseF64_reductionStep < (int)(8); ++mseF64_reductionStep) {
     uint mseF64_stride = mseF64_reductionStride;
-    if ((lid < mseF64_stride)) {
+    if (lid < mseF64_stride) {
       uint otherIdx = (lid + mseF64_stride);
       double mine = sdata[lid];
       double other = sdata[otherIdx];
@@ -8228,7 +8228,7 @@ __kernel void navatala_ml_compute_m_s_e_f64(__global const double* targets, __gl
   uint mseF64b_reductionStride = (uint)(128u);
   for (int mseF64b_reductionStep = 0; mseF64b_reductionStep < (int)(8); ++mseF64b_reductionStep) {
     uint mseF64b_stride = mseF64b_reductionStride;
-    if ((lid < mseF64b_stride)) {
+    if (lid < mseF64b_stride) {
       uint otherIdx2 = (lid + mseF64b_stride);
       double mine2 = sdata[lid];
       double other2 = sdata[otherIdx2];
@@ -8404,7 +8404,7 @@ __kernel void navatala_ml_forest_classify_f32(__global const float* X, __global 
             uint probIdx = (absLeafBase + classIdxU32);
             float prob = forest_leaves[probIdx];
             float currBest = bestProb;
-            if ((prob > currBest)) {
+            if (prob > currBest) {
               bestClass = classIdx;
               bestProb = prob;
             }
@@ -8438,7 +8438,7 @@ __kernel void navatala_ml_forest_classify_f32(__global const float* X, __global 
       uint voteIdx = (voteBase + cU32);
       uint votes = vote_counts[voteIdx];
       uint currMax = maxVotes;
-      if ((votes > currMax)) {
+      if (votes > currMax) {
         finalClass = c;
         maxVotes = votes;
       }
@@ -8491,7 +8491,7 @@ __kernel void navatala_ml_forest_classify_f64(__global const double* X, __global
             uint probIdx = (absLeafBase + classIdxU32);
             double prob = forest_leaves[probIdx];
             double currBest = bestProb;
-            if ((prob > currBest)) {
+            if (prob > currBest) {
               bestClass = classIdx;
               bestProb = prob;
             }
@@ -8525,7 +8525,7 @@ __kernel void navatala_ml_forest_classify_f64(__global const double* X, __global
       uint voteIdx = (voteBase + cU32);
       uint votes = vote_counts[voteIdx];
       uint currMax = maxVotes;
-      if ((votes > currMax)) {
+      if (votes > currMax) {
         finalClass = c;
         maxVotes = votes;
       }
@@ -8863,7 +8863,7 @@ __kernel void navatala_ml_fil_infer_classification_f32(__global const float* X, 
       uint voteIdx = (voteBase + cU32);
       uint votes = vote_counts[voteIdx];
       uint currMax = maxVotes;
-      if ((votes > currMax)) {
+      if (votes > currMax) {
         finalClass = c;
         maxVotes = votes;
       }
@@ -8933,7 +8933,7 @@ __kernel void navatala_ml_fil_infer_classification_f64(__global const double* X,
       uint voteIdx = (voteBase + cU32);
       uint votes = vote_counts[voteIdx];
       uint currMax = maxVotes;
-      if ((votes > currMax)) {
+      if (votes > currMax) {
         finalClass = c;
         maxVotes = votes;
       }
@@ -9902,7 +9902,7 @@ __kernel void navatala_ml_compute_fuzzy_simplicial_set_f32(__global const int* k
         membershipSum = newSum;
       }
       float sum = membershipSum;
-      if ((sum > targetSum)) {
+      if (sum > targetSum) {
         sigmaHigh = mid;
       } else {
         sigmaLow = mid;
@@ -9969,7 +9969,7 @@ __kernel void navatala_ml_compute_fuzzy_simplicial_set_f64(__global const int* k
         membershipSum = newSum;
       }
       double sum = membershipSum;
-      if ((sum > targetSum)) {
+      if (sum > targetSum) {
         sigmaHigh = mid;
       } else {
         sigmaLow = mid;
@@ -10715,7 +10715,7 @@ __kernel void navatala_ml_find_max_correlation_f32(__global const float* correla
   uint maxCorrF32RedStride = (uint)(128u);
   for (int maxCorrF32RedStep = 0; maxCorrF32RedStep < (int)(8); ++maxCorrF32RedStep) {
     uint maxCorrF32Stride = maxCorrF32RedStride;
-    if ((lid < maxCorrF32Stride)) {
+    if (lid < maxCorrF32Stride) {
       otherVal = svals[(lid + maxCorrF32Stride)];
       otherIdx = sidxs[(lid + maxCorrF32Stride)];
       myVal = svals[lid];
@@ -10731,7 +10731,7 @@ __kernel void navatala_ml_find_max_correlation_f32(__global const float* correla
     maxCorrF32RedStride = maxCorrF32NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     maxValue[0] = svals[0];
     maxIndex[0] = sidxs[0];
   }
@@ -10769,7 +10769,7 @@ __kernel void navatala_ml_find_max_correlation_f64(__global const double* correl
   uint maxCorrF64RedStride = (uint)(128u);
   for (int maxCorrF64RedStep = 0; maxCorrF64RedStep < (int)(8); ++maxCorrF64RedStep) {
     uint maxCorrF64Stride = maxCorrF64RedStride;
-    if ((lid < maxCorrF64Stride)) {
+    if (lid < maxCorrF64Stride) {
       otherVal = svals[(lid + maxCorrF64Stride)];
       otherIdx = sidxs[(lid + maxCorrF64Stride)];
       myVal = svals[lid];
@@ -10785,7 +10785,7 @@ __kernel void navatala_ml_find_max_correlation_f64(__global const double* correl
     maxCorrF64RedStride = maxCorrF64NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     maxValue[0] = svals[0];
     maxIndex[0] = sidxs[0];
   }

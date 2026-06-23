@@ -31,7 +31,7 @@ extern "C" __global__ void navatala_dataframe_sum_reduce_f32(const float* _input
   unsigned int reductionStride = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     unsigned int stride = reductionStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       unsigned int partnerIdx = (lid + stride);
       float myVal = sdata[lid];
       float partnerVal = sdata[partnerIdx];
@@ -43,7 +43,7 @@ extern "C" __global__ void navatala_dataframe_sum_reduce_f32(const float* _input
     __syncthreads();
   }
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     result[0] = sdata[0];
   }
 }

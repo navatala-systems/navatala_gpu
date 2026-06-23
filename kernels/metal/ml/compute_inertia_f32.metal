@@ -51,7 +51,7 @@ kernel void navatala_ml_compute_inertia_f32(device const float* data [[buffer(0)
   uint inertiaF32RedStride = 128u;
   for (int inertiaF32RedStep = 0; inertiaF32RedStep < (int)(8); ++inertiaF32RedStep) {
     uint inertiaF32Stride = inertiaF32RedStride;
-    if ((lid < inertiaF32Stride)) {
+    if (lid < inertiaF32Stride) {
       float other = sdata[(lid + inertiaF32Stride)];
       float mine = sdata[lid];
       float sum = (mine + other);
@@ -62,7 +62,7 @@ kernel void navatala_ml_compute_inertia_f32(device const float* data [[buffer(0)
     inertiaF32RedStride = inertiaF32NextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     inertia[0] = sdata[0];
   }
 }

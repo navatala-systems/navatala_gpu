@@ -112,7 +112,7 @@ void main() {
     sumSq[lid] = sumVal_sumSq_1;
   }
   barrier();
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float partialSum = sumSq[0u];
     partialSums[gid] = partialSum;
   }

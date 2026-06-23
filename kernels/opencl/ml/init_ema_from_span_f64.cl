@@ -16,7 +16,7 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_ml_init_ema_from_span_f64(__global const double* span, __global double* ema, __global double* alpha, __global uint* count) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double s = span[0];
     double spanPlus1 = (s + as_double(0x3ff0000000000000ul));
     double a = (as_double(0x4000000000000000ul) / spanPlus1);

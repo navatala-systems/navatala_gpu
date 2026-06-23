@@ -27,7 +27,7 @@ __kernel void navatala_runtime_deterministic_reduce_f32(__global const float* _i
   uint f32RedStride = (uint)(128u);
   for (int f32RedStep = 0; f32RedStep < (int)(8); ++f32RedStep) {
     uint f32Stride = f32RedStride;
-    if ((lid < f32Stride)) {
+    if (lid < f32Stride) {
       float other = sdata[(lid + f32Stride)];
       float mine = sdata[lid];
       float sum = (mine + other);
@@ -38,7 +38,7 @@ __kernel void navatala_runtime_deterministic_reduce_f32(__global const float* _i
     f32RedStride = f32NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float totalSum = sdata[0];
     result[0] = totalSum;
   }
@@ -64,7 +64,7 @@ __kernel void navatala_runtime_deterministic_reduce_f64(__global const double* _
   uint f64RedStride = (uint)(128u);
   for (int f64RedStep = 0; f64RedStep < (int)(8); ++f64RedStep) {
     uint f64Stride = f64RedStride;
-    if ((lid < f64Stride)) {
+    if (lid < f64Stride) {
       double other = sdata[(lid + f64Stride)];
       double mine = sdata[lid];
       double sum = (mine + other);
@@ -75,7 +75,7 @@ __kernel void navatala_runtime_deterministic_reduce_f64(__global const double* _
     f64RedStride = f64NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     double totalSum = sdata[0];
     result[0] = totalSum;
   }
@@ -96,7 +96,7 @@ __kernel void navatala_runtime_deterministic_histogram_f32(__global const float*
   float range = (maxValF - minValF);
   float numBinsFloat = ((float)(numBinsVal));
   float binWidth = (range / numBinsFloat);
-  if ((lid < numBinsVal)) {
+  if (lid < numBinsVal) {
     localHist[lid] = (uint)(0u);
   }
   bool inBounds = (gid < countVal);
@@ -112,15 +112,15 @@ __kernel void navatala_runtime_deterministic_histogram_f32(__global const float*
     binIndices[lid] = numBinsVal;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < numBinsVal)) {
+  if (lid < numBinsVal) {
     uint myBin = lid;
     uint histF32RedStride = (uint)(128u);
     for (int histF32RedStep = 0; histF32RedStep < (int)(8); ++histF32RedStep) {
       uint histF32Stride = histF32RedStride;
-      if ((lid < histF32Stride)) {
+      if (lid < histF32Stride) {
         uint partnerIdx = (lid + histF32Stride);
         uint storedBin = binIndices[partnerIdx];
-        if ((storedBin == myBin)) {
+        if (storedBin == myBin) {
           uint oldCount = localHist[lid];
           uint newCount = (oldCount + (uint)(1u));
           localHist[lid] = newCount;
@@ -133,7 +133,7 @@ __kernel void navatala_runtime_deterministic_histogram_f32(__global const float*
     }
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     for (int bin = 0; bin < (int)(numBinsVal); ++bin) {
       uint binU32 = ((uint)(bin));
       uint localCount = localHist[binU32];
@@ -160,7 +160,7 @@ __kernel void navatala_runtime_deterministic_histogram_f64(__global const double
   double range = (maxValF - minValF);
   double numBinsFloat = ((double)(numBinsVal));
   double binWidth = (range / numBinsFloat);
-  if ((lid < numBinsVal)) {
+  if (lid < numBinsVal) {
     localHist[lid] = (uint)(0u);
   }
   bool inBounds = (gid < countVal);
@@ -176,15 +176,15 @@ __kernel void navatala_runtime_deterministic_histogram_f64(__global const double
     binIndices[lid] = numBinsVal;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < numBinsVal)) {
+  if (lid < numBinsVal) {
     uint myBin = lid;
     uint histF64RedStride = (uint)(128u);
     for (int histF64RedStep = 0; histF64RedStep < (int)(8); ++histF64RedStep) {
       uint histF64Stride = histF64RedStride;
-      if ((lid < histF64Stride)) {
+      if (lid < histF64Stride) {
         uint partnerIdx = (lid + histF64Stride);
         uint storedBin = binIndices[partnerIdx];
-        if ((storedBin == myBin)) {
+        if (storedBin == myBin) {
           uint oldCount = localHist[lid];
           uint newCount = (oldCount + (uint)(1u));
           localHist[lid] = newCount;
@@ -197,7 +197,7 @@ __kernel void navatala_runtime_deterministic_histogram_f64(__global const double
     }
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     for (int bin = 0; bin < (int)(numBinsVal); ++bin) {
       uint binU32 = ((uint)(bin));
       uint localCount = localHist[binU32];

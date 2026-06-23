@@ -20,10 +20,10 @@ extern "C" __global__ void navatala_vector_search_update_neighbors_f32(const uns
   unsigned int nv = new_vertex[0];
   unsigned int nn = n_new_neighbors[0];
   unsigned int md = max_degree[0];
-  if ((tid < nn)) {
+  if (tid < nn) {
     unsigned int neighbor = new_neighbors[tid];
     unsigned int old_degree = atomicAdd(&(graph_degrees[neighbor]), 1u);
-    if ((old_degree < md)) {
+    if (old_degree < md) {
       unsigned int graph_idx = ((neighbor * md) + old_degree);
       graph[graph_idx] = nv;
     } else {

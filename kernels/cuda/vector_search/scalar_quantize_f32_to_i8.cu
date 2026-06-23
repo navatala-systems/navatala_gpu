@@ -20,7 +20,7 @@ extern "C" __global__ void navatala_vector_search_scalar_quantize_f32_to_i8(cons
   unsigned int nv = n_vectors[0];
   unsigned int d = dim[0];
   unsigned int total = (nv * d);
-  if ((gid < total)) {
+  if (gid < total) {
     unsigned int dim_idx = (gid % d);
     float val = _input[gid];
     float min_val = mins[dim_idx];

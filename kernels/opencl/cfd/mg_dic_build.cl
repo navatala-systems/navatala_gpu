@@ -19,7 +19,7 @@ __kernel void navatala_cfd_mg_dic_build(__global const float* diag, __global con
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= 1)) {
+  if ((int)(get_global_id(0)) >= 1) {
     return;
   } else {
     int nCells = counts[1];
@@ -31,14 +31,14 @@ __kernel void navatala_cfd_mg_dic_build(__global const float* diag, __global con
       int u = edgeU[e];
       int v = edgeV[e];
       double dl = rD[u];
-      if ((dl > as_double(0x01a56e1fc2f8f359ul))) {
+      if (dl > as_double(0x01a56e1fc2f8f359ul)) {
         double cf = ((double)(edgeCf[e]));
         rD[v] = (rD[v] - ((cf * cf) / dl));
       }
     }
     for (int c2 = 0; c2 < (int)(nCells); ++c2) {
       double d = rD[c2];
-      if ((d > as_double(0x01a56e1fc2f8f359ul))) {
+      if (d > as_double(0x01a56e1fc2f8f359ul)) {
         rD[c2] = (as_double(0x3ff0000000000000ul) / d);
       } else {
         rD[c2] = as_double(0x0000000000000000ul);

@@ -62,7 +62,7 @@ void main() {
     uint expertIdxU32 = uint(expertIdx);
     bool expertValid = (expertIdxU32 < ne);
     if (expertValid) {
-      if ((lid == 0u)) {
+      if (lid == 0u) {
         uint localPosition = atomicAdd(expertCounters[expertIdxU32], 1u);
         uint expertOffset = expertOffsets[expertIdxU32];
         uint destTokenIdx = (expertOffset + localPosition);
@@ -74,7 +74,7 @@ void main() {
       uint destTokenIdx = sharedDestTokenIdx[0u];
       for (int hIter = 0; hIter < int(hs); ++hIter) {
         uint hIdx = (lid + (256u * hIter));
-        if ((hIdx < hs)) {
+        if (hIdx < hs) {
           uint srcIdx = ((tokenIdx * hs) + hIdx);
           uint dstIdx = ((destTokenIdx * hs) + hIdx);
           float16_t val = hiddenStates[srcIdx];

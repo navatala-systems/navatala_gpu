@@ -18,14 +18,14 @@ extern "C" __global__ void navatala_sparse_strength_affinity_f64(const unsigned 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     double diag = __longlong_as_double(0x0000000000000000ull);
     for (int jd = 0; jd < (int)((re - rs)); ++jd) {
       int kd = (rs + jd);
       int colD = ((int)(colIdx[kd]));
-      if ((colD == gid)) {
+      if (colD == gid) {
         diag = values[kd];
       }
     }

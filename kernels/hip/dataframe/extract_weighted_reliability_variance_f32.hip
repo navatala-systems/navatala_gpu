@@ -16,7 +16,7 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_weighted_reliability_variance_f32(const float* weightSum, const float* M2, float* variance) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float w = weightSum[0];
     float m2Val = M2[0];
     float wMinus1 = (w - __uint_as_float(0x3f800000u));

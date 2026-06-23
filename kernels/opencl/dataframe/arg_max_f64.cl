@@ -45,7 +45,7 @@ __kernel void navatala_dataframe_arg_max_f64(__global const double* _input, __gl
   uint amf64_reductionStride = (uint)(128u);
   for (int amf64_reductionStep = 0; amf64_reductionStep < (int)(8); ++amf64_reductionStep) {
     uint amf64_stride = amf64_reductionStride;
-    if ((lid < amf64_stride)) {
+    if (lid < amf64_stride) {
       otherVal = svals[(lid + amf64_stride)];
       otherIdx = sidxs[(lid + amf64_stride)];
       myVal = svals[lid];
@@ -65,7 +65,7 @@ __kernel void navatala_dataframe_arg_max_f64(__global const double* _input, __gl
     amf64_reductionStride = amf64_nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     maxValue[0] = svals[0];
     maxIndex[0] = sidxs[0];
   }

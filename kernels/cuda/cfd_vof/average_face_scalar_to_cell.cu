@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_cfd_vof_average_face_scalar_to_cell(const fl
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0])))) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0]))) {
     return;
   } else {
     float s = __uint_as_float(0x00000000u);
@@ -33,7 +33,7 @@ extern "C" __global__ void navatala_cfd_vof_average_face_scalar_to_cell(const fl
       s = (s + (magSf[((int)(f))] * alphaF[((int)(f))]));
     }
     float d = sumMag[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
-    if ((d < __uint_as_float(0x1e3ce508u))) {
+    if (d < __uint_as_float(0x1e3ce508u)) {
       outAlpha[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = (s / __uint_as_float(0x1e3ce508u));
     } else {
       outAlpha[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = (s / d);

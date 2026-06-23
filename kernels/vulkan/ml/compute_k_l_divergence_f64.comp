@@ -61,7 +61,7 @@ void main() {
   uint klF64ReductionStride = 128u;
   for (int klF64ReductionStep = 0; klF64ReductionStep < int(8); ++klF64ReductionStep) {
     uint klF64Stride = klF64ReductionStride;
-    if ((lid < klF64Stride)) {
+    if (lid < klF64Stride) {
       double klF64Other = sdata[(lid + klF64Stride)];
       double klF64Mine = sdata[lid];
       double klF64Sum = (klF64Mine + klF64Other);
@@ -72,7 +72,7 @@ void main() {
     klF64ReductionStride = klF64NextStride;
     barrier();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double klVal = sdata[0];
     kl_divergence[0] = klVal;
   }

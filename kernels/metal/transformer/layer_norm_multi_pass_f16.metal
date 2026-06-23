@@ -31,7 +31,7 @@ kernel void navatala_transformer_layer_norm_multi_pass_f16(device const half* _i
   uint iterIdx = lid;
   uint workgroupSize = 256u;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < hs))) break;
+    if (!(iterIdx < hs)) break;
     uint globalIdx = (baseIdx + iterIdx);
     half xF16 = ((batchValid) ? (_input[globalIdx]) : (half(0.000000)));
     float xVal = ((float)(xF16));
@@ -199,7 +199,7 @@ kernel void navatala_transformer_layer_norm_multi_pass_f16(device const half* _i
   float std = sqrt(varEps);
   iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < hs))) break;
+    if (!(iterIdx < hs)) break;
     if (batchValid) {
       uint globalIdx2 = (baseIdx + iterIdx);
       half xF16_2 = _input[globalIdx2];

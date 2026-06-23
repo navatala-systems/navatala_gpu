@@ -48,7 +48,7 @@ void main() {
   float partialSum = uintBitsToFloat(0x00000000u);
   uint iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < sl))) break;
+    if (!(iterIdx < sl)) break;
     uint globalIdx = (baseIdx + iterIdx);
     float16_t xF16 = ((batchValid) ? (_input[globalIdx]) : (float16_t(0.000000)));
     float xVal = float(xF16);
@@ -142,7 +142,7 @@ void main() {
   float globalMax = maxBuf[0u];
   iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < sl))) break;
+    if (!(iterIdx < sl)) break;
     if (batchValid) {
       uint globalIdx2 = (baseIdx + iterIdx);
       float16_t xF16_2 = _input[globalIdx2];
@@ -230,7 +230,7 @@ void main() {
   float globalSum = sumBuf[0u];
   iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < sl))) break;
+    if (!(iterIdx < sl)) break;
     if (batchValid) {
       uint globalIdx3 = (baseIdx + iterIdx);
       float16_t xF16_3 = _input[globalIdx3];

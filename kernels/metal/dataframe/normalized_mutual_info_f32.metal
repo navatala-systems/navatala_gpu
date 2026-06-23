@@ -92,7 +92,7 @@ kernel void navatala_dataframe_normalized_mutual_info_f32(device const float* co
   threadgroup_barrier(mem_flags::mem_threadgroup);
   for (int stride = 0; stride < (int)(128u); ++stride) {
     uint strideU32 = ((uint)(stride));
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       float otherMI = miSum[(lid + strideU32)];
       float mineMI = miSum[lid];
       miSum[lid] = (mineMI + otherMI);
@@ -105,7 +105,7 @@ kernel void navatala_dataframe_normalized_mutual_info_f32(device const float* co
     }
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float miFinal = miSum[0u];
     float hyFinal = hySum[0u];
     float hcFinal = hcSum[0u];

@@ -18,15 +18,15 @@ extern "C" __global__ void navatala_sparse_csr_symmetry_check_f32(const unsigned
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col < gid)) {
+      if (col < gid) {
       } else {
-        if ((col > gid)) {
+        if (col > gid) {
           float a = values[k];
           int colRs = ((int)(rowPtr[col]));
           int colRe = ((int)(rowPtr[(col + 1)]));
@@ -34,11 +34,11 @@ extern "C" __global__ void navatala_sparse_csr_symmetry_check_f32(const unsigned
           for (int jj = 0; jj < (int)((colRe - colRs)); ++jj) {
             int kk = (colRs + jj);
             int cc = ((int)(colIdx[kk]));
-            if ((cc == gid)) {
+            if (cc == gid) {
               float at = values[kk];
               float tolVal = tol[0];
               float diff = abs((a - at));
-              if ((diff > tolVal)) {
+              if (diff > tolVal) {
                 asymmetricFlags[gid] = 1u;
                 unsigned int _aod5 = atomicAnd(&(isSymmetric[0]), 0u);
               }

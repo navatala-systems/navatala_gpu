@@ -17,7 +17,7 @@ __kernel void navatala_sparse_power_iteration_normalize_f32(__global const float
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float avi = Av[gid];
     float nrm = norm[0];
     v[gid] = (avi / nrm);

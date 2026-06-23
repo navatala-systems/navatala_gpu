@@ -41,7 +41,7 @@ void main() {
   uint mVal = m[0u];
   uint nVal = n[0u];
   uint totalElems = (mVal * nVal);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     uint row = (idx / nVal);
     uint col = (idx % nVal);
     uint kMod = (kVal % nVal);

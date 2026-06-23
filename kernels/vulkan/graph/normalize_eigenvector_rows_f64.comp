@@ -55,7 +55,7 @@ void main() {
     uint normF64RedStride = 128u;
     for (int normF64RedStep = 0; normF64RedStep < int(8); ++normF64RedStep) {
       uint normF64Stride = normF64RedStride;
-      if ((lid < normF64Stride)) {
+      if (lid < normF64Stride) {
         double other = sdata[(lid + normF64Stride)];
         double mine = sdata[lid];
         double sum = (mine + other);
@@ -66,7 +66,7 @@ void main() {
       normF64RedStride = normF64NextStride;
       barrier();
     }
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       double sumSq = sdata[0];
       double normVal = sqrt(sumSq);
       sdata[0] = normVal;

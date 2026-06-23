@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_halo_unpack_f64(const double* recvBuf
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(recvCount[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int idx = ((int)(recvMap[gid]));
     double val = recvBuf[gid];
     xHalo[idx] = val;

@@ -340,7 +340,7 @@ void main() {
     sumBuf[lid] = sumVal_sum_p2_sumBuf_1;
   }
   barrier();
-  if ((batchValid && (lid == 0u))) {
+  if (batchValid && (lid == 0u)) {
     float outVal = sumBuf[0u];
     float16_t outF16 = float16_t(outVal);
     uint outIdx = (qBase + 0u);

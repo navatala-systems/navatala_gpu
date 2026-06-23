@@ -16,7 +16,7 @@
 __kernel void navatala_graph_pack_f32x3(__global const int* indices, __global const float* src, __global const int* count, __global const int* n, __global float* dst) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(3); ++c) {
       int dstLin = ((c * count[0]) + i);
       int srcLin = ((c * n[0]) + indices[((int)((int)(get_global_id(0))))]);

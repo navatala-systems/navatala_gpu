@@ -17,7 +17,7 @@ __kernel void navatala_sparse_pcg_update_x_r_f32(__global const float* z, __glob
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float a = alpha[0];
     float zi = z[gid];
     float qi = q[gid];

@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_nccl_ring_reduce_scatter_step_sum_f32(const 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float inVal = incoming[gid];
     float locVal = local_buf[gid];
     float reduced = (inVal + locVal);

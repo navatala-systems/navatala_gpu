@@ -17,7 +17,7 @@ __kernel void navatala_cfd_gamg_proc_pack_f32(__global const float* x, __global 
   int gid0 = (int)get_global_id(0);
   int i = (int)(get_global_id(0));
   int N = ((int)(count[0]));
-  if ((i < N)) {
+  if (i < N) {
     int cell = ((int)(localCells[i]));
     float v = x[cell];
     sendVals[i] = v;

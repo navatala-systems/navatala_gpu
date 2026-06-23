@@ -18,7 +18,7 @@ __kernel void navatala_sparse_block_sp_m_v_f32(__global const uint* rowPtr, __gl
   int gid = (int)(get_global_id(0));
   int total = (((int)(nRows[0])) * ((int)(k[0])));
   int nR = ((int)(nRows[0]));
-  if ((gid < total)) {
+  if (gid < total) {
     int row = (gid % nR);
     int vecIdx = (gid / nR);
     int rs = ((int)(rowPtr[row]));

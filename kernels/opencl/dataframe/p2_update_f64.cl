@@ -16,7 +16,7 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_p2_update_f64(__global const double* x, __global double* q0, __global double* q1, __global double* q2, __global double* q3, __global double* q4, __global uint* pos0, __global uint* pos1, __global uint* pos2, __global uint* pos3, __global uint* pos4, __global const double* targetP, __global uint* count) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double xVal = x[0];
     uint n = count[0];
     double pVal = targetP[0];

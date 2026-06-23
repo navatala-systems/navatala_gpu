@@ -22,7 +22,7 @@ kernel void navatala_linalg_extract_diagonal_k_f32(device const float* A [[buffe
   uint size = n[0u];
   uint offset = k[0u];
   uint diagLen = (size - offset);
-  if ((idx < diagLen)) {
+  if (idx < diagLen) {
     uint row = idx;
     uint col = (idx + offset);
     uint srcIdx = ((row * size) + col);

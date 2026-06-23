@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_nccl_linear_broadcast_i32(const int* src, co
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int val = src[gid];
     dst[gid] = val;
   }

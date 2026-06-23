@@ -36,7 +36,7 @@ layout(std430, binding = 4) buffer buf_dst {
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int i = int(int(gl_GlobalInvocationID.x));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < int(3); ++c) {
       int srcLin = ((c * count[0]) + i);
       int dstLin = ((c * n[0]) + indices[int(int(gl_GlobalInvocationID.x))]);

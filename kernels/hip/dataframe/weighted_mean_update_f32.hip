@@ -16,7 +16,7 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_weighted_mean_update_f32(const float* x, const float* w, float* weightSum, float* mean) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float wOld = weightSum[0];
     float meanOld = mean[0];
     float xVal = x[0];

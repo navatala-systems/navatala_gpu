@@ -41,7 +41,7 @@ void main() {
   barrier();
   uint stride = 128u;
   for (int __iter = 0; __iter < 8; ++__iter) {
-    if (!((stride > 0u))) break;
+    if (!(stride > 0u)) break;
     uint s = stride;
     bool should_reduce = (lid < s);
     if (should_reduce) {

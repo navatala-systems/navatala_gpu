@@ -19,7 +19,7 @@ using namespace metal;
 kernel void navatala_ml_avgpool_exclude_pad_f16(device const half* _input [[buffer(0)]], device const uint* window [[buffer(1)]], device const uint* stride [[buffer(2)]], device const uint* inCount [[buffer(3)]], device const uint* outCount [[buffer(4)]], device half* _output [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     uint windowVal = window[0];
     uint strideVal = stride[0];
     uint inCountVal = inCount[0];
@@ -28,7 +28,7 @@ kernel void navatala_ml_avgpool_exclude_pad_f16(device const half* _input [[buff
     float cnt = as_type<float>(0x00000000u);
     for (int w = 0; w < (int)(windowVal); ++w) {
       uint idx = (base + ((uint)(w)));
-      if ((idx < inCountVal)) {
+      if (idx < inCountVal) {
         float v = ((float)(_input[idx]));
         sum = (sum + v);
         cnt = (cnt + as_type<float>(0x3f800000u));

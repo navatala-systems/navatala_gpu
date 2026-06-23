@@ -18,9 +18,9 @@ extern "C" __global__ void navatala_sparse_interpolate_symbolic_row_nnz_f32(cons
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int row = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
-    if ((mark == 1)) {
+    if (mark == 1) {
       ProwNnz[row] = 1u;
     } else {
       int rs = ((int)(rowPtr[row]));
@@ -29,10 +29,10 @@ extern "C" __global__ void navatala_sparse_interpolate_symbolic_row_nnz_f32(cons
       for (int j = 0; j < (int)((re - rs)); ++j) {
         int k = (rs + j);
         unsigned int isStr = strongMask[k];
-        if ((isStr == 1u)) {
+        if (isStr == 1u) {
           int col = ((int)(colIdx[k]));
           int mC = cfMarking[col];
-          if ((mC == 1)) {
+          if (mC == 1) {
             nnz = (nnz + 1u);
           }
         }

@@ -16,7 +16,7 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_cfd_add_vol_vector(const float* ax, const float* ay, const float* az, const float* bx, const float* by_, const float* bz, const int* params, float* outX, float* outY, float* outZ) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0]) {
     return;
   } else {
     outX[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (ax[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] + bx[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]);

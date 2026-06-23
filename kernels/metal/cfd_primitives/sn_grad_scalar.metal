@@ -17,17 +17,17 @@
 using namespace metal;
 
 kernel void navatala_cfd_primitives_sn_grad_scalar(device const float* cellVal [[buffer(0)]], device const int* owner [[buffer(1)]], device const int* neighbour [[buffer(2)]], device const float* delta [[buffer(3)]], device const float* faceVal [[buffer(4)]], device const uint* faceMask [[buffer(5)]], device const int* params [[buffer(6)]], device float* outSnGrad [[buffer(7)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= params[0])) {
+  if (((int)(int(__gid.x))) >= params[0]) {
     return;
   } else {
     int o = owner[((int)(int(__gid.x)))];
     float aO = cellVal[o];
-    if ((((int)(int(__gid.x))) < params[1])) {
+    if (((int)(int(__gid.x))) < params[1]) {
       int n = neighbour[((int)(int(__gid.x)))];
       float aN = cellVal[n];
       outSnGrad[((int)(int(__gid.x)))] = (delta[((int)(int(__gid.x)))] * (aN - aO));
     } else {
-      if ((faceMask[((int)(int(__gid.x)))] != 0u)) {
+      if (faceMask[((int)(int(__gid.x)))] != 0u) {
         float aN = faceVal[((int)(int(__gid.x)))];
         outSnGrad[((int)(int(__gid.x)))] = (delta[((int)(int(__gid.x)))] * (aN - aO));
       } else {

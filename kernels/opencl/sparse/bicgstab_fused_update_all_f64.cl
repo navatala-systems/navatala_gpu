@@ -18,7 +18,7 @@ __kernel void navatala_sparse_bicgstab_fused_update_all_f64(__global const doubl
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double a = alpha[0];
     double om = omega[0];
     double ph = phat[gid];

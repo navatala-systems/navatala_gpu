@@ -15,7 +15,7 @@
 
 __kernel void navatala_cfd_face_flux_internal(__global const float* x, __global const int* owner, __global const int* neighbour, __global const float* cf, __global const uint* params, __global float* faceFlux) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(params[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(params[0]))) {
     return;
   } else {
     int o = owner[(int)(get_global_id(0))];

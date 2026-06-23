@@ -18,13 +18,13 @@ __kernel void navatala_sparse_ell_sp_m_v_f64(__global const uint* ellColIdx, __g
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int maxNnz = ((int)(maxNnzPerRow[0]));
     double sum = as_double(0x0000000000000000ul);
     for (int j = 0; j < (int)(maxNnz); ++j) {
       int ellIdx = ((gid * maxNnz) + j);
       uint col = ellColIdx[ellIdx];
-      if ((col < (uint)(4294967295u))) {
+      if (col < (uint)(4294967295u)) {
         double a = ellValues[ellIdx];
         double xj = x[((int)(col))];
         sum = (sum + (a * xj));

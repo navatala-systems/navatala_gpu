@@ -20,7 +20,7 @@ extern "C" __global__ void navatala_sparse_idr_build_shadow_space_f32(const unsi
   int N = ((int)(n[0]));
   int S = ((int)(s[0]));
   int total = (N * S);
-  if ((gid < total)) {
+  if (gid < total) {
     int row = (gid % N);
     int col = (gid / N);
     float val = (((row == col)) ? (__uint_as_float(0x3f800000u)) : (__uint_as_float(0x00000000u)));

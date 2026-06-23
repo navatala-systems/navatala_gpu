@@ -29,7 +29,7 @@ kernel void navatala_runtime_deterministic_reduce_f32(device const float* _input
   uint f32RedStride = 128u;
   for (int f32RedStep = 0; f32RedStep < (int)(8); ++f32RedStep) {
     uint f32Stride = f32RedStride;
-    if ((lid < f32Stride)) {
+    if (lid < f32Stride) {
       float other = sdata[(lid + f32Stride)];
       float mine = sdata[lid];
       float sum = (mine + other);
@@ -40,7 +40,7 @@ kernel void navatala_runtime_deterministic_reduce_f32(device const float* _input
     f32RedStride = f32NextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float totalSum = sdata[0];
     result[0] = totalSum;
   }
@@ -63,7 +63,7 @@ kernel void navatala_runtime_deterministic_histogram_f32(device const float* val
   float range = (maxValF - minValF);
   float numBinsFloat = ((float)(numBinsVal));
   float binWidth = (range / numBinsFloat);
-  if ((lid < numBinsVal)) {
+  if (lid < numBinsVal) {
     localHist[lid] = 0u;
   }
   bool inBounds = (gid < countVal);
@@ -79,15 +79,15 @@ kernel void navatala_runtime_deterministic_histogram_f32(device const float* val
     binIndices[lid] = numBinsVal;
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((lid < numBinsVal)) {
+  if (lid < numBinsVal) {
     uint myBin = lid;
     uint histF32RedStride = 128u;
     for (int histF32RedStep = 0; histF32RedStep < (int)(8); ++histF32RedStep) {
       uint histF32Stride = histF32RedStride;
-      if ((lid < histF32Stride)) {
+      if (lid < histF32Stride) {
         uint partnerIdx = (lid + histF32Stride);
         uint storedBin = binIndices[partnerIdx];
-        if ((storedBin == myBin)) {
+        if (storedBin == myBin) {
           uint oldCount = localHist[lid];
           uint newCount = (oldCount + 1u);
           localHist[lid] = newCount;
@@ -100,7 +100,7 @@ kernel void navatala_runtime_deterministic_histogram_f32(device const float* val
     }
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     for (int bin = 0; bin < (int)(numBinsVal); ++bin) {
       uint binU32 = ((uint)(bin));
       uint localCount = localHist[binU32];

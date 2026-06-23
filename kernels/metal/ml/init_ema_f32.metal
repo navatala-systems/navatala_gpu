@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_ml_init_ema_f32(device const float* alphaIn [[buffer(0)]], device float* ema [[buffer(1)]], device float* alpha [[buffer(2)]], device uint* count [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) == 0)) {
+  if (int(__gid.x) == 0) {
     float a = alphaIn[0];
     ema[0] = as_type<float>(0x00000000u);
     alpha[0] = a;

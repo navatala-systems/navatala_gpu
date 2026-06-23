@@ -18,9 +18,9 @@ extern "C" __global__ void navatala_sparse_cf_split_aggressive_p_m_i_s(const uns
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int row = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int prevMark = cfMarkingPrev[row];
-    if ((prevMark == 1)) {
+    if (prevMark == 1) {
       unsigned int priority = (((unsigned int)(row)) ^ seed[0]);
       int rs = ((int)(rowPtr[row]));
       int re = ((int)(rowPtr[(row + 1)]));
@@ -28,10 +28,10 @@ extern "C" __global__ void navatala_sparse_cf_split_aggressive_p_m_i_s(const uns
       for (int j = 0; j < (int)((re - rs)); ++j) {
         int k = (rs + j);
         unsigned int isStr = strongMask[k];
-        if ((isStr == 1u)) {
+        if (isStr == 1u) {
           int nbr = ((int)(colIdx[k]));
           int nbrPrev = cfMarkingPrev[nbr];
-          if ((nbrPrev == 1)) {
+          if (nbrPrev == 1) {
             unsigned int nbrPri = (((unsigned int)(nbr)) ^ seed[0]);
             bool outranks = ((nbrPri > priority) || ((nbrPri == priority) && (nbr < row)));
             if (outranks) {
@@ -40,7 +40,7 @@ extern "C" __global__ void navatala_sparse_cf_split_aggressive_p_m_i_s(const uns
           }
         }
       }
-      if ((!hasHigherNbr)) {
+      if (!hasHigherNbr) {
         cfMarking[row] = 1;
       } else {
         cfMarking[row] = -1;

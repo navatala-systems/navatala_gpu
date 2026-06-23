@@ -17,9 +17,9 @@ __kernel void navatala_sparse_build_fine_to_coarse_map(__global const int* cfMar
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int mark = cfMarking[gid];
-    if ((mark == 1)) {
+    if (mark == 1) {
       uint cIdx = coarseOffset[gid];
       fineToCoarse[gid] = ((int)(cIdx));
     } else {

@@ -16,7 +16,7 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_init_covariance_state_f32(unsigned int* count, float* meanX, float* meanY, float* Cxy) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     count[0] = 0u;
     meanX[0] = __uint_as_float(0x00000000u);
     meanY[0] = __uint_as_float(0x00000000u);

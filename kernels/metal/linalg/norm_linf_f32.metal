@@ -32,7 +32,7 @@ kernel void navatala_linalg_norm_linf_f32(device const float* _input [[buffer(0)
   uint linfF32RedStride = 128u;
   for (int linfF32RedStep = 0; linfF32RedStep < (int)(8); ++linfF32RedStep) {
     uint linfF32Stride = linfF32RedStride;
-    if ((lid < linfF32Stride)) {
+    if (lid < linfF32Stride) {
       float other = sdata[(lid + linfF32Stride)];
       float mine = sdata[lid];
       bool mineGtOther = (mine > other);
@@ -44,7 +44,7 @@ kernel void navatala_linalg_norm_linf_f32(device const float* _input [[buffer(0)
     linfF32RedStride = linfF32NextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0] = sdata[0];
   }
 }

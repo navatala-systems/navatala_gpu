@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_spgemm_numeric_hash_f32(const unsigne
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRowsA[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int ars = ((int)(ArowPtr[gid]));
     int are = ((int)(ArowPtr[(gid + 1)]));
     int crs = ((int)(CrowPtr[gid]));

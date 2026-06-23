@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_partition_count_per_rank(const unsign
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rank = ((int)(partitionVector[gid]));
     unsigned int _aod1 = atomicAdd(&(countPerRank[rank]), 1u);
   }

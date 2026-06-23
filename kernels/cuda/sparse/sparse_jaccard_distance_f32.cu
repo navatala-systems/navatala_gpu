@@ -27,7 +27,7 @@ extern "C" __global__ void navatala_sparse_sparse_jaccard_distance_f32(const flo
   unsigned int gridSize = ((unsigned int)((int)(gridDim.x * blockDim.x)));
   for (int loopIdx = 0; loopIdx < (int)(nnzVal); ++loopIdx) {
     unsigned int currentIdx = idxAccum;
-    if ((currentIdx < nnzVal)) {
+    if (currentIdx < nnzVal) {
       float aVal = a[currentIdx];
       float bVal = b[currentIdx];
       bool aNonZero = (aVal != __uint_as_float(0x00000000u));
@@ -55,7 +55,7 @@ extern "C" __global__ void navatala_sparse_sparse_jaccard_distance_f32(const flo
   unsigned int strideAccum = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     unsigned int currentStride = strideAccum;
-    if ((lidU32 < currentStride)) {
+    if (lidU32 < currentStride) {
       unsigned int otherIdx = (lidU32 + currentStride);
       unsigned int myIntersect = sdataIntersect[lidU32];
       unsigned int otherIntersect = sdataIntersect[otherIdx];
@@ -69,7 +69,7 @@ extern "C" __global__ void navatala_sparse_sparse_jaccard_distance_f32(const flo
     strideAccum = nextStride;
     __syncthreads();
   }
-  if ((lidU32 == 0u)) {
+  if (lidU32 == 0u) {
     unsigned int totalIntersect = sdataIntersect[0u];
     unsigned int totalUnion = sdataUnion[0u];
     bool unionIsZero = (totalUnion == 0u);

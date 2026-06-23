@@ -28,7 +28,7 @@ kernel void navatala_vector_search_reduce_inertia_f32(device const float* min_di
   threadgroup_barrier(mem_flags::mem_threadgroup);
   uint stride = 128u;
   for (int __iter = 0; __iter < 8; ++__iter) {
-    if (!((stride > 0u))) break;
+    if (!(stride > 0u)) break;
     uint s = stride;
     bool should_reduce = (lid < s);
     if (should_reduce) {

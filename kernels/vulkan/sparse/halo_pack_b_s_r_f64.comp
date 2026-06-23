@@ -38,7 +38,7 @@ void main() {
   int gid = int(gl_GlobalInvocationID.x);
   int N = int(sendCount[0]);
   int bd = int(blockDim[0]);
-  if ((gid < (N * bd))) {
+  if (gid < (N * bd)) {
     int entry = (gid / bd);
     int comp = (gid % bd);
     int idx = ((int(sendMap[entry]) * bd) + comp);

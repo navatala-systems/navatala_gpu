@@ -30,7 +30,7 @@ __kernel void navatala_dataframe_sum_reduce_f32(__global const float* _input, __
   uint reductionStride = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint stride = reductionStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       uint partnerIdx = (lid + stride);
       float myVal = sdata[lid];
       float partnerVal = sdata[partnerIdx];
@@ -42,7 +42,7 @@ __kernel void navatala_dataframe_sum_reduce_f32(__global const float* _input, __
     barrier(CLK_LOCAL_MEM_FENCE);
   }
   uint zeroU32 = ((uint)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     result[0] = sdata[0];
   }
 }

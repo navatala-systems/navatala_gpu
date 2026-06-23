@@ -18,7 +18,7 @@ __kernel void navatala_cfd_vof_mules_face_update(__global const float* phiCorr, 
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[2])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[2]) {
     return;
   } else {
     float pc = phiCorr[((int)((int)(get_global_id(0))))];
@@ -27,21 +27,21 @@ __kernel void navatala_cfd_vof_mules_face_update(__global const float* phiCorr, 
     float a0 = lambdam[o];
     float b0 = lambdap[n];
     float lim = a0;
-    if ((lim > b0)) {
+    if (lim > b0) {
       lim = b0;
     }
-    if ((pc > as_float(0x00000000u))) {
+    if (pc > as_float(0x00000000u)) {
       float a1 = lambdap[o];
       float b1 = lambdam[n];
       float lim1 = a1;
-      if ((lim1 > b1)) {
+      if (lim1 > b1) {
         lim1 = b1;
       }
       lim = lim1;
     }
     float cur = lambda[((int)((int)(get_global_id(0))))];
     float _out = cur;
-    if ((_out > lim)) {
+    if (_out > lim) {
       _out = lim;
     }
     lambda[((int)((int)(get_global_id(0))))] = _out;

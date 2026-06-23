@@ -41,7 +41,7 @@ layout(std430, binding = 6) writeonly buffer buf_outCell {
 // kernel: navatala_cfd_primitives_average_face_scalar_to_cell
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= params[0])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= params[0]) {
     return;
   } else {
     uint begU = offsets[int(int(gl_GlobalInvocationID.x))];
@@ -59,7 +59,7 @@ void main() {
       acc = (acc + term);
     }
     float den = sumMag[int(int(gl_GlobalInvocationID.x))];
-    if ((den < uintBitsToFloat(0x1e3ce508u))) {
+    if (den < uintBitsToFloat(0x1e3ce508u)) {
       den = uintBitsToFloat(0x1e3ce508u);
     }
     outCell[int(int(gl_GlobalInvocationID.x))] = (acc / den);

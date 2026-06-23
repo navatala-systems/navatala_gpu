@@ -22,7 +22,7 @@ __kernel void navatala_linalg_roll_cols_f64(__global const double* A, __global c
   uint mVal = m[(uint)(0u)];
   uint nVal = n[(uint)(0u)];
   uint totalElems = (mVal * nVal);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     uint row = (idx / nVal);
     uint col = (idx % nVal);
     uint kMod = (kVal % nVal);

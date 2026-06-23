@@ -53,16 +53,16 @@ void main() {
   uint tid = uint(int(gl_GlobalInvocationID.x));
   uint n_cand = n_candidates[0];
   uint m_val = m[0];
-  if ((tid == 0u)) {
+  if (tid == 0u) {
     n_sel[0u] = 0u;
   }
   barrier();
-  if ((tid < n_cand)) {
+  if (tid < n_cand) {
     uint cand_id = candidates[tid];
     selected[tid] = cand_id;
   }
   barrier();
-  if ((tid == 0u)) {
+  if (tid == 0u) {
     uint final_count = (((n_cand < m_val)) ? (n_cand) : (m_val));
     n_selected[0u] = final_count;
   }

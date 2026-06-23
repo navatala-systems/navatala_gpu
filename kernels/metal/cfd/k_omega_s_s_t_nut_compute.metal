@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_cfd_k_omega_s_s_t_nut_compute(device const float* kVals [[buffer(0)]], device const float* omegaVals [[buffer(1)]], device const float* f23Vals [[buffer(2)]], device const float* s2Vals [[buffer(3)]], device const uint* counts [[buffer(4)]], device const float* params [[buffer(5)]], device float* outNut [[buffer(6)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(counts[0])))) {
+  if (int(__gid.x) >= ((int)(counts[0]))) {
     return;
   } else {
     float a1 = params[0];
@@ -29,14 +29,14 @@ kernel void navatala_cfd_k_omega_s_s_t_nut_compute(device const float* kVals [[b
     float denomA = (a1 * om);
     float denomB = ((b1 * f23) * sqrt((s2raw * ((float)((s2raw > as_type<float>(0x00000000u)))))));
     float num = (a1 * k);
-    if ((denomA > denomB)) {
-      if ((denomA > as_type<float>(0x00000000u))) {
+    if (denomA > denomB) {
+      if (denomA > as_type<float>(0x00000000u)) {
         outNut[int(__gid.x)] = (num / denomA);
       } else {
         outNut[int(__gid.x)] = as_type<float>(0x00000000u);
       }
     } else {
-      if ((denomB > as_type<float>(0x00000000u))) {
+      if (denomB > as_type<float>(0x00000000u)) {
         outNut[int(__gid.x)] = (num / denomB);
       } else {
         outNut[int(__gid.x)] = as_type<float>(0x00000000u);

@@ -16,7 +16,7 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_ewmc_extract_covariance_f64(__global const double* Cxy, __global const double* nEff, __global double* result) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double c = Cxy[0];
     double n = nEff[0];
     double eps = as_double(0x3cd203af9ee75616ul);

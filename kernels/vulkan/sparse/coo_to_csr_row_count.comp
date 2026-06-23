@@ -34,7 +34,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int gid = int(gl_GlobalInvocationID.x);
   int N = int(nnz[0]);
-  if ((gid < N)) {
+  if (gid < N) {
     int row = int(rowIdx[gid]);
     uint _aod4 = atomicAdd(rowCount[row], 1u);
   }

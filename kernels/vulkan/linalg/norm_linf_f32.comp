@@ -45,7 +45,7 @@ void main() {
   uint linfF32RedStride = 128u;
   for (int linfF32RedStep = 0; linfF32RedStep < int(8); ++linfF32RedStep) {
     uint linfF32Stride = linfF32RedStride;
-    if ((lid < linfF32Stride)) {
+    if (lid < linfF32Stride) {
       float other = sdata[(lid + linfF32Stride)];
       float mine = sdata[lid];
       bool mineGtOther = (mine > other);
@@ -57,7 +57,7 @@ void main() {
     linfF32RedStride = linfF32NextStride;
     barrier();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0] = sdata[0];
   }
 }

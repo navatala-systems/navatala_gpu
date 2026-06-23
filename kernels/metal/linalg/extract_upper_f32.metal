@@ -20,7 +20,7 @@ kernel void navatala_linalg_extract_upper_f32(device const float* A [[buffer(0)]
   uint idx = ((uint)(int(__gid.x)));
   uint nVal = n[0u];
   uint totalElements = (nVal * nVal);
-  if ((idx < totalElements)) {
+  if (idx < totalElements) {
     uint i = (idx / nVal);
     uint j = (idx % nVal);
     float aVal = A[idx];

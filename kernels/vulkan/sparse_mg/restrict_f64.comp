@@ -40,7 +40,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int row = int(gl_GlobalInvocationID.x);
   int N = int(nCoarse[0]);
-  if ((row < N)) {
+  if (row < N) {
     int rs = int(RrowPtr[row]);
     int re = int(RrowPtr[(row + 1)]);
     double acc = packDouble2x32(uvec2(0x00000000u, 0x00000000u));

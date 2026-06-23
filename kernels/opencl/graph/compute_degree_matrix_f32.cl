@@ -35,7 +35,7 @@ __kernel void navatala_graph_compute_degree_matrix_f32(__global const float* W, 
     uint degF32RedStride = (uint)(128u);
     for (int degF32RedStep = 0; degF32RedStep < (int)(8); ++degF32RedStep) {
       uint degF32Stride = degF32RedStride;
-      if ((lid < degF32Stride)) {
+      if (lid < degF32Stride) {
         float other = sdata[(lid + degF32Stride)];
         float mine = sdata[lid];
         float sum = (mine + other);
@@ -46,7 +46,7 @@ __kernel void navatala_graph_compute_degree_matrix_f32(__global const float* W, 
       degF32RedStride = degF32NextStride;
       barrier(CLK_LOCAL_MEM_FENCE);
     }
-    if ((lid == (uint)(0u))) {
+    if (lid == (uint)(0u)) {
       float degreeVal = sdata[0];
       D[rowIdx] = degreeVal;
     }

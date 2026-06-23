@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_reorder_vector_by_color_f64(const dou
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int origIdx = ((int)(reorderPerm[gid]));
     xReordered[gid] = x[origIdx];
   }

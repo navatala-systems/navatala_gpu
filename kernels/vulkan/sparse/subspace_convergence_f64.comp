@@ -47,7 +47,7 @@ void main() {
   int gid = int(gl_GlobalInvocationID.x);
   int N = int(n[0]);
   int kVal = int(k[0]);
-  if ((gid < kVal)) {
+  if (gid < kVal) {
     double norm2 = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
     for (int i = 0; i < int(N); ++i) {
       double ax = AX[((gid * N) + i)];
@@ -57,7 +57,7 @@ void main() {
     }
     residNorms[gid] = norm2;
     double tol = tolerance[0];
-    if ((norm2 < (tol * tol))) {
+    if (norm2 < (tol * tol)) {
       uint _aod1 = atomicAdd(nConverged[0], 1u);
     }
   }

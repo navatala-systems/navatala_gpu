@@ -17,7 +17,7 @@ __kernel void navatala_graph_out_degree_u32(__global const uint* offsets, __glob
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     uint hi = offsets[(gid + (uint)(1u))];
     uint lo = offsets[gid];
     uint deg = (hi - lo);

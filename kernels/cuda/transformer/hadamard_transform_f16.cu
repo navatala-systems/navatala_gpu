@@ -25,7 +25,7 @@ extern "C" __global__ void navatala_transformer_hadamard_transform_f16(const __h
   bool batchValid = (batchIdx < bs);
   bool threadValid = (lid < vs);
   unsigned int globalIdx = ((batchIdx * vs) + lid);
-  if ((batchValid && threadValid)) {
+  if (batchValid && threadValid) {
     __half valF16 = _input[globalIdx];
     float val = ((float)(valF16));
     sharedBuf[lid] = val;
@@ -70,7 +70,7 @@ extern "C" __global__ void navatala_transformer_hadamard_transform_f16(const __h
   float scale = sqrt(vsF32);
   float normalized = (newVal4 / scale);
   __half resultF16 = ((__half)(normalized));
-  if ((batchValid && threadValid)) {
+  if (batchValid && threadValid) {
     _output[globalIdx] = resultF16;
   }
 }

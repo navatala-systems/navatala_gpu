@@ -48,7 +48,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   uint gid = uint(int(gl_GlobalInvocationID.x));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float epsVal = eps[0];
     float d = (float(x[gid]) - float(mean[gid]));
     float denom = sqrt((float(var[gid]) + epsVal));

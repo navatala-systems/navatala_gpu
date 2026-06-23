@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_ml_init_ema_f32(const float* alphaIn, float* ema, float* alpha, unsigned int* count) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float a = alphaIn[0];
     ema[0] = __uint_as_float(0x00000000u);
     alpha[0] = a;

@@ -18,7 +18,7 @@ __kernel void navatala_nccl_direct_send_f16(__global const half* src, __global c
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half val = src[gid];
     dst[gid] = val;
   }

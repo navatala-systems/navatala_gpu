@@ -18,14 +18,14 @@ extern "C" __global__ void navatala_sparse_strength_of_connection_f64(const unsi
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     double maxOff = __longlong_as_double(0x0000000000000000ull);
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != gid)) {
+      if (col != gid) {
         double a = values[k];
         maxOff = (((abs(a) > maxOff)) ? (abs(a)) : (maxOff));
       }

@@ -19,7 +19,7 @@ __kernel void navatala_linalg_scatter_add_f64(__global const double* src, __glob
   uint gid = ((uint)((int)(get_global_id(0))));
   uint tid = gid;
   uint n = count[(uint)(0u)];
-  if ((tid < n)) {
+  if (tid < n) {
     uint dstIdx = indices[tid];
     double val = src[tid];
     atomic_add(&A[dstIdx], val);

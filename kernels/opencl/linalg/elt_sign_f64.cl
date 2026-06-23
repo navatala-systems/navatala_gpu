@@ -17,7 +17,7 @@
 __kernel void navatala_linalg_elt_sign_f64(__global const double* A, __global const uint* n, __global double* C) {
   int gid0 = (int)get_global_id(0);
   uint i = ((uint)((int)(get_global_id(0))));
-  if ((i < n[(uint)(0u)])) {
+  if (i < n[(uint)(0u)]) {
     double a = A[i];
     bool isNeg = (a < as_double(0x0000000000000000ul));
     double negOrZero = ((isNeg) ? (as_double(0xbff0000000000000ul)) : (as_double(0x0000000000000000ul)));

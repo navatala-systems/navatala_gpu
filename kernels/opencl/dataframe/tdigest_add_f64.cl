@@ -17,7 +17,7 @@
 __kernel void navatala_dataframe_tdigest_add_f64(__global const double* value, __global const double* weight, __global double* centroidMeans, __global double* centroidWeights, __global uint* centroidCount, __global double* totalWeight, __global double* minVal, __global double* maxVal) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     double x = value[0];
     double w = weight[0];
     uint count = centroidCount[0];

@@ -21,7 +21,7 @@ kernel void navatala_linalg_gather_elements_f32(device const float* A [[buffer(0
   uint tid = gid;
   uint countVal = count[0u];
   uint nVal = n[0u];
-  if ((tid < countVal)) {
+  if (tid < countVal) {
     uint row = rowIdx[tid];
     uint col = colIdx[tid];
     uint srcIdx = ((row * nVal) + col);

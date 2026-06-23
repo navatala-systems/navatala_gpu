@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_cfd_laplacian_coeffs(device const float* gamma [[buffer(0)]], device const int* owner [[buffer(1)]], device const int* neighbour [[buffer(2)]], device const float* weights [[buffer(3)]], device const float* deltaCoeffs [[buffer(4)]], device const float* magSf [[buffer(5)]], device const int* counts [[buffer(6)]], device float* outUpper [[buffer(7)]], device float* outLower [[buffer(8)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     float gammaF = gamma[((int)(int(__gid.x)))];

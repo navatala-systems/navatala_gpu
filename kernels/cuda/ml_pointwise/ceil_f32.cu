@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_ml_pointwise_ceil_f32(const float* _input, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = ceil(x);

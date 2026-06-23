@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_w_cycle_weight_partials_f64(const dou
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double ri = r[gid];
     double ei = e[gid];
     double aei = Ae[gid];

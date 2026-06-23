@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_sparse_threshold_f64(const double* va
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   double thresh = threshold[0u];
-  if ((i < nnz[0u])) {
+  if (i < nnz[0u]) {
     double a = valuesA[i];
     double absA = abs(a);
     double result = (((absA >= thresh)) ? (a) : (__longlong_as_double(0x0000000000000000ull)));

@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_nccl_reduce_local_min_f16(const __half* a, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half va = a[gid];
     __half vb = b[gid];
     bool aLtB = (va < vb);

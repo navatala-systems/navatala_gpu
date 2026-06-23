@@ -31,7 +31,7 @@ __kernel void navatala_ml_compute_m_s_e_f32(__global const float* targets, __glo
   uint mseF32_reductionStride = (uint)(128u);
   for (int mseF32_reductionStep = 0; mseF32_reductionStep < (int)(8); ++mseF32_reductionStep) {
     uint mseF32_stride = mseF32_reductionStride;
-    if ((lid < mseF32_stride)) {
+    if (lid < mseF32_stride) {
       uint otherIdx = (lid + mseF32_stride);
       float mine = sdata[lid];
       float other = sdata[otherIdx];
@@ -65,7 +65,7 @@ __kernel void navatala_ml_compute_m_s_e_f32(__global const float* targets, __glo
   uint mseF32b_reductionStride = (uint)(128u);
   for (int mseF32b_reductionStep = 0; mseF32b_reductionStep < (int)(8); ++mseF32b_reductionStep) {
     uint mseF32b_stride = mseF32b_reductionStride;
-    if ((lid < mseF32b_stride)) {
+    if (lid < mseF32b_stride) {
       uint otherIdx2 = (lid + mseF32b_stride);
       float mine2 = sdata[lid];
       float other2 = sdata[otherIdx2];

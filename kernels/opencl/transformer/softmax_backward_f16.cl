@@ -104,7 +104,7 @@ __kernel void navatala_transformer_softmax_backward_f16(__global const half* _ou
   }
   barrier(CLK_LOCAL_MEM_FENCE);
   float dot = dotBuf[(uint)(0u)];
-  if ((batchValid && seqValid)) {
+  if (batchValid && seqValid) {
     float dyMinusDot = (dy - dot);
     float dxF32 = (y * dyMinusDot);
     half dx = ((half)(dxF32));

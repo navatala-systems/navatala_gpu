@@ -19,7 +19,7 @@ using namespace metal;
 kernel void navatala_sparse_bicgstab_compute_s_f32(device const float* r [[buffer(0)]], device const float* v [[buffer(1)]], device const float* alpha [[buffer(2)]], device const uint* n [[buffer(3)]], device float* s [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int gid = int(__gid.x);
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float a = alpha[0];
     float ri = r[gid];
     float vi = v[gid];

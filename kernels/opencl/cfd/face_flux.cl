@@ -18,24 +18,24 @@ __kernel void navatala_cfd_face_flux(__global const float* x, __global const int
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[1])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[1]) {
     return;
   } else {
     int o = owner[((int)((int)(get_global_id(0))))];
     float xo = x[o];
     float other = xo;
-    if ((((int)((int)(get_global_id(0)))) < counts[2])) {
+    if (((int)((int)(get_global_id(0)))) < counts[2]) {
       int n = neighbour[((int)((int)(get_global_id(0))))];
       other = x[n];
     } else {
       int m = bcMask[((int)((int)(get_global_id(0))))];
-      if (((m == 1) || (m == 3))) {
+      if ((m == 1) || (m == 3)) {
         other = bcVal[((int)((int)(get_global_id(0))))];
       } else {
-        if ((m == 2)) {
+        if (m == 2) {
           other = as_float(0x00000000u);
         } else {
-          if ((m == 4)) {
+          if (m == 4) {
             outFlux[((int)((int)(get_global_id(0))))] = bcVal[((int)((int)(get_global_id(0))))];
             return;
           }

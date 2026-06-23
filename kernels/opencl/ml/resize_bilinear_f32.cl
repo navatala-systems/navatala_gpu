@@ -17,7 +17,7 @@ __kernel void navatala_ml_resize_bilinear_f32(__global const float* _input, __gl
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint outSizeVal = outSize[0];
-  if ((gid < outSizeVal)) {
+  if (gid < outSizeVal) {
     uint inSizeVal = inSize[0];
     uint inM1 = (inSizeVal - (uint)(1u));
     uint outM1 = (outSizeVal - (uint)(1u));

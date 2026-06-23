@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_build_color_offsets(const int* colors
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int c = colors[gid];
     unsigned int pos = atomicAdd(&(colorOffsets[c]), 1u);
     reorderPerm[((int)(pos))] = ((unsigned int)(gid));

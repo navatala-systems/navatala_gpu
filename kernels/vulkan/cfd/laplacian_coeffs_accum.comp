@@ -38,7 +38,7 @@ layout(std430, binding = 5) buffer buf_outLower {
 // kernel: navatala_cfd_laplacian_coeffs_accum
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= counts[0])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= counts[0]) {
     return;
   } else {
     float coeff = (deltaCoeffs[int(int(gl_GlobalInvocationID.x))] * (gamma[int(int(gl_GlobalInvocationID.x))] * magSf[int(int(gl_GlobalInvocationID.x))]));

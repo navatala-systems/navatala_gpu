@@ -18,14 +18,14 @@ __kernel void navatala_sparse_strength_affinity_f64(__global const uint* rowPtr,
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     double diag = as_double(0x0000000000000000ul);
     for (int jd = 0; jd < (int)((re - rs)); ++jd) {
       int kd = (rs + jd);
       int colD = ((int)(colIdx[kd]));
-      if ((colD == gid)) {
+      if (colD == gid) {
         diag = values[kd];
       }
     }

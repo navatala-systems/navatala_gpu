@@ -24,7 +24,7 @@ kernel void navatala_ml_softmax_f16(device const half* _input [[buffer(0)]], dev
   float gsMax = as_type<float>(0xff7fc99eu);
   for (int itA = 0; itA < (int)(numIters); ++itA) {
     uint idxA = (lid + (((uint)(itA)) * 256u));
-    if ((idxA < countVal)) {
+    if (idxA < countVal) {
       float xA = ((float)(_input[idxA]));
       gsMax = (((gsMax > xA)) ? (gsMax) : (xA));
     }
@@ -34,7 +34,7 @@ kernel void navatala_ml_softmax_f16(device const half* _input [[buffer(0)]], dev
   uint maxStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = maxStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (((mine > other)) ? (mine) : (other));
@@ -50,7 +50,7 @@ kernel void navatala_ml_softmax_f16(device const half* _input [[buffer(0)]], dev
   float gsSum = as_type<float>(0x00000000u);
   for (int itB = 0; itB < (int)(numIters); ++itB) {
     uint idxB = (lid + (((uint)(itB)) * 256u));
-    if ((idxB < countVal)) {
+    if (idxB < countVal) {
       float eB = exp((((float)(_input[idxB])) - maxVal));
       gsSum = (gsSum + eB);
     }
@@ -60,7 +60,7 @@ kernel void navatala_ml_softmax_f16(device const half* _input [[buffer(0)]], dev
   uint sumStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = sumStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -74,7 +74,7 @@ kernel void navatala_ml_softmax_f16(device const half* _input [[buffer(0)]], dev
   float sumVal = sdata[0];
   for (int itC = 0; itC < (int)(numIters); ++itC) {
     uint idxC = (lid + (((uint)(itC)) * 256u));
-    if ((idxC < countVal)) {
+    if (idxC < countVal) {
       float eC = exp((((float)(_input[idxC])) - maxVal));
       _output[idxC] = ((half)((eC / sumVal)));
     }

@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_cfd_two_mag_sqr_symm_grad_u(device const float* ufX [[buffer(0)]], device const float* ufY [[buffer(1)]], device const float* ufZ [[buffer(2)]], device const float* sfX [[buffer(3)]], device const float* sfY [[buffer(4)]], device const float* sfZ [[buffer(5)]], device const int* offsets [[buffer(6)]], device const int* faceIdx [[buffer(7)]], device const float* sign [[buffer(8)]], device const float* vol [[buffer(9)]], device const int* counts [[buffer(10)]], device float* outS2 [[buffer(11)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     int beg = offsets[((int)(int(__gid.x)))];
@@ -55,7 +55,7 @@ kernel void navatala_cfd_two_mag_sqr_symm_grad_u(device const float* ufX [[buffe
     }
     float v = vol[((int)(int(__gid.x)))];
     float invV = as_type<float>(0x00000000u);
-    if ((v != as_type<float>(0x00000000u))) {
+    if (v != as_type<float>(0x00000000u)) {
       invV = (as_type<float>(0x3f800000u) / v);
     }
     g00 = (g00 * invV);

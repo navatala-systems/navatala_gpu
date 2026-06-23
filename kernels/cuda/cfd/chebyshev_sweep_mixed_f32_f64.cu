@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_cfd_chebyshev_sweep_mixed_f32_f64(const floa
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     double cA = coeffA[0];
     double cB = coeffB[0];
     double ri = ((double)(r[i]));

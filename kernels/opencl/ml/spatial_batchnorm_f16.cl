@@ -30,7 +30,7 @@ __kernel void navatala_ml_spatial_batchnorm_f16(__global const half* x, __global
   float epsVal = eps[0];
   float gsM = as_float(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((uint)(itM)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itM)) * (uint)(256u))) < countVal) {
       gsM = (gsM + ((float)(x[(((((lid + (((uint)(itM)) * (uint)(256u))) / HWv) * CHW) + chBase) + ((lid + (((uint)(itM)) * (uint)(256u))) % HWv))])));
     }
   }
@@ -39,7 +39,7 @@ __kernel void navatala_ml_spatial_batchnorm_f16(__global const half* x, __global
   uint meanStr = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -54,7 +54,7 @@ __kernel void navatala_ml_spatial_batchnorm_f16(__global const half* x, __global
   barrier(CLK_LOCAL_MEM_FENCE);
   float gsV = as_float(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((uint)(itV)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itV)) * (uint)(256u))) < countVal) {
       gsV = (gsV + ((((float)(x[(((((lid + (((uint)(itV)) * (uint)(256u))) / HWv) * CHW) + chBase) + ((lid + (((uint)(itV)) * (uint)(256u))) % HWv))])) - mean) * (((float)(x[(((((lid + (((uint)(itV)) * (uint)(256u))) / HWv) * CHW) + chBase) + ((lid + (((uint)(itV)) * (uint)(256u))) % HWv))])) - mean)));
     }
   }
@@ -63,7 +63,7 @@ __kernel void navatala_ml_spatial_batchnorm_f16(__global const half* x, __global
   uint varStr = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -77,7 +77,7 @@ __kernel void navatala_ml_spatial_batchnorm_f16(__global const half* x, __global
   float var = (sdata[0] / n);
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
-    if (((lid + (((uint)(itW)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itW)) * (uint)(256u))) < countVal) {
       float gv = ((float)(gamma[grp]));
       float bv = ((float)(beta[grp]));
       float xv = ((float)(x[(((((lid + (((uint)(itW)) * (uint)(256u))) / HWv) * CHW) + chBase) + ((lid + (((uint)(itW)) * (uint)(256u))) % HWv))]));

@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_cfd_apply_sp_to_hby_a(device float* hx [[buffer(0)]], device float* hy [[buffer(1)]], device float* hz [[buffer(2)]], device const float* ux [[buffer(3)]], device const float* uy [[buffer(4)]], device const float* uz [[buffer(5)]], device const float* rAU [[buffer(6)]], device const float* sp [[buffer(7)]], device const int* counts [[buffer(8)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     float fac = (sp[((int)(int(__gid.x)))] * rAU[((int)(int(__gid.x)))]);

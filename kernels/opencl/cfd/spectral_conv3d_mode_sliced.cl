@@ -27,7 +27,7 @@ __kernel void navatala_cfd_spectral_conv3d_mode_sliced(__global const float* xFt
   int m3 = 4;
   int plane = ((ftd * fth) * ftw);
   int total = ((nb * outCh) * plane);
-  if ((gid < total)) {
+  if (gid < total) {
     int boc = (gid / plane);
     int dhwFlat = (gid % plane);
     int b = (boc / outCh);
@@ -40,7 +40,7 @@ __kernel void navatala_cfd_spectral_conv3d_mode_sliced(__global const float* xFt
     int negStartH = (fth - m2);
     float accR = as_float(0x00000000u);
     float accI = as_float(0x00000000u);
-    if ((((d < m1) && (h < m2)) && (w < m3))) {
+    if (((d < m1) && (h < m2)) && (w < m3)) {
       for (int ic = 0; ic < (int)(inCh); ++ic) {
         int xBase = ((((((((b * inCh) + ic) * ftd) + d) * fth) + h) * ftw) + w);
         int wBase = ((((((((oc * inCh) + ic) * m1) + d) * m2) + h) * m3) + w);
@@ -52,7 +52,7 @@ __kernel void navatala_cfd_spectral_conv3d_mode_sliced(__global const float* xFt
         accI = (accI + ((xr * wi) + (xi * wr)));
       }
     } else {
-      if ((((d >= negStartD) && (h < m2)) && (w < m3))) {
+      if (((d >= negStartD) && (h < m2)) && (w < m3)) {
         for (int ic = 0; ic < (int)(inCh); ++ic) {
           int xBase = ((((((((b * inCh) + ic) * ftd) + d) * fth) + h) * ftw) + w);
           int wBase = ((((((((oc * inCh) + ic) * m1) + (d - negStartD)) * m2) + h) * m3) + w);
@@ -64,7 +64,7 @@ __kernel void navatala_cfd_spectral_conv3d_mode_sliced(__global const float* xFt
           accI = (accI + ((xr * wi) + (xi * wr)));
         }
       } else {
-        if ((((d < m1) && (h >= negStartH)) && (w < m3))) {
+        if (((d < m1) && (h >= negStartH)) && (w < m3)) {
           for (int ic = 0; ic < (int)(inCh); ++ic) {
             int xBase = ((((((((b * inCh) + ic) * ftd) + d) * fth) + h) * ftw) + w);
             int wBase = ((((((((oc * inCh) + ic) * m1) + d) * m2) + (h - negStartH)) * m3) + w);
@@ -76,7 +76,7 @@ __kernel void navatala_cfd_spectral_conv3d_mode_sliced(__global const float* xFt
             accI = (accI + ((xr * wi) + (xi * wr)));
           }
         } else {
-          if ((((d >= negStartD) && (h >= negStartH)) && (w < m3))) {
+          if (((d >= negStartD) && (h >= negStartH)) && (w < m3)) {
             for (int ic = 0; ic < (int)(inCh); ++ic) {
               int xBase = ((((((((b * inCh) + ic) * ftd) + d) * fth) + h) * ftw) + w);
               int wBase = ((((((((oc * inCh) + ic) * m1) + (d - negStartD)) * m2) + (h - negStartH)) * m3) + w);

@@ -45,7 +45,7 @@ extern "C" __global__ void navatala_dataframe_scan_max_f32(const float* _input, 
     }
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     sdata[511u] = __uint_as_float(0xff7fffffu);
   }
   __syncthreads();

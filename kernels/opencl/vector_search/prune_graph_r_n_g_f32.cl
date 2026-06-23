@@ -31,7 +31,7 @@ __kernel void navatala_vector_search_prune_graph_r_n_g_f32(__global const float*
     bool should_prune = false;
     for (int wi = 0; wi < (int)(deg); ++wi) {
       bool is_self_slot = (wi == slot);
-      if ((wi != slot)) {
+      if (wi != slot) {
         uint w_slot = (graph_base + wi);
         uint w = graph[w_slot];
         float d_uw = graph_distances[w_slot];

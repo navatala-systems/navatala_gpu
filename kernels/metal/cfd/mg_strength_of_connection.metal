@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_cfd_mg_strength_of_connection(device const float* diag [[buffer(0)]], device const float* upper [[buffer(1)]], device const int* owner [[buffer(2)]], device const int* nei [[buffer(3)]], device float* strength [[buffer(4)]], device const int* counts [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(counts[1])))) {
+  if (int(__gid.x) >= ((int)(counts[1]))) {
     return;
   } else {
     int o = owner[int(__gid.x)];
@@ -25,7 +25,7 @@ kernel void navatala_cfd_mg_strength_of_connection(device const float* diag [[bu
     float dO = abs(diag[o]);
     float dN = abs(diag[n]);
     float denomSq = (dO * dN);
-    if ((denomSq > as_type<float>(0x0da24260u))) {
+    if (denomSq > as_type<float>(0x0da24260u)) {
       strength[int(__gid.x)] = (abs(upper[int(__gid.x)]) / sqrt(denomSq));
     } else {
       strength[int(__gid.x)] = as_type<float>(0x00000000u);

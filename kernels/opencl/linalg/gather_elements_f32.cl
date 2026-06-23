@@ -19,7 +19,7 @@ __kernel void navatala_linalg_gather_elements_f32(__global const float* A, __glo
   uint tid = gid;
   uint countVal = count[(uint)(0u)];
   uint nVal = n[(uint)(0u)];
-  if ((tid < countVal)) {
+  if (tid < countVal) {
     uint row = rowIdx[tid];
     uint col = colIdx[tid];
     uint srcIdx = ((row * nVal) + col);

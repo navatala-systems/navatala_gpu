@@ -34,7 +34,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int gid = int(gl_GlobalInvocationID.x);
   int N = int(nnzP[0]);
-  if ((gid < N)) {
+  if (gid < N) {
     float g = gradient[gid];
     float step = stepSize[0];
     float p = Pvalues[gid];

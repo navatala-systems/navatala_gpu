@@ -20,7 +20,7 @@ kernel void navatala_vector_search_robust_prune_f32(device const uint* vertex [[
   uint tid = ((uint)(int(__gid.x)));
   uint nc = n_candidates[0];
   uint md = max_degree[0];
-  if ((tid == 0u)) {
+  if (tid == 0u) {
     uint limit = (((nc < md)) ? (nc) : (md));
     for (int i = 0; i < (int)(limit); ++i) {
       uint cand = candidates[i];

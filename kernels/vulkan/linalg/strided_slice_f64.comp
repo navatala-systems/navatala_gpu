@@ -40,7 +40,7 @@ void main() {
   uint s = start[0u];
   uint st = stride[0u];
   uint n = count[0u];
-  if ((idx < n)) {
+  if (idx < n) {
     uint srcIdx = (s + (idx * st));
     double val = A[srcIdx];
     _out[idx] = val;

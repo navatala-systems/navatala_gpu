@@ -21,10 +21,10 @@ extern "C" __global__ void navatala_vector_search_extract_layer_results_f32(cons
   unsigned int k_val = k[0];
   unsigned int query_id = (gid / k_val);
   unsigned int neighbor_idx = (gid % k_val);
-  if ((query_id < nq)) {
+  if (query_id < nq) {
     unsigned int found = n_found[query_id];
     unsigned int src_idx = ((query_id * k_val) + neighbor_idx);
-    if ((neighbor_idx < found)) {
+    if (neighbor_idx < found) {
       unsigned int cand_id = candidates[src_idx];
       float cand_dist = distances[src_idx];
       result_ids[src_idx] = cand_id;

@@ -16,24 +16,24 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_interp_scalar_face(const int* owner, const int* neighbour, const float* weights, const float* cellPhi, const float* bcValue, const unsigned int* bcMask, const int* params, float* outPhiF) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0]) {
     return;
   } else {
     int o = owner[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float po = cellPhi[o];
-    if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < params[1])) {
+    if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < params[1]) {
       int n = neighbour[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       float pn = cellPhi[n];
       float w = weights[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       float iw = (__uint_as_float(0x3f800000u) - w);
       outPhiF[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = ((w * po) + (iw * pn));
     } else {
-      if ((bcMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] == 1u)) {
+      if (bcMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] == 1u) {
         float w = weights[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
         float iw = (__uint_as_float(0x3f800000u) - w);
         outPhiF[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = ((w * po) + (iw * bcValue[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]));
       } else {
-        if ((bcMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] == 2u)) {
+        if (bcMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] == 2u) {
           outPhiF[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = bcValue[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
         } else {
           outPhiF[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = po;

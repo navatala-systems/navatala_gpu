@@ -17,7 +17,7 @@ __kernel void navatala_cfd_prolongate_by_agglomeration_f32(__global const float*
   int gid0 = (int)get_global_id(0);
   int i = (int)(get_global_id(0));
   int N = ((int)(nFineCells[0]));
-  if ((i < N)) {
+  if (i < N) {
     int coarseIdx = ((int)(fineToCoarse[i]));
     float val = coarseField[coarseIdx];
     float cur = fineField[i];

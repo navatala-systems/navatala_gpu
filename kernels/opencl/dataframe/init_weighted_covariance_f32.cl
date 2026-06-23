@@ -15,7 +15,7 @@
 
 __kernel void navatala_dataframe_init_weighted_covariance_f32(__global float* weightSum, __global float* meanX, __global float* meanY, __global float* Cxy) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     weightSum[0] = as_float(0x00000000u);
     meanX[0] = as_float(0x00000000u);
     meanY[0] = as_float(0x00000000u);

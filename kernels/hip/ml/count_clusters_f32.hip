@@ -27,7 +27,7 @@ extern "C" __global__ void navatala_ml_count_clusters_f32(const int* labels, con
   unsigned int countClstF32RedStride = 128u;
   for (int countClstF32RedStep = 0; countClstF32RedStep < (int)(8); ++countClstF32RedStep) {
     unsigned int countClstF32Stride = countClstF32RedStride;
-    if ((lid < countClstF32Stride)) {
+    if (lid < countClstF32Stride) {
       unsigned int otherIdx = (lid + countClstF32Stride);
       int other = sdata[otherIdx];
       int mine = sdata[lid];
@@ -40,7 +40,7 @@ extern "C" __global__ void navatala_ml_count_clusters_f32(const int* labels, con
     countClstF32RedStride = countClstF32NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     int maxLabel = sdata[0];
     int count = (maxLabel + 1);
     numClusters[0] = count;

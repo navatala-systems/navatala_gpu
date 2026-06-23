@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_mg_prolong_add(const float* xCoarse, const int* prolongRowOffsets, const int* prolongCols, const float* prolongVals, float* zFine, const int* mgCounts) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(mgCounts[0])))) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(mgCounts[0]))) {
     return;
   } else {
     float accum = __uint_as_float(0x00000000u);

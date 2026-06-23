@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_graph_overlap_f32(const unsigned int* inter,
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int numP = numPairs[0];
-  if ((gid < numP)) {
+  if (gid < numP) {
     unsigned int a = pairsA[gid];
     unsigned int b = pairsB[gid];
     unsigned int iU = inter[gid];

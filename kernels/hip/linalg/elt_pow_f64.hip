@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_linalg_elt_pow_f64(const double* A, const do
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int i = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   double pVal = p[0u];
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     double a = A[i];
     double logA = log(a);
     double pLogA = (pVal * logA);

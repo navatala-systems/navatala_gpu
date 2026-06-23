@@ -108,7 +108,7 @@ extern "C" __global__ void navatala_transformer_rms_norm_forward_bf16(const __nv
   float meanSq = (totalSumSq / hsF32);
   float meanSqEps = (meanSq + eps);
   float rms = sqrt(meanSqEps);
-  if ((batchValid && hiddenValid)) {
+  if (batchValid && hiddenValid) {
     __nv_bfloat16 gBF16 = gamma[lid];
     float g = ((float)(gBF16));
     float xNorm = (x / rms);

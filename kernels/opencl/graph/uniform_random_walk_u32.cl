@@ -17,7 +17,7 @@ __kernel void navatala_graph_uniform_random_walk_u32(__global const uint* offset
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint numW = numWalks[0];
-  if ((gid < numW)) {
+  if (gid < numW) {
     uint maxL = maxLen[0];
     uint seedV = seed[0];
     uint rowBase = (gid * maxL);
@@ -33,7 +33,7 @@ __kernel void navatala_graph_uniform_random_walk_u32(__global const uint* offset
       uint rng = rngAccum;
       uint rngNext = ((rng * (uint)(1103515245u)) + (uint)(12345u));
       rngAccum = rngNext;
-      if ((deg > (uint)(0u))) {
+      if (deg > (uint)(0u)) {
         uint pick = (rngNext % deg);
         uint nbr = indices[(off + pick)];
         curAccum = nbr;

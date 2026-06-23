@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_cg_update_x_r_f64(const double* p, co
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double a = alpha[0];
     double pi = p[gid];
     double api = Ap[gid];

@@ -37,7 +37,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int face = int(gl_GlobalInvocationID.x);
   int nFaces = int(nInternalFaces[0]);
-  if ((face < nFaces)) {
+  if (face < nFaces) {
     int own = int(owner[face]);
     int nbr = int(neighbour[face]);
     uint _a = atomicAdd(rowNnz[own], 1u);

@@ -32,7 +32,7 @@ __kernel void navatala_linalg_reduce_sum_f16(__global const half* _input, __glob
   uint sumF16ReductionStride = (uint)(128u);
   for (int sumF16ReductionStep = 0; sumF16ReductionStep < (int)(8); ++sumF16ReductionStep) {
     uint sumF16Stride = sumF16ReductionStride;
-    if ((lid < sumF16Stride)) {
+    if (lid < sumF16Stride) {
       float other = sdata[(lid + sumF16Stride)];
       float mine = sdata[lid];
       float sum = (mine + other);
@@ -43,7 +43,7 @@ __kernel void navatala_linalg_reduce_sum_f16(__global const half* _input, __glob
     sumF16ReductionStride = sumF16NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float partialSum = sdata[0];
     result[0] = partialSum;
   }

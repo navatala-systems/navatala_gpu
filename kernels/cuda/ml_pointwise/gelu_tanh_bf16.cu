@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_ml_pointwise_gelu_tanh_bf16(const __nv_bfloa
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = ((__uint_as_float(0x3f000000u) * x) * (__uint_as_float(0x3f800000u) + tanh((__uint_as_float(0x3f4c422au) * (x + (__uint_as_float(0x3d372713u) * (x * (x * x))))))));

@@ -17,7 +17,7 @@
 __kernel void navatala_dataframe_quantile_f64(__global const double* sortedInput, __global const uint* count, __global const double* quantileP, __global double* result) {
   int gid0 = (int)get_global_id(0);
   uint gidU32 = ((uint)((int)(get_global_id(0))));
-  if ((gidU32 == (uint)(0u))) {
+  if (gidU32 == (uint)(0u)) {
     uint n = count[(uint)(0u)];
     double p = quantileP[(uint)(0u)];
     double pClamped = (((p < as_double(0x0000000000000000ul))) ? (as_double(0x0000000000000000ul)) : ((((p > as_double(0x3ff0000000000000ul))) ? (as_double(0x3ff0000000000000ul)) : (p))));

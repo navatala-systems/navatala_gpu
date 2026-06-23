@@ -18,22 +18,22 @@ extern "C" __global__ void navatala_sparse_interpolate_distance1_count_f32(const
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int row = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
-    if ((mark == 1)) {
+    if (mark == 1) {
       nnzPerRow[row] = 1u;
     } else {
-      if ((mark == -1)) {
+      if (mark == -1) {
         int rs = ((int)(rowPtr[row]));
         int re = ((int)(rowPtr[(row + 1)]));
         unsigned int nnz = 0u;
         for (int jc = 0; jc < (int)((re - rs)); ++jc) {
           int kc = (rs + jc);
           unsigned int isStr = strongMask[kc];
-          if ((isStr == 1u)) {
+          if (isStr == 1u) {
             int colC = ((int)(colIdx[kc]));
             int markC = cfMarking[colC];
-            if ((markC == 1)) {
+            if (markC == 1) {
               nnz = (nnz + 1u);
             }
           }

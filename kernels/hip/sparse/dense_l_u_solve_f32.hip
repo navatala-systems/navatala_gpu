@@ -22,7 +22,7 @@ extern "C" __global__ void navatala_sparse_dense_l_u_solve_f32(const float* LU, 
   }
   for (int k = 0; k < (int)(N); ++k) {
     int pk = ((int)(pivots[k]));
-    if ((pk != k)) {
+    if (pk != k) {
       float tmp = x[k];
       x[k] = x[pk];
       x[pk] = tmp;

@@ -20,7 +20,7 @@ kernel void navatala_vector_search_compute_neighbor_distances_f32(device const f
   uint tid = ((uint)(int(__gid.x)));
   uint nn = n_neighbors[0];
   uint d = dim[0];
-  if ((tid < nn)) {
+  if (tid < nn) {
     uint neighbor_id = neighbor_ids[tid];
     float acc = as_type<float>(0x00000000u);
     for (int k = 0; k < (int)(d); ++k) {

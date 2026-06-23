@@ -23,11 +23,11 @@ kernel void navatala_vector_search_extract_search_results_f32(device const uint*
   uint ls = search_list_size[0];
   uint query_id = (gid / k_val);
   uint k_idx = (gid % k_val);
-  if ((query_id < nq)) {
+  if (query_id < nq) {
     uint nc = n_candidates[query_id];
     uint src_idx = ((query_id * ls) + k_idx);
     uint dst_idx = ((query_id * k_val) + k_idx);
-    if ((k_idx < nc)) {
+    if (k_idx < nc) {
       uint cand_id = candidates[src_idx];
       float cand_dist = candidate_dists[src_idx];
       result_ids[dst_idx] = cand_id;

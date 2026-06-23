@@ -35,7 +35,7 @@ shared float tmp[256];
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   float v = uintBitsToFloat(0x00000000u);
-  if ((int(int(gl_GlobalInvocationID.x)) < counts[0])) {
+  if (int(int(gl_GlobalInvocationID.x)) < counts[0]) {
     int faceIdx = (counts[1] + int(int(gl_GlobalInvocationID.x)));
     float pVal = pAllFaces[faceIdx];
     float sfVal = sfComponent[faceIdx];
@@ -43,39 +43,39 @@ void main() {
   }
   tmp[int(int(gl_LocalInvocationID.x))] = v;
   barrier();
-  if ((int(int(gl_LocalInvocationID.x)) < 128)) {
+  if (int(int(gl_LocalInvocationID.x)) < 128) {
     tmp[int(int(gl_LocalInvocationID.x))] = (tmp[int(int(gl_LocalInvocationID.x))] + tmp[(int(int(gl_LocalInvocationID.x)) + 128)]);
   }
   barrier();
-  if ((int(int(gl_LocalInvocationID.x)) < 64)) {
+  if (int(int(gl_LocalInvocationID.x)) < 64) {
     tmp[int(int(gl_LocalInvocationID.x))] = (tmp[int(int(gl_LocalInvocationID.x))] + tmp[(int(int(gl_LocalInvocationID.x)) + 64)]);
   }
   barrier();
-  if ((int(int(gl_LocalInvocationID.x)) < 32)) {
+  if (int(int(gl_LocalInvocationID.x)) < 32) {
     tmp[int(int(gl_LocalInvocationID.x))] = (tmp[int(int(gl_LocalInvocationID.x))] + tmp[(int(int(gl_LocalInvocationID.x)) + 32)]);
   }
   barrier();
-  if ((int(int(gl_LocalInvocationID.x)) < 16)) {
+  if (int(int(gl_LocalInvocationID.x)) < 16) {
     tmp[int(int(gl_LocalInvocationID.x))] = (tmp[int(int(gl_LocalInvocationID.x))] + tmp[(int(int(gl_LocalInvocationID.x)) + 16)]);
   }
   barrier();
-  if ((int(int(gl_LocalInvocationID.x)) < 8)) {
+  if (int(int(gl_LocalInvocationID.x)) < 8) {
     tmp[int(int(gl_LocalInvocationID.x))] = (tmp[int(int(gl_LocalInvocationID.x))] + tmp[(int(int(gl_LocalInvocationID.x)) + 8)]);
   }
   barrier();
-  if ((int(int(gl_LocalInvocationID.x)) < 4)) {
+  if (int(int(gl_LocalInvocationID.x)) < 4) {
     tmp[int(int(gl_LocalInvocationID.x))] = (tmp[int(int(gl_LocalInvocationID.x))] + tmp[(int(int(gl_LocalInvocationID.x)) + 4)]);
   }
   barrier();
-  if ((int(int(gl_LocalInvocationID.x)) < 2)) {
+  if (int(int(gl_LocalInvocationID.x)) < 2) {
     tmp[int(int(gl_LocalInvocationID.x))] = (tmp[int(int(gl_LocalInvocationID.x))] + tmp[(int(int(gl_LocalInvocationID.x)) + 2)]);
   }
   barrier();
-  if ((int(int(gl_LocalInvocationID.x)) < 1)) {
+  if (int(int(gl_LocalInvocationID.x)) < 1) {
     tmp[int(int(gl_LocalInvocationID.x))] = (tmp[int(int(gl_LocalInvocationID.x))] + tmp[(int(int(gl_LocalInvocationID.x)) + 1)]);
   }
   barrier();
-  if ((int(int(gl_LocalInvocationID.x)) == 0)) {
+  if (int(int(gl_LocalInvocationID.x)) == 0) {
     outPartials[int(int(gl_WorkGroupID.x))] = tmp[0];
   }
 }

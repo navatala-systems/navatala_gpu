@@ -19,7 +19,7 @@ __kernel void navatala_cfd_exact_mat_vec_f64(__global const float* x, __global c
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
     double s = (diag[(int)(get_global_id(0))] * ((double)(x[(int)(get_global_id(0))])));
@@ -30,9 +30,9 @@ __kernel void navatala_cfd_exact_mat_vec_f64(__global const float* x, __global c
     for (int t = 0; t < (int)(len); ++t) {
       int k = (((int)(beg)) + t);
       uint f = faceIdx[k];
-      if ((((int)(f)) < ((int)(counts[2])))) {
+      if (((int)(f)) < ((int)(counts[2]))) {
         int sg = sign[k];
-        if ((sg >= 0)) {
+        if (sg >= 0) {
           int nb = neighbour[((int)(f))];
           s = (s + (upper[((int)(f))] * ((double)(x[nb]))));
         } else {

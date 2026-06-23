@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_ml_dema_update_f32(const float* x, const float* alpha, float* ema1, float* ema2, unsigned int* count) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float xVal = x[0];
     float a = alpha[0];
     float old1 = ema1[0];

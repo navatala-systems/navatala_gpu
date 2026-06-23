@@ -27,15 +27,15 @@ kernel void navatala_sparse_aggregate_serial_f32(device const uint* rowPtr [[buf
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       uint isStrong = strongMask[k];
-      if ((isStrong == 1u)) {
+      if (isStrong == 1u) {
         float a = values[k];
-        if ((abs(a) > bestVal)) {
+        if (abs(a) > bestVal) {
           bestVal = abs(a);
           bestCol = ((int)(colIdx[k]));
         }
       }
     }
-    if ((bestCol >= 0)) {
+    if (bestCol >= 0) {
       aggregateId[i] = (((i < bestCol)) ? (i) : (bestCol));
     } else {
       aggregateId[i] = nextAgg;

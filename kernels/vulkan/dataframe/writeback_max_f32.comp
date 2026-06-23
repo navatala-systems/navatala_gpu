@@ -33,11 +33,11 @@ layout(std430, binding = 3) buffer buf_dst {
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int j = int(int(gl_GlobalInvocationID.x));
-  if ((j < count[0u])) {
+  if (j < count[0u]) {
     uint key = keys[j];
     float newVal = vals[j];
     float oldVal = dst[key];
-    if ((newVal > oldVal)) {
+    if (newVal > oldVal) {
       dst[key] = newVal;
     }
   }

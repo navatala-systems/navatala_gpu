@@ -14,7 +14,7 @@ const char* k_metal_navatala_ml_init_ema_f32 = R"kernel(
 using namespace metal;
 
 kernel void navatala_ml_init_ema_f32(device const float* alphaIn [[buffer(0)]], device float* ema [[buffer(1)]], device float* alpha [[buffer(2)]], device uint* count [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) == 0)) {
+  if (int(__gid.x) == 0) {
     float a = alphaIn[0];
     ema[0] = as_type<float>(0x00000000u);
     alpha[0] = a;
@@ -28,7 +28,7 @@ const char* k_metal_navatala_ml_init_ema_from_span_f32 = R"kernel(
 using namespace metal;
 
 kernel void navatala_ml_init_ema_from_span_f32(device const float* span [[buffer(0)]], device float* ema [[buffer(1)]], device float* alpha [[buffer(2)]], device uint* count [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) == 0)) {
+  if (int(__gid.x) == 0) {
     float s = span[0];
     float spanPlus1 = (s + as_type<float>(0x3f800000u));
     float a = (as_type<float>(0x40000000u) / spanPlus1);
@@ -44,7 +44,7 @@ const char* k_metal_navatala_ml_ema_update_f32 = R"kernel(
 using namespace metal;
 
 kernel void navatala_ml_ema_update_f32(device const float* x [[buffer(0)]], device const float* alpha [[buffer(1)]], device float* ema [[buffer(2)]], device uint* count [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) == 0)) {
+  if (int(__gid.x) == 0) {
     float xVal = x[0];
     float a = alpha[0];
     float oldEma = ema[0];
@@ -66,7 +66,7 @@ const char* k_metal_navatala_ml_ema_extract_f32 = R"kernel(
 using namespace metal;
 
 kernel void navatala_ml_ema_extract_f32(device const float* ema [[buffer(0)]], device float* result [[buffer(1)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) == 0)) {
+  if (int(__gid.x) == 0) {
     float v = ema[0];
     result[0] = v;
   }
@@ -78,7 +78,7 @@ const char* k_metal_navatala_ml_ema_reset_f32 = R"kernel(
 using namespace metal;
 
 kernel void navatala_ml_ema_reset_f32(device float* ema [[buffer(0)]], device uint* count [[buffer(1)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) == 0)) {
+  if (int(__gid.x) == 0) {
     ema[0] = as_type<float>(0x00000000u);
     count[0] = 0u;
   }
@@ -90,7 +90,7 @@ const char* k_metal_navatala_ml_init_dema_f32 = R"kernel(
 using namespace metal;
 
 kernel void navatala_ml_init_dema_f32(device const float* alphaIn [[buffer(0)]], device float* ema1 [[buffer(1)]], device float* ema2 [[buffer(2)]], device float* alpha [[buffer(3)]], device uint* count [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) == 0)) {
+  if (int(__gid.x) == 0) {
     float a = alphaIn[0];
     ema1[0] = as_type<float>(0x00000000u);
     ema2[0] = as_type<float>(0x00000000u);
@@ -105,7 +105,7 @@ const char* k_metal_navatala_ml_dema_update_f32 = R"kernel(
 using namespace metal;
 
 kernel void navatala_ml_dema_update_f32(device const float* x [[buffer(0)]], device const float* alpha [[buffer(1)]], device float* ema1 [[buffer(2)]], device float* ema2 [[buffer(3)]], device uint* count [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) == 0)) {
+  if (int(__gid.x) == 0) {
     float xVal = x[0];
     float a = alpha[0];
     float old1 = ema1[0];
@@ -133,7 +133,7 @@ const char* k_metal_navatala_ml_dema_extract_f32 = R"kernel(
 using namespace metal;
 
 kernel void navatala_ml_dema_extract_f32(device const float* ema1 [[buffer(0)]], device const float* ema2 [[buffer(1)]], device float* result [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) == 0)) {
+  if (int(__gid.x) == 0) {
     float e1 = ema1[0];
     float e2 = ema2[0];
     float t2 = (as_type<float>(0x40000000u) * e1);
@@ -150,7 +150,7 @@ using namespace metal;
 kernel void navatala_ml_maxpool_f32(device const float* _input [[buffer(0)]], device const uint* window [[buffer(1)]], device const uint* stride [[buffer(2)]], device const uint* inCount [[buffer(3)]], device const uint* outCount [[buffer(4)]], device float* _output [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     uint windowVal = window[0];
     uint strideVal = stride[0];
     uint inCountVal = inCount[0];
@@ -158,7 +158,7 @@ kernel void navatala_ml_maxpool_f32(device const float* _input [[buffer(0)]], de
     float acc = as_type<float>(0xff7fc99eu);
     for (int w = 0; w < (int)(windowVal); ++w) {
       uint idx = (base + ((uint)(w)));
-      if ((idx < inCountVal)) {
+      if (idx < inCountVal) {
         float v = _input[idx];
         acc = (((acc > v)) ? (acc) : (v));
       }
@@ -175,7 +175,7 @@ using namespace metal;
 kernel void navatala_ml_avgpool_exclude_pad_f32(device const float* _input [[buffer(0)]], device const uint* window [[buffer(1)]], device const uint* stride [[buffer(2)]], device const uint* inCount [[buffer(3)]], device const uint* outCount [[buffer(4)]], device float* _output [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     uint windowVal = window[0];
     uint strideVal = stride[0];
     uint inCountVal = inCount[0];
@@ -184,7 +184,7 @@ kernel void navatala_ml_avgpool_exclude_pad_f32(device const float* _input [[buf
     float cnt = as_type<float>(0x00000000u);
     for (int w = 0; w < (int)(windowVal); ++w) {
       uint idx = (base + ((uint)(w)));
-      if ((idx < inCountVal)) {
+      if (idx < inCountVal) {
         float v = _input[idx];
         sum = (sum + v);
         cnt = (cnt + as_type<float>(0x3f800000u));
@@ -202,7 +202,7 @@ using namespace metal;
 kernel void navatala_ml_avgpool_include_pad_f32(device const float* _input [[buffer(0)]], device const uint* window [[buffer(1)]], device const uint* stride [[buffer(2)]], device const uint* inCount [[buffer(3)]], device const uint* outCount [[buffer(4)]], device float* _output [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     uint windowVal = window[0];
     uint strideVal = stride[0];
     uint inCountVal = inCount[0];
@@ -211,7 +211,7 @@ kernel void navatala_ml_avgpool_include_pad_f32(device const float* _input [[buf
     float cnt = as_type<float>(0x00000000u);
     for (int w = 0; w < (int)(windowVal); ++w) {
       uint idx = (base + ((uint)(w)));
-      if ((idx < inCountVal)) {
+      if (idx < inCountVal) {
         float v = _input[idx];
         sum = (sum + v);
         cnt = (cnt + as_type<float>(0x3f800000u));
@@ -229,7 +229,7 @@ using namespace metal;
 kernel void navatala_ml_resize_nearest_f32(device const float* _input [[buffer(0)]], device const uint* inSize [[buffer(1)]], device const uint* outSize [[buffer(2)]], device float* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint outSizeVal = outSize[0];
-  if ((gid < outSizeVal)) {
+  if (gid < outSizeVal) {
     uint inSizeVal = inSize[0];
     uint idx = ((gid * inSizeVal) / outSizeVal);
     float v = _input[idx];
@@ -245,7 +245,7 @@ using namespace metal;
 kernel void navatala_ml_resize_bilinear_f32(device const float* _input [[buffer(0)]], device const uint* inSize [[buffer(1)]], device const uint* outSize [[buffer(2)]], device float* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint outSizeVal = outSize[0];
-  if ((gid < outSizeVal)) {
+  if (gid < outSizeVal) {
     uint inSizeVal = inSize[0];
     uint inM1 = (inSizeVal - 1u);
     uint outM1 = (outSizeVal - 1u);
@@ -270,7 +270,7 @@ using namespace metal;
 kernel void navatala_ml_maxpool_f16(device const half* _input [[buffer(0)]], device const uint* window [[buffer(1)]], device const uint* stride [[buffer(2)]], device const uint* inCount [[buffer(3)]], device const uint* outCount [[buffer(4)]], device half* _output [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     uint windowVal = window[0];
     uint strideVal = stride[0];
     uint inCountVal = inCount[0];
@@ -278,7 +278,7 @@ kernel void navatala_ml_maxpool_f16(device const half* _input [[buffer(0)]], dev
     float acc = as_type<float>(0xff7fc99eu);
     for (int w = 0; w < (int)(windowVal); ++w) {
       uint idx = (base + ((uint)(w)));
-      if ((idx < inCountVal)) {
+      if (idx < inCountVal) {
         float v = ((float)(_input[idx]));
         acc = (((acc > v)) ? (acc) : (v));
       }
@@ -295,7 +295,7 @@ using namespace metal;
 kernel void navatala_ml_avgpool_exclude_pad_f16(device const half* _input [[buffer(0)]], device const uint* window [[buffer(1)]], device const uint* stride [[buffer(2)]], device const uint* inCount [[buffer(3)]], device const uint* outCount [[buffer(4)]], device half* _output [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     uint windowVal = window[0];
     uint strideVal = stride[0];
     uint inCountVal = inCount[0];
@@ -304,7 +304,7 @@ kernel void navatala_ml_avgpool_exclude_pad_f16(device const half* _input [[buff
     float cnt = as_type<float>(0x00000000u);
     for (int w = 0; w < (int)(windowVal); ++w) {
       uint idx = (base + ((uint)(w)));
-      if ((idx < inCountVal)) {
+      if (idx < inCountVal) {
         float v = ((float)(_input[idx]));
         sum = (sum + v);
         cnt = (cnt + as_type<float>(0x3f800000u));
@@ -322,7 +322,7 @@ using namespace metal;
 kernel void navatala_ml_avgpool_include_pad_f16(device const half* _input [[buffer(0)]], device const uint* window [[buffer(1)]], device const uint* stride [[buffer(2)]], device const uint* inCount [[buffer(3)]], device const uint* outCount [[buffer(4)]], device half* _output [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     uint windowVal = window[0];
     uint strideVal = stride[0];
     uint inCountVal = inCount[0];
@@ -331,7 +331,7 @@ kernel void navatala_ml_avgpool_include_pad_f16(device const half* _input [[buff
     float cnt = as_type<float>(0x00000000u);
     for (int w = 0; w < (int)(windowVal); ++w) {
       uint idx = (base + ((uint)(w)));
-      if ((idx < inCountVal)) {
+      if (idx < inCountVal) {
         float v = ((float)(_input[idx]));
         sum = (sum + v);
         cnt = (cnt + as_type<float>(0x3f800000u));
@@ -349,7 +349,7 @@ using namespace metal;
 kernel void navatala_ml_resize_nearest_f16(device const half* _input [[buffer(0)]], device const uint* inSize [[buffer(1)]], device const uint* outSize [[buffer(2)]], device half* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint outSizeVal = outSize[0];
-  if ((gid < outSizeVal)) {
+  if (gid < outSizeVal) {
     uint inSizeVal = inSize[0];
     uint idx = ((gid * inSizeVal) / outSizeVal);
     half v = _input[idx];
@@ -365,7 +365,7 @@ using namespace metal;
 kernel void navatala_ml_resize_bilinear_f16(device const half* _input [[buffer(0)]], device const uint* inSize [[buffer(1)]], device const uint* outSize [[buffer(2)]], device half* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint outSizeVal = outSize[0];
-  if ((gid < outSizeVal)) {
+  if (gid < outSizeVal) {
     uint inSizeVal = inSize[0];
     uint inM1 = (inSizeVal - 1u);
     uint outM1 = (outSizeVal - 1u);
@@ -390,7 +390,7 @@ using namespace metal;
 kernel void navatala_ml_reshape_f32(device const float* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device float* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float v = _input[gid];
     _output[gid] = v;
   }
@@ -404,7 +404,7 @@ using namespace metal;
 kernel void navatala_ml_slice_f32(device const float* _input [[buffer(0)]], device const uint* offset [[buffer(1)]], device const uint* outCount [[buffer(2)]], device float* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     uint offsetVal = offset[0];
     uint srcIdx = (offsetVal + gid);
     float v = _input[srcIdx];
@@ -420,7 +420,7 @@ using namespace metal;
 kernel void navatala_ml_transpose_f32(device const float* _input [[buffer(0)]], device const uint* nrows [[buffer(1)]], device const uint* ncols [[buffer(2)]], device const uint* count [[buffer(3)]], device float* _output [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint ncolsVal = ncols[0];
     uint nrowsVal = nrows[0];
     uint r = (gid / ncolsVal);
@@ -439,15 +439,15 @@ using namespace metal;
 kernel void navatala_ml_concatenate2_f32(device const float* a [[buffer(0)]], device const float* b [[buffer(1)]], device const uint* nA [[buffer(2)]], device const uint* nB [[buffer(3)]], device const uint* count [[buffer(4)]], device float* _output [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint nAVal = nA[0];
-    if ((gid < nAVal)) {
+    if (gid < nAVal) {
       float v = a[gid];
       _output[gid] = v;
     } else {
       uint srcIdx = (gid - nAVal);
       uint nBVal = nB[0];
-      if ((srcIdx < nBVal)) {
+      if (srcIdx < nBVal) {
         float v = b[srcIdx];
         _output[gid] = v;
       }
@@ -463,7 +463,7 @@ using namespace metal;
 kernel void navatala_ml_reshape_f16(device const half* _input [[buffer(0)]], device const uint* count [[buffer(1)]], device half* _output [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half v = _input[gid];
     _output[gid] = v;
   }
@@ -477,7 +477,7 @@ using namespace metal;
 kernel void navatala_ml_slice_f16(device const half* _input [[buffer(0)]], device const uint* offset [[buffer(1)]], device const uint* outCount [[buffer(2)]], device half* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     uint offsetVal = offset[0];
     uint srcIdx = (offsetVal + gid);
     half v = _input[srcIdx];
@@ -493,7 +493,7 @@ using namespace metal;
 kernel void navatala_ml_transpose_f16(device const half* _input [[buffer(0)]], device const uint* nrows [[buffer(1)]], device const uint* ncols [[buffer(2)]], device const uint* count [[buffer(3)]], device half* _output [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint ncolsVal = ncols[0];
     uint nrowsVal = nrows[0];
     uint r = (gid / ncolsVal);
@@ -512,15 +512,15 @@ using namespace metal;
 kernel void navatala_ml_concatenate2_f16(device const half* a [[buffer(0)]], device const half* b [[buffer(1)]], device const uint* nA [[buffer(2)]], device const uint* nB [[buffer(3)]], device const uint* count [[buffer(4)]], device half* _output [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint nAVal = nA[0];
-    if ((gid < nAVal)) {
+    if (gid < nAVal) {
       half v = a[gid];
       _output[gid] = v;
     } else {
       uint srcIdx = (gid - nAVal);
       uint nBVal = nB[0];
-      if ((srcIdx < nBVal)) {
+      if (srcIdx < nBVal) {
         half v = b[srcIdx];
         _output[gid] = v;
       }
@@ -541,7 +541,7 @@ kernel void navatala_ml_softmax_f32(device const float* _input [[buffer(0)]], de
   float gsMax = as_type<float>(0xff7fc99eu);
   for (int itA = 0; itA < (int)(numIters); ++itA) {
     uint idxA = (lid + (((uint)(itA)) * 256u));
-    if ((idxA < countVal)) {
+    if (idxA < countVal) {
       float xA = _input[idxA];
       gsMax = (((gsMax > xA)) ? (gsMax) : (xA));
     }
@@ -551,7 +551,7 @@ kernel void navatala_ml_softmax_f32(device const float* _input [[buffer(0)]], de
   uint maxStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = maxStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (((mine > other)) ? (mine) : (other));
@@ -567,7 +567,7 @@ kernel void navatala_ml_softmax_f32(device const float* _input [[buffer(0)]], de
   float gsSum = as_type<float>(0x00000000u);
   for (int itB = 0; itB < (int)(numIters); ++itB) {
     uint idxB = (lid + (((uint)(itB)) * 256u));
-    if ((idxB < countVal)) {
+    if (idxB < countVal) {
       float eB = exp((_input[idxB] - maxVal));
       gsSum = (gsSum + eB);
     }
@@ -577,7 +577,7 @@ kernel void navatala_ml_softmax_f32(device const float* _input [[buffer(0)]], de
   uint sumStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = sumStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -591,7 +591,7 @@ kernel void navatala_ml_softmax_f32(device const float* _input [[buffer(0)]], de
   float sumVal = sdata[0];
   for (int itC = 0; itC < (int)(numIters); ++itC) {
     uint idxC = (lid + (((uint)(itC)) * 256u));
-    if ((idxC < countVal)) {
+    if (idxC < countVal) {
       float eC = exp((_input[idxC] - maxVal));
       _output[idxC] = (eC / sumVal);
     }
@@ -611,7 +611,7 @@ kernel void navatala_ml_softmax_f16(device const half* _input [[buffer(0)]], dev
   float gsMax = as_type<float>(0xff7fc99eu);
   for (int itA = 0; itA < (int)(numIters); ++itA) {
     uint idxA = (lid + (((uint)(itA)) * 256u));
-    if ((idxA < countVal)) {
+    if (idxA < countVal) {
       float xA = ((float)(_input[idxA]));
       gsMax = (((gsMax > xA)) ? (gsMax) : (xA));
     }
@@ -621,7 +621,7 @@ kernel void navatala_ml_softmax_f16(device const half* _input [[buffer(0)]], dev
   uint maxStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = maxStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (((mine > other)) ? (mine) : (other));
@@ -637,7 +637,7 @@ kernel void navatala_ml_softmax_f16(device const half* _input [[buffer(0)]], dev
   float gsSum = as_type<float>(0x00000000u);
   for (int itB = 0; itB < (int)(numIters); ++itB) {
     uint idxB = (lid + (((uint)(itB)) * 256u));
-    if ((idxB < countVal)) {
+    if (idxB < countVal) {
       float eB = exp((((float)(_input[idxB])) - maxVal));
       gsSum = (gsSum + eB);
     }
@@ -647,7 +647,7 @@ kernel void navatala_ml_softmax_f16(device const half* _input [[buffer(0)]], dev
   uint sumStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = sumStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -661,7 +661,7 @@ kernel void navatala_ml_softmax_f16(device const half* _input [[buffer(0)]], dev
   float sumVal = sdata[0];
   for (int itC = 0; itC < (int)(numIters); ++itC) {
     uint idxC = (lid + (((uint)(itC)) * 256u));
-    if ((idxC < countVal)) {
+    if (idxC < countVal) {
       float eC = exp((((float)(_input[idxC])) - maxVal));
       _output[idxC] = ((half)((eC / sumVal)));
     }
@@ -682,7 +682,7 @@ kernel void navatala_ml_layernorm_f32(device const float* x [[buffer(0)]], devic
   float epsVal = eps[0];
   float gsM = as_type<float>(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((uint)(itM)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(itM)) * 256u)) < countVal) {
       gsM = (gsM + x[(lid + (((uint)(itM)) * 256u))]);
     }
   }
@@ -691,7 +691,7 @@ kernel void navatala_ml_layernorm_f32(device const float* x [[buffer(0)]], devic
   uint meanStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -706,7 +706,7 @@ kernel void navatala_ml_layernorm_f32(device const float* x [[buffer(0)]], devic
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float gsV = as_type<float>(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((uint)(itV)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(itV)) * 256u)) < countVal) {
       gsV = (gsV + ((x[(lid + (((uint)(itV)) * 256u))] - mean) * (x[(lid + (((uint)(itV)) * 256u))] - mean)));
     }
   }
@@ -715,7 +715,7 @@ kernel void navatala_ml_layernorm_f32(device const float* x [[buffer(0)]], devic
   uint varStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -730,7 +730,7 @@ kernel void navatala_ml_layernorm_f32(device const float* x [[buffer(0)]], devic
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
     uint idxW = (lid + (((uint)(itW)) * 256u));
-    if ((idxW < countVal)) {
+    if (idxW < countVal) {
       float xnW = ((x[idxW] - mean) / denom);
       float outF = ((gamma[idxW] * xnW) + beta[idxW]);
       _output[idxW] = outF;
@@ -758,7 +758,7 @@ kernel void navatala_ml_spatial_batchnorm_f32(device const float* x [[buffer(0)]
   float epsVal = eps[0];
   float gsM = as_type<float>(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((uint)(itM)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(itM)) * 256u)) < countVal) {
       gsM = (gsM + x[(((((lid + (((uint)(itM)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((uint)(itM)) * 256u)) % HWv))]);
     }
   }
@@ -767,7 +767,7 @@ kernel void navatala_ml_spatial_batchnorm_f32(device const float* x [[buffer(0)]
   uint meanStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -782,7 +782,7 @@ kernel void navatala_ml_spatial_batchnorm_f32(device const float* x [[buffer(0)]
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float gsV = as_type<float>(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((uint)(itV)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(itV)) * 256u)) < countVal) {
       gsV = (gsV + ((x[(((((lid + (((uint)(itV)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((uint)(itV)) * 256u)) % HWv))] - mean) * (x[(((((lid + (((uint)(itV)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((uint)(itV)) * 256u)) % HWv))] - mean)));
     }
   }
@@ -791,7 +791,7 @@ kernel void navatala_ml_spatial_batchnorm_f32(device const float* x [[buffer(0)]
   uint varStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -805,7 +805,7 @@ kernel void navatala_ml_spatial_batchnorm_f32(device const float* x [[buffer(0)]
   float var = (sdata[0] / n);
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
-    if (((lid + (((uint)(itW)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(itW)) * 256u)) < countVal) {
       float gv = gamma[grp];
       float bv = beta[grp];
       float xv = x[(((((lid + (((uint)(itW)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((uint)(itW)) * 256u)) % HWv))];
@@ -834,7 +834,7 @@ kernel void navatala_ml_instancenorm_f32(device const float* x [[buffer(0)]], de
   float epsVal = eps[0];
   float gsM = as_type<float>(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((uint)(itM)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(itM)) * 256u)) < countVal) {
       gsM = (gsM + x[(base + (lid + (((uint)(itM)) * 256u)))]);
     }
   }
@@ -843,7 +843,7 @@ kernel void navatala_ml_instancenorm_f32(device const float* x [[buffer(0)]], de
   uint meanStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -858,7 +858,7 @@ kernel void navatala_ml_instancenorm_f32(device const float* x [[buffer(0)]], de
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float gsV = as_type<float>(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((uint)(itV)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(itV)) * 256u)) < countVal) {
       gsV = (gsV + ((x[(base + (lid + (((uint)(itV)) * 256u)))] - mean) * (x[(base + (lid + (((uint)(itV)) * 256u)))] - mean)));
     }
   }
@@ -867,7 +867,7 @@ kernel void navatala_ml_instancenorm_f32(device const float* x [[buffer(0)]], de
   uint varStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -881,7 +881,7 @@ kernel void navatala_ml_instancenorm_f32(device const float* x [[buffer(0)]], de
   float var = (sdata[0] / n);
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
-    if (((lid + (((uint)(itW)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(itW)) * 256u)) < countVal) {
       float gv = gamma[chan];
       float bv = beta[chan];
       float xv = x[(base + (lid + (((uint)(itW)) * 256u)))];
@@ -899,7 +899,7 @@ using namespace metal;
 kernel void navatala_ml_batchnorm_inference_f32(device const float* x [[buffer(0)]], device const float* mean [[buffer(1)]], device const float* var [[buffer(2)]], device const float* gamma [[buffer(3)]], device const float* beta [[buffer(4)]], device const uint* count [[buffer(5)]], device const float* eps [[buffer(6)]], device float* _output [[buffer(7)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float epsVal = eps[0];
     float d = (x[gid] - mean[gid]);
     float denom = sqrt((var[gid] + epsVal));
@@ -923,7 +923,7 @@ kernel void navatala_ml_layernorm_backward_f32(device const float* x [[buffer(0)
   float epsVal = eps[0];
   float gM = as_type<float>(0x00000000u);
   for (int itm = 0; itm < (int)(numIters); ++itm) {
-    if (((lid + (((uint)(itm)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(itm)) * 256u)) < countVal) {
       gM = (gM + x[(lid + (((uint)(itm)) * 256u))]);
     }
   }
@@ -932,7 +932,7 @@ kernel void navatala_ml_layernorm_backward_f32(device const float* x [[buffer(0)
   uint mStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = mStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -947,7 +947,7 @@ kernel void navatala_ml_layernorm_backward_f32(device const float* x [[buffer(0)
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float gV = as_type<float>(0x00000000u);
   for (int itv = 0; itv < (int)(numIters); ++itv) {
-    if (((lid + (((uint)(itv)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(itv)) * 256u)) < countVal) {
       gV = (gV + ((x[(lid + (((uint)(itv)) * 256u))] - mean) * (x[(lid + (((uint)(itv)) * 256u))] - mean)));
     }
   }
@@ -956,7 +956,7 @@ kernel void navatala_ml_layernorm_backward_f32(device const float* x [[buffer(0)
   uint vStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = vStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -972,7 +972,7 @@ kernel void navatala_ml_layernorm_backward_f32(device const float* x [[buffer(0)
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float g1 = as_type<float>(0x00000000u);
   for (int it1 = 0; it1 < (int)(numIters); ++it1) {
-    if (((lid + (((uint)(it1)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(it1)) * 256u)) < countVal) {
       g1 = (g1 + (dy[(lid + (((uint)(it1)) * 256u))] * gamma[(lid + (((uint)(it1)) * 256u))]));
     }
   }
@@ -981,7 +981,7 @@ kernel void navatala_ml_layernorm_backward_f32(device const float* x [[buffer(0)
   uint s1Str = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = s1Str;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -996,7 +996,7 @@ kernel void navatala_ml_layernorm_backward_f32(device const float* x [[buffer(0)
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float g2 = as_type<float>(0x00000000u);
   for (int it2 = 0; it2 < (int)(numIters); ++it2) {
-    if (((lid + (((uint)(it2)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(it2)) * 256u)) < countVal) {
       g2 = (g2 + ((dy[(lid + (((uint)(it2)) * 256u))] * gamma[(lid + (((uint)(it2)) * 256u))]) * ((x[(lid + (((uint)(it2)) * 256u))] - mean) / std)));
     }
   }
@@ -1005,7 +1005,7 @@ kernel void navatala_ml_layernorm_backward_f32(device const float* x [[buffer(0)
   uint s2Str = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = s2Str;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1019,7 +1019,7 @@ kernel void navatala_ml_layernorm_backward_f32(device const float* x [[buffer(0)
   float m2 = (sdata[0] / n);
   for (int itw = 0; itw < (int)(numIters); ++itw) {
     uint idw = (lid + (((uint)(itw)) * 256u));
-    if ((idw < countVal)) {
+    if (idw < countVal) {
       float xhatw = ((x[idw] - mean) / std);
       float dyvw = dy[idw];
       float dxhw = (dyvw * gamma[idw]);
@@ -1045,7 +1045,7 @@ kernel void navatala_ml_layernorm_f16(device const half* x [[buffer(0)]], device
   float epsVal = eps[0];
   float gsM = as_type<float>(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((uint)(itM)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(itM)) * 256u)) < countVal) {
       gsM = (gsM + ((float)(x[(lid + (((uint)(itM)) * 256u))])));
     }
   }
@@ -1054,7 +1054,7 @@ kernel void navatala_ml_layernorm_f16(device const half* x [[buffer(0)]], device
   uint meanStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1069,7 +1069,7 @@ kernel void navatala_ml_layernorm_f16(device const half* x [[buffer(0)]], device
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float gsV = as_type<float>(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((uint)(itV)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(itV)) * 256u)) < countVal) {
       gsV = (gsV + ((((float)(x[(lid + (((uint)(itV)) * 256u))])) - mean) * (((float)(x[(lid + (((uint)(itV)) * 256u))])) - mean)));
     }
   }
@@ -1078,7 +1078,7 @@ kernel void navatala_ml_layernorm_f16(device const half* x [[buffer(0)]], device
   uint varStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1093,7 +1093,7 @@ kernel void navatala_ml_layernorm_f16(device const half* x [[buffer(0)]], device
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
     uint idxW = (lid + (((uint)(itW)) * 256u));
-    if ((idxW < countVal)) {
+    if (idxW < countVal) {
       float xnW = ((((float)(x[idxW])) - mean) / denom);
       float outF = ((((float)(gamma[idxW])) * xnW) + ((float)(beta[idxW])));
       _output[idxW] = ((half)(outF));
@@ -1121,7 +1121,7 @@ kernel void navatala_ml_spatial_batchnorm_f16(device const half* x [[buffer(0)]]
   float epsVal = eps[0];
   float gsM = as_type<float>(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((uint)(itM)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(itM)) * 256u)) < countVal) {
       gsM = (gsM + ((float)(x[(((((lid + (((uint)(itM)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((uint)(itM)) * 256u)) % HWv))])));
     }
   }
@@ -1130,7 +1130,7 @@ kernel void navatala_ml_spatial_batchnorm_f16(device const half* x [[buffer(0)]]
   uint meanStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1145,7 +1145,7 @@ kernel void navatala_ml_spatial_batchnorm_f16(device const half* x [[buffer(0)]]
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float gsV = as_type<float>(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((uint)(itV)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(itV)) * 256u)) < countVal) {
       gsV = (gsV + ((((float)(x[(((((lid + (((uint)(itV)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((uint)(itV)) * 256u)) % HWv))])) - mean) * (((float)(x[(((((lid + (((uint)(itV)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((uint)(itV)) * 256u)) % HWv))])) - mean)));
     }
   }
@@ -1154,7 +1154,7 @@ kernel void navatala_ml_spatial_batchnorm_f16(device const half* x [[buffer(0)]]
   uint varStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1168,7 +1168,7 @@ kernel void navatala_ml_spatial_batchnorm_f16(device const half* x [[buffer(0)]]
   float var = (sdata[0] / n);
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
-    if (((lid + (((uint)(itW)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(itW)) * 256u)) < countVal) {
       float gv = ((float)(gamma[grp]));
       float bv = ((float)(beta[grp]));
       float xv = ((float)(x[(((((lid + (((uint)(itW)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((uint)(itW)) * 256u)) % HWv))]));
@@ -1197,7 +1197,7 @@ kernel void navatala_ml_instancenorm_f16(device const half* x [[buffer(0)]], dev
   float epsVal = eps[0];
   float gsM = as_type<float>(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((uint)(itM)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(itM)) * 256u)) < countVal) {
       gsM = (gsM + ((float)(x[(base + (lid + (((uint)(itM)) * 256u)))])));
     }
   }
@@ -1206,7 +1206,7 @@ kernel void navatala_ml_instancenorm_f16(device const half* x [[buffer(0)]], dev
   uint meanStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1221,7 +1221,7 @@ kernel void navatala_ml_instancenorm_f16(device const half* x [[buffer(0)]], dev
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float gsV = as_type<float>(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((uint)(itV)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(itV)) * 256u)) < countVal) {
       gsV = (gsV + ((((float)(x[(base + (lid + (((uint)(itV)) * 256u)))])) - mean) * (((float)(x[(base + (lid + (((uint)(itV)) * 256u)))])) - mean)));
     }
   }
@@ -1230,7 +1230,7 @@ kernel void navatala_ml_instancenorm_f16(device const half* x [[buffer(0)]], dev
   uint varStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1244,7 +1244,7 @@ kernel void navatala_ml_instancenorm_f16(device const half* x [[buffer(0)]], dev
   float var = (sdata[0] / n);
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
-    if (((lid + (((uint)(itW)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(itW)) * 256u)) < countVal) {
       float gv = ((float)(gamma[chan]));
       float bv = ((float)(beta[chan]));
       float xv = ((float)(x[(base + (lid + (((uint)(itW)) * 256u)))]));
@@ -1262,7 +1262,7 @@ using namespace metal;
 kernel void navatala_ml_batchnorm_inference_f16(device const half* x [[buffer(0)]], device const half* mean [[buffer(1)]], device const half* var [[buffer(2)]], device const half* gamma [[buffer(3)]], device const half* beta [[buffer(4)]], device const uint* count [[buffer(5)]], device const float* eps [[buffer(6)]], device half* _output [[buffer(7)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float epsVal = eps[0];
     float d = (((float)(x[gid])) - ((float)(mean[gid])));
     float denom = sqrt((((float)(var[gid])) + epsVal));
@@ -1286,7 +1286,7 @@ kernel void navatala_ml_layernorm_backward_f16(device const half* x [[buffer(0)]
   float epsVal = eps[0];
   float gM = as_type<float>(0x00000000u);
   for (int itm = 0; itm < (int)(numIters); ++itm) {
-    if (((lid + (((uint)(itm)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(itm)) * 256u)) < countVal) {
       gM = (gM + ((float)(x[(lid + (((uint)(itm)) * 256u))])));
     }
   }
@@ -1295,7 +1295,7 @@ kernel void navatala_ml_layernorm_backward_f16(device const half* x [[buffer(0)]
   uint mStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = mStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1310,7 +1310,7 @@ kernel void navatala_ml_layernorm_backward_f16(device const half* x [[buffer(0)]
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float gV = as_type<float>(0x00000000u);
   for (int itv = 0; itv < (int)(numIters); ++itv) {
-    if (((lid + (((uint)(itv)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(itv)) * 256u)) < countVal) {
       gV = (gV + ((((float)(x[(lid + (((uint)(itv)) * 256u))])) - mean) * (((float)(x[(lid + (((uint)(itv)) * 256u))])) - mean)));
     }
   }
@@ -1319,7 +1319,7 @@ kernel void navatala_ml_layernorm_backward_f16(device const half* x [[buffer(0)]
   uint vStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = vStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1335,7 +1335,7 @@ kernel void navatala_ml_layernorm_backward_f16(device const half* x [[buffer(0)]
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float g1 = as_type<float>(0x00000000u);
   for (int it1 = 0; it1 < (int)(numIters); ++it1) {
-    if (((lid + (((uint)(it1)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(it1)) * 256u)) < countVal) {
       g1 = (g1 + (((float)(dy[(lid + (((uint)(it1)) * 256u))])) * ((float)(gamma[(lid + (((uint)(it1)) * 256u))]))));
     }
   }
@@ -1344,7 +1344,7 @@ kernel void navatala_ml_layernorm_backward_f16(device const half* x [[buffer(0)]
   uint s1Str = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = s1Str;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1359,7 +1359,7 @@ kernel void navatala_ml_layernorm_backward_f16(device const half* x [[buffer(0)]
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float g2 = as_type<float>(0x00000000u);
   for (int it2 = 0; it2 < (int)(numIters); ++it2) {
-    if (((lid + (((uint)(it2)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(it2)) * 256u)) < countVal) {
       g2 = (g2 + ((((float)(dy[(lid + (((uint)(it2)) * 256u))])) * ((float)(gamma[(lid + (((uint)(it2)) * 256u))]))) * ((((float)(x[(lid + (((uint)(it2)) * 256u))])) - mean) / std)));
     }
   }
@@ -1368,7 +1368,7 @@ kernel void navatala_ml_layernorm_backward_f16(device const half* x [[buffer(0)]
   uint s2Str = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = s2Str;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1382,7 +1382,7 @@ kernel void navatala_ml_layernorm_backward_f16(device const half* x [[buffer(0)]
   float m2 = (sdata[0] / n);
   for (int itw = 0; itw < (int)(numIters); ++itw) {
     uint idw = (lid + (((uint)(itw)) * 256u));
-    if ((idw < countVal)) {
+    if (idw < countVal) {
       float xhatw = ((((float)(x[idw])) - mean) / std);
       float dyvw = ((float)(dy[idw]));
       float dxhw = (dyvw * ((float)(gamma[idw])));
@@ -1403,7 +1403,7 @@ kernel void navatala_ml_uniform_f32(device const uint* count [[buffer(0)]], devi
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
   uint seedVal = seed[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint uk0 = ((seedVal + (gid * 2654435769u)) + 0u);
     uint uk1 = ((uk0 ^ (uk0 >> 16u)) * 2246822519u);
     uint uk2 = ((uk1 ^ (uk1 >> 13u)) * 3266489917u);
@@ -1423,7 +1423,7 @@ kernel void navatala_ml_bernoulli_f32(device const uint* count [[buffer(0)]], de
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
   uint seedVal = seed[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint uk0 = ((seedVal + (gid * 2654435769u)) + 0u);
     uint uk1 = ((uk0 ^ (uk0 >> 16u)) * 2246822519u);
     uint uk2 = ((uk1 ^ (uk1 >> 13u)) * 3266489917u);
@@ -1445,7 +1445,7 @@ kernel void navatala_ml_normal_f32(device const uint* count [[buffer(0)]], devic
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
   uint seedVal = seed[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint ak0 = ((seedVal + (gid * 2654435769u)) + 0u);
     uint ak1 = ((ak0 ^ (ak0 >> 16u)) * 2246822519u);
     uint ak2 = ((ak1 ^ (ak1 >> 13u)) * 3266489917u);
@@ -1473,7 +1473,7 @@ kernel void navatala_ml_uniform_f16(device const uint* count [[buffer(0)]], devi
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
   uint seedVal = seed[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint uk0 = ((seedVal + (gid * 2654435769u)) + 0u);
     uint uk1 = ((uk0 ^ (uk0 >> 16u)) * 2246822519u);
     uint uk2 = ((uk1 ^ (uk1 >> 13u)) * 3266489917u);
@@ -1493,7 +1493,7 @@ kernel void navatala_ml_bernoulli_f16(device const uint* count [[buffer(0)]], de
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
   uint seedVal = seed[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint uk0 = ((seedVal + (gid * 2654435769u)) + 0u);
     uint uk1 = ((uk0 ^ (uk0 >> 16u)) * 2246822519u);
     uint uk2 = ((uk1 ^ (uk1 >> 13u)) * 3266489917u);
@@ -1515,7 +1515,7 @@ kernel void navatala_ml_normal_f16(device const uint* count [[buffer(0)]], devic
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
   uint seedVal = seed[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint ak0 = ((seedVal + (gid * 2654435769u)) + 0u);
     uint ak1 = ((ak0 ^ (ak0 >> 16u)) * 2246822519u);
     uint ak2 = ((ak1 ^ (ak1 >> 13u)) * 3266489917u);
@@ -1541,7 +1541,7 @@ using namespace metal;
 
 kernel void navatala_ml_kde_bandwidth_silverman_f32(device const float* stddev [[buffer(0)]], device const uint* n [[buffer(1)]], device float* bandwidth [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     float sigma = stddev[0];
     uint count = n[0];
     float countF = ((float)(count));
@@ -1560,7 +1560,7 @@ using namespace metal;
 
 kernel void navatala_ml_kde_bandwidth_scott_f32(device const float* stddev [[buffer(0)]], device const uint* n [[buffer(1)]], device float* bandwidth [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     float sigma = stddev[0];
     uint count = n[0];
     float countF = ((float)(count));
@@ -1650,7 +1650,7 @@ using namespace metal;
 
 kernel void navatala_ml_kde_find_mode_f32(device const float* densities [[buffer(0)]], device const float* queryPoints [[buffer(1)]], device const uint* m [[buffer(2)]], device float* modeValue [[buffer(3)]], device float* modeLocation [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     uint numPoints = m[0];
     float maxDensity = densities[0];
     float maxLocation = queryPoints[0];
@@ -1961,7 +1961,7 @@ kernel void navatala_ml_assign_to_centroids_f32(device const float* data [[buffe
       }
       float distSum = distSumAccum;
       float bestDist = bestDistAccum;
-      if ((distSum < bestDist)) {
+      if (distSum < bestDist) {
         bestDistAccum = distSum;
         bestClusterAccum = cU32;
       }
@@ -2074,7 +2074,7 @@ kernel void navatala_ml_compute_inertia_f32(device const float* data [[buffer(0)
   uint inertiaF32RedStride = 128u;
   for (int inertiaF32RedStep = 0; inertiaF32RedStep < (int)(8); ++inertiaF32RedStep) {
     uint inertiaF32Stride = inertiaF32RedStride;
-    if ((lid < inertiaF32Stride)) {
+    if (lid < inertiaF32Stride) {
       float other = sdata[(lid + inertiaF32Stride)];
       float mine = sdata[lid];
       float sum = (mine + other);
@@ -2085,7 +2085,7 @@ kernel void navatala_ml_compute_inertia_f32(device const float* data [[buffer(0)
     inertiaF32RedStride = inertiaF32NextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     inertia[0] = sdata[0];
   }
 }
@@ -2332,7 +2332,7 @@ using namespace metal;
 
 kernel void navatala_ml_compute_log_likelihood_f32(device const float* logPdf [[buffer(0)]], device const float* weights [[buffer(1)]], device const uint* n [[buffer(2)]], device const uint* k [[buffer(3)]], device float* logLikelihood [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     uint numN = n[0];
     uint numK = k[0];
     float totalLLAccum = as_type<float>(0x00000000u);
@@ -2435,7 +2435,7 @@ kernel void navatala_ml_compute_xt_y_f32(device const float* X [[buffer(0)]], de
     uint xtyF32Stride = 128u;
     for (int reductionStep1 = 0; reductionStep1 < (int)(8); ++reductionStep1) {
       uint stride1 = xtyF32Stride;
-      if ((lid < stride1)) {
+      if (lid < stride1) {
         float other = sdata[(lid + stride1)];
         float mine = sdata[lid];
         float sum = (mine + other);
@@ -2446,7 +2446,7 @@ kernel void navatala_ml_compute_xt_y_f32(device const float* X [[buffer(0)]], de
       xtyF32Stride = nextStride1;
       threadgroup_barrier(mem_flags::mem_threadgroup);
     }
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       float totalSum = sdata[0];
       Xty[featureIdx] = totalSum;
     }
@@ -2520,7 +2520,7 @@ kernel void navatala_ml_compute_r_squared_f32(device const float* y [[buffer(0)]
   uint r2F32Stride = 128u;
   for (int reductionStep3 = 0; reductionStep3 < (int)(8); ++reductionStep3) {
     uint stride3 = r2F32Stride;
-    if ((lid < stride3)) {
+    if (lid < stride3) {
       float otherRes = sdataRes[(lid + stride3)];
       float mineRes = sdataRes[lid];
       float sumRes = (mineRes + otherRes);
@@ -2535,7 +2535,7 @@ kernel void navatala_ml_compute_r_squared_f32(device const float* y [[buffer(0)]
     r2F32Stride = nextStride3;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float ssRes = sdataRes[0];
     float ssTot = sdataTot[0];
     float ratio = (ssRes / ssTot);
@@ -2565,7 +2565,7 @@ kernel void navatala_ml_compute_mean_f32(device const float* y [[buffer(0)]], de
   uint meanF32Stride = 128u;
   for (int reductionStep5 = 0; reductionStep5 < (int)(8); ++reductionStep5) {
     uint stride5 = meanF32Stride;
-    if ((lid < stride5)) {
+    if (lid < stride5) {
       float other = sdata[(lid + stride5)];
       float mine = sdata[lid];
       float sum = (mine + other);
@@ -2576,7 +2576,7 @@ kernel void navatala_ml_compute_mean_f32(device const float* y [[buffer(0)]], de
     meanF32Stride = nextStride5;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float totalSum = sdata[0];
     float nFloat = ((float)(n));
     float meanVal = (totalSum / nFloat);
@@ -2632,7 +2632,7 @@ kernel void navatala_ml_ridge_predict_f32(device const float* X [[buffer(0)]], d
     uint pred32_reductionStride = 128u;
     for (int pred32_reductionStep = 0; pred32_reductionStep < (int)(8); ++pred32_reductionStep) {
       uint pred32_stride = pred32_reductionStride;
-      if ((lid < pred32_stride)) {
+      if (lid < pred32_stride) {
         float pred32_other = sdata[(lid + pred32_stride)];
         float pred32_mine = sdata[lid];
         float pred32_sum = (pred32_mine + pred32_other);
@@ -2643,7 +2643,7 @@ kernel void navatala_ml_ridge_predict_f32(device const float* X [[buffer(0)]], d
       pred32_reductionStride = pred32_nextStride;
       threadgroup_barrier(mem_flags::mem_threadgroup);
     }
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       float dotProduct = sdata[0];
       yPred[rowIdx] = dotProduct;
     }
@@ -2675,7 +2675,7 @@ kernel void navatala_ml_compute_gcv_score_f32(device const float* y [[buffer(0)]
   uint gcv32_reductionStride = 128u;
   for (int gcv32_reductionStep = 0; gcv32_reductionStep < (int)(8); ++gcv32_reductionStep) {
     uint gcv32_stride = gcv32_reductionStride;
-    if ((lid < gcv32_stride)) {
+    if (lid < gcv32_stride) {
       float gcv32_other = sdata[(lid + gcv32_stride)];
       float gcv32_mine = sdata[lid];
       float gcv32_sum = (gcv32_mine + gcv32_other);
@@ -2686,7 +2686,7 @@ kernel void navatala_ml_compute_gcv_score_f32(device const float* y [[buffer(0)]
     gcv32_reductionStride = gcv32_nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float rss = sdata[0];
     float nFloat = ((float)(nVal));
     float traceHOverN = (traceHVal / nFloat);
@@ -2722,7 +2722,7 @@ kernel void navatala_ml_compute_effective_dof_f32(device const float* eigenvalue
   uint dof32_reductionStride = 128u;
   for (int dof32_reductionStep = 0; dof32_reductionStep < (int)(8); ++dof32_reductionStep) {
     uint dof32_stride = dof32_reductionStride;
-    if ((lid < dof32_stride)) {
+    if (lid < dof32_stride) {
       float dof32_other = sdata[(lid + dof32_stride)];
       float dof32_mine = sdata[lid];
       float dof32_sum = (dof32_mine + dof32_other);
@@ -2733,7 +2733,7 @@ kernel void navatala_ml_compute_effective_dof_f32(device const float* eigenvalue
     dof32_reductionStride = dof32_nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float dofVal = sdata[0];
     dof[0] = dofVal;
   }
@@ -2848,7 +2848,7 @@ kernel void navatala_ml_coordinate_update_f32(device const float* X [[buffer(0)]
   uint cu32RedStride = 128u;
   for (int cu32RedStep = 0; cu32RedStep < (int)(8); ++cu32RedStep) {
     uint cu32RedStrideVal = cu32RedStride;
-    if ((lid < cu32RedStrideVal)) {
+    if (lid < cu32RedStrideVal) {
       float otherDot = sdataDot[(lid + cu32RedStrideVal)];
       float mineDot = sdataDot[lid];
       float sumDot = (mineDot + otherDot);
@@ -2863,7 +2863,7 @@ kernel void navatala_ml_coordinate_update_f32(device const float* X [[buffer(0)]
     cu32RedStride = cu32RedNextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float totalDot = sdataDot[0];
     float totalNorm = sdataNorm[0];
     float rho = (totalDot / totalNorm);
@@ -2926,7 +2926,7 @@ kernel void navatala_ml_compute_objective_f32(device const float* X [[buffer(0)]
   uint obj32RedStride = 128u;
   for (int obj32RedStep = 0; obj32RedStep < (int)(8); ++obj32RedStep) {
     uint obj32RedStrideVal = obj32RedStride;
-    if ((lid < obj32RedStrideVal)) {
+    if (lid < obj32RedStrideVal) {
       float otherMse = sdataMse[(lid + obj32RedStrideVal)];
       float mineMse = sdataMse[lid];
       float sumMse = (mineMse + otherMse);
@@ -2941,7 +2941,7 @@ kernel void navatala_ml_compute_objective_f32(device const float* X [[buffer(0)]
     obj32RedStride = obj32RedNextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float totalMse = sdataMse[0];
     float totalL1 = sdataL1[0];
     float halfMse = (as_type<float>(0x3f000000u) * totalMse);
@@ -3077,7 +3077,7 @@ kernel void navatala_ml_explained_variance_ratio_f32(device const float* eigenva
   uint varRatioF32RedStride = 128u;
   for (int varRatioF32RedStep = 0; varRatioF32RedStep < (int)(8); ++varRatioF32RedStep) {
     uint varRatioF32Stride = varRatioF32RedStride;
-    if ((lid < varRatioF32Stride)) {
+    if (lid < varRatioF32Stride) {
       float other = sdata[(lid + varRatioF32Stride)];
       float mine = sdata[lid];
       float sumVal = (mine + other);
@@ -3248,7 +3248,7 @@ kernel void navatala_ml_compute_q_distribution_f32(device const float* Y [[buffe
   uint qF32ReductionStride = 128u;
   for (int qF32ReductionStep = 0; qF32ReductionStep < (int)(8); ++qF32ReductionStep) {
     uint qF32Stride = qF32ReductionStride;
-    if ((lid < qF32Stride)) {
+    if (lid < qF32Stride) {
       float qF32Other = sdata[(lid + qF32Stride)];
       float qF32Mine = sdata[lid];
       float qF32Sum = (qF32Mine + qF32Other);
@@ -3259,7 +3259,7 @@ kernel void navatala_ml_compute_q_distribution_f32(device const float* Y [[buffe
     qF32ReductionStride = qF32NextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float partialSum = sdata[0];
     float oldSum = sumQ[0];
     float newSum = (oldSum + partialSum);
@@ -3382,7 +3382,7 @@ kernel void navatala_ml_compute_k_l_divergence_f32(device const float* P [[buffe
   uint klF32ReductionStride = 128u;
   for (int klF32ReductionStep = 0; klF32ReductionStep < (int)(8); ++klF32ReductionStep) {
     uint klF32Stride = klF32ReductionStride;
-    if ((lid < klF32Stride)) {
+    if (lid < klF32Stride) {
       float klF32Other = sdata[(lid + klF32Stride)];
       float klF32Mine = sdata[lid];
       float klF32Sum = (klF32Mine + klF32Other);
@@ -3393,7 +3393,7 @@ kernel void navatala_ml_compute_k_l_divergence_f32(device const float* P [[buffe
     klF32ReductionStride = klF32NextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float klVal = sdata[0];
     kl_divergence[0] = klVal;
   }
@@ -3541,7 +3541,7 @@ kernel void navatala_ml_compute_neighbor_counts_f32(device const float* points [
         distSqAccum = newDistSq;
       }
       float finalDistSq = distSqAccum;
-      if ((finalDistSq < epsSq)) {
+      if (finalDistSq < epsSq) {
         uint currentCount = countAccum;
         uint newCount = (currentCount + 1u);
         countAccum = newCount;
@@ -3657,7 +3657,7 @@ kernel void navatala_ml_expand_cluster_step_f32(device const float* points [[buf
             distSqAccum = newDistSq;
           }
           float finalDistSq = distSqAccum;
-          if ((finalDistSq < epsSq)) {
+          if (finalDistSq < epsSq) {
             newLabelAccum = jLabel;
           }
         }
@@ -3780,7 +3780,7 @@ kernel void navatala_ml_count_clusters_f32(device const int* labels [[buffer(0)]
   uint countClstF32RedStride = 128u;
   for (int countClstF32RedStep = 0; countClstF32RedStep < (int)(8); ++countClstF32RedStep) {
     uint countClstF32Stride = countClstF32RedStride;
-    if ((lid < countClstF32Stride)) {
+    if (lid < countClstF32Stride) {
       uint otherIdx = (lid + countClstF32Stride);
       int other = sdata[otherIdx];
       int mine = sdata[lid];
@@ -3793,7 +3793,7 @@ kernel void navatala_ml_count_clusters_f32(device const int* labels [[buffer(0)]
     countClstF32RedStride = countClstF32NextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     int maxLabel = sdata[0];
     int count = (maxLabel + 1);
     numClusters[0] = count;
@@ -3817,7 +3817,7 @@ kernel void navatala_ml_count_clusters_f64(device const int* labels [[buffer(0)]
   uint countClstF64RedStride = 128u;
   for (int countClstF64RedStep = 0; countClstF64RedStep < (int)(8); ++countClstF64RedStep) {
     uint countClstF64Stride = countClstF64RedStride;
-    if ((lid < countClstF64Stride)) {
+    if (lid < countClstF64Stride) {
       uint otherIdx = (lid + countClstF64Stride);
       int other = sdata[otherIdx];
       int mine = sdata[lid];
@@ -3830,7 +3830,7 @@ kernel void navatala_ml_count_clusters_f64(device const int* labels [[buffer(0)]
     countClstF64RedStride = countClstF64NextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     int maxLabel = sdata[0];
     int count = (maxLabel + 1);
     numClusters[0] = count;
@@ -4938,7 +4938,7 @@ kernel void navatala_ml_knn_regress_median_f32(device const uint* neighborIndice
     for (int i = 0; i < (int)(kVal); ++i) {
       uint iU32 = ((uint)(i));
       uint zeroU32 = ((uint)(0));
-      if ((iU32 > zeroU32)) {
+      if (iU32 > zeroU32) {
         float key = sortBuf[iU32];
         uint initialJIdx = (iU32 - 1u);
         jIdxAccum = initialJIdx;
@@ -5001,7 +5001,7 @@ kernel void navatala_ml_traverse_tree_classify_f32(device const float* X [[buffe
           uint probIdx = (leafBase + cU32);
           float prob = leaf_values[probIdx];
           float currBest = bestProb;
-          if ((prob > currBest)) {
+          if (prob > currBest) {
             bestClass = c;
             bestProb = prob;
           }
@@ -5129,7 +5129,7 @@ kernel void navatala_ml_compute_m_s_e_f32(device const float* targets [[buffer(0
   uint mseF32_reductionStride = 128u;
   for (int mseF32_reductionStep = 0; mseF32_reductionStep < (int)(8); ++mseF32_reductionStep) {
     uint mseF32_stride = mseF32_reductionStride;
-    if ((lid < mseF32_stride)) {
+    if (lid < mseF32_stride) {
       uint otherIdx = (lid + mseF32_stride);
       float mine = sdata[lid];
       float other = sdata[otherIdx];
@@ -5163,7 +5163,7 @@ kernel void navatala_ml_compute_m_s_e_f32(device const float* targets [[buffer(0
   uint mseF32b_reductionStride = 128u;
   for (int mseF32b_reductionStep = 0; mseF32b_reductionStep < (int)(8); ++mseF32b_reductionStep) {
     uint mseF32b_stride = mseF32b_reductionStride;
-    if ((lid < mseF32b_stride)) {
+    if (lid < mseF32b_stride) {
       uint otherIdx2 = (lid + mseF32b_stride);
       float mine2 = sdata[lid];
       float other2 = sdata[otherIdx2];
@@ -5287,7 +5287,7 @@ kernel void navatala_ml_forest_classify_f32(device const float* X [[buffer(0)]],
             uint probIdx = (absLeafBase + classIdxU32);
             float prob = forest_leaves[probIdx];
             float currBest = bestProb;
-            if ((prob > currBest)) {
+            if (prob > currBest) {
               bestClass = classIdx;
               bestProb = prob;
             }
@@ -5321,7 +5321,7 @@ kernel void navatala_ml_forest_classify_f32(device const float* X [[buffer(0)]],
       uint voteIdx = (voteBase + cU32);
       uint votes = vote_counts[voteIdx];
       uint currMax = maxVotes;
-      if ((votes > currMax)) {
+      if (votes > currMax) {
         finalClass = c;
         maxVotes = votes;
       }
@@ -5531,7 +5531,7 @@ kernel void navatala_ml_fil_infer_classification_f32(device const float* X [[buf
       uint voteIdx = (voteBase + cU32);
       uint votes = vote_counts[voteIdx];
       uint currMax = maxVotes;
-      if ((votes > currMax)) {
+      if (votes > currMax) {
         finalClass = c;
         maxVotes = votes;
       }
@@ -6115,7 +6115,7 @@ kernel void navatala_ml_compute_fuzzy_simplicial_set_f32(device const int* knn_i
         membershipSum = newSum;
       }
       float sum = membershipSum;
-      if ((sum > targetSum)) {
+      if (sum > targetSum) {
         sigmaHigh = mid;
       } else {
         sigmaLow = mid;
@@ -6534,7 +6534,7 @@ kernel void navatala_ml_find_max_correlation_f32(device const float* correlation
   uint maxCorrF32RedStride = 128u;
   for (int maxCorrF32RedStep = 0; maxCorrF32RedStep < (int)(8); ++maxCorrF32RedStep) {
     uint maxCorrF32Stride = maxCorrF32RedStride;
-    if ((lid < maxCorrF32Stride)) {
+    if (lid < maxCorrF32Stride) {
       otherVal = svals[(lid + maxCorrF32Stride)];
       otherIdx = sidxs[(lid + maxCorrF32Stride)];
       myVal = svals[lid];
@@ -6550,7 +6550,7 @@ kernel void navatala_ml_find_max_correlation_f32(device const float* correlation
     maxCorrF32RedStride = maxCorrF32NextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     maxValue[0] = svals[0];
     maxIndex[0] = sidxs[0];
   }

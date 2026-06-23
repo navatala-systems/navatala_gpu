@@ -18,7 +18,7 @@ __kernel void navatala_sparse_gmres_arnoldi_batch_project_f32(__global const flo
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
   int J = ((int)(j[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float acc = as_float(0x00000000u);
     for (int k = 0; k < (int)(J); ++k) {
       float hk = hCol[k];

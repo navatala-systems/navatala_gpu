@@ -14,7 +14,7 @@ const char* k_hip_navatala_dataframe_writeback_sum_f32 = R"kernel(
 extern "C" __global__ void navatala_dataframe_writeback_sum_f32(const unsigned int* keys, const float* vals, const int* count, float* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int j = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((j < count[0u])) {
+  if (j < count[0u]) {
     unsigned int key = keys[j];
     float val = vals[j];
     float oldVal = dst[key];
@@ -28,7 +28,7 @@ const char* k_hip_navatala_dataframe_writeback_sum_f64 = R"kernel(
 extern "C" __global__ void navatala_dataframe_writeback_sum_f64(const unsigned int* keys, const double* vals, const int* count, double* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int j = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((j < count[0u])) {
+  if (j < count[0u]) {
     unsigned int key = keys[j];
     double val = vals[j];
     double oldVal = dst[key];
@@ -42,7 +42,7 @@ const char* k_hip_navatala_dataframe_writeback_sum_i32 = R"kernel(
 extern "C" __global__ void navatala_dataframe_writeback_sum_i32(const unsigned int* keys, const int* vals, const int* count, int* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int j = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((j < count[0u])) {
+  if (j < count[0u]) {
     unsigned int key = keys[j];
     int val = vals[j];
     int oldVal = dst[key];
@@ -56,7 +56,7 @@ const char* k_hip_navatala_dataframe_writeback_sum_u32 = R"kernel(
 extern "C" __global__ void navatala_dataframe_writeback_sum_u32(const unsigned int* keys, const unsigned int* vals, const int* count, unsigned int* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int j = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((j < count[0u])) {
+  if (j < count[0u]) {
     unsigned int key = keys[j];
     unsigned int val = vals[j];
     unsigned int oldVal = dst[key];
@@ -70,11 +70,11 @@ const char* k_hip_navatala_dataframe_writeback_min_f32 = R"kernel(
 extern "C" __global__ void navatala_dataframe_writeback_min_f32(const unsigned int* keys, const float* vals, const int* count, float* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int j = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((j < count[0u])) {
+  if (j < count[0u]) {
     unsigned int key = keys[j];
     float newVal = vals[j];
     float oldVal = dst[key];
-    if ((newVal < oldVal)) {
+    if (newVal < oldVal) {
       dst[key] = newVal;
     }
   }
@@ -86,11 +86,11 @@ const char* k_hip_navatala_dataframe_writeback_min_f64 = R"kernel(
 extern "C" __global__ void navatala_dataframe_writeback_min_f64(const unsigned int* keys, const double* vals, const int* count, double* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int j = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((j < count[0u])) {
+  if (j < count[0u]) {
     unsigned int key = keys[j];
     double newVal = vals[j];
     double oldVal = dst[key];
-    if ((newVal < oldVal)) {
+    if (newVal < oldVal) {
       dst[key] = newVal;
     }
   }
@@ -102,11 +102,11 @@ const char* k_hip_navatala_dataframe_writeback_max_f32 = R"kernel(
 extern "C" __global__ void navatala_dataframe_writeback_max_f32(const unsigned int* keys, const float* vals, const int* count, float* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int j = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((j < count[0u])) {
+  if (j < count[0u]) {
     unsigned int key = keys[j];
     float newVal = vals[j];
     float oldVal = dst[key];
-    if ((newVal > oldVal)) {
+    if (newVal > oldVal) {
       dst[key] = newVal;
     }
   }
@@ -118,11 +118,11 @@ const char* k_hip_navatala_dataframe_writeback_max_f64 = R"kernel(
 extern "C" __global__ void navatala_dataframe_writeback_max_f64(const unsigned int* keys, const double* vals, const int* count, double* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int j = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((j < count[0u])) {
+  if (j < count[0u]) {
     unsigned int key = keys[j];
     double newVal = vals[j];
     double oldVal = dst[key];
-    if ((newVal > oldVal)) {
+    if (newVal > oldVal) {
       dst[key] = newVal;
     }
   }
@@ -133,7 +133,7 @@ const char* k_hip_navatala_dataframe_init_welford_state_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_init_welford_state_f32(unsigned int* count, float* mean, float* M2) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     count[0] = 0u;
     mean[0] = __uint_as_float(0x00000000u);
     M2[0] = __uint_as_float(0x00000000u);
@@ -145,7 +145,7 @@ const char* k_hip_navatala_dataframe_init_welford_state_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_init_welford_state_f64(unsigned int* count, double* mean, double* M2) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     count[0] = 0u;
     mean[0] = __longlong_as_double(0x0000000000000000ull);
     M2[0] = __longlong_as_double(0x0000000000000000ull);
@@ -157,7 +157,7 @@ const char* k_hip_navatala_dataframe_welford_update_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_welford_update_f32(const float* x, unsigned int* count, float* mean, float* M2) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int nOld = count[0];
     float meanOld = mean[0];
     float m2Old = M2[0];
@@ -179,7 +179,7 @@ const char* k_hip_navatala_dataframe_welford_update_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_welford_update_f64(const double* x, unsigned int* count, double* mean, double* M2) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int nOld = count[0];
     double meanOld = mean[0];
     double m2Old = M2[0];
@@ -201,7 +201,7 @@ const char* k_hip_navatala_dataframe_welford_merge_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_welford_merge_f32(const unsigned int* countA, const float* meanA, const float* M2A, const unsigned int* countB, const float* meanB, const float* M2B, unsigned int* count, float* mean, float* M2) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int nA = countA[0];
     float muA = meanA[0];
     float m2AVal = M2A[0];
@@ -230,7 +230,7 @@ const char* k_hip_navatala_dataframe_welford_merge_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_welford_merge_f64(const unsigned int* countA, const double* meanA, const double* M2A, const unsigned int* countB, const double* meanB, const double* M2B, unsigned int* count, double* mean, double* M2) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int nA = countA[0];
     double muA = meanA[0];
     double m2AVal = M2A[0];
@@ -259,7 +259,7 @@ const char* k_hip_navatala_dataframe_extract_variance_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_variance_f32(const unsigned int* count, const float* M2, float* variance) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int n = count[0];
     float m2Val = M2[0];
     float nf = ((float)(n));
@@ -273,7 +273,7 @@ const char* k_hip_navatala_dataframe_extract_variance_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_variance_f64(const unsigned int* count, const double* M2, double* variance) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int n = count[0];
     double m2Val = M2[0];
     double nf = ((double)(n));
@@ -287,7 +287,7 @@ const char* k_hip_navatala_dataframe_extract_sample_variance_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_sample_variance_f32(const unsigned int* count, const float* M2, float* variance) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int n = count[0];
     float m2Val = M2[0];
     unsigned int nMinus1 = (n - 1u);
@@ -302,7 +302,7 @@ const char* k_hip_navatala_dataframe_extract_sample_variance_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_sample_variance_f64(const unsigned int* count, const double* M2, double* variance) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int n = count[0];
     double m2Val = M2[0];
     unsigned int nMinus1 = (n - 1u);
@@ -317,7 +317,7 @@ const char* k_hip_navatala_dataframe_extract_stddev_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_stddev_f32(const unsigned int* count, const float* M2, float* stddev) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int n = count[0];
     float m2Val = M2[0];
     float nf = ((float)(n));
@@ -332,7 +332,7 @@ const char* k_hip_navatala_dataframe_extract_stddev_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_stddev_f64(const unsigned int* count, const double* M2, double* stddev) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int n = count[0];
     double m2Val = M2[0];
     double nf = ((double)(n));
@@ -347,7 +347,7 @@ const char* k_hip_navatala_dataframe_init_covariance_state_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_init_covariance_state_f32(unsigned int* count, float* meanX, float* meanY, float* Cxy) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     count[0] = 0u;
     meanX[0] = __uint_as_float(0x00000000u);
     meanY[0] = __uint_as_float(0x00000000u);
@@ -360,7 +360,7 @@ const char* k_hip_navatala_dataframe_init_covariance_state_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_init_covariance_state_f64(unsigned int* count, double* meanX, double* meanY, double* Cxy) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     count[0] = 0u;
     meanX[0] = __longlong_as_double(0x0000000000000000ull);
     meanY[0] = __longlong_as_double(0x0000000000000000ull);
@@ -373,7 +373,7 @@ const char* k_hip_navatala_dataframe_covariance_update_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_covariance_update_f32(const float* x, const float* y, unsigned int* count, float* meanX, float* meanY, float* Cxy) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int nOld = count[0];
     float muXOld = meanX[0];
     float muYOld = meanY[0];
@@ -400,7 +400,7 @@ const char* k_hip_navatala_dataframe_covariance_update_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_covariance_update_f64(const double* x, const double* y, unsigned int* count, double* meanX, double* meanY, double* Cxy) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int nOld = count[0];
     double muXOld = meanX[0];
     double muYOld = meanY[0];
@@ -427,7 +427,7 @@ const char* k_hip_navatala_dataframe_extract_covariance_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_covariance_f32(const unsigned int* count, const float* Cxy, float* covariance) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int n = count[0];
     float cxyVal = Cxy[0];
     float nf = ((float)(n));
@@ -441,7 +441,7 @@ const char* k_hip_navatala_dataframe_extract_covariance_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_covariance_f64(const unsigned int* count, const double* Cxy, double* covariance) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int n = count[0];
     double cxyVal = Cxy[0];
     double nf = ((double)(n));
@@ -455,7 +455,7 @@ const char* k_hip_navatala_dataframe_extract_correlation_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_correlation_f32(const float* Cxy, const float* M2x, const float* M2y, float* correlation) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float cxyVal = Cxy[0];
     float m2xVal = M2x[0];
     float m2yVal = M2y[0];
@@ -471,7 +471,7 @@ const char* k_hip_navatala_dataframe_extract_correlation_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_correlation_f64(const double* Cxy, const double* M2x, const double* M2y, double* correlation) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double cxyVal = Cxy[0];
     double m2xVal = M2x[0];
     double m2yVal = M2y[0];
@@ -487,7 +487,7 @@ const char* k_hip_navatala_dataframe_init_weighted_welford_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_init_weighted_welford_f32(float* weightSum, float* mean, float* M2) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     weightSum[0] = __uint_as_float(0x00000000u);
     mean[0] = __uint_as_float(0x00000000u);
     M2[0] = __uint_as_float(0x00000000u);
@@ -499,7 +499,7 @@ const char* k_hip_navatala_dataframe_init_weighted_welford_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_init_weighted_welford_f64(double* weightSum, double* mean, double* M2) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     weightSum[0] = __longlong_as_double(0x0000000000000000ull);
     mean[0] = __longlong_as_double(0x0000000000000000ull);
     M2[0] = __longlong_as_double(0x0000000000000000ull);
@@ -511,7 +511,7 @@ const char* k_hip_navatala_dataframe_weighted_welford_update_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_weighted_welford_update_f32(const float* x, const float* w, float* weightSum, float* mean, float* M2) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float wOld = weightSum[0];
     float meanOld = mean[0];
     float m2Old = M2[0];
@@ -534,7 +534,7 @@ const char* k_hip_navatala_dataframe_weighted_welford_update_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_weighted_welford_update_f64(const double* x, const double* w, double* weightSum, double* mean, double* M2) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double wOld = weightSum[0];
     double meanOld = mean[0];
     double m2Old = M2[0];
@@ -557,7 +557,7 @@ const char* k_hip_navatala_dataframe_weighted_welford_merge_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_weighted_welford_merge_f32(const float* weightSumA, const float* meanA, const float* M2A, const float* weightSumB, const float* meanB, const float* M2B, float* weightSum, float* mean, float* M2) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float wA = weightSumA[0];
     float muA = meanA[0];
     float m2AVal = M2A[0];
@@ -583,7 +583,7 @@ const char* k_hip_navatala_dataframe_weighted_welford_merge_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_weighted_welford_merge_f64(const double* weightSumA, const double* meanA, const double* M2A, const double* weightSumB, const double* meanB, const double* M2B, double* weightSum, double* mean, double* M2) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double wA = weightSumA[0];
     double muA = meanA[0];
     double m2AVal = M2A[0];
@@ -609,7 +609,7 @@ const char* k_hip_navatala_dataframe_extract_weighted_variance_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_weighted_variance_f32(const float* weightSum, const float* M2, float* variance) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float w = weightSum[0];
     float m2Val = M2[0];
     float var = (m2Val / w);
@@ -622,7 +622,7 @@ const char* k_hip_navatala_dataframe_extract_weighted_variance_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_weighted_variance_f64(const double* weightSum, const double* M2, double* variance) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double w = weightSum[0];
     double m2Val = M2[0];
     double var = (m2Val / w);
@@ -635,7 +635,7 @@ const char* k_hip_navatala_dataframe_extract_weighted_reliability_variance_f32 =
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_weighted_reliability_variance_f32(const float* weightSum, const float* M2, float* variance) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float w = weightSum[0];
     float m2Val = M2[0];
     float wMinus1 = (w - __uint_as_float(0x3f800000u));
@@ -649,7 +649,7 @@ const char* k_hip_navatala_dataframe_extract_weighted_reliability_variance_f64 =
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_weighted_reliability_variance_f64(const double* weightSum, const double* M2, double* variance) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double w = weightSum[0];
     double m2Val = M2[0];
     double wMinus1 = (w - __longlong_as_double(0x3ff0000000000000ull));
@@ -663,7 +663,7 @@ const char* k_hip_navatala_dataframe_extract_weighted_stddev_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_weighted_stddev_f32(const float* weightSum, const float* M2, float* stddev) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float w = weightSum[0];
     float m2Val = M2[0];
     float var = (m2Val / w);
@@ -677,7 +677,7 @@ const char* k_hip_navatala_dataframe_extract_weighted_stddev_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_weighted_stddev_f64(const double* weightSum, const double* M2, double* stddev) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double w = weightSum[0];
     double m2Val = M2[0];
     double var = (m2Val / w);
@@ -691,7 +691,7 @@ const char* k_hip_navatala_dataframe_init_weighted_covariance_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_init_weighted_covariance_f32(float* weightSum, float* meanX, float* meanY, float* Cxy) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     weightSum[0] = __uint_as_float(0x00000000u);
     meanX[0] = __uint_as_float(0x00000000u);
     meanY[0] = __uint_as_float(0x00000000u);
@@ -704,7 +704,7 @@ const char* k_hip_navatala_dataframe_init_weighted_covariance_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_init_weighted_covariance_f64(double* weightSum, double* meanX, double* meanY, double* Cxy) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     weightSum[0] = __longlong_as_double(0x0000000000000000ull);
     meanX[0] = __longlong_as_double(0x0000000000000000ull);
     meanY[0] = __longlong_as_double(0x0000000000000000ull);
@@ -717,7 +717,7 @@ const char* k_hip_navatala_dataframe_weighted_covariance_update_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_weighted_covariance_update_f32(const float* x, const float* y, const float* w, float* weightSum, float* meanX, float* meanY, float* Cxy) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float wOld = weightSum[0];
     float muXOld = meanX[0];
     float muYOld = meanY[0];
@@ -745,7 +745,7 @@ const char* k_hip_navatala_dataframe_weighted_covariance_update_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_weighted_covariance_update_f64(const double* x, const double* y, const double* w, double* weightSum, double* meanX, double* meanY, double* Cxy) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double wOld = weightSum[0];
     double muXOld = meanX[0];
     double muYOld = meanY[0];
@@ -773,7 +773,7 @@ const char* k_hip_navatala_dataframe_extract_weighted_covariance_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_weighted_covariance_f32(const float* weightSum, const float* Cxy, float* covariance) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float w = weightSum[0];
     float cxyVal = Cxy[0];
     float cov = (cxyVal / w);
@@ -786,7 +786,7 @@ const char* k_hip_navatala_dataframe_extract_weighted_covariance_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_weighted_covariance_f64(const double* weightSum, const double* Cxy, double* covariance) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double w = weightSum[0];
     double cxyVal = Cxy[0];
     double cov = (cxyVal / w);
@@ -799,7 +799,7 @@ const char* k_hip_navatala_dataframe_extract_weighted_correlation_f32 = R"kernel
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_weighted_correlation_f32(const float* Cxy, const float* M2x, const float* M2y, float* correlation) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float cxyVal = Cxy[0];
     float m2xVal = M2x[0];
     float m2yVal = M2y[0];
@@ -815,7 +815,7 @@ const char* k_hip_navatala_dataframe_extract_weighted_correlation_f64 = R"kernel
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_weighted_correlation_f64(const double* Cxy, const double* M2x, const double* M2y, double* correlation) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double cxyVal = Cxy[0];
     double m2xVal = M2x[0];
     double m2yVal = M2y[0];
@@ -831,7 +831,7 @@ const char* k_hip_navatala_dataframe_init_weighted_mean_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_init_weighted_mean_f32(float* weightSum, float* mean) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     weightSum[0] = __uint_as_float(0x00000000u);
     mean[0] = __uint_as_float(0x00000000u);
   }
@@ -842,7 +842,7 @@ const char* k_hip_navatala_dataframe_init_weighted_mean_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_init_weighted_mean_f64(double* weightSum, double* mean) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     weightSum[0] = __longlong_as_double(0x0000000000000000ull);
     mean[0] = __longlong_as_double(0x0000000000000000ull);
   }
@@ -853,7 +853,7 @@ const char* k_hip_navatala_dataframe_weighted_mean_update_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_weighted_mean_update_f32(const float* x, const float* w, float* weightSum, float* mean) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float wOld = weightSum[0];
     float meanOld = mean[0];
     float xVal = x[0];
@@ -872,7 +872,7 @@ const char* k_hip_navatala_dataframe_weighted_mean_update_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_weighted_mean_update_f64(const double* x, const double* w, double* weightSum, double* mean) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double wOld = weightSum[0];
     double meanOld = mean[0];
     double xVal = x[0];
@@ -891,7 +891,7 @@ const char* k_hip_navatala_dataframe_init_p2_state_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_init_p2_state_f32(const float* p, float* q0, float* q1, float* q2, float* q3, float* q4, unsigned int* pos0, unsigned int* pos1, unsigned int* pos2, unsigned int* pos3, unsigned int* pos4, float* targetP, unsigned int* count) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float pVal = p[0];
     q0[0] = __uint_as_float(0x00000000u);
     q1[0] = __uint_as_float(0x00000000u);
@@ -913,7 +913,7 @@ const char* k_hip_navatala_dataframe_init_p2_state_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_init_p2_state_f64(const double* p, double* q0, double* q1, double* q2, double* q3, double* q4, unsigned int* pos0, unsigned int* pos1, unsigned int* pos2, unsigned int* pos3, unsigned int* pos4, double* targetP, unsigned int* count) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double pVal = p[0];
     q0[0] = __longlong_as_double(0x0000000000000000ull);
     q1[0] = __longlong_as_double(0x0000000000000000ull);
@@ -935,7 +935,7 @@ const char* k_hip_navatala_dataframe_p2_update_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_p2_update_f32(const float* x, float* q0, float* q1, float* q2, float* q3, float* q4, unsigned int* pos0, unsigned int* pos1, unsigned int* pos2, unsigned int* pos3, unsigned int* pos4, const float* targetP, unsigned int* count) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float xVal = x[0];
     unsigned int n = count[0];
     float pVal = targetP[0];
@@ -963,7 +963,7 @@ const char* k_hip_navatala_dataframe_p2_update_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_p2_update_f64(const double* x, double* q0, double* q1, double* q2, double* q3, double* q4, unsigned int* pos0, unsigned int* pos1, unsigned int* pos2, unsigned int* pos3, unsigned int* pos4, const double* targetP, unsigned int* count) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double xVal = x[0];
     unsigned int n = count[0];
     double pVal = targetP[0];
@@ -989,7 +989,7 @@ const char* k_hip_navatala_dataframe_p2_extract_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_p2_extract_f32(const float* q2, float* quantile) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float val = q2[0];
     quantile[0] = val;
   }
@@ -1000,7 +1000,7 @@ const char* k_hip_navatala_dataframe_p2_extract_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_p2_extract_f64(const double* q2, double* quantile) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double val = q2[0];
     quantile[0] = val;
   }
@@ -1015,7 +1015,7 @@ extern "C" __global__ void navatala_dataframe_init_reservoir256_f32(const unsign
   if (inBounds) {
     reservoir[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = __uint_as_float(0x00000000u);
   }
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int initSeed = initialSeed[0];
     count[0] = 0u;
     seed[0] = initSeed;
@@ -1031,7 +1031,7 @@ extern "C" __global__ void navatala_dataframe_init_reservoir256_f64(const unsign
   if (inBounds) {
     reservoir[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = __longlong_as_double(0x0000000000000000ull);
   }
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int initSeed = initialSeed[0];
     count[0] = 0u;
     seed[0] = initSeed;
@@ -1043,7 +1043,7 @@ const char* k_hip_navatala_dataframe_reservoir_update256_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_reservoir_update256_f32(const float* x, float* reservoir, unsigned int* count, unsigned int* seed) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float xVal = x[0];
     unsigned int n = count[0];
     unsigned int s = seed[0];
@@ -1070,7 +1070,7 @@ const char* k_hip_navatala_dataframe_reservoir_update256_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_reservoir_update256_f64(const double* x, double* reservoir, unsigned int* count, unsigned int* seed) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double xVal = x[0];
     unsigned int n = count[0];
     unsigned int s = seed[0];
@@ -1097,7 +1097,7 @@ const char* k_hip_navatala_dataframe_reservoir_min256_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_reservoir_min256_f32(const float* reservoir, const unsigned int* count, float* minVal) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int n = count[0];
     unsigned int effectiveN = (((n < 256u)) ? (n) : (256u));
     float min0 = reservoir[0];
@@ -1110,7 +1110,7 @@ const char* k_hip_navatala_dataframe_reservoir_max256_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_reservoir_max256_f32(const float* reservoir, const unsigned int* count, float* maxVal) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int n = count[0];
     float max0 = reservoir[0];
     maxVal[0] = max0;
@@ -1122,7 +1122,7 @@ const char* k_hip_navatala_dataframe_reservoir_min256_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_reservoir_min256_f64(const double* reservoir, const unsigned int* count, double* minVal) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double min0 = reservoir[0];
     minVal[0] = min0;
   }
@@ -1133,7 +1133,7 @@ const char* k_hip_navatala_dataframe_reservoir_max256_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_reservoir_max256_f64(const double* reservoir, const unsigned int* count, double* maxVal) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double max0 = reservoir[0];
     maxVal[0] = max0;
   }
@@ -1145,7 +1145,7 @@ const char* k_hip_navatala_dataframe_trimmed_mean_f32 = R"kernel(
 extern "C" __global__ void navatala_dataframe_trimmed_mean_f32(const float* sortedData, const unsigned int* n, const float* trimFraction, float* trimmedMean) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int len = n[0];
     float frac = trimFraction[0];
     float lenF = ((float)(len));
@@ -1165,7 +1165,7 @@ const char* k_hip_navatala_dataframe_trimmed_mean_f64 = R"kernel(
 extern "C" __global__ void navatala_dataframe_trimmed_mean_f64(const double* sortedData, const unsigned int* n, const double* trimFraction, double* trimmedMean) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int len = n[0];
     double frac = trimFraction[0];
     double lenF = ((double)(len));
@@ -1184,7 +1184,7 @@ const char* k_hip_navatala_dataframe_iqm_f32 = R"kernel(
 extern "C" __global__ void navatala_dataframe_iqm_f32(const float* sortedData, const unsigned int* n, float* iqm) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int len = n[0];
     unsigned int q1Idx = (len / 4u);
     unsigned int q3Idx = (len - q1Idx);
@@ -1200,7 +1200,7 @@ const char* k_hip_navatala_dataframe_iqm_f64 = R"kernel(
 extern "C" __global__ void navatala_dataframe_iqm_f64(const double* sortedData, const unsigned int* n, double* iqm) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int len = n[0];
     unsigned int q1Idx = (len / 4u);
     unsigned int q3Idx = (len - q1Idx);
@@ -1216,7 +1216,7 @@ const char* k_hip_navatala_dataframe_winsorized_mean_f32 = R"kernel(
 extern "C" __global__ void navatala_dataframe_winsorized_mean_f32(const float* sortedData, const unsigned int* n, const float* trimFraction, float* winsorizedMean) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int len = n[0];
     float frac = trimFraction[0];
     float lenF = ((float)(len));
@@ -1235,7 +1235,7 @@ const char* k_hip_navatala_dataframe_winsorized_mean_f64 = R"kernel(
 extern "C" __global__ void navatala_dataframe_winsorized_mean_f64(const double* sortedData, const unsigned int* n, const double* trimFraction, double* winsorizedMean) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int len = n[0];
     unsigned int midIdx = (len / 2u);
     double midVal = sortedData[midIdx];
@@ -1249,7 +1249,7 @@ const char* k_hip_navatala_dataframe_mad_f32 = R"kernel(
 extern "C" __global__ void navatala_dataframe_mad_f32(const float* sortedData, const unsigned int* n, const float* median, float* mad) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int len = n[0];
     float med = median[0];
     unsigned int q1Idx = (len / 4u);
@@ -1269,7 +1269,7 @@ const char* k_hip_navatala_dataframe_mad_f64 = R"kernel(
 extern "C" __global__ void navatala_dataframe_mad_f64(const double* sortedData, const unsigned int* n, const double* median, double* mad) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int len = n[0];
     double med = median[0];
     unsigned int q1Idx = (len / 4u);
@@ -1289,7 +1289,7 @@ const char* k_hip_navatala_dataframe_normalized_mad_f32 = R"kernel(
 extern "C" __global__ void navatala_dataframe_normalized_mad_f32(const float* mad, float* normalizedMad) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     float m = mad[0];
     float norm = (__uint_as_float(0x3fbdc5d6u) * m);
     normalizedMad[0] = norm;
@@ -1302,7 +1302,7 @@ const char* k_hip_navatala_dataframe_normalized_mad_f64 = R"kernel(
 extern "C" __global__ void navatala_dataframe_normalized_mad_f64(const double* mad, double* normalizedMad) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     double m = mad[0];
     double norm = (__longlong_as_double(0x3ff7b8bac710cb29ull) * m);
     normalizedMad[0] = norm;
@@ -1395,7 +1395,7 @@ const char* k_hip_navatala_dataframe_init_t_digest_f32 = R"kernel(
 extern "C" __global__ void navatala_dataframe_init_t_digest_f32(const float* compressionIn, float* centroidMeans, float* centroidWeights, unsigned int* centroidCount, float* totalWeight, float* minVal, float* maxVal, float* compression) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     float delta = compressionIn[0];
     centroidCount[0] = 0u;
     totalWeight[0] = __uint_as_float(0x00000000u);
@@ -1411,7 +1411,7 @@ const char* k_hip_navatala_dataframe_init_t_digest_f64 = R"kernel(
 extern "C" __global__ void navatala_dataframe_init_t_digest_f64(const double* compressionIn, double* centroidMeans, double* centroidWeights, unsigned int* centroidCount, double* totalWeight, double* minVal, double* maxVal, double* compression) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     double delta = compressionIn[0];
     centroidCount[0] = 0u;
     totalWeight[0] = __longlong_as_double(0x0000000000000000ull);
@@ -1427,7 +1427,7 @@ const char* k_hip_navatala_dataframe_tdigest_add_f32 = R"kernel(
 extern "C" __global__ void navatala_dataframe_tdigest_add_f32(const float* value, const float* weight, float* centroidMeans, float* centroidWeights, unsigned int* centroidCount, float* totalWeight, float* minVal, float* maxVal) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     float x = value[0];
     float w = weight[0];
     unsigned int count = centroidCount[0];
@@ -1454,7 +1454,7 @@ const char* k_hip_navatala_dataframe_tdigest_add_f64 = R"kernel(
 extern "C" __global__ void navatala_dataframe_tdigest_add_f64(const double* value, const double* weight, double* centroidMeans, double* centroidWeights, unsigned int* centroidCount, double* totalWeight, double* minVal, double* maxVal) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     double x = value[0];
     double w = weight[0];
     unsigned int count = centroidCount[0];
@@ -1481,7 +1481,7 @@ const char* k_hip_navatala_dataframe_tdigest_merge_f32 = R"kernel(
 extern "C" __global__ void navatala_dataframe_tdigest_merge_f32(const float* meansA, const float* weightsA, const unsigned int* countA, const float* totalWeightA, const float* minA, const float* maxA, const float* meansB, const float* weightsB, const unsigned int* countB, const float* totalWeightB, const float* minB, const float* maxB, const float* compressionIn, float* meansOut, float* weightsOut, unsigned int* countOut, float* totalWeightOut, float* minOut, float* maxOut, float* compressionOut) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int cA = countA[0];
     unsigned int cB = countB[0];
     float twA = totalWeightA[0];
@@ -1509,7 +1509,7 @@ const char* k_hip_navatala_dataframe_tdigest_merge_f64 = R"kernel(
 extern "C" __global__ void navatala_dataframe_tdigest_merge_f64(const double* meansA, const double* weightsA, const unsigned int* countA, const double* totalWeightA, const double* minA, const double* maxA, const double* meansB, const double* weightsB, const unsigned int* countB, const double* totalWeightB, const double* minB, const double* maxB, const double* compressionIn, double* meansOut, double* weightsOut, unsigned int* countOut, double* totalWeightOut, double* minOut, double* maxOut, double* compressionOut) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int cA = countA[0];
     unsigned int cB = countB[0];
     double twA = totalWeightA[0];
@@ -1537,7 +1537,7 @@ const char* k_hip_navatala_dataframe_tdigest_quantile_f32 = R"kernel(
 extern "C" __global__ void navatala_dataframe_tdigest_quantile_f32(const float* p, const float* centroidMeans, const float* centroidWeights, const unsigned int* centroidCount, const float* totalWeight, const float* minVal, const float* maxVal, float* quantile) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     float pVal = p[0];
     unsigned int count = centroidCount[0];
     float minV = minVal[0];
@@ -1556,7 +1556,7 @@ const char* k_hip_navatala_dataframe_tdigest_quantile_f64 = R"kernel(
 extern "C" __global__ void navatala_dataframe_tdigest_quantile_f64(const double* p, const double* centroidMeans, const double* centroidWeights, const unsigned int* centroidCount, const double* totalWeight, const double* minVal, const double* maxVal, double* quantile) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     double pVal = p[0];
     unsigned int count = centroidCount[0];
     double minV = minVal[0];
@@ -1575,7 +1575,7 @@ const char* k_hip_navatala_dataframe_tdigest_cdf_f32 = R"kernel(
 extern "C" __global__ void navatala_dataframe_tdigest_cdf_f32(const float* x, const float* centroidMeans, const float* centroidWeights, const unsigned int* centroidCount, const float* totalWeight, const float* minVal, const float* maxVal, float* cdf) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     float xVal = x[0];
     unsigned int count = centroidCount[0];
     float minV = minVal[0];
@@ -1597,7 +1597,7 @@ const char* k_hip_navatala_dataframe_tdigest_cdf_f64 = R"kernel(
 extern "C" __global__ void navatala_dataframe_tdigest_cdf_f64(const double* x, const double* centroidMeans, const double* centroidWeights, const unsigned int* centroidCount, const double* totalWeight, const double* minVal, const double* maxVal, double* cdf) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     double xVal = x[0];
     unsigned int count = centroidCount[0];
     double minV = minVal[0];
@@ -1619,7 +1619,7 @@ const char* k_hip_navatala_dataframe_tdigest_mean_f32 = R"kernel(
 extern "C" __global__ void navatala_dataframe_tdigest_mean_f32(const float* centroidMeans, const float* centroidWeights, const unsigned int* centroidCount, const float* totalWeight, const float* minVal, const float* maxVal, float* mean) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int count = centroidCount[0];
     float minV = minVal[0];
     float maxV = maxVal[0];
@@ -1636,7 +1636,7 @@ const char* k_hip_navatala_dataframe_tdigest_mean_f64 = R"kernel(
 extern "C" __global__ void navatala_dataframe_tdigest_mean_f64(const double* centroidMeans, const double* centroidWeights, const unsigned int* centroidCount, const double* totalWeight, const double* minVal, const double* maxVal, double* mean) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int count = centroidCount[0];
     double minV = minVal[0];
     double maxV = maxVal[0];
@@ -1653,7 +1653,7 @@ const char* k_hip_navatala_dataframe_tdigest_min_f32 = R"kernel(
 extern "C" __global__ void navatala_dataframe_tdigest_min_f32(const float* minVal, const unsigned int* centroidCount, float* minOut) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int count = centroidCount[0];
     float minV = minVal[0];
     bool isEmpty = (count == 0u);
@@ -1668,7 +1668,7 @@ const char* k_hip_navatala_dataframe_tdigest_min_f64 = R"kernel(
 extern "C" __global__ void navatala_dataframe_tdigest_min_f64(const double* minVal, const unsigned int* centroidCount, double* minOut) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int count = centroidCount[0];
     double minV = minVal[0];
     bool isEmpty = (count == 0u);
@@ -1683,7 +1683,7 @@ const char* k_hip_navatala_dataframe_tdigest_max_f32 = R"kernel(
 extern "C" __global__ void navatala_dataframe_tdigest_max_f32(const float* maxVal, const unsigned int* centroidCount, float* maxOut) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int count = centroidCount[0];
     float maxV = maxVal[0];
     bool isEmpty = (count == 0u);
@@ -1698,7 +1698,7 @@ const char* k_hip_navatala_dataframe_tdigest_max_f64 = R"kernel(
 extern "C" __global__ void navatala_dataframe_tdigest_max_f64(const double* maxVal, const unsigned int* centroidCount, double* maxOut) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int count = centroidCount[0];
     double maxV = maxVal[0];
     bool isEmpty = (count == 0u);
@@ -1713,7 +1713,7 @@ const char* k_hip_navatala_dataframe_tdigest_reset_f32 = R"kernel(
 extern "C" __global__ void navatala_dataframe_tdigest_reset_f32(const float* compression, unsigned int* centroidCount, float* totalWeight, float* minVal, float* maxVal) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     centroidCount[0] = 0u;
     totalWeight[0] = __uint_as_float(0x00000000u);
     minVal[0] = __uint_as_float(0x7f7ffffdu);
@@ -1727,7 +1727,7 @@ const char* k_hip_navatala_dataframe_tdigest_reset_f64 = R"kernel(
 extern "C" __global__ void navatala_dataframe_tdigest_reset_f64(const double* compression, unsigned int* centroidCount, double* totalWeight, double* minVal, double* maxVal) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     centroidCount[0] = 0u;
     totalWeight[0] = __longlong_as_double(0x0000000000000000ull);
     minVal[0] = __longlong_as_double(0x7fefffffffffffffull);
@@ -3069,7 +3069,7 @@ extern "C" __global__ void navatala_dataframe_arg_max_f32(const float* _input, c
   unsigned int amf32_reductionStride = 128u;
   for (int amf32_reductionStep = 0; amf32_reductionStep < (int)(8); ++amf32_reductionStep) {
     unsigned int amf32_stride = amf32_reductionStride;
-    if ((lid < amf32_stride)) {
+    if (lid < amf32_stride) {
       otherVal = svals[(lid + amf32_stride)];
       otherIdx = sidxs[(lid + amf32_stride)];
       myVal = svals[lid];
@@ -3089,7 +3089,7 @@ extern "C" __global__ void navatala_dataframe_arg_max_f32(const float* _input, c
     amf32_reductionStride = amf32_nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     maxValue[0] = svals[0];
     maxIndex[0] = sidxs[0];
   }
@@ -3129,7 +3129,7 @@ extern "C" __global__ void navatala_dataframe_arg_max_f64(const double* _input, 
   unsigned int amf64_reductionStride = 128u;
   for (int amf64_reductionStep = 0; amf64_reductionStep < (int)(8); ++amf64_reductionStep) {
     unsigned int amf64_stride = amf64_reductionStride;
-    if ((lid < amf64_stride)) {
+    if (lid < amf64_stride) {
       otherVal = svals[(lid + amf64_stride)];
       otherIdx = sidxs[(lid + amf64_stride)];
       myVal = svals[lid];
@@ -3149,7 +3149,7 @@ extern "C" __global__ void navatala_dataframe_arg_max_f64(const double* _input, 
     amf64_reductionStride = amf64_nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     maxValue[0] = svals[0];
     maxIndex[0] = sidxs[0];
   }
@@ -3189,7 +3189,7 @@ extern "C" __global__ void navatala_dataframe_arg_min_f32(const float* _input, c
   unsigned int aminf32_reductionStride = 128u;
   for (int aminf32_reductionStep = 0; aminf32_reductionStep < (int)(8); ++aminf32_reductionStep) {
     unsigned int aminf32_stride = aminf32_reductionStride;
-    if ((lid < aminf32_stride)) {
+    if (lid < aminf32_stride) {
       otherVal = svals[(lid + aminf32_stride)];
       otherIdx = sidxs[(lid + aminf32_stride)];
       myVal = svals[lid];
@@ -3209,7 +3209,7 @@ extern "C" __global__ void navatala_dataframe_arg_min_f32(const float* _input, c
     aminf32_reductionStride = aminf32_nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     minValue[0] = svals[0];
     minIndex[0] = sidxs[0];
   }
@@ -3249,7 +3249,7 @@ extern "C" __global__ void navatala_dataframe_arg_min_f64(const double* _input, 
   unsigned int aminf64_reductionStride = 128u;
   for (int aminf64_reductionStep = 0; aminf64_reductionStep < (int)(8); ++aminf64_reductionStep) {
     unsigned int aminf64_stride = aminf64_reductionStride;
-    if ((lid < aminf64_stride)) {
+    if (lid < aminf64_stride) {
       otherVal = svals[(lid + aminf64_stride)];
       otherIdx = sidxs[(lid + aminf64_stride)];
       myVal = svals[lid];
@@ -3269,7 +3269,7 @@ extern "C" __global__ void navatala_dataframe_arg_min_f64(const double* _input, 
     aminf64_reductionStride = aminf64_nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     minValue[0] = svals[0];
     minIndex[0] = sidxs[0];
   }
@@ -3308,7 +3308,7 @@ extern "C" __global__ void navatala_dataframe_scan_sum_f32(const float* _input, 
     }
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float total = sdata[511u];
     sdata[511u] = __uint_as_float(0x00000000u);
   }
@@ -3374,7 +3374,7 @@ extern "C" __global__ void navatala_dataframe_scan_sum_f64(const double* _input,
     }
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     sdata[511u] = __longlong_as_double(0x0000000000000000ull);
   }
   __syncthreads();
@@ -3439,7 +3439,7 @@ extern "C" __global__ void navatala_dataframe_scan_sum_u32(const unsigned int* _
     }
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     sdata[511u] = 0u;
   }
   __syncthreads();
@@ -3477,9 +3477,9 @@ const char* k_hip_navatala_dataframe_scan_exclusive_write_total_u32 = R"kernel(
 extern "C" __global__ void navatala_dataframe_scan_exclusive_write_total_u32(const unsigned int* _input, const unsigned int* count, unsigned int* _output) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int n = count[0u];
-    if ((n == 0u)) {
+    if (n == 0u) {
       _output[0u] = 0u;
     } else {
       unsigned int nMinus1 = (n - 1u);
@@ -3524,7 +3524,7 @@ extern "C" __global__ void navatala_dataframe_scan_max_f32(const float* _input, 
     }
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     sdata[511u] = __uint_as_float(0xff7fffffu);
   }
   __syncthreads();
@@ -3591,7 +3591,7 @@ extern "C" __global__ void navatala_dataframe_scan_min_f32(const float* _input, 
     }
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     sdata[511u] = __uint_as_float(0x7f7fffffu);
   }
   __syncthreads();
@@ -3759,7 +3759,7 @@ extern "C" __global__ void navatala_dataframe_sum_reduce_f32(const float* _input
   unsigned int reductionStride = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     unsigned int stride = reductionStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       unsigned int partnerIdx = (lid + stride);
       float myVal = sdata[lid];
       float partnerVal = sdata[partnerIdx];
@@ -3771,7 +3771,7 @@ extern "C" __global__ void navatala_dataframe_sum_reduce_f32(const float* _input
     __syncthreads();
   }
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     result[0] = sdata[0];
   }
 }
@@ -3796,7 +3796,7 @@ extern "C" __global__ void navatala_dataframe_sum_reduce_f64(const double* _inpu
   unsigned int reductionStride = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     unsigned int stride = reductionStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       unsigned int partnerIdx = (lid + stride);
       double myVal = sdata[lid];
       double partnerVal = sdata[partnerIdx];
@@ -3808,7 +3808,7 @@ extern "C" __global__ void navatala_dataframe_sum_reduce_f64(const double* _inpu
     __syncthreads();
   }
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     result[0] = sdata[0];
   }
 }
@@ -3833,7 +3833,7 @@ extern "C" __global__ void navatala_dataframe_mean_f32(const float* _input, cons
   unsigned int reductionStride = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     unsigned int stride = reductionStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       unsigned int partnerIdx = (lid + stride);
       float myVal = sdata[lid];
       float partnerVal = sdata[partnerIdx];
@@ -3845,7 +3845,7 @@ extern "C" __global__ void navatala_dataframe_mean_f32(const float* _input, cons
     __syncthreads();
   }
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     float totalSum = sdata[0];
     float countFloat = ((float)(countVal));
     float meanVal = (totalSum / countFloat);
@@ -3873,7 +3873,7 @@ extern "C" __global__ void navatala_dataframe_mean_f64(const double* _input, con
   unsigned int reductionStride = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     unsigned int stride = reductionStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       unsigned int partnerIdx = (lid + stride);
       double myVal = sdata[lid];
       double partnerVal = sdata[partnerIdx];
@@ -3885,7 +3885,7 @@ extern "C" __global__ void navatala_dataframe_mean_f64(const double* _input, con
     __syncthreads();
   }
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     double totalSum = sdata[0];
     double countFloat = ((double)(countVal));
     double meanVal = (totalSum / countFloat);
@@ -3916,7 +3916,7 @@ extern "C" __global__ void navatala_dataframe_variance_f32(const float* _input, 
   unsigned int reductionStride = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     unsigned int stride = reductionStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       unsigned int partnerIdx = (lid + stride);
       float myVal = sdata[lid];
       float partnerVal = sdata[partnerIdx];
@@ -3928,7 +3928,7 @@ extern "C" __global__ void navatala_dataframe_variance_f32(const float* _input, 
     __syncthreads();
   }
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     float totalSumSq = sdata[0];
     float countFloat = ((float)(countVal));
     float varianceVal = (totalSumSq / countFloat);
@@ -3959,7 +3959,7 @@ extern "C" __global__ void navatala_dataframe_variance_f64(const double* _input,
   unsigned int reductionStride = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     unsigned int stride = reductionStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       unsigned int partnerIdx = (lid + stride);
       double myVal = sdata[lid];
       double partnerVal = sdata[partnerIdx];
@@ -3971,7 +3971,7 @@ extern "C" __global__ void navatala_dataframe_variance_f64(const double* _input,
     __syncthreads();
   }
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     double totalSumSq = sdata[0];
     double countFloat = ((double)(countVal));
     double varianceVal = (totalSumSq / countFloat);
@@ -3986,7 +3986,7 @@ extern "C" __global__ void navatala_dataframe_stddev_f32(const float* variance, 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((gid == zeroU32)) {
+  if (gid == zeroU32) {
     float varianceVal = variance[0];
     float stddevVal = sqrt(varianceVal);
     stddev[0] = stddevVal;
@@ -4000,7 +4000,7 @@ extern "C" __global__ void navatala_dataframe_stddev_f64(const double* variance,
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((gid == zeroU32)) {
+  if (gid == zeroU32) {
     double varianceVal = variance[0];
     double stddevVal = sqrt(varianceVal);
     stddev[0] = stddevVal;
@@ -4198,7 +4198,7 @@ extern "C" __global__ void navatala_dataframe_covariance_f32(const float* inputX
   unsigned int covF32_reductionStride = 128u;
   for (int covF32_reductionStep = 0; covF32_reductionStep < (int)(8); ++covF32_reductionStep) {
     unsigned int covF32_stride = covF32_reductionStride;
-    if ((lid < covF32_stride)) {
+    if (lid < covF32_stride) {
       float covF32_other = sdata[(lid + covF32_stride)];
       float covF32_mine = sdata[lid];
       float covF32_sum = (covF32_mine + covF32_other);
@@ -4209,7 +4209,7 @@ extern "C" __global__ void navatala_dataframe_covariance_f32(const float* inputX
     covF32_reductionStride = covF32_nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float totalSum = sdata[0u];
     float countFloat = ((float)(countVal));
     float covVal = (totalSum / countFloat);
@@ -4243,7 +4243,7 @@ extern "C" __global__ void navatala_dataframe_covariance_f64(const double* input
   unsigned int covF64_reductionStride = 128u;
   for (int covF64_reductionStep = 0; covF64_reductionStep < (int)(8); ++covF64_reductionStep) {
     unsigned int covF64_stride = covF64_reductionStride;
-    if ((lid < covF64_stride)) {
+    if (lid < covF64_stride) {
       double covF64_other = sdata[(lid + covF64_stride)];
       double covF64_mine = sdata[lid];
       double covF64_sum = (covF64_mine + covF64_other);
@@ -4254,7 +4254,7 @@ extern "C" __global__ void navatala_dataframe_covariance_f64(const double* input
     covF64_reductionStride = covF64_nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double totalSum = sdata[0u];
     double countFloat = ((double)(countVal));
     double covVal = (totalSum / countFloat);
@@ -4360,7 +4360,7 @@ extern "C" __global__ void navatala_dataframe_column_means_f32(const float* _inp
     unsigned int colMeansF32_reductionStride = 128u;
     for (int colMeansF32_reductionStep = 0; colMeansF32_reductionStep < (int)(8); ++colMeansF32_reductionStep) {
       unsigned int colMeansF32_stride = colMeansF32_reductionStride;
-      if ((lid < colMeansF32_stride)) {
+      if (lid < colMeansF32_stride) {
         float colMeansF32_other = sdata[(lid + colMeansF32_stride)];
         float colMeansF32_mine = sdata[lid];
         float colMeansF32_sum = (colMeansF32_mine + colMeansF32_other);
@@ -4371,7 +4371,7 @@ extern "C" __global__ void navatala_dataframe_column_means_f32(const float* _inp
       colMeansF32_reductionStride = colMeansF32_nextStride;
       __syncthreads();
     }
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       float totalSum = sdata[0u];
       float nFloat = ((float)(n));
       float meanVal = (totalSum / nFloat);
@@ -4408,7 +4408,7 @@ extern "C" __global__ void navatala_dataframe_column_means_f64(const double* _in
     unsigned int colMeansF64_reductionStride = 128u;
     for (int colMeansF64_reductionStep = 0; colMeansF64_reductionStep < (int)(8); ++colMeansF64_reductionStep) {
       unsigned int colMeansF64_stride = colMeansF64_reductionStride;
-      if ((lid < colMeansF64_stride)) {
+      if (lid < colMeansF64_stride) {
         double colMeansF64_other = sdata[(lid + colMeansF64_stride)];
         double colMeansF64_mine = sdata[lid];
         double colMeansF64_sum = (colMeansF64_mine + colMeansF64_other);
@@ -4419,7 +4419,7 @@ extern "C" __global__ void navatala_dataframe_column_means_f64(const double* _in
       colMeansF64_reductionStride = colMeansF64_nextStride;
       __syncthreads();
     }
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       double totalSum = sdata[0u];
       double nFloat = ((double)(n));
       double meanVal = (totalSum / nFloat);
@@ -4434,7 +4434,7 @@ const char* k_hip_navatala_dataframe_correlation_f32 = R"kernel(
 extern "C" __global__ void navatala_dataframe_correlation_f32(const float* covariance, const float* stddevX, const float* stddevY, float* correlation) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     float covVal = covariance[0];
     float sigmaX = stddevX[0];
     float sigmaY = stddevY[0];
@@ -4450,7 +4450,7 @@ const char* k_hip_navatala_dataframe_correlation_f64 = R"kernel(
 extern "C" __global__ void navatala_dataframe_correlation_f64(const double* covariance, const double* stddevX, const double* stddevY, double* correlation) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     double covVal = covariance[0];
     double sigmaX = stddevX[0];
     double sigmaY = stddevY[0];
@@ -4514,7 +4514,7 @@ const char* k_hip_navatala_dataframe_quantile_f32 = R"kernel(
 extern "C" __global__ void navatala_dataframe_quantile_f32(const float* sortedInput, const unsigned int* count, const float* quantileP, float* result) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gidU32 = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gidU32 == 0u)) {
+  if (gidU32 == 0u) {
     unsigned int n = count[0u];
     float p = quantileP[0u];
     float pClamped = (((p < __uint_as_float(0x00000000u))) ? (__uint_as_float(0x00000000u)) : ((((p > __uint_as_float(0x3f800000u))) ? (__uint_as_float(0x3f800000u)) : (p))));
@@ -4542,7 +4542,7 @@ const char* k_hip_navatala_dataframe_quantile_f64 = R"kernel(
 extern "C" __global__ void navatala_dataframe_quantile_f64(const double* sortedInput, const unsigned int* count, const double* quantileP, double* result) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gidU32 = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gidU32 == 0u)) {
+  if (gidU32 == 0u) {
     unsigned int n = count[0u];
     double p = quantileP[0u];
     double pClamped = (((p < __longlong_as_double(0x0000000000000000ull))) ? (__longlong_as_double(0x0000000000000000ull)) : ((((p > __longlong_as_double(0x3ff0000000000000ull))) ? (__longlong_as_double(0x3ff0000000000000ull)) : (p))));
@@ -4630,7 +4630,7 @@ const char* k_hip_navatala_dataframe_median_f32 = R"kernel(
 extern "C" __global__ void navatala_dataframe_median_f32(const float* sortedInput, const unsigned int* count, float* median) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gidU32 = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gidU32 == 0u)) {
+  if (gidU32 == 0u) {
     unsigned int n = count[0u];
     unsigned int nMinus1 = (n - 1u);
     float nMinus1Float = ((float)(nMinus1));
@@ -4656,7 +4656,7 @@ const char* k_hip_navatala_dataframe_median_f64 = R"kernel(
 extern "C" __global__ void navatala_dataframe_median_f64(const double* sortedInput, const unsigned int* count, double* median) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gidU32 = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gidU32 == 0u)) {
+  if (gidU32 == 0u) {
     unsigned int n = count[0u];
     unsigned int nMinus1 = (n - 1u);
     double nMinus1Float = ((double)(nMinus1));
@@ -4682,7 +4682,7 @@ const char* k_hip_navatala_dataframe_iqr_f32 = R"kernel(
 extern "C" __global__ void navatala_dataframe_iqr_f32(const float* sortedInput, const unsigned int* count, float* iqr) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gidU32 = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gidU32 == 0u)) {
+  if (gidU32 == 0u) {
     unsigned int n = count[0u];
     unsigned int nMinus1 = (n - 1u);
     float nMinus1Float = ((float)(nMinus1));
@@ -4717,7 +4717,7 @@ const char* k_hip_navatala_dataframe_iqr_f64 = R"kernel(
 extern "C" __global__ void navatala_dataframe_iqr_f64(const double* sortedInput, const unsigned int* count, double* iqr) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gidU32 = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gidU32 == 0u)) {
+  if (gidU32 == 0u) {
     unsigned int n = count[0u];
     unsigned int nMinus1 = (n - 1u);
     double nMinus1Float = ((double)(nMinus1));
@@ -4751,7 +4751,7 @@ const char* k_hip_navatala_dataframe_init_e_w_m_c_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_init_e_w_m_c_f32(const float* alphaIn, float* alpha, float* nEff, float* meanX, float* meanY, float* Cxy, float* varX, float* varY) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float a = alphaIn[0];
     alpha[0] = a;
     nEff[0] = __uint_as_float(0x00000000u);
@@ -4768,7 +4768,7 @@ const char* k_hip_navatala_dataframe_init_e_w_m_c_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_init_e_w_m_c_f64(const double* alphaIn, double* alpha, double* nEff, double* meanX, double* meanY, double* Cxy, double* varX, double* varY) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double a = alphaIn[0];
     alpha[0] = a;
     nEff[0] = __longlong_as_double(0x0000000000000000ull);
@@ -4785,7 +4785,7 @@ const char* k_hip_navatala_dataframe_init_e_w_m_c_from_halflife_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_init_e_w_m_c_from_halflife_f32(const float* halflife, float* alpha, float* nEff, float* meanX, float* meanY, float* Cxy, float* varX, float* varY) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float h = halflife[0];
     float ln2 = __uint_as_float(0x3f317215u);
     float a = (ln2 / h);
@@ -4804,7 +4804,7 @@ const char* k_hip_navatala_dataframe_init_e_w_m_c_from_halflife_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_init_e_w_m_c_from_halflife_f64(const double* halflife, double* alpha, double* nEff, double* meanX, double* meanY, double* Cxy, double* varX, double* varY) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double h = halflife[0];
     double ln2 = __longlong_as_double(0x3fe62e42fefa39efull);
     double a = (ln2 / h);
@@ -4823,7 +4823,7 @@ const char* k_hip_navatala_dataframe_ewmc_update_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_ewmc_update_f32(const float* x, const float* y, const float* alpha, float* nEff, float* meanX, float* meanY, float* Cxy, float* varX, float* varY) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float xVal = x[0];
     float yVal = y[0];
     float a = alpha[0];
@@ -4870,7 +4870,7 @@ const char* k_hip_navatala_dataframe_ewmc_update_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_ewmc_update_f64(const double* x, const double* y, const double* alpha, double* nEff, double* meanX, double* meanY, double* Cxy, double* varX, double* varY) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double xVal = x[0];
     double yVal = y[0];
     double a = alpha[0];
@@ -4917,7 +4917,7 @@ const char* k_hip_navatala_dataframe_ewmc_extract_covariance_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_ewmc_extract_covariance_f32(const float* Cxy, const float* nEff, float* result) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float c = Cxy[0];
     float n = nEff[0];
     float eps = __uint_as_float(0x2edbe6ffu);
@@ -4933,7 +4933,7 @@ const char* k_hip_navatala_dataframe_ewmc_extract_covariance_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_ewmc_extract_covariance_f64(const double* Cxy, const double* nEff, double* result) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double c = Cxy[0];
     double n = nEff[0];
     double eps = __longlong_as_double(0x3cd203af9ee75616ull);
@@ -4949,7 +4949,7 @@ const char* k_hip_navatala_dataframe_ewmc_extract_correlation_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_ewmc_extract_correlation_f32(const float* Cxy, const float* varX, const float* varY, const float* nEff, float* result) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float c = Cxy[0];
     float vx = varX[0];
     float vy = varY[0];
@@ -4969,7 +4969,7 @@ const char* k_hip_navatala_dataframe_ewmc_extract_correlation_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_ewmc_extract_correlation_f64(const double* Cxy, const double* varX, const double* varY, const double* nEff, double* result) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double c = Cxy[0];
     double vx = varX[0];
     double vy = varY[0];
@@ -4990,7 +4990,7 @@ const char* k_hip_navatala_dataframe_init_m_c_d_f32 = R"kernel(
 extern "C" __global__ void navatala_dataframe_init_m_c_d_f32(const float* thresholdIn, float* robustMeanX, float* robustMeanY, float* robustCov, float* determinant, float* threshold, unsigned int* count) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     float thresh = thresholdIn[0];
     robustMeanX[0] = __uint_as_float(0x00000000u);
     robustMeanY[0] = __uint_as_float(0x00000000u);
@@ -5007,7 +5007,7 @@ const char* k_hip_navatala_dataframe_init_m_c_d_f64 = R"kernel(
 extern "C" __global__ void navatala_dataframe_init_m_c_d_f64(const double* thresholdIn, double* robustMeanX, double* robustMeanY, double* robustCov, double* determinant, double* threshold, unsigned int* count) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     double thresh = thresholdIn[0];
     robustMeanX[0] = __longlong_as_double(0x0000000000000000ull);
     robustMeanY[0] = __longlong_as_double(0x0000000000000000ull);
@@ -5049,7 +5049,7 @@ extern "C" __global__ void navatala_dataframe_mcd_compute_center_f32(const float
   unsigned int ctr1ReductionStride = 128u;
   for (int ctr1ReductionStep = 0; ctr1ReductionStep < (int)(8); ++ctr1ReductionStep) {
     unsigned int ctr1Stride = ctr1ReductionStride;
-    if ((lid < ctr1Stride)) {
+    if (lid < ctr1Stride) {
       float otherX = sdataX[(lid + ctr1Stride)];
       float otherY = sdataY[(lid + ctr1Stride)];
       unsigned int otherC = scount[(lid + ctr1Stride)];
@@ -5068,7 +5068,7 @@ extern "C" __global__ void navatala_dataframe_mcd_compute_center_f32(const float
     ctr1ReductionStride = ctr1NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float totalX = sdataX[0];
     float totalY = sdataY[0];
     unsigned int totalCount = scount[0];
@@ -5112,7 +5112,7 @@ extern "C" __global__ void navatala_dataframe_mcd_compute_center_f64(const doubl
   unsigned int ctr2ReductionStride = 128u;
   for (int ctr2ReductionStep = 0; ctr2ReductionStep < (int)(8); ++ctr2ReductionStep) {
     unsigned int ctr2Stride = ctr2ReductionStride;
-    if ((lid < ctr2Stride)) {
+    if (lid < ctr2Stride) {
       double otherX = sdataX[(lid + ctr2Stride)];
       double otherY = sdataY[(lid + ctr2Stride)];
       unsigned int otherC = scount[(lid + ctr2Stride)];
@@ -5131,7 +5131,7 @@ extern "C" __global__ void navatala_dataframe_mcd_compute_center_f64(const doubl
     ctr2ReductionStride = ctr2NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double totalX = sdataX[0];
     double totalY = sdataY[0];
     unsigned int totalCount = scount[0];
@@ -5183,7 +5183,7 @@ extern "C" __global__ void navatala_dataframe_mcd_compute_covariance_f32(const f
   unsigned int cov1ReductionStride = 128u;
   for (int cov1ReductionStep = 0; cov1ReductionStep < (int)(8); ++cov1ReductionStep) {
     unsigned int cov1Stride = cov1ReductionStride;
-    if ((lid < cov1Stride)) {
+    if (lid < cov1Stride) {
       float otherCov = scov[(lid + cov1Stride)];
       float otherVX = svarX[(lid + cov1Stride)];
       float otherVY = svarY[(lid + cov1Stride)];
@@ -5206,7 +5206,7 @@ extern "C" __global__ void navatala_dataframe_mcd_compute_covariance_f32(const f
     cov1ReductionStride = cov1NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float totalCov = scov[0];
     float totalVX = svarX[0];
     float totalVY = svarY[0];
@@ -5262,7 +5262,7 @@ extern "C" __global__ void navatala_dataframe_mcd_compute_covariance_f64(const d
   unsigned int cov2ReductionStride = 128u;
   for (int cov2ReductionStep = 0; cov2ReductionStep < (int)(8); ++cov2ReductionStep) {
     unsigned int cov2Stride = cov2ReductionStride;
-    if ((lid < cov2Stride)) {
+    if (lid < cov2Stride) {
       double otherCov = scov[(lid + cov2Stride)];
       double otherVX = svarX[(lid + cov2Stride)];
       double otherVY = svarY[(lid + cov2Stride)];
@@ -5285,7 +5285,7 @@ extern "C" __global__ void navatala_dataframe_mcd_compute_covariance_f64(const d
     cov2ReductionStride = cov2NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double totalCov = scov[0];
     double totalVX = svarX[0];
     double totalVY = svarY[0];
@@ -5410,7 +5410,7 @@ const char* k_hip_navatala_dataframe_mcd_extract_mean_f32 = R"kernel(
 extern "C" __global__ void navatala_dataframe_mcd_extract_mean_f32(const float* robustMeanX, const float* robustMeanY, float* meanX, float* meanY) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     float mx = robustMeanX[0];
     float my = robustMeanY[0];
     meanX[0] = mx;
@@ -5424,7 +5424,7 @@ const char* k_hip_navatala_dataframe_mcd_extract_mean_f64 = R"kernel(
 extern "C" __global__ void navatala_dataframe_mcd_extract_mean_f64(const double* robustMeanX, const double* robustMeanY, double* meanX, double* meanY) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     double mx = robustMeanX[0];
     double my = robustMeanY[0];
     meanX[0] = mx;
@@ -5437,7 +5437,7 @@ const char* k_hip_navatala_dataframe_init_moments_state_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_init_moments_state_f32(unsigned int* n, float* M1, float* M2, float* M3, float* M4) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     n[0] = 0u;
     M1[0] = __uint_as_float(0x00000000u);
     M2[0] = __uint_as_float(0x00000000u);
@@ -5451,7 +5451,7 @@ const char* k_hip_navatala_dataframe_init_moments_state_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_init_moments_state_f64(unsigned int* n, double* M1, double* M2, double* M3, double* M4) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     n[0] = 0u;
     M1[0] = __longlong_as_double(0x0000000000000000ull);
     M2[0] = __longlong_as_double(0x0000000000000000ull);
@@ -5465,7 +5465,7 @@ const char* k_hip_navatala_dataframe_moments_update_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_moments_update_f32(const float* x, unsigned int* n, float* M1, float* M2, float* M3, float* M4) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int nOld = n[0];
     float m1Old = M1[0];
     float m2Old = M2[0];
@@ -5506,7 +5506,7 @@ const char* k_hip_navatala_dataframe_moments_update_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_moments_update_f64(const double* x, unsigned int* n, double* M1, double* M2, double* M3, double* M4) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int nOld = n[0];
     double m1Old = M1[0];
     double m2Old = M2[0];
@@ -5547,7 +5547,7 @@ const char* k_hip_navatala_dataframe_moments_merge_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_moments_merge_f32(const unsigned int* nA, const float* M1A, const float* M2A, const float* M3A, const float* M4A, const unsigned int* nB, const float* M1B, const float* M2B, const float* M3B, const float* M4B, unsigned int* nOut, float* M1Out, float* M2Out, float* M3Out, float* M4Out) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int nAVal = nA[0];
     float m1AVal = M1A[0];
     float m2AVal = M2A[0];
@@ -5604,7 +5604,7 @@ const char* k_hip_navatala_dataframe_moments_merge_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_moments_merge_f64(const unsigned int* nA, const double* M1A, const double* M2A, const double* M3A, const double* M4A, const unsigned int* nB, const double* M1B, const double* M2B, const double* M3B, const double* M4B, unsigned int* nOut, double* M1Out, double* M2Out, double* M3Out, double* M4Out) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int nAVal = nA[0];
     double m1AVal = M1A[0];
     double m2AVal = M2A[0];
@@ -5661,7 +5661,7 @@ const char* k_hip_navatala_dataframe_extract_skewness_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_skewness_f32(const unsigned int* n, const float* M2, const float* M3, float* skewness) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int nVal = n[0];
     float m2Val = M2[0];
     float m3Val = M3[0];
@@ -5682,7 +5682,7 @@ const char* k_hip_navatala_dataframe_extract_skewness_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_skewness_f64(const unsigned int* n, const double* M2, const double* M3, double* skewness) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int nVal = n[0];
     double m2Val = M2[0];
     double m3Val = M3[0];
@@ -5703,7 +5703,7 @@ const char* k_hip_navatala_dataframe_extract_kurtosis_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_kurtosis_f32(const unsigned int* n, const float* M2, const float* M4, float* kurtosis) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int nVal = n[0];
     float m2Val = M2[0];
     float m4Val = M4[0];
@@ -5722,7 +5722,7 @@ const char* k_hip_navatala_dataframe_extract_kurtosis_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_kurtosis_f64(const unsigned int* n, const double* M2, const double* M4, double* kurtosis) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int nVal = n[0];
     double m2Val = M2[0];
     double m4Val = M4[0];
@@ -5741,7 +5741,7 @@ const char* k_hip_navatala_dataframe_extract_excess_kurtosis_f32 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_excess_kurtosis_f32(const unsigned int* n, const float* M2, const float* M4, float* excessKurtosis) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int nVal = n[0];
     float m2Val = M2[0];
     float m4Val = M4[0];
@@ -5761,7 +5761,7 @@ const char* k_hip_navatala_dataframe_extract_excess_kurtosis_f64 = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_excess_kurtosis_f64(const unsigned int* n, const double* M2, const double* M4, double* excessKurtosis) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int nVal = n[0];
     double m2Val = M2[0];
     double m4Val = M4[0];
@@ -6038,7 +6038,7 @@ extern "C" __global__ void navatala_dataframe_adjusted_rand_index_f32(const floa
   __syncthreads();
   for (int stride = 0; stride < (int)(128u); ++stride) {
     unsigned int strideU32 = ((unsigned int)(stride));
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       float otherNij = sumNij[(lid + strideU32)];
       float mineNij = sumNij[lid];
       sumNij[lid] = (mineNij + otherNij);
@@ -6051,7 +6051,7 @@ extern "C" __global__ void navatala_dataframe_adjusted_rand_index_f32(const floa
     }
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float sumNijFinal = sumNij[0u];
     float sumAiFinal = sumAi[0u];
     float sumBjFinal = sumBj[0u];
@@ -6129,7 +6129,7 @@ extern "C" __global__ void navatala_dataframe_adjusted_rand_index_f64(const doub
   __syncthreads();
   for (int stride = 0; stride < (int)(128u); ++stride) {
     unsigned int strideU32 = ((unsigned int)(stride));
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       double otherNij = sumNij[(lid + strideU32)];
       double mineNij = sumNij[lid];
       sumNij[lid] = (mineNij + otherNij);
@@ -6142,7 +6142,7 @@ extern "C" __global__ void navatala_dataframe_adjusted_rand_index_f64(const doub
     }
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double sumNijFinal = sumNij[0u];
     double sumAiFinal = sumAi[0u];
     double sumBjFinal = sumBj[0u];
@@ -6238,7 +6238,7 @@ extern "C" __global__ void navatala_dataframe_normalized_mutual_info_f32(const f
   __syncthreads();
   for (int stride = 0; stride < (int)(128u); ++stride) {
     unsigned int strideU32 = ((unsigned int)(stride));
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       float otherMI = miSum[(lid + strideU32)];
       float mineMI = miSum[lid];
       miSum[lid] = (mineMI + otherMI);
@@ -6251,7 +6251,7 @@ extern "C" __global__ void navatala_dataframe_normalized_mutual_info_f32(const f
     }
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float miFinal = miSum[0u];
     float hyFinal = hySum[0u];
     float hcFinal = hcSum[0u];
@@ -6342,7 +6342,7 @@ extern "C" __global__ void navatala_dataframe_normalized_mutual_info_f64(const d
   __syncthreads();
   for (int stride = 0; stride < (int)(128u); ++stride) {
     unsigned int strideU32 = ((unsigned int)(stride));
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       double otherMI = miSum[(lid + strideU32)];
       double mineMI = miSum[lid];
       miSum[lid] = (mineMI + otherMI);
@@ -6355,7 +6355,7 @@ extern "C" __global__ void navatala_dataframe_normalized_mutual_info_f64(const d
     }
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double miFinal = miSum[0u];
     double hyFinal = hySum[0u];
     double hcFinal = hcSum[0u];
@@ -6425,7 +6425,7 @@ extern "C" __global__ void navatala_dataframe_homogeneity_score_f32(const float*
   __syncthreads();
   for (int stride = 0; stride < (int)(128u); ++stride) {
     unsigned int strideU32 = ((unsigned int)(stride));
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       float otherHYC = hycSum[(lid + strideU32)];
       float mineHYC = hycSum[lid];
       hycSum[lid] = (mineHYC + otherHYC);
@@ -6435,7 +6435,7 @@ extern "C" __global__ void navatala_dataframe_homogeneity_score_f32(const float*
     }
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float hycFinal = hycSum[0u];
     float hyFinal = hySum[0u];
     bool hyIsZero = (hyFinal == __uint_as_float(0x00000000u));
@@ -6503,7 +6503,7 @@ extern "C" __global__ void navatala_dataframe_homogeneity_score_f64(const double
   __syncthreads();
   for (int stride = 0; stride < (int)(128u); ++stride) {
     unsigned int strideU32 = ((unsigned int)(stride));
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       double otherHYC = hycSum[(lid + strideU32)];
       double mineHYC = hycSum[lid];
       hycSum[lid] = (mineHYC + otherHYC);
@@ -6513,7 +6513,7 @@ extern "C" __global__ void navatala_dataframe_homogeneity_score_f64(const double
     }
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double hycFinal = hycSum[0u];
     double hyFinal = hySum[0u];
     bool hyIsZero = (hyFinal == __longlong_as_double(0x0000000000000000ull));
@@ -6581,7 +6581,7 @@ extern "C" __global__ void navatala_dataframe_completeness_score_f32(const float
   __syncthreads();
   for (int stride = 0; stride < (int)(128u); ++stride) {
     unsigned int strideU32 = ((unsigned int)(stride));
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       float otherHCY = hcySum[(lid + strideU32)];
       float mineHCY = hcySum[lid];
       hcySum[lid] = (mineHCY + otherHCY);
@@ -6591,7 +6591,7 @@ extern "C" __global__ void navatala_dataframe_completeness_score_f32(const float
     }
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float hcyFinal = hcySum[0u];
     float hcFinal = hcSum[0u];
     bool hcIsZero = (hcFinal == __uint_as_float(0x00000000u));
@@ -6659,7 +6659,7 @@ extern "C" __global__ void navatala_dataframe_completeness_score_f64(const doubl
   __syncthreads();
   for (int stride = 0; stride < (int)(128u); ++stride) {
     unsigned int strideU32 = ((unsigned int)(stride));
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       double otherHCY = hcySum[(lid + strideU32)];
       double mineHCY = hcySum[lid];
       hcySum[lid] = (mineHCY + otherHCY);
@@ -6669,7 +6669,7 @@ extern "C" __global__ void navatala_dataframe_completeness_score_f64(const doubl
     }
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double hcyFinal = hcySum[0u];
     double hcFinal = hcSum[0u];
     bool hcIsZero = (hcFinal == __longlong_as_double(0x0000000000000000ull));
@@ -6684,7 +6684,7 @@ const char* k_hip_navatala_dataframe_v_measure_f32 = R"kernel(
 extern "C" __global__ void navatala_dataframe_v_measure_f32(const float* homogeneity, const float* completeness, float* vMeasure) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     float h = homogeneity[0u];
     float c = completeness[0u];
     float hPlusC = (h + c);
@@ -6702,7 +6702,7 @@ const char* k_hip_navatala_dataframe_v_measure_f64 = R"kernel(
 extern "C" __global__ void navatala_dataframe_v_measure_f64(const double* homogeneity, const double* completeness, double* vMeasure) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     double h = homogeneity[0u];
     double c = completeness[0u];
     double hPlusC = (h + c);
@@ -6743,7 +6743,7 @@ extern "C" __global__ void navatala_dataframe_r2_score_f32(const float* y_true, 
   unsigned int r2F32_reductionStride = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     unsigned int r2F32_stride = r2F32_reductionStride;
-    if ((lid < r2F32_stride)) {
+    if (lid < r2F32_stride) {
       unsigned int r2F32_partnerIdx = (lid + r2F32_stride);
       float otherRes = sdata_res[r2F32_partnerIdx];
       float mineRes = sdata_res[lid];
@@ -6760,7 +6760,7 @@ extern "C" __global__ void navatala_dataframe_r2_score_f32(const float* y_true, 
     __syncthreads();
   }
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     float ssRes = sdata_res[0];
     float ssTot = sdata_tot[0];
     float ratio = (ssRes / ssTot);
@@ -6798,7 +6798,7 @@ extern "C" __global__ void navatala_dataframe_r2_score_f64(const double* y_true,
   unsigned int r2F64_reductionStride = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     unsigned int r2F64_stride = r2F64_reductionStride;
-    if ((lid < r2F64_stride)) {
+    if (lid < r2F64_stride) {
       unsigned int r2F64_partnerIdx = (lid + r2F64_stride);
       double otherRes = sdata_res[r2F64_partnerIdx];
       double mineRes = sdata_res[lid];
@@ -6815,7 +6815,7 @@ extern "C" __global__ void navatala_dataframe_r2_score_f64(const double* y_true,
     __syncthreads();
   }
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     double ssRes = sdata_res[0];
     double ssTot = sdata_tot[0];
     double ratio = (ssRes / ssTot);
@@ -6847,7 +6847,7 @@ extern "C" __global__ void navatala_dataframe_mse_f32(const float* y_true, const
   unsigned int mseF32_reductionStride = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     unsigned int mseF32_stride = mseF32_reductionStride;
-    if ((lid < mseF32_stride)) {
+    if (lid < mseF32_stride) {
       unsigned int mseF32_partnerIdx = (lid + mseF32_stride);
       float other = sdata[mseF32_partnerIdx];
       float mine = sdata[lid];
@@ -6860,7 +6860,7 @@ extern "C" __global__ void navatala_dataframe_mse_f32(const float* y_true, const
     __syncthreads();
   }
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     float totalSum = sdata[0];
     float countFloat = ((float)(countVal));
     float mseVal = (totalSum / countFloat);
@@ -6891,7 +6891,7 @@ extern "C" __global__ void navatala_dataframe_mse_f64(const double* y_true, cons
   unsigned int mseF64_reductionStride = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     unsigned int mseF64_stride = mseF64_reductionStride;
-    if ((lid < mseF64_stride)) {
+    if (lid < mseF64_stride) {
       unsigned int mseF64_partnerIdx = (lid + mseF64_stride);
       double other = sdata[mseF64_partnerIdx];
       double mine = sdata[lid];
@@ -6904,7 +6904,7 @@ extern "C" __global__ void navatala_dataframe_mse_f64(const double* y_true, cons
     __syncthreads();
   }
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     double totalSum = sdata[0];
     double countFloat = ((double)(countVal));
     double mseVal = (totalSum / countFloat);
@@ -6919,7 +6919,7 @@ extern "C" __global__ void navatala_dataframe_rmse_f32(const float* mse, float* 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((gid == zeroU32)) {
+  if (gid == zeroU32) {
     float mseVal = mse[0];
     float rmseVal = sqrt(mseVal);
     rmse[0] = rmseVal;
@@ -6933,7 +6933,7 @@ extern "C" __global__ void navatala_dataframe_rmse_f64(const double* mse, double
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((gid == zeroU32)) {
+  if (gid == zeroU32) {
     double mseVal = mse[0];
     double rmseVal = sqrt(mseVal);
     rmse[0] = rmseVal;
@@ -6963,7 +6963,7 @@ extern "C" __global__ void navatala_dataframe_mae_f32(const float* y_true, const
   unsigned int maeF32_reductionStride = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     unsigned int maeF32_stride = maeF32_reductionStride;
-    if ((lid < maeF32_stride)) {
+    if (lid < maeF32_stride) {
       unsigned int maeF32_partnerIdx = (lid + maeF32_stride);
       float other = sdata[maeF32_partnerIdx];
       float mine = sdata[lid];
@@ -6976,7 +6976,7 @@ extern "C" __global__ void navatala_dataframe_mae_f32(const float* y_true, const
     __syncthreads();
   }
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     float totalSum = sdata[0];
     float countFloat = ((float)(countVal));
     float maeVal = (totalSum / countFloat);
@@ -7007,7 +7007,7 @@ extern "C" __global__ void navatala_dataframe_mae_f64(const double* y_true, cons
   unsigned int maeF64_reductionStride = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     unsigned int maeF64_stride = maeF64_reductionStride;
-    if ((lid < maeF64_stride)) {
+    if (lid < maeF64_stride) {
       unsigned int maeF64_partnerIdx = (lid + maeF64_stride);
       double other = sdata[maeF64_partnerIdx];
       double mine = sdata[lid];
@@ -7020,7 +7020,7 @@ extern "C" __global__ void navatala_dataframe_mae_f64(const double* y_true, cons
     __syncthreads();
   }
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     double totalSum = sdata[0];
     double countFloat = ((double)(countVal));
     double maeVal = (totalSum / countFloat);
@@ -7053,7 +7053,7 @@ extern "C" __global__ void navatala_dataframe_mape_f32(const float* y_true, cons
   unsigned int mapeF32_reductionStride = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     unsigned int mapeF32_stride = mapeF32_reductionStride;
-    if ((lid < mapeF32_stride)) {
+    if (lid < mapeF32_stride) {
       unsigned int mapeF32_partnerIdx = (lid + mapeF32_stride);
       float other = sdata[mapeF32_partnerIdx];
       float mine = sdata[lid];
@@ -7066,7 +7066,7 @@ extern "C" __global__ void navatala_dataframe_mape_f32(const float* y_true, cons
     __syncthreads();
   }
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     float totalSum = sdata[0];
     float countFloat = ((float)(countVal));
     float avgPctErr = (totalSum / countFloat);
@@ -7100,7 +7100,7 @@ extern "C" __global__ void navatala_dataframe_mape_f64(const double* y_true, con
   unsigned int mapeF64_reductionStride = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     unsigned int mapeF64_stride = mapeF64_reductionStride;
-    if ((lid < mapeF64_stride)) {
+    if (lid < mapeF64_stride) {
       unsigned int mapeF64_partnerIdx = (lid + mapeF64_stride);
       double other = sdata[mapeF64_partnerIdx];
       double mine = sdata[lid];
@@ -7113,7 +7113,7 @@ extern "C" __global__ void navatala_dataframe_mape_f64(const double* y_true, con
     __syncthreads();
   }
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     double totalSum = sdata[0];
     double countFloat = ((double)(countVal));
     double avgPctErr = (totalSum / countFloat);
@@ -7153,7 +7153,7 @@ extern "C" __global__ void navatala_dataframe_explained_variance_f32(const float
   unsigned int evF32_reductionStride = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     unsigned int evF32_stride = evF32_reductionStride;
-    if ((lid < evF32_stride)) {
+    if (lid < evF32_stride) {
       unsigned int evF32_partnerIdx = (lid + evF32_stride);
       float otherRes = sdata_var_res[evF32_partnerIdx];
       float mineRes = sdata_var_res[lid];
@@ -7170,7 +7170,7 @@ extern "C" __global__ void navatala_dataframe_explained_variance_f32(const float
     __syncthreads();
   }
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     float sumSqRes = sdata_var_res[0];
     float sumSqTrue = sdata_var_true[0];
     float countFloat = ((float)(countVal));
@@ -7211,7 +7211,7 @@ extern "C" __global__ void navatala_dataframe_explained_variance_f64(const doubl
   unsigned int evF64_reductionStride = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     unsigned int evF64_stride = evF64_reductionStride;
-    if ((lid < evF64_stride)) {
+    if (lid < evF64_stride) {
       unsigned int evF64_partnerIdx = (lid + evF64_stride);
       double otherRes = sdata_var_res[evF64_partnerIdx];
       double mineRes = sdata_var_res[lid];
@@ -7228,7 +7228,7 @@ extern "C" __global__ void navatala_dataframe_explained_variance_f64(const doubl
     __syncthreads();
   }
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     double sumSqRes = sdata_var_res[0];
     double sumSqTrue = sdata_var_true[0];
     double countFloat = ((double)(countVal));
@@ -7262,7 +7262,7 @@ extern "C" __global__ void navatala_dataframe_entropy_f32(const float* p, const 
   unsigned int e32_reductionStride = 128u;
   for (int e32_reductionStep = 0; e32_reductionStep < (int)(8); ++e32_reductionStep) {
     unsigned int e32_stride = e32_reductionStride;
-    if ((lid < e32_stride)) {
+    if (lid < e32_stride) {
       float e32_other = sdata[(lid + e32_stride)];
       float e32_mine = sdata[lid];
       float e32_sum = (e32_mine + e32_other);
@@ -7273,7 +7273,7 @@ extern "C" __global__ void navatala_dataframe_entropy_f32(const float* p, const 
     e32_reductionStride = e32_nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0u] = sdata[0u];
   }
 }
@@ -7302,7 +7302,7 @@ extern "C" __global__ void navatala_dataframe_entropy_f64(const double* p, const
   unsigned int e64_reductionStride = 128u;
   for (int e64_reductionStep = 0; e64_reductionStep < (int)(8); ++e64_reductionStep) {
     unsigned int e64_stride = e64_reductionStride;
-    if ((lid < e64_stride)) {
+    if (lid < e64_stride) {
       double e64_other = sdata[(lid + e64_stride)];
       double e64_mine = sdata[lid];
       double e64_sum = (e64_mine + e64_other);
@@ -7313,7 +7313,7 @@ extern "C" __global__ void navatala_dataframe_entropy_f64(const double* p, const
     e64_reductionStride = e64_nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0u] = sdata[0u];
   }
 }
@@ -7343,7 +7343,7 @@ extern "C" __global__ void navatala_dataframe_cross_entropy_f32(const float* p, 
   unsigned int ce32_reductionStride = 128u;
   for (int ce32_reductionStep = 0; ce32_reductionStep < (int)(8); ++ce32_reductionStep) {
     unsigned int ce32_stride = ce32_reductionStride;
-    if ((lid < ce32_stride)) {
+    if (lid < ce32_stride) {
       float ce32_other = sdata[(lid + ce32_stride)];
       float ce32_mine = sdata[lid];
       float ce32_sum = (ce32_mine + ce32_other);
@@ -7354,7 +7354,7 @@ extern "C" __global__ void navatala_dataframe_cross_entropy_f32(const float* p, 
     ce32_reductionStride = ce32_nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0u] = sdata[0u];
   }
 }
@@ -7384,7 +7384,7 @@ extern "C" __global__ void navatala_dataframe_cross_entropy_f64(const double* p,
   unsigned int ce64_reductionStride = 128u;
   for (int ce64_reductionStep = 0; ce64_reductionStep < (int)(8); ++ce64_reductionStep) {
     unsigned int ce64_stride = ce64_reductionStride;
-    if ((lid < ce64_stride)) {
+    if (lid < ce64_stride) {
       double ce64_other = sdata[(lid + ce64_stride)];
       double ce64_mine = sdata[lid];
       double ce64_sum = (ce64_mine + ce64_other);
@@ -7395,7 +7395,7 @@ extern "C" __global__ void navatala_dataframe_cross_entropy_f64(const double* p,
     ce64_reductionStride = ce64_nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0u] = sdata[0u];
   }
 }
@@ -7427,7 +7427,7 @@ extern "C" __global__ void navatala_dataframe_kl_divergence_f32(const float* p, 
   unsigned int kl32_reductionStride = 128u;
   for (int kl32_reductionStep = 0; kl32_reductionStep < (int)(8); ++kl32_reductionStep) {
     unsigned int kl32_stride = kl32_reductionStride;
-    if ((lid < kl32_stride)) {
+    if (lid < kl32_stride) {
       float kl32_other = sdata[(lid + kl32_stride)];
       float kl32_mine = sdata[lid];
       float kl32_sum = (kl32_mine + kl32_other);
@@ -7438,7 +7438,7 @@ extern "C" __global__ void navatala_dataframe_kl_divergence_f32(const float* p, 
     kl32_reductionStride = kl32_nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0u] = sdata[0u];
   }
 }
@@ -7470,7 +7470,7 @@ extern "C" __global__ void navatala_dataframe_kl_divergence_f64(const double* p,
   unsigned int kl64_reductionStride = 128u;
   for (int kl64_reductionStep = 0; kl64_reductionStep < (int)(8); ++kl64_reductionStep) {
     unsigned int kl64_stride = kl64_reductionStride;
-    if ((lid < kl64_stride)) {
+    if (lid < kl64_stride) {
       double kl64_other = sdata[(lid + kl64_stride)];
       double kl64_mine = sdata[lid];
       double kl64_sum = (kl64_mine + kl64_other);
@@ -7481,7 +7481,7 @@ extern "C" __global__ void navatala_dataframe_kl_divergence_f64(const double* p,
     kl64_reductionStride = kl64_nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0u] = sdata[0u];
   }
 }
@@ -7492,7 +7492,7 @@ const char* k_hip_navatala_dataframe_mutual_information_f32 = R"kernel(
 extern "C" __global__ void navatala_dataframe_mutual_information_f32(const float* hX, const float* hY, const float* hXY, float* result) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gidU32 = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gidU32 == 0u)) {
+  if (gidU32 == 0u) {
     float hXVal = hX[0u];
     float hYVal = hY[0u];
     float hXYVal = hXY[0u];
@@ -7508,7 +7508,7 @@ const char* k_hip_navatala_dataframe_mutual_information_f64 = R"kernel(
 extern "C" __global__ void navatala_dataframe_mutual_information_f64(const double* hX, const double* hY, const double* hXY, double* result) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gidU32 = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gidU32 == 0u)) {
+  if (gidU32 == 0u) {
     double hXVal = hX[0u];
     double hYVal = hY[0u];
     double hXYVal = hXY[0u];
@@ -7524,7 +7524,7 @@ const char* k_hip_navatala_dataframe_conditional_entropy_f32 = R"kernel(
 extern "C" __global__ void navatala_dataframe_conditional_entropy_f32(const float* hX, const float* hXY, float* result) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gidU32 = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gidU32 == 0u)) {
+  if (gidU32 == 0u) {
     float hXVal = hX[0u];
     float hXYVal = hXY[0u];
     float condH = (hXYVal - hXVal);
@@ -7538,7 +7538,7 @@ const char* k_hip_navatala_dataframe_conditional_entropy_f64 = R"kernel(
 extern "C" __global__ void navatala_dataframe_conditional_entropy_f64(const double* hX, const double* hXY, double* result) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gidU32 = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gidU32 == 0u)) {
+  if (gidU32 == 0u) {
     double hXVal = hX[0u];
     double hXYVal = hXY[0u];
     double condH = (hXYVal - hXVal);
@@ -11241,7 +11241,7 @@ extern "C" __global__ void navatala_dataframe_build_hash_table_i32(const int* ke
       unsigned int probeIdx = startIdx;
       bool inserted = false;
       for (int __iter = 0; __iter < 65536; ++__iter) {
-        if (!((!inserted))) break;
+        if (!(!inserted)) break;
         unsigned int curIdx = probeIdx;
         int oldKey = atomicCAS((int*)(&(tableKeys[curIdx])), (int)(2147483647), (int)(key));
         bool gotSlot = (oldKey == 2147483647);
@@ -11279,7 +11279,7 @@ extern "C" __global__ void navatala_dataframe_probe_hash_table_i32(const int* ri
     bool done = (!isValid);
     unsigned int matchedRowId = 0u;
     for (int __iter = 0; __iter < 65536; ++__iter) {
-      if (!((!done))) break;
+      if (!(!done)) break;
       unsigned int curIdx = probeIdx;
       int tableKey = tableKeys[curIdx];
       bool isEmpty = (tableKey == 2147483647);
@@ -11403,7 +11403,7 @@ extern "C" __global__ void navatala_dataframe_count_unmatched_left(const unsigne
     unsigned int word = leftMatched[wordIdx];
     unsigned int bit = ((word >> bitIdx) & 1u);
     bool isMatched = (bit == 1u);
-    if ((isMatched == false)) {
+    if (isMatched == false) {
       atomicAdd(&unmatchedCount[0u], 1u);
     }
   }
@@ -11423,7 +11423,7 @@ extern "C" __global__ void navatala_dataframe_gather_unmatched_left_indices(cons
     unsigned int word = leftMatched[wordIdx];
     unsigned int bit = ((word >> bitIdx) & 1u);
     bool isMatched = (bit == 1u);
-    if ((isMatched == false)) {
+    if (isMatched == false) {
       unmatchedIndices[gid] = gid;
     }
   }
@@ -11559,7 +11559,7 @@ extern "C" __global__ void navatala_dataframe_count_unmatched_right(const unsign
     unsigned int word = rightMatched[wordIdx];
     unsigned int bit = ((word >> bitIdx) & 1u);
     bool isMatched = (bit == 1u);
-    if ((isMatched == false)) {
+    if (isMatched == false) {
       atomicAdd(&unmatchedCount[0u], 1u);
     }
   }
@@ -11579,7 +11579,7 @@ extern "C" __global__ void navatala_dataframe_gather_unmatched_right_indices(con
     unsigned int word = rightMatched[wordIdx];
     unsigned int bit = ((word >> bitIdx) & 1u);
     bool isMatched = (bit == 1u);
-    if ((isMatched == false)) {
+    if (isMatched == false) {
       unmatchedIndices[gid] = gid;
     }
   }

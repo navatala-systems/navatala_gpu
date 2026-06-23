@@ -31,7 +31,7 @@ kernel void navatala_ml_spatial_batchnorm_f16(device const half* x [[buffer(0)]]
   float epsVal = eps[0];
   float gsM = as_type<float>(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((uint)(itM)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(itM)) * 256u)) < countVal) {
       gsM = (gsM + ((float)(x[(((((lid + (((uint)(itM)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((uint)(itM)) * 256u)) % HWv))])));
     }
   }
@@ -40,7 +40,7 @@ kernel void navatala_ml_spatial_batchnorm_f16(device const half* x [[buffer(0)]]
   uint meanStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -55,7 +55,7 @@ kernel void navatala_ml_spatial_batchnorm_f16(device const half* x [[buffer(0)]]
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float gsV = as_type<float>(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((uint)(itV)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(itV)) * 256u)) < countVal) {
       gsV = (gsV + ((((float)(x[(((((lid + (((uint)(itV)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((uint)(itV)) * 256u)) % HWv))])) - mean) * (((float)(x[(((((lid + (((uint)(itV)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((uint)(itV)) * 256u)) % HWv))])) - mean)));
     }
   }
@@ -64,7 +64,7 @@ kernel void navatala_ml_spatial_batchnorm_f16(device const half* x [[buffer(0)]]
   uint varStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -78,7 +78,7 @@ kernel void navatala_ml_spatial_batchnorm_f16(device const half* x [[buffer(0)]]
   float var = (sdata[0] / n);
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
-    if (((lid + (((uint)(itW)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(itW)) * 256u)) < countVal) {
       float gv = ((float)(gamma[grp]));
       float bv = ((float)(beta[grp]));
       float xv = ((float)(x[(((((lid + (((uint)(itW)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((uint)(itW)) * 256u)) % HWv))]));

@@ -20,7 +20,7 @@ extern "C" __global__ void navatala_ml_normal_bf16(const unsigned int* count, co
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
   unsigned int seedVal = seed[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     unsigned int ak0 = ((seedVal + (gid * 2654435769u)) + 0u);
     unsigned int ak1 = ((ak0 ^ (ak0 >> 16u)) * 2246822519u);
     unsigned int ak2 = ((ak1 ^ (ak1 >> 13u)) * 3266489917u);

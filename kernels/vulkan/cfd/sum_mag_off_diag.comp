@@ -41,7 +41,7 @@ layout(std430, binding = 6) writeonly buffer buf_outSumOff {
 // kernel: navatala_cfd_sum_mag_off_diag
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= counts[0])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= counts[0]) {
     return;
   } else {
     float sum = uintBitsToFloat(0x00000000u);
@@ -52,9 +52,9 @@ void main() {
     for (int t = 0; t < int(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < counts[1])) {
+      if (f < counts[1]) {
         int sgn = sign[k];
-        if ((sgn > 0)) {
+        if (sgn > 0) {
           float val = upper[f];
           float negVal = (uintBitsToFloat(0x00000000u) - val);
           float absVal = (((val >= uintBitsToFloat(0x00000000u))) ? (val) : (negVal));

@@ -16,11 +16,11 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_cfd_predictor_inverse_diag(const float* inputDiag, const int* counts1, float* outRAU) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts1[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts1[0]) {
     return;
   } else {
     float a = inputDiag[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
-    if ((a != __uint_as_float(0x00000000u))) {
+    if (a != __uint_as_float(0x00000000u)) {
       outRAU[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (__uint_as_float(0x3f800000u) / a);
     } else {
       outRAU[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = __uint_as_float(0x00000000u);

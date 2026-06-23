@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_axpy_f32(const float* x, const float*
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float a = alpha[0];
     float xi = x[gid];
     float yi = y[gid];

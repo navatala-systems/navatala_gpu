@@ -20,7 +20,7 @@ extern "C" __global__ void navatala_linalg_set_upper_f64(const double* val, cons
   unsigned int nVal = n[0u];
   double fillVal = val[0u];
   unsigned int totalElements = (nVal * nVal);
-  if ((idx < totalElements)) {
+  if (idx < totalElements) {
     unsigned int i = (idx / nVal);
     unsigned int j = (idx % nVal);
     bool isStrictUpper = (i < j);

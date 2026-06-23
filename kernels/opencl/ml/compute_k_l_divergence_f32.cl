@@ -43,7 +43,7 @@ __kernel void navatala_ml_compute_k_l_divergence_f32(__global const float* P, __
   uint klF32ReductionStride = (uint)(128u);
   for (int klF32ReductionStep = 0; klF32ReductionStep < (int)(8); ++klF32ReductionStep) {
     uint klF32Stride = klF32ReductionStride;
-    if ((lid < klF32Stride)) {
+    if (lid < klF32Stride) {
       float klF32Other = sdata[(lid + klF32Stride)];
       float klF32Mine = sdata[lid];
       float klF32Sum = (klF32Mine + klF32Other);
@@ -54,7 +54,7 @@ __kernel void navatala_ml_compute_k_l_divergence_f32(__global const float* P, __
     klF32ReductionStride = klF32NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float klVal = sdata[0];
     kl_divergence[0] = klVal;
   }

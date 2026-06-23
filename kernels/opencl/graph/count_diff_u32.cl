@@ -22,7 +22,7 @@ __kernel void navatala_graph_count_diff_u32(__global const uint* a, __global con
   float gsAcc = as_float(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     uint idx = (lid + (((uint)(it)) * (uint)(256u)));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       uint av = a[idx];
       uint bv = b[idx];
       float diff = (((av == bv)) ? (as_float(0x00000000u)) : (as_float(0x3f800000u)));
@@ -34,7 +34,7 @@ __kernel void navatala_graph_count_diff_u32(__global const uint* a, __global con
   uint redStride = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -45,7 +45,7 @@ __kernel void navatala_graph_count_diff_u32(__global const uint* a, __global con
     redStride = nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     result[0] = sdata[0];
   }
 }

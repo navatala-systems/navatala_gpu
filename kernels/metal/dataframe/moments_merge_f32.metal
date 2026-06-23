@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_dataframe_moments_merge_f32(device const uint* nA [[buffer(0)]], device const float* M1A [[buffer(1)]], device const float* M2A [[buffer(2)]], device const float* M3A [[buffer(3)]], device const float* M4A [[buffer(4)]], device const uint* nB [[buffer(5)]], device const float* M1B [[buffer(6)]], device const float* M2B [[buffer(7)]], device const float* M3B [[buffer(8)]], device const float* M4B [[buffer(9)]], device uint* nOut [[buffer(10)]], device float* M1Out [[buffer(11)]], device float* M2Out [[buffer(12)]], device float* M3Out [[buffer(13)]], device float* M4Out [[buffer(14)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) == 0)) {
+  if (int(__gid.x) == 0) {
     uint nAVal = nA[0];
     float m1AVal = M1A[0];
     float m2AVal = M2A[0];

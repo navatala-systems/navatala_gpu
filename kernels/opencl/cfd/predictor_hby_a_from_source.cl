@@ -15,7 +15,7 @@
 
 __kernel void navatala_cfd_predictor_hby_a_from_source(__global const float* rAU, __global const float* sourceX, __global const float* sourceY, __global const float* sourceZ, __global const int* counts1, __global float* outHbyAX, __global float* outHbyAY, __global float* outHbyAZ) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= counts1[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts1[0]) {
     return;
   } else {
     float r = rAU[((int)((int)(get_global_id(0))))];

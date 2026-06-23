@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_graph_scale_add_bias_f32(const float* x, con
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float alphaV = alpha[0];
     float biasV = bias[0];
     float xv = x[gid];

@@ -19,7 +19,7 @@ __kernel void navatala_sparse_lobpcg_residual_f32(__global const float* AX, __gl
   int N = ((int)(n[0]));
   int kVal = ((int)(k[0]));
   int total = (N * kVal);
-  if ((gid < total)) {
+  if (gid < total) {
     int vecIdx = (gid / N);
     int elemIdx = (gid % N);
     float ax = AX[gid];

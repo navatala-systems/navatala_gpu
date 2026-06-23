@@ -308,7 +308,7 @@ extern "C" __global__ void navatala_transformer_paged_attention_f32(const float*
       sumBuf[lid] = sumVal_sum_p2_sumBuf_1;
     }
     __syncthreads();
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       float outVal = sumBuf[0u];
       unsigned int outIdx = (qBase + outD);
       _output[outIdx] = outVal;

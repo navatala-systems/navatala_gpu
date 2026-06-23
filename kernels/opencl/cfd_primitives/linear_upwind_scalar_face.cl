@@ -15,13 +15,13 @@
 
 __kernel void navatala_cfd_primitives_linear_upwind_scalar_face(__global const float* flux, __global const float* xCell, __global const float* gradX, __global const float* gradY, __global const float* gradZ, __global const float* limiter, __global const int* owner, __global const int* nei, __global const float* cx, __global const float* cy, __global const float* cz, __global const float* cfx, __global const float* cfy, __global const float* cfz, __global const float* bcValue, __global const uint* bcMask, __global const uint* params, __global float* outFace) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(params[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(params[0]))) {
     return;
   } else {
     float phif = flux[(int)(get_global_id(0))];
     int own = owner[(int)(get_global_id(0))];
-    if (((int)(get_global_id(0)) < ((int)(params[1])))) {
-      if ((phif >= as_float(0x00000000u))) {
+    if ((int)(get_global_id(0)) < ((int)(params[1]))) {
+      if (phif >= as_float(0x00000000u)) {
         float dx = (cfx[(int)(get_global_id(0))] - cx[own]);
         float dy = (cfy[(int)(get_global_id(0))] - cy[own]);
         float dz = (cfz[(int)(get_global_id(0))] - cz[own]);
@@ -36,11 +36,11 @@ __kernel void navatala_cfd_primitives_linear_upwind_scalar_face(__global const f
         outFace[(int)(get_global_id(0))] = (xCell[neiCell] + (limiter[neiCell] * corr));
       }
     } else {
-      if ((phif >= as_float(0x00000000u))) {
+      if (phif >= as_float(0x00000000u)) {
         outFace[(int)(get_global_id(0))] = xCell[own];
       } else {
         uint mask = bcMask[(int)(get_global_id(0))];
-        if ((((int)(mask)) == 0)) {
+        if (((int)(mask)) == 0) {
           outFace[(int)(get_global_id(0))] = xCell[own];
         } else {
           outFace[(int)(get_global_id(0))] = bcValue[(int)(get_global_id(0))];

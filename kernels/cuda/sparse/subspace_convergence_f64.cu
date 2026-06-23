@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_sparse_subspace_convergence_f64(const double
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
   int kVal = ((int)(k[0]));
-  if ((gid < kVal)) {
+  if (gid < kVal) {
     double norm2 = __longlong_as_double(0x0000000000000000ull);
     for (int i = 0; i < (int)(N); ++i) {
       double ax = AX[((gid * N) + i)];
@@ -29,7 +29,7 @@ extern "C" __global__ void navatala_sparse_subspace_convergence_f64(const double
     }
     residNorms[gid] = norm2;
     double tol = tolerance[0];
-    if ((norm2 < (tol * tol))) {
+    if (norm2 < (tol * tol)) {
       unsigned int _aod1 = atomicAdd(&(nConverged[0]), 1u);
     }
   }

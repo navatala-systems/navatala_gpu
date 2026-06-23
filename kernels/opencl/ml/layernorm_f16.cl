@@ -24,7 +24,7 @@ __kernel void navatala_ml_layernorm_f16(__global const half* x, __global const h
   float epsVal = eps[0];
   float gsM = as_float(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((uint)(itM)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itM)) * (uint)(256u))) < countVal) {
       gsM = (gsM + ((float)(x[(lid + (((uint)(itM)) * (uint)(256u)))])));
     }
   }
@@ -33,7 +33,7 @@ __kernel void navatala_ml_layernorm_f16(__global const half* x, __global const h
   uint meanStr = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -48,7 +48,7 @@ __kernel void navatala_ml_layernorm_f16(__global const half* x, __global const h
   barrier(CLK_LOCAL_MEM_FENCE);
   float gsV = as_float(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((uint)(itV)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itV)) * (uint)(256u))) < countVal) {
       gsV = (gsV + ((((float)(x[(lid + (((uint)(itV)) * (uint)(256u)))])) - mean) * (((float)(x[(lid + (((uint)(itV)) * (uint)(256u)))])) - mean)));
     }
   }
@@ -57,7 +57,7 @@ __kernel void navatala_ml_layernorm_f16(__global const half* x, __global const h
   uint varStr = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -72,7 +72,7 @@ __kernel void navatala_ml_layernorm_f16(__global const half* x, __global const h
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
     uint idxW = (lid + (((uint)(itW)) * (uint)(256u)));
-    if ((idxW < countVal)) {
+    if (idxW < countVal) {
       float xnW = ((((float)(x[idxW])) - mean) / denom);
       float outF = ((((float)(gamma[idxW])) * xnW) + ((float)(beta[idxW])));
       _output[idxW] = ((half)(outF));

@@ -20,7 +20,7 @@ kernel void navatala_sparse_sparse_bicgstab_iter_f32(device const float* x [[buf
   uint gid = ((uint)(int(__gid.x)));
   uint i = gid;
   uint nVal = n[0u];
-  if ((i < nVal)) {
+  if (i < nVal) {
     float alphaVal = alpha[0u];
     float omegaVal = omega[0u];
     float xi = x[i];

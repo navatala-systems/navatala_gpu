@@ -43,7 +43,7 @@ kernel void navatala_sparse_compute_residual_norm_f32(device const float* residu
   threadgroup_barrier(mem_flags::mem_threadgroup);
   for (int s = 0; s < (int)(128u); ++s) {
     uint sU32 = ((uint)(s));
-    if ((lid < sU32)) {
+    if (lid < sU32) {
       float other = sdata[(lid + sU32)];
       float mine = sdata[lid];
       float sum = (mine + other);
@@ -51,7 +51,7 @@ kernel void navatala_sparse_compute_residual_norm_f32(device const float* residu
     }
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     atomic_fetch_add_explicit((device atomic_float*)(&normSq[0u]), sdata[0u], memory_order_relaxed);
   }
 }

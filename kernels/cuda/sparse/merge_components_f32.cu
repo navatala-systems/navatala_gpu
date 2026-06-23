@@ -17,15 +17,15 @@
 extern "C" __global__ void navatala_sparse_merge_components_f32(const unsigned int* srcNodes, const unsigned int* dstNodes, const unsigned int* minEdgeIdx, const unsigned int* numNodes, unsigned int* components, bool* mstEdges) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int nodeId = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((nodeId < numNodes[0u])) {
+  if (nodeId < numNodes[0u]) {
     unsigned int comp = components[nodeId];
-    if ((comp == nodeId)) {
+    if (comp == nodeId) {
       unsigned int edgeIdx = minEdgeIdx[nodeId];
-      if ((edgeIdx != 4294967295u)) {
+      if (edgeIdx != 4294967295u) {
         unsigned int src = srcNodes[edgeIdx];
         unsigned int dst = dstNodes[edgeIdx];
         unsigned int dstComp = components[dst];
-        if ((nodeId != dstComp)) {
+        if (nodeId != dstComp) {
           unsigned int smaller = (((nodeId < dstComp)) ? (nodeId) : (dstComp));
           unsigned int larger = (((nodeId < dstComp)) ? (dstComp) : (nodeId));
           atomicMin(&components[larger], smaller);

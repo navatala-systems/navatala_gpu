@@ -36,7 +36,7 @@ void main() {
   int N = int(n[0]);
   int S = int(s[0]);
   int total = (N * S);
-  if ((gid < total)) {
+  if (gid < total) {
     int row = (gid % N);
     int col = (gid / N);
     double val = (((row == col)) ? (packDouble2x32(uvec2(0x00000000u, 0x3ff00000u))) : (packDouble2x32(uvec2(0x00000000u, 0x00000000u))));

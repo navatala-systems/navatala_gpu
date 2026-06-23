@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_sparse_fgmres_store_z_f64(const double* z, c
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
   int col = ((int)(colIdx[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double zi = z[gid];
     Z[(gid + (col * N))] = zi;
   }

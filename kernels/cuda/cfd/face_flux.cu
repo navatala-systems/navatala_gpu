@@ -19,24 +19,24 @@ extern "C" __global__ void navatala_cfd_face_flux(const float* x, const int* own
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1]) {
     return;
   } else {
     int o = owner[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float xo = x[o];
     float other = xo;
-    if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < counts[2])) {
+    if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < counts[2]) {
       int n = neighbour[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       other = x[n];
     } else {
       int m = bcMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
-      if (((m == 1) || (m == 3))) {
+      if ((m == 1) || (m == 3)) {
         other = bcVal[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       } else {
-        if ((m == 2)) {
+        if (m == 2) {
           other = __uint_as_float(0x00000000u);
         } else {
-          if ((m == 4)) {
+          if (m == 4) {
             outFlux[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = bcVal[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
             return;
           }

@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_csr_permute_cols_f32(const unsigned i
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nnz[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     unsigned int c = colIdx[gid];
     unsigned int newC = perm[((int)(c))];
     newColIdx[gid] = newC;

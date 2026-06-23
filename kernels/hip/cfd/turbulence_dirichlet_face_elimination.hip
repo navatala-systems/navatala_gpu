@@ -16,23 +16,23 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_cfd_turbulence_dirichlet_face_elimination(const int* owner, const int* neighbour, const int* constrainedMask, const float* constrainedValue, const int* nIntFaces, float* upper, float* lower, float* source) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= nIntFaces[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= nIntFaces[0]) {
     return;
   } else {
     int o = owner[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     int n = neighbour[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     int oC = constrainedMask[o];
     int nC = constrainedMask[n];
-    if (((oC | nC) == 0)) {
+    if ((oC | nC) == 0) {
       return;
     } else {
       float up = upper[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       float lo = lower[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
-      if ((oC != 0)) {
+      if (oC != 0) {
         float cv = constrainedValue[o];
         atomicAdd(&source[n], (-(lo * cv)));
       }
-      if ((nC != 0)) {
+      if (nC != 0) {
         float cv = constrainedValue[n];
         atomicAdd(&source[o], (-(up * cv)));
       }

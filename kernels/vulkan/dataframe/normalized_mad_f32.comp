@@ -27,7 +27,7 @@ layout(std430, binding = 1) writeonly buffer buf_normalizedMad {
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   uint gid = uint(int(gl_GlobalInvocationID.x));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     float m = mad[0];
     float norm = (uintBitsToFloat(0x3fbdc5d6u) * m);
     normalizedMad[0] = norm;

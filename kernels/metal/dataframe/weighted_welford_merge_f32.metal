@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_dataframe_weighted_welford_merge_f32(device const float* weightSumA [[buffer(0)]], device const float* meanA [[buffer(1)]], device const float* M2A [[buffer(2)]], device const float* weightSumB [[buffer(3)]], device const float* meanB [[buffer(4)]], device const float* M2B [[buffer(5)]], device float* weightSum [[buffer(6)]], device float* mean [[buffer(7)]], device float* M2 [[buffer(8)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) == 0)) {
+  if (int(__gid.x) == 0) {
     float wA = weightSumA[0];
     float muA = meanA[0];
     float m2AVal = M2A[0];

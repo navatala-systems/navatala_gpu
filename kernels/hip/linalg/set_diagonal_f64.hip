@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_linalg_set_diagonal_f64(const double* val, c
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int idx = gid;
   unsigned int size = n[0u];
-  if ((idx < size)) {
+  if (idx < size) {
     unsigned int stride = (size + 1u);
     unsigned int destIdx = (idx * stride);
     double v = val[idx];

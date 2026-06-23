@@ -18,7 +18,7 @@ __kernel void navatala_cfd_scatter_mu_grad_ghost(__global const float* recvVals,
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
     int idx = (((int)(counts[1])) + (int)(get_global_id(0)));

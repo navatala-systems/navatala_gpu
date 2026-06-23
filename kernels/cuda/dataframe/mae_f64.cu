@@ -34,7 +34,7 @@ extern "C" __global__ void navatala_dataframe_mae_f64(const double* y_true, cons
   unsigned int maeF64_reductionStride = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     unsigned int maeF64_stride = maeF64_reductionStride;
-    if ((lid < maeF64_stride)) {
+    if (lid < maeF64_stride) {
       unsigned int maeF64_partnerIdx = (lid + maeF64_stride);
       double other = sdata[maeF64_partnerIdx];
       double mine = sdata[lid];
@@ -47,7 +47,7 @@ extern "C" __global__ void navatala_dataframe_mae_f64(const double* y_true, cons
     __syncthreads();
   }
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     double totalSum = sdata[0];
     double countFloat = ((double)(countVal));
     double maeVal = (totalSum / countFloat);

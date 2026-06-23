@@ -47,7 +47,7 @@ layout(std430, binding = 8) buffer buf_uBcMask {
 // kernel: navatala_cfd_scatter_rho_vec3_and_mask
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) >= int(counts[0]))) {
+  if (int(gl_GlobalInvocationID.x) >= int(counts[0])) {
     return;
   } else {
     int f = procFaces[int(gl_GlobalInvocationID.x)];

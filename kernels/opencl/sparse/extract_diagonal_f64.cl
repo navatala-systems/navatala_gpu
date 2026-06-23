@@ -18,13 +18,13 @@ __kernel void navatala_sparse_extract_diagonal_f64(__global const uint* rowPtr, 
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col == row)) {
+      if (col == row) {
         diag[row] = values[k];
       }
     }

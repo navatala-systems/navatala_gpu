@@ -16,7 +16,7 @@
 __kernel void navatala_sparse_zero_scalar_u32(__global uint* x) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     x[0] = (uint)(0u);
   }
 }

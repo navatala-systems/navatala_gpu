@@ -16,7 +16,7 @@
 __kernel void navatala_cfd_ref_add_b(__global const float* diag, __global float* b, __global const int* refCell, __global const float* refVal) {
   int gid0 = (int)get_global_id(0);
   int c = refCell[0];
-  if ((c < 0)) {
+  if (c < 0) {
     return;
   } else {
     float cur = b[c];

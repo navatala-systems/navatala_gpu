@@ -18,7 +18,7 @@ using namespace metal;
 
 kernel void navatala_dataframe_quantile_f32(device const float* sortedInput [[buffer(0)]], device const uint* count [[buffer(1)]], device const float* quantileP [[buffer(2)]], device float* result [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gidU32 = ((uint)(int(__gid.x)));
-  if ((gidU32 == 0u)) {
+  if (gidU32 == 0u) {
     uint n = count[0u];
     float p = quantileP[0u];
     float pClamped = (((p < as_type<float>(0x00000000u))) ? (as_type<float>(0x00000000u)) : ((((p > as_type<float>(0x3f800000u))) ? (as_type<float>(0x3f800000u)) : (p))));

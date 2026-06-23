@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_phig_gravity(const float* ghf, const float* snGradRho, const float* rAUf, const float* magSf, const unsigned int* params, float* outPhig) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(params[0])))) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(params[0]))) {
     return;
   } else {
     outPhig[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = (-((ghf[(int)(blockIdx.x * blockDim.x + threadIdx.x)] * snGradRho[(int)(blockIdx.x * blockDim.x + threadIdx.x)]) * (rAUf[(int)(blockIdx.x * blockDim.x + threadIdx.x)] * magSf[(int)(blockIdx.x * blockDim.x + threadIdx.x)])));

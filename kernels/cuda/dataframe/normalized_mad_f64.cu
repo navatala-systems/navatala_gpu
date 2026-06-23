@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_dataframe_normalized_mad_f64(const double* mad, double* normalizedMad) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     double m = mad[0];
     double norm = (__longlong_as_double(0x3ff7b8bac710cb29ull) * m);
     normalizedMad[0] = norm;

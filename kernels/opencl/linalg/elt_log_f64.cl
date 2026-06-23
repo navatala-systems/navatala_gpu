@@ -17,7 +17,7 @@
 __kernel void navatala_linalg_elt_log_f64(__global const double* A, __global const uint* n, __global double* C) {
   int gid0 = (int)get_global_id(0);
   uint i = ((uint)((int)(get_global_id(0))));
-  if ((i < n[(uint)(0u)])) {
+  if (i < n[(uint)(0u)]) {
     double a = A[i];
     C[i] = log(a);
   }

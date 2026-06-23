@@ -18,7 +18,7 @@ __kernel void navatala_ml_normal_f32(__global const uint* count, __global const 
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
   uint seedVal = seed[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint ak0 = ((seedVal + (gid * (uint)(2654435769u))) + (uint)(0u));
     uint ak1 = ((ak0 ^ (ak0 >> (uint)(16u))) * (uint)(2246822519u));
     uint ak2 = ((ak1 ^ (ak1 >> (uint)(13u))) * (uint)(3266489917u));

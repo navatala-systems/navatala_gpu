@@ -23,17 +23,17 @@ __kernel void navatala_vector_search_prune_excess_degree_sorted(__global uint* g
   uint inv = invalid_id[0];
   __local uint shared_ids[128];
   __local float shared_dists[128];
-  if ((vid < nv)) {
+  if (vid < nv) {
     uint deg = degrees[vid];
-    if ((deg > tmd)) {
-      if ((tid < deg)) {
+    if (deg > tmd) {
+      if (tid < deg) {
         uint read_idx = ((vid * cmd) + tid);
         uint neighbor_id = graph[read_idx];
         float neighbor_dist = neighbor_distances[read_idx];
         shared_ids[tid] = neighbor_id;
         shared_dists[tid] = neighbor_dist;
       } else {
-        if ((tid < (uint)(128u))) {
+        if (tid < (uint)(128u)) {
           shared_ids[tid] = inv;
           shared_dists[tid] = as_float(0x7e967699u);
         }
@@ -44,11 +44,11 @@ __kernel void navatala_vector_search_prune_excess_degree_sorted(__global uint* g
           uint half_net = ((uint)(1u) << (stage - substage));
           uint partner = (tid ^ half_net);
           uint direction_bit = ((tid >> (stage + (uint)(1u))) & (uint)(1u));
-          if ((partner < (uint)(128u))) {
+          if (partner < (uint)(128u)) {
             float my_dist = shared_dists[tid];
             float partner_d = shared_dists[partner];
             uint should_swap = (((tid < partner)) ? ((((direction_bit == (uint)(0u))) ? ((((my_dist > partner_d)) ? ((uint)(1u)) : ((uint)(0u)))) : ((((my_dist < partner_d)) ? ((uint)(1u)) : ((uint)(0u)))))) : ((uint)(0u)));
-            if ((should_swap == (uint)(1u))) {
+            if (should_swap == (uint)(1u)) {
               uint my_id = shared_ids[tid];
               uint partner_id = shared_ids[partner];
               shared_ids[tid] = partner_id;
@@ -60,16 +60,16 @@ __kernel void navatala_vector_search_prune_excess_degree_sorted(__global uint* g
           barrier(CLK_LOCAL_MEM_FENCE);
         }
       }
-      if ((tid < cmd)) {
+      if (tid < cmd) {
         uint write_idx = ((vid * cmd) + tid);
-        if ((tid < tmd)) {
+        if (tid < tmd) {
           uint sorted_id = shared_ids[tid];
           graph[write_idx] = sorted_id;
         } else {
           graph[write_idx] = inv;
         }
       }
-      if ((tid == (uint)(0u))) {
+      if (tid == (uint)(0u)) {
         degrees[vid] = tmd;
       }
     }

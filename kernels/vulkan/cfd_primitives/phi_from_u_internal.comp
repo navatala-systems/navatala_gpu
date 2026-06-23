@@ -53,7 +53,7 @@ layout(std430, binding = 10) writeonly buffer buf_outPhi {
 // kernel: navatala_cfd_primitives_phi_from_u_internal
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) >= int(params[1]))) {
+  if (int(gl_GlobalInvocationID.x) >= int(params[1])) {
     return;
   } else {
     int o = owner[int(gl_GlobalInvocationID.x)];

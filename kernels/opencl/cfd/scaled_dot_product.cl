@@ -20,7 +20,7 @@ __kernel void navatala_cfd_scaled_dot_product(__global const float* q, __global 
   int nk = numK[0];
   int hd = headDim[0];
   int total = (nq * nk);
-  if ((gid < total)) {
+  if (gid < total) {
     int qi = (gid / nk);
     int kj = (gid % nk);
     float acc = as_float(0x00000000u);

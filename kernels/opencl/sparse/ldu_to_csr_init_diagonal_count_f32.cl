@@ -17,7 +17,7 @@ __kernel void navatala_sparse_ldu_to_csr_init_diagonal_count_f32(__global const 
   int gid0 = (int)get_global_id(0);
   int cell = (int)(get_global_id(0));
   int N = ((int)(nCells[0]));
-  if ((cell < N)) {
+  if (cell < N) {
     rowNnz[cell] = (uint)(1u);
   }
 }

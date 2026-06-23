@@ -18,13 +18,13 @@ extern "C" __global__ void navatala_sparse_ell_sp_m_v_f32(const unsigned int* el
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int maxNnz = ((int)(maxNnzPerRow[0]));
     float sum = __uint_as_float(0x00000000u);
     for (int j = 0; j < (int)(maxNnz); ++j) {
       int ellIdx = ((gid * maxNnz) + j);
       unsigned int col = ellColIdx[ellIdx];
-      if ((col < 4294967295u)) {
+      if (col < 4294967295u) {
         float a = ellValues[ellIdx];
         float xj = x[((int)(col))];
         sum = (sum + (a * xj));

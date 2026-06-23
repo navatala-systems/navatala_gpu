@@ -17,10 +17,10 @@ __kernel void navatala_graph_peel_below_threshold_u32(__global uint* _active, __
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     uint deg = degrees[gid];
     uint k = threshold[0];
-    if ((deg < k)) {
+    if (deg < k) {
       _active[gid] = (uint)(0u);
     }
   }

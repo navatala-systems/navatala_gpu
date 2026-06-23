@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_idr_g_space_update_f32(const float* d
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float a = alpha[0];
     float dj = dRj[gid];
     float dk = dRk[gid];

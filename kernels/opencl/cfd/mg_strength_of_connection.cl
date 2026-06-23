@@ -18,7 +18,7 @@ __kernel void navatala_cfd_mg_strength_of_connection(__global const float* diag,
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[1])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[1]))) {
     return;
   } else {
     int o = owner[(int)(get_global_id(0))];
@@ -26,7 +26,7 @@ __kernel void navatala_cfd_mg_strength_of_connection(__global const float* diag,
     float dO = fabs(diag[o]);
     float dN = fabs(diag[n]);
     float denomSq = (dO * dN);
-    if ((denomSq > as_float(0x0da24260u))) {
+    if (denomSq > as_float(0x0da24260u)) {
       strength[(int)(get_global_id(0))] = (fabs(upper[(int)(get_global_id(0))]) / sqrt(denomSq));
     } else {
       strength[(int)(get_global_id(0))] = as_float(0x00000000u);

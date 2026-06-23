@@ -18,7 +18,7 @@ __kernel void navatala_linalg_extract_diagonal_f32(__global const float* A, __gl
   uint gid = ((uint)((int)(get_global_id(0))));
   uint idx = gid;
   uint size = n[(uint)(0u)];
-  if ((idx < size)) {
+  if (idx < size) {
     uint stride = (size + (uint)(1u));
     uint srcIdx = (idx * stride);
     float val = A[srcIdx];

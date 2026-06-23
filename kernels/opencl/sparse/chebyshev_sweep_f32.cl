@@ -17,7 +17,7 @@ __kernel void navatala_sparse_chebyshev_sweep_f32(__global const float* r, __glo
   int gid0 = (int)get_global_id(0);
   int i = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     float cA = coeffA[0];
     float cB = coeffB[0];
     float ri = r[i];

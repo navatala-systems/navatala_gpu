@@ -26,7 +26,7 @@ __kernel void navatala_vector_search_reduce_inertia_f32(__global const float* mi
   barrier(CLK_LOCAL_MEM_FENCE);
   uint stride = (uint)(128u);
   for (int __iter = 0; __iter < 8; ++__iter) {
-    if (!((stride > (uint)(0u)))) break;
+    if (!(stride > (uint)(0u))) break;
     uint s = stride;
     bool should_reduce = (lid < s);
     if (should_reduce) {

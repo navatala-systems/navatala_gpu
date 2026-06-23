@@ -32,7 +32,7 @@ void main() {
   uint gid = uint(int(gl_GlobalInvocationID.x));
   uint idx = gid;
   uint size = n[0u];
-  if ((idx < size)) {
+  if (idx < size) {
     uint stride = (size + 1u);
     uint srcIdx = (idx * stride);
     double val = A[srcIdx];

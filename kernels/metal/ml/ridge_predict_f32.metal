@@ -41,7 +41,7 @@ kernel void navatala_ml_ridge_predict_f32(device const float* X [[buffer(0)]], d
     uint pred32_reductionStride = 128u;
     for (int pred32_reductionStep = 0; pred32_reductionStep < (int)(8); ++pred32_reductionStep) {
       uint pred32_stride = pred32_reductionStride;
-      if ((lid < pred32_stride)) {
+      if (lid < pred32_stride) {
         float pred32_other = sdata[(lid + pred32_stride)];
         float pred32_mine = sdata[lid];
         float pred32_sum = (pred32_mine + pred32_other);
@@ -52,7 +52,7 @@ kernel void navatala_ml_ridge_predict_f32(device const float* X [[buffer(0)]], d
       pred32_reductionStride = pred32_nextStride;
       threadgroup_barrier(mem_flags::mem_threadgroup);
     }
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       float dotProduct = sdata[0];
       yPred[rowIdx] = dotProduct;
     }

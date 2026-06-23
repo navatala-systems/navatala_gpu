@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_vector_search_select_neighbors_simple_f32(co
   unsigned int tid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int n_cand = n_candidates[0];
   unsigned int m_val = m[0];
-  if ((tid == 0u)) {
+  if (tid == 0u) {
     unsigned int limit = (((n_cand < m_val)) ? (n_cand) : (m_val));
     for (int i = 0; i < (int)(limit); ++i) {
       unsigned int cand = candidates[i];

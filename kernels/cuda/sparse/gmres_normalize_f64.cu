@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_gmres_normalize_f64(const double* w, 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double nm = norm[0];
     double wi = w[gid];
     v[gid] = (wi / nm);

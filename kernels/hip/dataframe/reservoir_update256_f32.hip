@@ -16,7 +16,7 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_reservoir_update256_f32(const float* x, float* reservoir, unsigned int* count, unsigned int* seed) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float xVal = x[0];
     unsigned int n = count[0];
     unsigned int s = seed[0];

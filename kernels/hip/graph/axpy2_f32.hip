@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_graph_axpy2_f32(const float* x, const float*
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float alphaV = alpha[0];
     float betaV = beta[0];
     float xv = x[gid];

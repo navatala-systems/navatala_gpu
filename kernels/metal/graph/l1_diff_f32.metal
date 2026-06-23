@@ -24,7 +24,7 @@ kernel void navatala_graph_l1_diff_f32(device const float* a [[buffer(0)]], devi
   float gsAcc = as_type<float>(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     uint idx = (lid + (((uint)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       float av = a[idx];
       float bv = b[idx];
       float d = abs((av - bv));
@@ -36,7 +36,7 @@ kernel void navatala_graph_l1_diff_f32(device const float* a [[buffer(0)]], devi
   uint redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -47,7 +47,7 @@ kernel void navatala_graph_l1_diff_f32(device const float* a [[buffer(0)]], devi
     redStride = nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0] = sdata[0];
   }
 }

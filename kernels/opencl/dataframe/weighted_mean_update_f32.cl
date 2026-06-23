@@ -15,7 +15,7 @@
 
 __kernel void navatala_dataframe_weighted_mean_update_f32(__global const float* x, __global const float* w, __global float* weightSum, __global float* mean) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float wOld = weightSum[0];
     float meanOld = mean[0];
     float xVal = x[0];

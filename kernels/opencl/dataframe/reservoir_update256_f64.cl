@@ -16,7 +16,7 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_reservoir_update256_f64(__global const double* x, __global double* reservoir, __global uint* count, __global uint* seed) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double xVal = x[0];
     uint n = count[0];
     uint s = seed[0];

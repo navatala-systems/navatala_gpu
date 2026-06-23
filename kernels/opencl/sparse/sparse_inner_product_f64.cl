@@ -25,7 +25,7 @@ __kernel void navatala_sparse_sparse_inner_product_f64(__global const double* a,
   uint gridSize = ((uint)((int)(get_global_size(0))));
   for (int loopIdx = 0; loopIdx < (int)(nnzVal); ++loopIdx) {
     uint currentIdx = idxAccum;
-    if ((currentIdx < nnzVal)) {
+    if (currentIdx < nnzVal) {
       double aVal = a[currentIdx];
       double bVal = b[currentIdx];
       double prod = (aVal * bVal);
@@ -43,7 +43,7 @@ __kernel void navatala_sparse_sparse_inner_product_f64(__global const double* a,
   uint strideAccum = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint currentStride = strideAccum;
-    if ((lidU32 < currentStride)) {
+    if (lidU32 < currentStride) {
       uint otherIdx = (lidU32 + currentStride);
       double myVal = sdata[lidU32];
       double otherVal = sdata[otherIdx];
@@ -54,7 +54,7 @@ __kernel void navatala_sparse_sparse_inner_product_f64(__global const double* a,
     strideAccum = nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lidU32 == (uint)(0u))) {
+  if (lidU32 == (uint)(0u)) {
     result[(uint)(0u)] = sdata[(uint)(0u)];
   }
 }

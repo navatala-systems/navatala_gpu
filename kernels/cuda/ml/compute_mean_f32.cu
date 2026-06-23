@@ -31,7 +31,7 @@ extern "C" __global__ void navatala_ml_compute_mean_f32(const float* y, const un
   unsigned int meanF32Stride = 128u;
   for (int reductionStep5 = 0; reductionStep5 < (int)(8); ++reductionStep5) {
     unsigned int stride5 = meanF32Stride;
-    if ((lid < stride5)) {
+    if (lid < stride5) {
       float other = sdata[(lid + stride5)];
       float mine = sdata[lid];
       float sum = (mine + other);
@@ -42,7 +42,7 @@ extern "C" __global__ void navatala_ml_compute_mean_f32(const float* y, const un
     meanF32Stride = nextStride5;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float totalSum = sdata[0];
     float nFloat = ((float)(n));
     float meanVal = (totalSum / nFloat);

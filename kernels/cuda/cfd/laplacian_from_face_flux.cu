@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_laplacian_from_face_flux(const float* faceFlux, const int* offsets, const int* faceIdx, const float* signF, const float* vol, const int* counts, float* outLap) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= counts[0])) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= counts[0]) {
     return;
   } else {
     int beg = offsets[(int)(blockIdx.x * blockDim.x + threadIdx.x)];

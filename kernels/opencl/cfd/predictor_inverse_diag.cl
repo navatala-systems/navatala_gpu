@@ -15,11 +15,11 @@
 
 __kernel void navatala_cfd_predictor_inverse_diag(__global const float* inputDiag, __global const int* counts1, __global float* outRAU) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= counts1[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts1[0]) {
     return;
   } else {
     float a = inputDiag[((int)((int)(get_global_id(0))))];
-    if ((a != as_float(0x00000000u))) {
+    if (a != as_float(0x00000000u)) {
       outRAU[((int)((int)(get_global_id(0))))] = (as_float(0x3f800000u) / a);
     } else {
       outRAU[((int)((int)(get_global_id(0))))] = as_float(0x00000000u);

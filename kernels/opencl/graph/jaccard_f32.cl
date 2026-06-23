@@ -17,7 +17,7 @@ __kernel void navatala_graph_jaccard_f32(__global const uint* inter, __global co
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint numP = numPairs[0];
-  if ((gid < numP)) {
+  if (gid < numP) {
     uint a = pairsA[gid];
     uint b = pairsB[gid];
     uint iU = inter[gid];

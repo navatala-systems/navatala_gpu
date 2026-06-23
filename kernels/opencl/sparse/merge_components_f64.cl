@@ -16,15 +16,15 @@
 __kernel void navatala_sparse_merge_components_f64(__global const uint* srcNodes, __global const uint* dstNodes, __global const uint* minEdgeIdx, __global const uint* numNodes, __global uint* components, __global bool* mstEdges) {
   int gid0 = (int)get_global_id(0);
   uint nodeId = ((uint)((int)(get_global_id(0))));
-  if ((nodeId < numNodes[(uint)(0u)])) {
+  if (nodeId < numNodes[(uint)(0u)]) {
     uint comp = components[nodeId];
-    if ((comp == nodeId)) {
+    if (comp == nodeId) {
       uint edgeIdx = minEdgeIdx[nodeId];
-      if ((edgeIdx != (uint)(4294967295u))) {
+      if (edgeIdx != (uint)(4294967295u)) {
         uint src = srcNodes[edgeIdx];
         uint dst = dstNodes[edgeIdx];
         uint dstComp = components[dst];
-        if ((nodeId != dstComp)) {
+        if (nodeId != dstComp) {
           uint smaller = (((nodeId < dstComp)) ? (nodeId) : (dstComp));
           uint larger = (((nodeId < dstComp)) ? (dstComp) : (nodeId));
           atomic_min(&components[larger], smaller);

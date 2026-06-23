@@ -45,7 +45,7 @@ extern "C" __global__ void navatala_dataframe_arg_max_f64(const double* _input, 
   unsigned int amf64_reductionStride = 128u;
   for (int amf64_reductionStep = 0; amf64_reductionStep < (int)(8); ++amf64_reductionStep) {
     unsigned int amf64_stride = amf64_reductionStride;
-    if ((lid < amf64_stride)) {
+    if (lid < amf64_stride) {
       otherVal = svals[(lid + amf64_stride)];
       otherIdx = sidxs[(lid + amf64_stride)];
       myVal = svals[lid];
@@ -65,7 +65,7 @@ extern "C" __global__ void navatala_dataframe_arg_max_f64(const double* _input, 
     amf64_reductionStride = amf64_nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     maxValue[0] = svals[0];
     maxIndex[0] = sidxs[0];
   }

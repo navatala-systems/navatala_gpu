@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_cfd_k_omega_s_s_t_sources(device const float* k [[buffer(0)]], device const float* omega [[buffer(1)]], device const float* nut [[buffer(2)]], device const float* nu [[buffer(3)]], device const float* alpha [[buffer(4)]], device const float* rho [[buffer(5)]], device const float* F1 [[buffer(6)]], device const float* F23 [[buffer(7)]], device const float* CDkOmega [[buffer(8)]], device const float* S2 [[buffer(9)]], device const float* divU [[buffer(10)]], device const int* counts [[buffer(11)]], device float* outOmegaSp [[buffer(12)]], device float* outOmegaSuSp1 [[buffer(13)]], device float* outOmegaSuSp2 [[buffer(14)]], device float* outOmegaExpl [[buffer(15)]], device float* outKSp [[buffer(16)]], device float* outKSuSp [[buffer(17)]], device float* outKExpl [[buffer(18)]], device float* outDomegaEff [[buffer(19)]], device float* outDkEff [[buffer(20)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     float kC = k[((int)(int(__gid.x)))];

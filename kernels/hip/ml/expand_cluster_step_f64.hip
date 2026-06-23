@@ -51,7 +51,7 @@ extern "C" __global__ void navatala_ml_expand_cluster_step_f64(const double* poi
             distSqAccum = newDistSq;
           }
           double finalDistSq = distSqAccum;
-          if ((finalDistSq < epsSq)) {
+          if (finalDistSq < epsSq) {
             newLabelAccum = jLabel;
           }
         }

@@ -32,7 +32,7 @@ layout(std430, binding = 3) writeonly buffer buf_Cxy {
 // kernel: navatala_dataframe_init_covariance_state_f32
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) == 0)) {
+  if (int(gl_GlobalInvocationID.x) == 0) {
     count[0] = 0u;
     meanX[0] = uintBitsToFloat(0x00000000u);
     meanY[0] = uintBitsToFloat(0x00000000u);

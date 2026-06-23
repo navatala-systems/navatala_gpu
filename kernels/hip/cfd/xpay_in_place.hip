@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_cfd_xpay_in_place(const float* z, const floa
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= counts[0])) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= counts[0]) {
     return;
   } else {
     pOut[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = (z[(int)(blockIdx.x * blockDim.x + threadIdx.x)] + (paramsF[0] * pIn[(int)(blockIdx.x * blockDim.x + threadIdx.x)]));

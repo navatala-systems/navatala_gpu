@@ -17,14 +17,14 @@
 using namespace metal;
 
 kernel void navatala_cfd_fvm_su_sp(device const float* sp [[buffer(0)]], device const float* psi [[buffer(1)]], device const float* vol [[buffer(2)]], device const int* counts [[buffer(3)]], device float* outDiag [[buffer(4)]], device float* outSource [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     float spVal = sp[((int)(int(__gid.x)))];
     float psiVal = psi[((int)(int(__gid.x)))];
     float volVal = vol[((int)(int(__gid.x)))];
     float spVol = (spVal * volVal);
-    if ((spVal >= as_type<float>(0x00000000u))) {
+    if (spVal >= as_type<float>(0x00000000u)) {
       float prevDiag = outDiag[((int)(int(__gid.x)))];
       float newDiag = (prevDiag + spVol);
       outDiag[((int)(int(__gid.x)))] = newDiag;

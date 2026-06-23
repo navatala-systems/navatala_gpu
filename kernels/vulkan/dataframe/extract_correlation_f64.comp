@@ -32,7 +32,7 @@ layout(std430, binding = 3) writeonly buffer buf_correlation {
 // kernel: navatala_dataframe_extract_correlation_f64
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) == 0)) {
+  if (int(gl_GlobalInvocationID.x) == 0) {
     double cxyVal = Cxy[0];
     double m2xVal = M2x[0];
     double m2yVal = M2y[0];

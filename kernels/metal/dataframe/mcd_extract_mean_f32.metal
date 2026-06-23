@@ -18,7 +18,7 @@ using namespace metal;
 
 kernel void navatala_dataframe_mcd_extract_mean_f32(device const float* robustMeanX [[buffer(0)]], device const float* robustMeanY [[buffer(1)]], device float* meanX [[buffer(2)]], device float* meanY [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     float mx = robustMeanX[0];
     float my = robustMeanY[0];
     meanX[0] = mx;

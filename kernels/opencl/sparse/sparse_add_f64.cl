@@ -17,7 +17,7 @@
 __kernel void navatala_sparse_sparse_add_f64(__global const double* valuesA, __global const double* valuesB, __global const int* nnz, __global double* valuesC) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < nnz[(uint)(0u)])) {
+  if (i < nnz[(uint)(0u)]) {
     double a = valuesA[i];
     double b = valuesB[i];
     valuesC[i] = (a + b);

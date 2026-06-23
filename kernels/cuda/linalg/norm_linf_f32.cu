@@ -31,7 +31,7 @@ extern "C" __global__ void navatala_linalg_norm_linf_f32(const float* _input, co
   unsigned int linfF32RedStride = 128u;
   for (int linfF32RedStep = 0; linfF32RedStep < (int)(8); ++linfF32RedStep) {
     unsigned int linfF32Stride = linfF32RedStride;
-    if ((lid < linfF32Stride)) {
+    if (lid < linfF32Stride) {
       float other = sdata[(lid + linfF32Stride)];
       float mine = sdata[lid];
       bool mineGtOther = (mine > other);
@@ -43,7 +43,7 @@ extern "C" __global__ void navatala_linalg_norm_linf_f32(const float* _input, co
     linfF32RedStride = linfF32NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0] = sdata[0];
   }
 }

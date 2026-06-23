@@ -32,7 +32,7 @@ layout(std430, binding = 3) buffer buf_y {
 // kernel: navatala_cfd_axpy_cells
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= counts[0])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= counts[0]) {
     return;
   } else {
     float xVal = x[int(int(gl_GlobalInvocationID.x))];

@@ -18,7 +18,7 @@ __kernel void navatala_sparse_sparse_threshold_f64(__global const double* values
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
   double thresh = threshold[(uint)(0u)];
-  if ((i < nnz[(uint)(0u)])) {
+  if (i < nnz[(uint)(0u)]) {
     double a = valuesA[i];
     double absA = fabs(a);
     double result = (((absA >= thresh)) ? (a) : (as_double(0x0000000000000000ul)));

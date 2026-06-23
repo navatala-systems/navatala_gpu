@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_cfd_attention_row_softmax(const float* score
   int qi = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int nq = numQ[0];
   int nk = numK[0];
-  if ((qi < nq)) {
+  if (qi < nq) {
     int rowBase = (qi * nk);
     float maxScore = __uint_as_float(0xf149f2cau);
     for (int j = 0; j < (int)(nk); ++j) {

@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_block_gram_schmidt_f64(const double* 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int jVal = ((int)(j[0]));
     double xij = X[((jVal * N) + gid)];
     double v = xij;

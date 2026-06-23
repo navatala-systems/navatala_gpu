@@ -16,7 +16,7 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_cfd_laplacian_vector_explicit(const float* muCell, const float* muBc, const float* ux, const float* uy, const float* uz, const int* owner, const int* neighbour, const float* weights, const float* magSf, const float* deltaCoeffs, const float* corrX, const float* corrY, const float* corrZ, const float* gradRow0, const float* gradRow1, const float* gradRow2, const int* offsets, const int* faceIdx, const int* sign, const float* vol, const float* bcX, const float* bcY, const float* bcZ, const int* bcMask, const int* params, float* outX, float* outY, float* outZ) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0]) {
     return;
   } else {
     float ucx = ux[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
@@ -33,15 +33,15 @@ extern "C" __global__ void navatala_cfd_laplacian_vector_explicit(const float* m
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < params[1])) {
+      if (f < params[1]) {
         int sgn = sign[k];
         int o = owner[f];
         float otherX = ux[o];
         float otherY = uy[o];
         float otherZ = uz[o];
         float muF = muC;
-        if ((sgn > 0)) {
-          if ((f < params[2])) {
+        if (sgn > 0) {
+          if (f < params[2]) {
             int n = neighbour[f];
             otherX = ux[n];
             otherY = uy[n];
@@ -51,7 +51,7 @@ extern "C" __global__ void navatala_cfd_laplacian_vector_explicit(const float* m
             muF = ((w0 * muC) + (iw * muCell[n]));
           } else {
             muF = muBc[f];
-            if ((bcMask[f] == 1)) {
+            if (bcMask[f] == 1) {
               float w0 = weights[f];
               float iw = (__uint_as_float(0x3f800000u) - w0);
               muF = ((w0 * muC) + (iw * muBc[f]));
@@ -59,7 +59,7 @@ extern "C" __global__ void navatala_cfd_laplacian_vector_explicit(const float* m
               otherY = bcY[f];
               otherZ = bcZ[f];
             } else {
-              if ((bcMask[f] != 0)) {
+              if (bcMask[f] != 0) {
                 otherX = bcX[f];
                 otherY = bcY[f];
                 otherZ = bcZ[f];
@@ -87,7 +87,7 @@ extern "C" __global__ void navatala_cfd_laplacian_vector_explicit(const float* m
         float gzxF = gradRow2[((o)*3 + 0)];
         float gzyF = gradRow2[((o)*3 + 1)];
         float gzzF = gradRow2[((o)*3 + 2)];
-        if ((f < params[2])) {
+        if (f < params[2]) {
           int n2 = neighbour[f];
           float w1 = weights[f];
           float iw1 = (__uint_as_float(0x3f800000u) - w1);
@@ -113,7 +113,7 @@ extern "C" __global__ void navatala_cfd_laplacian_vector_explicit(const float* m
     }
     float v = vol[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float invV = __uint_as_float(0x00000000u);
-    if ((v != __uint_as_float(0x00000000u))) {
+    if (v != __uint_as_float(0x00000000u)) {
       invV = (__uint_as_float(0x3f800000u) / v);
     }
     outX[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (sumX * invV);

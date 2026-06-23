@@ -17,7 +17,7 @@ __kernel void navatala_linalg_elt_pow_f32(__global const float* A, __global cons
   int gid0 = (int)get_global_id(0);
   uint i = ((uint)((int)(get_global_id(0))));
   float pVal = p[(uint)(0u)];
-  if ((i < n[(uint)(0u)])) {
+  if (i < n[(uint)(0u)]) {
     float a = A[i];
     float logA = log(a);
     float pLogA = (pVal * logA);

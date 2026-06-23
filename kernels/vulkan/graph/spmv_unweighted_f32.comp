@@ -37,7 +37,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   uint gid = uint(int(gl_GlobalInvocationID.x));
   uint numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     uint base = offsets[gid];
     uint endv = offsets[(gid + 1u)];
     uint rowlen = (endv - base);

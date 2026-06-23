@@ -32,7 +32,7 @@ extern "C" __global__ void navatala_ml_explained_variance_ratio_f64(const double
   unsigned int varRatioF64RedStride = 128u;
   for (int varRatioF64RedStep = 0; varRatioF64RedStep < (int)(8); ++varRatioF64RedStep) {
     unsigned int varRatioF64Stride = varRatioF64RedStride;
-    if ((lid < varRatioF64Stride)) {
+    if (lid < varRatioF64Stride) {
       double other = sdata[(lid + varRatioF64Stride)];
       double mine = sdata[lid];
       double sumVal = (mine + other);

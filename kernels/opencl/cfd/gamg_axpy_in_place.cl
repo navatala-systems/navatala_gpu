@@ -15,7 +15,7 @@
 
 __kernel void navatala_cfd_gamg_axpy_in_place(__global const float* x, __global const float* alpha, __global const uint* nRows, __global float* y) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(nRows[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(nRows[0]))) {
     return;
   } else {
     float a = alpha[0];

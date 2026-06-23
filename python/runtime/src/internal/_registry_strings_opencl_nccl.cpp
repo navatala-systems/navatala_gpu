@@ -14,7 +14,7 @@ __kernel void navatala_nccl_direct_send_f32(__global const float* src, __global 
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float val = src[gid];
     dst[gid] = val;
   }
@@ -27,7 +27,7 @@ __kernel void navatala_nccl_direct_send_f16(__global const half* src, __global c
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half val = src[gid];
     dst[gid] = val;
   }
@@ -39,7 +39,7 @@ __kernel void navatala_nccl_direct_send_i32(__global const int* src, __global co
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int val = src[gid];
     dst[gid] = val;
   }
@@ -51,7 +51,7 @@ __kernel void navatala_nccl_direct_recv_f32(__global const float* src, __global 
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float val = src[gid];
     dst[gid] = val;
   }
@@ -64,7 +64,7 @@ __kernel void navatala_nccl_direct_recv_f16(__global const half* src, __global c
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half val = src[gid];
     dst[gid] = val;
   }
@@ -76,7 +76,7 @@ __kernel void navatala_nccl_direct_recv_i32(__global const int* src, __global co
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int val = src[gid];
     dst[gid] = val;
   }
@@ -88,7 +88,7 @@ __kernel void navatala_nccl_reduce_local_sum_f32(__global const float* a, __glob
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float va = a[gid];
     float vb = b[gid];
     float result = (va + vb);
@@ -103,7 +103,7 @@ __kernel void navatala_nccl_reduce_local_sum_f16(__global const half* a, __globa
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half va = a[gid];
     half vb = b[gid];
     half result = (va + vb);
@@ -117,7 +117,7 @@ __kernel void navatala_nccl_reduce_local_sum_i32(__global const int* a, __global
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int va = a[gid];
     int vb = b[gid];
     int result = (va + vb);
@@ -131,7 +131,7 @@ __kernel void navatala_nccl_reduce_local_min_f32(__global const float* a, __glob
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float va = a[gid];
     float vb = b[gid];
     bool aLtB = (va < vb);
@@ -147,7 +147,7 @@ __kernel void navatala_nccl_reduce_local_min_f16(__global const half* a, __globa
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half va = a[gid];
     half vb = b[gid];
     bool aLtB = (va < vb);
@@ -162,7 +162,7 @@ __kernel void navatala_nccl_reduce_local_min_i32(__global const int* a, __global
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int va = a[gid];
     int vb = b[gid];
     bool aLtB = (va < vb);
@@ -177,7 +177,7 @@ __kernel void navatala_nccl_reduce_local_max_f32(__global const float* a, __glob
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float va = a[gid];
     float vb = b[gid];
     bool aGtB = (va > vb);
@@ -193,7 +193,7 @@ __kernel void navatala_nccl_reduce_local_max_f16(__global const half* a, __globa
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half va = a[gid];
     half vb = b[gid];
     bool aGtB = (va > vb);
@@ -208,7 +208,7 @@ __kernel void navatala_nccl_reduce_local_max_i32(__global const int* a, __global
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int va = a[gid];
     int vb = b[gid];
     bool aGtB = (va > vb);
@@ -223,7 +223,7 @@ __kernel void navatala_nccl_ring_reduce_scatter_step_sum_f32(__global const floa
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float inVal = incoming[gid];
     float locVal = local_buf[gid];
     float reduced = (inVal + locVal);
@@ -238,7 +238,7 @@ __kernel void navatala_nccl_ring_reduce_scatter_step_sum_f16(__global const half
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half inVal = incoming[gid];
     half locVal = local_buf[gid];
     half reduced = (inVal + locVal);
@@ -252,7 +252,7 @@ __kernel void navatala_nccl_ring_reduce_scatter_step_sum_i32(__global const int*
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int inVal = incoming[gid];
     int locVal = local_buf[gid];
     int reduced = (inVal + locVal);
@@ -266,7 +266,7 @@ __kernel void navatala_nccl_ring_reduce_scatter_step_min_f32(__global const floa
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float inVal = incoming[gid];
     float locVal = local_buf[gid];
     bool cmp = (inVal < locVal);
@@ -282,7 +282,7 @@ __kernel void navatala_nccl_ring_reduce_scatter_step_min_f16(__global const half
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half inVal = incoming[gid];
     half locVal = local_buf[gid];
     bool cmp = (inVal < locVal);
@@ -297,7 +297,7 @@ __kernel void navatala_nccl_ring_reduce_scatter_step_min_i32(__global const int*
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int inVal = incoming[gid];
     int locVal = local_buf[gid];
     bool cmp = (inVal < locVal);
@@ -312,7 +312,7 @@ __kernel void navatala_nccl_ring_reduce_scatter_step_max_f32(__global const floa
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float inVal = incoming[gid];
     float locVal = local_buf[gid];
     bool cmp = (inVal > locVal);
@@ -328,7 +328,7 @@ __kernel void navatala_nccl_ring_reduce_scatter_step_max_f16(__global const half
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half inVal = incoming[gid];
     half locVal = local_buf[gid];
     bool cmp = (inVal > locVal);
@@ -343,7 +343,7 @@ __kernel void navatala_nccl_ring_reduce_scatter_step_max_i32(__global const int*
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int inVal = incoming[gid];
     int locVal = local_buf[gid];
     bool cmp = (inVal > locVal);
@@ -358,7 +358,7 @@ __kernel void navatala_nccl_ring_all_gather_step_f32(__global const float* incom
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float val = incoming[gid];
     local_chunk[gid] = val;
     outgoing[gid] = val;
@@ -372,7 +372,7 @@ __kernel void navatala_nccl_ring_all_gather_step_f16(__global const half* incomi
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half val = incoming[gid];
     local_chunk[gid] = val;
     outgoing[gid] = val;
@@ -385,7 +385,7 @@ __kernel void navatala_nccl_ring_all_gather_step_i32(__global const int* incomin
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int val = incoming[gid];
     local_chunk[gid] = val;
     outgoing[gid] = val;
@@ -398,7 +398,7 @@ __kernel void navatala_nccl_ring_all_reduce_sum_f32(__global const float* sendbu
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float myVal = sendbuf[gid];
     float peerVal = peer_buf[gid];
     float reduced = (myVal + peerVal);
@@ -413,7 +413,7 @@ __kernel void navatala_nccl_ring_all_reduce_sum_f16(__global const half* sendbuf
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half myVal = sendbuf[gid];
     half peerVal = peer_buf[gid];
     half reduced = (myVal + peerVal);
@@ -427,7 +427,7 @@ __kernel void navatala_nccl_ring_all_reduce_sum_i32(__global const int* sendbuf,
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int myVal = sendbuf[gid];
     int peerVal = peer_buf[gid];
     int reduced = (myVal + peerVal);
@@ -441,7 +441,7 @@ __kernel void navatala_nccl_ring_all_gather_f32(__global const float* incoming, 
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float val = incoming[gid];
     local_slot[gid] = val;
     outgoing[gid] = val;
@@ -455,7 +455,7 @@ __kernel void navatala_nccl_ring_all_gather_f16(__global const half* incoming, _
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half val = incoming[gid];
     local_slot[gid] = val;
     outgoing[gid] = val;
@@ -468,7 +468,7 @@ __kernel void navatala_nccl_ring_all_gather_i32(__global const int* incoming, __
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int val = incoming[gid];
     local_slot[gid] = val;
     outgoing[gid] = val;
@@ -481,7 +481,7 @@ __kernel void navatala_nccl_linear_broadcast_f32(__global const float* src, __gl
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float val = src[gid];
     dst[gid] = val;
   }
@@ -494,7 +494,7 @@ __kernel void navatala_nccl_linear_broadcast_f16(__global const half* src, __glo
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half val = src[gid];
     dst[gid] = val;
   }
@@ -506,7 +506,7 @@ __kernel void navatala_nccl_linear_broadcast_i32(__global const int* src, __glob
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int val = src[gid];
     dst[gid] = val;
   }

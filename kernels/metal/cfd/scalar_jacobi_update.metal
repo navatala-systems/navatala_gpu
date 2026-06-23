@@ -17,15 +17,15 @@
 using namespace metal;
 
 kernel void navatala_cfd_scalar_jacobi_update(device const float* ax [[buffer(0)]], device const float* diag [[buffer(1)]], device const float* rhs [[buffer(2)]], device const float* params [[buffer(3)]], device const uint* counts [[buffer(4)]], device float* x [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(counts[0])))) {
+  if (int(__gid.x) >= ((int)(counts[0]))) {
     return;
   } else {
     float smallDiag = params[0];
     float omega = params[1];
     float d = diag[int(__gid.x)];
     float absD = abs(d);
-    if ((absD < smallDiag)) {
-      if ((d >= as_type<float>(0x00000000u))) {
+    if (absD < smallDiag) {
+      if (d >= as_type<float>(0x00000000u)) {
         d = smallDiag;
       } else {
         d = (-smallDiag);

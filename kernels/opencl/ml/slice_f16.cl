@@ -18,7 +18,7 @@ __kernel void navatala_ml_slice_f16(__global const half* _input, __global const 
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     uint offsetVal = offset[0];
     uint srcIdx = (offsetVal + gid);
     half v = _input[srcIdx];

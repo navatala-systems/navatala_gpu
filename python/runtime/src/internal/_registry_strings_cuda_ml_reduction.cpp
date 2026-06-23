@@ -20,7 +20,7 @@ extern "C" __global__ void navatala_ml_reduction_sum_f32(const float* _input, co
   float gsAcc = __uint_as_float(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       float raw = _input[idx];
       float v = raw;
       gsAcc = (gsAcc + v);
@@ -31,7 +31,7 @@ extern "C" __global__ void navatala_ml_reduction_sum_f32(const float* _input, co
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -42,7 +42,7 @@ extern "C" __global__ void navatala_ml_reduction_sum_f32(const float* _input, co
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -63,7 +63,7 @@ extern "C" __global__ void navatala_ml_reduction_prod_f32(const float* _input, c
   float gsAcc = __uint_as_float(0x3f800000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       float raw = _input[idx];
       float v = raw;
       gsAcc = (gsAcc * v);
@@ -74,7 +74,7 @@ extern "C" __global__ void navatala_ml_reduction_prod_f32(const float* _input, c
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine * other);
@@ -85,7 +85,7 @@ extern "C" __global__ void navatala_ml_reduction_prod_f32(const float* _input, c
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -106,7 +106,7 @@ extern "C" __global__ void navatala_ml_reduction_min_f32(const float* _input, co
   float gsAcc = __uint_as_float(0x7f7fc99eu);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       float raw = _input[idx];
       float v = raw;
       gsAcc = (((gsAcc < v)) ? (gsAcc) : (v));
@@ -117,7 +117,7 @@ extern "C" __global__ void navatala_ml_reduction_min_f32(const float* _input, co
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (((mine < other)) ? (mine) : (other));
@@ -128,7 +128,7 @@ extern "C" __global__ void navatala_ml_reduction_min_f32(const float* _input, co
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -149,7 +149,7 @@ extern "C" __global__ void navatala_ml_reduction_max_f32(const float* _input, co
   float gsAcc = __uint_as_float(0xff7fc99eu);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       float raw = _input[idx];
       float v = raw;
       gsAcc = (((gsAcc > v)) ? (gsAcc) : (v));
@@ -160,7 +160,7 @@ extern "C" __global__ void navatala_ml_reduction_max_f32(const float* _input, co
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (((mine > other)) ? (mine) : (other));
@@ -171,7 +171,7 @@ extern "C" __global__ void navatala_ml_reduction_max_f32(const float* _input, co
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -192,7 +192,7 @@ extern "C" __global__ void navatala_ml_reduction_amax_f32(const float* _input, c
   float gsAcc = __uint_as_float(0xff7fc99eu);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       float raw = _input[idx];
       float v = abs(raw);
       gsAcc = (((gsAcc > v)) ? (gsAcc) : (v));
@@ -203,7 +203,7 @@ extern "C" __global__ void navatala_ml_reduction_amax_f32(const float* _input, c
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (((mine > other)) ? (mine) : (other));
@@ -214,7 +214,7 @@ extern "C" __global__ void navatala_ml_reduction_amax_f32(const float* _input, c
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -235,7 +235,7 @@ extern "C" __global__ void navatala_ml_reduction_norm1_f32(const float* _input, 
   float gsAcc = __uint_as_float(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       float raw = _input[idx];
       float v = abs(raw);
       gsAcc = (gsAcc + v);
@@ -246,7 +246,7 @@ extern "C" __global__ void navatala_ml_reduction_norm1_f32(const float* _input, 
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -257,7 +257,7 @@ extern "C" __global__ void navatala_ml_reduction_norm1_f32(const float* _input, 
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -278,7 +278,7 @@ extern "C" __global__ void navatala_ml_reduction_avg_f32(const float* _input, co
   float gsAcc = __uint_as_float(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       float raw = _input[idx];
       float v = raw;
       gsAcc = (gsAcc + v);
@@ -289,7 +289,7 @@ extern "C" __global__ void navatala_ml_reduction_avg_f32(const float* _input, co
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -300,7 +300,7 @@ extern "C" __global__ void navatala_ml_reduction_avg_f32(const float* _input, co
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = (reduced / nF);
@@ -321,7 +321,7 @@ extern "C" __global__ void navatala_ml_reduction_norm2_f32(const float* _input, 
   float gsAcc = __uint_as_float(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       float raw = _input[idx];
       float v = (raw * raw);
       gsAcc = (gsAcc + v);
@@ -332,7 +332,7 @@ extern "C" __global__ void navatala_ml_reduction_norm2_f32(const float* _input, 
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -343,7 +343,7 @@ extern "C" __global__ void navatala_ml_reduction_norm2_f32(const float* _input, 
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = sqrt(reduced);
@@ -365,7 +365,7 @@ extern "C" __global__ void navatala_ml_reduction_sum_f16(const __half* _input, c
   float gsAcc = __uint_as_float(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       __half raw = _input[idx];
       float v = ((float)(raw));
       gsAcc = (gsAcc + v);
@@ -376,7 +376,7 @@ extern "C" __global__ void navatala_ml_reduction_sum_f16(const __half* _input, c
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -387,7 +387,7 @@ extern "C" __global__ void navatala_ml_reduction_sum_f16(const __half* _input, c
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -409,7 +409,7 @@ extern "C" __global__ void navatala_ml_reduction_prod_f16(const __half* _input, 
   float gsAcc = __uint_as_float(0x3f800000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       __half raw = _input[idx];
       float v = ((float)(raw));
       gsAcc = (gsAcc * v);
@@ -420,7 +420,7 @@ extern "C" __global__ void navatala_ml_reduction_prod_f16(const __half* _input, 
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine * other);
@@ -431,7 +431,7 @@ extern "C" __global__ void navatala_ml_reduction_prod_f16(const __half* _input, 
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -453,7 +453,7 @@ extern "C" __global__ void navatala_ml_reduction_min_f16(const __half* _input, c
   float gsAcc = __uint_as_float(0x7f7fc99eu);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       __half raw = _input[idx];
       float v = ((float)(raw));
       gsAcc = (((gsAcc < v)) ? (gsAcc) : (v));
@@ -464,7 +464,7 @@ extern "C" __global__ void navatala_ml_reduction_min_f16(const __half* _input, c
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (((mine < other)) ? (mine) : (other));
@@ -475,7 +475,7 @@ extern "C" __global__ void navatala_ml_reduction_min_f16(const __half* _input, c
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -497,7 +497,7 @@ extern "C" __global__ void navatala_ml_reduction_max_f16(const __half* _input, c
   float gsAcc = __uint_as_float(0xff7fc99eu);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       __half raw = _input[idx];
       float v = ((float)(raw));
       gsAcc = (((gsAcc > v)) ? (gsAcc) : (v));
@@ -508,7 +508,7 @@ extern "C" __global__ void navatala_ml_reduction_max_f16(const __half* _input, c
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (((mine > other)) ? (mine) : (other));
@@ -519,7 +519,7 @@ extern "C" __global__ void navatala_ml_reduction_max_f16(const __half* _input, c
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -541,7 +541,7 @@ extern "C" __global__ void navatala_ml_reduction_amax_f16(const __half* _input, 
   float gsAcc = __uint_as_float(0xff7fc99eu);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       __half raw = _input[idx];
       float v = abs(((float)(raw)));
       gsAcc = (((gsAcc > v)) ? (gsAcc) : (v));
@@ -552,7 +552,7 @@ extern "C" __global__ void navatala_ml_reduction_amax_f16(const __half* _input, 
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (((mine > other)) ? (mine) : (other));
@@ -563,7 +563,7 @@ extern "C" __global__ void navatala_ml_reduction_amax_f16(const __half* _input, 
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -585,7 +585,7 @@ extern "C" __global__ void navatala_ml_reduction_norm1_f16(const __half* _input,
   float gsAcc = __uint_as_float(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       __half raw = _input[idx];
       float v = abs(((float)(raw)));
       gsAcc = (gsAcc + v);
@@ -596,7 +596,7 @@ extern "C" __global__ void navatala_ml_reduction_norm1_f16(const __half* _input,
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -607,7 +607,7 @@ extern "C" __global__ void navatala_ml_reduction_norm1_f16(const __half* _input,
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -629,7 +629,7 @@ extern "C" __global__ void navatala_ml_reduction_avg_f16(const __half* _input, c
   float gsAcc = __uint_as_float(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       __half raw = _input[idx];
       float v = ((float)(raw));
       gsAcc = (gsAcc + v);
@@ -640,7 +640,7 @@ extern "C" __global__ void navatala_ml_reduction_avg_f16(const __half* _input, c
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -651,7 +651,7 @@ extern "C" __global__ void navatala_ml_reduction_avg_f16(const __half* _input, c
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = (reduced / nF);
@@ -673,7 +673,7 @@ extern "C" __global__ void navatala_ml_reduction_norm2_f16(const __half* _input,
   float gsAcc = __uint_as_float(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       __half raw = _input[idx];
       float v = (((float)(raw)) * ((float)(raw)));
       gsAcc = (gsAcc + v);
@@ -684,7 +684,7 @@ extern "C" __global__ void navatala_ml_reduction_norm2_f16(const __half* _input,
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -695,7 +695,7 @@ extern "C" __global__ void navatala_ml_reduction_norm2_f16(const __half* _input,
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = sqrt(reduced);
@@ -717,7 +717,7 @@ extern "C" __global__ void navatala_ml_reduction_sum_bf16(const __nv_bfloat16* _
   float gsAcc = __uint_as_float(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       __nv_bfloat16 raw = _input[idx];
       float v = ((float)(raw));
       gsAcc = (gsAcc + v);
@@ -728,7 +728,7 @@ extern "C" __global__ void navatala_ml_reduction_sum_bf16(const __nv_bfloat16* _
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -739,7 +739,7 @@ extern "C" __global__ void navatala_ml_reduction_sum_bf16(const __nv_bfloat16* _
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -761,7 +761,7 @@ extern "C" __global__ void navatala_ml_reduction_prod_bf16(const __nv_bfloat16* 
   float gsAcc = __uint_as_float(0x3f800000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       __nv_bfloat16 raw = _input[idx];
       float v = ((float)(raw));
       gsAcc = (gsAcc * v);
@@ -772,7 +772,7 @@ extern "C" __global__ void navatala_ml_reduction_prod_bf16(const __nv_bfloat16* 
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine * other);
@@ -783,7 +783,7 @@ extern "C" __global__ void navatala_ml_reduction_prod_bf16(const __nv_bfloat16* 
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -805,7 +805,7 @@ extern "C" __global__ void navatala_ml_reduction_min_bf16(const __nv_bfloat16* _
   float gsAcc = __uint_as_float(0x7f7fc99eu);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       __nv_bfloat16 raw = _input[idx];
       float v = ((float)(raw));
       gsAcc = (((gsAcc < v)) ? (gsAcc) : (v));
@@ -816,7 +816,7 @@ extern "C" __global__ void navatala_ml_reduction_min_bf16(const __nv_bfloat16* _
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (((mine < other)) ? (mine) : (other));
@@ -827,7 +827,7 @@ extern "C" __global__ void navatala_ml_reduction_min_bf16(const __nv_bfloat16* _
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -849,7 +849,7 @@ extern "C" __global__ void navatala_ml_reduction_max_bf16(const __nv_bfloat16* _
   float gsAcc = __uint_as_float(0xff7fc99eu);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       __nv_bfloat16 raw = _input[idx];
       float v = ((float)(raw));
       gsAcc = (((gsAcc > v)) ? (gsAcc) : (v));
@@ -860,7 +860,7 @@ extern "C" __global__ void navatala_ml_reduction_max_bf16(const __nv_bfloat16* _
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (((mine > other)) ? (mine) : (other));
@@ -871,7 +871,7 @@ extern "C" __global__ void navatala_ml_reduction_max_bf16(const __nv_bfloat16* _
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -893,7 +893,7 @@ extern "C" __global__ void navatala_ml_reduction_amax_bf16(const __nv_bfloat16* 
   float gsAcc = __uint_as_float(0xff7fc99eu);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       __nv_bfloat16 raw = _input[idx];
       float v = abs(((float)(raw)));
       gsAcc = (((gsAcc > v)) ? (gsAcc) : (v));
@@ -904,7 +904,7 @@ extern "C" __global__ void navatala_ml_reduction_amax_bf16(const __nv_bfloat16* 
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (((mine > other)) ? (mine) : (other));
@@ -915,7 +915,7 @@ extern "C" __global__ void navatala_ml_reduction_amax_bf16(const __nv_bfloat16* 
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -937,7 +937,7 @@ extern "C" __global__ void navatala_ml_reduction_norm1_bf16(const __nv_bfloat16*
   float gsAcc = __uint_as_float(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       __nv_bfloat16 raw = _input[idx];
       float v = abs(((float)(raw)));
       gsAcc = (gsAcc + v);
@@ -948,7 +948,7 @@ extern "C" __global__ void navatala_ml_reduction_norm1_bf16(const __nv_bfloat16*
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -959,7 +959,7 @@ extern "C" __global__ void navatala_ml_reduction_norm1_bf16(const __nv_bfloat16*
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -981,7 +981,7 @@ extern "C" __global__ void navatala_ml_reduction_avg_bf16(const __nv_bfloat16* _
   float gsAcc = __uint_as_float(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       __nv_bfloat16 raw = _input[idx];
       float v = ((float)(raw));
       gsAcc = (gsAcc + v);
@@ -992,7 +992,7 @@ extern "C" __global__ void navatala_ml_reduction_avg_bf16(const __nv_bfloat16* _
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1003,7 +1003,7 @@ extern "C" __global__ void navatala_ml_reduction_avg_bf16(const __nv_bfloat16* _
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = (reduced / nF);
@@ -1025,7 +1025,7 @@ extern "C" __global__ void navatala_ml_reduction_norm2_bf16(const __nv_bfloat16*
   float gsAcc = __uint_as_float(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       __nv_bfloat16 raw = _input[idx];
       float v = (((float)(raw)) * ((float)(raw)));
       gsAcc = (gsAcc + v);
@@ -1036,7 +1036,7 @@ extern "C" __global__ void navatala_ml_reduction_norm2_bf16(const __nv_bfloat16*
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1047,7 +1047,7 @@ extern "C" __global__ void navatala_ml_reduction_norm2_bf16(const __nv_bfloat16*
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = sqrt(reduced);

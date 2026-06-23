@@ -18,7 +18,7 @@ using namespace metal;
 
 kernel void navatala_graph_unpack_f32x6(device const int* indices [[buffer(0)]], device const float* src [[buffer(1)]], device const int* count [[buffer(2)]], device const int* n [[buffer(3)]], device float* dst [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int i = ((int)(int(__gid.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(6); ++c) {
       int srcLin = ((c * count[0]) + i);
       int dstLin = ((c * n[0]) + indices[((int)(int(__gid.x)))]);

@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_arnoldi_step_f32(const float* Av, con
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float avi = Av[gid];
     float w = avi;
     int jVal = ((int)(j[0]));

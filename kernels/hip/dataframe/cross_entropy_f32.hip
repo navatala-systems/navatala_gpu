@@ -36,7 +36,7 @@ extern "C" __global__ void navatala_dataframe_cross_entropy_f32(const float* p, 
   unsigned int ce32_reductionStride = 128u;
   for (int ce32_reductionStep = 0; ce32_reductionStep < (int)(8); ++ce32_reductionStep) {
     unsigned int ce32_stride = ce32_reductionStride;
-    if ((lid < ce32_stride)) {
+    if (lid < ce32_stride) {
       float ce32_other = sdata[(lid + ce32_stride)];
       float ce32_mine = sdata[lid];
       float ce32_sum = (ce32_mine + ce32_other);
@@ -47,7 +47,7 @@ extern "C" __global__ void navatala_dataframe_cross_entropy_f32(const float* p, 
     ce32_reductionStride = ce32_nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0u] = sdata[0u];
   }
 }

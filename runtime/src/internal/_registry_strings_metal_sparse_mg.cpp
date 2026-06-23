@@ -16,7 +16,7 @@ using namespace metal;
 kernel void navatala_sparse_mg_restrict_f32(device const uint* RrowPtr [[buffer(0)]], device const uint* RcolIdx [[buffer(1)]], device const float* Rvalues [[buffer(2)]], device const float* rFine [[buffer(3)]], device const uint* nCoarse [[buffer(4)]], device float* rCoarse [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int row = int(__gid.x);
   int N = ((int)(nCoarse[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(RrowPtr[row]));
     int re = ((int)(RrowPtr[(row + 1)]));
     float acc = as_type<float>(0x00000000u);
@@ -39,7 +39,7 @@ using namespace metal;
 kernel void navatala_sparse_mg_prolongate_f32(device const uint* ProwPtr [[buffer(0)]], device const uint* PcolIdx [[buffer(1)]], device const float* Pvalues [[buffer(2)]], device const float* eCoarse [[buffer(3)]], device const uint* nFine [[buffer(4)]], device float* xFine [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int row = int(__gid.x);
   int N = ((int)(nFine[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(ProwPtr[row]));
     int re = ((int)(ProwPtr[(row + 1)]));
     float pe = as_type<float>(0x00000000u);
@@ -89,7 +89,7 @@ using namespace metal;
 kernel void navatala_sparse_mg_compute_residual_f32(device const float* b [[buffer(0)]], device const float* Ax [[buffer(1)]], device const uint* n [[buffer(2)]], device float* r [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int i = int(__gid.x);
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     float bi = b[i];
     float axi = Ax[i];
     r[i] = (bi - axi);
@@ -104,7 +104,7 @@ using namespace metal;
 kernel void navatala_sparse_mg_weighted_restrict_f32(device const uint* RrowPtr [[buffer(0)]], device const uint* RcolIdx [[buffer(1)]], device const float* Rvalues [[buffer(2)]], device const float* rFine [[buffer(3)]], device const float* weights [[buffer(4)]], device const uint* nCoarse [[buffer(5)]], device float* rCoarse [[buffer(6)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int row = int(__gid.x);
   int N = ((int)(nCoarse[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(RrowPtr[row]));
     int re = ((int)(RrowPtr[(row + 1)]));
     float acc = as_type<float>(0x00000000u);
@@ -133,15 +133,15 @@ kernel void navatala_sparse_mg_error_norm_partials_f32(device const float* error
   float warpSum = simd_sum(sq);
   threadgroup float sdata[32];
   int lane = int(__lane);
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((lid < 8)) {
+  if (lid < 8) {
     float val = sdata[lid];
     float finalSum = simd_sum(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       int grpId = int(__tgid.x);
       partials[grpId] = finalSum;
     }
@@ -156,7 +156,7 @@ using namespace metal;
 kernel void navatala_sparse_mg_zero_vector_f32(device const uint* n [[buffer(0)]], device float* v [[buffer(1)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int i = int(__gid.x);
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     v[i] = as_type<float>(0x00000000u);
   }
 }
@@ -169,7 +169,7 @@ using namespace metal;
 kernel void navatala_sparse_mg_prolongate_damped_f32(device const uint* ProwPtr [[buffer(0)]], device const uint* PcolIdx [[buffer(1)]], device const float* Pvalues [[buffer(2)]], device const float* eCoarse [[buffer(3)]], device const float* omega [[buffer(4)]], device const uint* nFine [[buffer(5)]], device float* xFine [[buffer(6)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int row = int(__gid.x);
   int N = ((int)(nFine[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(ProwPtr[row]));
     int re = ((int)(ProwPtr[(row + 1)]));
     float pe = as_type<float>(0x00000000u);

@@ -52,13 +52,13 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int blockRow = int(gl_GlobalInvocationID.x);
   int N = int(nBlockRows[0]);
-  if ((blockRow < N)) {
+  if (blockRow < N) {
     int bdm = int(blockDim[0]);
     int bdm2 = (bdm * bdm);
     int rs = int(rowPtr[blockRow]);
     int re = int(rowPtr[(blockRow + 1)]);
     double om = omega[0];
-    if ((bdm == 4)) {
+    if (bdm == 4) {
       int rowBase4 = (blockRow * 4);
       double offDiag0 = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
       double offDiag1 = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
@@ -67,7 +67,7 @@ void main() {
       for (int jj = 0; jj < int((re - rs)); ++jj) {
         int k = (rs + jj);
         int col = int(colIdx[k]);
-        if ((col != blockRow)) {
+        if (col != blockRow) {
           int kBase = (k * 16);
           int colBase4 = (col * 4);
           double xv0 = x[colBase4];
@@ -101,7 +101,7 @@ void main() {
         for (int jj = 0; jj < int((re - rs)); ++jj) {
           int k = (rs + jj);
           int col = int(colIdx[k]);
-          if ((col != blockRow)) {
+          if (col != blockRow) {
             int kBase = (k * bdm2);
             int rowBase = (kBase + (eq * bdm));
             for (int eq2 = 0; eq2 < int(bdm); ++eq2) {

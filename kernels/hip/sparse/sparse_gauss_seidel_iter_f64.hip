@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_sparse_sparse_gauss_seidel_iter_f64(const un
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int i = gid;
   unsigned int nVal = n[0u];
-  if ((i < nVal)) {
+  if (i < nVal) {
     unsigned int rowStart = rowPtr[i];
     unsigned int iPlusOne = (i + 1u);
     unsigned int rowEnd = rowPtr[iPlusOne];
@@ -28,7 +28,7 @@ extern "C" __global__ void navatala_sparse_sparse_gauss_seidel_iter_f64(const un
     double bi = b[i];
     for (int j = 0; j < (int)(rowEnd); ++j) {
       unsigned int jU32 = ((unsigned int)(j));
-      if ((jU32 >= rowStart)) {
+      if (jU32 >= rowStart) {
         unsigned int col = colInd[jU32];
         double aVal = values[jU32];
         bool isDiag = (col == i);

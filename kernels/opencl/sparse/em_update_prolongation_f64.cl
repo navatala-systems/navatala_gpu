@@ -18,7 +18,7 @@ __kernel void navatala_sparse_em_update_prolongation_f64(__global const double* 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nnzP[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double g = gradient[gid];
     double step = stepSize[0];
     double p = Pvalues[gid];

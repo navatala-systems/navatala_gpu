@@ -91,7 +91,7 @@ extern "C" __global__ void navatala_dataframe_normalized_mutual_info_f64(const d
   __syncthreads();
   for (int stride = 0; stride < (int)(128u); ++stride) {
     unsigned int strideU32 = ((unsigned int)(stride));
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       double otherMI = miSum[(lid + strideU32)];
       double mineMI = miSum[lid];
       miSum[lid] = (mineMI + otherMI);
@@ -104,7 +104,7 @@ extern "C" __global__ void navatala_dataframe_normalized_mutual_info_f64(const d
     }
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double miFinal = miSum[0u];
     double hyFinal = hySum[0u];
     double hcFinal = hcSum[0u];

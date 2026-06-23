@@ -19,7 +19,7 @@ using namespace metal;
 kernel void navatala_graph_spmv_weighted_f32(device const uint* offsets [[buffer(0)]], device const uint* indices [[buffer(1)]], device const float* weights [[buffer(2)]], device const float* x [[buffer(3)]], device const uint* numVertices [[buffer(4)]], device float* y [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     uint base = offsets[gid];
     uint endv = offsets[(gid + 1u)];
     uint rowlen = (endv - base);

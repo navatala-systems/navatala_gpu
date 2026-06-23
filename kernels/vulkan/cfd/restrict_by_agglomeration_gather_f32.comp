@@ -37,7 +37,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int c = int(gl_GlobalInvocationID.x);
   int N = int(nCoarseCells[0]);
-  if ((c < N)) {
+  if (c < N) {
     int begin = int(coarseToFineOffsets[c]);
     int end = int(coarseToFineOffsets[(c + 1)]);
     float sum = uintBitsToFloat(0x00000000u);

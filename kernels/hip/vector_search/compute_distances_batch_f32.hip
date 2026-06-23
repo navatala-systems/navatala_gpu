@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_vector_search_compute_distances_batch_f32(co
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int n_cand = n_candidates[0];
   unsigned int d = dim[0];
-  if ((gid < n_cand)) {
+  if (gid < n_cand) {
     unsigned int cand_id = candidate_ids[gid];
     float acc = __uint_as_float(0x00000000u);
     for (int k = 0; k < (int)(d); ++k) {

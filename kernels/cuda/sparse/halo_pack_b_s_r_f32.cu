@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_sparse_halo_pack_b_s_r_f32(const float* x, c
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(sendCount[0]));
   int bd = ((int)(blockDim[0]));
-  if ((gid < (N * bd))) {
+  if (gid < (N * bd)) {
     int entry = (gid / bd);
     int comp = (gid % bd);
     int idx = ((((int)(sendMap[entry])) * bd) + comp);

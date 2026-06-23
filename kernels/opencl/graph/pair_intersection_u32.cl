@@ -17,7 +17,7 @@ __kernel void navatala_graph_pair_intersection_u32(__global const uint* offsets,
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint numP = numPairs[0];
-  if ((gid < numP)) {
+  if (gid < numP) {
     uint a = pairsA[gid];
     uint b = pairsB[gid];
     uint baseU = offsets[a];
@@ -36,7 +36,7 @@ __kernel void navatala_graph_pair_intersection_u32(__global const uint* offsets,
       for (int _bs = 0; _bs < (int)((uint)(32u)); ++_bs) {
         uint lo = loAccum;
         uint hi = hiAccum;
-        if ((lo < hi)) {
+        if (lo < hi) {
           uint mid = ((lo + hi) / (uint)(2u));
           uint midval = indices[mid];
           bool goRight = (midval < w);
@@ -47,9 +47,9 @@ __kernel void navatala_graph_pair_intersection_u32(__global const uint* offsets,
         }
       }
       uint lb = loAccum;
-      if ((lb < endV)) {
+      if (lb < endV) {
         uint cand = indices[lb];
-        if ((cand == w)) {
+        if (cand == w) {
           interAccum = (interAccum + (uint)(1u));
         }
       }

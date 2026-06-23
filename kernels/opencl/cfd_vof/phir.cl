@@ -15,10 +15,10 @@
 
 __kernel void navatala_cfd_vof_phir(__global const float* gx, __global const float* gy, __global const float* gz, __global const float* sfX, __global const float* sfY, __global const float* sfZ, __global const float* phi, __global const float* magSf, __global const int* owner, __global const int* nei, __global const int* faceParams, __global const float* paramsF, __global float* outPhir) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= faceParams[0])) {
+  if (((int)((int)(get_global_id(0)))) >= faceParams[0]) {
     return;
   } else {
-    if ((paramsF[0] == as_float(0x00000000u))) {
+    if (paramsF[0] == as_float(0x00000000u)) {
       outPhir[((int)((int)(get_global_id(0))))] = as_float(0x00000000u);
       return;
     }

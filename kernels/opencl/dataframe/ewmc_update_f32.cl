@@ -15,7 +15,7 @@
 
 __kernel void navatala_dataframe_ewmc_update_f32(__global const float* x, __global const float* y, __global const float* alpha, __global float* nEff, __global float* meanX, __global float* meanY, __global float* Cxy, __global float* varX, __global float* varY) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float xVal = x[0];
     float yVal = y[0];
     float a = alpha[0];

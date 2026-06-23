@@ -17,9 +17,9 @@ __kernel void navatala_sparse_aggregate_multi_pairwise_f32(__global const uint* 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int curAgg = aggregateId[gid];
-    if ((curAgg < 0)) {
+    if (curAgg < 0) {
       int rs = ((int)(rowPtr[gid]));
       int re = ((int)(rowPtr[(gid + 1)]));
       int bestCol = -1;
@@ -27,15 +27,15 @@ __kernel void navatala_sparse_aggregate_multi_pairwise_f32(__global const uint* 
       for (int j = 0; j < (int)((re - rs)); ++j) {
         int k = (rs + j);
         uint isStrong = strongMask[k];
-        if ((isStrong == (uint)(1u))) {
+        if (isStrong == (uint)(1u)) {
           float a = values[k];
-          if ((fabs(a) > bestVal)) {
+          if (fabs(a) > bestVal) {
             bestVal = fabs(a);
             bestCol = ((int)(colIdx[k]));
           }
         }
       }
-      if ((bestCol >= 0)) {
+      if (bestCol >= 0) {
         aggregateId[gid] = (((gid < bestCol)) ? (gid) : (bestCol));
       } else {
         aggregateId[gid] = gid;

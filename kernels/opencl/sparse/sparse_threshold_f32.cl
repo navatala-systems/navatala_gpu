@@ -17,7 +17,7 @@ __kernel void navatala_sparse_sparse_threshold_f32(__global const float* valuesA
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
   float thresh = threshold[(uint)(0u)];
-  if ((i < nnz[(uint)(0u)])) {
+  if (i < nnz[(uint)(0u)]) {
     float a = valuesA[i];
     float absA = fabs(a);
     float result = (((absA >= thresh)) ? (a) : (as_float(0x00000000u)));

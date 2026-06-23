@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_validate_coloring(const unsigned int*
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int myColor = colors[gid];
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
@@ -27,12 +27,12 @@ extern "C" __global__ void navatala_sparse_validate_coloring(const unsigned int*
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
       int cc = colors[col];
-      if (((col != gid) && (cc == myColor))) {
+      if ((col != gid) && (cc == myColor)) {
         conflict = 1u;
       }
     }
     conflictFlags[gid] = conflict;
-    if ((conflict == 1u)) {
+    if (conflict == 1u) {
       unsigned int _aod1 = atomicAdd(&(nConflicts[0]), 1u);
     }
   }

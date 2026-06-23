@@ -19,7 +19,7 @@ using namespace metal;
 kernel void navatala_sparse_truncate_interpolation_count_f32(device const uint* ProwPtr [[buffer(0)]], device const uint* PcolIdx [[buffer(1)]], device const float* Pvalues [[buffer(2)]], device const float* threshold [[buffer(3)]], device const uint* nRows [[buffer(4)]], device uint* nnzPerRowOut [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int row = int(__gid.x);
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(ProwPtr[row]));
     int re = ((int)(ProwPtr[(row + 1)]));
     float maxAbs = as_type<float>(0x00000000u);
@@ -33,7 +33,7 @@ kernel void navatala_sparse_truncate_interpolation_count_f32(device const uint* 
     for (int j2 = 0; j2 < (int)((re - rs)); ++j2) {
       int k2 = (rs + j2);
       float v2 = Pvalues[k2];
-      if ((abs(v2) >= thresh)) {
+      if (abs(v2) >= thresh) {
         nnz = (nnz + 1u);
       }
     }

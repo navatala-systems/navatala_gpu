@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_dataframe_quantile_f32(const float* sortedInput, const unsigned int* count, const float* quantileP, float* result) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gidU32 = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gidU32 == 0u)) {
+  if (gidU32 == 0u) {
     unsigned int n = count[0u];
     float p = quantileP[0u];
     float pClamped = (((p < __uint_as_float(0x00000000u))) ? (__uint_as_float(0x00000000u)) : ((((p > __uint_as_float(0x3f800000u))) ? (__uint_as_float(0x3f800000u)) : (p))));

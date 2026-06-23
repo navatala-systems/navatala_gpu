@@ -15,7 +15,7 @@
 
 __kernel void navatala_dataframe_reservoir_update256_f32(__global const float* x, __global float* reservoir, __global uint* count, __global uint* seed) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float xVal = x[0];
     uint n = count[0];
     uint s = seed[0];

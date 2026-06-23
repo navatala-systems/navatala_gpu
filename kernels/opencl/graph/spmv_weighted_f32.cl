@@ -17,7 +17,7 @@ __kernel void navatala_graph_spmv_weighted_f32(__global const uint* offsets, __g
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     uint base = offsets[gid];
     uint endv = offsets[(gid + (uint)(1u))];
     uint rowlen = (endv - base);

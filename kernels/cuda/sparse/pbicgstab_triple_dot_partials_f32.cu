@@ -39,20 +39,20 @@ extern "C" __global__ void navatala_sparse_pbicgstab_triple_dot_partials_f32(con
   __shared__ float sd1[32];
   __shared__ float sd2[32];
   int lane = (int)(threadIdx.x % warpSize);
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sd0[warpIdx] = ws0;
     sd1[warpIdx] = ws1;
     sd2[warpIdx] = ws2;
   }
   __syncthreads();
-  if ((lid < 8)) {
+  if (lid < 8) {
     int grpId = (int)(blockIdx.x);
     int base = (grpId * 3);
     float f0 = gpu_warp_reduce_sum(sd0[lid]);
     float f1 = gpu_warp_reduce_sum(sd1[lid]);
     float f2 = gpu_warp_reduce_sum(sd2[lid]);
-    if ((lid == 0)) {
+    if (lid == 0) {
       partials[base] = f0;
       partials[(base + 1)] = f1;
       partials[(base + 2)] = f2;

@@ -18,7 +18,7 @@ __kernel void navatala_ml_pointwise_tanh_bwd_f16(__global const half* a, __globa
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));

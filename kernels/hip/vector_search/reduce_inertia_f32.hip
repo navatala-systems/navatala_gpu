@@ -27,7 +27,7 @@ extern "C" __global__ void navatala_vector_search_reduce_inertia_f32(const float
   __syncthreads();
   unsigned int stride = 128u;
   for (int __iter = 0; __iter < 8; ++__iter) {
-    if (!((stride > 0u))) break;
+    if (!(stride > 0u)) break;
     unsigned int s = stride;
     bool should_reduce = (lid < s);
     if (should_reduce) {

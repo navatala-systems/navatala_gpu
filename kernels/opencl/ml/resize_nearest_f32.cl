@@ -17,7 +17,7 @@ __kernel void navatala_ml_resize_nearest_f32(__global const float* _input, __glo
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint outSizeVal = outSize[0];
-  if ((gid < outSizeVal)) {
+  if (gid < outSizeVal) {
     uint inSizeVal = inSize[0];
     uint idx = ((gid * inSizeVal) / outSizeVal);
     float v = _input[idx];

@@ -16,7 +16,7 @@
 __kernel void navatala_dataframe_conditional_entropy_f32(__global const float* hX, __global const float* hXY, __global float* result) {
   int gid0 = (int)get_global_id(0);
   uint gidU32 = ((uint)((int)(get_global_id(0))));
-  if ((gidU32 == (uint)(0u))) {
+  if (gidU32 == (uint)(0u)) {
     float hXVal = hX[(uint)(0u)];
     float hXYVal = hXY[(uint)(0u)];
     float condH = (hXYVal - hXVal);

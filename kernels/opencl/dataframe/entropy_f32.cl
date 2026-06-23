@@ -34,7 +34,7 @@ __kernel void navatala_dataframe_entropy_f32(__global const float* p, __global c
   uint e32_reductionStride = (uint)(128u);
   for (int e32_reductionStep = 0; e32_reductionStep < (int)(8); ++e32_reductionStep) {
     uint e32_stride = e32_reductionStride;
-    if ((lid < e32_stride)) {
+    if (lid < e32_stride) {
       float e32_other = sdata[(lid + e32_stride)];
       float e32_mine = sdata[lid];
       float e32_sum = (e32_mine + e32_other);
@@ -45,7 +45,7 @@ __kernel void navatala_dataframe_entropy_f32(__global const float* p, __global c
     e32_reductionStride = e32_nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     result[(uint)(0u)] = sdata[(uint)(0u)];
   }
 }

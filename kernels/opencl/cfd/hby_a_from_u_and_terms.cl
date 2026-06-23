@@ -18,18 +18,18 @@ __kernel void navatala_cfd_hby_a_from_u_and_terms(__global const float* ux, __gl
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float tx = lapx[((int)((int)(get_global_id(0))))];
     float ty = lapy[((int)((int)(get_global_id(0))))];
     float tz = lapz[((int)((int)(get_global_id(0))))];
-    if (((modeBuf[0] == 1) || (modeBuf[0] == 3))) {
+    if ((modeBuf[0] == 1) || (modeBuf[0] == 3)) {
       tx = (tx - divx[((int)((int)(get_global_id(0))))]);
       ty = (ty - divy[((int)((int)(get_global_id(0))))]);
       tz = (tz - divz[((int)((int)(get_global_id(0))))]);
     }
-    if (((modeBuf[0] == 2) || (modeBuf[0] == 3))) {
+    if ((modeBuf[0] == 2) || (modeBuf[0] == 3)) {
       tx = (tx + extrax[((int)((int)(get_global_id(0))))]);
       ty = (ty + extray[((int)((int)(get_global_id(0))))]);
       tz = (tz + extraz[((int)((int)(get_global_id(0))))]);

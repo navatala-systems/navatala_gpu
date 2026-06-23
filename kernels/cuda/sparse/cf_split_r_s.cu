@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_sparse_cf_split_r_s(const unsigned int* rowPtr, const unsigned int* colIdx, const unsigned int* strongMask, const unsigned int* nRows, int* cfMarking) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     for (int row = 0; row < (int)(N); ++row) {
       int rs = ((int)(rowPtr[row]));
       int re = ((int)(rowPtr[(row + 1)]));
@@ -25,15 +25,15 @@ extern "C" __global__ void navatala_sparse_cf_split_r_s(const unsigned int* rowP
       for (int j = 0; j < (int)((re - rs)); ++j) {
         int k = (rs + j);
         unsigned int isStrong = strongMask[k];
-        if ((isStrong == 1u)) {
+        if (isStrong == 1u) {
           int nbr = ((int)(colIdx[k]));
           int nbrMark = cfMarking[nbr];
-          if ((nbrMark == 1)) {
+          if (nbrMark == 1) {
             nStrongC = (nStrongC + 1u);
           }
         }
       }
-      if ((nStrongC == 0u)) {
+      if (nStrongC == 0u) {
         cfMarking[row] = 1;
       } else {
         cfMarking[row] = -1;

@@ -22,7 +22,7 @@ extern "C" __global__ void navatala_linalg_roll_cols_f32(const float* A, const u
   unsigned int mVal = m[0u];
   unsigned int nVal = n[0u];
   unsigned int totalElems = (mVal * nVal);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     unsigned int row = (idx / nVal);
     unsigned int col = (idx % nVal);
     unsigned int kMod = (kVal % nVal);

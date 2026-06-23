@@ -21,7 +21,7 @@ extern "C" __global__ void navatala_cfd_attention_value_projection(const float* 
   int nk = numK[0];
   int hd = headDim[0];
   int total = (nq * hd);
-  if ((gid < total)) {
+  if (gid < total) {
     int qi = (gid / hd);
     int d = (gid % hd);
     float acc = __uint_as_float(0x00000000u);

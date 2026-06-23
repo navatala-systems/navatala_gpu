@@ -202,7 +202,7 @@ extern "C" __global__ void navatala_transformer_top_k_gating_f16(const __half* r
   indexBuf[lid] = lidI32_2;
   __syncthreads();
   for (int kIter = 0; kIter < (int)(k); ++kIter) {
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       int bestIdx = 0;
       float bestVal = __uint_as_float(0xf149f2cau);
       for (int scanIdx = 0; scanIdx < (int)(ne); ++scanIdx) {

@@ -50,7 +50,7 @@ __kernel void navatala_ml_expand_cluster_step_f32(__global const float* points, 
             distSqAccum = newDistSq;
           }
           float finalDistSq = distSqAccum;
-          if ((finalDistSq < epsSq)) {
+          if (finalDistSq < epsSq) {
             newLabelAccum = jLabel;
           }
         }

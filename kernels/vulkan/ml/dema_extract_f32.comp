@@ -29,7 +29,7 @@ layout(std430, binding = 2) writeonly buffer buf_result {
 // kernel: navatala_ml_dema_extract_f32
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) == 0)) {
+  if (int(gl_GlobalInvocationID.x) == 0) {
     float e1 = ema1[0];
     float e2 = ema2[0];
     float t2 = (uintBitsToFloat(0x40000000u) * e1);

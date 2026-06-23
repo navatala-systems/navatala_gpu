@@ -16,7 +16,7 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_ml_dema_extract_f32(const float* ema1, const float* ema2, float* result) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float e1 = ema1[0];
     float e2 = ema2[0];
     float t2 = (__uint_as_float(0x40000000u) * e1);

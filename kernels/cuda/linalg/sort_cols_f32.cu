@@ -29,7 +29,7 @@ extern "C" __global__ void navatala_linalg_sort_cols_f32(const float* A, const u
   unsigned int rowIdx = ((unsigned int)((int)(threadIdx.x)));
   unsigned int mVal = m[0u];
   unsigned int nVal = n[0u];
-  if ((colIdx < nVal)) {
+  if (colIdx < nVal) {
     bool inBounds = (rowIdx < mVal);
     unsigned int linearIdx = ((rowIdx * nVal) + colIdx);
     if (inBounds) {
@@ -56,7 +56,7 @@ extern "C" __global__ void navatala_linalg_sort_cols_f32(const float* A, const u
         unsigned int partnerIdxVal = loopPartnerIdx;
         loopPartnerVal = svals[partnerIdxVal];
         float partnerValRead = loopPartnerVal;
-        if ((myValRead > partnerValRead)) {
+        if (myValRead > partnerValRead) {
           svals[rowIdx] = partnerValRead;
           svals[partnerIdxVal] = myValRead;
         }

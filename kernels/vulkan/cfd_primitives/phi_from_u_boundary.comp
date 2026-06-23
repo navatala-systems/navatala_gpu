@@ -63,7 +63,7 @@ layout(std430, binding = 13) buffer buf_outPhi {
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int f = (int(params[1]) + int(gl_GlobalInvocationID.x));
-  if ((f >= int(params[0]))) {
+  if (f >= int(params[0])) {
     return;
   } else {
     int o = owner[f];
@@ -75,14 +75,14 @@ void main() {
     float ufz = uoz;
     uint m = bcmask[f];
     int mInt = int(m);
-    if ((mInt == 1)) {
+    if (mInt == 1) {
       float w = weights[f];
       float iw = (uintBitsToFloat(0x3f800000u) - w);
       ufx = ((w * uox) + (iw * bcx[f]));
       ufy = ((w * uoy) + (iw * bcy[f]));
       ufz = ((w * uoz) + (iw * bcz[f]));
     } else {
-      if ((mInt == 2)) {
+      if (mInt == 2) {
         ufx = bcx[f];
         ufy = bcy[f];
         ufz = bcz[f];

@@ -16,7 +16,7 @@
 __kernel void navatala_sparse_build_prolongation_terminator(__global const uint* nRows, __global uint* ProwPtr) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint N = nRows[0];
     ProwPtr[N] = N;
   }

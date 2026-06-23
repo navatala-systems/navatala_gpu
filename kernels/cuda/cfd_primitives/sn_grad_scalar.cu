@@ -16,17 +16,17 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_sn_grad_scalar(const float* cellVal, const int* owner, const int* neighbour, const float* delta, const float* faceVal, const unsigned int* faceMask, const int* params, float* outSnGrad) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0]) {
     return;
   } else {
     int o = owner[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float aO = cellVal[o];
-    if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < params[1])) {
+    if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < params[1]) {
       int n = neighbour[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       float aN = cellVal[n];
       outSnGrad[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (delta[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] * (aN - aO));
     } else {
-      if ((faceMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] != 0u)) {
+      if (faceMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] != 0u) {
         float aN = faceVal[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
         outSnGrad[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (delta[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] * (aN - aO));
       } else {

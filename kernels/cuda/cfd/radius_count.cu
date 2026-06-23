@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_cfd_radius_count(const float* query, const f
   int qid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int nq = numQuery[0];
   int nr = numRef[0];
-  if ((qid < nq)) {
+  if (qid < nq) {
     float qx = query[((qid)*3 + 0)];
     float qy = query[((qid)*3 + 1)];
     float qz = query[((qid)*3 + 2)];
@@ -34,7 +34,7 @@ extern "C" __global__ void navatala_cfd_radius_count(const float* query, const f
       float dy = (qy - ry);
       float dz = (qz - rz);
       float d2 = (((dx * dx) + (dy * dy)) + (dz * dz));
-      if ((d2 <= rCmp)) {
+      if (d2 <= rCmp) {
         cnt = (cnt + 1);
       }
     }

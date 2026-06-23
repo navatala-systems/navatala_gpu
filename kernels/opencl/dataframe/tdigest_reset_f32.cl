@@ -16,7 +16,7 @@
 __kernel void navatala_dataframe_tdigest_reset_f32(__global const float* compression, __global uint* centroidCount, __global float* totalWeight, __global float* minVal, __global float* maxVal) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     centroidCount[0] = (uint)(0u);
     totalWeight[0] = as_float(0x00000000u);
     minVal[0] = as_float(0x7f7ffffdu);

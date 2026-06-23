@@ -18,7 +18,7 @@ __kernel void navatala_sparse_coo_transpose_f64(__global const uint* rowInd, __g
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint i = gid;
-  if ((i < nnz[(uint)(0u)])) {
+  if (i < nnz[(uint)(0u)]) {
     uint col = colInd[i];
     rowInd_out[i] = col;
     uint row = rowInd[i];

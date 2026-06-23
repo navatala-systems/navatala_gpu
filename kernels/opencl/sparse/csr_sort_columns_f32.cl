@@ -17,7 +17,7 @@ __kernel void navatala_sparse_csr_sort_columns_f32(__global const uint* rowPtr, 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int len = (re - rs);
@@ -27,7 +27,7 @@ __kernel void navatala_sparse_csr_sort_columns_f32(__global const uint* rowPtr, 
         int b = (rs + (j + 1));
         uint ca = colIdx[a];
         uint cb = colIdx[b];
-        if ((ca > cb)) {
+        if (ca > cb) {
           colIdx[a] = cb;
           colIdx[b] = ca;
           float va = values[a];

@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_cfd_restrict_by_agglomeration_gather_f32(con
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int c = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nCoarseCells[0]));
-  if ((c < N)) {
+  if (c < N) {
     int begin = ((int)(coarseToFineOffsets[c]));
     int end = ((int)(coarseToFineOffsets[(c + 1)]));
     float sum = __uint_as_float(0x00000000u);

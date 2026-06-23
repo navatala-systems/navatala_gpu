@@ -39,7 +39,7 @@ extern "C" __global__ void navatala_dataframe_column_means_f32(const float* _inp
     unsigned int colMeansF32_reductionStride = 128u;
     for (int colMeansF32_reductionStep = 0; colMeansF32_reductionStep < (int)(8); ++colMeansF32_reductionStep) {
       unsigned int colMeansF32_stride = colMeansF32_reductionStride;
-      if ((lid < colMeansF32_stride)) {
+      if (lid < colMeansF32_stride) {
         float colMeansF32_other = sdata[(lid + colMeansF32_stride)];
         float colMeansF32_mine = sdata[lid];
         float colMeansF32_sum = (colMeansF32_mine + colMeansF32_other);
@@ -50,7 +50,7 @@ extern "C" __global__ void navatala_dataframe_column_means_f32(const float* _inp
       colMeansF32_reductionStride = colMeansF32_nextStride;
       __syncthreads();
     }
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       float totalSum = sdata[0u];
       float nFloat = ((float)(n));
       float meanVal = (totalSum / nFloat);

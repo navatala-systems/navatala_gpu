@@ -15,7 +15,7 @@ extern "C" __global__ void navatala_nccl_direct_send_f32(const float* src, const
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float val = src[gid];
     dst[gid] = val;
   }
@@ -29,7 +29,7 @@ extern "C" __global__ void navatala_nccl_direct_send_f16(const __half* src, cons
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half val = src[gid];
     dst[gid] = val;
   }
@@ -42,7 +42,7 @@ extern "C" __global__ void navatala_nccl_direct_send_i32(const int* src, const u
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int val = src[gid];
     dst[gid] = val;
   }
@@ -55,7 +55,7 @@ extern "C" __global__ void navatala_nccl_direct_recv_f32(const float* src, const
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float val = src[gid];
     dst[gid] = val;
   }
@@ -69,7 +69,7 @@ extern "C" __global__ void navatala_nccl_direct_recv_f16(const __half* src, cons
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half val = src[gid];
     dst[gid] = val;
   }
@@ -82,7 +82,7 @@ extern "C" __global__ void navatala_nccl_direct_recv_i32(const int* src, const u
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int val = src[gid];
     dst[gid] = val;
   }
@@ -95,7 +95,7 @@ extern "C" __global__ void navatala_nccl_reduce_local_sum_f32(const float* a, co
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float va = a[gid];
     float vb = b[gid];
     float result = (va + vb);
@@ -111,7 +111,7 @@ extern "C" __global__ void navatala_nccl_reduce_local_sum_f16(const __half* a, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half va = a[gid];
     __half vb = b[gid];
     __half result = (va + vb);
@@ -126,7 +126,7 @@ extern "C" __global__ void navatala_nccl_reduce_local_sum_i32(const int* a, cons
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int va = a[gid];
     int vb = b[gid];
     int result = (va + vb);
@@ -141,7 +141,7 @@ extern "C" __global__ void navatala_nccl_reduce_local_min_f32(const float* a, co
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float va = a[gid];
     float vb = b[gid];
     bool aLtB = (va < vb);
@@ -158,7 +158,7 @@ extern "C" __global__ void navatala_nccl_reduce_local_min_f16(const __half* a, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half va = a[gid];
     __half vb = b[gid];
     bool aLtB = (va < vb);
@@ -174,7 +174,7 @@ extern "C" __global__ void navatala_nccl_reduce_local_min_i32(const int* a, cons
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int va = a[gid];
     int vb = b[gid];
     bool aLtB = (va < vb);
@@ -190,7 +190,7 @@ extern "C" __global__ void navatala_nccl_reduce_local_max_f32(const float* a, co
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float va = a[gid];
     float vb = b[gid];
     bool aGtB = (va > vb);
@@ -207,7 +207,7 @@ extern "C" __global__ void navatala_nccl_reduce_local_max_f16(const __half* a, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half va = a[gid];
     __half vb = b[gid];
     bool aGtB = (va > vb);
@@ -223,7 +223,7 @@ extern "C" __global__ void navatala_nccl_reduce_local_max_i32(const int* a, cons
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int va = a[gid];
     int vb = b[gid];
     bool aGtB = (va > vb);
@@ -239,7 +239,7 @@ extern "C" __global__ void navatala_nccl_ring_reduce_scatter_step_sum_f32(const 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float inVal = incoming[gid];
     float locVal = local_buf[gid];
     float reduced = (inVal + locVal);
@@ -255,7 +255,7 @@ extern "C" __global__ void navatala_nccl_ring_reduce_scatter_step_sum_f16(const 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half inVal = incoming[gid];
     __half locVal = local_buf[gid];
     __half reduced = (inVal + locVal);
@@ -270,7 +270,7 @@ extern "C" __global__ void navatala_nccl_ring_reduce_scatter_step_sum_i32(const 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int inVal = incoming[gid];
     int locVal = local_buf[gid];
     int reduced = (inVal + locVal);
@@ -285,7 +285,7 @@ extern "C" __global__ void navatala_nccl_ring_reduce_scatter_step_min_f32(const 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float inVal = incoming[gid];
     float locVal = local_buf[gid];
     bool cmp = (inVal < locVal);
@@ -302,7 +302,7 @@ extern "C" __global__ void navatala_nccl_ring_reduce_scatter_step_min_f16(const 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half inVal = incoming[gid];
     __half locVal = local_buf[gid];
     bool cmp = (inVal < locVal);
@@ -318,7 +318,7 @@ extern "C" __global__ void navatala_nccl_ring_reduce_scatter_step_min_i32(const 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int inVal = incoming[gid];
     int locVal = local_buf[gid];
     bool cmp = (inVal < locVal);
@@ -334,7 +334,7 @@ extern "C" __global__ void navatala_nccl_ring_reduce_scatter_step_max_f32(const 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float inVal = incoming[gid];
     float locVal = local_buf[gid];
     bool cmp = (inVal > locVal);
@@ -351,7 +351,7 @@ extern "C" __global__ void navatala_nccl_ring_reduce_scatter_step_max_f16(const 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half inVal = incoming[gid];
     __half locVal = local_buf[gid];
     bool cmp = (inVal > locVal);
@@ -367,7 +367,7 @@ extern "C" __global__ void navatala_nccl_ring_reduce_scatter_step_max_i32(const 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int inVal = incoming[gid];
     int locVal = local_buf[gid];
     bool cmp = (inVal > locVal);
@@ -383,7 +383,7 @@ extern "C" __global__ void navatala_nccl_ring_all_gather_step_f32(const float* i
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float val = incoming[gid];
     local_chunk[gid] = val;
     outgoing[gid] = val;
@@ -398,7 +398,7 @@ extern "C" __global__ void navatala_nccl_ring_all_gather_step_f16(const __half* 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half val = incoming[gid];
     local_chunk[gid] = val;
     outgoing[gid] = val;
@@ -412,7 +412,7 @@ extern "C" __global__ void navatala_nccl_ring_all_gather_step_i32(const int* inc
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int val = incoming[gid];
     local_chunk[gid] = val;
     outgoing[gid] = val;
@@ -426,7 +426,7 @@ extern "C" __global__ void navatala_nccl_ring_all_reduce_sum_f32(const float* se
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float myVal = sendbuf[gid];
     float peerVal = peer_buf[gid];
     float reduced = (myVal + peerVal);
@@ -442,7 +442,7 @@ extern "C" __global__ void navatala_nccl_ring_all_reduce_sum_f16(const __half* s
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half myVal = sendbuf[gid];
     __half peerVal = peer_buf[gid];
     __half reduced = (myVal + peerVal);
@@ -457,7 +457,7 @@ extern "C" __global__ void navatala_nccl_ring_all_reduce_sum_i32(const int* send
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int myVal = sendbuf[gid];
     int peerVal = peer_buf[gid];
     int reduced = (myVal + peerVal);
@@ -472,7 +472,7 @@ extern "C" __global__ void navatala_nccl_ring_all_gather_f32(const float* incomi
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float val = incoming[gid];
     local_slot[gid] = val;
     outgoing[gid] = val;
@@ -487,7 +487,7 @@ extern "C" __global__ void navatala_nccl_ring_all_gather_f16(const __half* incom
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half val = incoming[gid];
     local_slot[gid] = val;
     outgoing[gid] = val;
@@ -501,7 +501,7 @@ extern "C" __global__ void navatala_nccl_ring_all_gather_i32(const int* incoming
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int val = incoming[gid];
     local_slot[gid] = val;
     outgoing[gid] = val;
@@ -515,7 +515,7 @@ extern "C" __global__ void navatala_nccl_linear_broadcast_f32(const float* src, 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float val = src[gid];
     dst[gid] = val;
   }
@@ -529,7 +529,7 @@ extern "C" __global__ void navatala_nccl_linear_broadcast_f16(const __half* src,
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half val = src[gid];
     dst[gid] = val;
   }
@@ -542,7 +542,7 @@ extern "C" __global__ void navatala_nccl_linear_broadcast_i32(const int* src, co
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int val = src[gid];
     dst[gid] = val;
   }

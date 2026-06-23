@@ -42,7 +42,7 @@ kernel void navatala_ml_coordinate_update_f32(device const float* X [[buffer(0)]
   uint cu32RedStride = 128u;
   for (int cu32RedStep = 0; cu32RedStep < (int)(8); ++cu32RedStep) {
     uint cu32RedStrideVal = cu32RedStride;
-    if ((lid < cu32RedStrideVal)) {
+    if (lid < cu32RedStrideVal) {
       float otherDot = sdataDot[(lid + cu32RedStrideVal)];
       float mineDot = sdataDot[lid];
       float sumDot = (mineDot + otherDot);
@@ -57,7 +57,7 @@ kernel void navatala_ml_coordinate_update_f32(device const float* X [[buffer(0)]
     cu32RedStride = cu32RedNextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float totalDot = sdataDot[0];
     float totalNorm = sdataNorm[0];
     float rho = (totalDot / totalNorm);

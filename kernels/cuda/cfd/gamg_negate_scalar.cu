@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_gamg_negate_scalar(const float* _input, float* _output) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= 1)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= 1) {
     return;
   } else {
     float v = _input[0];

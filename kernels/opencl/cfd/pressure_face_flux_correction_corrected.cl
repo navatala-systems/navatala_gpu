@@ -15,10 +15,10 @@
 
 __kernel void navatala_cfd_pressure_face_flux_correction_corrected(__global const int* owner, __global const int* neighbour, __global const float* weights, __global const float* gradX, __global const float* gradY, __global const float* gradZ, __global const float* magSf, __global const float* dCorrX, __global const float* dCorrY, __global const float* dCorrZ, __global const float* rAUf, __global const uint* params, __global float* outFaceFlux) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(params[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(params[0]))) {
     return;
   } else {
-    if (((int)(get_global_id(0)) >= ((int)(params[1])))) {
+    if ((int)(get_global_id(0)) >= ((int)(params[1]))) {
       outFaceFlux[(int)(get_global_id(0))] = as_float(0x00000000u);
     } else {
       int own = owner[(int)(get_global_id(0))];

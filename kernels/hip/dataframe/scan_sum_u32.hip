@@ -44,7 +44,7 @@ extern "C" __global__ void navatala_dataframe_scan_sum_u32(const unsigned int* _
     }
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     sdata[511u] = 0u;
   }
   __syncthreads();

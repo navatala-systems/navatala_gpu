@@ -32,20 +32,20 @@ kernel void navatala_sparse_pbicgstab_triple_dot_partials_f32(device const float
   threadgroup float sd1[32];
   threadgroup float sd2[32];
   int lane = int(__lane);
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sd0[warpIdx] = ws0;
     sd1[warpIdx] = ws1;
     sd2[warpIdx] = ws2;
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((lid < 8)) {
+  if (lid < 8) {
     int grpId = int(__tgid.x);
     int base = (grpId * 3);
     float f0 = simd_sum(sd0[lid]);
     float f1 = simd_sum(sd1[lid]);
     float f2 = simd_sum(sd2[lid]);
-    if ((lid == 0)) {
+    if (lid == 0) {
       partials[base] = f0;
       partials[(base + 1)] = f1;
       partials[(base + 2)] = f2;

@@ -18,7 +18,7 @@ __kernel void navatala_vector_search_search_layer_greedy_f32(__global const floa
   uint query_id = ((uint)((int)(get_global_id(0))));
   uint nq = n_queries[0];
   uint d = dim[0];
-  if ((query_id < nq)) {
+  if (query_id < nq) {
     uint entry = entry_points[query_id];
     float best_dist = as_float(0x00000000u);
     for (int k = 0; k < (int)(d); ++k) {

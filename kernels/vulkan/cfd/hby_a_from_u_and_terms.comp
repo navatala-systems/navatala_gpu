@@ -74,18 +74,18 @@ layout(std430, binding = 17) writeonly buffer buf_outz {
 // kernel: navatala_cfd_hby_a_from_u_and_terms
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= counts[0])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= counts[0]) {
     return;
   } else {
     float tx = lapx[int(int(gl_GlobalInvocationID.x))];
     float ty = lapy[int(int(gl_GlobalInvocationID.x))];
     float tz = lapz[int(int(gl_GlobalInvocationID.x))];
-    if (((modeBuf[0] == 1) || (modeBuf[0] == 3))) {
+    if ((modeBuf[0] == 1) || (modeBuf[0] == 3)) {
       tx = (tx - divx[int(int(gl_GlobalInvocationID.x))]);
       ty = (ty - divy[int(int(gl_GlobalInvocationID.x))]);
       tz = (tz - divz[int(int(gl_GlobalInvocationID.x))]);
     }
-    if (((modeBuf[0] == 2) || (modeBuf[0] == 3))) {
+    if ((modeBuf[0] == 2) || (modeBuf[0] == 3)) {
       tx = (tx + extrax[int(int(gl_GlobalInvocationID.x))]);
       ty = (ty + extray[int(int(gl_GlobalInvocationID.x))]);
       tz = (tz + extraz[int(int(gl_GlobalInvocationID.x))]);

@@ -60,7 +60,7 @@ extern "C" __global__ void navatala_ml_compute_q_distribution_f64(const double* 
   unsigned int qF64ReductionStride = 128u;
   for (int qF64ReductionStep = 0; qF64ReductionStep < (int)(8); ++qF64ReductionStep) {
     unsigned int qF64Stride = qF64ReductionStride;
-    if ((lid < qF64Stride)) {
+    if (lid < qF64Stride) {
       double qF64Other = sdata[(lid + qF64Stride)];
       double qF64Mine = sdata[lid];
       double qF64Sum = (qF64Mine + qF64Other);
@@ -71,7 +71,7 @@ extern "C" __global__ void navatala_ml_compute_q_distribution_f64(const double* 
     qF64ReductionStride = qF64NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double partialSum = sdata[0];
     double oldSum = sumQ[0];
     double newSum = (oldSum + partialSum);

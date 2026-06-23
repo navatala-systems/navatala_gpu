@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_variance_f64(const unsigned int* count, const double* M2, double* variance) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int n = count[0];
     double m2Val = M2[0];
     double nf = ((double)(n));

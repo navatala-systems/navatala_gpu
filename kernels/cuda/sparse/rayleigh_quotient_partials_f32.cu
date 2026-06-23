@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_rayleigh_quotient_partials_f32(const 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float vi = v[gid];
     float avi = Av[gid];
     vAvPartials[gid] = (vi * avi);

@@ -23,7 +23,7 @@ extern "C" __global__ void navatala_graph_l1norm_f32(const float* _input, const 
   float gsAcc = __uint_as_float(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       float val = abs(_input[idx]);
       gsAcc = (gsAcc + val);
     }
@@ -33,7 +33,7 @@ extern "C" __global__ void navatala_graph_l1norm_f32(const float* _input, const 
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -44,7 +44,7 @@ extern "C" __global__ void navatala_graph_l1norm_f32(const float* _input, const 
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0] = sdata[0];
   }
 }

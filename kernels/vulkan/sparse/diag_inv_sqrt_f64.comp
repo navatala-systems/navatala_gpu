@@ -31,7 +31,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int gid = int(gl_GlobalInvocationID.x);
   int N = int(n[0]);
-  if ((gid < N)) {
+  if (gid < N) {
     double d = diag[gid];
     dinvsqrt[gid] = (packDouble2x32(uvec2(0x00000000u, 0x3ff00000u)) / sqrt(d));
   }

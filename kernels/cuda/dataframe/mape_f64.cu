@@ -36,7 +36,7 @@ extern "C" __global__ void navatala_dataframe_mape_f64(const double* y_true, con
   unsigned int mapeF64_reductionStride = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     unsigned int mapeF64_stride = mapeF64_reductionStride;
-    if ((lid < mapeF64_stride)) {
+    if (lid < mapeF64_stride) {
       unsigned int mapeF64_partnerIdx = (lid + mapeF64_stride);
       double other = sdata[mapeF64_partnerIdx];
       double mine = sdata[lid];
@@ -49,7 +49,7 @@ extern "C" __global__ void navatala_dataframe_mape_f64(const double* y_true, con
     __syncthreads();
   }
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     double totalSum = sdata[0];
     double countFloat = ((double)(countVal));
     double avgPctErr = (totalSum / countFloat);

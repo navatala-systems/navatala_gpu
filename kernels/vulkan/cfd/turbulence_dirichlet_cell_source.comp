@@ -35,11 +35,11 @@ layout(std430, binding = 4) buffer buf_source {
 // kernel: navatala_cfd_turbulence_dirichlet_cell_source
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= nCells[0])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= nCells[0]) {
     return;
   } else {
     int mask = constrainedMask[int(int(gl_GlobalInvocationID.x))];
-    if ((mask == 0)) {
+    if (mask == 0) {
       return;
     } else {
       source[int(int(gl_GlobalInvocationID.x))] = (diag[int(int(gl_GlobalInvocationID.x))] * constrainedValue[int(int(gl_GlobalInvocationID.x))]);

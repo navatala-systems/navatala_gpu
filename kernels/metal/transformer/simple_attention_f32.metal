@@ -307,7 +307,7 @@ kernel void navatala_transformer_simple_attention_f32(device const float* query 
     sumBuf[lid] = sumVal_sum_p2_sumBuf_1;
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((batchValid && (lid == 0u))) {
+  if (batchValid && (lid == 0u)) {
     float outVal = sumBuf[0u];
     uint outIdx = (qBase + 0u);
     _output[outIdx] = outVal;

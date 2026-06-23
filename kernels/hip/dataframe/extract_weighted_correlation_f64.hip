@@ -16,7 +16,7 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_weighted_correlation_f64(const double* Cxy, const double* M2x, const double* M2y, double* correlation) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double cxyVal = Cxy[0];
     double m2xVal = M2x[0];
     double m2yVal = M2y[0];

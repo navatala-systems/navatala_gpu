@@ -16,7 +16,7 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_init_weighted_covariance_f64(__global double* weightSum, __global double* meanX, __global double* meanY, __global double* Cxy) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     weightSum[0] = as_double(0x0000000000000000ul);
     meanX[0] = as_double(0x0000000000000000ul);
     meanY[0] = as_double(0x0000000000000000ul);

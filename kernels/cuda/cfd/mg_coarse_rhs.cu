@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_mg_coarse_rhs(const float* b, const float* ax, float* r, const int* mgCounts) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(mgCounts[1])))) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(mgCounts[1]))) {
     return;
   } else {
     r[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = (b[(int)(blockIdx.x * blockDim.x + threadIdx.x)] - ax[(int)(blockIdx.x * blockDim.x + threadIdx.x)]);

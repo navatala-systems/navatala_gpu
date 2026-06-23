@@ -31,7 +31,7 @@ __kernel void navatala_ml_compute_mean_f64(__global const double* y, __global co
   uint meanF64Stride = (uint)(128u);
   for (int reductionStep6 = 0; reductionStep6 < (int)(8); ++reductionStep6) {
     uint stride6 = meanF64Stride;
-    if ((lid < stride6)) {
+    if (lid < stride6) {
       double other = sdata[(lid + stride6)];
       double mine = sdata[lid];
       double sum = (mine + other);
@@ -42,7 +42,7 @@ __kernel void navatala_ml_compute_mean_f64(__global const double* y, __global co
     meanF64Stride = nextStride6;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     double totalSum = sdata[0];
     double nFloat = ((double)(n));
     double meanVal = (totalSum / nFloat);

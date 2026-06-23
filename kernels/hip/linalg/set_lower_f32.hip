@@ -20,7 +20,7 @@ extern "C" __global__ void navatala_linalg_set_lower_f32(const float* val, const
   unsigned int nVal = n[0u];
   float fillVal = val[0u];
   unsigned int totalElements = (nVal * nVal);
-  if ((idx < totalElements)) {
+  if (idx < totalElements) {
     unsigned int i = (idx / nVal);
     unsigned int j = (idx % nVal);
     bool isStrictLower = (i > j);

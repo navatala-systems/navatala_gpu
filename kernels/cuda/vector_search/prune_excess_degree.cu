@@ -21,11 +21,11 @@ extern "C" __global__ void navatala_vector_search_prune_excess_degree(unsigned i
   unsigned int cmd = current_max_degree[0];
   unsigned int tmd = target_max_degree[0];
   unsigned int inv = invalid_id[0];
-  if ((vid < nv)) {
+  if (vid < nv) {
     unsigned int deg = degrees[vid];
-    if ((deg > tmd)) {
+    if (deg > tmd) {
       for (int i = 0; i < (int)(cmd); ++i) {
-        if ((i >= tmd)) {
+        if (i >= tmd) {
           unsigned int idx = ((vid * cmd) + i);
           graph[idx] = inv;
         }

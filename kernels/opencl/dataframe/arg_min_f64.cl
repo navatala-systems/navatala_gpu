@@ -45,7 +45,7 @@ __kernel void navatala_dataframe_arg_min_f64(__global const double* _input, __gl
   uint aminf64_reductionStride = (uint)(128u);
   for (int aminf64_reductionStep = 0; aminf64_reductionStep < (int)(8); ++aminf64_reductionStep) {
     uint aminf64_stride = aminf64_reductionStride;
-    if ((lid < aminf64_stride)) {
+    if (lid < aminf64_stride) {
       otherVal = svals[(lid + aminf64_stride)];
       otherIdx = sidxs[(lid + aminf64_stride)];
       myVal = svals[lid];
@@ -65,7 +65,7 @@ __kernel void navatala_dataframe_arg_min_f64(__global const double* _input, __gl
     aminf64_reductionStride = aminf64_nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     minValue[0] = svals[0];
     minIndex[0] = sidxs[0];
   }

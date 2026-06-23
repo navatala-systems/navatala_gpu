@@ -19,7 +19,7 @@ __kernel void navatala_dataframe_init_reservoir256_f32(__global const uint* init
   if (inBounds) {
     reservoir[(int)(get_global_id(0))] = as_float(0x00000000u);
   }
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint initSeed = initialSeed[0];
     count[0] = (uint)(0u);
     seed[0] = initSeed;

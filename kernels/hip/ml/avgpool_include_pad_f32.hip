@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_ml_avgpool_include_pad_f32(const float* _inp
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     unsigned int windowVal = window[0];
     unsigned int strideVal = stride[0];
     unsigned int inCountVal = inCount[0];
@@ -27,7 +27,7 @@ extern "C" __global__ void navatala_ml_avgpool_include_pad_f32(const float* _inp
     float cnt = __uint_as_float(0x00000000u);
     for (int w = 0; w < (int)(windowVal); ++w) {
       unsigned int idx = (base + ((unsigned int)(w)));
-      if ((idx < inCountVal)) {
+      if (idx < inCountVal) {
         float v = _input[idx];
         sum = (sum + v);
         cnt = (cnt + __uint_as_float(0x3f800000u));

@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_dataframe_tdigest_add_f32(const float* value, const float* weight, float* centroidMeans, float* centroidWeights, unsigned int* centroidCount, float* totalWeight, float* minVal, float* maxVal) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     float x = value[0];
     float w = weight[0];
     unsigned int count = centroidCount[0];

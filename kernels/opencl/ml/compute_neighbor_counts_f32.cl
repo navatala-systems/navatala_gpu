@@ -41,7 +41,7 @@ __kernel void navatala_ml_compute_neighbor_counts_f32(__global const float* poin
         distSqAccum = newDistSq;
       }
       float finalDistSq = distSqAccum;
-      if ((finalDistSq < epsSq)) {
+      if (finalDistSq < epsSq) {
         uint currentCount = countAccum;
         uint newCount = (currentCount + (uint)(1u));
         countAccum = newCount;

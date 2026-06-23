@@ -18,7 +18,7 @@ __kernel void navatala_cfd_two_mag_sqr_symm_grad_u(__global const float* ufX, __
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     int beg = offsets[((int)((int)(get_global_id(0))))];
@@ -56,7 +56,7 @@ __kernel void navatala_cfd_two_mag_sqr_symm_grad_u(__global const float* ufX, __
     }
     float v = vol[((int)((int)(get_global_id(0))))];
     float invV = as_float(0x00000000u);
-    if ((v != as_float(0x00000000u))) {
+    if (v != as_float(0x00000000u)) {
       invV = (as_float(0x3f800000u) / v);
     }
     g00 = (g00 * invV);

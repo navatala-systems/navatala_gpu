@@ -17,7 +17,7 @@
 __kernel void navatala_dataframe_tdigest_quantile_f64(__global const double* p, __global const double* centroidMeans, __global const double* centroidWeights, __global const uint* centroidCount, __global const double* totalWeight, __global const double* minVal, __global const double* maxVal, __global double* quantile) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     double pVal = p[0];
     uint count = centroidCount[0];
     double minV = minVal[0];

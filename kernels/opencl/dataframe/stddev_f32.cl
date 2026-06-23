@@ -17,7 +17,7 @@ __kernel void navatala_dataframe_stddev_f32(__global const float* variance, __gl
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint zeroU32 = ((uint)(0));
-  if ((gid == zeroU32)) {
+  if (gid == zeroU32) {
     float varianceVal = variance[0];
     float stddevVal = sqrt(varianceVal);
     stddev[0] = stddevVal;

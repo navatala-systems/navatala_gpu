@@ -27,7 +27,7 @@ extern "C" __global__ void navatala_vector_search_merge_sorted_f32(const float* 
     unsigned int hi_clamped = (((gid > na)) ? (na) : (gid));
     hi = hi_clamped;
     for (int __iter = 0; __iter < 32; ++__iter) {
-      if (!((lo < hi))) break;
+      if (!(lo < hi)) break;
       unsigned int lo_v = lo;
       unsigned int hi_v = hi;
       unsigned int mid = (lo_v + ((hi_v - lo_v) / 2u));

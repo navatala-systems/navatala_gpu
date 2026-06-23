@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_cfd_predictor_hby_a_from_source(device const float* rAU [[buffer(0)]], device const float* sourceX [[buffer(1)]], device const float* sourceY [[buffer(2)]], device const float* sourceZ [[buffer(3)]], device const int* counts1 [[buffer(4)]], device float* outHbyAX [[buffer(5)]], device float* outHbyAY [[buffer(6)]], device float* outHbyAZ [[buffer(7)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts1[0])) {
+  if (((int)(int(__gid.x))) >= counts1[0]) {
     return;
   } else {
     float r = rAU[((int)(int(__gid.x)))];

@@ -16,7 +16,7 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_weighted_covariance_f64(const double* weightSum, const double* Cxy, double* covariance) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double w = weightSum[0];
     double cxyVal = Cxy[0];
     double cov = (cxyVal / w);

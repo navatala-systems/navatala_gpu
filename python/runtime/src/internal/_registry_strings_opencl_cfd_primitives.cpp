@@ -12,7 +12,7 @@
 const char* k_opencl_navatala_cfd_primitives_average_face_scalar_to_cell = R"kernel(
 __kernel void navatala_cfd_primitives_average_face_scalar_to_cell(__global const float* facePhi, __global const float* magSf, __global const uint* offsets, __global const uint* faceIdx, __global const float* sumMag, __global const int* params, __global float* outCell) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
     uint begU = offsets[((int)((int)(get_global_id(0))))];
@@ -30,7 +30,7 @@ __kernel void navatala_cfd_primitives_average_face_scalar_to_cell(__global const
       acc = (acc + term);
     }
     float den = sumMag[((int)((int)(get_global_id(0))))];
-    if ((den < as_float(0x1e3ce508u))) {
+    if (den < as_float(0x1e3ce508u)) {
       den = as_float(0x1e3ce508u);
     }
     outCell[((int)((int)(get_global_id(0))))] = (acc / den);
@@ -44,12 +44,12 @@ __kernel void navatala_cfd_primitives_evaluate_scalar_bc(__global const float* i
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
     uint bcType = bcTypeMask[(int)(get_global_id(0))];
     int cell = faceCells[(int)(get_global_id(0))];
-    if ((((int)(bcType)) == 1)) {
+    if (((int)(bcType)) == 1) {
       boundaryOut[(int)(get_global_id(0))] = fixedValues[(int)(get_global_id(0))];
     } else {
       boundaryOut[(int)(get_global_id(0))] = internalField[cell];
@@ -64,12 +64,12 @@ __kernel void navatala_cfd_primitives_evaluate_vector_bc(__global const float* i
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
     uint bcType = bcTypeMask[(int)(get_global_id(0))];
     int cell = faceCells[(int)(get_global_id(0))];
-    if ((((int)(bcType)) == 1)) {
+    if (((int)(bcType)) == 1) {
       outX[(int)(get_global_id(0))] = fvX[(int)(get_global_id(0))];
       outY[(int)(get_global_id(0))] = fvY[(int)(get_global_id(0))];
       outZ[(int)(get_global_id(0))] = fvZ[(int)(get_global_id(0))];
@@ -85,7 +85,7 @@ __kernel void navatala_cfd_primitives_evaluate_vector_bc(__global const float* i
 const char* k_opencl_navatala_cfd_primitives_div_face_flux_csr = R"kernel(
 __kernel void navatala_cfd_primitives_div_face_flux_csr(__global const int* offsets, __global const int* faceIdx, __global const float* sign, __global const float* faceFlux, __global const float* vol, __global const int* params, __global float* outDiv) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
     int beg = offsets[((int)((int)(get_global_id(0))))];
@@ -108,7 +108,7 @@ const char* k_opencl_navatala_cfd_primitives_div_face_flux_csr_f64 = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_cfd_primitives_div_face_flux_csr_f64(__global const int* offsets, __global const int* faceIdx, __global const float* sign, __global const double* faceFlux, __global const double* vol, __global const int* params, __global double* outDiv) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
     int beg = offsets[((int)((int)(get_global_id(0))))];
@@ -131,7 +131,7 @@ __kernel void navatala_cfd_primitives_div_face_flux_csr_f64(__global const int* 
 const char* k_opencl_navatala_cfd_primitives_div_face_flux_vector_csr = R"kernel(
 __kernel void navatala_cfd_primitives_div_face_flux_vector_csr(__global const int* offsets, __global const int* faceIdx, __global const float* sign, __global const float* faceFluxX, __global const float* faceFluxY, __global const float* faceFluxZ, __global const float* vol, __global const int* params, __global float* outX, __global float* outY, __global float* outZ) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
     int beg = offsets[((int)((int)(get_global_id(0))))];
@@ -162,7 +162,7 @@ __kernel void navatala_cfd_primitives_div_face_flux_vector_csr(__global const in
 const char* k_opencl_navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_grad_v2 = R"kernel(
 __kernel void navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_grad_v2(__global const float* muCell, __global const float* muBc, __global const float* gXX, __global const float* gXY, __global const float* gXZ, __global const float* gYX, __global const float* gYY, __global const float* gYZ, __global const float* gZX, __global const float* gZY, __global const float* gZZ, __global const int* owner, __global const int* neighbour, __global const float* weights, __global const float* sfX, __global const float* sfY, __global const float* sfZ, __global const int* offsets, __global const int* faceIdx, __global const float* signF, __global const float* vol, __global const int* params, __global float* outX, __global float* outY, __global float* outZ) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
     float sumX = as_float(0x00000000u);
@@ -175,7 +175,7 @@ __kernel void navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_grad_v2(__global
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < params[1])) {
+      if (f < params[1]) {
         float s = signF[k];
         int o = owner[f];
         float muO = muCell[o];
@@ -218,7 +218,7 @@ __kernel void navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_grad_v2(__global
         float tauFzy = tauOzy;
         float tauFzz = tauOzz;
         int n = neighbour[f];
-        if ((n >= 0)) {
+        if (n >= 0) {
           float muN = muCell[n];
           float gnXX = gXX[n];
           float gnXY = gXY[n];
@@ -277,7 +277,7 @@ __kernel void navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_grad_v2(__global
     }
     float v = vol[((int)((int)(get_global_id(0))))];
     float invV = as_float(0x00000000u);
-    if ((v != as_float(0x00000000u))) {
+    if (v != as_float(0x00000000u)) {
       invV = (as_float(0x3f800000u) / v);
     }
     outX[((int)((int)(get_global_id(0))))] = (sumX * invV);
@@ -290,7 +290,7 @@ __kernel void navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_grad_v2(__global
 const char* k_opencl_navatala_cfd_primitives_face_scalar_product = R"kernel(
 __kernel void navatala_cfd_primitives_face_scalar_product(__global const float* aAllFaces, __global const float* bAllFaces, __global const int* params, __global float* outProd) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
     float a = aAllFaces[((int)((int)(get_global_id(0))))];
@@ -303,7 +303,7 @@ __kernel void navatala_cfd_primitives_face_scalar_product(__global const float* 
 const char* k_opencl_navatala_cfd_primitives_grad_vol_scalar_gauss = R"kernel(
 __kernel void navatala_cfd_primitives_grad_vol_scalar_gauss(__global const float* cellPhi, __global const float* bcValue, __global const uint* bcMask, __global const int* owner, __global const int* neighbour, __global const float* weights, __global const float* sfX, __global const float* sfY, __global const float* sfZ, __global const int* offsets, __global const int* faceIdx, __global const float* sign, __global const float* vol, __global const int* params, __global float* outX, __global float* outY, __global float* outZ) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
     float sumX = as_float(0x00000000u);
@@ -316,12 +316,12 @@ __kernel void navatala_cfd_primitives_grad_vol_scalar_gauss(__global const float
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < params[1])) {
+      if (f < params[1]) {
         float s = sign[k];
         int o = owner[f];
         float po = cellPhi[o];
         float phiF = po;
-        if ((f < params[2])) {
+        if (f < params[2]) {
           int n = neighbour[f];
           float pn = cellPhi[n];
           float ww = weights[f];
@@ -329,12 +329,12 @@ __kernel void navatala_cfd_primitives_grad_vol_scalar_gauss(__global const float
           phiF = ((ww * po) + (iw * pn));
         } else {
           uint m = bcMask[f];
-          if ((m == (uint)(1u))) {
+          if (m == (uint)(1u)) {
             float ww = weights[f];
             float iw = (as_float(0x3f800000u) - ww);
             phiF = ((ww * po) + (iw * bcValue[f]));
           }
-          if ((m == (uint)(2u))) {
+          if (m == (uint)(2u)) {
             phiF = bcValue[f];
           }
         }
@@ -346,7 +346,7 @@ __kernel void navatala_cfd_primitives_grad_vol_scalar_gauss(__global const float
     }
     float v = vol[((int)((int)(get_global_id(0))))];
     float invV = as_float(0x00000000u);
-    if ((v != as_float(0x00000000u))) {
+    if (v != as_float(0x00000000u)) {
       invV = (as_float(0x3f800000u) / v);
     }
     outX[((int)((int)(get_global_id(0))))] = (sumX * invV);
@@ -359,7 +359,7 @@ __kernel void navatala_cfd_primitives_grad_vol_scalar_gauss(__global const float
 const char* k_opencl_navatala_cfd_primitives_grad_vol_vector_gauss = R"kernel(
 __kernel void navatala_cfd_primitives_grad_vol_vector_gauss(__global const float* cellUx, __global const float* cellUy, __global const float* cellUz, __global const float* bcX, __global const float* bcY, __global const float* bcZ, __global const uint* bcMask, __global const int* owner, __global const int* neighbour, __global const float* weights, __global const float* sfX, __global const float* sfY, __global const float* sfZ, __global const int* offsets, __global const int* faceIdx, __global const float* sign, __global const float* vol, __global const int* params, __global float* outXX, __global float* outXY, __global float* outXZ, __global float* outYX, __global float* outYY, __global float* outYZ, __global float* outZX, __global float* outZY, __global float* outZZ) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
     float sumXX = as_float(0x00000000u);
@@ -378,7 +378,7 @@ __kernel void navatala_cfd_primitives_grad_vol_vector_gauss(__global const float
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < params[1])) {
+      if (f < params[1]) {
         float s = sign[k];
         int o = owner[f];
         float uxO = cellUx[o];
@@ -387,7 +387,7 @@ __kernel void navatala_cfd_primitives_grad_vol_vector_gauss(__global const float
         float uxF = uxO;
         float uyF = uyO;
         float uzF = uzO;
-        if ((f < params[2])) {
+        if (f < params[2]) {
           int n = neighbour[f];
           float uxN = cellUx[n];
           float uyN = cellUy[n];
@@ -399,14 +399,14 @@ __kernel void navatala_cfd_primitives_grad_vol_vector_gauss(__global const float
           uzF = ((ww * uzO) + (iw * uzN));
         } else {
           uint m = bcMask[f];
-          if ((m == (uint)(1u))) {
+          if (m == (uint)(1u)) {
             float ww = weights[f];
             float iw = (as_float(0x3f800000u) - ww);
             uxF = ((ww * uxO) + (iw * bcX[f]));
             uyF = ((ww * uyO) + (iw * bcY[f]));
             uzF = ((ww * uzO) + (iw * bcZ[f]));
           }
-          if ((m == (uint)(2u))) {
+          if (m == (uint)(2u)) {
             uxF = bcX[f];
             uyF = bcY[f];
             uzF = bcZ[f];
@@ -431,7 +431,7 @@ __kernel void navatala_cfd_primitives_grad_vol_vector_gauss(__global const float
     }
     float v = vol[((int)((int)(get_global_id(0))))];
     float invV = as_float(0x00000000u);
-    if ((v != as_float(0x00000000u))) {
+    if (v != as_float(0x00000000u)) {
       invV = (as_float(0x3f800000u) / v);
     }
     outXX[((int)((int)(get_global_id(0))))] = (sumXX * invV);
@@ -450,24 +450,24 @@ __kernel void navatala_cfd_primitives_grad_vol_vector_gauss(__global const float
 const char* k_opencl_navatala_cfd_primitives_interp_scalar_face = R"kernel(
 __kernel void navatala_cfd_primitives_interp_scalar_face(__global const int* owner, __global const int* neighbour, __global const float* weights, __global const float* cellPhi, __global const float* bcValue, __global const uint* bcMask, __global const int* params, __global float* outPhiF) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
     int o = owner[((int)((int)(get_global_id(0))))];
     float po = cellPhi[o];
-    if ((((int)((int)(get_global_id(0)))) < params[1])) {
+    if (((int)((int)(get_global_id(0)))) < params[1]) {
       int n = neighbour[((int)((int)(get_global_id(0))))];
       float pn = cellPhi[n];
       float w = weights[((int)((int)(get_global_id(0))))];
       float iw = (as_float(0x3f800000u) - w);
       outPhiF[((int)((int)(get_global_id(0))))] = ((w * po) + (iw * pn));
     } else {
-      if ((bcMask[((int)((int)(get_global_id(0))))] == (uint)(1u))) {
+      if (bcMask[((int)((int)(get_global_id(0))))] == (uint)(1u)) {
         float w = weights[((int)((int)(get_global_id(0))))];
         float iw = (as_float(0x3f800000u) - w);
         outPhiF[((int)((int)(get_global_id(0))))] = ((w * po) + (iw * bcValue[((int)((int)(get_global_id(0))))]));
       } else {
-        if ((bcMask[((int)((int)(get_global_id(0))))] == (uint)(2u))) {
+        if (bcMask[((int)((int)(get_global_id(0))))] == (uint)(2u)) {
           outPhiF[((int)((int)(get_global_id(0))))] = bcValue[((int)((int)(get_global_id(0))))];
         } else {
           outPhiF[((int)((int)(get_global_id(0))))] = po;
@@ -481,36 +481,36 @@ __kernel void navatala_cfd_primitives_interp_scalar_face(__global const int* own
 const char* k_opencl_navatala_cfd_primitives_interp_scalar_face_all = R"kernel(
 __kernel void navatala_cfd_primitives_interp_scalar_face_all(__global const float* cellPhi, __global const int* owner, __global const int* neighbour, __global const float* weights, __global const float* bcValue, __global const int* params, __global float* outPhiF) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
-    if ((((int)((int)(get_global_id(0)))) < params[1])) {
+    if (((int)((int)(get_global_id(0)))) < params[1]) {
       int o = owner[((int)((int)(get_global_id(0))))];
       int n = neighbour[((int)((int)(get_global_id(0))))];
       float po = cellPhi[o];
       float pn = cellPhi[n];
       float wf = weights[((int)((int)(get_global_id(0))))];
-      if ((wf < as_float(0x00000000u))) {
+      if (wf < as_float(0x00000000u)) {
         wf = as_float(0x00000000u);
       }
-      if ((wf > as_float(0x3f800000u))) {
+      if (wf > as_float(0x3f800000u)) {
         wf = as_float(0x3f800000u);
       }
       float iw = (as_float(0x3f800000u) - wf);
       float a = ((wf * po) + (iw * pn));
-      if ((a < as_float(0x00000000u))) {
+      if (a < as_float(0x00000000u)) {
         a = as_float(0x00000000u);
       }
-      if ((a > as_float(0x3f800000u))) {
+      if (a > as_float(0x3f800000u)) {
         a = as_float(0x3f800000u);
       }
       outPhiF[((int)((int)(get_global_id(0))))] = a;
     } else {
       float a = bcValue[((int)((int)(get_global_id(0))))];
-      if ((a < as_float(0x00000000u))) {
+      if (a < as_float(0x00000000u)) {
         a = as_float(0x00000000u);
       }
-      if ((a > as_float(0x3f800000u))) {
+      if (a > as_float(0x3f800000u)) {
         a = as_float(0x3f800000u);
       }
       outPhiF[((int)((int)(get_global_id(0))))] = a;
@@ -522,14 +522,14 @@ __kernel void navatala_cfd_primitives_interp_scalar_face_all(__global const floa
 const char* k_opencl_navatala_cfd_primitives_interp_vector_face = R"kernel(
 __kernel void navatala_cfd_primitives_interp_vector_face(__global const int* owner, __global const int* neighbour, __global const float* weights, __global const float* cellX, __global const float* cellY, __global const float* cellZ, __global const float* bcX, __global const float* bcY, __global const float* bcZ, __global const uint* bcMask, __global const int* params, __global float* outX, __global float* outY, __global float* outZ) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
     int o = owner[((int)((int)(get_global_id(0))))];
     float uxo = cellX[o];
     float uyo = cellY[o];
     float uzo = cellZ[o];
-    if ((((int)((int)(get_global_id(0)))) < params[1])) {
+    if (((int)((int)(get_global_id(0)))) < params[1]) {
       int n = neighbour[((int)((int)(get_global_id(0))))];
       float uxn = cellX[n];
       float uyn = cellY[n];
@@ -541,14 +541,14 @@ __kernel void navatala_cfd_primitives_interp_vector_face(__global const int* own
       outZ[((int)((int)(get_global_id(0))))] = ((w * uzo) + (iw * uzn));
     } else {
       uint m = bcMask[((int)((int)(get_global_id(0))))];
-      if ((m == (uint)(1u))) {
+      if (m == (uint)(1u)) {
         float w = weights[((int)((int)(get_global_id(0))))];
         float iw = (as_float(0x3f800000u) - w);
         outX[((int)((int)(get_global_id(0))))] = ((w * uxo) + (iw * bcX[((int)((int)(get_global_id(0))))]));
         outY[((int)((int)(get_global_id(0))))] = ((w * uyo) + (iw * bcY[((int)((int)(get_global_id(0))))]));
         outZ[((int)((int)(get_global_id(0))))] = ((w * uzo) + (iw * bcZ[((int)((int)(get_global_id(0))))]));
       } else {
-        if ((m == (uint)(2u))) {
+        if (m == (uint)(2u)) {
           outX[((int)((int)(get_global_id(0))))] = bcX[((int)((int)(get_global_id(0))))];
           outY[((int)((int)(get_global_id(0))))] = bcY[((int)((int)(get_global_id(0))))];
           outZ[((int)((int)(get_global_id(0))))] = bcZ[((int)((int)(get_global_id(0))))];
@@ -566,13 +566,13 @@ __kernel void navatala_cfd_primitives_interp_vector_face(__global const int* own
 const char* k_opencl_navatala_cfd_primitives_linear_upwind_scalar_face = R"kernel(
 __kernel void navatala_cfd_primitives_linear_upwind_scalar_face(__global const float* flux, __global const float* xCell, __global const float* gradX, __global const float* gradY, __global const float* gradZ, __global const float* limiter, __global const int* owner, __global const int* nei, __global const float* cx, __global const float* cy, __global const float* cz, __global const float* cfx, __global const float* cfy, __global const float* cfz, __global const float* bcValue, __global const uint* bcMask, __global const uint* params, __global float* outFace) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(params[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(params[0]))) {
     return;
   } else {
     float phif = flux[(int)(get_global_id(0))];
     int own = owner[(int)(get_global_id(0))];
-    if (((int)(get_global_id(0)) < ((int)(params[1])))) {
-      if ((phif >= as_float(0x00000000u))) {
+    if ((int)(get_global_id(0)) < ((int)(params[1]))) {
+      if (phif >= as_float(0x00000000u)) {
         float dx = (cfx[(int)(get_global_id(0))] - cx[own]);
         float dy = (cfy[(int)(get_global_id(0))] - cy[own]);
         float dz = (cfz[(int)(get_global_id(0))] - cz[own]);
@@ -587,11 +587,11 @@ __kernel void navatala_cfd_primitives_linear_upwind_scalar_face(__global const f
         outFace[(int)(get_global_id(0))] = (xCell[neiCell] + (limiter[neiCell] * corr));
       }
     } else {
-      if ((phif >= as_float(0x00000000u))) {
+      if (phif >= as_float(0x00000000u)) {
         outFace[(int)(get_global_id(0))] = xCell[own];
       } else {
         uint mask = bcMask[(int)(get_global_id(0))];
-        if ((((int)(mask)) == 0)) {
+        if (((int)(mask)) == 0) {
           outFace[(int)(get_global_id(0))] = xCell[own];
         } else {
           outFace[(int)(get_global_id(0))] = bcValue[(int)(get_global_id(0))];
@@ -605,14 +605,14 @@ __kernel void navatala_cfd_primitives_linear_upwind_scalar_face(__global const f
 const char* k_opencl_navatala_cfd_primitives_phi_from_u = R"kernel(
 __kernel void navatala_cfd_primitives_phi_from_u(__global const int* owner, __global const int* neighbour, __global const float* weights, __global const float* sfX, __global const float* sfY, __global const float* sfZ, __global const float* ux, __global const float* uy, __global const float* uz, __global const float* bcX, __global const float* bcY, __global const float* bcZ, __global const uint* bcMask, __global const int* params, __global float* outPhi) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
     int o = owner[((int)((int)(get_global_id(0))))];
     float uox = ux[o];
     float uoy = uy[o];
     float uoz = uz[o];
-    if ((((int)((int)(get_global_id(0)))) < params[1])) {
+    if (((int)((int)(get_global_id(0)))) < params[1]) {
       int n = neighbour[((int)((int)(get_global_id(0))))];
       float w = weights[((int)((int)(get_global_id(0))))];
       float iw = (as_float(0x3f800000u) - w);
@@ -621,7 +621,7 @@ __kernel void navatala_cfd_primitives_phi_from_u(__global const int* owner, __gl
       float ufz = ((w * uoz) + (iw * uz[n]));
       outPhi[((int)((int)(get_global_id(0))))] = (((sfX[((int)((int)(get_global_id(0))))] * ufx) + (sfY[((int)((int)(get_global_id(0))))] * ufy)) + (sfZ[((int)((int)(get_global_id(0))))] * ufz));
     } else {
-      if ((bcMask[((int)((int)(get_global_id(0))))] == (uint)(1u))) {
+      if (bcMask[((int)((int)(get_global_id(0))))] == (uint)(1u)) {
         float w = weights[((int)((int)(get_global_id(0))))];
         float iw = (as_float(0x3f800000u) - w);
         float ufx = ((w * uox) + (iw * bcX[((int)((int)(get_global_id(0))))]));
@@ -629,7 +629,7 @@ __kernel void navatala_cfd_primitives_phi_from_u(__global const int* owner, __gl
         float ufz = ((w * uoz) + (iw * bcZ[((int)((int)(get_global_id(0))))]));
         outPhi[((int)((int)(get_global_id(0))))] = (((sfX[((int)((int)(get_global_id(0))))] * ufx) + (sfY[((int)((int)(get_global_id(0))))] * ufy)) + (sfZ[((int)((int)(get_global_id(0))))] * ufz));
       } else {
-        if ((bcMask[((int)((int)(get_global_id(0))))] == (uint)(2u))) {
+        if (bcMask[((int)((int)(get_global_id(0))))] == (uint)(2u)) {
           float ufx = bcX[((int)((int)(get_global_id(0))))];
           float ufy = bcY[((int)((int)(get_global_id(0))))];
           float ufz = bcZ[((int)((int)(get_global_id(0))))];
@@ -647,7 +647,7 @@ const char* k_opencl_navatala_cfd_primitives_phi_from_u_boundary = R"kernel(
 __kernel void navatala_cfd_primitives_phi_from_u_boundary(__global const int* owner, __global const float* weights, __global const float* sfX, __global const float* sfY, __global const float* sfZ, __global const float* ux, __global const float* uy, __global const float* uz, __global const float* bcx, __global const float* bcy, __global const float* bcz, __global const uint* bcmask, __global const uint* params, __global float* outPhi) {
   int gid0 = (int)get_global_id(0);
   int f = (((int)(params[1])) + (int)(get_global_id(0)));
-  if ((f >= ((int)(params[0])))) {
+  if (f >= ((int)(params[0]))) {
     return;
   } else {
     int o = owner[f];
@@ -659,14 +659,14 @@ __kernel void navatala_cfd_primitives_phi_from_u_boundary(__global const int* ow
     float ufz = uoz;
     uint m = bcmask[f];
     int mInt = ((int)(m));
-    if ((mInt == 1)) {
+    if (mInt == 1) {
       float w = weights[f];
       float iw = (as_float(0x3f800000u) - w);
       ufx = ((w * uox) + (iw * bcx[f]));
       ufy = ((w * uoy) + (iw * bcy[f]));
       ufz = ((w * uoz) + (iw * bcz[f]));
     } else {
-      if ((mInt == 2)) {
+      if (mInt == 2) {
         ufx = bcx[f];
         ufy = bcy[f];
         ufz = bcz[f];
@@ -680,7 +680,7 @@ __kernel void navatala_cfd_primitives_phi_from_u_boundary(__global const int* ow
 const char* k_opencl_navatala_cfd_primitives_phi_from_u_internal = R"kernel(
 __kernel void navatala_cfd_primitives_phi_from_u_internal(__global const int* owner, __global const int* neighbour, __global const float* weights, __global const float* sfX, __global const float* sfY, __global const float* sfZ, __global const float* ux, __global const float* uy, __global const float* uz, __global const uint* params, __global float* outPhi) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(params[1])))) {
+  if ((int)(get_global_id(0)) >= ((int)(params[1]))) {
     return;
   } else {
     int o = owner[(int)(get_global_id(0))];
@@ -698,7 +698,7 @@ __kernel void navatala_cfd_primitives_phi_from_u_internal(__global const int* ow
 const char* k_opencl_navatala_cfd_primitives_phig_gravity = R"kernel(
 __kernel void navatala_cfd_primitives_phig_gravity(__global const float* ghf, __global const float* snGradRho, __global const float* rAUf, __global const float* magSf, __global const uint* params, __global float* outPhig) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(params[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(params[0]))) {
     return;
   } else {
     outPhig[(int)(get_global_id(0))] = (-((ghf[(int)(get_global_id(0))] * snGradRho[(int)(get_global_id(0))]) * (rAUf[(int)(get_global_id(0))] * magSf[(int)(get_global_id(0))])));
@@ -712,7 +712,7 @@ __kernel void navatala_cfd_primitives_r_a_u_from_dt_rho(__global const float* rh
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float r = rho[((int)((int)(get_global_id(0))))];
@@ -727,13 +727,13 @@ __kernel void navatala_cfd_primitives_r_a_u_from_dt_rho_integrated(__global cons
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float r = rho[((int)((int)(get_global_id(0))))];
     float v = vol[((int)((int)(get_global_id(0))))];
     float denom = (r * v);
-    if ((denom != as_float(0x00000000u))) {
+    if (denom != as_float(0x00000000u)) {
       outRAU[((int)((int)(get_global_id(0))))] = (paramsF[0] / denom);
     } else {
       outRAU[((int)((int)(get_global_id(0))))] = as_float(0x00000000u);
@@ -748,7 +748,7 @@ __kernel void navatala_cfd_primitives_r_a_u_from_dt_rho_sp(__global const float*
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float r = rho[((int)((int)(get_global_id(0))))];
@@ -765,14 +765,14 @@ __kernel void navatala_cfd_primitives_r_a_u_from_dt_rho_sp_integrated(__global c
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float r = rho[((int)((int)(get_global_id(0))))];
     float s = sp[((int)((int)(get_global_id(0))))];
     float v = vol[((int)((int)(get_global_id(0))))];
     float denom = ((r + (paramsF[0] * s)) * v);
-    if ((denom != as_float(0x00000000u))) {
+    if (denom != as_float(0x00000000u)) {
       outRAU[((int)((int)(get_global_id(0))))] = (paramsF[0] / denom);
     } else {
       outRAU[((int)((int)(get_global_id(0))))] = as_float(0x00000000u);
@@ -784,7 +784,7 @@ __kernel void navatala_cfd_primitives_r_a_u_from_dt_rho_sp_integrated(__global c
 const char* k_opencl_navatala_cfd_primitives_r_a_u_from_u_eqn_approx = R"kernel(
 __kernel void navatala_cfd_primitives_r_a_u_from_u_eqn_approx(__global const float* rhoCell, __global const float* muCell, __global const float* phiFaces, __global const float* rhoBcVal, __global const uint* rhoBcMask, __global const float* muBcVal, __global const uint* muBcMask, __global const int* ownerAll, __global const int* neighbourInt, __global const float* weightsAll, __global const float* magSfAll, __global const float* deltaAll, __global const uint* offsets, __global const uint* faceIdx, __global const int* sign, __global const float* volCells, __global const int* counts3, __global const float* paramsF, __global float* outRAU) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= counts3[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts3[0]) {
     return;
   } else {
     float invDt = (as_float(0x3f800000u) / paramsF[0]);
@@ -802,26 +802,26 @@ __kernel void navatala_cfd_primitives_r_a_u_from_u_eqn_approx(__global const flo
       int k = (beg + t);
       uint fU = faceIdx[k];
       int f = ((int)(fU));
-      if ((f >= counts3[1])) {
+      if (f >= counts3[1]) {
       } else {
         int s = sign[k];
         int o = ownerAll[f];
         float phi = phiFaces[f];
         float rhoF = as_float(0x00000000u);
         float muF = as_float(0x00000000u);
-        if ((f < counts3[2])) {
+        if (f < counts3[2]) {
           int n = neighbourInt[f];
           float w = weightsAll[f];
           float iw = (as_float(0x3f800000u) - w);
           rhoF = ((w * rhoCell[o]) + (iw * rhoCell[n]));
           muF = ((w * muCell[o]) + (iw * muCell[n]));
         } else {
-          if ((rhoBcMask[f] != (uint)(0u))) {
+          if (rhoBcMask[f] != (uint)(0u)) {
             rhoF = rhoBcVal[f];
           } else {
             rhoF = rhoCell[o];
           }
-          if ((muBcMask[f] != (uint)(0u))) {
+          if (muBcMask[f] != (uint)(0u)) {
             muF = muBcVal[f];
           } else {
             muF = muCell[o];
@@ -829,10 +829,10 @@ __kernel void navatala_cfd_primitives_r_a_u_from_u_eqn_approx(__global const flo
         }
         float rhoPhi = (rhoF * phi);
         float outFlux = rhoPhi;
-        if ((s < 0)) {
+        if (s < 0) {
           outFlux = (as_float(0x00000000u) - rhoPhi);
         }
-        if ((outFlux > as_float(0x00000000u))) {
+        if (outFlux > as_float(0x00000000u)) {
           conv = (conv + outFlux);
         }
         float diffTerm = (muF * (magSfAll[f] * deltaAll[f]));
@@ -840,7 +840,7 @@ __kernel void navatala_cfd_primitives_r_a_u_from_u_eqn_approx(__global const flo
       }
     }
     A = (A + ((conv + diff) / V));
-    if ((A != as_float(0x00000000u))) {
+    if (A != as_float(0x00000000u)) {
       outRAU[((int)((int)(get_global_id(0))))] = (as_float(0x3f800000u) / A);
     } else {
       outRAU[((int)((int)(get_global_id(0))))] = as_float(0x00000000u);
@@ -852,7 +852,7 @@ __kernel void navatala_cfd_primitives_r_a_u_from_u_eqn_approx(__global const flo
 const char* k_opencl_navatala_cfd_primitives_r_a_u_from_u_eqn_approx_sp = R"kernel(
 __kernel void navatala_cfd_primitives_r_a_u_from_u_eqn_approx_sp(__global const float* rhoCell, __global const float* muCell, __global const float* phiFaces, __global const float* rhoBcVal, __global const uint* rhoBcMask, __global const float* muBcVal, __global const uint* muBcMask, __global const int* ownerAll, __global const int* neighbourInt, __global const float* weightsAll, __global const float* magSfAll, __global const float* deltaAll, __global const uint* offsets, __global const uint* faceIdx, __global const int* sign, __global const float* volCells, __global const float* sp, __global const int* counts3, __global const float* paramsF, __global float* outRAU) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= counts3[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts3[0]) {
     return;
   } else {
     float invDt = (as_float(0x3f800000u) / paramsF[0]);
@@ -870,26 +870,26 @@ __kernel void navatala_cfd_primitives_r_a_u_from_u_eqn_approx_sp(__global const 
       int k = (beg + t);
       uint fU = faceIdx[k];
       int f = ((int)(fU));
-      if ((f >= counts3[1])) {
+      if (f >= counts3[1]) {
       } else {
         int s = sign[k];
         int o = ownerAll[f];
         float phi = phiFaces[f];
         float rhoF = as_float(0x00000000u);
         float muF = as_float(0x00000000u);
-        if ((f < counts3[2])) {
+        if (f < counts3[2]) {
           int n = neighbourInt[f];
           float w = weightsAll[f];
           float iw = (as_float(0x3f800000u) - w);
           rhoF = ((w * rhoCell[o]) + (iw * rhoCell[n]));
           muF = ((w * muCell[o]) + (iw * muCell[n]));
         } else {
-          if ((rhoBcMask[f] != (uint)(0u))) {
+          if (rhoBcMask[f] != (uint)(0u)) {
             rhoF = rhoBcVal[f];
           } else {
             rhoF = rhoCell[o];
           }
-          if ((muBcMask[f] != (uint)(0u))) {
+          if (muBcMask[f] != (uint)(0u)) {
             muF = muBcVal[f];
           } else {
             muF = muCell[o];
@@ -897,10 +897,10 @@ __kernel void navatala_cfd_primitives_r_a_u_from_u_eqn_approx_sp(__global const 
         }
         float rhoPhi = (rhoF * phi);
         float outFlux = rhoPhi;
-        if ((s < 0)) {
+        if (s < 0) {
           outFlux = (as_float(0x00000000u) - rhoPhi);
         }
-        if ((outFlux > as_float(0x00000000u))) {
+        if (outFlux > as_float(0x00000000u)) {
           conv = (conv + outFlux);
         }
         float diffTerm = (muF * (magSfAll[f] * deltaAll[f]));
@@ -909,7 +909,7 @@ __kernel void navatala_cfd_primitives_r_a_u_from_u_eqn_approx_sp(__global const 
     }
     A = (A + ((conv + diff) / V));
     A = (A + sp[((int)((int)(get_global_id(0))))]);
-    if ((A != as_float(0x00000000u))) {
+    if (A != as_float(0x00000000u)) {
       outRAU[((int)((int)(get_global_id(0))))] = (as_float(0x3f800000u) / A);
     } else {
       outRAU[((int)((int)(get_global_id(0))))] = as_float(0x00000000u);
@@ -924,14 +924,14 @@ __kernel void navatala_cfd_primitives_rho_from_alpha(__global const float* alpha
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float a = alpha[((int)((int)(get_global_id(0))))];
-    if ((a < as_float(0x00000000u))) {
+    if (a < as_float(0x00000000u)) {
       a = as_float(0x00000000u);
     }
-    if ((a > as_float(0x3f800000u))) {
+    if (a > as_float(0x3f800000u)) {
       a = as_float(0x3f800000u);
     }
     float invA = (as_float(0x3f800000u) - a);
@@ -944,24 +944,24 @@ __kernel void navatala_cfd_primitives_rho_from_alpha(__global const float* alpha
 const char* k_opencl_navatala_cfd_primitives_rho_phi_from_rho_and_phi = R"kernel(
 __kernel void navatala_cfd_primitives_rho_phi_from_rho_and_phi(__global const float* phiAll, __global const float* rhoCell, __global const int* owner, __global const int* neighbour, __global const float* weights, __global const float* rhoBcVal, __global const uint* rhoBcMask, __global const int* params, __global float* outRhoPhi) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
     int o = owner[((int)((int)(get_global_id(0))))];
     float rhoF = rhoCell[o];
-    if ((((int)((int)(get_global_id(0)))) < params[1])) {
+    if (((int)((int)(get_global_id(0)))) < params[1]) {
       int n = neighbour[((int)((int)(get_global_id(0))))];
       float w0 = weights[((int)((int)(get_global_id(0))))];
       float iw = (as_float(0x3f800000u) - w0);
       rhoF = ((w0 * rhoCell[o]) + (iw * rhoCell[n]));
     } else {
       uint m = rhoBcMask[((int)((int)(get_global_id(0))))];
-      if ((m == (uint)(1u))) {
+      if (m == (uint)(1u)) {
         float w0 = weights[((int)((int)(get_global_id(0))))];
         float iw = (as_float(0x3f800000u) - w0);
         rhoF = ((w0 * rhoCell[o]) + (iw * rhoBcVal[((int)((int)(get_global_id(0))))]));
       }
-      if ((m == (uint)(2u))) {
+      if (m == (uint)(2u)) {
         rhoF = rhoBcVal[((int)((int)(get_global_id(0))))];
       }
     }
@@ -974,17 +974,17 @@ __kernel void navatala_cfd_primitives_rho_phi_from_rho_and_phi(__global const fl
 const char* k_opencl_navatala_cfd_primitives_sn_grad_scalar = R"kernel(
 __kernel void navatala_cfd_primitives_sn_grad_scalar(__global const float* cellVal, __global const int* owner, __global const int* neighbour, __global const float* delta, __global const float* faceVal, __global const uint* faceMask, __global const int* params, __global float* outSnGrad) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
     int o = owner[((int)((int)(get_global_id(0))))];
     float aO = cellVal[o];
-    if ((((int)((int)(get_global_id(0)))) < params[1])) {
+    if (((int)((int)(get_global_id(0)))) < params[1]) {
       int n = neighbour[((int)((int)(get_global_id(0))))];
       float aN = cellVal[n];
       outSnGrad[((int)((int)(get_global_id(0))))] = (delta[((int)((int)(get_global_id(0))))] * (aN - aO));
     } else {
-      if ((faceMask[((int)((int)(get_global_id(0))))] != (uint)(0u))) {
+      if (faceMask[((int)((int)(get_global_id(0))))] != (uint)(0u)) {
         float aN = faceVal[((int)((int)(get_global_id(0))))];
         outSnGrad[((int)((int)(get_global_id(0))))] = (delta[((int)((int)(get_global_id(0))))] * (aN - aO));
       } else {

@@ -63,7 +63,7 @@ void main() {
   uint maxCorrF64RedStride = 128u;
   for (int maxCorrF64RedStep = 0; maxCorrF64RedStep < int(8); ++maxCorrF64RedStep) {
     uint maxCorrF64Stride = maxCorrF64RedStride;
-    if ((lid < maxCorrF64Stride)) {
+    if (lid < maxCorrF64Stride) {
       otherVal = svals[(lid + maxCorrF64Stride)];
       otherIdx = sidxs[(lid + maxCorrF64Stride)];
       myVal = svals[lid];
@@ -79,7 +79,7 @@ void main() {
     maxCorrF64RedStride = maxCorrF64NextStride;
     barrier();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     maxValue[0] = svals[0];
     maxIndex[0] = sidxs[0];
   }

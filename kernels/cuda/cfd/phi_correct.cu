@@ -19,23 +19,23 @@ extern "C" __global__ void navatala_cfd_phi_correct(const float* phiIn, const fl
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0]) {
     return;
   } else {
     int o = owner[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float po = pCell[o];
     float other = po;
     float snGrad = __uint_as_float(0x00000000u);
-    if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < counts[1])) {
+    if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < counts[1]) {
       int n = neighbour[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       other = pCell[n];
     } else {
-      if ((bcMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] != 0)) {
+      if (bcMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] != 0) {
         other = bcVal[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       }
     }
     snGrad = (deltaCoeffs[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] * (other - po));
-    if ((bcSnGradMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] != 0)) {
+    if (bcSnGradMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] != 0) {
       snGrad = bcSnGrad[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     }
     float gradFace = (magSf[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] * snGrad);

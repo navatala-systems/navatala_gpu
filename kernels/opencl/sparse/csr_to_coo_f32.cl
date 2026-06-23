@@ -17,7 +17,7 @@ __kernel void navatala_sparse_csr_to_coo_f32(__global const uint* rowPtr, __glob
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     for (int j = 0; j < (int)((re - rs)); ++j) {

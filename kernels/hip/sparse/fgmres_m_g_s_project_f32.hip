@@ -31,15 +31,15 @@ extern "C" __global__ void navatala_sparse_fgmres_m_g_s_project_f32(const float*
   float warpSum = gpu_warp_reduce_sum(prod);
   __shared__ float sdata[32];
   int lane = (int)(threadIdx.x % warpSize);
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   __syncthreads();
-  if ((lid < 8)) {
+  if (lid < 8) {
     float val = sdata[lid];
     float finalSum = gpu_warp_reduce_sum(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       hij[0] = finalSum;
     }
   }

@@ -18,7 +18,7 @@ __kernel void navatala_cfd_scalar_ldu_mat_vec(__global const float* diag, __glob
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
     float s = (diag[(int)(get_global_id(0))] * x[(int)(get_global_id(0))]);
@@ -30,8 +30,8 @@ __kernel void navatala_cfd_scalar_ldu_mat_vec(__global const float* diag, __glob
       int k = (beg + t);
       uint f = faceIdx[k];
       int sg = sign[k];
-      if ((((int)(f)) < ((int)(counts[1])))) {
-        if ((sg >= 0)) {
+      if (((int)(f)) < ((int)(counts[1]))) {
+        if (sg >= 0) {
           int nb = neighbour[((int)(f))];
           s = (s + (upper[((int)(f))] * x[nb]));
         } else {

@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_vector_search_compute_neighbor_distances_f32
   unsigned int tid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int nn = n_neighbors[0];
   unsigned int d = dim[0];
-  if ((tid < nn)) {
+  if (tid < nn) {
     unsigned int neighbor_id = neighbor_ids[tid];
     float acc = __uint_as_float(0x00000000u);
     for (int k = 0; k < (int)(d); ++k) {

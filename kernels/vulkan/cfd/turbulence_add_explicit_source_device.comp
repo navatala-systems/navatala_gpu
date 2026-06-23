@@ -32,7 +32,7 @@ layout(std430, binding = 3) writeonly buffer buf_outVals {
 // kernel: navatala_cfd_turbulence_add_explicit_source_device
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) >= int(counts[0]))) {
+  if (int(gl_GlobalInvocationID.x) >= int(counts[0])) {
     return;
   } else {
     outVals[int(gl_GlobalInvocationID.x)] = (explicitSrc[int(gl_GlobalInvocationID.x)] * vol[int(gl_GlobalInvocationID.x)]);

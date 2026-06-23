@@ -19,7 +19,7 @@ __kernel void navatala_sparse_multi_vec_norm_partials_f32(__global const float* 
   int N = ((int)(n[0]));
   int kVal = ((int)(k[0]));
   int total = (N * kVal);
-  if ((gid < total)) {
+  if (gid < total) {
     float x = X[gid];
     partials[gid] = (x * x);
   }

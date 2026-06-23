@@ -34,7 +34,7 @@ __kernel void navatala_ml_compute_effective_dof_f64(__global const double* eigen
   uint dof64_reductionStride = (uint)(128u);
   for (int dof64_reductionStep = 0; dof64_reductionStep < (int)(8); ++dof64_reductionStep) {
     uint dof64_stride = dof64_reductionStride;
-    if ((lid < dof64_stride)) {
+    if (lid < dof64_stride) {
       double dof64_other = sdata[(lid + dof64_stride)];
       double dof64_mine = sdata[lid];
       double dof64_sum = (dof64_mine + dof64_other);
@@ -45,7 +45,7 @@ __kernel void navatala_ml_compute_effective_dof_f64(__global const double* eigen
     dof64_reductionStride = dof64_nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     double dofVal = sdata[0];
     dof[0] = dofVal;
   }

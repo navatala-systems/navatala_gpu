@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_graph_spmv_unweighted_f32(const unsigned int
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     unsigned int base = offsets[gid];
     unsigned int endv = offsets[(gid + 1u)];
     unsigned int rowlen = (endv - base);

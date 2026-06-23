@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_global_to_local_index_map(const unsig
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nIndices[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     unsigned int gIdx = globalIndices[gid];
     unsigned int offset = localOffset[0];
     unsigned int nLoc = nLocal[0];

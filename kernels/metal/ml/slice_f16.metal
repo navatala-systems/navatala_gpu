@@ -19,7 +19,7 @@ using namespace metal;
 kernel void navatala_ml_slice_f16(device const half* _input [[buffer(0)]], device const uint* offset [[buffer(1)]], device const uint* outCount [[buffer(2)]], device half* _output [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     uint offsetVal = offset[0];
     uint srcIdx = (offsetVal + gid);
     half v = _input[srcIdx];

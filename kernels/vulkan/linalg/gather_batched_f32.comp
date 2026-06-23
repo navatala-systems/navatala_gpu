@@ -49,7 +49,7 @@ void main() {
   uint kVal = kCount[0u];
   uint outBatchStride = (kVal * nVal);
   uint totalElems = (batchVal * outBatchStride);
-  if ((tid < totalElems)) {
+  if (tid < totalElems) {
     uint batchIdx = (tid / outBatchStride);
     uint withinBatch = (tid % outBatchStride);
     uint rowIdx = (withinBatch / nVal);

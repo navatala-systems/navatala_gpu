@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_dilu_build_reciprocal_d_f64(const uns
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int localIdx = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRowsThisColor[0]));
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int offset = ((int)(colorOffsets[0]));
     int row = (offset + localIdx);
     int rs = ((int)(rowPtr[row]));
@@ -27,7 +27,7 @@ extern "C" __global__ void navatala_sparse_dilu_build_reciprocal_d_f64(const uns
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col == row)) {
+      if (col == row) {
         diag = values[k];
       }
     }
@@ -35,7 +35,7 @@ extern "C" __global__ void navatala_sparse_dilu_build_reciprocal_d_f64(const uns
     for (int j2 = 0; j2 < (int)((re - rs)); ++j2) {
       int k2 = (rs + j2);
       int col2 = ((int)(colIdx[k2]));
-      if ((col2 < row)) {
+      if (col2 < row) {
         double aij = values[k2];
         double rdj = recipD[col2];
         int jrs = ((int)(rowPtr[col2]));
@@ -44,7 +44,7 @@ extern "C" __global__ void navatala_sparse_dilu_build_reciprocal_d_f64(const uns
         for (int pp = 0; pp < (int)((jre - jrs)); ++pp) {
           int p = (jrs + pp);
           int pcol = ((int)(colIdx[p]));
-          if ((pcol == row)) {
+          if (pcol == row) {
             aji = values[p];
           }
         }

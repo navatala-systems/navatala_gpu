@@ -25,7 +25,7 @@ kernel void navatala_ml_layernorm_backward_f16(device const half* x [[buffer(0)]
   float epsVal = eps[0];
   float gM = as_type<float>(0x00000000u);
   for (int itm = 0; itm < (int)(numIters); ++itm) {
-    if (((lid + (((uint)(itm)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(itm)) * 256u)) < countVal) {
       gM = (gM + ((float)(x[(lid + (((uint)(itm)) * 256u))])));
     }
   }
@@ -34,7 +34,7 @@ kernel void navatala_ml_layernorm_backward_f16(device const half* x [[buffer(0)]
   uint mStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = mStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -49,7 +49,7 @@ kernel void navatala_ml_layernorm_backward_f16(device const half* x [[buffer(0)]
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float gV = as_type<float>(0x00000000u);
   for (int itv = 0; itv < (int)(numIters); ++itv) {
-    if (((lid + (((uint)(itv)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(itv)) * 256u)) < countVal) {
       gV = (gV + ((((float)(x[(lid + (((uint)(itv)) * 256u))])) - mean) * (((float)(x[(lid + (((uint)(itv)) * 256u))])) - mean)));
     }
   }
@@ -58,7 +58,7 @@ kernel void navatala_ml_layernorm_backward_f16(device const half* x [[buffer(0)]
   uint vStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = vStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -74,7 +74,7 @@ kernel void navatala_ml_layernorm_backward_f16(device const half* x [[buffer(0)]
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float g1 = as_type<float>(0x00000000u);
   for (int it1 = 0; it1 < (int)(numIters); ++it1) {
-    if (((lid + (((uint)(it1)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(it1)) * 256u)) < countVal) {
       g1 = (g1 + (((float)(dy[(lid + (((uint)(it1)) * 256u))])) * ((float)(gamma[(lid + (((uint)(it1)) * 256u))]))));
     }
   }
@@ -83,7 +83,7 @@ kernel void navatala_ml_layernorm_backward_f16(device const half* x [[buffer(0)]
   uint s1Str = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = s1Str;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -98,7 +98,7 @@ kernel void navatala_ml_layernorm_backward_f16(device const half* x [[buffer(0)]
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float g2 = as_type<float>(0x00000000u);
   for (int it2 = 0; it2 < (int)(numIters); ++it2) {
-    if (((lid + (((uint)(it2)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(it2)) * 256u)) < countVal) {
       g2 = (g2 + ((((float)(dy[(lid + (((uint)(it2)) * 256u))])) * ((float)(gamma[(lid + (((uint)(it2)) * 256u))]))) * ((((float)(x[(lid + (((uint)(it2)) * 256u))])) - mean) / std)));
     }
   }
@@ -107,7 +107,7 @@ kernel void navatala_ml_layernorm_backward_f16(device const half* x [[buffer(0)]
   uint s2Str = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = s2Str;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -121,7 +121,7 @@ kernel void navatala_ml_layernorm_backward_f16(device const half* x [[buffer(0)]
   float m2 = (sdata[0] / n);
   for (int itw = 0; itw < (int)(numIters); ++itw) {
     uint idw = (lid + (((uint)(itw)) * 256u));
-    if ((idw < countVal)) {
+    if (idw < countVal) {
       float xhatw = ((((float)(x[idw])) - mean) / std);
       float dyvw = ((float)(dy[idw]));
       float dxhw = (dyvw * ((float)(gamma[idw])));

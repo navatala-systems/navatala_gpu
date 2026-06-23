@@ -16,7 +16,7 @@
 __kernel void navatala_cfd_primitives_phi_from_u_boundary(__global const int* owner, __global const float* weights, __global const float* sfX, __global const float* sfY, __global const float* sfZ, __global const float* ux, __global const float* uy, __global const float* uz, __global const float* bcx, __global const float* bcy, __global const float* bcz, __global const uint* bcmask, __global const uint* params, __global float* outPhi) {
   int gid0 = (int)get_global_id(0);
   int f = (((int)(params[1])) + (int)(get_global_id(0)));
-  if ((f >= ((int)(params[0])))) {
+  if (f >= ((int)(params[0]))) {
     return;
   } else {
     int o = owner[f];
@@ -28,14 +28,14 @@ __kernel void navatala_cfd_primitives_phi_from_u_boundary(__global const int* ow
     float ufz = uoz;
     uint m = bcmask[f];
     int mInt = ((int)(m));
-    if ((mInt == 1)) {
+    if (mInt == 1) {
       float w = weights[f];
       float iw = (as_float(0x3f800000u) - w);
       ufx = ((w * uox) + (iw * bcx[f]));
       ufy = ((w * uoy) + (iw * bcy[f]));
       ufz = ((w * uoz) + (iw * bcz[f]));
     } else {
-      if ((mInt == 2)) {
+      if (mInt == 2) {
         ufx = bcx[f];
         ufy = bcy[f];
         ufz = bcz[f];

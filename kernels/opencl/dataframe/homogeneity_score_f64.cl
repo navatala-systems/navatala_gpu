@@ -70,7 +70,7 @@ __kernel void navatala_dataframe_homogeneity_score_f64(__global const double* co
   barrier(CLK_LOCAL_MEM_FENCE);
   for (int stride = 0; stride < (int)((uint)(128u)); ++stride) {
     uint strideU32 = ((uint)(stride));
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       double otherHYC = hycSum[(lid + strideU32)];
       double mineHYC = hycSum[lid];
       hycSum[lid] = (mineHYC + otherHYC);
@@ -80,7 +80,7 @@ __kernel void navatala_dataframe_homogeneity_score_f64(__global const double* co
     }
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     double hycFinal = hycSum[(uint)(0u)];
     double hyFinal = hySum[(uint)(0u)];
     bool hyIsZero = (hyFinal == as_double(0x0000000000000000ul));

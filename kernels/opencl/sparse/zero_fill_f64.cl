@@ -18,7 +18,7 @@ __kernel void navatala_sparse_zero_fill_f64(__global const uint* n, __global dou
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     x[gid] = as_double(0x0000000000000000ul);
   }
 }

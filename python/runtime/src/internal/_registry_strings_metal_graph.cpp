@@ -15,7 +15,7 @@ using namespace metal;
 
 kernel void navatala_graph_pack_f32(device const int* indices [[buffer(0)]], device const float* src [[buffer(1)]], device const int* count [[buffer(2)]], device float* dst [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int i = ((int)(int(__gid.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     dst[i] = src[indices[((int)(int(__gid.x)))]];
   }
 }
@@ -27,7 +27,7 @@ using namespace metal;
 
 kernel void navatala_graph_pack_i32(device const int* indices [[buffer(0)]], device const int* src [[buffer(1)]], device const int* count [[buffer(2)]], device int* dst [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int i = ((int)(int(__gid.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     dst[i] = src[indices[((int)(int(__gid.x)))]];
   }
 }
@@ -39,7 +39,7 @@ using namespace metal;
 
 kernel void navatala_graph_pack_u32(device const int* indices [[buffer(0)]], device const uint* src [[buffer(1)]], device const int* count [[buffer(2)]], device uint* dst [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int i = ((int)(int(__gid.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     dst[i] = src[indices[((int)(int(__gid.x)))]];
   }
 }
@@ -51,7 +51,7 @@ using namespace metal;
 
 kernel void navatala_graph_unpack_f32(device const int* indices [[buffer(0)]], device const float* src [[buffer(1)]], device const int* count [[buffer(2)]], device float* dst [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int i = ((int)(int(__gid.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     dst[indices[((int)(int(__gid.x)))]] = src[((int)(int(__gid.x)))];
   }
 }
@@ -63,7 +63,7 @@ using namespace metal;
 
 kernel void navatala_graph_unpack_i32(device const int* indices [[buffer(0)]], device const int* src [[buffer(1)]], device const int* count [[buffer(2)]], device int* dst [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int i = ((int)(int(__gid.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     dst[indices[((int)(int(__gid.x)))]] = src[((int)(int(__gid.x)))];
   }
 }
@@ -75,7 +75,7 @@ using namespace metal;
 
 kernel void navatala_graph_unpack_u32(device const int* indices [[buffer(0)]], device const uint* src [[buffer(1)]], device const int* count [[buffer(2)]], device uint* dst [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int i = ((int)(int(__gid.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     dst[indices[((int)(int(__gid.x)))]] = src[((int)(int(__gid.x)))];
   }
 }
@@ -87,7 +87,7 @@ using namespace metal;
 
 kernel void navatala_graph_pack_f32x3(device const int* indices [[buffer(0)]], device const float* src [[buffer(1)]], device const int* count [[buffer(2)]], device const int* n [[buffer(3)]], device float* dst [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int i = ((int)(int(__gid.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(3); ++c) {
       int dstLin = ((c * count[0]) + i);
       int srcLin = ((c * n[0]) + indices[((int)(int(__gid.x)))]);
@@ -103,7 +103,7 @@ using namespace metal;
 
 kernel void navatala_graph_unpack_f32x3(device const int* indices [[buffer(0)]], device const float* src [[buffer(1)]], device const int* count [[buffer(2)]], device const int* n [[buffer(3)]], device float* dst [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int i = ((int)(int(__gid.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(3); ++c) {
       int srcLin = ((c * count[0]) + i);
       int dstLin = ((c * n[0]) + indices[((int)(int(__gid.x)))]);
@@ -119,7 +119,7 @@ using namespace metal;
 
 kernel void navatala_graph_pack_f32x6(device const int* indices [[buffer(0)]], device const float* src [[buffer(1)]], device const int* count [[buffer(2)]], device const int* n [[buffer(3)]], device float* dst [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int i = ((int)(int(__gid.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(6); ++c) {
       int dstLin = ((c * count[0]) + i);
       int srcLin = ((c * n[0]) + indices[((int)(int(__gid.x)))]);
@@ -135,7 +135,7 @@ using namespace metal;
 
 kernel void navatala_graph_unpack_f32x6(device const int* indices [[buffer(0)]], device const float* src [[buffer(1)]], device const int* count [[buffer(2)]], device const int* n [[buffer(3)]], device float* dst [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int i = ((int)(int(__gid.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(6); ++c) {
       int srcLin = ((c * count[0]) + i);
       int dstLin = ((c * n[0]) + indices[((int)(int(__gid.x)))]);
@@ -151,7 +151,7 @@ using namespace metal;
 
 kernel void navatala_graph_pack_f32x9(device const int* indices [[buffer(0)]], device const float* src [[buffer(1)]], device const int* count [[buffer(2)]], device const int* n [[buffer(3)]], device float* dst [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int i = ((int)(int(__gid.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(9); ++c) {
       int dstLin = ((c * count[0]) + i);
       int srcLin = ((c * n[0]) + indices[((int)(int(__gid.x)))]);
@@ -167,7 +167,7 @@ using namespace metal;
 
 kernel void navatala_graph_unpack_f32x9(device const int* indices [[buffer(0)]], device const float* src [[buffer(1)]], device const int* count [[buffer(2)]], device const int* n [[buffer(3)]], device float* dst [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int i = ((int)(int(__gid.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(9); ++c) {
       int srcLin = ((c * count[0]) + i);
       int dstLin = ((c * n[0]) + indices[((int)(int(__gid.x)))]);
@@ -184,7 +184,7 @@ using namespace metal;
 kernel void navatala_graph_degree_out_u32(device const uint* offsets [[buffer(0)]], device const uint* numVertices [[buffer(1)]], device uint* degrees [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     uint hi = offsets[(gid + 1u)];
     uint lo = offsets[gid];
     uint deg = (hi - lo);
@@ -200,7 +200,7 @@ using namespace metal;
 kernel void navatala_graph_degree_in_u32(device const uint* offsets [[buffer(0)]], device const uint* numVertices [[buffer(1)]], device uint* degrees [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     uint hi = offsets[(gid + 1u)];
     uint lo = offsets[gid];
     uint deg = (hi - lo);
@@ -216,7 +216,7 @@ using namespace metal;
 kernel void navatala_graph_spmv_weighted_f32(device const uint* offsets [[buffer(0)]], device const uint* indices [[buffer(1)]], device const float* weights [[buffer(2)]], device const float* x [[buffer(3)]], device const uint* numVertices [[buffer(4)]], device float* y [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     uint base = offsets[gid];
     uint endv = offsets[(gid + 1u)];
     uint rowlen = (endv - base);
@@ -243,7 +243,7 @@ kernel void navatala_graph_spmv_weighted_subgroup_f32(device const uint* offsets
   uint subgroupSize = ((uint)(int(__simd_size)));
   uint row = (gid / subgroupSize);
   uint numV = numVertices[0];
-  if ((row < numV)) {
+  if (row < numV) {
     uint base = offsets[row];
     uint endv = offsets[(row + 1u)];
     uint rowlen = (endv - base);
@@ -251,7 +251,7 @@ kernel void navatala_graph_spmv_weighted_subgroup_f32(device const uint* offsets
     float laneAcc = as_type<float>(0x00000000u);
     for (int k = 0; k < (int)(rowIters); ++k) {
       uint rel = ((((uint)(k)) * subgroupSize) + lane);
-      if ((rel < rowlen)) {
+      if (rel < rowlen) {
         uint eidx = (base + rel);
         uint col = indices[eidx];
         float w = weights[eidx];
@@ -260,7 +260,7 @@ kernel void navatala_graph_spmv_weighted_subgroup_f32(device const uint* offsets
       }
     }
     float rowSum = simd_sum(laneAcc);
-    if ((lane == 0u)) {
+    if (lane == 0u) {
       y[row] = rowSum;
     }
   }
@@ -274,7 +274,7 @@ using namespace metal;
 kernel void navatala_graph_spmv_unweighted_f32(device const uint* offsets [[buffer(0)]], device const uint* indices [[buffer(1)]], device const float* x [[buffer(2)]], device const uint* numVertices [[buffer(3)]], device float* y [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     uint base = offsets[gid];
     uint endv = offsets[(gid + 1u)];
     uint rowlen = (endv - base);
@@ -300,7 +300,7 @@ kernel void navatala_graph_spmv_unweighted_subgroup_f32(device const uint* offse
   uint subgroupSize = ((uint)(int(__simd_size)));
   uint row = (gid / subgroupSize);
   uint numV = numVertices[0];
-  if ((row < numV)) {
+  if (row < numV) {
     uint base = offsets[row];
     uint endv = offsets[(row + 1u)];
     uint rowlen = (endv - base);
@@ -308,7 +308,7 @@ kernel void navatala_graph_spmv_unweighted_subgroup_f32(device const uint* offse
     float laneAcc = as_type<float>(0x00000000u);
     for (int k = 0; k < (int)(rowIters); ++k) {
       uint rel = ((((uint)(k)) * subgroupSize) + lane);
-      if ((rel < rowlen)) {
+      if (rel < rowlen) {
         uint eidx = (base + rel);
         uint col = indices[eidx];
         float xv = x[col];
@@ -316,7 +316,7 @@ kernel void navatala_graph_spmv_unweighted_subgroup_f32(device const uint* offse
       }
     }
     float rowSum = simd_sum(laneAcc);
-    if ((lane == 0u)) {
+    if (lane == 0u) {
       y[row] = rowSum;
     }
   }
@@ -330,7 +330,7 @@ using namespace metal;
 kernel void navatala_graph_axpy2_f32(device const float* x [[buffer(0)]], device const float* z [[buffer(1)]], device const float* alpha [[buffer(2)]], device const float* beta [[buffer(3)]], device const uint* count [[buffer(4)]], device float* y [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float alphaV = alpha[0];
     float betaV = beta[0];
     float xv = x[gid];
@@ -348,7 +348,7 @@ using namespace metal;
 kernel void navatala_graph_scale_f32(device const float* x [[buffer(0)]], device const float* alpha [[buffer(1)]], device const uint* count [[buffer(2)]], device float* y [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float alphaV = alpha[0];
     float xv = x[gid];
     y[gid] = (alphaV * xv);
@@ -363,7 +363,7 @@ using namespace metal;
 kernel void navatala_graph_scale_add_bias_f32(device const float* x [[buffer(0)]], device const float* alpha [[buffer(1)]], device const float* bias [[buffer(2)]], device const uint* count [[buffer(3)]], device float* y [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float alphaV = alpha[0];
     float biasV = bias[0];
     float xv = x[gid];
@@ -384,7 +384,7 @@ kernel void navatala_graph_l1norm_f32(device const float* _input [[buffer(0)]], 
   float gsAcc = as_type<float>(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     uint idx = (lid + (((uint)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       float val = abs(_input[idx]);
       gsAcc = (gsAcc + val);
     }
@@ -394,7 +394,7 @@ kernel void navatala_graph_l1norm_f32(device const float* _input [[buffer(0)]], 
   uint redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -405,7 +405,7 @@ kernel void navatala_graph_l1norm_f32(device const float* _input [[buffer(0)]], 
     redStride = nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0] = sdata[0];
   }
 }
@@ -417,9 +417,9 @@ using namespace metal;
 
 kernel void navatala_graph_recip_f32(device const float* x [[buffer(0)]], device float* y [[buffer(1)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     float xv = x[0];
-    if ((xv == as_type<float>(0x00000000u))) {
+    if (xv == as_type<float>(0x00000000u)) {
       y[0] = as_type<float>(0x00000000u);
     } else {
       y[0] = (as_type<float>(0x3f800000u) / xv);
@@ -440,7 +440,7 @@ kernel void navatala_graph_l1_diff_f32(device const float* a [[buffer(0)]], devi
   float gsAcc = as_type<float>(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     uint idx = (lid + (((uint)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       float av = a[idx];
       float bv = b[idx];
       float d = abs((av - bv));
@@ -452,7 +452,7 @@ kernel void navatala_graph_l1_diff_f32(device const float* a [[buffer(0)]], devi
   uint redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -463,7 +463,7 @@ kernel void navatala_graph_l1_diff_f32(device const float* a [[buffer(0)]], devi
     redStride = nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0] = sdata[0];
   }
 }
@@ -481,7 +481,7 @@ kernel void navatala_graph_count_diff_u32(device const uint* a [[buffer(0)]], de
   float gsAcc = as_type<float>(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     uint idx = (lid + (((uint)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       uint av = a[idx];
       uint bv = b[idx];
       float diff = (((av == bv)) ? (as_type<float>(0x00000000u)) : (as_type<float>(0x3f800000u)));
@@ -493,7 +493,7 @@ kernel void navatala_graph_count_diff_u32(device const uint* a [[buffer(0)]], de
   uint redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -504,7 +504,7 @@ kernel void navatala_graph_count_diff_u32(device const uint* a [[buffer(0)]], de
     redStride = nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0] = sdata[0];
   }
 }
@@ -517,7 +517,7 @@ using namespace metal;
 kernel void navatala_graph_copy_f32(device const float* x [[buffer(0)]], device const uint* count [[buffer(1)]], device float* y [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xv = x[gid];
     y[gid] = xv;
   }
@@ -531,7 +531,7 @@ using namespace metal;
 kernel void navatala_graph_copy_u32(device const uint* x [[buffer(0)]], device const uint* count [[buffer(1)]], device uint* y [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint xv = x[gid];
     y[gid] = xv;
   }
@@ -545,7 +545,7 @@ using namespace metal;
 kernel void navatala_graph_relax_vertex_pull_f32(device const uint* inOffsets [[buffer(0)]], device const uint* inSrcs [[buffer(1)]], device const float* inWeights [[buffer(2)]], device float* dist [[buffer(3)]], device const uint* numVertices [[buffer(4)]], device const float* inf [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     uint base = inOffsets[gid];
     uint endv = inOffsets[(gid + 1u)];
     uint deg = (endv - base);
@@ -556,7 +556,7 @@ kernel void navatala_graph_relax_vertex_pull_f32(device const uint* inOffsets [[
       uint u = inSrcs[eidx];
       float w = inWeights[eidx];
       float du = dist[u];
-      if ((du < infV)) {
+      if (du < infV) {
         float cand = (du + w);
         float cur = best;
         best = (((cand < cur)) ? (cand) : (cur));
@@ -588,7 +588,7 @@ static inline uint gpu_atomic_cas_uint(device atomic_uint* ptr, uint expected, u
 kernel void navatala_graph_label_propagate_edges_u32(device const uint* srcs [[buffer(0)]], device const uint* dsts [[buffer(1)]], device atomic_uint* labels [[buffer(2)]], device const uint* numEdges [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint numE = numEdges[0];
-  if ((gid < numE)) {
+  if (gid < numE) {
     uint u = srcs[gid];
     uint v = dsts[gid];
     uint lu = labels[u];
@@ -606,7 +606,7 @@ using namespace metal;
 kernel void navatala_graph_symmetrize_reverse_u32(device const uint* srcs [[buffer(0)]], device const uint* dsts [[buffer(1)]], device const uint* numEdges [[buffer(2)]], device uint* outSrcs [[buffer(3)]], device uint* outDsts [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint numE = numEdges[0];
-  if ((gid < numE)) {
+  if (gid < numE) {
     uint u = srcs[gid];
     uint v = dsts[gid];
     outSrcs[gid] = v;
@@ -622,7 +622,7 @@ using namespace metal;
 kernel void navatala_graph_apply_renumber_u32(device const uint* mapping [[buffer(0)]], device const uint* numVertices [[buffer(1)]], device uint* newIds [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     newIds[gid] = mapping[gid];
   }
 }
@@ -635,10 +635,10 @@ using namespace metal;
 kernel void navatala_graph_peel_below_threshold_u32(device uint* _active [[buffer(0)]], device const uint* degrees [[buffer(1)]], device const uint* threshold [[buffer(2)]], device const uint* numVertices [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     uint deg = degrees[gid];
     uint k = threshold[0];
-    if ((deg < k)) {
+    if (deg < k) {
       _active[gid] = 0u;
     }
   }
@@ -652,7 +652,7 @@ using namespace metal;
 kernel void navatala_graph_pair_intersection_u32(device const uint* offsets [[buffer(0)]], device const uint* indices [[buffer(1)]], device const uint* pairsA [[buffer(2)]], device const uint* pairsB [[buffer(3)]], device const uint* numPairs [[buffer(4)]], device uint* inter [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint numP = numPairs[0];
-  if ((gid < numP)) {
+  if (gid < numP) {
     uint a = pairsA[gid];
     uint b = pairsB[gid];
     uint baseU = offsets[a];
@@ -671,7 +671,7 @@ kernel void navatala_graph_pair_intersection_u32(device const uint* offsets [[bu
       for (int _bs = 0; _bs < (int)(32u); ++_bs) {
         uint lo = loAccum;
         uint hi = hiAccum;
-        if ((lo < hi)) {
+        if (lo < hi) {
           uint mid = ((lo + hi) / 2u);
           uint midval = indices[mid];
           bool goRight = (midval < w);
@@ -682,9 +682,9 @@ kernel void navatala_graph_pair_intersection_u32(device const uint* offsets [[bu
         }
       }
       uint lb = loAccum;
-      if ((lb < endV)) {
+      if (lb < endV) {
         uint cand = indices[lb];
-        if ((cand == w)) {
+        if (cand == w) {
           interAccum = (interAccum + 1u);
         }
       }
@@ -701,7 +701,7 @@ using namespace metal;
 kernel void navatala_graph_jaccard_f32(device const uint* inter [[buffer(0)]], device const uint* degrees [[buffer(1)]], device const uint* pairsA [[buffer(2)]], device const uint* pairsB [[buffer(3)]], device const uint* numPairs [[buffer(4)]], device float* coeff [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint numP = numPairs[0];
-  if ((gid < numP)) {
+  if (gid < numP) {
     uint a = pairsA[gid];
     uint b = pairsB[gid];
     uint iU = inter[gid];
@@ -722,7 +722,7 @@ using namespace metal;
 kernel void navatala_graph_overlap_f32(device const uint* inter [[buffer(0)]], device const uint* degrees [[buffer(1)]], device const uint* pairsA [[buffer(2)]], device const uint* pairsB [[buffer(3)]], device const uint* numPairs [[buffer(4)]], device float* coeff [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint numP = numPairs[0];
-  if ((gid < numP)) {
+  if (gid < numP) {
     uint a = pairsA[gid];
     uint b = pairsB[gid];
     uint iU = inter[gid];
@@ -743,7 +743,7 @@ using namespace metal;
 kernel void navatala_graph_sorensen_f32(device const uint* inter [[buffer(0)]], device const uint* degrees [[buffer(1)]], device const uint* pairsA [[buffer(2)]], device const uint* pairsB [[buffer(3)]], device const uint* numPairs [[buffer(4)]], device float* coeff [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint numP = numPairs[0];
-  if ((gid < numP)) {
+  if (gid < numP) {
     uint a = pairsA[gid];
     uint b = pairsB[gid];
     uint iU = inter[gid];
@@ -764,7 +764,7 @@ using namespace metal;
 kernel void navatala_graph_cosine_f32(device const uint* inter [[buffer(0)]], device const uint* degrees [[buffer(1)]], device const uint* pairsA [[buffer(2)]], device const uint* pairsB [[buffer(3)]], device const uint* numPairs [[buffer(4)]], device float* coeff [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint numP = numPairs[0];
-  if ((gid < numP)) {
+  if (gid < numP) {
     uint a = pairsA[gid];
     uint b = pairsB[gid];
     uint iU = inter[gid];
@@ -785,7 +785,7 @@ using namespace metal;
 kernel void navatala_graph_uniform_random_walk_u32(device const uint* offsets [[buffer(0)]], device const uint* indices [[buffer(1)]], device const uint* startVertices [[buffer(2)]], device const uint* maxLen [[buffer(3)]], device const uint* numWalks [[buffer(4)]], device const uint* seed [[buffer(5)]], device uint* walks [[buffer(6)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint numW = numWalks[0];
-  if ((gid < numW)) {
+  if (gid < numW) {
     uint maxL = maxLen[0];
     uint seedV = seed[0];
     uint rowBase = (gid * maxL);
@@ -801,7 +801,7 @@ kernel void navatala_graph_uniform_random_walk_u32(device const uint* offsets [[
       uint rng = rngAccum;
       uint rngNext = ((rng * 1103515245u) + 12345u);
       rngAccum = rngNext;
-      if ((deg > 0u)) {
+      if (deg > 0u) {
         uint pick = (rngNext % deg);
         uint nbr = indices[(off + pick)];
         curAccum = nbr;
@@ -818,7 +818,7 @@ using namespace metal;
 kernel void navatala_graph_out_degree_u32(device const uint* offsets [[buffer(0)]], device const uint* numVertices [[buffer(1)]], device uint* degrees [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     uint hi = offsets[(gid + 1u)];
     uint lo = offsets[gid];
     uint deg = (hi - lo);
@@ -834,7 +834,7 @@ using namespace metal;
 kernel void navatala_graph_in_degree_u32(device const uint* offsets [[buffer(0)]], device const uint* numVertices [[buffer(1)]], device uint* degrees [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     uint hi = offsets[(gid + 1u)];
     uint lo = offsets[gid];
     uint deg = (hi - lo);
@@ -905,7 +905,7 @@ kernel void navatala_graph_compute_degree_matrix_f32(device const float* W [[buf
     uint degF32RedStride = 128u;
     for (int degF32RedStep = 0; degF32RedStep < (int)(8); ++degF32RedStep) {
       uint degF32Stride = degF32RedStride;
-      if ((lid < degF32Stride)) {
+      if (lid < degF32Stride) {
         float other = sdata[(lid + degF32Stride)];
         float mine = sdata[lid];
         float sum = (mine + other);
@@ -916,7 +916,7 @@ kernel void navatala_graph_compute_degree_matrix_f32(device const float* W [[buf
       degF32RedStride = degF32NextStride;
       threadgroup_barrier(mem_flags::mem_threadgroup);
     }
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       float degreeVal = sdata[0];
       D[rowIdx] = degreeVal;
     }
@@ -1018,7 +1018,7 @@ kernel void navatala_graph_normalize_eigenvector_rows_f32(device const float* V 
     uint normF32RedStride = 128u;
     for (int normF32RedStep = 0; normF32RedStep < (int)(8); ++normF32RedStep) {
       uint normF32Stride = normF32RedStride;
-      if ((lid < normF32Stride)) {
+      if (lid < normF32Stride) {
         float other = sdata[(lid + normF32Stride)];
         float mine = sdata[lid];
         float sum = (mine + other);
@@ -1029,7 +1029,7 @@ kernel void navatala_graph_normalize_eigenvector_rows_f32(device const float* V 
       normF32RedStride = normF32NextStride;
       threadgroup_barrier(mem_flags::mem_threadgroup);
     }
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       float sumSq = sdata[0];
       float normVal = sqrt(sumSq);
       sdata[0] = normVal;

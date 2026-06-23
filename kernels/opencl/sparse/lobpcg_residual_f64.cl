@@ -20,7 +20,7 @@ __kernel void navatala_sparse_lobpcg_residual_f64(__global const double* AX, __g
   int N = ((int)(n[0]));
   int kVal = ((int)(k[0]));
   int total = (N * kVal);
-  if ((gid < total)) {
+  if (gid < total) {
     int vecIdx = (gid / N);
     int elemIdx = (gid % N);
     double ax = AX[gid];

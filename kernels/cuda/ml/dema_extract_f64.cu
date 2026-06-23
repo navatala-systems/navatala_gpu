@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_ml_dema_extract_f64(const double* ema1, const double* ema2, double* result) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double e1 = ema1[0];
     double e2 = ema2[0];
     double t2 = (__longlong_as_double(0x4000000000000000ull) * e1);

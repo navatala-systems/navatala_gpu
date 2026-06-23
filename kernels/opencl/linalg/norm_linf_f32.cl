@@ -30,7 +30,7 @@ __kernel void navatala_linalg_norm_linf_f32(__global const float* _input, __glob
   uint linfF32RedStride = (uint)(128u);
   for (int linfF32RedStep = 0; linfF32RedStep < (int)(8); ++linfF32RedStep) {
     uint linfF32Stride = linfF32RedStride;
-    if ((lid < linfF32Stride)) {
+    if (lid < linfF32Stride) {
       float other = sdata[(lid + linfF32Stride)];
       float mine = sdata[lid];
       bool mineGtOther = (mine > other);
@@ -42,7 +42,7 @@ __kernel void navatala_linalg_norm_linf_f32(__global const float* _input, __glob
     linfF32RedStride = linfF32NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     result[0] = sdata[0];
   }
 }

@@ -21,7 +21,7 @@ kernel void navatala_linalg_set_lower_f32(device const float* val [[buffer(0)]],
   uint nVal = n[0u];
   float fillVal = val[0u];
   uint totalElements = (nVal * nVal);
-  if ((idx < totalElements)) {
+  if (idx < totalElements) {
     uint i = (idx / nVal);
     uint j = (idx % nVal);
     bool isStrictLower = (i > j);

@@ -71,25 +71,25 @@ layout(std430, binding = 16) writeonly buffer buf_outSnGrad {
 // kernel: navatala_cfd_pressure_sn_grad
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) >= int(params[1]))) {
+  if (int(gl_GlobalInvocationID.x) >= int(params[1])) {
     return;
   } else {
     uint mask = snGradMask[int(gl_GlobalInvocationID.x)];
-    if ((int(mask) == 0)) {
+    if (int(mask) == 0) {
       outSnGrad[int(gl_GlobalInvocationID.x)] = uintBitsToFloat(0x00000000u);
     } else {
       int o = ownerAll[int(gl_GlobalInvocationID.x)];
-      if ((o < 0)) {
+      if (o < 0) {
         outSnGrad[int(gl_GlobalInvocationID.x)] = uintBitsToFloat(0x00000000u);
       } else {
-        if ((o >= int(params[0]))) {
+        if (o >= int(params[0])) {
           outSnGrad[int(gl_GlobalInvocationID.x)] = uintBitsToFloat(0x00000000u);
         } else {
           float uxF = ux[o];
           float uyF = uy[o];
           float uzF = uz[o];
           uint bcm = uBcMask[int(gl_GlobalInvocationID.x)];
-          if ((int(bcm) == 2)) {
+          if (int(bcm) == 2) {
             uxF = uBcX[int(gl_GlobalInvocationID.x)];
             uyF = uBcY[int(gl_GlobalInvocationID.x)];
             uzF = uBcZ[int(gl_GlobalInvocationID.x)];
@@ -99,7 +99,7 @@ void main() {
           float ms = magSf[int(gl_GlobalInvocationID.x)];
           float denom = (rf * ms);
           float ph = phiHbyA[int(gl_GlobalInvocationID.x)];
-          if ((abs(denom) < uintBitsToFloat(0x1e3ce508u))) {
+          if (abs(denom) < uintBitsToFloat(0x1e3ce508u)) {
             outSnGrad[int(gl_GlobalInvocationID.x)] = uintBitsToFloat(0x00000000u);
           } else {
             outSnGrad[int(gl_GlobalInvocationID.x)] = ((ph - (rf * phiU)) / denom);

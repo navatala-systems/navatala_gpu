@@ -42,7 +42,7 @@ extern "C" __global__ void navatala_dataframe_mcd_compute_center_f64(const doubl
   unsigned int ctr2ReductionStride = 128u;
   for (int ctr2ReductionStep = 0; ctr2ReductionStep < (int)(8); ++ctr2ReductionStep) {
     unsigned int ctr2Stride = ctr2ReductionStride;
-    if ((lid < ctr2Stride)) {
+    if (lid < ctr2Stride) {
       double otherX = sdataX[(lid + ctr2Stride)];
       double otherY = sdataY[(lid + ctr2Stride)];
       unsigned int otherC = scount[(lid + ctr2Stride)];
@@ -61,7 +61,7 @@ extern "C" __global__ void navatala_dataframe_mcd_compute_center_f64(const doubl
     ctr2ReductionStride = ctr2NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double totalX = sdataX[0];
     double totalY = sdataY[0];
     unsigned int totalCount = scount[0];

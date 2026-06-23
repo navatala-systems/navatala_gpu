@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_dataframe_tdigest_reset_f32(const float* compression, unsigned int* centroidCount, float* totalWeight, float* minVal, float* maxVal) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     centroidCount[0] = 0u;
     totalWeight[0] = __uint_as_float(0x00000000u);
     minVal[0] = __uint_as_float(0x7f7ffffdu);

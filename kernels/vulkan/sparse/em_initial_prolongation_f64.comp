@@ -37,13 +37,13 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int gid = int(gl_GlobalInvocationID.x);
   int N = int(nRows[0]);
-  if ((gid < N)) {
+  if (gid < N) {
     int aggId = aggregateId[gid];
     ProwPtr[gid] = uint(gid);
     PcolIdx[gid] = uint(aggId);
     Pvalues[gid] = packDouble2x32(uvec2(0x00000000u, 0x3ff00000u));
   }
-  if ((gid == N)) {
+  if (gid == N) {
     ProwPtr[N] = uint(N);
   }
 }

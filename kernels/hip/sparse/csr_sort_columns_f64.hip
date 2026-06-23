@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_csr_sort_columns_f64(const unsigned i
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int len = (re - rs);
@@ -28,7 +28,7 @@ extern "C" __global__ void navatala_sparse_csr_sort_columns_f64(const unsigned i
         int b = (rs + (j + 1));
         unsigned int ca = colIdx[a];
         unsigned int cb = colIdx[b];
-        if ((ca > cb)) {
+        if (ca > cb) {
           colIdx[a] = cb;
           colIdx[b] = ca;
           double va = values[a];

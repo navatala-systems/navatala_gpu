@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_dataframe_stddev_f64(const double* variance,
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((gid == zeroU32)) {
+  if (gid == zeroU32) {
     double varianceVal = variance[0];
     double stddevVal = sqrt(varianceVal);
     stddev[0] = stddevVal;

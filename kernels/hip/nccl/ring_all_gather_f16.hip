@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_nccl_ring_all_gather_f16(const __half* incom
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half val = incoming[gid];
     local_slot[gid] = val;
     outgoing[gid] = val;

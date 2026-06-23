@@ -17,7 +17,7 @@ __kernel void navatala_linalg_reduce_row_sum_f32(__global const float* A, __glob
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint row = gid;
-  if ((row < m[(uint)(0u)])) {
+  if (row < m[(uint)(0u)]) {
     float sumAccum = as_float(0x00000000u);
     for (int j = 0; j < (int)(n[(uint)(0u)]); ++j) {
       uint jU32 = ((uint)(j));

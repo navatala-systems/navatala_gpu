@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_dataframe_extract_skewness_f32(const unsigned int* n, const float* M2, const float* M3, float* skewness) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int nVal = n[0];
     float m2Val = M2[0];
     float m3Val = M3[0];

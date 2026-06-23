@@ -53,7 +53,7 @@ void main() {
   uint iterIdx = lid;
   uint workgroupSize = 256u;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < hs))) break;
+    if (!(iterIdx < hs)) break;
     uint globalIdx = (baseIdx + iterIdx);
     float16_t xF16 = ((batchValid) ? (_input[globalIdx]) : (float16_t(0.000000)));
     float xVal = float(xF16);
@@ -142,7 +142,7 @@ void main() {
   float rms = sqrt(meanSqEps);
   iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < hs))) break;
+    if (!(iterIdx < hs)) break;
     if (batchValid) {
       uint globalIdx2 = (baseIdx + iterIdx);
       float16_t xF16_2 = _input[globalIdx2];

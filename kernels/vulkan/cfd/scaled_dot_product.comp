@@ -43,7 +43,7 @@ void main() {
   int nk = numK[0];
   int hd = headDim[0];
   int total = (nq * nk);
-  if ((gid < total)) {
+  if (gid < total) {
     int qi = (gid / nk);
     int kj = (gid % nk);
     float acc = uintBitsToFloat(0x00000000u);

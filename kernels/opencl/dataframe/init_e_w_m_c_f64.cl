@@ -16,7 +16,7 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_init_e_w_m_c_f64(__global const double* alphaIn, __global double* alpha, __global double* nEff, __global double* meanX, __global double* meanY, __global double* Cxy, __global double* varX, __global double* varY) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double a = alphaIn[0];
     alpha[0] = a;
     nEff[0] = as_double(0x0000000000000000ul);

@@ -19,7 +19,7 @@ using namespace metal;
 kernel void navatala_sparse_spgemm_numeric_hash_f32(device const uint* ArowPtr [[buffer(0)]], device const uint* AcolIdx [[buffer(1)]], device const float* Avalues [[buffer(2)]], device const uint* BrowPtr [[buffer(3)]], device const uint* BcolIdx [[buffer(4)]], device const float* Bvalues [[buffer(5)]], device const uint* CrowPtr [[buffer(6)]], device const uint* nRowsA [[buffer(7)]], device const uint* hashSize [[buffer(8)]], device uint* CcolIdx [[buffer(9)]], device float* Cvalues [[buffer(10)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int gid = int(__gid.x);
   int N = ((int)(nRowsA[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int ars = ((int)(ArowPtr[gid]));
     int are = ((int)(ArowPtr[(gid + 1)]));
     int crs = ((int)(CrowPtr[gid]));

@@ -59,7 +59,7 @@ kernel void navatala_vector_search_nn_descent_join_f32(device const float* datas
         uint nn_slot = (neighbor_graph_base + nni);
         uint candidate = graph[nn_slot];
         bool is_self = (candidate == node_idx);
-        if (((candidate != node_idx) && true)) {
+        if ((candidate != node_idx) && true) {
           uint cand_base = (candidate * d);
           float cand_dist_acc = as_type<float>(0x00000000u);
           for (int k = 0; k < (int)(d); ++k) {

@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_gmres_arnoldi_project_f32(const float
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float c = coeff[0];
     float vi = v[gid];
     float wi = w[gid];

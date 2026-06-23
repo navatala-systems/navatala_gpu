@@ -19,12 +19,12 @@ extern "C" __global__ void navatala_cfd_mg_pair_match(const int* bestNeighbor, i
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0])))) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0]))) {
     return;
   } else {
     int n = bestNeighbor[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
-    if ((n >= 0)) {
-      if (((int)(blockIdx.x * blockDim.x + threadIdx.x) < n)) {
+    if (n >= 0) {
+      if ((int)(blockIdx.x * blockDim.x + threadIdx.x) < n) {
         aggMap[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = (int)(blockIdx.x * blockDim.x + threadIdx.x);
       } else {
         aggMap[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = n;

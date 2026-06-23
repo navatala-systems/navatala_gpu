@@ -53,7 +53,7 @@ layout(std430, binding = 10) writeonly buffer buf_ax {
 // kernel: navatala_cfd_scalar_ldu_mat_vec
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) >= int(counts[0]))) {
+  if (int(gl_GlobalInvocationID.x) >= int(counts[0])) {
     return;
   } else {
     float s = (diag[int(gl_GlobalInvocationID.x)] * x[int(gl_GlobalInvocationID.x)]);
@@ -65,8 +65,8 @@ void main() {
       int k = (beg + t);
       uint f = faceIdx[k];
       int sg = sign[k];
-      if ((int(f) < int(counts[1]))) {
-        if ((sg >= 0)) {
+      if (int(f) < int(counts[1])) {
+        if (sg >= 0) {
           int nb = neighbour[int(f)];
           s = (s + (upper[int(f)] * x[nb]));
         } else {

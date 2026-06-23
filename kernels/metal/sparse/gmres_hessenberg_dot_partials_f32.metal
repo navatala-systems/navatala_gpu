@@ -24,15 +24,15 @@ kernel void navatala_sparse_gmres_hessenberg_dot_partials_f32(device const float
   float warpSum = simd_sum(sq);
   threadgroup float sdata[32];
   int lane = int(__lane);
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((lid < 8)) {
+  if (lid < 8) {
     float val = sdata[lid];
     float finalSum = simd_sum(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       int grpId = int(__tgid.x);
       partials[grpId] = finalSum;
     }

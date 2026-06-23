@@ -31,7 +31,7 @@ __kernel void navatala_cfd_dic_build_reciprocal_d(__global const float* diag, __
   }
   for (int c2 = 0; c2 < (int)(counts[0]); ++c2) {
     float v = rD[c2];
-    if ((v != as_float(0x00000000u))) {
+    if (v != as_float(0x00000000u)) {
       rD[c2] = (as_float(0x3f800000u) / v);
     } else {
       rD[c2] = as_float(0x00000000u);

@@ -25,7 +25,7 @@ kernel void navatala_ml_layernorm_f32(device const float* x [[buffer(0)]], devic
   float epsVal = eps[0];
   float gsM = as_type<float>(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((uint)(itM)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(itM)) * 256u)) < countVal) {
       gsM = (gsM + x[(lid + (((uint)(itM)) * 256u))]);
     }
   }
@@ -34,7 +34,7 @@ kernel void navatala_ml_layernorm_f32(device const float* x [[buffer(0)]], devic
   uint meanStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -49,7 +49,7 @@ kernel void navatala_ml_layernorm_f32(device const float* x [[buffer(0)]], devic
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float gsV = as_type<float>(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((uint)(itV)) * 256u)) < countVal)) {
+    if ((lid + (((uint)(itV)) * 256u)) < countVal) {
       gsV = (gsV + ((x[(lid + (((uint)(itV)) * 256u))] - mean) * (x[(lid + (((uint)(itV)) * 256u))] - mean)));
     }
   }
@@ -58,7 +58,7 @@ kernel void navatala_ml_layernorm_f32(device const float* x [[buffer(0)]], devic
   uint varStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -73,7 +73,7 @@ kernel void navatala_ml_layernorm_f32(device const float* x [[buffer(0)]], devic
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
     uint idxW = (lid + (((uint)(itW)) * 256u));
-    if ((idxW < countVal)) {
+    if (idxW < countVal) {
       float xnW = ((x[idxW] - mean) / denom);
       float outF = ((gamma[idxW] * xnW) + beta[idxW]);
       _output[idxW] = outF;

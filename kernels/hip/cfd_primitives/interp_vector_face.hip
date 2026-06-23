@@ -16,14 +16,14 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_interp_vector_face(const int* owner, const int* neighbour, const float* weights, const float* cellX, const float* cellY, const float* cellZ, const float* bcX, const float* bcY, const float* bcZ, const unsigned int* bcMask, const int* params, float* outX, float* outY, float* outZ) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0]) {
     return;
   } else {
     int o = owner[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float uxo = cellX[o];
     float uyo = cellY[o];
     float uzo = cellZ[o];
-    if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < params[1])) {
+    if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < params[1]) {
       int n = neighbour[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       float uxn = cellX[n];
       float uyn = cellY[n];
@@ -35,14 +35,14 @@ extern "C" __global__ void navatala_cfd_primitives_interp_vector_face(const int*
       outZ[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = ((w * uzo) + (iw * uzn));
     } else {
       unsigned int m = bcMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
-      if ((m == 1u)) {
+      if (m == 1u) {
         float w = weights[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
         float iw = (__uint_as_float(0x3f800000u) - w);
         outX[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = ((w * uxo) + (iw * bcX[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]));
         outY[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = ((w * uyo) + (iw * bcY[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]));
         outZ[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = ((w * uzo) + (iw * bcZ[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]));
       } else {
-        if ((m == 2u)) {
+        if (m == 2u) {
           outX[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = bcX[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
           outY[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = bcY[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
           outZ[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = bcZ[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];

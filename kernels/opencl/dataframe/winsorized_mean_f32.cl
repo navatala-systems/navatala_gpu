@@ -16,7 +16,7 @@
 __kernel void navatala_dataframe_winsorized_mean_f32(__global const float* sortedData, __global const uint* n, __global const float* trimFraction, __global float* winsorizedMean) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint len = n[0];
     float frac = trimFraction[0];
     float lenF = ((float)(len));

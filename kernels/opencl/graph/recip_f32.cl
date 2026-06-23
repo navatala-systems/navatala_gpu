@@ -16,9 +16,9 @@
 __kernel void navatala_graph_recip_f32(__global const float* x, __global float* y) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     float xv = x[0];
-    if ((xv == as_float(0x00000000u))) {
+    if (xv == as_float(0x00000000u)) {
       y[0] = as_float(0x00000000u);
     } else {
       y[0] = (as_float(0x3f800000u) / xv);

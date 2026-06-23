@@ -37,7 +37,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int gid = int(gl_GlobalInvocationID.x);
   int nEdges = numEdges[0];
-  if ((gid < nEdges)) {
+  if (gid < nEdges) {
     int dstIdx = indices[gid];
     int fd = featureDim[0];
     for (int f = 0; f < int(fd); ++f) {

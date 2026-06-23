@@ -18,23 +18,23 @@ __kernel void navatala_cfd_phi_correct(__global const float* phiIn, __global con
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     int o = owner[((int)((int)(get_global_id(0))))];
     float po = pCell[o];
     float other = po;
     float snGrad = as_float(0x00000000u);
-    if ((((int)((int)(get_global_id(0)))) < counts[1])) {
+    if (((int)((int)(get_global_id(0)))) < counts[1]) {
       int n = neighbour[((int)((int)(get_global_id(0))))];
       other = pCell[n];
     } else {
-      if ((bcMask[((int)((int)(get_global_id(0))))] != 0)) {
+      if (bcMask[((int)((int)(get_global_id(0))))] != 0) {
         other = bcVal[((int)((int)(get_global_id(0))))];
       }
     }
     snGrad = (deltaCoeffs[((int)((int)(get_global_id(0))))] * (other - po));
-    if ((bcSnGradMask[((int)((int)(get_global_id(0))))] != 0)) {
+    if (bcSnGradMask[((int)((int)(get_global_id(0))))] != 0) {
       snGrad = bcSnGrad[((int)((int)(get_global_id(0))))];
     }
     float gradFace = (magSf[((int)((int)(get_global_id(0))))] * snGrad);

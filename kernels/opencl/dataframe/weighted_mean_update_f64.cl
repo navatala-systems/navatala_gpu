@@ -16,7 +16,7 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_weighted_mean_update_f64(__global const double* x, __global const double* w, __global double* weightSum, __global double* mean) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double wOld = weightSum[0];
     double meanOld = mean[0];
     double xVal = x[0];

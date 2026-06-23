@@ -17,7 +17,7 @@ __kernel void navatala_graph_apply_renumber_u32(__global const uint* mapping, __
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     newIds[gid] = mapping[gid];
   }
 }

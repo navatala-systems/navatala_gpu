@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_cfd_pack_mu_grad_owner(device const float* muCell [[buffer(0)]], device const float* gXX [[buffer(1)]], device const float* gXY [[buffer(2)]], device const float* gXZ [[buffer(3)]], device const float* gYX [[buffer(4)]], device const float* gYY [[buffer(5)]], device const float* gYZ [[buffer(6)]], device const float* gZX [[buffer(7)]], device const float* gZY [[buffer(8)]], device const float* gZZ [[buffer(9)]], device const int* owner [[buffer(10)]], device const int* procFaces [[buffer(11)]], device const int* counts [[buffer(12)]], device float* outSend [[buffer(13)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(counts[0])))) {
+  if (int(__gid.x) >= ((int)(counts[0]))) {
     return;
   } else {
     int f = procFaces[int(__gid.x)];

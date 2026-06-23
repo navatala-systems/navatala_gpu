@@ -47,15 +47,15 @@ layout(std430, binding = 7) buffer buf_minEdgeWeight {
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   uint edgeIdx = uint(int(gl_GlobalInvocationID.x));
-  if ((edgeIdx < numEdges[0u])) {
+  if (edgeIdx < numEdges[0u]) {
     uint src = srcNodes[edgeIdx];
     uint dst = dstNodes[edgeIdx];
     uint srcComp = components[src];
     uint dstComp = components[dst];
-    if ((srcComp != dstComp)) {
+    if (srcComp != dstComp) {
       float w = weights[edgeIdx];
       float currWeight = minEdgeWeight[srcComp];
-      if ((w < currWeight)) {
+      if (w < currWeight) {
         atomicMin(minEdgeWeight[srcComp], w);
         minEdgeIdx[srcComp] = edgeIdx;
       }

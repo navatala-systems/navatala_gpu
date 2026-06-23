@@ -41,7 +41,7 @@ kernel void navatala_ml_traverse_tree_classify_f32(device const float* X [[buffe
           uint probIdx = (leafBase + cU32);
           float prob = leaf_values[probIdx];
           float currBest = bestProb;
-          if ((prob > currBest)) {
+          if (prob > currBest) {
             bestClass = c;
             bestProb = prob;
           }

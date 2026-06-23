@@ -18,9 +18,9 @@ extern "C" __global__ void navatala_cfd_sum_abs_partials(const float* a, const i
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   __shared__ double tmp[256];
   float v = __uint_as_float(0x00000000u);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < counts[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < counts[0]) {
     float ai = a[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
-    if ((ai >= __uint_as_float(0x00000000u))) {
+    if (ai >= __uint_as_float(0x00000000u)) {
       v = ai;
     } else {
       v = (__uint_as_float(0x00000000u) - ai);
@@ -28,39 +28,39 @@ extern "C" __global__ void navatala_cfd_sum_abs_partials(const float* a, const i
   }
   tmp[((int)((int)(threadIdx.x)))] = v;
   __syncthreads();
-  if ((((int)((int)(threadIdx.x))) < 128)) {
+  if (((int)((int)(threadIdx.x))) < 128) {
     tmp[((int)((int)(threadIdx.x)))] = (tmp[((int)((int)(threadIdx.x)))] + tmp[(((int)((int)(threadIdx.x))) + 128)]);
   }
   __syncthreads();
-  if ((((int)((int)(threadIdx.x))) < 64)) {
+  if (((int)((int)(threadIdx.x))) < 64) {
     tmp[((int)((int)(threadIdx.x)))] = (tmp[((int)((int)(threadIdx.x)))] + tmp[(((int)((int)(threadIdx.x))) + 64)]);
   }
   __syncthreads();
-  if ((((int)((int)(threadIdx.x))) < 32)) {
+  if (((int)((int)(threadIdx.x))) < 32) {
     tmp[((int)((int)(threadIdx.x)))] = (tmp[((int)((int)(threadIdx.x)))] + tmp[(((int)((int)(threadIdx.x))) + 32)]);
   }
   __syncthreads();
-  if ((((int)((int)(threadIdx.x))) < 16)) {
+  if (((int)((int)(threadIdx.x))) < 16) {
     tmp[((int)((int)(threadIdx.x)))] = (tmp[((int)((int)(threadIdx.x)))] + tmp[(((int)((int)(threadIdx.x))) + 16)]);
   }
   __syncthreads();
-  if ((((int)((int)(threadIdx.x))) < 8)) {
+  if (((int)((int)(threadIdx.x))) < 8) {
     tmp[((int)((int)(threadIdx.x)))] = (tmp[((int)((int)(threadIdx.x)))] + tmp[(((int)((int)(threadIdx.x))) + 8)]);
   }
   __syncthreads();
-  if ((((int)((int)(threadIdx.x))) < 4)) {
+  if (((int)((int)(threadIdx.x))) < 4) {
     tmp[((int)((int)(threadIdx.x)))] = (tmp[((int)((int)(threadIdx.x)))] + tmp[(((int)((int)(threadIdx.x))) + 4)]);
   }
   __syncthreads();
-  if ((((int)((int)(threadIdx.x))) < 2)) {
+  if (((int)((int)(threadIdx.x))) < 2) {
     tmp[((int)((int)(threadIdx.x)))] = (tmp[((int)((int)(threadIdx.x)))] + tmp[(((int)((int)(threadIdx.x))) + 2)]);
   }
   __syncthreads();
-  if ((((int)((int)(threadIdx.x))) < 1)) {
+  if (((int)((int)(threadIdx.x))) < 1) {
     tmp[((int)((int)(threadIdx.x)))] = (tmp[((int)((int)(threadIdx.x)))] + tmp[(((int)((int)(threadIdx.x))) + 1)]);
   }
   __syncthreads();
-  if ((((int)((int)(threadIdx.x))) == 0)) {
+  if (((int)((int)(threadIdx.x))) == 0) {
     outPartials[((int)((int)(blockIdx.x)))] = tmp[0];
   }
 }

@@ -100,7 +100,7 @@ extern "C" __global__ void navatala_transformer_multi_tensor_l2_norm_f16(const _
     sumSq[lid] = sumVal_sumSq_1;
   }
   __syncthreads();
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float partialSum = sumSq[0u];
     partialSums[gid] = partialSum;
   }

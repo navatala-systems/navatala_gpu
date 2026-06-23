@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_dataframe_weighted_mean_update_f32(device const float* x [[buffer(0)]], device const float* w [[buffer(1)]], device float* weightSum [[buffer(2)]], device float* mean [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) == 0)) {
+  if (int(__gid.x) == 0) {
     float wOld = weightSum[0];
     float meanOld = mean[0];
     float xVal = x[0];

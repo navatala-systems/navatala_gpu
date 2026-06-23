@@ -16,7 +16,7 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_extract_weighted_reliability_variance_f64(__global const double* weightSum, __global const double* M2, __global double* variance) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double w = weightSum[0];
     double m2Val = M2[0];
     double wMinus1 = (w - as_double(0x3ff0000000000000ul));

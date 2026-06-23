@@ -38,14 +38,14 @@ layout(std430, binding = 5) writeonly buffer buf_outFlux {
 // kernel: navatala_cfd_bc_sn_grad_face_flux
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= counts[1])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= counts[1]) {
     return;
   } else {
     float d = delta[int(int(gl_GlobalInvocationID.x))];
     float sg = bcSnGrad[int(int(gl_GlobalInvocationID.x))];
     float flux = uintBitsToFloat(0x00000000u);
-    if ((bcSnGradMask[int(int(gl_GlobalInvocationID.x))] != 0)) {
-      if ((d != uintBitsToFloat(0x00000000u))) {
+    if (bcSnGradMask[int(int(gl_GlobalInvocationID.x))] != 0) {
+      if (d != uintBitsToFloat(0x00000000u)) {
         flux = (cf[int(int(gl_GlobalInvocationID.x))] * (sg / d));
       }
     }

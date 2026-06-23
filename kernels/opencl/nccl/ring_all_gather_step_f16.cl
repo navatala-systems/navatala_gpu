@@ -18,7 +18,7 @@ __kernel void navatala_nccl_ring_all_gather_step_f16(__global const half* incomi
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half val = incoming[gid];
     local_chunk[gid] = val;
     outgoing[gid] = val;

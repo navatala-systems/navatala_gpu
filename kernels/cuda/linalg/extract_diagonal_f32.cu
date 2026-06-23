@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_linalg_extract_diagonal_f32(const float* A, 
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int idx = gid;
   unsigned int size = n[0u];
-  if ((idx < size)) {
+  if (idx < size) {
     unsigned int stride = (size + 1u);
     unsigned int srcIdx = (idx * stride);
     float val = A[srcIdx];

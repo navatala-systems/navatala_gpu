@@ -52,9 +52,9 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int row = int(gl_GlobalInvocationID.x);
   int N = int(nRows[0]);
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
-    if ((mark == -1)) {
+    if (mark == -1) {
       int rs = int(rowPtr[row]);
       int re = int(rowPtr[(row + 1)]);
       float diagVal = diag[row];
@@ -63,19 +63,19 @@ void main() {
       for (int j = 0; j < int((re - rs)); ++j) {
         int k = (rs + j);
         uint isStr = strongMask[k];
-        if ((isStr == 1u)) {
+        if (isStr == 1u) {
           int col = int(colIdx[k]);
           int mC = cfMarking[col];
-          if ((mC == 1)) {
+          if (mC == 1) {
             float aij = values[k];
             float numer = aij;
             for (int ff = 0; ff < int((re - rs)); ++ff) {
               int kf = (rs + ff);
               uint isStrF = strongMask[kf];
-              if ((isStrF == 1u)) {
+              if (isStrF == 1u) {
                 int colF = int(colIdx[kf]);
                 int mF = cfMarking[colF];
-                if ((mF == -1)) {
+                if (mF == -1) {
                   float aik = values[kf];
                   float diagK = diag[colF];
                   int rsK = int(rowPtr[colF]);
@@ -84,7 +84,7 @@ void main() {
                   for (int kn = 0; kn < int((reK - rsK)); ++kn) {
                     int knIdx = (rsK + kn);
                     int knCol = int(colIdx[knIdx]);
-                    if ((knCol == col)) {
+                    if (knCol == col) {
                       akj = values[knIdx];
                     }
                   }

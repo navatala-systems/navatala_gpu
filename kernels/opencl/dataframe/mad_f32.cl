@@ -16,7 +16,7 @@
 __kernel void navatala_dataframe_mad_f32(__global const float* sortedData, __global const uint* n, __global const float* median, __global float* mad) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint len = n[0];
     float med = median[0];
     uint q1Idx = (len / (uint)(4u));

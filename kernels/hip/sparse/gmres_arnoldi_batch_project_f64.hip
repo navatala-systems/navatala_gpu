@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_sparse_gmres_arnoldi_batch_project_f64(const
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
   int J = ((int)(j[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double acc = __longlong_as_double(0x0000000000000000ull);
     for (int k = 0; k < (int)(J); ++k) {
       double hk = hCol[k];

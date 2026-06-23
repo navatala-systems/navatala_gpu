@@ -16,7 +16,7 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_cfd_div_rho_phi_u_explicit(const float* phi, const float* rhoCell, const float* ux, const float* uy, const float* uz, const int* owner, const int* neighbour, const float* weights, const int* offsets, const int* faceIdx, const float* sign, const float* vol, const float* rhoBcVal, const unsigned int* rhoBcMask, const float* uBcX, const float* uBcY, const float* uBcZ, const unsigned int* uBcMask, const int* params, float* outX, float* outY, float* outZ) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0]) {
     return;
   } else {
     float sumX = __uint_as_float(0x00000000u);
@@ -29,7 +29,7 @@ extern "C" __global__ void navatala_cfd_div_rho_phi_u_explicit(const float* phi,
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < params[1])) {
+      if (f < params[1]) {
         float s = sign[k];
         float flux = phi[f];
         int o = owner[f];
@@ -37,7 +37,7 @@ extern "C" __global__ void navatala_cfd_div_rho_phi_u_explicit(const float* phi,
         float ufx = ux[o];
         float ufy = uy[o];
         float ufz = uz[o];
-        if ((f < params[2])) {
+        if (f < params[2]) {
           int n = neighbour[f];
           float w0 = weights[f];
           float iw = (__uint_as_float(0x3f800000u) - w0);
@@ -47,23 +47,23 @@ extern "C" __global__ void navatala_cfd_div_rho_phi_u_explicit(const float* phi,
           ufz = ((w0 * uz[o]) + (iw * uz[n]));
         } else {
           unsigned int rm = rhoBcMask[f];
-          if ((rm == 1u)) {
+          if (rm == 1u) {
             float w0 = weights[f];
             float iw = (__uint_as_float(0x3f800000u) - w0);
             rhoF = ((w0 * rhoCell[o]) + (iw * rhoBcVal[f]));
           }
-          if ((rm == 2u)) {
+          if (rm == 2u) {
             rhoF = rhoBcVal[f];
           }
           unsigned int um = uBcMask[f];
-          if ((um == 1u)) {
+          if (um == 1u) {
             float w0 = weights[f];
             float iw = (__uint_as_float(0x3f800000u) - w0);
             ufx = ((w0 * ux[o]) + (iw * uBcX[f]));
             ufy = ((w0 * uy[o]) + (iw * uBcY[f]));
             ufz = ((w0 * uz[o]) + (iw * uBcZ[f]));
           }
-          if ((um == 2u)) {
+          if (um == 2u) {
             ufx = uBcX[f];
             ufy = uBcY[f];
             ufz = uBcZ[f];
@@ -77,7 +77,7 @@ extern "C" __global__ void navatala_cfd_div_rho_phi_u_explicit(const float* phi,
     }
     float v = vol[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float invV = __uint_as_float(0x00000000u);
-    if ((v != __uint_as_float(0x00000000u))) {
+    if (v != __uint_as_float(0x00000000u)) {
       invV = (__uint_as_float(0x3f800000u) / v);
     }
     outX[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (sumX * invV);

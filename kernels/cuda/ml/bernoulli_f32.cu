@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_ml_bernoulli_f32(const unsigned int* count, 
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
   unsigned int seedVal = seed[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     unsigned int uk0 = ((seedVal + (gid * 2654435769u)) + 0u);
     unsigned int uk1 = ((uk0 ^ (uk0 >> 16u)) * 2246822519u);
     unsigned int uk2 = ((uk1 ^ (uk1 >> 13u)) * 3266489917u);

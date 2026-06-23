@@ -50,7 +50,7 @@ void main() {
     uint degF32RedStride = 128u;
     for (int degF32RedStep = 0; degF32RedStep < int(8); ++degF32RedStep) {
       uint degF32Stride = degF32RedStride;
-      if ((lid < degF32Stride)) {
+      if (lid < degF32Stride) {
         float other = sdata[(lid + degF32Stride)];
         float mine = sdata[lid];
         float sum = (mine + other);
@@ -61,7 +61,7 @@ void main() {
       degF32RedStride = degF32NextStride;
       barrier();
     }
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       float degreeVal = sdata[0];
       D[rowIdx] = degreeVal;
     }

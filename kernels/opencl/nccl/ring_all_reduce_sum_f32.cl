@@ -17,7 +17,7 @@ __kernel void navatala_nccl_ring_all_reduce_sum_f32(__global const float* sendbu
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float myVal = sendbuf[gid];
     float peerVal = peer_buf[gid];
     float reduced = (myVal + peerVal);

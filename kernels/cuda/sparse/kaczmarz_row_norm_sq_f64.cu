@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_kaczmarz_row_norm_sq_f64(const unsign
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int row = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     double acc = __longlong_as_double(0x0000000000000000ull);

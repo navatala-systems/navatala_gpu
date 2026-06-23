@@ -107,7 +107,7 @@ __kernel void navatala_transformer_rms_norm_forward_f16(__global const half* _in
   float meanSq = (totalSumSq / hsF32);
   float meanSqEps = (meanSq + eps);
   float rms = sqrt(meanSqEps);
-  if ((batchValid && hiddenValid)) {
+  if (batchValid && hiddenValid) {
     half gF16 = gamma[lid];
     float g = ((float)(gF16));
     float xNorm = (x / rms);

@@ -38,7 +38,7 @@ void main() {
   int gid = int(gl_GlobalInvocationID.x);
   int N = int(n[0]);
   int col = int(colIdx[0]);
-  if ((gid < N)) {
+  if (gid < N) {
     double rn = rNew[gid];
     double ro = rOld[gid];
     dR[(gid + (col * N))] = (rn - ro);

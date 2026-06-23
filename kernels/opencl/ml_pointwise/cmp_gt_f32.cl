@@ -17,7 +17,7 @@ __kernel void navatala_ml_pointwise_cmp_gt_f32(__global const float* a, __global
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;

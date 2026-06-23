@@ -55,7 +55,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int gid = int(gl_GlobalInvocationID.x);
   int N = int(nRowsA[0]);
-  if ((gid < N)) {
+  if (gid < N) {
     int ars = int(ArowPtr[gid]);
     int are = int(ArowPtr[(gid + 1)]);
     int crs = int(CrowPtr[gid]);

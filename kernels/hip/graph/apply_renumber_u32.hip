@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_graph_apply_renumber_u32(const unsigned int*
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     newIds[gid] = mapping[gid];
   }
 }

@@ -56,20 +56,20 @@ void main() {
   float ws1 = subgroupAdd(d1);
   float ws2 = subgroupAdd(d2);
   int lane = int(gl_SubgroupInvocationID);
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sd0[warpIdx] = ws0;
     sd1[warpIdx] = ws1;
     sd2[warpIdx] = ws2;
   }
   barrier();
-  if ((lid < 8)) {
+  if (lid < 8) {
     int grpId = int(gl_WorkGroupID.x);
     int base = (grpId * 3);
     float f0 = subgroupAdd(sd0[lid]);
     float f1 = subgroupAdd(sd1[lid]);
     float f2 = subgroupAdd(sd2[lid]);
-    if ((lid == 0)) {
+    if (lid == 0) {
       partials[base] = f0;
       partials[(base + 1)] = f1;
       partials[(base + 2)] = f2;

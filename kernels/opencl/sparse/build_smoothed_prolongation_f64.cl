@@ -18,7 +18,7 @@ __kernel void navatala_sparse_build_smoothed_prolongation_f64(__global const uin
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     uint myAgg = PcolIdx[gid];
     double myPval = Pvalues[gid];
     int aStart = ((int)(ArowPtr[gid]));
@@ -29,7 +29,7 @@ __kernel void navatala_sparse_build_smoothed_prolongation_f64(__global const uin
       int col = ((int)(AcolIdx[idx]));
       double aVal = Avalues[idx];
       uint colAgg = PcolIdx[col];
-      if ((colAgg == myAgg)) {
+      if (colAgg == myAgg) {
         sumAP = (sumAP + aVal);
       }
     }

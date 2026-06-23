@@ -39,7 +39,7 @@ __kernel void navatala_ml_compute_xt_y_f32(__global const float* X, __global con
     uint xtyF32Stride = (uint)(128u);
     for (int reductionStep1 = 0; reductionStep1 < (int)(8); ++reductionStep1) {
       uint stride1 = xtyF32Stride;
-      if ((lid < stride1)) {
+      if (lid < stride1) {
         float other = sdata[(lid + stride1)];
         float mine = sdata[lid];
         float sum = (mine + other);
@@ -50,7 +50,7 @@ __kernel void navatala_ml_compute_xt_y_f32(__global const float* X, __global con
       xtyF32Stride = nextStride1;
       barrier(CLK_LOCAL_MEM_FENCE);
     }
-    if ((lid == (uint)(0u))) {
+    if (lid == (uint)(0u)) {
       float totalSum = sdata[0];
       Xty[featureIdx] = totalSum;
     }

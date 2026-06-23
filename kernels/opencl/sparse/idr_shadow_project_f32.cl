@@ -24,15 +24,15 @@ __kernel void navatala_sparse_idr_shadow_project_f32(__global const float* P, __
   float warpSum = sub_group_reduce_add(val);
   __local float sdata[32];
   int lane = (int)(get_sub_group_local_id());
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < 8)) {
+  if (lid < 8) {
     float sv = sdata[lid];
     float finalSum = sub_group_reduce_add(sv);
-    if ((lid == 0)) {
+    if (lid == 0) {
       c[k] = finalSum;
     }
   }

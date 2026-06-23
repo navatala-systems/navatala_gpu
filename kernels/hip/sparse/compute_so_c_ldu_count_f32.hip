@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_compute_so_c_ldu_count_f32(const unsi
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int cell = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nCells[0]));
-  if ((cell < N)) {
+  if (cell < N) {
     int fStart = ((int)(cellFaceOffsets[cell]));
     int fEnd = ((int)(cellFaceOffsets[(cell + 1)]));
     float maxCoeff = __uint_as_float(0x00000000u);
@@ -27,7 +27,7 @@ extern "C" __global__ void navatala_sparse_compute_so_c_ldu_count_f32(const unsi
       int face = ((int)(cellFaceIdx[fIdx]));
       int own = ((int)(owner[face]));
       float coeff = abs((((cell == own)) ? (upper[face]) : (lower[face])));
-      if ((coeff > maxCoeff)) {
+      if (coeff > maxCoeff) {
         maxCoeff = coeff;
       }
     }
@@ -39,7 +39,7 @@ extern "C" __global__ void navatala_sparse_compute_so_c_ldu_count_f32(const unsi
       int face2 = ((int)(cellFaceIdx[fIdx2]));
       int own2 = ((int)(owner[face2]));
       float coeff2 = abs((((cell == own2)) ? (upper[face2]) : (lower[face2])));
-      if ((coeff2 > threshold)) {
+      if (coeff2 > threshold) {
         count = (count + 1);
       }
     }

@@ -18,7 +18,7 @@ __kernel void navatala_cfd_chebyshev_smooth_post_fused_mixed(__global const floa
   int gid0 = (int)get_global_id(0);
   int i = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     double cA = coeffA[0];
     double cB = coeffB[0];
     double az_i = ((double)(Az[i]));

@@ -18,7 +18,7 @@ __kernel void navatala_cfd_apply_sp_to_hby_a(__global float* hx, __global float*
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float fac = (sp[((int)((int)(get_global_id(0))))] * rAU[((int)((int)(get_global_id(0))))]);

@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_dataframe_ewmc_extract_correlation_f64(const double* Cxy, const double* varX, const double* varY, const double* nEff, double* result) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double c = Cxy[0];
     double vx = varX[0];
     double vy = varY[0];

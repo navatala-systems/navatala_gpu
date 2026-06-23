@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_vector_search_mark_visited_batch(const unsig
   unsigned int tid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int nn = n_nodes[0];
   unsigned int stride = visited_stride[0];
-  if ((tid < nn)) {
+  if (tid < nn) {
     unsigned int node = node_ids[tid];
     unsigned int query = query_ids[tid];
     unsigned int word_idx = (node / 32u);

@@ -16,15 +16,15 @@
 __kernel void navatala_sparse_find_min_edge_per_component_f32(__global const uint* srcNodes, __global const uint* dstNodes, __global const float* weights, __global const uint* components, __global const uint* numEdges, __global const uint* numNodes, __global uint* minEdgeIdx, __global float* minEdgeWeight) {
   int gid0 = (int)get_global_id(0);
   uint edgeIdx = ((uint)((int)(get_global_id(0))));
-  if ((edgeIdx < numEdges[(uint)(0u)])) {
+  if (edgeIdx < numEdges[(uint)(0u)]) {
     uint src = srcNodes[edgeIdx];
     uint dst = dstNodes[edgeIdx];
     uint srcComp = components[src];
     uint dstComp = components[dst];
-    if ((srcComp != dstComp)) {
+    if (srcComp != dstComp) {
       float w = weights[edgeIdx];
       float currWeight = minEdgeWeight[srcComp];
-      if ((w < currWeight)) {
+      if (w < currWeight) {
         atomic_min(&minEdgeWeight[srcComp], w);
         minEdgeIdx[srcComp] = edgeIdx;
       }

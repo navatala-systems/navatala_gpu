@@ -52,7 +52,7 @@ kernel void navatala_linalg_scatter_max_f32(device const float* src [[buffer(0)]
   uint gid = ((uint)(int(__gid.x)));
   uint tid = gid;
   uint n = count[0u];
-  if ((tid < n)) {
+  if (tid < n) {
     uint dstIdx = indices[tid];
     float val = src[tid];
     gpu_atomic_max_float((device atomic_float*)(&A[dstIdx]), val);

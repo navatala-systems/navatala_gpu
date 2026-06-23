@@ -30,7 +30,7 @@ __kernel void navatala_dataframe_mean_f32(__global const float* _input, __global
   uint reductionStride = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint stride = reductionStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       uint partnerIdx = (lid + stride);
       float myVal = sdata[lid];
       float partnerVal = sdata[partnerIdx];
@@ -42,7 +42,7 @@ __kernel void navatala_dataframe_mean_f32(__global const float* _input, __global
     barrier(CLK_LOCAL_MEM_FENCE);
   }
   uint zeroU32 = ((uint)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     float totalSum = sdata[0];
     float countFloat = ((float)(countVal));
     float meanVal = (totalSum / countFloat);

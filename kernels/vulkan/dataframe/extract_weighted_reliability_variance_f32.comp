@@ -29,7 +29,7 @@ layout(std430, binding = 2) writeonly buffer buf_variance {
 // kernel: navatala_dataframe_extract_weighted_reliability_variance_f32
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) == 0)) {
+  if (int(gl_GlobalInvocationID.x) == 0) {
     float w = weightSum[0];
     float m2Val = M2[0];
     float wMinus1 = (w - uintBitsToFloat(0x3f800000u));

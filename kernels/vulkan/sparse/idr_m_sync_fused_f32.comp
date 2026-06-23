@@ -55,15 +55,15 @@ void main() {
   }
   float warpSum = subgroupAdd(acc);
   int lane = int(gl_SubgroupInvocationID);
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier();
-  if ((lid < 8)) {
+  if (lid < 8) {
     float sv = sdata[lid];
     float finalSum = subgroupAdd(sv);
-    if ((lid == 0)) {
+    if (lid == 0) {
       c[k] = finalSum;
     }
   }

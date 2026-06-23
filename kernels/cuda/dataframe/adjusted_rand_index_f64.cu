@@ -73,7 +73,7 @@ extern "C" __global__ void navatala_dataframe_adjusted_rand_index_f64(const doub
   __syncthreads();
   for (int stride = 0; stride < (int)(128u); ++stride) {
     unsigned int strideU32 = ((unsigned int)(stride));
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       double otherNij = sumNij[(lid + strideU32)];
       double mineNij = sumNij[lid];
       sumNij[lid] = (mineNij + otherNij);
@@ -86,7 +86,7 @@ extern "C" __global__ void navatala_dataframe_adjusted_rand_index_f64(const doub
     }
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double sumNijFinal = sumNij[0u];
     double sumAiFinal = sumAi[0u];
     double sumBjFinal = sumBj[0u];

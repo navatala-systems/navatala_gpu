@@ -34,7 +34,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int i = int(gl_GlobalInvocationID.x);
   int N = int(count[0]);
-  if ((i < N)) {
+  if (i < N) {
     int cell = int(localCells[i]);
     float v = x[cell];
     sendVals[i] = v;

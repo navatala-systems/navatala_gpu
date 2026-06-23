@@ -32,7 +32,7 @@ __kernel void navatala_dataframe_probe_hash_table_i32(__global const int* rightK
     bool done = (!isValid);
     uint matchedRowId = (uint)(0u);
     for (int __iter = 0; __iter < 65536; ++__iter) {
-      if (!((!done))) break;
+      if (!(!done)) break;
       uint curIdx = probeIdx;
       int tableKey = tableKeys[curIdx];
       bool isEmpty = (tableKey == 2147483647);

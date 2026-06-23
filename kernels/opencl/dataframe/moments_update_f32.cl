@@ -15,7 +15,7 @@
 
 __kernel void navatala_dataframe_moments_update_f32(__global const float* x, __global uint* n, __global float* M1, __global float* M2, __global float* M3, __global float* M4) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint nOld = n[0];
     float m1Old = M1[0];
     float m2Old = M2[0];

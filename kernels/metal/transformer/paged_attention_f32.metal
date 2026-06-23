@@ -309,7 +309,7 @@ kernel void navatala_transformer_paged_attention_f32(device const float* query [
       sumBuf[lid] = sumVal_sum_p2_sumBuf_1;
     }
     threadgroup_barrier(mem_flags::mem_threadgroup);
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       float outVal = sumBuf[0u];
       uint outIdx = (qBase + outD);
       _output[outIdx] = outVal;

@@ -19,13 +19,13 @@ using namespace metal;
 kernel void navatala_sparse_block_jacobi_sweep_f32(device const uint* rowPtr [[buffer(0)]], device const uint* colIdx [[buffer(1)]], device const float* values [[buffer(2)]], device const float* diagBlocks [[buffer(3)]], device const float* b [[buffer(4)]], device const float* x [[buffer(5)]], device const float* omega [[buffer(6)]], device const uint* nBlockRows [[buffer(7)]], device const uint* blockDim [[buffer(8)]], device float* xNew [[buffer(9)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int blockRow = int(__gid.x);
   int N = ((int)(nBlockRows[0]));
-  if ((blockRow < N)) {
+  if (blockRow < N) {
     int bdm = ((int)(blockDim[0]));
     int bdm2 = (bdm * bdm);
     int rs = ((int)(rowPtr[blockRow]));
     int re = ((int)(rowPtr[(blockRow + 1)]));
     float om = omega[0];
-    if ((bdm == 4)) {
+    if (bdm == 4) {
       int rowBase4 = (blockRow * 4);
       float offDiag0 = as_type<float>(0x00000000u);
       float offDiag1 = as_type<float>(0x00000000u);
@@ -34,7 +34,7 @@ kernel void navatala_sparse_block_jacobi_sweep_f32(device const uint* rowPtr [[b
       for (int jj = 0; jj < (int)((re - rs)); ++jj) {
         int k = (rs + jj);
         int col = ((int)(colIdx[k]));
-        if ((col != blockRow)) {
+        if (col != blockRow) {
           int kBase = (k * 16);
           int colBase4 = (col * 4);
           float xv0 = x[colBase4];
@@ -68,7 +68,7 @@ kernel void navatala_sparse_block_jacobi_sweep_f32(device const uint* rowPtr [[b
         for (int jj = 0; jj < (int)((re - rs)); ++jj) {
           int k = (rs + jj);
           int col = ((int)(colIdx[k]));
-          if ((col != blockRow)) {
+          if (col != blockRow) {
             int kBase = (k * bdm2);
             int rowBase = (kBase + (eq * bdm));
             for (int eq2 = 0; eq2 < (int)(bdm); ++eq2) {

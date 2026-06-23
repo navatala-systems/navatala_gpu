@@ -15,7 +15,7 @@
 
 __kernel void navatala_ml_init_ema_f32(__global const float* alphaIn, __global float* ema, __global float* alpha, __global uint* count) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float a = alphaIn[0];
     ema[0] = as_float(0x00000000u);
     alpha[0] = a;

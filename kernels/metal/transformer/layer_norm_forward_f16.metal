@@ -186,7 +186,7 @@ kernel void navatala_transformer_layer_norm_forward_f16(device const half* _inpu
   float variance = (totalSumSq / hsF32);
   float varEps = (variance + eps);
   float std = sqrt(varEps);
-  if ((batchValid && hiddenValid)) {
+  if (batchValid && hiddenValid) {
     half gF16 = gamma[lid];
     half bF16 = beta[lid];
     float g = ((float)(gF16));

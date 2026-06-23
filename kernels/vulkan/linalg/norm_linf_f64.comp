@@ -45,7 +45,7 @@ void main() {
   uint linfF64RedStride = 128u;
   for (int linfF64RedStep = 0; linfF64RedStep < int(8); ++linfF64RedStep) {
     uint linfF64Stride = linfF64RedStride;
-    if ((lid < linfF64Stride)) {
+    if (lid < linfF64Stride) {
       double other = sdata[(lid + linfF64Stride)];
       double mine = sdata[lid];
       bool mineGtOther = (mine > other);
@@ -57,7 +57,7 @@ void main() {
     linfF64RedStride = linfF64NextStride;
     barrier();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0] = sdata[0];
   }
 }

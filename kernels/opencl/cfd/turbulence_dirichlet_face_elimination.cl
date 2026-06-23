@@ -15,23 +15,23 @@
 
 __kernel void navatala_cfd_turbulence_dirichlet_face_elimination(__global const int* owner, __global const int* neighbour, __global const int* constrainedMask, __global const float* constrainedValue, __global const int* nIntFaces, __global float* upper, __global float* lower, __global float* source) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= nIntFaces[0])) {
+  if (((int)((int)(get_global_id(0)))) >= nIntFaces[0]) {
     return;
   } else {
     int o = owner[((int)((int)(get_global_id(0))))];
     int n = neighbour[((int)((int)(get_global_id(0))))];
     int oC = constrainedMask[o];
     int nC = constrainedMask[n];
-    if (((oC | nC) == 0)) {
+    if ((oC | nC) == 0) {
       return;
     } else {
       float up = upper[((int)((int)(get_global_id(0))))];
       float lo = lower[((int)((int)(get_global_id(0))))];
-      if ((oC != 0)) {
+      if (oC != 0) {
         float cv = constrainedValue[o];
         atomic_add(&source[n], (-(lo * cv)));
       }
-      if ((nC != 0)) {
+      if (nC != 0) {
         float cv = constrainedValue[n];
         atomic_add(&source[o], (-(up * cv)));
       }

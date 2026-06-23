@@ -20,11 +20,11 @@ extern "C" __global__ void navatala_vector_search_init_search_state_f32(const un
   unsigned int entry = global_entry[0];
   unsigned int nq = n_queries[0];
   unsigned int vs = visited_size[0];
-  if ((gid < nq)) {
+  if (gid < nq) {
     entry_points[gid] = entry;
   }
   unsigned int total_visited = (nq * vs);
-  if ((gid < total_visited)) {
+  if (gid < total_visited) {
     unsigned int q_idx = (gid / vs);
     unsigned int v_idx = (gid % vs);
     unsigned int flat_idx = ((q_idx * vs) + v_idx);

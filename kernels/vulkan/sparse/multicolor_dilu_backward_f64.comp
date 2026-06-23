@@ -46,7 +46,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int localIdx = int(gl_GlobalInvocationID.x);
   int N = int(nRowsThisColor[0]);
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int offset = int(colorOffsets[0]);
     int row = (offset + localIdx);
     int rs = int(rowPtr[row]);
@@ -55,7 +55,7 @@ void main() {
     for (int j = 0; j < int((re - rs)); ++j) {
       int k = (rs + j);
       int col = int(colIdx[k]);
-      if ((col > row)) {
+      if (col > row) {
         double a = values[k];
         double xj = x[col];
         sum = (sum + (a * xj));

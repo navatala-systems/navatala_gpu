@@ -50,15 +50,15 @@ static inline float gpu_atomic_max_float(device atomic_float* ptr, float value) 
 
 kernel void navatala_sparse_mst_boruvka_step_f32(device const uint* srcNodes [[buffer(0)]], device const uint* dstNodes [[buffer(1)]], device const float* weights [[buffer(2)]], device const uint* numEdges [[buffer(3)]], device const uint* numNodes [[buffer(4)]], device uint* components [[buffer(5)]], device uint* minEdgeIdx [[buffer(6)]], device float* minEdgeWeight [[buffer(7)]], device bool* mstEdges [[buffer(8)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint tid = ((uint)(int(__gid.x)));
-  if ((tid < numEdges[0u])) {
+  if (tid < numEdges[0u]) {
     uint src = srcNodes[tid];
     uint dst = dstNodes[tid];
     uint srcRoot = components[src];
     uint dstRoot = components[dst];
-    if ((srcRoot != dstRoot)) {
+    if (srcRoot != dstRoot) {
       float w = weights[tid];
       float currMin = minEdgeWeight[srcRoot];
-      if ((w < currMin)) {
+      if (w < currMin) {
         gpu_atomic_min_float((device atomic_float*)(&minEdgeWeight[srcRoot]), w);
         minEdgeIdx[srcRoot] = tid;
       }

@@ -77,7 +77,7 @@ layout(std430, binding = 18) writeonly buffer buf_outRAU {
 // kernel: navatala_cfd_primitives_r_a_u_from_u_eqn_approx
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= counts3[0])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= counts3[0]) {
     return;
   } else {
     float invDt = (uintBitsToFloat(0x3f800000u) / paramsF[0]);
@@ -95,26 +95,26 @@ void main() {
       int k = (beg + t);
       uint fU = faceIdx[k];
       int f = int(fU);
-      if ((f >= counts3[1])) {
+      if (f >= counts3[1]) {
       } else {
         int s = sign[k];
         int o = ownerAll[f];
         float phi = phiFaces[f];
         float rhoF = uintBitsToFloat(0x00000000u);
         float muF = uintBitsToFloat(0x00000000u);
-        if ((f < counts3[2])) {
+        if (f < counts3[2]) {
           int n = neighbourInt[f];
           float w = weightsAll[f];
           float iw = (uintBitsToFloat(0x3f800000u) - w);
           rhoF = ((w * rhoCell[o]) + (iw * rhoCell[n]));
           muF = ((w * muCell[o]) + (iw * muCell[n]));
         } else {
-          if ((rhoBcMask[f] != 0u)) {
+          if (rhoBcMask[f] != 0u) {
             rhoF = rhoBcVal[f];
           } else {
             rhoF = rhoCell[o];
           }
-          if ((muBcMask[f] != 0u)) {
+          if (muBcMask[f] != 0u) {
             muF = muBcVal[f];
           } else {
             muF = muCell[o];
@@ -122,10 +122,10 @@ void main() {
         }
         float rhoPhi = (rhoF * phi);
         float outFlux = rhoPhi;
-        if ((s < 0)) {
+        if (s < 0) {
           outFlux = (uintBitsToFloat(0x00000000u) - rhoPhi);
         }
-        if ((outFlux > uintBitsToFloat(0x00000000u))) {
+        if (outFlux > uintBitsToFloat(0x00000000u)) {
           conv = (conv + outFlux);
         }
         float diffTerm = (muF * (magSfAll[f] * deltaAll[f]));
@@ -133,7 +133,7 @@ void main() {
       }
     }
     A = (A + ((conv + diff) / V));
-    if ((A != uintBitsToFloat(0x00000000u))) {
+    if (A != uintBitsToFloat(0x00000000u)) {
       outRAU[int(int(gl_GlobalInvocationID.x))] = (uintBitsToFloat(0x3f800000u) / A);
     } else {
       outRAU[int(int(gl_GlobalInvocationID.x))] = uintBitsToFloat(0x00000000u);

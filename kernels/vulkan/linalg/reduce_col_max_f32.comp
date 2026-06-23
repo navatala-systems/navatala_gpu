@@ -34,7 +34,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   uint gid = uint(int(gl_GlobalInvocationID.x));
   uint col = gid;
-  if ((col < n[0u])) {
+  if (col < n[0u]) {
     float initMaxVal = A[col];
     float maxAccum = initMaxVal;
     for (int i = 0; i < int(m[0u]); ++i) {

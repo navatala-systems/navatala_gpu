@@ -18,14 +18,14 @@ __kernel void navatala_sparse_strength_of_connection_f64(__global const uint* ro
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     double maxOff = as_double(0x0000000000000000ul);
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != gid)) {
+      if (col != gid) {
         double a = values[k];
         maxOff = (((fabs(a) > maxOff)) ? (fabs(a)) : (maxOff));
       }

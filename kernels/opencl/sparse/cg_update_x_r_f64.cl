@@ -18,7 +18,7 @@ __kernel void navatala_sparse_cg_update_x_r_f64(__global const double* p, __glob
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double a = alpha[0];
     double pi = p[gid];
     double api = Ap[gid];

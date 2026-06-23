@@ -57,7 +57,7 @@ __kernel void navatala_ml_compute_objective_f64(__global const double* X, __glob
   uint obj64RedStride = (uint)(128u);
   for (int obj64RedStep = 0; obj64RedStep < (int)(8); ++obj64RedStep) {
     uint obj64RedStrideVal = obj64RedStride;
-    if ((lid < obj64RedStrideVal)) {
+    if (lid < obj64RedStrideVal) {
       double otherMse = sdataMse[(lid + obj64RedStrideVal)];
       double mineMse = sdataMse[lid];
       double sumMse = (mineMse + otherMse);
@@ -72,7 +72,7 @@ __kernel void navatala_ml_compute_objective_f64(__global const double* X, __glob
     obj64RedStride = obj64RedNextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     double totalMse = sdataMse[0];
     double totalL1 = sdataL1[0];
     double halfMse = (as_double(0x3fe0000000000000ul) * totalMse);

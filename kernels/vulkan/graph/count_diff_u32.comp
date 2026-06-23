@@ -40,7 +40,7 @@ void main() {
   float gsAcc = uintBitsToFloat(0x00000000u);
   for (int it = 0; it < int(numIters); ++it) {
     uint idx = (lid + (uint(it) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       uint av = a[idx];
       uint bv = b[idx];
       float diff = (((av == bv)) ? (uintBitsToFloat(0x00000000u)) : (uintBitsToFloat(0x3f800000u)));
@@ -52,7 +52,7 @@ void main() {
   uint redStride = 128u;
   for (int redStep = 0; redStep < int(8); ++redStep) {
     uint stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -63,7 +63,7 @@ void main() {
     redStride = nextStride;
     barrier();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0] = sdata[0];
   }
 }

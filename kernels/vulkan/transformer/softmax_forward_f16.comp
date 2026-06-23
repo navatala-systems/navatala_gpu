@@ -207,7 +207,7 @@ void main() {
   }
   barrier();
   float sumExp = sumBuf[0u];
-  if ((batchValid && seqValid)) {
+  if (batchValid && seqValid) {
     float resultF32 = (expVal / sumExp);
     float16_t result = float16_t(resultF32);
     _output[globalIdx] = result;

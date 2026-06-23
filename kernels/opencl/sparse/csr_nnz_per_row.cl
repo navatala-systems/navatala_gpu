@@ -17,7 +17,7 @@ __kernel void navatala_sparse_csr_nnz_per_row(__global const uint* rowPtr, __glo
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     uint rs = rowPtr[gid];
     uint re = rowPtr[(gid + 1)];
     nnzPerRow[gid] = (re - rs);

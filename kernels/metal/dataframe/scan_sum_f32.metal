@@ -45,7 +45,7 @@ kernel void navatala_dataframe_scan_sum_f32(device const float* _input [[buffer(
     }
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float total = sdata[511u];
     sdata[511u] = as_type<float>(0x00000000u);
   }

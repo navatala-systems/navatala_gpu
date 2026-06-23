@@ -44,7 +44,7 @@ void main() {
   int gid = int(gl_GlobalInvocationID.x);
   int total = (int(nRows[0]) * int(k[0]));
   int nR = int(nRows[0]);
-  if ((gid < total)) {
+  if (gid < total) {
     int row = (gid % nR);
     int vecIdx = (gid / nR);
     int rs = int(rowPtr[row]);

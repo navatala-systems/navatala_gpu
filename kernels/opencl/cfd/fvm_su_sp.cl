@@ -18,14 +18,14 @@ __kernel void navatala_cfd_fvm_su_sp(__global const float* sp, __global const fl
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float spVal = sp[((int)((int)(get_global_id(0))))];
     float psiVal = psi[((int)((int)(get_global_id(0))))];
     float volVal = vol[((int)((int)(get_global_id(0))))];
     float spVol = (spVal * volVal);
-    if ((spVal >= as_float(0x00000000u))) {
+    if (spVal >= as_float(0x00000000u)) {
       float prevDiag = outDiag[((int)((int)(get_global_id(0))))];
       float newDiag = (prevDiag + spVol);
       outDiag[((int)((int)(get_global_id(0))))] = newDiag;

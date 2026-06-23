@@ -18,7 +18,7 @@ __kernel void navatala_sparse_spgemm_numeric_f64(__global const uint* ArowPtr, _
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRowsA[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int ars = ((int)(ArowPtr[gid]));
     int are = ((int)(ArowPtr[(gid + 1)]));
     int crs = ((int)(CrowPtr[gid]));

@@ -19,7 +19,7 @@ __kernel void navatala_sparse_sparse_bicgstab_iter_f64(__global const double* x,
   uint gid = ((uint)((int)(get_global_id(0))));
   uint i = gid;
   uint nVal = n[(uint)(0u)];
-  if ((i < nVal)) {
+  if (i < nVal) {
     double alphaVal = alpha[(uint)(0u)];
     double omegaVal = omega[(uint)(0u)];
     double xi = x[i];

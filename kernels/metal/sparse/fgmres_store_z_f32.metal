@@ -20,7 +20,7 @@ kernel void navatala_sparse_fgmres_store_z_f32(device const float* z [[buffer(0)
   int gid = int(__gid.x);
   int N = ((int)(n[0]));
   int col = ((int)(colIdx[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float zi = z[gid];
     Z[(gid + (col * N))] = zi;
   }

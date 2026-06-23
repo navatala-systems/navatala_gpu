@@ -43,10 +43,10 @@ layout(std430, binding = 6) readonly buffer buf_mgCounts {
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int total = (int(mgCounts[1]) + int(mgCounts[2]));
-  if ((int(gl_GlobalInvocationID.x) >= total)) {
+  if (int(gl_GlobalInvocationID.x) >= total) {
     return;
   } else {
-    if ((int(gl_GlobalInvocationID.x) < int(mgCounts[1]))) {
+    if (int(gl_GlobalInvocationID.x) < int(mgCounts[1])) {
       atomicAdd(outAx[int(gl_GlobalInvocationID.x)], (diag[int(gl_GlobalInvocationID.x)] * x[int(gl_GlobalInvocationID.x)]));
     } else {
       int e = (int(gl_GlobalInvocationID.x) - int(mgCounts[1]));

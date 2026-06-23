@@ -18,7 +18,7 @@ __kernel void navatala_sparse_binorm_row_scale_f64(__global const uint* rowPtr, 
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     double sum = as_double(0x0000000000000000ul);

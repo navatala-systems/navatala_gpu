@@ -30,7 +30,7 @@ layout(std430, binding = 2) writeonly buffer buf_vMeasure {
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   uint gid = uint(int(gl_GlobalInvocationID.x));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     double h = homogeneity[0u];
     double c = completeness[0u];
     double hPlusC = (h + c);

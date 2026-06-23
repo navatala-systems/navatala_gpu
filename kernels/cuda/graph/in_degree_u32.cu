@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_graph_in_degree_u32(const unsigned int* offs
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     unsigned int hi = offsets[(gid + 1u)];
     unsigned int lo = offsets[gid];
     unsigned int deg = (hi - lo);

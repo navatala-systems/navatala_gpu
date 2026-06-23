@@ -17,7 +17,7 @@ __kernel void navatala_sparse_kpz_polynomial_sweep_f32(__global const float* Ax,
   int gid0 = (int)get_global_id(0);
   int i = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     float ri = (b[i] - Ax[i]);
     float xi = x[i];
     int deg = ((int)(degree[0]));

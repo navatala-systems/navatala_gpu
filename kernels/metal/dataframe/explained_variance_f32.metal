@@ -43,7 +43,7 @@ kernel void navatala_dataframe_explained_variance_f32(device const float* y_true
   uint evF32_reductionStride = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint evF32_stride = evF32_reductionStride;
-    if ((lid < evF32_stride)) {
+    if (lid < evF32_stride) {
       uint evF32_partnerIdx = (lid + evF32_stride);
       float otherRes = sdata_var_res[evF32_partnerIdx];
       float mineRes = sdata_var_res[lid];
@@ -60,7 +60,7 @@ kernel void navatala_dataframe_explained_variance_f32(device const float* y_true
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
   uint zeroU32 = ((uint)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     float sumSqRes = sdata_var_res[0];
     float sumSqTrue = sdata_var_true[0];
     float countFloat = ((float)(countVal));

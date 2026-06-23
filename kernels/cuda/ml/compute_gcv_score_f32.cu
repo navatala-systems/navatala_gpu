@@ -35,7 +35,7 @@ extern "C" __global__ void navatala_ml_compute_gcv_score_f32(const float* y, con
   unsigned int gcv32_reductionStride = 128u;
   for (int gcv32_reductionStep = 0; gcv32_reductionStep < (int)(8); ++gcv32_reductionStep) {
     unsigned int gcv32_stride = gcv32_reductionStride;
-    if ((lid < gcv32_stride)) {
+    if (lid < gcv32_stride) {
       float gcv32_other = sdata[(lid + gcv32_stride)];
       float gcv32_mine = sdata[lid];
       float gcv32_sum = (gcv32_mine + gcv32_other);
@@ -46,7 +46,7 @@ extern "C" __global__ void navatala_ml_compute_gcv_score_f32(const float* y, con
     gcv32_reductionStride = gcv32_nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float rss = sdata[0];
     float nFloat = ((float)(nVal));
     float traceHOverN = (traceHVal / nFloat);

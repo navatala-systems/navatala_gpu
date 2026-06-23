@@ -18,7 +18,7 @@ __kernel void navatala_sparse_truncate_interpolation_count_f64(__global const ui
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(ProwPtr[row]));
     int re = ((int)(ProwPtr[(row + 1)]));
     double maxAbs = as_double(0x0000000000000000ul);
@@ -32,7 +32,7 @@ __kernel void navatala_sparse_truncate_interpolation_count_f64(__global const ui
     for (int j2 = 0; j2 < (int)((re - rs)); ++j2) {
       int k2 = (rs + j2);
       double v2 = Pvalues[k2];
-      if ((fabs(v2) >= thresh)) {
+      if (fabs(v2) >= thresh) {
         nnz = (nnz + (uint)(1u));
       }
     }

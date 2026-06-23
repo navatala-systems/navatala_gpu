@@ -19,14 +19,14 @@ extern "C" __global__ void navatala_cfd_fvm_su_sp(const float* sp, const float* 
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0]) {
     return;
   } else {
     float spVal = sp[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float psiVal = psi[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float volVal = vol[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float spVol = (spVal * volVal);
-    if ((spVal >= __uint_as_float(0x00000000u))) {
+    if (spVal >= __uint_as_float(0x00000000u)) {
       float prevDiag = outDiag[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       float newDiag = (prevDiag + spVol);
       outDiag[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = newDiag;

@@ -19,7 +19,7 @@ using namespace metal;
 kernel void navatala_sparse_ldu_diagonal_fill_f32(device const float* diagonal [[buffer(0)]], device const uint* rowPtr [[buffer(1)]], device const uint* nCells [[buffer(2)]], device uint* colInd [[buffer(3)]], device float* values [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int row = int(__gid.x);
   int N = ((int)(nCells[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rEnd = ((int)(rowPtr[(row + 1)]));
     int dPos = (rEnd - 1);
     colInd[dPos] = ((uint)(row));

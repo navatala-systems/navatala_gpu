@@ -16,7 +16,7 @@
 __kernel void navatala_dataframe_writeback_sum_i32(__global const uint* keys, __global const int* vals, __global const int* count, __global int* dst) {
   int gid0 = (int)get_global_id(0);
   int j = ((int)((int)(get_global_id(0))));
-  if ((j < count[(uint)(0u)])) {
+  if (j < count[(uint)(0u)]) {
     uint key = keys[j];
     int val = vals[j];
     int oldVal = dst[key];

@@ -17,26 +17,26 @@ __kernel void navatala_sparse_interpolate_ext_no_i_f32(__global const uint* rowP
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     int pStart = ((int)(ProwPtr[row]));
-    if ((mark == 1)) {
+    if (mark == 1) {
       PcolIdx[pStart] = ((uint)(row));
       Pvalues[pStart] = as_float(0x3f800000u);
     } else {
-      if ((mark == -1)) {
+      if (mark == -1) {
         int iDiagPos = ((int)(diagIdx[row]));
         float diagI = values[iDiagPos];
         int pos = 0;
         for (int jw = 0; jw < (int)((re - rs)); ++jw) {
           int kw = (rs + jw);
           uint isStrW = strongMask[kw];
-          if ((isStrW == (uint)(1u))) {
+          if (isStrW == (uint)(1u)) {
             int colW = ((int)(colIdx[kw]));
             int mW = cfMarking[colW];
-            if ((mW == 1)) {
+            if (mW == 1) {
               float aij = values[kw];
               float w = (-(aij / diagI));
               PcolIdx[(pStart + pos)] = ((uint)(colW));
@@ -48,10 +48,10 @@ __kernel void navatala_sparse_interpolate_ext_no_i_f32(__global const uint* rowP
         for (int jf = 0; jf < (int)((re - rs)); ++jf) {
           int kf = (rs + jf);
           uint isStrF = strongMask[kf];
-          if ((isStrF == (uint)(1u))) {
+          if (isStrF == (uint)(1u)) {
             int nbrF = ((int)(colIdx[kf]));
             int mF = cfMarking[nbrF];
-            if ((mF == -1)) {
+            if (mF == -1) {
               float aij = values[kf];
               int jDiagPos = ((int)(diagIdx[nbrF]));
               float diagJ = values[jDiagPos];
@@ -60,10 +60,10 @@ __kernel void navatala_sparse_interpolate_ext_no_i_f32(__global const uint* rowP
               for (int j2 = 0; j2 < (int)((re2 - rs2)); ++j2) {
                 int k2 = (rs2 + j2);
                 uint isStr2 = strongMask[k2];
-                if ((isStr2 == (uint)(1u))) {
+                if (isStr2 == (uint)(1u)) {
                   int nbr2 = ((int)(colIdx[k2]));
                   int m2 = cfMarking[nbr2];
-                  if ((m2 == 1)) {
+                  if (m2 == 1) {
                     float ajk = values[k2];
                     float prod = (aij * (ajk / diagJ));
                     float wff = (-(prod / diagI));

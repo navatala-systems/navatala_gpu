@@ -21,7 +21,7 @@ extern "C" __global__ void navatala_linalg_scatter_rows_f32(const float* src, co
   unsigned int kVal = k[0u];
   unsigned int nVal = n[0u];
   unsigned int totalElems = (kVal * nVal);
-  if ((tid < totalElems)) {
+  if (tid < totalElems) {
     unsigned int rowIdx = (tid / nVal);
     unsigned int colIdx = (tid % nVal);
     unsigned int dstRow = indices[rowIdx];

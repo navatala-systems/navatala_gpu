@@ -29,12 +29,12 @@ layout(std430, binding = 2) writeonly buffer buf_beta {
 // kernel: navatala_cfd_pcg_compute_beta
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) >= 1)) {
+  if (int(gl_GlobalInvocationID.x) >= 1) {
     return;
   } else {
     double new_val = rzNew[0];
     double old_val = rzOld[0];
-    if ((old_val != packDouble2x32(uvec2(0x00000000u, 0x00000000u)))) {
+    if (old_val != packDouble2x32(uvec2(0x00000000u, 0x00000000u))) {
       beta[0] = float((new_val / old_val));
     } else {
       beta[0] = uintBitsToFloat(0x00000000u);

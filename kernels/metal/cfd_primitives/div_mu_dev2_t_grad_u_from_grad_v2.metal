@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_grad_v2(device const float* muCell [[buffer(0)]], device const float* muBc [[buffer(1)]], device const float* gXX [[buffer(2)]], device const float* gXY [[buffer(3)]], device const float* gXZ [[buffer(4)]], device const float* gYX [[buffer(5)]], device const float* gYY [[buffer(6)]], device const float* gYZ [[buffer(7)]], device const float* gZX [[buffer(8)]], device const float* gZY [[buffer(9)]], device const float* gZZ [[buffer(10)]], device const int* owner [[buffer(11)]], device const int* neighbour [[buffer(12)]], device const float* weights [[buffer(13)]], device const float* sfX [[buffer(14)]], device const float* sfY [[buffer(15)]], device const float* sfZ [[buffer(16)]], device const int* offsets [[buffer(17)]], device const int* faceIdx [[buffer(18)]], device const float* signF [[buffer(19)]], device const float* vol [[buffer(20)]], device const int* params [[buffer(21)]], device float* outX [[buffer(22)]], device float* outY [[buffer(23)]], device float* outZ [[buffer(24)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= params[0])) {
+  if (((int)(int(__gid.x))) >= params[0]) {
     return;
   } else {
     float sumX = as_type<float>(0x00000000u);
@@ -30,7 +30,7 @@ kernel void navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_grad_v2(device con
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < params[1])) {
+      if (f < params[1]) {
         float s = signF[k];
         int o = owner[f];
         float muO = muCell[o];
@@ -73,7 +73,7 @@ kernel void navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_grad_v2(device con
         float tauFzy = tauOzy;
         float tauFzz = tauOzz;
         int n = neighbour[f];
-        if ((n >= 0)) {
+        if (n >= 0) {
           float muN = muCell[n];
           float gnXX = gXX[n];
           float gnXY = gXY[n];
@@ -132,7 +132,7 @@ kernel void navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_grad_v2(device con
     }
     float v = vol[((int)(int(__gid.x)))];
     float invV = as_type<float>(0x00000000u);
-    if ((v != as_type<float>(0x00000000u))) {
+    if (v != as_type<float>(0x00000000u)) {
       invV = (as_type<float>(0x3f800000u) / v);
     }
     outX[((int)(int(__gid.x)))] = (sumX * invV);

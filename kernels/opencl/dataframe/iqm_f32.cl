@@ -16,7 +16,7 @@
 __kernel void navatala_dataframe_iqm_f32(__global const float* sortedData, __global const uint* n, __global float* iqm) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint len = n[0];
     uint q1Idx = (len / (uint)(4u));
     uint q3Idx = (len - q1Idx);

@@ -21,7 +21,7 @@ kernel void navatala_ml_reduction_sum_f32(device const float* _input [[buffer(0)
   float gsAcc = as_type<float>(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     uint idx = (lid + (((uint)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       float raw = _input[idx];
       float v = raw;
       gsAcc = (gsAcc + v);
@@ -32,7 +32,7 @@ kernel void navatala_ml_reduction_sum_f32(device const float* _input [[buffer(0)
   uint redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -43,7 +43,7 @@ kernel void navatala_ml_reduction_sum_f32(device const float* _input [[buffer(0)
     redStride = nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -65,7 +65,7 @@ kernel void navatala_ml_reduction_prod_f32(device const float* _input [[buffer(0
   float gsAcc = as_type<float>(0x3f800000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     uint idx = (lid + (((uint)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       float raw = _input[idx];
       float v = raw;
       gsAcc = (gsAcc * v);
@@ -76,7 +76,7 @@ kernel void navatala_ml_reduction_prod_f32(device const float* _input [[buffer(0
   uint redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine * other);
@@ -87,7 +87,7 @@ kernel void navatala_ml_reduction_prod_f32(device const float* _input [[buffer(0
     redStride = nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -109,7 +109,7 @@ kernel void navatala_ml_reduction_min_f32(device const float* _input [[buffer(0)
   float gsAcc = as_type<float>(0x7f7fc99eu);
   for (int it = 0; it < (int)(numIters); ++it) {
     uint idx = (lid + (((uint)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       float raw = _input[idx];
       float v = raw;
       gsAcc = (((gsAcc < v)) ? (gsAcc) : (v));
@@ -120,7 +120,7 @@ kernel void navatala_ml_reduction_min_f32(device const float* _input [[buffer(0)
   uint redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (((mine < other)) ? (mine) : (other));
@@ -131,7 +131,7 @@ kernel void navatala_ml_reduction_min_f32(device const float* _input [[buffer(0)
     redStride = nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -153,7 +153,7 @@ kernel void navatala_ml_reduction_max_f32(device const float* _input [[buffer(0)
   float gsAcc = as_type<float>(0xff7fc99eu);
   for (int it = 0; it < (int)(numIters); ++it) {
     uint idx = (lid + (((uint)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       float raw = _input[idx];
       float v = raw;
       gsAcc = (((gsAcc > v)) ? (gsAcc) : (v));
@@ -164,7 +164,7 @@ kernel void navatala_ml_reduction_max_f32(device const float* _input [[buffer(0)
   uint redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (((mine > other)) ? (mine) : (other));
@@ -175,7 +175,7 @@ kernel void navatala_ml_reduction_max_f32(device const float* _input [[buffer(0)
     redStride = nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -197,7 +197,7 @@ kernel void navatala_ml_reduction_amax_f32(device const float* _input [[buffer(0
   float gsAcc = as_type<float>(0xff7fc99eu);
   for (int it = 0; it < (int)(numIters); ++it) {
     uint idx = (lid + (((uint)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       float raw = _input[idx];
       float v = abs(raw);
       gsAcc = (((gsAcc > v)) ? (gsAcc) : (v));
@@ -208,7 +208,7 @@ kernel void navatala_ml_reduction_amax_f32(device const float* _input [[buffer(0
   uint redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (((mine > other)) ? (mine) : (other));
@@ -219,7 +219,7 @@ kernel void navatala_ml_reduction_amax_f32(device const float* _input [[buffer(0
     redStride = nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -241,7 +241,7 @@ kernel void navatala_ml_reduction_norm1_f32(device const float* _input [[buffer(
   float gsAcc = as_type<float>(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     uint idx = (lid + (((uint)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       float raw = _input[idx];
       float v = abs(raw);
       gsAcc = (gsAcc + v);
@@ -252,7 +252,7 @@ kernel void navatala_ml_reduction_norm1_f32(device const float* _input [[buffer(
   uint redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -263,7 +263,7 @@ kernel void navatala_ml_reduction_norm1_f32(device const float* _input [[buffer(
     redStride = nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -285,7 +285,7 @@ kernel void navatala_ml_reduction_avg_f32(device const float* _input [[buffer(0)
   float gsAcc = as_type<float>(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     uint idx = (lid + (((uint)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       float raw = _input[idx];
       float v = raw;
       gsAcc = (gsAcc + v);
@@ -296,7 +296,7 @@ kernel void navatala_ml_reduction_avg_f32(device const float* _input [[buffer(0)
   uint redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -307,7 +307,7 @@ kernel void navatala_ml_reduction_avg_f32(device const float* _input [[buffer(0)
     redStride = nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = (reduced / nF);
@@ -329,7 +329,7 @@ kernel void navatala_ml_reduction_norm2_f32(device const float* _input [[buffer(
   float gsAcc = as_type<float>(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     uint idx = (lid + (((uint)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       float raw = _input[idx];
       float v = (raw * raw);
       gsAcc = (gsAcc + v);
@@ -340,7 +340,7 @@ kernel void navatala_ml_reduction_norm2_f32(device const float* _input [[buffer(
   uint redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -351,7 +351,7 @@ kernel void navatala_ml_reduction_norm2_f32(device const float* _input [[buffer(
     redStride = nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = sqrt(reduced);
@@ -373,7 +373,7 @@ kernel void navatala_ml_reduction_sum_f16(device const half* _input [[buffer(0)]
   float gsAcc = as_type<float>(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     uint idx = (lid + (((uint)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       half raw = _input[idx];
       float v = ((float)(raw));
       gsAcc = (gsAcc + v);
@@ -384,7 +384,7 @@ kernel void navatala_ml_reduction_sum_f16(device const half* _input [[buffer(0)]
   uint redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -395,7 +395,7 @@ kernel void navatala_ml_reduction_sum_f16(device const half* _input [[buffer(0)]
     redStride = nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -417,7 +417,7 @@ kernel void navatala_ml_reduction_prod_f16(device const half* _input [[buffer(0)
   float gsAcc = as_type<float>(0x3f800000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     uint idx = (lid + (((uint)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       half raw = _input[idx];
       float v = ((float)(raw));
       gsAcc = (gsAcc * v);
@@ -428,7 +428,7 @@ kernel void navatala_ml_reduction_prod_f16(device const half* _input [[buffer(0)
   uint redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine * other);
@@ -439,7 +439,7 @@ kernel void navatala_ml_reduction_prod_f16(device const half* _input [[buffer(0)
     redStride = nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -461,7 +461,7 @@ kernel void navatala_ml_reduction_min_f16(device const half* _input [[buffer(0)]
   float gsAcc = as_type<float>(0x7f7fc99eu);
   for (int it = 0; it < (int)(numIters); ++it) {
     uint idx = (lid + (((uint)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       half raw = _input[idx];
       float v = ((float)(raw));
       gsAcc = (((gsAcc < v)) ? (gsAcc) : (v));
@@ -472,7 +472,7 @@ kernel void navatala_ml_reduction_min_f16(device const half* _input [[buffer(0)]
   uint redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (((mine < other)) ? (mine) : (other));
@@ -483,7 +483,7 @@ kernel void navatala_ml_reduction_min_f16(device const half* _input [[buffer(0)]
     redStride = nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -505,7 +505,7 @@ kernel void navatala_ml_reduction_max_f16(device const half* _input [[buffer(0)]
   float gsAcc = as_type<float>(0xff7fc99eu);
   for (int it = 0; it < (int)(numIters); ++it) {
     uint idx = (lid + (((uint)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       half raw = _input[idx];
       float v = ((float)(raw));
       gsAcc = (((gsAcc > v)) ? (gsAcc) : (v));
@@ -516,7 +516,7 @@ kernel void navatala_ml_reduction_max_f16(device const half* _input [[buffer(0)]
   uint redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (((mine > other)) ? (mine) : (other));
@@ -527,7 +527,7 @@ kernel void navatala_ml_reduction_max_f16(device const half* _input [[buffer(0)]
     redStride = nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -549,7 +549,7 @@ kernel void navatala_ml_reduction_amax_f16(device const half* _input [[buffer(0)
   float gsAcc = as_type<float>(0xff7fc99eu);
   for (int it = 0; it < (int)(numIters); ++it) {
     uint idx = (lid + (((uint)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       half raw = _input[idx];
       float v = abs(((float)(raw)));
       gsAcc = (((gsAcc > v)) ? (gsAcc) : (v));
@@ -560,7 +560,7 @@ kernel void navatala_ml_reduction_amax_f16(device const half* _input [[buffer(0)
   uint redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (((mine > other)) ? (mine) : (other));
@@ -571,7 +571,7 @@ kernel void navatala_ml_reduction_amax_f16(device const half* _input [[buffer(0)
     redStride = nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -593,7 +593,7 @@ kernel void navatala_ml_reduction_norm1_f16(device const half* _input [[buffer(0
   float gsAcc = as_type<float>(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     uint idx = (lid + (((uint)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       half raw = _input[idx];
       float v = abs(((float)(raw)));
       gsAcc = (gsAcc + v);
@@ -604,7 +604,7 @@ kernel void navatala_ml_reduction_norm1_f16(device const half* _input [[buffer(0
   uint redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -615,7 +615,7 @@ kernel void navatala_ml_reduction_norm1_f16(device const half* _input [[buffer(0
     redStride = nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;
@@ -637,7 +637,7 @@ kernel void navatala_ml_reduction_avg_f16(device const half* _input [[buffer(0)]
   float gsAcc = as_type<float>(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     uint idx = (lid + (((uint)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       half raw = _input[idx];
       float v = ((float)(raw));
       gsAcc = (gsAcc + v);
@@ -648,7 +648,7 @@ kernel void navatala_ml_reduction_avg_f16(device const half* _input [[buffer(0)]
   uint redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -659,7 +659,7 @@ kernel void navatala_ml_reduction_avg_f16(device const half* _input [[buffer(0)]
     redStride = nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = (reduced / nF);
@@ -681,7 +681,7 @@ kernel void navatala_ml_reduction_norm2_f16(device const half* _input [[buffer(0
   float gsAcc = as_type<float>(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     uint idx = (lid + (((uint)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       half raw = _input[idx];
       float v = (((float)(raw)) * ((float)(raw)));
       gsAcc = (gsAcc + v);
@@ -692,7 +692,7 @@ kernel void navatala_ml_reduction_norm2_f16(device const half* _input [[buffer(0
   uint redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -703,7 +703,7 @@ kernel void navatala_ml_reduction_norm2_f16(device const half* _input [[buffer(0
     redStride = nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = sqrt(reduced);

@@ -57,7 +57,7 @@ void main() {
       uint probeIdx = startIdx;
       bool inserted = false;
       for (int __iter = 0; __iter < 65536; ++__iter) {
-        if (!((!inserted))) break;
+        if (!(!inserted)) break;
         uint curIdx = probeIdx;
         int oldKey = atomicCompSwap(tableKeys[curIdx], 2147483647, key);
         bool gotSlot = (oldKey == 2147483647);

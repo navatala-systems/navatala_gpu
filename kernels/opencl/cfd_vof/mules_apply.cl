@@ -18,7 +18,7 @@ __kernel void navatala_cfd_vof_mules_apply(__global const float* phiBD, __global
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[1])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[1]) {
     return;
   } else {
     alphaPhi[((int)((int)(get_global_id(0))))] = (phiBD[((int)((int)(get_global_id(0))))] + (lambda[((int)((int)(get_global_id(0))))] * phiCorr[((int)((int)(get_global_id(0))))]));

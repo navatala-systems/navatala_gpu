@@ -16,7 +16,7 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_extract_kurtosis_f64(__global const uint* n, __global const double* M2, __global const double* M4, __global double* kurtosis) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint nVal = n[0];
     double m2Val = M2[0];
     double m4Val = M4[0];

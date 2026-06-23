@@ -18,21 +18,21 @@ __kernel void navatala_cfd_vof_mules_cell_lambda(__global const float* psiMaxCap
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float ld = ((sumlPhip[((int)((int)(get_global_id(0))))] + psiMaxCap[((int)((int)(get_global_id(0))))]) / (mSumPhim[((int)((int)(get_global_id(0))))] + paramsF[1]));
     float lp = ((mSumlPhim[((int)((int)(get_global_id(0))))] + psiMinCap[((int)((int)(get_global_id(0))))]) / (sumPhip[((int)((int)(get_global_id(0))))] + paramsF[1]));
-    if ((ld < as_float(0x00000000u))) {
+    if (ld < as_float(0x00000000u)) {
       ld = as_float(0x00000000u);
     }
-    if ((ld > as_float(0x3f800000u))) {
+    if (ld > as_float(0x3f800000u)) {
       ld = as_float(0x3f800000u);
     }
-    if ((lp < as_float(0x00000000u))) {
+    if (lp < as_float(0x00000000u)) {
       lp = as_float(0x00000000u);
     }
-    if ((lp > as_float(0x3f800000u))) {
+    if (lp > as_float(0x3f800000u)) {
       lp = as_float(0x3f800000u);
     }
     lambdam[((int)((int)(get_global_id(0))))] = ld;

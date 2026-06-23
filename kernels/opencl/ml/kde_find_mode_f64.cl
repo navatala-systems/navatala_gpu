@@ -17,7 +17,7 @@
 __kernel void navatala_ml_kde_find_mode_f64(__global const double* densities, __global const double* queryPoints, __global const uint* m, __global double* modeValue, __global double* modeLocation) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint numPoints = m[0];
     double maxDensity = densities[0];
     double maxLocation = queryPoints[0];

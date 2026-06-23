@@ -73,15 +73,15 @@ void main() {
   float sq = ((inBounds) ? ((r[gid] * r[gid])) : (uintBitsToFloat(0x00000000u)));
   float warpSum = subgroupAdd(sq);
   int lane = int(gl_SubgroupInvocationID);
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier();
-  if ((lid < 8)) {
+  if (lid < 8) {
     float val = sdata[lid];
     float finalSum = subgroupAdd(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       int grpId = int(gl_WorkGroupID.x);
       rrPartials[grpId] = finalSum;
     }

@@ -18,7 +18,7 @@ __kernel void navatala_sparse_idr_g_space_update_f64(__global const double* dRj,
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double a = alpha[0];
     double dj = dRj[gid];
     double dk = dRk[gid];

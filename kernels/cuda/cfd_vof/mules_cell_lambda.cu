@@ -19,21 +19,21 @@ extern "C" __global__ void navatala_cfd_vof_mules_cell_lambda(const float* psiMa
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0]) {
     return;
   } else {
     float ld = ((sumlPhip[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] + psiMaxCap[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]) / (mSumPhim[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] + paramsF[1]));
     float lp = ((mSumlPhim[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] + psiMinCap[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]) / (sumPhip[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] + paramsF[1]));
-    if ((ld < __uint_as_float(0x00000000u))) {
+    if (ld < __uint_as_float(0x00000000u)) {
       ld = __uint_as_float(0x00000000u);
     }
-    if ((ld > __uint_as_float(0x3f800000u))) {
+    if (ld > __uint_as_float(0x3f800000u)) {
       ld = __uint_as_float(0x3f800000u);
     }
-    if ((lp < __uint_as_float(0x00000000u))) {
+    if (lp < __uint_as_float(0x00000000u)) {
       lp = __uint_as_float(0x00000000u);
     }
-    if ((lp > __uint_as_float(0x3f800000u))) {
+    if (lp > __uint_as_float(0x3f800000u)) {
       lp = __uint_as_float(0x3f800000u);
     }
     lambdam[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = ld;

@@ -20,12 +20,12 @@ __kernel void navatala_vector_search_filter_by_threshold_f32(__global const floa
   uint k_val = k[0];
   float thresh = threshold[0];
   uint inv = invalid_id[0];
-  if ((query_id < nq)) {
+  if (query_id < nq) {
     uint count = (uint)(0u);
     for (int i = 0; i < (int)(k_val); ++i) {
       uint idx = ((query_id * k_val) + i);
       float dist = distances[idx];
-      if ((dist > thresh)) {
+      if (dist > thresh) {
         candidate_ids[idx] = inv;
       } else {
         uint old_cnt = count;

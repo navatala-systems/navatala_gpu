@@ -54,7 +54,7 @@ extern "C" __global__ void navatala_ml_forest_classify_f64(const double* X, cons
             unsigned int probIdx = (absLeafBase + classIdxU32);
             double prob = forest_leaves[probIdx];
             double currBest = bestProb;
-            if ((prob > currBest)) {
+            if (prob > currBest) {
               bestClass = classIdx;
               bestProb = prob;
             }
@@ -88,7 +88,7 @@ extern "C" __global__ void navatala_ml_forest_classify_f64(const double* X, cons
       unsigned int voteIdx = (voteBase + cU32);
       unsigned int votes = vote_counts[voteIdx];
       unsigned int currMax = maxVotes;
-      if ((votes > currMax)) {
+      if (votes > currMax) {
         finalClass = c;
         maxVotes = votes;
       }

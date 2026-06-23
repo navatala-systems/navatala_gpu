@@ -26,7 +26,7 @@ kernel void navatala_sparse_sparse_inner_product_f32(device const float* a [[buf
   uint gridSize = ((uint)(int(__grid_size.x)));
   for (int loopIdx = 0; loopIdx < (int)(nnzVal); ++loopIdx) {
     uint currentIdx = idxAccum;
-    if ((currentIdx < nnzVal)) {
+    if (currentIdx < nnzVal) {
       float aVal = a[currentIdx];
       float bVal = b[currentIdx];
       float prod = (aVal * bVal);
@@ -44,7 +44,7 @@ kernel void navatala_sparse_sparse_inner_product_f32(device const float* a [[buf
   uint strideAccum = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint currentStride = strideAccum;
-    if ((lidU32 < currentStride)) {
+    if (lidU32 < currentStride) {
       uint otherIdx = (lidU32 + currentStride);
       float myVal = sdata[lidU32];
       float otherVal = sdata[otherIdx];
@@ -55,7 +55,7 @@ kernel void navatala_sparse_sparse_inner_product_f32(device const float* a [[buf
     strideAccum = nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lidU32 == 0u)) {
+  if (lidU32 == 0u) {
     result[0u] = sdata[0u];
   }
 }

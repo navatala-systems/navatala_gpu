@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_csr_residual_f64(const unsigned int* 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int row = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rowStart = ((int)(rowPtr[row]));
     int rowEnd = ((int)(rowPtr[(row + 1)]));
     double Ax = __longlong_as_double(0x0000000000000000ull);

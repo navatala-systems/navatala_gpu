@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_dilu_apply_f32(const unsigned int* ro
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int localIdx = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRowsThisColor[0]));
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int offset = ((int)(colorOffsets[0]));
     int row = (offset + localIdx);
     int rs = ((int)(rowPtr[row]));
@@ -28,7 +28,7 @@ extern "C" __global__ void navatala_sparse_dilu_apply_f32(const unsigned int* ro
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != row)) {
+      if (col != row) {
         float a = values[k];
         float xj = x[col];
         sum = (sum + (a * xj));

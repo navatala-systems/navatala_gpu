@@ -30,9 +30,9 @@ layout(std430, binding = 2) buffer buf__output {
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   uint gid = uint(int(gl_GlobalInvocationID.x));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     uint n = count[0u];
-    if ((n == 0u)) {
+    if (n == 0u) {
       _output[0u] = 0u;
     } else {
       uint nMinus1 = (n - 1u);

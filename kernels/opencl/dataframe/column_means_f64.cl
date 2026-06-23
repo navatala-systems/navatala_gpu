@@ -39,7 +39,7 @@ __kernel void navatala_dataframe_column_means_f64(__global const double* _input,
     uint colMeansF64_reductionStride = (uint)(128u);
     for (int colMeansF64_reductionStep = 0; colMeansF64_reductionStep < (int)(8); ++colMeansF64_reductionStep) {
       uint colMeansF64_stride = colMeansF64_reductionStride;
-      if ((lid < colMeansF64_stride)) {
+      if (lid < colMeansF64_stride) {
         double colMeansF64_other = sdata[(lid + colMeansF64_stride)];
         double colMeansF64_mine = sdata[lid];
         double colMeansF64_sum = (colMeansF64_mine + colMeansF64_other);
@@ -50,7 +50,7 @@ __kernel void navatala_dataframe_column_means_f64(__global const double* _input,
       colMeansF64_reductionStride = colMeansF64_nextStride;
       barrier(CLK_LOCAL_MEM_FENCE);
     }
-    if ((lid == (uint)(0u))) {
+    if (lid == (uint)(0u)) {
       double totalSum = sdata[(uint)(0u)];
       double nFloat = ((double)(n));
       double meanVal = (totalSum / nFloat);

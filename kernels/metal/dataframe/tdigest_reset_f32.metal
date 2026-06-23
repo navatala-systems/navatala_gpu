@@ -18,7 +18,7 @@ using namespace metal;
 
 kernel void navatala_dataframe_tdigest_reset_f32(device const float* compression [[buffer(0)]], device uint* centroidCount [[buffer(1)]], device float* totalWeight [[buffer(2)]], device float* minVal [[buffer(3)]], device float* maxVal [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     centroidCount[0] = 0u;
     totalWeight[0] = as_type<float>(0x00000000u);
     minVal[0] = as_type<float>(0x7f7ffffdu);

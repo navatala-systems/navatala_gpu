@@ -21,11 +21,11 @@ kernel void navatala_vector_search_init_search_state_f32(device const uint* glob
   uint entry = global_entry[0];
   uint nq = n_queries[0];
   uint vs = visited_size[0];
-  if ((gid < nq)) {
+  if (gid < nq) {
     entry_points[gid] = entry;
   }
   uint total_visited = (nq * vs);
-  if ((gid < total_visited)) {
+  if (gid < total_visited) {
     uint q_idx = (gid / vs);
     uint v_idx = (gid % vs);
     uint flat_idx = ((q_idx * vs) + v_idx);

@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_ml_kde_bandwidth_silverman_f64(const double* stddev, const unsigned int* n, double* bandwidth) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     double sigma = stddev[0];
     unsigned int count = n[0];
     double countF = ((double)(count));

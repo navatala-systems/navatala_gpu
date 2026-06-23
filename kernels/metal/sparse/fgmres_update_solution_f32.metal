@@ -20,7 +20,7 @@ kernel void navatala_sparse_fgmres_update_solution_f32(device const float* Z [[b
   int gid = int(__gid.x);
   int N = ((int)(n[0]));
   int M = ((int)(m[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float acc = as_type<float>(0x00000000u);
     for (int j = 0; j < (int)(M); ++j) {
       float yj = y[j];

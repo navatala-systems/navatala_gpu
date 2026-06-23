@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_apply_diag_sym_scale_f64(const unsign
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int row = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     double di = dinvsqrt[row];

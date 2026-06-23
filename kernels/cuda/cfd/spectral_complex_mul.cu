@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_cfd_spectral_complex_mul(const float* x, con
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int count = n[0];
-  if ((gid < count)) {
+  if (gid < count) {
     float xr = x[((gid)*2 + 0)];
     float xi = x[((gid)*2 + 1)];
     float wr = w[((gid)*2 + 0)];

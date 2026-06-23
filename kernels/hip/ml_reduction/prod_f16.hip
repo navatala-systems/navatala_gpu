@@ -24,7 +24,7 @@ extern "C" __global__ void navatala_ml_reduction_prod_f16(const __half* _input, 
   float gsAcc = __uint_as_float(0x3f800000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       __half raw = _input[idx];
       float v = ((float)(raw));
       gsAcc = (gsAcc * v);
@@ -35,7 +35,7 @@ extern "C" __global__ void navatala_ml_reduction_prod_f16(const __half* _input, 
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine * other);
@@ -46,7 +46,7 @@ extern "C" __global__ void navatala_ml_reduction_prod_f16(const __half* _input, 
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;

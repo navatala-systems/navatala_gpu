@@ -22,7 +22,7 @@ kernel void navatala_vector_search_rerank_with_exact_distances_f32(device const 
   uint k_val = k[0];
   uint d = dim[0];
   uint total = (nq * k_val);
-  if ((gid < total)) {
+  if (gid < total) {
     uint query_id = (gid / k_val);
     uint k_idx = (gid % k_val);
     uint cand_id = candidate_ids[gid];

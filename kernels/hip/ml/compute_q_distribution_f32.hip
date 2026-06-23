@@ -60,7 +60,7 @@ extern "C" __global__ void navatala_ml_compute_q_distribution_f32(const float* Y
   unsigned int qF32ReductionStride = 128u;
   for (int qF32ReductionStep = 0; qF32ReductionStep < (int)(8); ++qF32ReductionStep) {
     unsigned int qF32Stride = qF32ReductionStride;
-    if ((lid < qF32Stride)) {
+    if (lid < qF32Stride) {
       float qF32Other = sdata[(lid + qF32Stride)];
       float qF32Mine = sdata[lid];
       float qF32Sum = (qF32Mine + qF32Other);
@@ -71,7 +71,7 @@ extern "C" __global__ void navatala_ml_compute_q_distribution_f32(const float* Y
     qF32ReductionStride = qF32NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float partialSum = sdata[0];
     float oldSum = sumQ[0];
     float newSum = (oldSum + partialSum);

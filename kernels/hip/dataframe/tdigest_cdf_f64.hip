@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_dataframe_tdigest_cdf_f64(const double* x, const double* centroidMeans, const double* centroidWeights, const unsigned int* centroidCount, const double* totalWeight, const double* minVal, const double* maxVal, double* cdf) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     double xVal = x[0];
     unsigned int count = centroidCount[0];
     double minV = minVal[0];

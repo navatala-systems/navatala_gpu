@@ -307,7 +307,7 @@ __kernel void navatala_transformer_paged_attention_f32(__global const float* que
       sumBuf[lid] = sumVal_sum_p2_sumBuf_1;
     }
     barrier(CLK_LOCAL_MEM_FENCE);
-    if ((lid == (uint)(0u))) {
+    if (lid == (uint)(0u)) {
       float outVal = sumBuf[(uint)(0u)];
       uint outIdx = (qBase + outD);
       _output[outIdx] = outVal;

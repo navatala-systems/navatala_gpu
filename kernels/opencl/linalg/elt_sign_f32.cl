@@ -16,7 +16,7 @@
 __kernel void navatala_linalg_elt_sign_f32(__global const float* A, __global const uint* n, __global float* C) {
   int gid0 = (int)get_global_id(0);
   uint i = ((uint)((int)(get_global_id(0))));
-  if ((i < n[(uint)(0u)])) {
+  if (i < n[(uint)(0u)]) {
     float a = A[i];
     bool isNeg = (a < as_float(0x00000000u));
     float negOrZero = ((isNeg) ? (as_float(0xbf800000u)) : (as_float(0x00000000u)));

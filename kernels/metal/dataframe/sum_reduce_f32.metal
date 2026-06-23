@@ -32,7 +32,7 @@ kernel void navatala_dataframe_sum_reduce_f32(device const float* _input [[buffe
   uint reductionStride = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint stride = reductionStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       uint partnerIdx = (lid + stride);
       float myVal = sdata[lid];
       float partnerVal = sdata[partnerIdx];
@@ -44,7 +44,7 @@ kernel void navatala_dataframe_sum_reduce_f32(device const float* _input [[buffe
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
   uint zeroU32 = ((uint)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     result[0] = sdata[0];
   }
 }

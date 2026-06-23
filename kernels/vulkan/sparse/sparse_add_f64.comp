@@ -33,7 +33,7 @@ layout(std430, binding = 3) writeonly buffer buf_valuesC {
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int i = int(int(gl_GlobalInvocationID.x));
-  if ((i < nnz[0u])) {
+  if (i < nnz[0u]) {
     double a = valuesA[i];
     double b = valuesB[i];
     valuesC[i] = (a + b);

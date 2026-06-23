@@ -32,7 +32,7 @@ layout(std430, binding = 3) writeonly buffer buf_excessKurtosis {
 // kernel: navatala_dataframe_extract_excess_kurtosis_f32
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) == 0)) {
+  if (int(gl_GlobalInvocationID.x) == 0) {
     uint nVal = n[0];
     float m2Val = M2[0];
     float m4Val = M4[0];

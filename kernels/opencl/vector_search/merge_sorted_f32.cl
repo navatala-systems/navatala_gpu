@@ -26,7 +26,7 @@ __kernel void navatala_vector_search_merge_sorted_f32(__global const float* a, _
     uint hi_clamped = (((gid > na)) ? (na) : (gid));
     hi = hi_clamped;
     for (int __iter = 0; __iter < 32; ++__iter) {
-      if (!((lo < hi))) break;
+      if (!(lo < hi)) break;
       uint lo_v = lo;
       uint hi_v = hi;
       uint mid = (lo_v + ((hi_v - lo_v) / (uint)(2u)));

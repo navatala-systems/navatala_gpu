@@ -16,7 +16,7 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_extract_covariance_f64(__global const uint* count, __global const double* Cxy, __global double* covariance) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint n = count[0];
     double cxyVal = Cxy[0];
     double nf = ((double)(n));

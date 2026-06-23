@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_zero_fill_f64(const unsigned int* n, 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     x[gid] = __longlong_as_double(0x0000000000000000ull);
   }
 }

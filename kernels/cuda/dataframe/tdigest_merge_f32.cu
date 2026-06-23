@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_dataframe_tdigest_merge_f32(const float* meansA, const float* weightsA, const unsigned int* countA, const float* totalWeightA, const float* minA, const float* maxA, const float* meansB, const float* weightsB, const unsigned int* countB, const float* totalWeightB, const float* minB, const float* maxB, const float* compressionIn, float* meansOut, float* weightsOut, unsigned int* countOut, float* totalWeightOut, float* minOut, float* maxOut, float* compressionOut) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int cA = countA[0];
     unsigned int cB = countB[0];
     float twA = totalWeightA[0];

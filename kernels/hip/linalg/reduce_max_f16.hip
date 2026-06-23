@@ -33,7 +33,7 @@ extern "C" __global__ void navatala_linalg_reduce_max_f16(const __half* _input, 
   unsigned int maxF16ReductionStride = 128u;
   for (int maxF16ReductionStep = 0; maxF16ReductionStep < (int)(8); ++maxF16ReductionStep) {
     unsigned int maxF16Stride = maxF16ReductionStride;
-    if ((lid < maxF16Stride)) {
+    if (lid < maxF16Stride) {
       float other = sdata[(lid + maxF16Stride)];
       float mine = sdata[lid];
       bool isGreater = (mine > other);
@@ -45,7 +45,7 @@ extern "C" __global__ void navatala_linalg_reduce_max_f16(const __half* _input, 
     maxF16ReductionStride = maxF16NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float maxResult = sdata[0];
     result[0] = maxResult;
   }

@@ -16,13 +16,13 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_gamg_compute_scale_factor(const float* num, const float* den, float* sf) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= 1)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= 1) {
     return;
   } else {
     float n = num[0];
     float d = den[0];
     float dAbs = abs(d);
-    if ((dAbs > __uint_as_float(0x0da24260u))) {
+    if (dAbs > __uint_as_float(0x0da24260u)) {
       sf[0] = (n / d);
     } else {
       sf[0] = __uint_as_float(0x3f800000u);

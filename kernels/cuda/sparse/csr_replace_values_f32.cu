@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_csr_replace_values_f32(const float* n
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nnz[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float v = newValues[gid];
     values[gid] = v;
   }

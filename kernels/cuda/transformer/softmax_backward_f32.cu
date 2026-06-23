@@ -102,7 +102,7 @@ extern "C" __global__ void navatala_transformer_softmax_backward_f32(const float
   }
   __syncthreads();
   float dot = dotBuf[0u];
-  if ((batchValid && seqValid)) {
+  if (batchValid && seqValid) {
     float dyMinusDot = (dy - dot);
     float dx = (y * dyMinusDot);
     gradInput[globalIdx] = dx;

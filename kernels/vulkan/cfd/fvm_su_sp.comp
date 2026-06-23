@@ -38,14 +38,14 @@ layout(std430, binding = 5) buffer buf_outSource {
 // kernel: navatala_cfd_fvm_su_sp
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= counts[0])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= counts[0]) {
     return;
   } else {
     float spVal = sp[int(int(gl_GlobalInvocationID.x))];
     float psiVal = psi[int(int(gl_GlobalInvocationID.x))];
     float volVal = vol[int(int(gl_GlobalInvocationID.x))];
     float spVol = (spVal * volVal);
-    if ((spVal >= uintBitsToFloat(0x00000000u))) {
+    if (spVal >= uintBitsToFloat(0x00000000u)) {
       float prevDiag = outDiag[int(int(gl_GlobalInvocationID.x))];
       float newDiag = (prevDiag + spVol);
       outDiag[int(int(gl_GlobalInvocationID.x))] = newDiag;

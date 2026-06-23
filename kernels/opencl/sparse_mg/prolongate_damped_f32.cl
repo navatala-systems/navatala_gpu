@@ -17,7 +17,7 @@ __kernel void navatala_sparse_mg_prolongate_damped_f32(__global const uint* Prow
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nFine[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(ProwPtr[row]));
     int re = ((int)(ProwPtr[(row + 1)]));
     float pe = as_float(0x00000000u);

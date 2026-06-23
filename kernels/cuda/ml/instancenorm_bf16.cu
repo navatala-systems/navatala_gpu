@@ -30,7 +30,7 @@ extern "C" __global__ void navatala_ml_instancenorm_bf16(const __nv_bfloat16* x,
   float epsVal = eps[0];
   float gsM = __uint_as_float(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((unsigned int)(itM)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itM)) * 256u)) < countVal) {
       gsM = (gsM + ((float)(x[(base + (lid + (((unsigned int)(itM)) * 256u)))])));
     }
   }
@@ -39,7 +39,7 @@ extern "C" __global__ void navatala_ml_instancenorm_bf16(const __nv_bfloat16* x,
   unsigned int meanStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -54,7 +54,7 @@ extern "C" __global__ void navatala_ml_instancenorm_bf16(const __nv_bfloat16* x,
   __syncthreads();
   float gsV = __uint_as_float(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((unsigned int)(itV)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itV)) * 256u)) < countVal) {
       gsV = (gsV + ((((float)(x[(base + (lid + (((unsigned int)(itV)) * 256u)))])) - mean) * (((float)(x[(base + (lid + (((unsigned int)(itV)) * 256u)))])) - mean)));
     }
   }
@@ -63,7 +63,7 @@ extern "C" __global__ void navatala_ml_instancenorm_bf16(const __nv_bfloat16* x,
   unsigned int varStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -77,7 +77,7 @@ extern "C" __global__ void navatala_ml_instancenorm_bf16(const __nv_bfloat16* x,
   float var = (sdata[0] / n);
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
-    if (((lid + (((unsigned int)(itW)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itW)) * 256u)) < countVal) {
       float gv = ((float)(gamma[chan]));
       float bv = ((float)(beta[chan]));
       float xv = ((float)(x[(base + (lid + (((unsigned int)(itW)) * 256u)))]));

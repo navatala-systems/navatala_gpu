@@ -17,7 +17,7 @@ __kernel void navatala_sparse_multicolor_gs_forward_f32(__global const uint* row
   int gid0 = (int)get_global_id(0);
   int localIdx = (int)(get_global_id(0));
   int N = ((int)(nRowsThisColor[0]));
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int start = ((int)(colorOffsets[0]));
     int row = (start + localIdx);
     int rs = ((int)(rowPtr[row]));
@@ -26,7 +26,7 @@ __kernel void navatala_sparse_multicolor_gs_forward_f32(__global const uint* row
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != row)) {
+      if (col != row) {
         float a = values[k];
         float xj = x[col];
         sum = (sum + (a * xj));

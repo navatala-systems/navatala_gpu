@@ -16,7 +16,7 @@
 __kernel void navatala_dataframe_median_f32(__global const float* sortedInput, __global const uint* count, __global float* median) {
   int gid0 = (int)get_global_id(0);
   uint gidU32 = ((uint)((int)(get_global_id(0))));
-  if ((gidU32 == (uint)(0u))) {
+  if (gidU32 == (uint)(0u)) {
     uint n = count[(uint)(0u)];
     uint nMinus1 = (n - (uint)(1u));
     float nMinus1Float = ((float)(nMinus1));

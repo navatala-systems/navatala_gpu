@@ -99,7 +99,7 @@ void main() {
   barrier();
   for (int stride = 0; stride < int(128u); ++stride) {
     uint strideU32 = uint(stride);
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       double otherNij = sumNij[(lid + strideU32)];
       double mineNij = sumNij[lid];
       sumNij[lid] = (mineNij + otherNij);
@@ -112,7 +112,7 @@ void main() {
     }
     barrier();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double sumNijFinal = sumNij[0u];
     double sumAiFinal = sumAi[0u];
     double sumBjFinal = sumBj[0u];

@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_em_energy_eval_partials_f64(const dou
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nnzP[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double ap = APvalues[gid];
     double p = Pvalues[gid];
     numPartials[gid] = (p * ap);

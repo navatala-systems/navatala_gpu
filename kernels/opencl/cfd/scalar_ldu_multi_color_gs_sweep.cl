@@ -19,7 +19,7 @@ __kernel void navatala_cfd_scalar_ldu_multi_color_gs_sweep(__global const float*
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
   int colorSize = (((int)(colorRange[1])) - ((int)(colorRange[0])));
-  if (((int)(get_global_id(0)) >= colorSize)) {
+  if ((int)(get_global_id(0)) >= colorSize) {
     return;
   } else {
     int cellIdx = (((int)(colorRange[0])) + (int)(get_global_id(0)));
@@ -29,8 +29,8 @@ __kernel void navatala_cfd_scalar_ldu_multi_color_gs_sweep(__global const float*
     float omega = params[1];
     float d = diag[ci];
     float absD = fabs(d);
-    if ((absD < smallDiag)) {
-      if ((d >= as_float(0x00000000u))) {
+    if (absD < smallDiag) {
+      if (d >= as_float(0x00000000u)) {
         d = smallDiag;
       } else {
         d = (-smallDiag);
@@ -45,8 +45,8 @@ __kernel void navatala_cfd_scalar_ldu_multi_color_gs_sweep(__global const float*
       int k = (beg + t);
       uint f = faceIdx[k];
       int sg = sign[k];
-      if ((((int)(f)) < ((int)(counts[1])))) {
-        if ((sg >= 0)) {
+      if (((int)(f)) < ((int)(counts[1]))) {
+        if (sg >= 0) {
           int nb = neighbour[((int)(f))];
           s = (s + (upper[((int)(f))] * x[nb]));
         } else {

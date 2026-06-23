@@ -43,7 +43,7 @@ extern "C" __global__ void navatala_ml_find_max_correlation_f64(const double* co
   unsigned int maxCorrF64RedStride = 128u;
   for (int maxCorrF64RedStep = 0; maxCorrF64RedStep < (int)(8); ++maxCorrF64RedStep) {
     unsigned int maxCorrF64Stride = maxCorrF64RedStride;
-    if ((lid < maxCorrF64Stride)) {
+    if (lid < maxCorrF64Stride) {
       otherVal = svals[(lid + maxCorrF64Stride)];
       otherIdx = sidxs[(lid + maxCorrF64Stride)];
       myVal = svals[lid];
@@ -59,7 +59,7 @@ extern "C" __global__ void navatala_ml_find_max_correlation_f64(const double* co
     maxCorrF64RedStride = maxCorrF64NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     maxValue[0] = svals[0];
     maxIndex[0] = sidxs[0];
   }

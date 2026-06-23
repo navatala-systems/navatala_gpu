@@ -16,10 +16,10 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_vof_phir(const float* gx, const float* gy, const float* gz, const float* sfX, const float* sfY, const float* sfZ, const float* phi, const float* magSf, const int* owner, const int* nei, const int* faceParams, const float* paramsF, float* outPhir) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= faceParams[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= faceParams[0]) {
     return;
   } else {
-    if ((paramsF[0] == __uint_as_float(0x00000000u))) {
+    if (paramsF[0] == __uint_as_float(0x00000000u)) {
       outPhir[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = __uint_as_float(0x00000000u);
       return;
     }

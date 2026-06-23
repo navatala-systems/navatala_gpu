@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_cfd_upper_from_cf(const float* cf, const int
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[2])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[2]) {
     return;
   } else {
     upper[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = cf[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];

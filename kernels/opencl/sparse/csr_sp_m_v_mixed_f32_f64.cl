@@ -18,7 +18,7 @@ __kernel void navatala_sparse_csr_sp_m_v_mixed_f32_f64(__global const uint* rowP
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     double sum = as_double(0x0000000000000000ul);

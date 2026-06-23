@@ -17,7 +17,7 @@ __kernel void navatala_cfd_scatter_add_atomic(__global const int* values, __glob
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int nEdges = numEdges[0];
-  if ((gid < nEdges)) {
+  if (gid < nEdges) {
     int dstIdx = indices[gid];
     int fd = featureDim[0];
     for (int f = 0; f < (int)(fd); ++f) {

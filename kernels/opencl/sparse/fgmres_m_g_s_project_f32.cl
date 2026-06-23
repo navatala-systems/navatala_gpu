@@ -24,15 +24,15 @@ __kernel void navatala_sparse_fgmres_m_g_s_project_f32(__global const float* vi,
   float warpSum = sub_group_reduce_add(prod);
   __local float sdata[32];
   int lane = (int)(get_sub_group_local_id());
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < 8)) {
+  if (lid < 8) {
     float val = sdata[lid];
     float finalSum = sub_group_reduce_add(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       hij[0] = finalSum;
     }
   }

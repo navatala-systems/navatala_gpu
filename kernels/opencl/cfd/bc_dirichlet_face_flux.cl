@@ -18,11 +18,11 @@ __kernel void navatala_cfd_bc_dirichlet_face_flux(__global const float* cf, __gl
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[1])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[1]) {
     return;
   } else {
     float flux = as_float(0x00000000u);
-    if ((bcMask[((int)((int)(get_global_id(0))))] == 2)) {
+    if (bcMask[((int)((int)(get_global_id(0))))] == 2) {
       flux = (cf[((int)((int)(get_global_id(0))))] * bcVal[((int)((int)(get_global_id(0))))]);
     }
     outFlux[((int)((int)(get_global_id(0))))] = flux;

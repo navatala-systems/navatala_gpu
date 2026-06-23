@@ -28,7 +28,7 @@ kernel void navatala_ml_count_clusters_f64(device const int* labels [[buffer(0)]
   uint countClstF64RedStride = 128u;
   for (int countClstF64RedStep = 0; countClstF64RedStep < (int)(8); ++countClstF64RedStep) {
     uint countClstF64Stride = countClstF64RedStride;
-    if ((lid < countClstF64Stride)) {
+    if (lid < countClstF64Stride) {
       uint otherIdx = (lid + countClstF64Stride);
       int other = sdata[otherIdx];
       int mine = sdata[lid];
@@ -41,7 +41,7 @@ kernel void navatala_ml_count_clusters_f64(device const int* labels [[buffer(0)]
     countClstF64RedStride = countClstF64NextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     int maxLabel = sdata[0];
     int count = (maxLabel + 1);
     numClusters[0] = count;

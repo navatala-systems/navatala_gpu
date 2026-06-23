@@ -17,7 +17,7 @@ __kernel void navatala_sparse_truncate_interpolation_f32(__global const uint* Pr
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(ProwPtr[row]));
     int re = ((int)(ProwPtr[(row + 1)]));
     int pStart = ((int)(ProwPtrOut[row]));
@@ -32,7 +32,7 @@ __kernel void navatala_sparse_truncate_interpolation_f32(__global const uint* Pr
     for (int j3 = 0; j3 < (int)((re - rs)); ++j3) {
       int k3 = (rs + j3);
       float v3 = Pvalues[k3];
-      if ((fabs(v3) >= thresh)) {
+      if (fabs(v3) >= thresh) {
         PcolIdxOut[(pStart + pos)] = PcolIdx[k3];
         PvaluesOut[(pStart + pos)] = v3;
         pos = (pos + 1);

@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_deflated_project_f32(const float* x, 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float xi = x[gid];
     float proj = __uint_as_float(0x00000000u);
     int kVal = ((int)(k[0]));

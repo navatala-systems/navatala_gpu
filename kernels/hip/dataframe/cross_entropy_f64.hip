@@ -36,7 +36,7 @@ extern "C" __global__ void navatala_dataframe_cross_entropy_f64(const double* p,
   unsigned int ce64_reductionStride = 128u;
   for (int ce64_reductionStep = 0; ce64_reductionStep < (int)(8); ++ce64_reductionStep) {
     unsigned int ce64_stride = ce64_reductionStride;
-    if ((lid < ce64_stride)) {
+    if (lid < ce64_stride) {
       double ce64_other = sdata[(lid + ce64_stride)];
       double ce64_mine = sdata[lid];
       double ce64_sum = (ce64_mine + ce64_other);
@@ -47,7 +47,7 @@ extern "C" __global__ void navatala_dataframe_cross_entropy_f64(const double* p,
     ce64_reductionStride = ce64_nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0u] = sdata[0u];
   }
 }

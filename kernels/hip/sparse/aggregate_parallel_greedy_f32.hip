@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_aggregate_parallel_greedy_f32(const u
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int bestCol = -1;
@@ -26,15 +26,15 @@ extern "C" __global__ void navatala_sparse_aggregate_parallel_greedy_f32(const u
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       unsigned int isStrong = strongMask[k];
-      if ((isStrong == 1u)) {
+      if (isStrong == 1u) {
         float a = values[k];
-        if ((abs(a) > bestVal)) {
+        if (abs(a) > bestVal) {
           bestVal = abs(a);
           bestCol = ((int)(colIdx[k]));
         }
       }
     }
-    if ((bestCol >= 0)) {
+    if (bestCol >= 0) {
       int aggVal = (((gid < bestCol)) ? (gid) : (bestCol));
       aggregateId[gid] = aggVal;
       aggregateId[bestCol] = aggVal;

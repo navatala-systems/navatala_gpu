@@ -22,7 +22,7 @@ extern "C" __global__ void navatala_linalg_scatter_cols_f64(const double* src, c
   unsigned int kVal = k[0u];
   unsigned int nVal = n[0u];
   unsigned int totalElems = (mVal * kVal);
-  if ((tid < totalElems)) {
+  if (tid < totalElems) {
     unsigned int row = (tid / kVal);
     unsigned int srcColIdx = (tid % kVal);
     unsigned int dstCol = indices[srcColIdx];

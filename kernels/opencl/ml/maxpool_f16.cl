@@ -18,7 +18,7 @@ __kernel void navatala_ml_maxpool_f16(__global const half* _input, __global cons
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     uint windowVal = window[0];
     uint strideVal = stride[0];
     uint inCountVal = inCount[0];
@@ -26,7 +26,7 @@ __kernel void navatala_ml_maxpool_f16(__global const half* _input, __global cons
     float acc = as_float(0xff7fc99eu);
     for (int w = 0; w < (int)(windowVal); ++w) {
       uint idx = (base + ((uint)(w)));
-      if ((idx < inCountVal)) {
+      if (idx < inCountVal) {
         float v = ((float)(_input[idx]));
         acc = (((acc > v)) ? (acc) : (v));
       }

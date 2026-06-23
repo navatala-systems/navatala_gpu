@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_sparse_compute_grid_complexity(const unsigned int* levelNnz, const unsigned int* nLevels, float* gridComplexity) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     int nLev = ((int)(nLevels[0]));
     unsigned int finestNnz = levelNnz[0];
     float total = __uint_as_float(0x00000000u);

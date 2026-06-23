@@ -44,7 +44,7 @@ layout(std430, binding = 7) readonly buffer buf_paramsF {
 // kernel: navatala_cfd_vof_mules_face_update
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= counts[2])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= counts[2]) {
     return;
   } else {
     float pc = phiCorr[int(int(gl_GlobalInvocationID.x))];
@@ -53,21 +53,21 @@ void main() {
     float a0 = lambdam[o];
     float b0 = lambdap[n];
     float lim = a0;
-    if ((lim > b0)) {
+    if (lim > b0) {
       lim = b0;
     }
-    if ((pc > uintBitsToFloat(0x00000000u))) {
+    if (pc > uintBitsToFloat(0x00000000u)) {
       float a1 = lambdap[o];
       float b1 = lambdam[n];
       float lim1 = a1;
-      if ((lim1 > b1)) {
+      if (lim1 > b1) {
         lim1 = b1;
       }
       lim = lim1;
     }
     float cur = lambda[int(int(gl_GlobalInvocationID.x))];
     float _out = cur;
-    if ((_out > lim)) {
+    if (_out > lim) {
       _out = lim;
     }
     lambda[int(int(gl_GlobalInvocationID.x))] = _out;

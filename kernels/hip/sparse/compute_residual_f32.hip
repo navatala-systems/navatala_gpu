@@ -19,14 +19,14 @@ extern "C" __global__ void navatala_sparse_compute_residual_f32(const unsigned i
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int i = gid;
   unsigned int nVal = n[0u];
-  if ((i < nVal)) {
+  if (i < nVal) {
     unsigned int rowStart = rowPtr[i];
     unsigned int iPlusOne = (i + 1u);
     unsigned int rowEnd = rowPtr[iPlusOne];
     float axSumAccum = __uint_as_float(0x00000000u);
     for (int j = 0; j < (int)(rowEnd); ++j) {
       unsigned int jU32 = ((unsigned int)(j));
-      if ((jU32 >= rowStart)) {
+      if (jU32 >= rowStart) {
         unsigned int col = colInd[jU32];
         float aVal = values[jU32];
         float xj = x[col];

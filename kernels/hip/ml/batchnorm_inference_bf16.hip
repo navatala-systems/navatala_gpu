@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_ml_batchnorm_inference_bf16(const __hip_bflo
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float epsVal = eps[0];
     float d = (((float)(x[gid])) - ((float)(mean[gid])));
     float denom = sqrt((((float)(var[gid])) + epsVal));

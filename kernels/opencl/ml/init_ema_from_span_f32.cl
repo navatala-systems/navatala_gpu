@@ -15,7 +15,7 @@
 
 __kernel void navatala_ml_init_ema_from_span_f32(__global const float* span, __global float* ema, __global float* alpha, __global uint* count) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float s = span[0];
     float spanPlus1 = (s + as_float(0x3f800000u));
     float a = (as_float(0x40000000u) / spanPlus1);

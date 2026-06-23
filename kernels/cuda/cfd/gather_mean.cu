@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_cfd_gather_mean(const float* features, const
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int nNodes = numNodes[0];
-  if ((gid < nNodes)) {
+  if (gid < nNodes) {
     int cnt = neighborCounts[gid];
     int fd = featureDim[0];
     for (int f = 0; f < (int)(fd); ++f) {

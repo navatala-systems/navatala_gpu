@@ -18,7 +18,7 @@ __kernel void navatala_cfd_attention_row_softmax(__global const float* scores, _
   int qi = (int)(get_global_id(0));
   int nq = numQ[0];
   int nk = numK[0];
-  if ((qi < nq)) {
+  if (qi < nq) {
     int rowBase = (qi * nk);
     float maxScore = as_float(0xf149f2cau);
     for (int j = 0; j < (int)(nk); ++j) {

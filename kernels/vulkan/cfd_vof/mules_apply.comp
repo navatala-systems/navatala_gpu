@@ -38,7 +38,7 @@ layout(std430, binding = 5) writeonly buffer buf_alphaPhi {
 // kernel: navatala_cfd_vof_mules_apply
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= counts[1])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= counts[1]) {
     return;
   } else {
     alphaPhi[int(int(gl_GlobalInvocationID.x))] = (phiBD[int(int(gl_GlobalInvocationID.x))] + (lambda[int(int(gl_GlobalInvocationID.x))] * phiCorr[int(int(gl_GlobalInvocationID.x))]));

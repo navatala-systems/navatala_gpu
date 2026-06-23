@@ -37,7 +37,7 @@ __kernel void navatala_graph_normalize_eigenvector_rows_f32(__global const float
     uint normF32RedStride = (uint)(128u);
     for (int normF32RedStep = 0; normF32RedStep < (int)(8); ++normF32RedStep) {
       uint normF32Stride = normF32RedStride;
-      if ((lid < normF32Stride)) {
+      if (lid < normF32Stride) {
         float other = sdata[(lid + normF32Stride)];
         float mine = sdata[lid];
         float sum = (mine + other);
@@ -48,7 +48,7 @@ __kernel void navatala_graph_normalize_eigenvector_rows_f32(__global const float
       normF32RedStride = normF32NextStride;
       barrier(CLK_LOCAL_MEM_FENCE);
     }
-    if ((lid == (uint)(0u))) {
+    if (lid == (uint)(0u)) {
       float sumSq = sdata[0];
       float normVal = sqrt(sumSq);
       sdata[0] = normVal;

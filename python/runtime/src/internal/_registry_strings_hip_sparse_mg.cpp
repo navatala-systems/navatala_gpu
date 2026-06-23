@@ -15,7 +15,7 @@ extern "C" __global__ void navatala_sparse_mg_restrict_f32(const unsigned int* R
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int row = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nCoarse[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(RrowPtr[row]));
     int re = ((int)(RrowPtr[(row + 1)]));
     float acc = __uint_as_float(0x00000000u);
@@ -37,7 +37,7 @@ extern "C" __global__ void navatala_sparse_mg_restrict_f64(const unsigned int* R
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int row = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nCoarse[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(RrowPtr[row]));
     int re = ((int)(RrowPtr[(row + 1)]));
     double acc = __longlong_as_double(0x0000000000000000ull);
@@ -59,7 +59,7 @@ extern "C" __global__ void navatala_sparse_mg_prolongate_f32(const unsigned int*
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int row = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nFine[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(ProwPtr[row]));
     int re = ((int)(ProwPtr[(row + 1)]));
     float pe = __uint_as_float(0x00000000u);
@@ -82,7 +82,7 @@ extern "C" __global__ void navatala_sparse_mg_prolongate_f64(const unsigned int*
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int row = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nFine[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(ProwPtr[row]));
     int re = ((int)(ProwPtr[(row + 1)]));
     double pe = __longlong_as_double(0x0000000000000000ull);
@@ -153,7 +153,7 @@ extern "C" __global__ void navatala_sparse_mg_compute_residual_f32(const float* 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     float bi = b[i];
     float axi = Ax[i];
     r[i] = (bi - axi);
@@ -167,7 +167,7 @@ extern "C" __global__ void navatala_sparse_mg_compute_residual_f64(const double*
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     double bi = b[i];
     double axi = Ax[i];
     r[i] = (bi - axi);
@@ -181,7 +181,7 @@ extern "C" __global__ void navatala_sparse_mg_weighted_restrict_f32(const unsign
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int row = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nCoarse[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(RrowPtr[row]));
     int re = ((int)(RrowPtr[(row + 1)]));
     float acc = __uint_as_float(0x00000000u);
@@ -204,7 +204,7 @@ extern "C" __global__ void navatala_sparse_mg_weighted_restrict_f64(const unsign
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int row = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nCoarse[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(RrowPtr[row]));
     int re = ((int)(RrowPtr[(row + 1)]));
     double acc = __longlong_as_double(0x0000000000000000ull);
@@ -239,15 +239,15 @@ extern "C" __global__ void navatala_sparse_mg_error_norm_partials_f32(const floa
   float warpSum = gpu_warp_reduce_sum(sq);
   __shared__ float sdata[32];
   int lane = (int)(threadIdx.x % warpSize);
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   __syncthreads();
-  if ((lid < 8)) {
+  if (lid < 8) {
     float val = sdata[lid];
     float finalSum = gpu_warp_reduce_sum(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       int grpId = (int)(blockIdx.x);
       partials[grpId] = finalSum;
     }
@@ -273,15 +273,15 @@ extern "C" __global__ void navatala_sparse_mg_error_norm_partials_f64(const doub
   double warpSum = gpu_warp_reduce_sum(sq);
   __shared__ double sdata[32];
   int lane = (int)(threadIdx.x % warpSize);
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   __syncthreads();
-  if ((lid < 8)) {
+  if (lid < 8) {
     double val = sdata[lid];
     double finalSum = gpu_warp_reduce_sum(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       int grpId = (int)(blockIdx.x);
       partials[grpId] = finalSum;
     }
@@ -295,7 +295,7 @@ extern "C" __global__ void navatala_sparse_mg_zero_vector_f32(const unsigned int
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     v[i] = __uint_as_float(0x00000000u);
   }
 }
@@ -307,7 +307,7 @@ extern "C" __global__ void navatala_sparse_mg_zero_vector_f64(const unsigned int
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     v[i] = __longlong_as_double(0x0000000000000000ull);
   }
 }
@@ -319,7 +319,7 @@ extern "C" __global__ void navatala_sparse_mg_prolongate_damped_f32(const unsign
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int row = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nFine[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(ProwPtr[row]));
     int re = ((int)(ProwPtr[(row + 1)]));
     float pe = __uint_as_float(0x00000000u);
@@ -343,7 +343,7 @@ extern "C" __global__ void navatala_sparse_mg_prolongate_damped_f64(const unsign
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int row = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nFine[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(ProwPtr[row]));
     int re = ((int)(ProwPtr[(row + 1)]));
     double pe = __longlong_as_double(0x0000000000000000ull);

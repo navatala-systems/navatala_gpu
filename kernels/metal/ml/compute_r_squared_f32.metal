@@ -41,7 +41,7 @@ kernel void navatala_ml_compute_r_squared_f32(device const float* y [[buffer(0)]
   uint r2F32Stride = 128u;
   for (int reductionStep3 = 0; reductionStep3 < (int)(8); ++reductionStep3) {
     uint stride3 = r2F32Stride;
-    if ((lid < stride3)) {
+    if (lid < stride3) {
       float otherRes = sdataRes[(lid + stride3)];
       float mineRes = sdataRes[lid];
       float sumRes = (mineRes + otherRes);
@@ -56,7 +56,7 @@ kernel void navatala_ml_compute_r_squared_f32(device const float* y [[buffer(0)]
     r2F32Stride = nextStride3;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float ssRes = sdataRes[0];
     float ssTot = sdataTot[0];
     float ratio = (ssRes / ssTot);

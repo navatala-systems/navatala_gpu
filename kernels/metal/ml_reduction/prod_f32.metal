@@ -24,7 +24,7 @@ kernel void navatala_ml_reduction_prod_f32(device const float* _input [[buffer(0
   float gsAcc = as_type<float>(0x3f800000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     uint idx = (lid + (((uint)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       float raw = _input[idx];
       float v = raw;
       gsAcc = (gsAcc * v);
@@ -35,7 +35,7 @@ kernel void navatala_ml_reduction_prod_f32(device const float* _input [[buffer(0
   uint redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine * other);
@@ -46,7 +46,7 @@ kernel void navatala_ml_reduction_prod_f32(device const float* _input [[buffer(0
     redStride = nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float reduced = sdata[0];
     float nF = ((float)(countVal));
     float finalF = reduced;

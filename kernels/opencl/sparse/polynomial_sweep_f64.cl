@@ -18,7 +18,7 @@ __kernel void navatala_sparse_polynomial_sweep_f64(__global const double* Ax, __
   int gid0 = (int)get_global_id(0);
   int i = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     double ri = (b[i] - Ax[i]);
     double xi = x[i];
     int deg = ((int)(degree[0]));

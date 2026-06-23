@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_cfd_gamg_proc_add_f32(const unsigned int* lo
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(count[0]));
-  if ((i < N)) {
+  if (i < N) {
     int cell = ((int)(localCells[i]));
     float co = coeffs[i];
     float rv = recvVals[i];

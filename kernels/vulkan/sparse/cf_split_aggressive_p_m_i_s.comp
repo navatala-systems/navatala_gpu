@@ -43,9 +43,9 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int row = int(gl_GlobalInvocationID.x);
   int N = int(nRows[0]);
-  if ((row < N)) {
+  if (row < N) {
     int prevMark = cfMarkingPrev[row];
-    if ((prevMark == 1)) {
+    if (prevMark == 1) {
       uint priority = (uint(row) ^ seed[0]);
       int rs = int(rowPtr[row]);
       int re = int(rowPtr[(row + 1)]);
@@ -53,10 +53,10 @@ void main() {
       for (int j = 0; j < int((re - rs)); ++j) {
         int k = (rs + j);
         uint isStr = strongMask[k];
-        if ((isStr == 1u)) {
+        if (isStr == 1u) {
           int nbr = int(colIdx[k]);
           int nbrPrev = cfMarkingPrev[nbr];
-          if ((nbrPrev == 1)) {
+          if (nbrPrev == 1) {
             uint nbrPri = (uint(nbr) ^ seed[0]);
             bool outranks = ((nbrPri > priority) || ((nbrPri == priority) && (nbr < row)));
             if (outranks) {
@@ -65,7 +65,7 @@ void main() {
           }
         }
       }
-      if ((!hasHigherNbr)) {
+      if (!hasHigherNbr) {
         cfMarking[row] = 1;
       } else {
         cfMarking[row] = -1;

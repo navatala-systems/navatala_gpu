@@ -24,7 +24,7 @@ extern "C" __global__ void navatala_linalg_slice_cols_f32(const float* A, const 
   unsigned int n = srcCols[0u];
   unsigned int outCols = (ce - cs);
   unsigned int totalElems = (m * outCols);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     unsigned int outRow = (idx / outCols);
     unsigned int outCol = (idx % outCols);
     unsigned int srcCol = (cs + outCol);

@@ -21,12 +21,12 @@ extern "C" __global__ void navatala_vector_search_insert_vertex_f32(const unsign
   unsigned int nc = n_candidates[0];
   unsigned int md = max_degree[0];
   unsigned int n_neighbors = (((nc < md)) ? (nc) : (md));
-  if ((tid < n_neighbors)) {
+  if (tid < n_neighbors) {
     unsigned int neighbor = candidates[tid];
     unsigned int graph_idx = ((vid * md) + tid);
     graph[graph_idx] = neighbor;
   }
-  if ((tid == 0u)) {
+  if (tid == 0u) {
     graph_degrees[vid] = n_neighbors;
   }
 }

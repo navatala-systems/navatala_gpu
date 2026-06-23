@@ -34,7 +34,7 @@ kernel void navatala_vector_search_train_p_q_codebook_f32(device const float* su
   uint vid = ((uint)(int(__gid.x)));
   uint nv = n_vectors[0];
   uint sd = sub_dim[0];
-  if ((vid < nv)) {
+  if (vid < nv) {
     uint cw = assignments[vid];
     for (int k = 0; k < (int)(sd); ++k) {
       uint src_idx = ((vid * sd) + k);

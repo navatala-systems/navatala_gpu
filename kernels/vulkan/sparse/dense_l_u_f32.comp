@@ -36,13 +36,13 @@ void main() {
     for (int i = 0; i < int((N - k)); ++i) {
       int r = (k + i);
       float v = A[((r * N) + k)];
-      if ((abs(v) > abs(maxVal))) {
+      if (abs(v) > abs(maxVal)) {
         maxVal = v;
         maxRow = r;
       }
     }
     pivots[k] = uint(maxRow);
-    if ((maxRow != k)) {
+    if (maxRow != k) {
       for (int j = 0; j < int(N); ++j) {
         float a = A[((k * N) + j)];
         float b = A[((maxRow * N) + j)];

@@ -19,7 +19,7 @@ using namespace metal;
 kernel void navatala_graph_in_degree_u32(device const uint* offsets [[buffer(0)]], device const uint* numVertices [[buffer(1)]], device uint* degrees [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     uint hi = offsets[(gid + 1u)];
     uint lo = offsets[gid];
     uint deg = (hi - lo);

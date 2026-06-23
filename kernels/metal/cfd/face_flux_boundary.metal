@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_cfd_face_flux_boundary(device const float* x [[buffer(0)]], device const int* owner [[buffer(1)]], device const float* cf [[buffer(2)]], device const float* bcVal [[buffer(3)]], device const uint* bcMask [[buffer(4)]], device const uint* params [[buffer(5)]], device float* faceFlux [[buffer(6)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(params[0])))) {
+  if (int(__gid.x) >= ((int)(params[0]))) {
     return;
   } else {
     int gf = (((int)(params[1])) + int(__gid.x));
@@ -25,17 +25,17 @@ kernel void navatala_cfd_face_flux_boundary(device const float* x [[buffer(0)]],
     float xo = x[o];
     uint m = bcMask[gf];
     int mInt = ((int)(m));
-    if ((mInt == 4)) {
+    if (mInt == 4) {
       faceFlux[gf] = bcVal[gf];
     } else {
       float other = xo;
-      if ((mInt == 1)) {
+      if (mInt == 1) {
         other = bcVal[gf];
       } else {
-        if ((mInt == 3)) {
+        if (mInt == 3) {
           other = bcVal[gf];
         } else {
-          if ((mInt == 2)) {
+          if (mInt == 2) {
             other = as_type<float>(0x00000000u);
           }
         }

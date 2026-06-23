@@ -37,7 +37,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int gid = int(gl_GlobalInvocationID.x);
   int N = int(nRows[0]);
-  if ((gid < N)) {
+  if (gid < N) {
     int c = colors[gid];
     uint pos = atomicAdd(colorOffsets[c], 1u);
     reorderPerm[int(pos)] = uint(gid);

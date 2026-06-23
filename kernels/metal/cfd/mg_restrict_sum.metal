@@ -31,7 +31,7 @@ static inline uint gpu_atomic_cas_uint(device atomic_uint* ptr, uint expected, u
 }
 
 kernel void navatala_cfd_mg_restrict_sum(device const float* rFine [[buffer(0)]], device const int* prolongRowOffsets [[buffer(1)]], device const int* prolongCols [[buffer(2)]], device const float* prolongVals [[buffer(3)]], device float* rCoarse [[buffer(4)]], device const int* mgCounts [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(mgCounts[0])))) {
+  if (int(__gid.x) >= ((int)(mgCounts[0]))) {
     return;
   } else {
     int beg = prolongRowOffsets[int(__gid.x)];

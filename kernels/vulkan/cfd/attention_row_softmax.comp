@@ -35,7 +35,7 @@ void main() {
   int qi = int(gl_GlobalInvocationID.x);
   int nq = numQ[0];
   int nk = numK[0];
-  if ((qi < nq)) {
+  if (qi < nq) {
     int rowBase = (qi * nk);
     float maxScore = uintBitsToFloat(0xf149f2cau);
     for (int j = 0; j < int(nk); ++j) {

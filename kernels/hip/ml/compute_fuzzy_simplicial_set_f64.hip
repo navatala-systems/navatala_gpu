@@ -57,7 +57,7 @@ extern "C" __global__ void navatala_ml_compute_fuzzy_simplicial_set_f64(const in
         membershipSum = newSum;
       }
       double sum = membershipSum;
-      if ((sum > targetSum)) {
+      if (sum > targetSum) {
         sigmaHigh = mid;
       } else {
         sigmaLow = mid;

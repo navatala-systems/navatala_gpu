@@ -17,7 +17,7 @@ __kernel void navatala_cfd_restrict_by_agglomeration_gather_f32(__global const f
   int gid0 = (int)get_global_id(0);
   int c = (int)(get_global_id(0));
   int N = ((int)(nCoarseCells[0]));
-  if ((c < N)) {
+  if (c < N) {
     int begin = ((int)(coarseToFineOffsets[c]));
     int end = ((int)(coarseToFineOffsets[(c + 1)]));
     float sum = as_float(0x00000000u);

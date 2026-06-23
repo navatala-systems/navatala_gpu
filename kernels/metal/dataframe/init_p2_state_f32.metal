@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_dataframe_init_p2_state_f32(device const float* p [[buffer(0)]], device float* q0 [[buffer(1)]], device float* q1 [[buffer(2)]], device float* q2 [[buffer(3)]], device float* q3 [[buffer(4)]], device float* q4 [[buffer(5)]], device uint* pos0 [[buffer(6)]], device uint* pos1 [[buffer(7)]], device uint* pos2 [[buffer(8)]], device uint* pos3 [[buffer(9)]], device uint* pos4 [[buffer(10)]], device float* targetP [[buffer(11)]], device uint* count [[buffer(12)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) == 0)) {
+  if (int(__gid.x) == 0) {
     float pVal = p[0];
     q0[0] = as_type<float>(0x00000000u);
     q1[0] = as_type<float>(0x00000000u);

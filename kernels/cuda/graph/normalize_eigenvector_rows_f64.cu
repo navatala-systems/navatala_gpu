@@ -38,7 +38,7 @@ extern "C" __global__ void navatala_graph_normalize_eigenvector_rows_f64(const d
     unsigned int normF64RedStride = 128u;
     for (int normF64RedStep = 0; normF64RedStep < (int)(8); ++normF64RedStep) {
       unsigned int normF64Stride = normF64RedStride;
-      if ((lid < normF64Stride)) {
+      if (lid < normF64Stride) {
         double other = sdata[(lid + normF64Stride)];
         double mine = sdata[lid];
         double sum = (mine + other);
@@ -49,7 +49,7 @@ extern "C" __global__ void navatala_graph_normalize_eigenvector_rows_f64(const d
       normF64RedStride = normF64NextStride;
       __syncthreads();
     }
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       double sumSq = sdata[0];
       double normVal = sqrt(sumSq);
       sdata[0] = normVal;

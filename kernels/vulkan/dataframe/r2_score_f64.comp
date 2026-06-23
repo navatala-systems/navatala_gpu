@@ -60,7 +60,7 @@ void main() {
   uint r2F64_reductionStride = 128u;
   for (int reductionStep = 0; reductionStep < int(8); ++reductionStep) {
     uint r2F64_stride = r2F64_reductionStride;
-    if ((lid < r2F64_stride)) {
+    if (lid < r2F64_stride) {
       uint r2F64_partnerIdx = (lid + r2F64_stride);
       double otherRes = sdata_res[r2F64_partnerIdx];
       double mineRes = sdata_res[lid];
@@ -77,7 +77,7 @@ void main() {
     barrier();
   }
   uint zeroU32 = uint(0);
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     double ssRes = sdata_res[0];
     double ssTot = sdata_tot[0];
     double ratio = (ssRes / ssTot);

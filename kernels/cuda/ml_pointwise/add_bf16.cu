@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_ml_pointwise_add_bf16(const __nv_bfloat16* a
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 aRaw = a[gid];
     __nv_bfloat16 bRaw = b[gid];
     float av = ((float)(aRaw));

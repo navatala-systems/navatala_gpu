@@ -31,23 +31,23 @@ static inline uint gpu_atomic_cas_uint(device atomic_uint* ptr, uint expected, u
 }
 
 kernel void navatala_cfd_turbulence_dirichlet_face_elimination(device const int* owner [[buffer(0)]], device const int* neighbour [[buffer(1)]], device const int* constrainedMask [[buffer(2)]], device const float* constrainedValue [[buffer(3)]], device const int* nIntFaces [[buffer(4)]], device float* upper [[buffer(5)]], device float* lower [[buffer(6)]], device float* source [[buffer(7)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= nIntFaces[0])) {
+  if (((int)(int(__gid.x))) >= nIntFaces[0]) {
     return;
   } else {
     int o = owner[((int)(int(__gid.x)))];
     int n = neighbour[((int)(int(__gid.x)))];
     int oC = constrainedMask[o];
     int nC = constrainedMask[n];
-    if (((oC | nC) == 0)) {
+    if ((oC | nC) == 0) {
       return;
     } else {
       float up = upper[((int)(int(__gid.x)))];
       float lo = lower[((int)(int(__gid.x)))];
-      if ((oC != 0)) {
+      if (oC != 0) {
         float cv = constrainedValue[o];
         atomic_fetch_add_explicit((device atomic_float*)(&source[n]), (-(lo * cv)), memory_order_relaxed);
       }
-      if ((nC != 0)) {
+      if (nC != 0) {
         float cv = constrainedValue[n];
         atomic_fetch_add_explicit((device atomic_float*)(&source[o]), (-(up * cv)), memory_order_relaxed);
       }

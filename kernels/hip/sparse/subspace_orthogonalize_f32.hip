@@ -20,7 +20,7 @@ extern "C" __global__ void navatala_sparse_subspace_orthogonalize_f32(const unsi
   int N = ((int)(n[0]));
   int kVal = ((int)(k[0]));
   for (int j = 0; j < (int)(kVal); ++j) {
-    if ((gid < N)) {
+    if (gid < N) {
       float xij = X[((j * N) + gid)];
       float v = xij;
       for (int ii = 0; ii < (int)(j); ++ii) {

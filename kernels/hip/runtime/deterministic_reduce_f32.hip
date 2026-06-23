@@ -31,7 +31,7 @@ extern "C" __global__ void navatala_runtime_deterministic_reduce_f32(const float
   unsigned int f32RedStride = 128u;
   for (int f32RedStep = 0; f32RedStep < (int)(8); ++f32RedStep) {
     unsigned int f32Stride = f32RedStride;
-    if ((lid < f32Stride)) {
+    if (lid < f32Stride) {
       float other = sdata[(lid + f32Stride)];
       float mine = sdata[lid];
       float sum = (mine + other);
@@ -42,7 +42,7 @@ extern "C" __global__ void navatala_runtime_deterministic_reduce_f32(const float
     f32RedStride = f32NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float totalSum = sdata[0];
     result[0] = totalSum;
   }

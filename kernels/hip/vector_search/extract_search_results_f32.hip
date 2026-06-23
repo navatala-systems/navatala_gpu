@@ -22,11 +22,11 @@ extern "C" __global__ void navatala_vector_search_extract_search_results_f32(con
   unsigned int ls = search_list_size[0];
   unsigned int query_id = (gid / k_val);
   unsigned int k_idx = (gid % k_val);
-  if ((query_id < nq)) {
+  if (query_id < nq) {
     unsigned int nc = n_candidates[query_id];
     unsigned int src_idx = ((query_id * ls) + k_idx);
     unsigned int dst_idx = ((query_id * k_val) + k_idx);
-    if ((k_idx < nc)) {
+    if (k_idx < nc) {
       unsigned int cand_id = candidates[src_idx];
       float cand_dist = candidate_dists[src_idx];
       result_ids[dst_idx] = cand_id;

@@ -15,7 +15,7 @@
 
 __kernel void navatala_cfd_primitives_phig_gravity(__global const float* ghf, __global const float* snGradRho, __global const float* rAUf, __global const float* magSf, __global const uint* params, __global float* outPhig) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(params[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(params[0]))) {
     return;
   } else {
     outPhig[(int)(get_global_id(0))] = (-((ghf[(int)(get_global_id(0))] * snGradRho[(int)(get_global_id(0))]) * (rAUf[(int)(get_global_id(0))] * magSf[(int)(get_global_id(0))])));

@@ -17,7 +17,7 @@ __kernel void navatala_sparse_axpy_f32(__global const float* x, __global const f
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float a = alpha[0];
     float xi = x[gid];
     float yi = y[gid];

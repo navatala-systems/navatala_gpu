@@ -18,7 +18,7 @@ __kernel void navatala_vector_search_robust_prune_f32(__global const uint* verte
   uint tid = ((uint)((int)(get_global_id(0))));
   uint nc = n_candidates[0];
   uint md = max_degree[0];
-  if ((tid == (uint)(0u))) {
+  if (tid == (uint)(0u)) {
     uint limit = (((nc < md)) ? (nc) : (md));
     for (int i = 0; i < (int)(limit); ++i) {
       uint cand = candidates[i];

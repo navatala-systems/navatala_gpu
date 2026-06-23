@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_ilu_factor_color_f64(const unsigned i
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int localIdx = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRowsThisColor[0]));
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int offset = ((int)(colorOffsets[0]));
     int row = (offset + localIdx);
     int rs = ((int)(rowPtr[row]));
@@ -26,7 +26,7 @@ extern "C" __global__ void navatala_sparse_ilu_factor_color_f64(const unsigned i
     for (int jj = 0; jj < (int)((re - rs)); ++jj) {
       int k = (rs + jj);
       int col = ((int)(colIdx[k]));
-      if ((col < row)) {
+      if (col < row) {
         int colDiagPos = ((int)(diagIdx[col]));
         double diagVal = values[colDiagPos];
         double lFactor = (values[k] / diagVal);
@@ -39,7 +39,7 @@ extern "C" __global__ void navatala_sparse_ilu_factor_color_f64(const unsigned i
           for (int pp = 0; pp < (int)((colRe - colRs)); ++pp) {
             int p = (colRs + pp);
             int pcol = ((int)(colIdx[p]));
-            if ((pcol == mcol)) {
+            if (pcol == mcol) {
               double uVal = values[p];
               double aim = values[m];
               values[m] = (aim - (lFactor * uVal));

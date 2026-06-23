@@ -20,7 +20,7 @@ __kernel void navatala_vector_search_greedy_search_f32(__global const float* que
   uint d = dim[0];
   uint entry = entry_point[0];
   uint ls = search_list_size[0];
-  if ((query_id < nq)) {
+  if (query_id < nq) {
     float entry_dist = as_float(0x00000000u);
     for (int k = 0; k < (int)(d); ++k) {
       uint q_idx = ((query_id * d) + k);

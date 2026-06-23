@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_sparse_lobpcg_rayleigh_ritz_f64(const double
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
   int kVal = ((int)(k[0]));
-  if ((gid < (kVal * kVal))) {
+  if (gid < (kVal * kVal)) {
     int row = (gid / kVal);
     int col = (gid % kVal);
     double dotAX = __longlong_as_double(0x0000000000000000ull);

@@ -30,7 +30,7 @@ kernel void navatala_sparse_sparse_cosine_distance_f32(device const float* a [[b
   uint gridSize = ((uint)(int(__grid_size.x)));
   for (int loopIdx = 0; loopIdx < (int)(nnzVal); ++loopIdx) {
     uint currentIdx = idxAccum;
-    if ((currentIdx < nnzVal)) {
+    if (currentIdx < nnzVal) {
       float aVal = a[currentIdx];
       float bVal = b[currentIdx];
       float prod = (aVal * bVal);
@@ -60,7 +60,7 @@ kernel void navatala_sparse_sparse_cosine_distance_f32(device const float* a [[b
   uint strideAccum = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint currentStride = strideAccum;
-    if ((lidU32 < currentStride)) {
+    if (lidU32 < currentStride) {
       uint otherIdx = (lidU32 + currentStride);
       float myDot = sdataDot[lidU32];
       float otherDot = sdataDot[otherIdx];
@@ -77,7 +77,7 @@ kernel void navatala_sparse_sparse_cosine_distance_f32(device const float* a [[b
     strideAccum = nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lidU32 == 0u)) {
+  if (lidU32 == 0u) {
     float dotProduct = sdataDot[0u];
     float normASq = sdataNormA[0u];
     float normBSq = sdataNormB[0u];

@@ -65,7 +65,7 @@ layout(std430, binding = 14) writeonly buffer buf_nHatf {
 // kernel: navatala_cfd_n_hatf_all
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= counts[1])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= counts[1]) {
     return;
   } else {
     int o = owner[int(int(gl_GlobalInvocationID.x))];
@@ -82,21 +82,21 @@ void main() {
     float ny = (gfy * inv);
     float nz = (gfz * inv);
     contactGrad[int(int(gl_GlobalInvocationID.x))] = uintBitsToFloat(0x00000000u);
-    if ((thetaMask[int(int(gl_GlobalInvocationID.x))] != 0u)) {
+    if (thetaMask[int(int(gl_GlobalInvocationID.x))] != 0u) {
       float sfx = sfX[int(int(gl_GlobalInvocationID.x))];
       float sfy = sfY[int(int(gl_GlobalInvocationID.x))];
       float sfz = sfZ[int(int(gl_GlobalInvocationID.x))];
       float magSf = sqrt((((sfx * sfx) + (sfy * sfy)) + (sfz * sfz)));
-      if ((magSf > uintBitsToFloat(0x1e3ce508u))) {
+      if (magSf > uintBitsToFloat(0x1e3ce508u)) {
         float nfx = (sfx / magSf);
         float nfy = (sfy / magSf);
         float nfz = (sfz / magSf);
         float a12raw = (((nx * nfx) + (ny * nfy)) + (nz * nfz));
         float a12 = a12raw;
-        if ((a12 < uintBitsToFloat(0xbf800000u))) {
+        if (a12 < uintBitsToFloat(0xbf800000u)) {
           a12 = uintBitsToFloat(0xbf800000u);
         } else {
-          if ((a12 > uintBitsToFloat(0x3f800000u))) {
+          if (a12 > uintBitsToFloat(0x3f800000u)) {
             a12 = uintBitsToFloat(0x3f800000u);
           }
         }
@@ -105,7 +105,7 @@ void main() {
         float acosA12 = acos(a12);
         float b2 = cos((acosA12 - th));
         float det = (uintBitsToFloat(0x3f800000u) - (a12 * a12));
-        if ((det < uintBitsToFloat(0x358637bdu))) {
+        if (det < uintBitsToFloat(0x358637bdu)) {
           det = uintBitsToFloat(0x358637bdu);
         }
         float a = ((b1 - (a12 * b2)) / det);

@@ -35,7 +35,7 @@ kernel void navatala_vector_search_accumulate_p_q_codebook_i32(device const floa
   uint nv = n_vectors[0];
   uint sd = sub_dim[0];
   float scale = as_type<float>(0x47800000u);
-  if ((vid < nv)) {
+  if (vid < nv) {
     uint cw = assignments[vid];
     for (int k = 0; k < (int)(sd); ++k) {
       uint src_idx = ((vid * sd) + k);

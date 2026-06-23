@@ -17,7 +17,7 @@ __kernel void navatala_sparse_csr_replace_values_f32(__global const float* newVa
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nnz[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float v = newValues[gid];
     values[gid] = v;
   }

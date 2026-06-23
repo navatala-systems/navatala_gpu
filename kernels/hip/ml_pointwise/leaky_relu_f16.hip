@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_ml_pointwise_leaky_relu_f16(const __half* _i
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (((x > __uint_as_float(0x00000000u))) ? (x) : ((__uint_as_float(0x3c23d70au) * x)));

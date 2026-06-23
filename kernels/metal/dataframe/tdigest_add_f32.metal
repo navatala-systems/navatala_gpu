@@ -18,7 +18,7 @@ using namespace metal;
 
 kernel void navatala_dataframe_tdigest_add_f32(device const float* value [[buffer(0)]], device const float* weight [[buffer(1)]], device float* centroidMeans [[buffer(2)]], device float* centroidWeights [[buffer(3)]], device uint* centroidCount [[buffer(4)]], device float* totalWeight [[buffer(5)]], device float* minVal [[buffer(6)]], device float* maxVal [[buffer(7)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     float x = value[0];
     float w = weight[0];
     uint count = centroidCount[0];

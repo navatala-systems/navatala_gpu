@@ -18,7 +18,7 @@ __kernel void navatala_nccl_ring_reduce_scatter_step_max_f16(__global const half
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half inVal = incoming[gid];
     half locVal = local_buf[gid];
     bool cmp = (inVal > locVal);

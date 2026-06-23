@@ -18,7 +18,7 @@ __kernel void navatala_sparse_mg_weighted_restrict_f64(__global const uint* Rrow
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nCoarse[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(RrowPtr[row]));
     int re = ((int)(RrowPtr[(row + 1)]));
     double acc = as_double(0x0000000000000000ul);

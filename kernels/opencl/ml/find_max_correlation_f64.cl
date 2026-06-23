@@ -43,7 +43,7 @@ __kernel void navatala_ml_find_max_correlation_f64(__global const double* correl
   uint maxCorrF64RedStride = (uint)(128u);
   for (int maxCorrF64RedStep = 0; maxCorrF64RedStep < (int)(8); ++maxCorrF64RedStep) {
     uint maxCorrF64Stride = maxCorrF64RedStride;
-    if ((lid < maxCorrF64Stride)) {
+    if (lid < maxCorrF64Stride) {
       otherVal = svals[(lid + maxCorrF64Stride)];
       otherIdx = sidxs[(lid + maxCorrF64Stride)];
       myVal = svals[lid];
@@ -59,7 +59,7 @@ __kernel void navatala_ml_find_max_correlation_f64(__global const double* correl
     maxCorrF64RedStride = maxCorrF64NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     maxValue[0] = svals[0];
     maxIndex[0] = sidxs[0];
   }

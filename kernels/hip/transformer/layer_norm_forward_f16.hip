@@ -186,7 +186,7 @@ extern "C" __global__ void navatala_transformer_layer_norm_forward_f16(const __h
   float variance = (totalSumSq / hsF32);
   float varEps = (variance + eps);
   float std = sqrt(varEps);
-  if ((batchValid && hiddenValid)) {
+  if (batchValid && hiddenValid) {
     __half gF16 = gamma[lid];
     __half bF16 = beta[lid];
     float g = ((float)(gF16));

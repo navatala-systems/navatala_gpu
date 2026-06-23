@@ -29,7 +29,7 @@ __kernel void navatala_transformer_softmax_multi_pass_f16(__global const half* _
   float partialSum = as_float(0x00000000u);
   uint iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < sl))) break;
+    if (!(iterIdx < sl)) break;
     uint globalIdx = (baseIdx + iterIdx);
     half xF16 = ((batchValid) ? (_input[globalIdx]) : ((half)(0.000000f)));
     float xVal = ((float)(xF16));
@@ -123,7 +123,7 @@ __kernel void navatala_transformer_softmax_multi_pass_f16(__global const half* _
   float globalMax = maxBuf[(uint)(0u)];
   iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < sl))) break;
+    if (!(iterIdx < sl)) break;
     if (batchValid) {
       uint globalIdx2 = (baseIdx + iterIdx);
       half xF16_2 = _input[globalIdx2];
@@ -211,7 +211,7 @@ __kernel void navatala_transformer_softmax_multi_pass_f16(__global const half* _
   float globalSum = sumBuf[(uint)(0u)];
   iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < sl))) break;
+    if (!(iterIdx < sl)) break;
     if (batchValid) {
       uint globalIdx3 = (baseIdx + iterIdx);
       half xF16_3 = _input[globalIdx3];

@@ -21,7 +21,7 @@ __kernel void navatala_linalg_gather_cols_f32(__global const float* A, __global 
   uint nVal = n[(uint)(0u)];
   uint kVal = kCount[(uint)(0u)];
   uint totalElems = (mVal * kVal);
-  if ((tid < totalElems)) {
+  if (tid < totalElems) {
     uint rowIdx = (tid / kVal);
     uint outColIdx = (tid % kVal);
     uint srcCol = indices[outColIdx];

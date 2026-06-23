@@ -33,7 +33,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   uint gid = uint(int(gl_GlobalInvocationID.x));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float16_t xRaw = _input[gid];
     float x = float(xRaw);
     float yF = abs(x);

@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_cfd_ref_add_ax(const float* diag, const float* x, float* outAx, const int* refCell) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int c = refCell[0];
-  if ((c < 0)) {
+  if (c < 0) {
     return;
   } else {
     float cur = outAx[c];

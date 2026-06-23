@@ -18,7 +18,7 @@ using namespace metal;
 
 kernel void navatala_cfd_scalar_ldu_multi_color_gs_sweep(device const float* diag [[buffer(0)]], device const float* upper [[buffer(1)]], device const float* lower [[buffer(2)]], device const float* rhs [[buffer(3)]], device const int* owner [[buffer(4)]], device const int* neighbour [[buffer(5)]], device const uint* offsets [[buffer(6)]], device const uint* faceIdx [[buffer(7)]], device const int* sign [[buffer(8)]], device const uint* colorOrder [[buffer(9)]], device const uint* colorRange [[buffer(10)]], device const float* params [[buffer(11)]], device const uint* counts [[buffer(12)]], device float* x [[buffer(13)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int colorSize = (((int)(colorRange[1])) - ((int)(colorRange[0])));
-  if ((int(__gid.x) >= colorSize)) {
+  if (int(__gid.x) >= colorSize) {
     return;
   } else {
     int cellIdx = (((int)(colorRange[0])) + int(__gid.x));
@@ -28,8 +28,8 @@ kernel void navatala_cfd_scalar_ldu_multi_color_gs_sweep(device const float* dia
     float omega = params[1];
     float d = diag[ci];
     float absD = abs(d);
-    if ((absD < smallDiag)) {
-      if ((d >= as_type<float>(0x00000000u))) {
+    if (absD < smallDiag) {
+      if (d >= as_type<float>(0x00000000u)) {
         d = smallDiag;
       } else {
         d = (-smallDiag);
@@ -44,8 +44,8 @@ kernel void navatala_cfd_scalar_ldu_multi_color_gs_sweep(device const float* dia
       int k = (beg + t);
       uint f = faceIdx[k];
       int sg = sign[k];
-      if ((((int)(f)) < ((int)(counts[1])))) {
-        if ((sg >= 0)) {
+      if (((int)(f)) < ((int)(counts[1]))) {
+        if (sg >= 0) {
           int nb = neighbour[((int)(f))];
           s = (s + (upper[((int)(f))] * x[nb]));
         } else {

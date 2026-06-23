@@ -47,24 +47,24 @@ layout(std430, binding = 8) writeonly buffer buf_outRhoPhi {
 // kernel: navatala_cfd_primitives_rho_phi_from_rho_and_phi
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= params[0])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= params[0]) {
     return;
   } else {
     int o = owner[int(int(gl_GlobalInvocationID.x))];
     float rhoF = rhoCell[o];
-    if ((int(int(gl_GlobalInvocationID.x)) < params[1])) {
+    if (int(int(gl_GlobalInvocationID.x)) < params[1]) {
       int n = neighbour[int(int(gl_GlobalInvocationID.x))];
       float w0 = weights[int(int(gl_GlobalInvocationID.x))];
       float iw = (uintBitsToFloat(0x3f800000u) - w0);
       rhoF = ((w0 * rhoCell[o]) + (iw * rhoCell[n]));
     } else {
       uint m = rhoBcMask[int(int(gl_GlobalInvocationID.x))];
-      if ((m == 1u)) {
+      if (m == 1u) {
         float w0 = weights[int(int(gl_GlobalInvocationID.x))];
         float iw = (uintBitsToFloat(0x3f800000u) - w0);
         rhoF = ((w0 * rhoCell[o]) + (iw * rhoBcVal[int(int(gl_GlobalInvocationID.x))]));
       }
-      if ((m == 2u)) {
+      if (m == 2u) {
         rhoF = rhoBcVal[int(int(gl_GlobalInvocationID.x))];
       }
     }

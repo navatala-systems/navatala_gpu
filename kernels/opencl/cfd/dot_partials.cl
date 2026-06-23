@@ -17,44 +17,44 @@ __kernel void navatala_cfd_dot_partials(__global const float* a, __global const 
   int gid0 = (int)get_global_id(0);
   __local float tmp[256];
   float v = as_float(0x00000000u);
-  if ((((int)((int)(get_global_id(0)))) < counts[0])) {
+  if (((int)((int)(get_global_id(0)))) < counts[0]) {
     v = (a[((int)((int)(get_global_id(0))))] * b[((int)((int)(get_global_id(0))))]);
   }
   tmp[((int)((int)(get_local_id(0))))] = v;
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 128)) {
+  if (((int)((int)(get_local_id(0)))) < 128) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 128)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 64)) {
+  if (((int)((int)(get_local_id(0)))) < 64) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 64)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 32)) {
+  if (((int)((int)(get_local_id(0)))) < 32) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 32)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 16)) {
+  if (((int)((int)(get_local_id(0)))) < 16) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 16)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 8)) {
+  if (((int)((int)(get_local_id(0)))) < 8) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 8)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 4)) {
+  if (((int)((int)(get_local_id(0)))) < 4) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 4)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 2)) {
+  if (((int)((int)(get_local_id(0)))) < 2) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 2)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 1)) {
+  if (((int)((int)(get_local_id(0)))) < 1) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 1)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) == 0)) {
+  if (((int)((int)(get_local_id(0)))) == 0) {
     outPartials[((int)((int)(get_group_id(0))))] = tmp[0];
   }
 }

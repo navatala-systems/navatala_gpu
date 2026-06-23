@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_dataframe_ewmc_extract_covariance_f64(const double* Cxy, const double* nEff, double* result) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double c = Cxy[0];
     double n = nEff[0];
     double eps = __longlong_as_double(0x3cd203af9ee75616ull);

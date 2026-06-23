@@ -83,7 +83,7 @@ void main() {
   uint obj64RedStride = 128u;
   for (int obj64RedStep = 0; obj64RedStep < int(8); ++obj64RedStep) {
     uint obj64RedStrideVal = obj64RedStride;
-    if ((lid < obj64RedStrideVal)) {
+    if (lid < obj64RedStrideVal) {
       double otherMse = sdataMse[(lid + obj64RedStrideVal)];
       double mineMse = sdataMse[lid];
       double sumMse = (mineMse + otherMse);
@@ -98,7 +98,7 @@ void main() {
     obj64RedStride = obj64RedNextStride;
     barrier();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double totalMse = sdataMse[0];
     double totalL1 = sdataL1[0];
     double halfMse = (packDouble2x32(uvec2(0x00000000u, 0x3fe00000u)) * totalMse);

@@ -40,7 +40,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   uint gid = uint(int(gl_GlobalInvocationID.x));
   uint numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     uint base = inOffsets[gid];
     uint endv = inOffsets[(gid + 1u)];
     uint deg = (endv - base);
@@ -51,7 +51,7 @@ void main() {
       uint u = inSrcs[eidx];
       float w = inWeights[eidx];
       float du = dist[u];
-      if ((du < infV)) {
+      if (du < infV) {
         float cand = (du + w);
         float cur = best;
         best = (((cand < cur)) ? (cand) : (cur));

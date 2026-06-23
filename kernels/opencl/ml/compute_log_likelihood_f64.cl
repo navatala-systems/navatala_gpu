@@ -17,7 +17,7 @@
 __kernel void navatala_ml_compute_log_likelihood_f64(__global const double* logPdf, __global const double* weights, __global const uint* n, __global const uint* k, __global double* logLikelihood) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint numN = n[0];
     uint numK = k[0];
     double totalLLAccum = as_double(0x0000000000000000ul);

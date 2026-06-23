@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_dataframe_init_moments_state_f64(unsigned int* n, double* M1, double* M2, double* M3, double* M4) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     n[0] = 0u;
     M1[0] = __longlong_as_double(0x0000000000000000ull);
     M2[0] = __longlong_as_double(0x0000000000000000ull);

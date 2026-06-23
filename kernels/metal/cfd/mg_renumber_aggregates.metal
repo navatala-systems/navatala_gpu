@@ -31,10 +31,10 @@ static inline uint gpu_atomic_cas_uint(device atomic_uint* ptr, uint expected, u
 }
 
 kernel void navatala_cfd_mg_renumber_aggregates(device int* aggMap [[buffer(0)]], device atomic_int* counter [[buffer(1)]], device const int* counts [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(counts[0])))) {
+  if (int(__gid.x) >= ((int)(counts[0]))) {
     return;
   } else {
-    if ((aggMap[int(__gid.x)] == int(__gid.x))) {
+    if (aggMap[int(__gid.x)] == int(__gid.x)) {
       int oldCount = atomic_fetch_add_explicit(((device atomic_int*)(&(counter[0]))), 1, memory_order_relaxed);
       aggMap[int(__gid.x)] = (-(oldCount + 1));
     }

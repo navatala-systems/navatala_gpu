@@ -34,7 +34,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   uint gid = uint(int(gl_GlobalInvocationID.x));
   uint idx = gid;
-  if ((idx < (m[0u] * n[0u]))) {
+  if (idx < (m[0u] * n[0u])) {
     float val = A[idx];
     result[idx] = val;
   }

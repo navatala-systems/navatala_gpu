@@ -36,7 +36,7 @@ extern "C" __global__ void navatala_graph_compute_degree_matrix_f64(const double
     unsigned int degF64RedStride = 128u;
     for (int degF64RedStep = 0; degF64RedStep < (int)(8); ++degF64RedStep) {
       unsigned int degF64Stride = degF64RedStride;
-      if ((lid < degF64Stride)) {
+      if (lid < degF64Stride) {
         double other = sdata[(lid + degF64Stride)];
         double mine = sdata[lid];
         double sum = (mine + other);
@@ -47,7 +47,7 @@ extern "C" __global__ void navatala_graph_compute_degree_matrix_f64(const double
       degF64RedStride = degF64NextStride;
       __syncthreads();
     }
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       double degreeVal = sdata[0];
       D[rowIdx] = degreeVal;
     }

@@ -29,7 +29,7 @@ extern "C" __global__ void navatala_transformer_rms_norm_multi_pass_f16(const __
   unsigned int iterIdx = lid;
   unsigned int workgroupSize = 256u;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < hs))) break;
+    if (!(iterIdx < hs)) break;
     unsigned int globalIdx = (baseIdx + iterIdx);
     __half xF16 = ((batchValid) ? (_input[globalIdx]) : (__float2half(0.000000f)));
     float xVal = ((float)(xF16));
@@ -118,7 +118,7 @@ extern "C" __global__ void navatala_transformer_rms_norm_multi_pass_f16(const __
   float rms = sqrt(meanSqEps);
   iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < hs))) break;
+    if (!(iterIdx < hs)) break;
     if (batchValid) {
       unsigned int globalIdx2 = (baseIdx + iterIdx);
       __half xF16_2 = _input[globalIdx2];

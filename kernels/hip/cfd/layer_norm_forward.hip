@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_cfd_layer_norm_forward(const float* x, const
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int row = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int nRows = numRows[0];
-  if ((row < nRows)) {
+  if (row < nRows) {
     int hd = 16;
     int rowBase = (row * hd);
     float sum = __uint_as_float(0x00000000u);

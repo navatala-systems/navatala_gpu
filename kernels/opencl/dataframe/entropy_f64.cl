@@ -35,7 +35,7 @@ __kernel void navatala_dataframe_entropy_f64(__global const double* p, __global 
   uint e64_reductionStride = (uint)(128u);
   for (int e64_reductionStep = 0; e64_reductionStep < (int)(8); ++e64_reductionStep) {
     uint e64_stride = e64_reductionStride;
-    if ((lid < e64_stride)) {
+    if (lid < e64_stride) {
       double e64_other = sdata[(lid + e64_stride)];
       double e64_mine = sdata[lid];
       double e64_sum = (e64_mine + e64_other);
@@ -46,7 +46,7 @@ __kernel void navatala_dataframe_entropy_f64(__global const double* p, __global 
     e64_reductionStride = e64_nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     result[(uint)(0u)] = sdata[(uint)(0u)];
   }
 }

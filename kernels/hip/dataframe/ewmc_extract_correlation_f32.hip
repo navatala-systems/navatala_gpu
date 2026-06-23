@@ -16,7 +16,7 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_ewmc_extract_correlation_f32(const float* Cxy, const float* varX, const float* varY, const float* nEff, float* result) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float c = Cxy[0];
     float vx = varX[0];
     float vy = varY[0];

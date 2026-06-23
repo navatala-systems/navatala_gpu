@@ -44,7 +44,7 @@ __kernel void navatala_dataframe_scan_max_f32(__global const float* _input, __gl
     }
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     sdata[(uint)(511u)] = as_float(0xff7fffffu);
   }
   barrier(CLK_LOCAL_MEM_FENCE);

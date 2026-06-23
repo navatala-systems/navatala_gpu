@@ -71,14 +71,14 @@ layout(std430, binding = 16) writeonly buffer buf_mSumPhim {
 // kernel: navatala_cfd_vof_mules_init
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= counts[0])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= counts[0]) {
     return;
   } else {
     float psi = alpha[int(int(gl_GlobalInvocationID.x))];
-    if ((psi < uintBitsToFloat(0x00000000u))) {
+    if (psi < uintBitsToFloat(0x00000000u)) {
       psi = uintBitsToFloat(0x00000000u);
     }
-    if ((psi > uintBitsToFloat(0x3f800000u))) {
+    if (psi > uintBitsToFloat(0x3f800000u)) {
       psi = uintBitsToFloat(0x3f800000u);
     }
     float maxN = uintBitsToFloat(0x00000000u);
@@ -95,46 +95,46 @@ void main() {
       int f = faceIdx[k];
       float s = sign[k];
       float v = uintBitsToFloat(0x00000000u);
-      if ((f < counts[2])) {
+      if (f < counts[2]) {
         int nbr = owner[f];
-        if ((s > uintBitsToFloat(0x00000000u))) {
+        if (s > uintBitsToFloat(0x00000000u)) {
           nbr = nei[f];
         }
         v = alpha[nbr];
       } else {
         v = alphaF[f];
       }
-      if ((v < uintBitsToFloat(0x00000000u))) {
+      if (v < uintBitsToFloat(0x00000000u)) {
         v = uintBitsToFloat(0x00000000u);
       }
-      if ((v > uintBitsToFloat(0x3f800000u))) {
+      if (v > uintBitsToFloat(0x3f800000u)) {
         v = uintBitsToFloat(0x3f800000u);
       }
-      if ((v > maxN)) {
+      if (v > maxN) {
         maxN = v;
       }
-      if ((v < minN)) {
+      if (v < minN) {
         minN = v;
       }
       float termBD = (s * phiBD[f]);
       sumPhiBD = (sumPhiBD + termBD);
       float pc = phiCorr[f];
-      if ((f < counts[2])) {
-        if ((s > uintBitsToFloat(0x00000000u))) {
-          if ((pc > uintBitsToFloat(0x00000000u))) {
+      if (f < counts[2]) {
+        if (s > uintBitsToFloat(0x00000000u)) {
+          if (pc > uintBitsToFloat(0x00000000u)) {
             sp = (sp + pc);
           } else {
             sm = (sm + (-pc));
           }
         } else {
-          if ((pc > uintBitsToFloat(0x00000000u))) {
+          if (pc > uintBitsToFloat(0x00000000u)) {
             sm = (sm + pc);
           } else {
             sp = (sp + (-pc));
           }
         }
       } else {
-        if ((pc > uintBitsToFloat(0x00000000u))) {
+        if (pc > uintBitsToFloat(0x00000000u)) {
           sp = (sp + pc);
         } else {
           sm = (sm + (-pc));
@@ -142,21 +142,21 @@ void main() {
       }
     }
     maxN = (maxN + paramsF[2]);
-    if ((maxN > uintBitsToFloat(0x3f800000u))) {
+    if (maxN > uintBitsToFloat(0x3f800000u)) {
       maxN = uintBitsToFloat(0x3f800000u);
     }
     minN = (minN - paramsF[2]);
-    if ((minN < uintBitsToFloat(0x00000000u))) {
+    if (minN < uintBitsToFloat(0x00000000u)) {
       minN = uintBitsToFloat(0x00000000u);
     }
-    if ((paramsF[3] > uintBitsToFloat(0x00000000u))) {
+    if (paramsF[3] > uintBitsToFloat(0x00000000u)) {
       float omSmooth = (uintBitsToFloat(0x3f800000u) - paramsF[3]);
       maxN = ((paramsF[3] * psi) + (omSmooth * maxN));
-      if ((maxN > uintBitsToFloat(0x3f800000u))) {
+      if (maxN > uintBitsToFloat(0x3f800000u)) {
         maxN = uintBitsToFloat(0x3f800000u);
       }
       minN = ((paramsF[3] * psi) + (omSmooth * minN));
-      if ((minN < uintBitsToFloat(0x00000000u))) {
+      if (minN < uintBitsToFloat(0x00000000u)) {
         minN = uintBitsToFloat(0x00000000u);
       }
     }

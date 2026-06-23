@@ -18,7 +18,7 @@ using namespace metal;
 
 kernel void navatala_dataframe_conditional_entropy_f32(device const float* hX [[buffer(0)]], device const float* hXY [[buffer(1)]], device float* result [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gidU32 = ((uint)(int(__gid.x)));
-  if ((gidU32 == 0u)) {
+  if (gidU32 == 0u) {
     float hXVal = hX[0u];
     float hXYVal = hXY[0u];
     float condH = (hXYVal - hXVal);

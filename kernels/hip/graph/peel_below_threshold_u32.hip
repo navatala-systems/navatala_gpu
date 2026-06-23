@@ -18,10 +18,10 @@ extern "C" __global__ void navatala_graph_peel_below_threshold_u32(unsigned int*
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     unsigned int deg = degrees[gid];
     unsigned int k = threshold[0];
-    if ((deg < k)) {
+    if (deg < k) {
       _active[gid] = 0u;
     }
   }

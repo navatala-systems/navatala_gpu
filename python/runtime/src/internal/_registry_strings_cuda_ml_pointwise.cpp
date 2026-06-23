@@ -15,7 +15,7 @@ extern "C" __global__ void navatala_ml_pointwise_neg_f32(const float* _input, co
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = (-x);
@@ -31,7 +31,7 @@ extern "C" __global__ void navatala_ml_pointwise_abs_f32(const float* _input, co
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = abs(x);
@@ -47,7 +47,7 @@ extern "C" __global__ void navatala_ml_pointwise_sqrt_f32(const float* _input, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = sqrt(x);
@@ -63,7 +63,7 @@ extern "C" __global__ void navatala_ml_pointwise_rsqrt_f32(const float* _input, 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = (__uint_as_float(0x3f800000u) / sqrt(x));
@@ -79,7 +79,7 @@ extern "C" __global__ void navatala_ml_pointwise_reciprocal_f32(const float* _in
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = (__uint_as_float(0x3f800000u) / x);
@@ -95,7 +95,7 @@ extern "C" __global__ void navatala_ml_pointwise_exp_f32(const float* _input, co
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = exp(x);
@@ -111,7 +111,7 @@ extern "C" __global__ void navatala_ml_pointwise_log_f32(const float* _input, co
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = log(x);
@@ -127,7 +127,7 @@ extern "C" __global__ void navatala_ml_pointwise_sin_f32(const float* _input, co
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = sin(x);
@@ -143,7 +143,7 @@ extern "C" __global__ void navatala_ml_pointwise_cos_f32(const float* _input, co
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = cos(x);
@@ -159,7 +159,7 @@ extern "C" __global__ void navatala_ml_pointwise_tan_f32(const float* _input, co
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = (sin(x) / cos(x));
@@ -175,7 +175,7 @@ extern "C" __global__ void navatala_ml_pointwise_floor_f32(const float* _input, 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = floor(x);
@@ -191,7 +191,7 @@ extern "C" __global__ void navatala_ml_pointwise_ceil_f32(const float* _input, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = ceil(x);
@@ -207,7 +207,7 @@ extern "C" __global__ void navatala_ml_pointwise_round_f32(const float* _input, 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = round(x);
@@ -223,7 +223,7 @@ extern "C" __global__ void navatala_ml_pointwise_relu_f32(const float* _input, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = (((x > __uint_as_float(0x00000000u))) ? (x) : (__uint_as_float(0x00000000u)));
@@ -239,7 +239,7 @@ extern "C" __global__ void navatala_ml_pointwise_leaky_relu_f32(const float* _in
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = (((x > __uint_as_float(0x00000000u))) ? (x) : ((__uint_as_float(0x3c23d70au) * x)));
@@ -255,7 +255,7 @@ extern "C" __global__ void navatala_ml_pointwise_elu_f32(const float* _input, co
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = (((x > __uint_as_float(0x00000000u))) ? (x) : ((exp(x) - __uint_as_float(0x3f800000u))));
@@ -271,7 +271,7 @@ extern "C" __global__ void navatala_ml_pointwise_tanh_f32(const float* _input, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = tanh(x);
@@ -287,7 +287,7 @@ extern "C" __global__ void navatala_ml_pointwise_sigmoid_f32(const float* _input
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = (__uint_as_float(0x3f800000u) / (__uint_as_float(0x3f800000u) + exp((-x))));
@@ -303,7 +303,7 @@ extern "C" __global__ void navatala_ml_pointwise_softplus_f32(const float* _inpu
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = log((__uint_as_float(0x3f800000u) + exp(x)));
@@ -319,7 +319,7 @@ extern "C" __global__ void navatala_ml_pointwise_swish_f32(const float* _input, 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = (x * (__uint_as_float(0x3f800000u) / (__uint_as_float(0x3f800000u) + exp((-x)))));
@@ -335,7 +335,7 @@ extern "C" __global__ void navatala_ml_pointwise_gelu_tanh_f32(const float* _inp
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = ((__uint_as_float(0x3f000000u) * x) * (__uint_as_float(0x3f800000u) + tanh((__uint_as_float(0x3f4c422au) * (x + (__uint_as_float(0x3d372713u) * (x * (x * x))))))));
@@ -351,7 +351,7 @@ extern "C" __global__ void navatala_ml_pointwise_add_f32(const float* a, const f
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -369,7 +369,7 @@ extern "C" __global__ void navatala_ml_pointwise_sub_f32(const float* a, const f
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -387,7 +387,7 @@ extern "C" __global__ void navatala_ml_pointwise_mul_f32(const float* a, const f
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -405,7 +405,7 @@ extern "C" __global__ void navatala_ml_pointwise_div_f32(const float* a, const f
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -423,7 +423,7 @@ extern "C" __global__ void navatala_ml_pointwise_max_f32(const float* a, const f
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -441,7 +441,7 @@ extern "C" __global__ void navatala_ml_pointwise_min_f32(const float* a, const f
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -459,7 +459,7 @@ extern "C" __global__ void navatala_ml_pointwise_cmp_eq_f32(const float* a, cons
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -477,7 +477,7 @@ extern "C" __global__ void navatala_ml_pointwise_cmp_ne_f32(const float* a, cons
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -495,7 +495,7 @@ extern "C" __global__ void navatala_ml_pointwise_cmp_lt_f32(const float* a, cons
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -513,7 +513,7 @@ extern "C" __global__ void navatala_ml_pointwise_cmp_le_f32(const float* a, cons
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -531,7 +531,7 @@ extern "C" __global__ void navatala_ml_pointwise_cmp_gt_f32(const float* a, cons
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -549,7 +549,7 @@ extern "C" __global__ void navatala_ml_pointwise_cmp_ge_f32(const float* a, cons
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -567,7 +567,7 @@ extern "C" __global__ void navatala_ml_pointwise_relu_bwd_f32(const float* a, co
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -585,7 +585,7 @@ extern "C" __global__ void navatala_ml_pointwise_sigmoid_bwd_f32(const float* a,
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -603,7 +603,7 @@ extern "C" __global__ void navatala_ml_pointwise_tanh_bwd_f32(const float* a, co
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -622,7 +622,7 @@ extern "C" __global__ void navatala_ml_pointwise_neg_f16(const __half* _input, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (-x);
@@ -639,7 +639,7 @@ extern "C" __global__ void navatala_ml_pointwise_abs_f16(const __half* _input, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = abs(x);
@@ -656,7 +656,7 @@ extern "C" __global__ void navatala_ml_pointwise_sqrt_f16(const __half* _input, 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = sqrt(x);
@@ -673,7 +673,7 @@ extern "C" __global__ void navatala_ml_pointwise_rsqrt_f16(const __half* _input,
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (__uint_as_float(0x3f800000u) / sqrt(x));
@@ -690,7 +690,7 @@ extern "C" __global__ void navatala_ml_pointwise_reciprocal_f16(const __half* _i
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (__uint_as_float(0x3f800000u) / x);
@@ -707,7 +707,7 @@ extern "C" __global__ void navatala_ml_pointwise_exp_f16(const __half* _input, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = exp(x);
@@ -724,7 +724,7 @@ extern "C" __global__ void navatala_ml_pointwise_log_f16(const __half* _input, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = log(x);
@@ -741,7 +741,7 @@ extern "C" __global__ void navatala_ml_pointwise_sin_f16(const __half* _input, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = sin(x);
@@ -758,7 +758,7 @@ extern "C" __global__ void navatala_ml_pointwise_cos_f16(const __half* _input, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = cos(x);
@@ -775,7 +775,7 @@ extern "C" __global__ void navatala_ml_pointwise_tan_f16(const __half* _input, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (sin(x) / cos(x));
@@ -792,7 +792,7 @@ extern "C" __global__ void navatala_ml_pointwise_floor_f16(const __half* _input,
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = floor(x);
@@ -809,7 +809,7 @@ extern "C" __global__ void navatala_ml_pointwise_ceil_f16(const __half* _input, 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = ceil(x);
@@ -826,7 +826,7 @@ extern "C" __global__ void navatala_ml_pointwise_round_f16(const __half* _input,
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = round(x);
@@ -843,7 +843,7 @@ extern "C" __global__ void navatala_ml_pointwise_relu_f16(const __half* _input, 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (((x > __uint_as_float(0x00000000u))) ? (x) : (__uint_as_float(0x00000000u)));
@@ -860,7 +860,7 @@ extern "C" __global__ void navatala_ml_pointwise_leaky_relu_f16(const __half* _i
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (((x > __uint_as_float(0x00000000u))) ? (x) : ((__uint_as_float(0x3c23d70au) * x)));
@@ -877,7 +877,7 @@ extern "C" __global__ void navatala_ml_pointwise_elu_f16(const __half* _input, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (((x > __uint_as_float(0x00000000u))) ? (x) : ((exp(x) - __uint_as_float(0x3f800000u))));
@@ -894,7 +894,7 @@ extern "C" __global__ void navatala_ml_pointwise_tanh_f16(const __half* _input, 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = tanh(x);
@@ -911,7 +911,7 @@ extern "C" __global__ void navatala_ml_pointwise_sigmoid_f16(const __half* _inpu
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (__uint_as_float(0x3f800000u) / (__uint_as_float(0x3f800000u) + exp((-x))));
@@ -928,7 +928,7 @@ extern "C" __global__ void navatala_ml_pointwise_softplus_f16(const __half* _inp
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = log((__uint_as_float(0x3f800000u) + exp(x)));
@@ -945,7 +945,7 @@ extern "C" __global__ void navatala_ml_pointwise_swish_f16(const __half* _input,
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (x * (__uint_as_float(0x3f800000u) / (__uint_as_float(0x3f800000u) + exp((-x)))));
@@ -962,7 +962,7 @@ extern "C" __global__ void navatala_ml_pointwise_gelu_tanh_f16(const __half* _in
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = ((__uint_as_float(0x3f000000u) * x) * (__uint_as_float(0x3f800000u) + tanh((__uint_as_float(0x3f4c422au) * (x + (__uint_as_float(0x3d372713u) * (x * (x * x))))))));
@@ -979,7 +979,7 @@ extern "C" __global__ void navatala_ml_pointwise_add_f16(const __half* a, const 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half aRaw = a[gid];
     __half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -998,7 +998,7 @@ extern "C" __global__ void navatala_ml_pointwise_sub_f16(const __half* a, const 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half aRaw = a[gid];
     __half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1017,7 +1017,7 @@ extern "C" __global__ void navatala_ml_pointwise_mul_f16(const __half* a, const 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half aRaw = a[gid];
     __half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1036,7 +1036,7 @@ extern "C" __global__ void navatala_ml_pointwise_div_f16(const __half* a, const 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half aRaw = a[gid];
     __half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1055,7 +1055,7 @@ extern "C" __global__ void navatala_ml_pointwise_max_f16(const __half* a, const 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half aRaw = a[gid];
     __half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1074,7 +1074,7 @@ extern "C" __global__ void navatala_ml_pointwise_min_f16(const __half* a, const 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half aRaw = a[gid];
     __half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1093,7 +1093,7 @@ extern "C" __global__ void navatala_ml_pointwise_cmp_eq_f16(const __half* a, con
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half aRaw = a[gid];
     __half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1112,7 +1112,7 @@ extern "C" __global__ void navatala_ml_pointwise_cmp_ne_f16(const __half* a, con
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half aRaw = a[gid];
     __half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1131,7 +1131,7 @@ extern "C" __global__ void navatala_ml_pointwise_cmp_lt_f16(const __half* a, con
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half aRaw = a[gid];
     __half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1150,7 +1150,7 @@ extern "C" __global__ void navatala_ml_pointwise_cmp_le_f16(const __half* a, con
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half aRaw = a[gid];
     __half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1169,7 +1169,7 @@ extern "C" __global__ void navatala_ml_pointwise_cmp_gt_f16(const __half* a, con
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half aRaw = a[gid];
     __half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1188,7 +1188,7 @@ extern "C" __global__ void navatala_ml_pointwise_cmp_ge_f16(const __half* a, con
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half aRaw = a[gid];
     __half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1207,7 +1207,7 @@ extern "C" __global__ void navatala_ml_pointwise_relu_bwd_f16(const __half* a, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half aRaw = a[gid];
     __half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1226,7 +1226,7 @@ extern "C" __global__ void navatala_ml_pointwise_sigmoid_bwd_f16(const __half* a
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half aRaw = a[gid];
     __half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1245,7 +1245,7 @@ extern "C" __global__ void navatala_ml_pointwise_tanh_bwd_f16(const __half* a, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half aRaw = a[gid];
     __half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1264,7 +1264,7 @@ extern "C" __global__ void navatala_ml_pointwise_neg_bf16(const __nv_bfloat16* _
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (-x);
@@ -1281,7 +1281,7 @@ extern "C" __global__ void navatala_ml_pointwise_abs_bf16(const __nv_bfloat16* _
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = abs(x);
@@ -1298,7 +1298,7 @@ extern "C" __global__ void navatala_ml_pointwise_sqrt_bf16(const __nv_bfloat16* 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = sqrt(x);
@@ -1315,7 +1315,7 @@ extern "C" __global__ void navatala_ml_pointwise_rsqrt_bf16(const __nv_bfloat16*
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (__uint_as_float(0x3f800000u) / sqrt(x));
@@ -1332,7 +1332,7 @@ extern "C" __global__ void navatala_ml_pointwise_reciprocal_bf16(const __nv_bflo
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (__uint_as_float(0x3f800000u) / x);
@@ -1349,7 +1349,7 @@ extern "C" __global__ void navatala_ml_pointwise_exp_bf16(const __nv_bfloat16* _
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = exp(x);
@@ -1366,7 +1366,7 @@ extern "C" __global__ void navatala_ml_pointwise_log_bf16(const __nv_bfloat16* _
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = log(x);
@@ -1383,7 +1383,7 @@ extern "C" __global__ void navatala_ml_pointwise_sin_bf16(const __nv_bfloat16* _
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = sin(x);
@@ -1400,7 +1400,7 @@ extern "C" __global__ void navatala_ml_pointwise_cos_bf16(const __nv_bfloat16* _
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = cos(x);
@@ -1417,7 +1417,7 @@ extern "C" __global__ void navatala_ml_pointwise_tan_bf16(const __nv_bfloat16* _
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (sin(x) / cos(x));
@@ -1434,7 +1434,7 @@ extern "C" __global__ void navatala_ml_pointwise_floor_bf16(const __nv_bfloat16*
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = floor(x);
@@ -1451,7 +1451,7 @@ extern "C" __global__ void navatala_ml_pointwise_ceil_bf16(const __nv_bfloat16* 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = ceil(x);
@@ -1468,7 +1468,7 @@ extern "C" __global__ void navatala_ml_pointwise_round_bf16(const __nv_bfloat16*
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = round(x);
@@ -1485,7 +1485,7 @@ extern "C" __global__ void navatala_ml_pointwise_relu_bf16(const __nv_bfloat16* 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (((x > __uint_as_float(0x00000000u))) ? (x) : (__uint_as_float(0x00000000u)));
@@ -1502,7 +1502,7 @@ extern "C" __global__ void navatala_ml_pointwise_leaky_relu_bf16(const __nv_bflo
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (((x > __uint_as_float(0x00000000u))) ? (x) : ((__uint_as_float(0x3c23d70au) * x)));
@@ -1519,7 +1519,7 @@ extern "C" __global__ void navatala_ml_pointwise_elu_bf16(const __nv_bfloat16* _
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (((x > __uint_as_float(0x00000000u))) ? (x) : ((exp(x) - __uint_as_float(0x3f800000u))));
@@ -1536,7 +1536,7 @@ extern "C" __global__ void navatala_ml_pointwise_tanh_bf16(const __nv_bfloat16* 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = tanh(x);
@@ -1553,7 +1553,7 @@ extern "C" __global__ void navatala_ml_pointwise_sigmoid_bf16(const __nv_bfloat1
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (__uint_as_float(0x3f800000u) / (__uint_as_float(0x3f800000u) + exp((-x))));
@@ -1570,7 +1570,7 @@ extern "C" __global__ void navatala_ml_pointwise_softplus_bf16(const __nv_bfloat
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = log((__uint_as_float(0x3f800000u) + exp(x)));
@@ -1587,7 +1587,7 @@ extern "C" __global__ void navatala_ml_pointwise_swish_bf16(const __nv_bfloat16*
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (x * (__uint_as_float(0x3f800000u) / (__uint_as_float(0x3f800000u) + exp((-x)))));
@@ -1604,7 +1604,7 @@ extern "C" __global__ void navatala_ml_pointwise_gelu_tanh_bf16(const __nv_bfloa
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = ((__uint_as_float(0x3f000000u) * x) * (__uint_as_float(0x3f800000u) + tanh((__uint_as_float(0x3f4c422au) * (x + (__uint_as_float(0x3d372713u) * (x * (x * x))))))));
@@ -1621,7 +1621,7 @@ extern "C" __global__ void navatala_ml_pointwise_add_bf16(const __nv_bfloat16* a
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 aRaw = a[gid];
     __nv_bfloat16 bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1640,7 +1640,7 @@ extern "C" __global__ void navatala_ml_pointwise_sub_bf16(const __nv_bfloat16* a
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 aRaw = a[gid];
     __nv_bfloat16 bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1659,7 +1659,7 @@ extern "C" __global__ void navatala_ml_pointwise_mul_bf16(const __nv_bfloat16* a
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 aRaw = a[gid];
     __nv_bfloat16 bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1678,7 +1678,7 @@ extern "C" __global__ void navatala_ml_pointwise_div_bf16(const __nv_bfloat16* a
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 aRaw = a[gid];
     __nv_bfloat16 bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1697,7 +1697,7 @@ extern "C" __global__ void navatala_ml_pointwise_max_bf16(const __nv_bfloat16* a
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 aRaw = a[gid];
     __nv_bfloat16 bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1716,7 +1716,7 @@ extern "C" __global__ void navatala_ml_pointwise_min_bf16(const __nv_bfloat16* a
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 aRaw = a[gid];
     __nv_bfloat16 bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1735,7 +1735,7 @@ extern "C" __global__ void navatala_ml_pointwise_cmp_eq_bf16(const __nv_bfloat16
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 aRaw = a[gid];
     __nv_bfloat16 bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1754,7 +1754,7 @@ extern "C" __global__ void navatala_ml_pointwise_cmp_ne_bf16(const __nv_bfloat16
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 aRaw = a[gid];
     __nv_bfloat16 bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1773,7 +1773,7 @@ extern "C" __global__ void navatala_ml_pointwise_cmp_lt_bf16(const __nv_bfloat16
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 aRaw = a[gid];
     __nv_bfloat16 bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1792,7 +1792,7 @@ extern "C" __global__ void navatala_ml_pointwise_cmp_le_bf16(const __nv_bfloat16
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 aRaw = a[gid];
     __nv_bfloat16 bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1811,7 +1811,7 @@ extern "C" __global__ void navatala_ml_pointwise_cmp_gt_bf16(const __nv_bfloat16
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 aRaw = a[gid];
     __nv_bfloat16 bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1830,7 +1830,7 @@ extern "C" __global__ void navatala_ml_pointwise_cmp_ge_bf16(const __nv_bfloat16
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 aRaw = a[gid];
     __nv_bfloat16 bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1849,7 +1849,7 @@ extern "C" __global__ void navatala_ml_pointwise_relu_bwd_bf16(const __nv_bfloat
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 aRaw = a[gid];
     __nv_bfloat16 bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1868,7 +1868,7 @@ extern "C" __global__ void navatala_ml_pointwise_sigmoid_bwd_bf16(const __nv_bfl
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 aRaw = a[gid];
     __nv_bfloat16 bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1887,7 +1887,7 @@ extern "C" __global__ void navatala_ml_pointwise_tanh_bwd_bf16(const __nv_bfloat
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 aRaw = a[gid];
     __nv_bfloat16 bRaw = b[gid];
     float av = ((float)(aRaw));

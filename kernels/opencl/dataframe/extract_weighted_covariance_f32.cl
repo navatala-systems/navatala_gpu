@@ -15,7 +15,7 @@
 
 __kernel void navatala_dataframe_extract_weighted_covariance_f32(__global const float* weightSum, __global const float* Cxy, __global float* covariance) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float w = weightSum[0];
     float cxyVal = Cxy[0];
     float cov = (cxyVal / w);

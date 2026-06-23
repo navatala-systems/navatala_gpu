@@ -17,7 +17,7 @@ __kernel void navatala_sparse_halo_pack_f32(__global const float* x, __global co
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(sendCount[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int idx = ((int)(sendMap[gid]));
     float val = x[idx];
     sendBuf[gid] = val;

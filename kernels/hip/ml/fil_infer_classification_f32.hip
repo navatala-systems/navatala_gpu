@@ -71,7 +71,7 @@ extern "C" __global__ void navatala_ml_fil_infer_classification_f32(const float*
       unsigned int voteIdx = (voteBase + cU32);
       unsigned int votes = vote_counts[voteIdx];
       unsigned int currMax = maxVotes;
-      if ((votes > currMax)) {
+      if (votes > currMax) {
         finalClass = c;
         maxVotes = votes;
       }

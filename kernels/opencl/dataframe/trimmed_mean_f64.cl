@@ -17,7 +17,7 @@
 __kernel void navatala_dataframe_trimmed_mean_f64(__global const double* sortedData, __global const uint* n, __global const double* trimFraction, __global double* trimmedMean) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint len = n[0];
     double frac = trimFraction[0];
     double lenF = ((double)(len));

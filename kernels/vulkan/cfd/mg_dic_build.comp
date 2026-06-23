@@ -38,7 +38,7 @@ layout(std430, binding = 5) buffer buf_rD {
 // kernel: navatala_cfd_mg_dic_build
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) >= 1)) {
+  if (int(gl_GlobalInvocationID.x) >= 1) {
     return;
   } else {
     int nCells = counts[1];
@@ -50,14 +50,14 @@ void main() {
       int u = edgeU[e];
       int v = edgeV[e];
       double dl = rD[u];
-      if ((dl > packDouble2x32(uvec2(0xc2f8f359u, 0x01a56e1fu)))) {
+      if (dl > packDouble2x32(uvec2(0xc2f8f359u, 0x01a56e1fu))) {
         double cf = double(edgeCf[e]);
         rD[v] = (rD[v] - ((cf * cf) / dl));
       }
     }
     for (int c2 = 0; c2 < int(nCells); ++c2) {
       double d = rD[c2];
-      if ((d > packDouble2x32(uvec2(0xc2f8f359u, 0x01a56e1fu)))) {
+      if (d > packDouble2x32(uvec2(0xc2f8f359u, 0x01a56e1fu))) {
         rD[c2] = (packDouble2x32(uvec2(0x00000000u, 0x3ff00000u)) / d);
       } else {
         rD[c2] = packDouble2x32(uvec2(0x00000000u, 0x00000000u));

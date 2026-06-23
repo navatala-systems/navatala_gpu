@@ -44,7 +44,7 @@ void main() {
   int blockRow = int(gl_GlobalInvocationID.x);
   int N = int(nBlockRows[0]);
   int bd = int(blockDim[0]);
-  if ((blockRow < N)) {
+  if (blockRow < N) {
     int rs = int(rowPtr[blockRow]);
     int re = int(rowPtr[(blockRow + 1)]);
     for (int comp = 0; comp < int(bd); ++comp) {

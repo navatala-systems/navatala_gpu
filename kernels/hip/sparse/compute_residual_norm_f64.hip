@@ -28,7 +28,7 @@ extern "C" __global__ void navatala_sparse_compute_residual_norm_f64(const doubl
   __syncthreads();
   for (int s = 0; s < (int)(128u); ++s) {
     unsigned int sU32 = ((unsigned int)(s));
-    if ((lid < sU32)) {
+    if (lid < sU32) {
       double other = sdata[(lid + sU32)];
       double mine = sdata[lid];
       double sum = (mine + other);
@@ -36,7 +36,7 @@ extern "C" __global__ void navatala_sparse_compute_residual_norm_f64(const doubl
     }
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     atomicAdd(&normSq[0u], sdata[0u]);
   }
 }

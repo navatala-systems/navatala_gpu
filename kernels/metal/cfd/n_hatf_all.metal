@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_cfd_n_hatf_all(device const float* gx [[buffer(0)]], device const float* gy [[buffer(1)]], device const float* gz [[buffer(2)]], device const float* sfX [[buffer(3)]], device const float* sfY [[buffer(4)]], device const float* sfZ [[buffer(5)]], device const int* owner [[buffer(6)]], device const int* nei [[buffer(7)]], device const float* weights [[buffer(8)]], device const float* theta [[buffer(9)]], device const uint* thetaMask [[buffer(10)]], device const float* paramsF [[buffer(11)]], device const int* counts [[buffer(12)]], device float* contactGrad [[buffer(13)]], device float* nHatf [[buffer(14)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[1])) {
+  if (((int)(int(__gid.x))) >= counts[1]) {
     return;
   } else {
     int o = owner[((int)(int(__gid.x)))];
@@ -34,21 +34,21 @@ kernel void navatala_cfd_n_hatf_all(device const float* gx [[buffer(0)]], device
     float ny = (gfy * inv);
     float nz = (gfz * inv);
     contactGrad[((int)(int(__gid.x)))] = as_type<float>(0x00000000u);
-    if ((thetaMask[((int)(int(__gid.x)))] != 0u)) {
+    if (thetaMask[((int)(int(__gid.x)))] != 0u) {
       float sfx = sfX[((int)(int(__gid.x)))];
       float sfy = sfY[((int)(int(__gid.x)))];
       float sfz = sfZ[((int)(int(__gid.x)))];
       float magSf = sqrt((((sfx * sfx) + (sfy * sfy)) + (sfz * sfz)));
-      if ((magSf > as_type<float>(0x1e3ce508u))) {
+      if (magSf > as_type<float>(0x1e3ce508u)) {
         float nfx = (sfx / magSf);
         float nfy = (sfy / magSf);
         float nfz = (sfz / magSf);
         float a12raw = (((nx * nfx) + (ny * nfy)) + (nz * nfz));
         float a12 = a12raw;
-        if ((a12 < as_type<float>(0xbf800000u))) {
+        if (a12 < as_type<float>(0xbf800000u)) {
           a12 = as_type<float>(0xbf800000u);
         } else {
-          if ((a12 > as_type<float>(0x3f800000u))) {
+          if (a12 > as_type<float>(0x3f800000u)) {
             a12 = as_type<float>(0x3f800000u);
           }
         }
@@ -57,7 +57,7 @@ kernel void navatala_cfd_n_hatf_all(device const float* gx [[buffer(0)]], device
         float acosA12 = acos(a12);
         float b2 = cos((acosA12 - th));
         float det = (as_type<float>(0x3f800000u) - (a12 * a12));
-        if ((det < as_type<float>(0x358637bdu))) {
+        if (det < as_type<float>(0x358637bdu)) {
           det = as_type<float>(0x358637bdu);
         }
         float a = ((b1 - (a12 * b2)) / det);

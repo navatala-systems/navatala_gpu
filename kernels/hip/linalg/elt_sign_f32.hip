@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_linalg_elt_sign_f32(const float* A, const unsigned int* n, float* C) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int i = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     float a = A[i];
     bool isNeg = (a < __uint_as_float(0x00000000u));
     float negOrZero = ((isNeg) ? (__uint_as_float(0xbf800000u)) : (__uint_as_float(0x00000000u)));

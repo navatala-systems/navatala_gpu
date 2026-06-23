@@ -28,7 +28,7 @@ extern "C" __global__ void navatala_graph_spmv_unweighted_subgroup_f32(const uns
   unsigned int subgroupSize = ((unsigned int)((int)(warpSize)));
   unsigned int row = (gid / subgroupSize);
   unsigned int numV = numVertices[0];
-  if ((row < numV)) {
+  if (row < numV) {
     unsigned int base = offsets[row];
     unsigned int endv = offsets[(row + 1u)];
     unsigned int rowlen = (endv - base);
@@ -36,7 +36,7 @@ extern "C" __global__ void navatala_graph_spmv_unweighted_subgroup_f32(const uns
     float laneAcc = __uint_as_float(0x00000000u);
     for (int k = 0; k < (int)(rowIters); ++k) {
       unsigned int rel = ((((unsigned int)(k)) * subgroupSize) + lane);
-      if ((rel < rowlen)) {
+      if (rel < rowlen) {
         unsigned int eidx = (base + rel);
         unsigned int col = indices[eidx];
         float xv = x[col];
@@ -44,7 +44,7 @@ extern "C" __global__ void navatala_graph_spmv_unweighted_subgroup_f32(const uns
       }
     }
     float rowSum = gpu_warp_reduce_sum(laneAcc);
-    if ((lane == 0u)) {
+    if (lane == 0u) {
       y[row] = rowSum;
     }
   }

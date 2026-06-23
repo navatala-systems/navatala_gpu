@@ -16,11 +16,11 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_turbulence_dirichlet_cell_source(const int* constrainedMask, const float* constrainedValue, const float* diag, const int* nCells, float* source) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= nCells[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= nCells[0]) {
     return;
   } else {
     int mask = constrainedMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
-    if ((mask == 0)) {
+    if (mask == 0) {
       return;
     } else {
       source[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (diag[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] * constrainedValue[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]);

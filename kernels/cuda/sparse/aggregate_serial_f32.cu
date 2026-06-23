@@ -26,15 +26,15 @@ extern "C" __global__ void navatala_sparse_aggregate_serial_f32(const unsigned i
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       unsigned int isStrong = strongMask[k];
-      if ((isStrong == 1u)) {
+      if (isStrong == 1u) {
         float a = values[k];
-        if ((abs(a) > bestVal)) {
+        if (abs(a) > bestVal) {
           bestVal = abs(a);
           bestCol = ((int)(colIdx[k]));
         }
       }
     }
-    if ((bestCol >= 0)) {
+    if (bestCol >= 0) {
       aggregateId[i] = (((i < bestCol)) ? (i) : (bestCol));
     } else {
       aggregateId[i] = nextAgg;

@@ -85,7 +85,7 @@ void main() {
         membershipSum = newSum;
       }
       float sum = membershipSum;
-      if ((sum > targetSum)) {
+      if (sum > targetSum) {
         sigmaHigh = mid;
       } else {
         sigmaLow = mid;

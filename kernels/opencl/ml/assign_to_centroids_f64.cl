@@ -44,7 +44,7 @@ __kernel void navatala_ml_assign_to_centroids_f64(__global const double* data, _
       }
       double distSum = distSumAccum;
       double bestDist = bestDistAccum;
-      if ((distSum < bestDist)) {
+      if (distSum < bestDist) {
         bestDistAccum = distSum;
         bestClusterAccum = cU32;
       }

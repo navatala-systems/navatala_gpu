@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_linalg_reduce_row_max_f32(const float* A, co
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int row = gid;
-  if ((row < m[0u])) {
+  if (row < m[0u]) {
     unsigned int firstIdx = (row * n[0u]);
     float initMaxVal = A[firstIdx];
     float maxAccum = initMaxVal;

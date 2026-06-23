@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_cfd_n_hatf_all_f64(const double* gx, const d
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1]) {
     return;
   } else {
     int o = owner[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
@@ -36,21 +36,21 @@ extern "C" __global__ void navatala_cfd_n_hatf_all_f64(const double* gx, const d
     double ny = (gfy * inv);
     double nz = (gfz * inv);
     contactGrad[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = __longlong_as_double(0x0000000000000000ull);
-    if ((thetaMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] != 0u)) {
+    if (thetaMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] != 0u) {
       double sfx = ((double)(sfX[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]));
       double sfy = ((double)(sfY[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]));
       double sfz = ((double)(sfZ[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]));
       double magSf = sqrt((((sfx * sfx) + (sfy * sfy)) + (sfz * sfz)));
-      if ((magSf > __longlong_as_double(0x3bc79ca10c924223ull))) {
+      if (magSf > __longlong_as_double(0x3bc79ca10c924223ull)) {
         double nfx = (sfx / magSf);
         double nfy = (sfy / magSf);
         double nfz = (sfz / magSf);
         double a12raw = (((nx * nfx) + (ny * nfy)) + (nz * nfz));
         double a12 = a12raw;
-        if ((a12 < __longlong_as_double(0xbff0000000000000ull))) {
+        if (a12 < __longlong_as_double(0xbff0000000000000ull)) {
           a12 = __longlong_as_double(0xbff0000000000000ull);
         } else {
-          if ((a12 > __longlong_as_double(0x3ff0000000000000ull))) {
+          if (a12 > __longlong_as_double(0x3ff0000000000000ull)) {
             a12 = __longlong_as_double(0x3ff0000000000000ull);
           }
         }
@@ -59,7 +59,7 @@ extern "C" __global__ void navatala_cfd_n_hatf_all_f64(const double* gx, const d
         double acosA12 = acos(a12);
         double b2 = cos((acosA12 - th));
         double det = (__longlong_as_double(0x3ff0000000000000ull) - (a12 * a12));
-        if ((det < __longlong_as_double(0x3eb0c6f7a0b5ed8dull))) {
+        if (det < __longlong_as_double(0x3eb0c6f7a0b5ed8dull)) {
           det = __longlong_as_double(0x3eb0c6f7a0b5ed8dull);
         }
         double a = ((b1 - (a12 * b2)) / det);

@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_bicgstab_update_r_f64(const double* s
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double om = omega[0];
     double si = s[gid];
     double ti = t[gid];

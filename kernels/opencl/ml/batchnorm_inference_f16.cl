@@ -18,7 +18,7 @@ __kernel void navatala_ml_batchnorm_inference_f16(__global const half* x, __glob
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float epsVal = eps[0];
     float d = (((float)(x[gid])) - ((float)(mean[gid])));
     float denom = sqrt((((float)(var[gid])) + epsVal));

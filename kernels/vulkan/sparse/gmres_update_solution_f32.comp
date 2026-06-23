@@ -38,7 +38,7 @@ void main() {
   int gid = int(gl_GlobalInvocationID.x);
   int N = int(n[0]);
   int M = int(m[0]);
-  if ((gid < N)) {
+  if (gid < N) {
     float acc = uintBitsToFloat(0x00000000u);
     for (int j = 0; j < int(M); ++j) {
       float yj = y[j];

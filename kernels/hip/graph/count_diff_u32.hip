@@ -23,7 +23,7 @@ extern "C" __global__ void navatala_graph_count_diff_u32(const unsigned int* a, 
   float gsAcc = __uint_as_float(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       unsigned int av = a[idx];
       unsigned int bv = b[idx];
       float diff = (((av == bv)) ? (__uint_as_float(0x00000000u)) : (__uint_as_float(0x3f800000u)));
@@ -35,7 +35,7 @@ extern "C" __global__ void navatala_graph_count_diff_u32(const unsigned int* a, 
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -46,7 +46,7 @@ extern "C" __global__ void navatala_graph_count_diff_u32(const unsigned int* a, 
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0] = sdata[0];
   }
 }

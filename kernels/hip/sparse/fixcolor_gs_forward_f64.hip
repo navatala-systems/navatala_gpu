@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_fixcolor_gs_forward_f64(const unsigne
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int localIdx = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRowsThisColor[0]));
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int start = ((int)(colorOffsets[0]));
     int permIdx = (start + localIdx);
     int row = ((int)(reorderPerm[permIdx]));
@@ -28,7 +28,7 @@ extern "C" __global__ void navatala_sparse_fixcolor_gs_forward_f64(const unsigne
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != row)) {
+      if (col != row) {
         double a = values[k];
         double xj = x[col];
         sum = (sum + (a * xj));

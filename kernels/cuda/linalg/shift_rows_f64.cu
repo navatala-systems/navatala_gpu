@@ -22,7 +22,7 @@ extern "C" __global__ void navatala_linalg_shift_rows_f64(const double* A, const
   unsigned int mVal = m[0u];
   unsigned int nVal = n[0u];
   unsigned int totalElems = (mVal * nVal);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     unsigned int row = (idx / nVal);
     unsigned int col = (idx % nVal);
     bool inBounds = (row >= kVal);

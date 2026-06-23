@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_cfd_u_correct(const float* pCell, const int*
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0]) {
     return;
   } else {
     int beg = offsets[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
@@ -34,11 +34,11 @@ extern "C" __global__ void navatala_cfd_u_correct(const float* pCell, const int*
       int f = faceIdx[k];
       int o = owner[f];
       float pf = pCell[o];
-      if ((f < counts[2])) {
+      if (f < counts[2]) {
         int n = neighbour[f];
         pf = (__uint_as_float(0x3f000000u) * (pCell[o] + pCell[n]));
       } else {
-        if ((bcMask[f] != 0)) {
+        if (bcMask[f] != 0) {
           pf = bcVal[f];
         }
       }

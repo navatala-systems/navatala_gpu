@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_cfd_mg_strength_of_connection(const float* d
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[1])))) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[1]))) {
     return;
   } else {
     int o = owner[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
@@ -27,7 +27,7 @@ extern "C" __global__ void navatala_cfd_mg_strength_of_connection(const float* d
     float dO = abs(diag[o]);
     float dN = abs(diag[n]);
     float denomSq = (dO * dN);
-    if ((denomSq > __uint_as_float(0x0da24260u))) {
+    if (denomSq > __uint_as_float(0x0da24260u)) {
       strength[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = (abs(upper[(int)(blockIdx.x * blockDim.x + threadIdx.x)]) / sqrt(denomSq));
     } else {
       strength[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = __uint_as_float(0x00000000u);

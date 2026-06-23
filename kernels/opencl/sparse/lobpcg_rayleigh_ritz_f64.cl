@@ -19,7 +19,7 @@ __kernel void navatala_sparse_lobpcg_rayleigh_ritz_f64(__global const double* X,
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
   int kVal = ((int)(k[0]));
-  if ((gid < (kVal * kVal))) {
+  if (gid < (kVal * kVal)) {
     int row = (gid / kVal);
     int col = (gid % kVal);
     double dotAX = as_double(0x0000000000000000ul);

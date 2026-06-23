@@ -18,7 +18,7 @@ __kernel void navatala_linalg_reduce_col_max_f64(__global const double* A, __glo
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint col = gid;
-  if ((col < n[(uint)(0u)])) {
+  if (col < n[(uint)(0u)]) {
     double initMaxVal = A[col];
     double maxAccum = initMaxVal;
     for (int i = 0; i < (int)(m[(uint)(0u)]); ++i) {

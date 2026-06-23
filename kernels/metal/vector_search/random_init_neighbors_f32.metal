@@ -22,7 +22,7 @@ kernel void navatala_vector_search_random_init_neighbors_f32(device const uint* 
   uint md = max_degree[0];
   uint id = init_degree[0];
   uint s = seed[0];
-  if ((vid < nv)) {
+  if (vid < nv) {
     uint rng = (vid + s);
     for (int i = 0; i < (int)(id); ++i) {
       uint old_rng = rng;

@@ -101,7 +101,7 @@ __kernel void navatala_transformer_softmax_backward_f32(__global const float* _o
   }
   barrier(CLK_LOCAL_MEM_FENCE);
   float dot = dotBuf[(uint)(0u)];
-  if ((batchValid && seqValid)) {
+  if (batchValid && seqValid) {
     float dyMinusDot = (dy - dot);
     float dx = (y * dyMinusDot);
     gradInput[globalIdx] = dx;

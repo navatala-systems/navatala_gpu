@@ -22,7 +22,7 @@ __kernel void navatala_sparse_dense_l_u_solve_f64(__global const double* LU, __g
   }
   for (int k = 0; k < (int)(N); ++k) {
     int pk = ((int)(pivots[k]));
-    if ((pk != k)) {
+    if (pk != k) {
       double tmp = x[k];
       x[k] = x[pk];
       x[pk] = tmp;

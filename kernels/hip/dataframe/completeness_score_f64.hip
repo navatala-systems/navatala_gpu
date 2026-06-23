@@ -70,7 +70,7 @@ extern "C" __global__ void navatala_dataframe_completeness_score_f64(const doubl
   __syncthreads();
   for (int stride = 0; stride < (int)(128u); ++stride) {
     unsigned int strideU32 = ((unsigned int)(stride));
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       double otherHCY = hcySum[(lid + strideU32)];
       double mineHCY = hcySum[lid];
       hcySum[lid] = (mineHCY + otherHCY);
@@ -80,7 +80,7 @@ extern "C" __global__ void navatala_dataframe_completeness_score_f64(const doubl
     }
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double hcyFinal = hcySum[0u];
     double hcFinal = hcSum[0u];
     bool hcIsZero = (hcFinal == __longlong_as_double(0x0000000000000000ull));

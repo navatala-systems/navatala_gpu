@@ -38,14 +38,14 @@ layout(std430, binding = 5) writeonly buffer buf_alphaNew {
 // kernel: navatala_cfd_vof_alpha_update
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= counts[0])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= counts[0]) {
     return;
   } else {
     float a = (alpha[int(int(gl_GlobalInvocationID.x))] - (divA[int(int(gl_GlobalInvocationID.x))] / rSubDeltaT[int(int(gl_GlobalInvocationID.x))]));
-    if ((a < uintBitsToFloat(0x00000000u))) {
+    if (a < uintBitsToFloat(0x00000000u)) {
       a = uintBitsToFloat(0x00000000u);
     }
-    if ((a > uintBitsToFloat(0x3f800000u))) {
+    if (a > uintBitsToFloat(0x3f800000u)) {
       a = uintBitsToFloat(0x3f800000u);
     }
     alphaNew[int(int(gl_GlobalInvocationID.x))] = a;

@@ -18,7 +18,7 @@ __kernel void navatala_vector_search_compute_neighbor_distances_f32(__global con
   uint tid = ((uint)((int)(get_global_id(0))));
   uint nn = n_neighbors[0];
   uint d = dim[0];
-  if ((tid < nn)) {
+  if (tid < nn) {
     uint neighbor_id = neighbor_ids[tid];
     float acc = as_float(0x00000000u);
     for (int k = 0; k < (int)(d); ++k) {

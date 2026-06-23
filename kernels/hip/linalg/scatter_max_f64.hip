@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_linalg_scatter_max_f64(const double* src, co
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int tid = gid;
   unsigned int n = count[0u];
-  if ((tid < n)) {
+  if (tid < n) {
     unsigned int dstIdx = indices[tid];
     double val = src[tid];
     atomicMax(&A[dstIdx], val);

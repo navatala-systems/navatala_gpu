@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_sparse_build_prolongation_terminator(const unsigned int* nRows, unsigned int* ProwPtr) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int N = nRows[0];
     ProwPtr[N] = N;
   }

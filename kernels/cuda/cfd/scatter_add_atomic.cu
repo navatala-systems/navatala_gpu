@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_cfd_scatter_add_atomic(const int* values, co
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int nEdges = numEdges[0];
-  if ((gid < nEdges)) {
+  if (gid < nEdges) {
     int dstIdx = indices[gid];
     int fd = featureDim[0];
     for (int f = 0; f < (int)(fd); ++f) {

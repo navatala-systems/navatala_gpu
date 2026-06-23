@@ -40,7 +40,7 @@ extern "C" __global__ void navatala_ml_traverse_tree_classify_f64(const double* 
           unsigned int probIdx = (leafBase + cU32);
           double prob = leaf_values[probIdx];
           double currBest = bestProb;
-          if ((prob > currBest)) {
+          if (prob > currBest) {
             bestClass = c;
             bestProb = prob;
           }

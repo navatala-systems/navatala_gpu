@@ -34,7 +34,7 @@ extern "C" __global__ void navatala_dataframe_variance_f64(const double* _input,
   unsigned int reductionStride = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     unsigned int stride = reductionStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       unsigned int partnerIdx = (lid + stride);
       double myVal = sdata[lid];
       double partnerVal = sdata[partnerIdx];
@@ -46,7 +46,7 @@ extern "C" __global__ void navatala_dataframe_variance_f64(const double* _input,
     __syncthreads();
   }
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     double totalSumSq = sdata[0];
     double countFloat = ((double)(countVal));
     double varianceVal = (totalSumSq / countFloat);

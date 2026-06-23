@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_dataframe_init_weighted_welford_f32(float* weightSum, float* mean, float* M2) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     weightSum[0] = __uint_as_float(0x00000000u);
     mean[0] = __uint_as_float(0x00000000u);
     M2[0] = __uint_as_float(0x00000000u);

@@ -13,7 +13,7 @@ const char* k_opencl_navatala_graph_pack_f32 = R"kernel(
 __kernel void navatala_graph_pack_f32(__global const int* indices, __global const float* src, __global const int* count, __global float* dst) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     dst[i] = src[indices[((int)((int)(get_global_id(0))))]];
   }
 }
@@ -24,7 +24,7 @@ const char* k_opencl_navatala_graph_pack_f64 = R"kernel(
 __kernel void navatala_graph_pack_f64(__global const int* indices, __global const double* src, __global const int* count, __global double* dst) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     dst[i] = src[indices[((int)((int)(get_global_id(0))))]];
   }
 }
@@ -34,7 +34,7 @@ const char* k_opencl_navatala_graph_pack_i32 = R"kernel(
 __kernel void navatala_graph_pack_i32(__global const int* indices, __global const int* src, __global const int* count, __global int* dst) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     dst[i] = src[indices[((int)((int)(get_global_id(0))))]];
   }
 }
@@ -44,7 +44,7 @@ const char* k_opencl_navatala_graph_pack_u32 = R"kernel(
 __kernel void navatala_graph_pack_u32(__global const int* indices, __global const uint* src, __global const int* count, __global uint* dst) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     dst[i] = src[indices[((int)((int)(get_global_id(0))))]];
   }
 }
@@ -54,7 +54,7 @@ const char* k_opencl_navatala_graph_unpack_f32 = R"kernel(
 __kernel void navatala_graph_unpack_f32(__global const int* indices, __global const float* src, __global const int* count, __global float* dst) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     dst[indices[((int)((int)(get_global_id(0))))]] = src[((int)((int)(get_global_id(0))))];
   }
 }
@@ -65,7 +65,7 @@ const char* k_opencl_navatala_graph_unpack_f64 = R"kernel(
 __kernel void navatala_graph_unpack_f64(__global const int* indices, __global const double* src, __global const int* count, __global double* dst) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     dst[indices[((int)((int)(get_global_id(0))))]] = src[((int)((int)(get_global_id(0))))];
   }
 }
@@ -75,7 +75,7 @@ const char* k_opencl_navatala_graph_unpack_i32 = R"kernel(
 __kernel void navatala_graph_unpack_i32(__global const int* indices, __global const int* src, __global const int* count, __global int* dst) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     dst[indices[((int)((int)(get_global_id(0))))]] = src[((int)((int)(get_global_id(0))))];
   }
 }
@@ -85,7 +85,7 @@ const char* k_opencl_navatala_graph_unpack_u32 = R"kernel(
 __kernel void navatala_graph_unpack_u32(__global const int* indices, __global const uint* src, __global const int* count, __global uint* dst) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     dst[indices[((int)((int)(get_global_id(0))))]] = src[((int)((int)(get_global_id(0))))];
   }
 }
@@ -95,7 +95,7 @@ const char* k_opencl_navatala_graph_pack_f32x3 = R"kernel(
 __kernel void navatala_graph_pack_f32x3(__global const int* indices, __global const float* src, __global const int* count, __global const int* n, __global float* dst) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(3); ++c) {
       int dstLin = ((c * count[0]) + i);
       int srcLin = ((c * n[0]) + indices[((int)((int)(get_global_id(0))))]);
@@ -109,7 +109,7 @@ const char* k_opencl_navatala_graph_unpack_f32x3 = R"kernel(
 __kernel void navatala_graph_unpack_f32x3(__global const int* indices, __global const float* src, __global const int* count, __global const int* n, __global float* dst) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(3); ++c) {
       int srcLin = ((c * count[0]) + i);
       int dstLin = ((c * n[0]) + indices[((int)((int)(get_global_id(0))))]);
@@ -123,7 +123,7 @@ const char* k_opencl_navatala_graph_pack_f32x6 = R"kernel(
 __kernel void navatala_graph_pack_f32x6(__global const int* indices, __global const float* src, __global const int* count, __global const int* n, __global float* dst) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(6); ++c) {
       int dstLin = ((c * count[0]) + i);
       int srcLin = ((c * n[0]) + indices[((int)((int)(get_global_id(0))))]);
@@ -137,7 +137,7 @@ const char* k_opencl_navatala_graph_unpack_f32x6 = R"kernel(
 __kernel void navatala_graph_unpack_f32x6(__global const int* indices, __global const float* src, __global const int* count, __global const int* n, __global float* dst) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(6); ++c) {
       int srcLin = ((c * count[0]) + i);
       int dstLin = ((c * n[0]) + indices[((int)((int)(get_global_id(0))))]);
@@ -151,7 +151,7 @@ const char* k_opencl_navatala_graph_pack_f32x9 = R"kernel(
 __kernel void navatala_graph_pack_f32x9(__global const int* indices, __global const float* src, __global const int* count, __global const int* n, __global float* dst) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(9); ++c) {
       int dstLin = ((c * count[0]) + i);
       int srcLin = ((c * n[0]) + indices[((int)((int)(get_global_id(0))))]);
@@ -165,7 +165,7 @@ const char* k_opencl_navatala_graph_unpack_f32x9 = R"kernel(
 __kernel void navatala_graph_unpack_f32x9(__global const int* indices, __global const float* src, __global const int* count, __global const int* n, __global float* dst) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(9); ++c) {
       int srcLin = ((c * count[0]) + i);
       int dstLin = ((c * n[0]) + indices[((int)((int)(get_global_id(0))))]);
@@ -180,7 +180,7 @@ const char* k_opencl_navatala_graph_pack_f64x3 = R"kernel(
 __kernel void navatala_graph_pack_f64x3(__global const int* indices, __global const double* src, __global const int* count, __global const int* n, __global double* dst) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(3); ++c) {
       int dstLin = ((c * count[0]) + i);
       int srcLin = ((c * n[0]) + indices[((int)((int)(get_global_id(0))))]);
@@ -195,7 +195,7 @@ const char* k_opencl_navatala_graph_unpack_f64x3 = R"kernel(
 __kernel void navatala_graph_unpack_f64x3(__global const int* indices, __global const double* src, __global const int* count, __global const int* n, __global double* dst) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(3); ++c) {
       int srcLin = ((c * count[0]) + i);
       int dstLin = ((c * n[0]) + indices[((int)((int)(get_global_id(0))))]);
@@ -210,7 +210,7 @@ const char* k_opencl_navatala_graph_pack_f64x6 = R"kernel(
 __kernel void navatala_graph_pack_f64x6(__global const int* indices, __global const double* src, __global const int* count, __global const int* n, __global double* dst) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(6); ++c) {
       int dstLin = ((c * count[0]) + i);
       int srcLin = ((c * n[0]) + indices[((int)((int)(get_global_id(0))))]);
@@ -225,7 +225,7 @@ const char* k_opencl_navatala_graph_unpack_f64x6 = R"kernel(
 __kernel void navatala_graph_unpack_f64x6(__global const int* indices, __global const double* src, __global const int* count, __global const int* n, __global double* dst) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(6); ++c) {
       int srcLin = ((c * count[0]) + i);
       int dstLin = ((c * n[0]) + indices[((int)((int)(get_global_id(0))))]);
@@ -240,7 +240,7 @@ const char* k_opencl_navatala_graph_pack_f64x9 = R"kernel(
 __kernel void navatala_graph_pack_f64x9(__global const int* indices, __global const double* src, __global const int* count, __global const int* n, __global double* dst) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(9); ++c) {
       int dstLin = ((c * count[0]) + i);
       int srcLin = ((c * n[0]) + indices[((int)((int)(get_global_id(0))))]);
@@ -255,7 +255,7 @@ const char* k_opencl_navatala_graph_unpack_f64x9 = R"kernel(
 __kernel void navatala_graph_unpack_f64x9(__global const int* indices, __global const double* src, __global const int* count, __global const int* n, __global double* dst) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(9); ++c) {
       int srcLin = ((c * count[0]) + i);
       int dstLin = ((c * n[0]) + indices[((int)((int)(get_global_id(0))))]);
@@ -270,7 +270,7 @@ __kernel void navatala_graph_degree_out_u32(__global const uint* offsets, __glob
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     uint hi = offsets[(gid + (uint)(1u))];
     uint lo = offsets[gid];
     uint deg = (hi - lo);
@@ -284,7 +284,7 @@ __kernel void navatala_graph_degree_in_u32(__global const uint* offsets, __globa
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     uint hi = offsets[(gid + (uint)(1u))];
     uint lo = offsets[gid];
     uint deg = (hi - lo);
@@ -298,7 +298,7 @@ __kernel void navatala_graph_spmv_weighted_f32(__global const uint* offsets, __g
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     uint base = offsets[gid];
     uint endv = offsets[(gid + (uint)(1u))];
     uint rowlen = (endv - base);
@@ -324,7 +324,7 @@ __kernel void navatala_graph_spmv_weighted_subgroup_f32(__global const uint* off
   uint subgroupSize = ((uint)((int)(get_sub_group_size())));
   uint row = (gid / subgroupSize);
   uint numV = numVertices[0];
-  if ((row < numV)) {
+  if (row < numV) {
     uint base = offsets[row];
     uint endv = offsets[(row + (uint)(1u))];
     uint rowlen = (endv - base);
@@ -332,7 +332,7 @@ __kernel void navatala_graph_spmv_weighted_subgroup_f32(__global const uint* off
     float laneAcc = as_float(0x00000000u);
     for (int k = 0; k < (int)(rowIters); ++k) {
       uint rel = ((((uint)(k)) * subgroupSize) + lane);
-      if ((rel < rowlen)) {
+      if (rel < rowlen) {
         uint eidx = (base + rel);
         uint col = indices[eidx];
         float w = weights[eidx];
@@ -341,7 +341,7 @@ __kernel void navatala_graph_spmv_weighted_subgroup_f32(__global const uint* off
       }
     }
     float rowSum = sub_group_reduce_add(laneAcc);
-    if ((lane == (uint)(0u))) {
+    if (lane == (uint)(0u)) {
       y[row] = rowSum;
     }
   }
@@ -353,7 +353,7 @@ __kernel void navatala_graph_spmv_unweighted_f32(__global const uint* offsets, _
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     uint base = offsets[gid];
     uint endv = offsets[(gid + (uint)(1u))];
     uint rowlen = (endv - base);
@@ -378,7 +378,7 @@ __kernel void navatala_graph_spmv_unweighted_subgroup_f32(__global const uint* o
   uint subgroupSize = ((uint)((int)(get_sub_group_size())));
   uint row = (gid / subgroupSize);
   uint numV = numVertices[0];
-  if ((row < numV)) {
+  if (row < numV) {
     uint base = offsets[row];
     uint endv = offsets[(row + (uint)(1u))];
     uint rowlen = (endv - base);
@@ -386,7 +386,7 @@ __kernel void navatala_graph_spmv_unweighted_subgroup_f32(__global const uint* o
     float laneAcc = as_float(0x00000000u);
     for (int k = 0; k < (int)(rowIters); ++k) {
       uint rel = ((((uint)(k)) * subgroupSize) + lane);
-      if ((rel < rowlen)) {
+      if (rel < rowlen) {
         uint eidx = (base + rel);
         uint col = indices[eidx];
         float xv = x[col];
@@ -394,7 +394,7 @@ __kernel void navatala_graph_spmv_unweighted_subgroup_f32(__global const uint* o
       }
     }
     float rowSum = sub_group_reduce_add(laneAcc);
-    if ((lane == (uint)(0u))) {
+    if (lane == (uint)(0u)) {
       y[row] = rowSum;
     }
   }
@@ -406,7 +406,7 @@ __kernel void navatala_graph_axpy2_f32(__global const float* x, __global const f
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float alphaV = alpha[0];
     float betaV = beta[0];
     float xv = x[gid];
@@ -422,7 +422,7 @@ __kernel void navatala_graph_scale_f32(__global const float* x, __global const f
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float alphaV = alpha[0];
     float xv = x[gid];
     y[gid] = (alphaV * xv);
@@ -435,7 +435,7 @@ __kernel void navatala_graph_scale_add_bias_f32(__global const float* x, __globa
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float alphaV = alpha[0];
     float biasV = bias[0];
     float xv = x[gid];
@@ -454,7 +454,7 @@ __kernel void navatala_graph_l1norm_f32(__global const float* _input, __global c
   float gsAcc = as_float(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     uint idx = (lid + (((uint)(it)) * (uint)(256u)));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       float val = fabs(_input[idx]);
       gsAcc = (gsAcc + val);
     }
@@ -464,7 +464,7 @@ __kernel void navatala_graph_l1norm_f32(__global const float* _input, __global c
   uint redStride = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -475,7 +475,7 @@ __kernel void navatala_graph_l1norm_f32(__global const float* _input, __global c
     redStride = nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     result[0] = sdata[0];
   }
 }
@@ -485,9 +485,9 @@ const char* k_opencl_navatala_graph_recip_f32 = R"kernel(
 __kernel void navatala_graph_recip_f32(__global const float* x, __global float* y) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     float xv = x[0];
-    if ((xv == as_float(0x00000000u))) {
+    if (xv == as_float(0x00000000u)) {
       y[0] = as_float(0x00000000u);
     } else {
       y[0] = (as_float(0x3f800000u) / xv);
@@ -506,7 +506,7 @@ __kernel void navatala_graph_l1_diff_f32(__global const float* a, __global const
   float gsAcc = as_float(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     uint idx = (lid + (((uint)(it)) * (uint)(256u)));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       float av = a[idx];
       float bv = b[idx];
       float d = fabs((av - bv));
@@ -518,7 +518,7 @@ __kernel void navatala_graph_l1_diff_f32(__global const float* a, __global const
   uint redStride = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -529,7 +529,7 @@ __kernel void navatala_graph_l1_diff_f32(__global const float* a, __global const
     redStride = nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     result[0] = sdata[0];
   }
 }
@@ -545,7 +545,7 @@ __kernel void navatala_graph_count_diff_u32(__global const uint* a, __global con
   float gsAcc = as_float(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     uint idx = (lid + (((uint)(it)) * (uint)(256u)));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       uint av = a[idx];
       uint bv = b[idx];
       float diff = (((av == bv)) ? (as_float(0x00000000u)) : (as_float(0x3f800000u)));
@@ -557,7 +557,7 @@ __kernel void navatala_graph_count_diff_u32(__global const uint* a, __global con
   uint redStride = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -568,7 +568,7 @@ __kernel void navatala_graph_count_diff_u32(__global const uint* a, __global con
     redStride = nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     result[0] = sdata[0];
   }
 }
@@ -579,7 +579,7 @@ __kernel void navatala_graph_copy_f32(__global const float* x, __global const ui
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xv = x[gid];
     y[gid] = xv;
   }
@@ -591,7 +591,7 @@ __kernel void navatala_graph_copy_u32(__global const uint* x, __global const uin
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint xv = x[gid];
     y[gid] = xv;
   }
@@ -603,7 +603,7 @@ __kernel void navatala_graph_relax_vertex_pull_f32(__global const uint* inOffset
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     uint base = inOffsets[gid];
     uint endv = inOffsets[(gid + (uint)(1u))];
     uint deg = (endv - base);
@@ -614,7 +614,7 @@ __kernel void navatala_graph_relax_vertex_pull_f32(__global const uint* inOffset
       uint u = inSrcs[eidx];
       float w = inWeights[eidx];
       float du = dist[u];
-      if ((du < infV)) {
+      if (du < infV) {
         float cand = (du + w);
         float cur = best;
         best = (((cand < cur)) ? (cand) : (cur));
@@ -630,7 +630,7 @@ __kernel void navatala_graph_symmetrize_reverse_u32(__global const uint* srcs, _
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint numE = numEdges[0];
-  if ((gid < numE)) {
+  if (gid < numE) {
     uint u = srcs[gid];
     uint v = dsts[gid];
     outSrcs[gid] = v;
@@ -644,7 +644,7 @@ __kernel void navatala_graph_apply_renumber_u32(__global const uint* mapping, __
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     newIds[gid] = mapping[gid];
   }
 }
@@ -655,10 +655,10 @@ __kernel void navatala_graph_peel_below_threshold_u32(__global uint* _active, __
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     uint deg = degrees[gid];
     uint k = threshold[0];
-    if ((deg < k)) {
+    if (deg < k) {
       _active[gid] = (uint)(0u);
     }
   }
@@ -670,7 +670,7 @@ __kernel void navatala_graph_pair_intersection_u32(__global const uint* offsets,
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint numP = numPairs[0];
-  if ((gid < numP)) {
+  if (gid < numP) {
     uint a = pairsA[gid];
     uint b = pairsB[gid];
     uint baseU = offsets[a];
@@ -689,7 +689,7 @@ __kernel void navatala_graph_pair_intersection_u32(__global const uint* offsets,
       for (int _bs = 0; _bs < (int)((uint)(32u)); ++_bs) {
         uint lo = loAccum;
         uint hi = hiAccum;
-        if ((lo < hi)) {
+        if (lo < hi) {
           uint mid = ((lo + hi) / (uint)(2u));
           uint midval = indices[mid];
           bool goRight = (midval < w);
@@ -700,9 +700,9 @@ __kernel void navatala_graph_pair_intersection_u32(__global const uint* offsets,
         }
       }
       uint lb = loAccum;
-      if ((lb < endV)) {
+      if (lb < endV) {
         uint cand = indices[lb];
-        if ((cand == w)) {
+        if (cand == w) {
           interAccum = (interAccum + (uint)(1u));
         }
       }
@@ -717,7 +717,7 @@ __kernel void navatala_graph_jaccard_f32(__global const uint* inter, __global co
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint numP = numPairs[0];
-  if ((gid < numP)) {
+  if (gid < numP) {
     uint a = pairsA[gid];
     uint b = pairsB[gid];
     uint iU = inter[gid];
@@ -736,7 +736,7 @@ __kernel void navatala_graph_overlap_f32(__global const uint* inter, __global co
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint numP = numPairs[0];
-  if ((gid < numP)) {
+  if (gid < numP) {
     uint a = pairsA[gid];
     uint b = pairsB[gid];
     uint iU = inter[gid];
@@ -755,7 +755,7 @@ __kernel void navatala_graph_sorensen_f32(__global const uint* inter, __global c
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint numP = numPairs[0];
-  if ((gid < numP)) {
+  if (gid < numP) {
     uint a = pairsA[gid];
     uint b = pairsB[gid];
     uint iU = inter[gid];
@@ -774,7 +774,7 @@ __kernel void navatala_graph_cosine_f32(__global const uint* inter, __global con
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint numP = numPairs[0];
-  if ((gid < numP)) {
+  if (gid < numP) {
     uint a = pairsA[gid];
     uint b = pairsB[gid];
     uint iU = inter[gid];
@@ -793,7 +793,7 @@ __kernel void navatala_graph_uniform_random_walk_u32(__global const uint* offset
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint numW = numWalks[0];
-  if ((gid < numW)) {
+  if (gid < numW) {
     uint maxL = maxLen[0];
     uint seedV = seed[0];
     uint rowBase = (gid * maxL);
@@ -809,7 +809,7 @@ __kernel void navatala_graph_uniform_random_walk_u32(__global const uint* offset
       uint rng = rngAccum;
       uint rngNext = ((rng * (uint)(1103515245u)) + (uint)(12345u));
       rngAccum = rngNext;
-      if ((deg > (uint)(0u))) {
+      if (deg > (uint)(0u)) {
         uint pick = (rngNext % deg);
         uint nbr = indices[(off + pick)];
         curAccum = nbr;
@@ -824,7 +824,7 @@ __kernel void navatala_graph_out_degree_u32(__global const uint* offsets, __glob
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     uint hi = offsets[(gid + (uint)(1u))];
     uint lo = offsets[gid];
     uint deg = (hi - lo);
@@ -838,7 +838,7 @@ __kernel void navatala_graph_in_degree_u32(__global const uint* offsets, __globa
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     uint hi = offsets[(gid + (uint)(1u))];
     uint lo = offsets[gid];
     uint deg = (hi - lo);
@@ -941,7 +941,7 @@ __kernel void navatala_graph_compute_degree_matrix_f32(__global const float* W, 
     uint degF32RedStride = (uint)(128u);
     for (int degF32RedStep = 0; degF32RedStep < (int)(8); ++degF32RedStep) {
       uint degF32Stride = degF32RedStride;
-      if ((lid < degF32Stride)) {
+      if (lid < degF32Stride) {
         float other = sdata[(lid + degF32Stride)];
         float mine = sdata[lid];
         float sum = (mine + other);
@@ -952,7 +952,7 @@ __kernel void navatala_graph_compute_degree_matrix_f32(__global const float* W, 
       degF32RedStride = degF32NextStride;
       barrier(CLK_LOCAL_MEM_FENCE);
     }
-    if ((lid == (uint)(0u))) {
+    if (lid == (uint)(0u)) {
       float degreeVal = sdata[0];
       D[rowIdx] = degreeVal;
     }
@@ -984,7 +984,7 @@ __kernel void navatala_graph_compute_degree_matrix_f64(__global const double* W,
     uint degF64RedStride = (uint)(128u);
     for (int degF64RedStep = 0; degF64RedStep < (int)(8); ++degF64RedStep) {
       uint degF64Stride = degF64RedStride;
-      if ((lid < degF64Stride)) {
+      if (lid < degF64Stride) {
         double other = sdata[(lid + degF64Stride)];
         double mine = sdata[lid];
         double sum = (mine + other);
@@ -995,7 +995,7 @@ __kernel void navatala_graph_compute_degree_matrix_f64(__global const double* W,
       degF64RedStride = degF64NextStride;
       barrier(CLK_LOCAL_MEM_FENCE);
     }
-    if ((lid == (uint)(0u))) {
+    if (lid == (uint)(0u)) {
       double degreeVal = sdata[0];
       D[rowIdx] = degreeVal;
     }
@@ -1156,7 +1156,7 @@ __kernel void navatala_graph_normalize_eigenvector_rows_f32(__global const float
     uint normF32RedStride = (uint)(128u);
     for (int normF32RedStep = 0; normF32RedStep < (int)(8); ++normF32RedStep) {
       uint normF32Stride = normF32RedStride;
-      if ((lid < normF32Stride)) {
+      if (lid < normF32Stride) {
         float other = sdata[(lid + normF32Stride)];
         float mine = sdata[lid];
         float sum = (mine + other);
@@ -1167,7 +1167,7 @@ __kernel void navatala_graph_normalize_eigenvector_rows_f32(__global const float
       normF32RedStride = normF32NextStride;
       barrier(CLK_LOCAL_MEM_FENCE);
     }
-    if ((lid == (uint)(0u))) {
+    if (lid == (uint)(0u)) {
       float sumSq = sdata[0];
       float normVal = sqrt(sumSq);
       sdata[0] = normVal;
@@ -1215,7 +1215,7 @@ __kernel void navatala_graph_normalize_eigenvector_rows_f64(__global const doubl
     uint normF64RedStride = (uint)(128u);
     for (int normF64RedStep = 0; normF64RedStep < (int)(8); ++normF64RedStep) {
       uint normF64Stride = normF64RedStride;
-      if ((lid < normF64Stride)) {
+      if (lid < normF64Stride) {
         double other = sdata[(lid + normF64Stride)];
         double mine = sdata[lid];
         double sum = (mine + other);
@@ -1226,7 +1226,7 @@ __kernel void navatala_graph_normalize_eigenvector_rows_f64(__global const doubl
       normF64RedStride = normF64NextStride;
       barrier(CLK_LOCAL_MEM_FENCE);
     }
-    if ((lid == (uint)(0u))) {
+    if (lid == (uint)(0u)) {
       double sumSq = sdata[0];
       double normVal = sqrt(sumSq);
       sdata[0] = normVal;

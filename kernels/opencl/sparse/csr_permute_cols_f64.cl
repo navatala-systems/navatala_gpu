@@ -18,7 +18,7 @@ __kernel void navatala_sparse_csr_permute_cols_f64(__global const uint* colIdx, 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nnz[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     uint c = colIdx[gid];
     uint newC = perm[((int)(c))];
     newColIdx[gid] = newC;

@@ -17,7 +17,7 @@ __kernel void navatala_sparse_csr_max_nnz_per_row_partials(__global const uint* 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     partials[gid] = nnzPerRow[gid];
   } else {
     partials[gid] = (uint)(0u);

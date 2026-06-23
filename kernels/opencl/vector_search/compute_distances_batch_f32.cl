@@ -18,7 +18,7 @@ __kernel void navatala_vector_search_compute_distances_batch_f32(__global const 
   uint gid = ((uint)((int)(get_global_id(0))));
   uint n_cand = n_candidates[0];
   uint d = dim[0];
-  if ((gid < n_cand)) {
+  if (gid < n_cand) {
     uint cand_id = candidate_ids[gid];
     float acc = as_float(0x00000000u);
     for (int k = 0; k < (int)(d); ++k) {

@@ -18,7 +18,7 @@ using namespace metal;
 
 kernel void navatala_sparse_build_prolongation_terminator(device const uint* nRows [[buffer(0)]], device uint* ProwPtr [[buffer(1)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     uint N = nRows[0];
     ProwPtr[N] = N;
   }

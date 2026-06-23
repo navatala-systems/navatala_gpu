@@ -18,26 +18,26 @@ extern "C" __global__ void navatala_sparse_interpolate_distance2_f64(const unsig
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int row = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     int pStart = ((int)(ProwPtr[row]));
-    if ((mark == 1)) {
+    if (mark == 1) {
       PcolIdx[pStart] = ((unsigned int)(row));
       Pvalues[pStart] = __longlong_as_double(0x3ff0000000000000ull);
     } else {
-      if ((mark == -1)) {
+      if (mark == -1) {
         int iDiagPos = ((int)(diagIdx[row]));
         double diagI = values[iDiagPos];
         int pos = 0;
         for (int jw = 0; jw < (int)((re - rs)); ++jw) {
           int kw = (rs + jw);
           unsigned int isStrW = strongMask[kw];
-          if ((isStrW == 1u)) {
+          if (isStrW == 1u) {
             int colW = ((int)(colIdx[kw]));
             int mW = cfMarking[colW];
-            if ((mW == 1)) {
+            if (mW == 1) {
               double aij = values[kw];
               double w = (-(aij / diagI));
               PcolIdx[(pStart + pos)] = ((unsigned int)(colW));
@@ -49,10 +49,10 @@ extern "C" __global__ void navatala_sparse_interpolate_distance2_f64(const unsig
         for (int jf = 0; jf < (int)((re - rs)); ++jf) {
           int kf = (rs + jf);
           unsigned int isStrF = strongMask[kf];
-          if ((isStrF == 1u)) {
+          if (isStrF == 1u) {
             int nbrF = ((int)(colIdx[kf]));
             int mF = cfMarking[nbrF];
-            if ((mF == -1)) {
+            if (mF == -1) {
               double aij = values[kf];
               int jDiagPos = ((int)(diagIdx[nbrF]));
               double diagJ = values[jDiagPos];
@@ -61,10 +61,10 @@ extern "C" __global__ void navatala_sparse_interpolate_distance2_f64(const unsig
               for (int j2 = 0; j2 < (int)((re2 - rs2)); ++j2) {
                 int k2 = (rs2 + j2);
                 unsigned int isStr2 = strongMask[k2];
-                if ((isStr2 == 1u)) {
+                if (isStr2 == 1u) {
                   int nbr2 = ((int)(colIdx[k2]));
                   int m2 = cfMarking[nbr2];
-                  if ((m2 == 1)) {
+                  if (m2 == 1) {
                     double ajk = values[k2];
                     double prod = (aij * (ajk / diagJ));
                     double wff = (-(prod / diagI));

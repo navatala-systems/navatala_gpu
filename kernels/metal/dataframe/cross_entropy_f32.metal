@@ -37,7 +37,7 @@ kernel void navatala_dataframe_cross_entropy_f32(device const float* p [[buffer(
   uint ce32_reductionStride = 128u;
   for (int ce32_reductionStep = 0; ce32_reductionStep < (int)(8); ++ce32_reductionStep) {
     uint ce32_stride = ce32_reductionStride;
-    if ((lid < ce32_stride)) {
+    if (lid < ce32_stride) {
       float ce32_other = sdata[(lid + ce32_stride)];
       float ce32_mine = sdata[lid];
       float ce32_sum = (ce32_mine + ce32_other);
@@ -48,7 +48,7 @@ kernel void navatala_dataframe_cross_entropy_f32(device const float* p [[buffer(
     ce32_reductionStride = ce32_nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0u] = sdata[0u];
   }
 }

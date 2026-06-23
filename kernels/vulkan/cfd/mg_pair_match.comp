@@ -29,12 +29,12 @@ layout(std430, binding = 2) readonly buffer buf_counts {
 // kernel: navatala_cfd_mg_pair_match
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) >= int(counts[0]))) {
+  if (int(gl_GlobalInvocationID.x) >= int(counts[0])) {
     return;
   } else {
     int n = bestNeighbor[int(gl_GlobalInvocationID.x)];
-    if ((n >= 0)) {
-      if ((int(gl_GlobalInvocationID.x) < n)) {
+    if (n >= 0) {
+      if (int(gl_GlobalInvocationID.x) < n) {
         aggMap[int(gl_GlobalInvocationID.x)] = int(gl_GlobalInvocationID.x);
       } else {
         aggMap[int(gl_GlobalInvocationID.x)] = n;

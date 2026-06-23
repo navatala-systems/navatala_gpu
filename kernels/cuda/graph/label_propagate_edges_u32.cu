@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_graph_label_propagate_edges_u32(const unsign
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int numE = numEdges[0];
-  if ((gid < numE)) {
+  if (gid < numE) {
     unsigned int u = srcs[gid];
     unsigned int v = dsts[gid];
     unsigned int lu = labels[u];

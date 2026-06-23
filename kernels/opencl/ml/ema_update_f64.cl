@@ -16,7 +16,7 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_ml_ema_update_f64(__global const double* x, __global const double* alpha, __global double* ema, __global uint* count) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double xVal = x[0];
     double a = alpha[0];
     double oldEma = ema[0];

@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_linalg_map_reduce_sum_f32(const float* A, co
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int idx = gid;
-  if ((idx < (m[0u] * n[0u]))) {
+  if (idx < (m[0u] * n[0u])) {
     float val = A[idx];
     atomicAdd(&result[0u], val);
   }

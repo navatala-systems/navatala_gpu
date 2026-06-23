@@ -15,11 +15,11 @@
 
 __kernel void navatala_cfd_turbulence_dirichlet_cell_source(__global const int* constrainedMask, __global const float* constrainedValue, __global const float* diag, __global const int* nCells, __global float* source) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= nCells[0])) {
+  if (((int)((int)(get_global_id(0)))) >= nCells[0]) {
     return;
   } else {
     int mask = constrainedMask[((int)((int)(get_global_id(0))))];
-    if ((mask == 0)) {
+    if (mask == 0) {
       return;
     } else {
       source[((int)((int)(get_global_id(0))))] = (diag[((int)((int)(get_global_id(0))))] * constrainedValue[((int)((int)(get_global_id(0))))]);

@@ -16,7 +16,7 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_average_face_scalar_to_cell(const float* facePhi, const float* magSf, const unsigned int* offsets, const unsigned int* faceIdx, const float* sumMag, const int* params, float* outCell) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0]) {
     return;
   } else {
     unsigned int begU = offsets[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
@@ -34,7 +34,7 @@ extern "C" __global__ void navatala_cfd_primitives_average_face_scalar_to_cell(c
       acc = (acc + term);
     }
     float den = sumMag[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
-    if ((den < __uint_as_float(0x1e3ce508u))) {
+    if (den < __uint_as_float(0x1e3ce508u)) {
       den = __uint_as_float(0x1e3ce508u);
     }
     outCell[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (acc / den);

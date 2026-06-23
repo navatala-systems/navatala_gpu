@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_nccl_direct_send_f32(const float* src, const
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float val = src[gid];
     dst[gid] = val;
   }

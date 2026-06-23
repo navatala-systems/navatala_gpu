@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_ilu_forward_sweep_f64(const unsigned 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int localIdx = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRowsThisColor[0]));
-  if ((localIdx < N)) {
+  if (localIdx < N) {
     int offset = ((int)(colorOffsets[0]));
     int row = (offset + localIdx);
     int rs = ((int)(rowPtr[row]));
@@ -28,7 +28,7 @@ extern "C" __global__ void navatala_sparse_ilu_forward_sweep_f64(const unsigned 
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col < row)) {
+      if (col < row) {
         double a = luValues[k];
         double yj = y[col];
         sum = (sum + (a * yj));

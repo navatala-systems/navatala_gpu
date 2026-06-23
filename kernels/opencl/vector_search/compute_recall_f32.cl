@@ -18,7 +18,7 @@ __kernel void navatala_vector_search_compute_recall_f32(__global const uint* app
   uint query_id = ((uint)((int)(get_global_id(0))));
   uint nq = n_queries[0];
   uint k_val = k[0];
-  if ((query_id < nq)) {
+  if (query_id < nq) {
     uint hits = (uint)(0u);
     for (int i = 0; i < (int)(k_val); ++i) {
       uint approx_idx = ((query_id * k_val) + i);
@@ -27,7 +27,7 @@ __kernel void navatala_vector_search_compute_recall_f32(__global const uint* app
       for (int j = 0; j < (int)(k_val); ++j) {
         uint gt_idx = ((query_id * k_val) + j);
         uint gt_id = ground_truth_ids[gt_idx];
-        if ((approx_id == gt_id)) {
+        if (approx_id == gt_id) {
           found = (uint)(1u);
         }
       }

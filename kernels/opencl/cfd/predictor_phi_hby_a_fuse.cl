@@ -15,7 +15,7 @@
 
 __kernel void navatala_cfd_predictor_phi_hby_a_fuse(__global const float* fluxHbyA, __global const float* rhoRauFace, __global const float* ddtCorr, __global const int* counts1, __global float* outPhiHbyA) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= counts1[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts1[0]) {
     return;
   } else {
     float f = fluxHbyA[((int)((int)(get_global_id(0))))];

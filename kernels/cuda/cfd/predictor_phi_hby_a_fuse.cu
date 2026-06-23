@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_predictor_phi_hby_a_fuse(const float* fluxHbyA, const float* rhoRauFace, const float* ddtCorr, const int* counts1, float* outPhiHbyA) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts1[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts1[0]) {
     return;
   } else {
     float f = fluxHbyA[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];

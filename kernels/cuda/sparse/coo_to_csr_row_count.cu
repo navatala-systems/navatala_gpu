@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_coo_to_csr_row_count(const unsigned i
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nnz[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int row = ((int)(rowIdx[gid]));
     unsigned int _aod4 = atomicAdd(&(rowCount[row]), 1u);
   }

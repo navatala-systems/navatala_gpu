@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_cfd_scatter_mu_grad_ghost(device const float* recvVals [[buffer(0)]], device const int* counts [[buffer(1)]], device float* muCell [[buffer(2)]], device float* gXX [[buffer(3)]], device float* gXY [[buffer(4)]], device float* gXZ [[buffer(5)]], device float* gYX [[buffer(6)]], device float* gYY [[buffer(7)]], device float* gYZ [[buffer(8)]], device float* gZX [[buffer(9)]], device float* gZY [[buffer(10)]], device float* gZZ [[buffer(11)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(counts[0])))) {
+  if (int(__gid.x) >= ((int)(counts[0]))) {
     return;
   } else {
     int idx = (((int)(counts[1])) + int(__gid.x));

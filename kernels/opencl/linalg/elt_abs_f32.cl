@@ -16,7 +16,7 @@
 __kernel void navatala_linalg_elt_abs_f32(__global const float* A, __global const uint* n, __global float* C) {
   int gid0 = (int)get_global_id(0);
   uint i = ((uint)((int)(get_global_id(0))));
-  if ((i < n[(uint)(0u)])) {
+  if (i < n[(uint)(0u)]) {
     float a = A[i];
     C[i] = fabs(a);
   }

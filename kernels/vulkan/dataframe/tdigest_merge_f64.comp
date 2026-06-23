@@ -81,7 +81,7 @@ layout(std430, binding = 19) writeonly buffer buf_compressionOut {
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   uint gid = uint(int(gl_GlobalInvocationID.x));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     uint cA = countA[0];
     uint cB = countB[0];
     double twA = totalWeightA[0];

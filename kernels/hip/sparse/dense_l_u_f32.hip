@@ -23,13 +23,13 @@ extern "C" __global__ void navatala_sparse_dense_l_u_f32(const unsigned int* n, 
     for (int i = 0; i < (int)((N - k)); ++i) {
       int r = (k + i);
       float v = A[((r * N) + k)];
-      if ((abs(v) > abs(maxVal))) {
+      if (abs(v) > abs(maxVal)) {
         maxVal = v;
         maxRow = r;
       }
     }
     pivots[k] = ((unsigned int)(maxRow));
-    if ((maxRow != k)) {
+    if (maxRow != k) {
       for (int j = 0; j < (int)(N); ++j) {
         float a = A[((k * N) + j)];
         float b = A[((maxRow * N) + j)];

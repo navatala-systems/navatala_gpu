@@ -40,7 +40,7 @@ extern "C" __global__ void navatala_ml_compute_r_squared_f64(const double* y, co
   unsigned int r2F64Stride = 128u;
   for (int reductionStep4 = 0; reductionStep4 < (int)(8); ++reductionStep4) {
     unsigned int stride4 = r2F64Stride;
-    if ((lid < stride4)) {
+    if (lid < stride4) {
       double otherRes = sdataRes[(lid + stride4)];
       double mineRes = sdataRes[lid];
       double sumRes = (mineRes + otherRes);
@@ -55,7 +55,7 @@ extern "C" __global__ void navatala_ml_compute_r_squared_f64(const double* y, co
     r2F64Stride = nextStride4;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double ssRes = sdataRes[0];
     double ssTot = sdataTot[0];
     double ratio = (ssRes / ssTot);

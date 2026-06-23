@@ -29,7 +29,7 @@ layout(std430, binding = 2) writeonly buffer buf_lambda {
 // kernel: navatala_cfd_vof_mules_fill_lambda
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= counts[1])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= counts[1]) {
     return;
   } else {
     lambda[int(int(gl_GlobalInvocationID.x))] = uintBitsToFloat(0x3f800000u);

@@ -19,18 +19,18 @@ extern "C" __global__ void navatala_cfd_hby_a_from_u_and_terms(const float* ux, 
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0]) {
     return;
   } else {
     float tx = lapx[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float ty = lapy[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float tz = lapz[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
-    if (((modeBuf[0] == 1) || (modeBuf[0] == 3))) {
+    if ((modeBuf[0] == 1) || (modeBuf[0] == 3)) {
       tx = (tx - divx[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]);
       ty = (ty - divy[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]);
       tz = (tz - divz[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]);
     }
-    if (((modeBuf[0] == 2) || (modeBuf[0] == 3))) {
+    if ((modeBuf[0] == 2) || (modeBuf[0] == 3)) {
       tx = (tx + extrax[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]);
       ty = (ty + extray[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]);
       tz = (tz + extraz[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]);

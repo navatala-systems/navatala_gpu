@@ -40,7 +40,7 @@ extern "C" __global__ void navatala_dataframe_r2_score_f64(const double* y_true,
   unsigned int r2F64_reductionStride = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     unsigned int r2F64_stride = r2F64_reductionStride;
-    if ((lid < r2F64_stride)) {
+    if (lid < r2F64_stride) {
       unsigned int r2F64_partnerIdx = (lid + r2F64_stride);
       double otherRes = sdata_res[r2F64_partnerIdx];
       double mineRes = sdata_res[lid];
@@ -57,7 +57,7 @@ extern "C" __global__ void navatala_dataframe_r2_score_f64(const double* y_true,
     __syncthreads();
   }
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     double ssRes = sdata_res[0];
     double ssTot = sdata_tot[0];
     double ratio = (ssRes / ssTot);

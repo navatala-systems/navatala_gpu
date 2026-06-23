@@ -221,7 +221,7 @@ void main() {
   indexBuf[lid] = lidI32;
   barrier();
   for (int kIter = 0; kIter < int(k); ++kIter) {
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       int bestIdx = 0;
       float bestVal = uintBitsToFloat(0xf149f2cau);
       for (int scanIdx = 0; scanIdx < int(ne); ++scanIdx) {

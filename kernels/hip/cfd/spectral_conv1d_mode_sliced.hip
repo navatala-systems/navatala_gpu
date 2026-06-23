@@ -23,14 +23,14 @@ extern "C" __global__ void navatala_cfd_spectral_conv1d_mode_sliced(const float*
   int inCh = 2;
   int m1 = 8;
   int total = ((nb * outCh) * ftw);
-  if ((gid < total)) {
+  if (gid < total) {
     int boc = (gid / ftw);
     int w = (gid % ftw);
     int b = (boc / outCh);
     int oc = (boc % outCh);
     float accR = __uint_as_float(0x00000000u);
     float accI = __uint_as_float(0x00000000u);
-    if ((w < m1)) {
+    if (w < m1) {
       for (int ic = 0; ic < (int)(inCh); ++ic) {
         int xBase = ((((b * inCh) + ic) * ftw) + w);
         int wBase = ((((oc * inCh) + ic) * m1) + w);
@@ -43,7 +43,7 @@ extern "C" __global__ void navatala_cfd_spectral_conv1d_mode_sliced(const float*
       }
     } else {
       int negStart = (ftw - m1);
-      if ((w >= negStart)) {
+      if (w >= negStart) {
         int wLocal = (w - negStart);
         for (int ic = 0; ic < (int)(inCh); ++ic) {
           int xBase = ((((b * inCh) + ic) * ftw) + w);

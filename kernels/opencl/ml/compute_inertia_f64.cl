@@ -50,7 +50,7 @@ __kernel void navatala_ml_compute_inertia_f64(__global const double* data, __glo
   uint inertiaF64RedStride = (uint)(128u);
   for (int inertiaF64RedStep = 0; inertiaF64RedStep < (int)(8); ++inertiaF64RedStep) {
     uint inertiaF64Stride = inertiaF64RedStride;
-    if ((lid < inertiaF64Stride)) {
+    if (lid < inertiaF64Stride) {
       double other = sdata[(lid + inertiaF64Stride)];
       double mine = sdata[lid];
       double sum = (mine + other);
@@ -61,7 +61,7 @@ __kernel void navatala_ml_compute_inertia_f64(__global const double* data, __glo
     inertiaF64RedStride = inertiaF64NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     inertia[0] = sdata[0];
   }
 }

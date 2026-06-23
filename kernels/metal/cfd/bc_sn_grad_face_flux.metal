@@ -17,14 +17,14 @@
 using namespace metal;
 
 kernel void navatala_cfd_bc_sn_grad_face_flux(device const float* cf [[buffer(0)]], device const float* delta [[buffer(1)]], device const float* bcSnGrad [[buffer(2)]], device const int* bcSnGradMask [[buffer(3)]], device const int* counts [[buffer(4)]], device float* outFlux [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[1])) {
+  if (((int)(int(__gid.x))) >= counts[1]) {
     return;
   } else {
     float d = delta[((int)(int(__gid.x)))];
     float sg = bcSnGrad[((int)(int(__gid.x)))];
     float flux = as_type<float>(0x00000000u);
-    if ((bcSnGradMask[((int)(int(__gid.x)))] != 0)) {
-      if ((d != as_type<float>(0x00000000u))) {
+    if (bcSnGradMask[((int)(int(__gid.x)))] != 0) {
+      if (d != as_type<float>(0x00000000u)) {
         flux = (cf[((int)(int(__gid.x)))] * (sg / d));
       }
     }

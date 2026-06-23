@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_cfd_neg_sum_diag(const float* upper, const f
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0]) {
     return;
   } else {
     float sum = __uint_as_float(0x00000000u);
@@ -30,9 +30,9 @@ extern "C" __global__ void navatala_cfd_neg_sum_diag(const float* upper, const f
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < counts[1])) {
+      if (f < counts[1]) {
         int sgn = sign[k];
-        if ((sgn > 0)) {
+        if (sgn > 0) {
           sum = (sum - upper[f]);
         } else {
           sum = (sum - lower[f]);

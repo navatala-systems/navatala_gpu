@@ -15,7 +15,7 @@
 
 __kernel void navatala_cfd_negate_scalar(__global const float* _input, __global float* _output) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= 1)) {
+  if ((int)(get_global_id(0)) >= 1) {
     return;
   } else {
     float v = _input[0];

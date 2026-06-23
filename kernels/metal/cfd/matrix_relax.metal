@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_cfd_matrix_relax(device const float* diagOld [[buffer(0)]], device const float* sumOff [[buffer(1)]], device const float* psi [[buffer(2)]], device const int* counts [[buffer(3)]], device const float* paramsF [[buffer(4)]], device float* diag [[buffer(5)]], device float* source [[buffer(6)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     float d0 = diagOld[((int)(int(__gid.x)))];

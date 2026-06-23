@@ -43,7 +43,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   uint gid = uint(int(gl_GlobalInvocationID.x));
   uint i = gid;
-  if ((i < nnz[0u])) {
+  if (i < nnz[0u]) {
     uint col = colInd[i];
     rowInd_out[i] = col;
     uint row = rowInd[i];

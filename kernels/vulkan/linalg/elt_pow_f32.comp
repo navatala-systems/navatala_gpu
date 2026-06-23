@@ -34,7 +34,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   uint i = uint(int(gl_GlobalInvocationID.x));
   float pVal = p[0u];
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     float a = A[i];
     float logA = log(a);
     float pLogA = (pVal * logA);

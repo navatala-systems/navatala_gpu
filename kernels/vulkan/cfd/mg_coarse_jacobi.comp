@@ -32,11 +32,11 @@ layout(std430, binding = 3) readonly buffer buf_mgCounts {
 // kernel: navatala_cfd_mg_coarse_jacobi
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) >= int(mgCounts[1]))) {
+  if (int(gl_GlobalInvocationID.x) >= int(mgCounts[1])) {
     return;
   } else {
     float d = diag[int(gl_GlobalInvocationID.x)];
-    if ((d == uintBitsToFloat(0x00000000u))) {
+    if (d == uintBitsToFloat(0x00000000u)) {
       return;
     } else {
       float omega = uintBitsToFloat(0x3f4ccccdu);

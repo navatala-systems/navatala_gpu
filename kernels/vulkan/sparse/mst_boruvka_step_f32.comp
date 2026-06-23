@@ -50,15 +50,15 @@ layout(std430, binding = 8) buffer buf_mstEdges {
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   uint tid = uint(int(gl_GlobalInvocationID.x));
-  if ((tid < numEdges[0u])) {
+  if (tid < numEdges[0u]) {
     uint src = srcNodes[tid];
     uint dst = dstNodes[tid];
     uint srcRoot = components[src];
     uint dstRoot = components[dst];
-    if ((srcRoot != dstRoot)) {
+    if (srcRoot != dstRoot) {
       float w = weights[tid];
       float currMin = minEdgeWeight[srcRoot];
-      if ((w < currMin)) {
+      if (w < currMin) {
         atomicMin(minEdgeWeight[srcRoot], w);
         minEdgeIdx[srcRoot] = tid;
       }

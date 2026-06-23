@@ -70,7 +70,7 @@ extern "C" __global__ void navatala_dataframe_homogeneity_score_f32(const float*
   __syncthreads();
   for (int stride = 0; stride < (int)(128u); ++stride) {
     unsigned int strideU32 = ((unsigned int)(stride));
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       float otherHYC = hycSum[(lid + strideU32)];
       float mineHYC = hycSum[lid];
       hycSum[lid] = (mineHYC + otherHYC);
@@ -80,7 +80,7 @@ extern "C" __global__ void navatala_dataframe_homogeneity_score_f32(const float*
     }
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float hycFinal = hycSum[0u];
     float hyFinal = hySum[0u];
     bool hyIsZero = (hyFinal == __uint_as_float(0x00000000u));

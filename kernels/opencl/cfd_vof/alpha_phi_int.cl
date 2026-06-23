@@ -15,29 +15,29 @@
 
 __kernel void navatala_cfd_vof_alpha_phi_int(__global const float* alpha, __global const float* phi, __global const int* owner, __global const int* nei, __global const float* phir, __global const float* alphaF, __global const int* faceParams, __global float* outAlphaPhi) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= faceParams[0])) {
+  if (((int)((int)(get_global_id(0)))) >= faceParams[0]) {
     return;
   } else {
     float ph = phi[((int)((int)(get_global_id(0))))];
     int o = owner[((int)((int)(get_global_id(0))))];
     int n = nei[((int)((int)(get_global_id(0))))];
     float a = as_float(0x00000000u);
-    if ((ph >= as_float(0x00000000u))) {
+    if (ph >= as_float(0x00000000u)) {
       a = alpha[o];
     } else {
       a = alpha[n];
     }
-    if ((a < as_float(0x00000000u))) {
+    if (a < as_float(0x00000000u)) {
       a = as_float(0x00000000u);
     }
-    if ((a > as_float(0x3f800000u))) {
+    if (a > as_float(0x3f800000u)) {
       a = as_float(0x3f800000u);
     }
     float ac = alphaF[((int)((int)(get_global_id(0))))];
-    if ((ac < as_float(0x00000000u))) {
+    if (ac < as_float(0x00000000u)) {
       ac = as_float(0x00000000u);
     }
-    if ((ac > as_float(0x3f800000u))) {
+    if (ac > as_float(0x3f800000u)) {
       ac = as_float(0x3f800000u);
     }
     float oneMinus = (as_float(0x3f800000u) - ac);

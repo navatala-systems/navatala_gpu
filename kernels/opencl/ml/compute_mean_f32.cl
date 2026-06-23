@@ -30,7 +30,7 @@ __kernel void navatala_ml_compute_mean_f32(__global const float* y, __global con
   uint meanF32Stride = (uint)(128u);
   for (int reductionStep5 = 0; reductionStep5 < (int)(8); ++reductionStep5) {
     uint stride5 = meanF32Stride;
-    if ((lid < stride5)) {
+    if (lid < stride5) {
       float other = sdata[(lid + stride5)];
       float mine = sdata[lid];
       float sum = (mine + other);
@@ -41,7 +41,7 @@ __kernel void navatala_ml_compute_mean_f32(__global const float* y, __global con
     meanF32Stride = nextStride5;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float totalSum = sdata[0];
     float nFloat = ((float)(n));
     float meanVal = (totalSum / nFloat);

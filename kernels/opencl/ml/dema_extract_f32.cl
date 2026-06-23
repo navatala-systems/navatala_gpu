@@ -15,7 +15,7 @@
 
 __kernel void navatala_ml_dema_extract_f32(__global const float* ema1, __global const float* ema2, __global float* result) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float e1 = ema1[0];
     float e2 = ema2[0];
     float t2 = (as_float(0x40000000u) * e1);

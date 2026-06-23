@@ -34,16 +34,16 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int gid = int(gl_GlobalInvocationID.x);
   int N = int(nRows[0]);
-  if ((gid < N)) {
+  if (gid < N) {
     int myPick = pickArray[gid];
-    if ((myPick < 0)) {
+    if (myPick < 0) {
       aggregateId[gid] = -1;
     } else {
       int peerPick = pickArray[myPick];
-      if ((peerPick == gid)) {
+      if (peerPick == gid) {
         int leader = (((gid < myPick)) ? (gid) : (myPick));
         aggregateId[gid] = leader;
-        if ((gid < myPick)) {
+        if (gid < myPick) {
           uint _naBump = atomicAdd(nAggregates[0], 1u);
         }
       } else {

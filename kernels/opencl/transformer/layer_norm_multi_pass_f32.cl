@@ -29,7 +29,7 @@ __kernel void navatala_transformer_layer_norm_multi_pass_f32(__global const floa
   uint iterIdx = lid;
   uint workgroupSize = (uint)(256u);
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < hs))) break;
+    if (!(iterIdx < hs)) break;
     uint globalIdx = (baseIdx + iterIdx);
     float xVal = ((batchValid) ? (_input[globalIdx]) : (as_float(0x00000000u)));
     partialSum = (partialSum + xVal);
@@ -196,7 +196,7 @@ __kernel void navatala_transformer_layer_norm_multi_pass_f32(__global const floa
   float std = sqrt(varEps);
   iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < hs))) break;
+    if (!(iterIdx < hs)) break;
     if (batchValid) {
       uint globalIdx2 = (baseIdx + iterIdx);
       float xVal2 = _input[globalIdx2];

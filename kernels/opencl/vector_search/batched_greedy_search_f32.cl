@@ -22,14 +22,14 @@ __kernel void navatala_vector_search_batched_greedy_search_f32(__global const fl
   uint entry = entry_point[0];
   uint k_val = k[0];
   __local float partial_sums[64];
-  if ((query_id < nq)) {
-    if ((tid == (uint)(0u))) {
+  if (query_id < nq) {
+    if (tid == (uint)(0u)) {
       uint base_idx = (query_id * k_val);
       result_ids[base_idx] = entry;
       result_dists[base_idx] = as_float(0x00000000u);
     }
-    if ((tid < k_val)) {
-      if ((tid != (uint)(0u))) {
+    if (tid < k_val) {
+      if (tid != (uint)(0u)) {
         uint out_idx = ((query_id * k_val) + tid);
         result_ids[out_idx] = (uint)(4294967295u);
         result_dists[out_idx] = as_float(0x7e967699u);

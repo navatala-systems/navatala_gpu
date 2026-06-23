@@ -16,7 +16,7 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_init_moments_state_f64(__global uint* n, __global double* M1, __global double* M2, __global double* M3, __global double* M4) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     n[0] = (uint)(0u);
     M1[0] = as_double(0x0000000000000000ul);
     M2[0] = as_double(0x0000000000000000ul);

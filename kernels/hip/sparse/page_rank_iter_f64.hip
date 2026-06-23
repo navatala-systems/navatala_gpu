@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_page_rank_iter_f64(const double* Ax, 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double axi = Ax[gid];
     double d = damping[0];
     double nInv = (__longlong_as_double(0x3ff0000000000000ull) / ((double)(N)));

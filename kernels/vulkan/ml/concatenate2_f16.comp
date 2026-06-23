@@ -42,15 +42,15 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   uint gid = uint(int(gl_GlobalInvocationID.x));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint nAVal = nA[0];
-    if ((gid < nAVal)) {
+    if (gid < nAVal) {
       float16_t v = a[gid];
       _output[gid] = v;
     } else {
       uint srcIdx = (gid - nAVal);
       uint nBVal = nB[0];
-      if ((srcIdx < nBVal)) {
+      if (srcIdx < nBVal) {
         float16_t v = b[srcIdx];
         _output[gid] = v;
       }

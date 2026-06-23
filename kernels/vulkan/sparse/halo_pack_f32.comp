@@ -34,7 +34,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int gid = int(gl_GlobalInvocationID.x);
   int N = int(sendCount[0]);
-  if ((gid < N)) {
+  if (gid < N) {
     int idx = int(sendMap[gid]);
     float val = x[idx];
     sendBuf[gid] = val;

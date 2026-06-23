@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_dataframe_init_m_c_d_f64(const double* thresholdIn, double* robustMeanX, double* robustMeanY, double* robustCov, double* determinant, double* threshold, unsigned int* count) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     double thresh = thresholdIn[0];
     robustMeanX[0] = __longlong_as_double(0x0000000000000000ull);
     robustMeanY[0] = __longlong_as_double(0x0000000000000000ull);

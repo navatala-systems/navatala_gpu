@@ -18,7 +18,7 @@ __kernel void navatala_sparse_mg_zero_vector_f64(__global const uint* n, __globa
   int gid0 = (int)get_global_id(0);
   int i = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     v[i] = as_double(0x0000000000000000ul);
   }
 }

@@ -17,7 +17,7 @@ __kernel void navatala_sparse_spgemm_symbolic_row_nnz(__global const uint* ArowP
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRowsA[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int ars = ((int)(ArowPtr[gid]));
     int are = ((int)(ArowPtr[(gid + 1)]));
     int count = 0;

@@ -18,9 +18,9 @@ extern "C" __global__ void navatala_sparse_assign_leader_compact_ids(const unsig
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int aggId = aggregateId[gid];
-    if ((aggId == gid)) {
+    if (aggId == gid) {
       unsigned int compactId = atomicAdd(&(nAggregates[0]), 1u);
       compactMap[gid] = ((int)(compactId));
     }

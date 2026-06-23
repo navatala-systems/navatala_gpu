@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_predictor_hby_a_from_source(const float* rAU, const float* sourceX, const float* sourceY, const float* sourceZ, const int* counts1, float* outHbyAX, float* outHbyAY, float* outHbyAZ) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts1[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts1[0]) {
     return;
   } else {
     float r = rAU[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];

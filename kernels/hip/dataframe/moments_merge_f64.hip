@@ -16,7 +16,7 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_moments_merge_f64(const unsigned int* nA, const double* M1A, const double* M2A, const double* M3A, const double* M4A, const unsigned int* nB, const double* M1B, const double* M2B, const double* M3B, const double* M4B, unsigned int* nOut, double* M1Out, double* M2Out, double* M3Out, double* M4Out) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int nAVal = nA[0];
     double m1AVal = M1A[0];
     double m2AVal = M2A[0];

@@ -17,9 +17,9 @@ __kernel void navatala_sparse_assign_orphans_f32(__global const uint* rowPtr, __
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int curAgg = aggregateId[gid];
-    if ((curAgg < 0)) {
+    if (curAgg < 0) {
       int rs = ((int)(rowPtr[gid]));
       int re = ((int)(rowPtr[(gid + 1)]));
       int bestAgg = -1;
@@ -28,15 +28,15 @@ __kernel void navatala_sparse_assign_orphans_f32(__global const uint* rowPtr, __
         int k = (rs + j);
         int col = ((int)(colIdx[k]));
         int neighAgg = aggregateId[col];
-        if ((neighAgg >= 0)) {
+        if (neighAgg >= 0) {
           float a = values[k];
-          if ((fabs(a) > bestVal)) {
+          if (fabs(a) > bestVal) {
             bestVal = fabs(a);
             bestAgg = neighAgg;
           }
         }
       }
-      if ((bestAgg >= 0)) {
+      if (bestAgg >= 0) {
         aggregateId[gid] = bestAgg;
       }
     }

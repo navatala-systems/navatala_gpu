@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_bicgstab_fused_update_all_f32(const f
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float a = alpha[0];
     float om = omega[0];
     float ph = phat[gid];

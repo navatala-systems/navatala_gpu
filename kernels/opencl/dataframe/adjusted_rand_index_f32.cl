@@ -72,7 +72,7 @@ __kernel void navatala_dataframe_adjusted_rand_index_f32(__global const float* c
   barrier(CLK_LOCAL_MEM_FENCE);
   for (int stride = 0; stride < (int)((uint)(128u)); ++stride) {
     uint strideU32 = ((uint)(stride));
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       float otherNij = sumNij[(lid + strideU32)];
       float mineNij = sumNij[lid];
       sumNij[lid] = (mineNij + otherNij);
@@ -85,7 +85,7 @@ __kernel void navatala_dataframe_adjusted_rand_index_f32(__global const float* c
     }
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float sumNijFinal = sumNij[(uint)(0u)];
     float sumAiFinal = sumAi[(uint)(0u)];
     float sumBjFinal = sumBj[(uint)(0u)];

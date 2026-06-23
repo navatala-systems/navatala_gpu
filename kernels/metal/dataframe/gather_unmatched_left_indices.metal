@@ -26,7 +26,7 @@ kernel void navatala_dataframe_gather_unmatched_left_indices(device const uint* 
     uint word = leftMatched[wordIdx];
     uint bit = ((word >> bitIdx) & 1u);
     bool isMatched = (bit == 1u);
-    if ((isMatched == false)) {
+    if (isMatched == false) {
       unmatchedIndices[gid] = gid;
     }
   }

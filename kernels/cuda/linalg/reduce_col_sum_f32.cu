@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_linalg_reduce_col_sum_f32(const float* A, co
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int col = gid;
-  if ((col < n[0u])) {
+  if (col < n[0u]) {
     float sumAccum = __uint_as_float(0x00000000u);
     for (int i = 0; i < (int)(m[0u]); ++i) {
       unsigned int iU32 = ((unsigned int)(i));

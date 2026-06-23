@@ -40,7 +40,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int f = int(gl_GlobalInvocationID.x);
   int N = int(nFaces[0]);
-  if ((f < N)) {
+  if (f < N) {
     float sx = sfX[f];
     float sy = sfY[f];
     float sz = sfZ[f];

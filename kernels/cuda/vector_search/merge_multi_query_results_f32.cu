@@ -21,7 +21,7 @@ extern "C" __global__ void navatala_vector_search_merge_multi_query_results_f32(
   unsigned int k_val = k[0];
   unsigned int query_id = (gid / k_val);
   unsigned int k_idx = (gid % k_val);
-  if ((query_id < nq)) {
+  if (query_id < nq) {
     unsigned int flat_idx = ((query_id * k_val) + k_idx);
     unsigned int result_id = layer_results[flat_idx];
     float result_dist = layer_distances[flat_idx];

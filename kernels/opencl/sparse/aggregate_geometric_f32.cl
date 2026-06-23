@@ -17,7 +17,7 @@ __kernel void navatala_sparse_aggregate_geometric_f32(__global const float* coor
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float r = radius[0];
     aggregateId[gid] = gid;
   }

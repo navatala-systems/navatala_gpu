@@ -18,34 +18,34 @@ extern "C" __global__ void navatala_sparse_interpolate_distance2_count_f32(const
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int row = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int mark = cfMarking[row];
-    if ((mark == 1)) {
+    if (mark == 1) {
       nnzPerRow[row] = 1u;
     } else {
-      if ((mark == -1)) {
+      if (mark == -1) {
         int rs = ((int)(rowPtr[row]));
         int re = ((int)(rowPtr[(row + 1)]));
         unsigned int nnz = 0u;
         for (int j1 = 0; j1 < (int)((re - rs)); ++j1) {
           int k1 = (rs + j1);
           unsigned int isStr1 = strongMask[k1];
-          if ((isStr1 == 1u)) {
+          if (isStr1 == 1u) {
             int nbr1 = ((int)(colIdx[k1]));
             int m1 = cfMarking[nbr1];
-            if ((m1 == 1)) {
+            if (m1 == 1) {
               nnz = (nnz + 1u);
             } else {
-              if ((m1 == -1)) {
+              if (m1 == -1) {
                 int rs2 = ((int)(rowPtr[nbr1]));
                 int re2 = ((int)(rowPtr[(nbr1 + 1)]));
                 for (int j2 = 0; j2 < (int)((re2 - rs2)); ++j2) {
                   int k2 = (rs2 + j2);
                   unsigned int isStr2 = strongMask[k2];
-                  if ((isStr2 == 1u)) {
+                  if (isStr2 == 1u) {
                     int nbr2 = ((int)(colIdx[k2]));
                     int m2 = cfMarking[nbr2];
-                    if ((m2 == 1)) {
+                    if (m2 == 1) {
                       nnz = (nnz + 1u);
                     }
                   }

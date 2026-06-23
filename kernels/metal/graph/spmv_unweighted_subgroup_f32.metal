@@ -22,7 +22,7 @@ kernel void navatala_graph_spmv_unweighted_subgroup_f32(device const uint* offse
   uint subgroupSize = ((uint)(int(__simd_size)));
   uint row = (gid / subgroupSize);
   uint numV = numVertices[0];
-  if ((row < numV)) {
+  if (row < numV) {
     uint base = offsets[row];
     uint endv = offsets[(row + 1u)];
     uint rowlen = (endv - base);
@@ -30,7 +30,7 @@ kernel void navatala_graph_spmv_unweighted_subgroup_f32(device const uint* offse
     float laneAcc = as_type<float>(0x00000000u);
     for (int k = 0; k < (int)(rowIters); ++k) {
       uint rel = ((((uint)(k)) * subgroupSize) + lane);
-      if ((rel < rowlen)) {
+      if (rel < rowlen) {
         uint eidx = (base + rel);
         uint col = indices[eidx];
         float xv = x[col];
@@ -38,7 +38,7 @@ kernel void navatala_graph_spmv_unweighted_subgroup_f32(device const uint* offse
       }
     }
     float rowSum = simd_sum(laneAcc);
-    if ((lane == 0u)) {
+    if (lane == 0u) {
       y[row] = rowSum;
     }
   }

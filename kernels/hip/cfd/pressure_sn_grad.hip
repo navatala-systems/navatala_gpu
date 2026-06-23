@@ -16,25 +16,25 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_cfd_pressure_sn_grad(const float* phiHbyA, const int* ownerAll, const float* sfX, const float* sfY, const float* sfZ, const float* magSf, const float* ux, const float* uy, const float* uz, const float* uBcX, const float* uBcY, const float* uBcZ, const unsigned int* uBcMask, const float* rAUf, const unsigned int* snGradMask, const unsigned int* params, float* outSnGrad) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(params[1])))) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(params[1]))) {
     return;
   } else {
     unsigned int mask = snGradMask[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
-    if ((((int)(mask)) == 0)) {
+    if (((int)(mask)) == 0) {
       outSnGrad[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = __uint_as_float(0x00000000u);
     } else {
       int o = ownerAll[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
-      if ((o < 0)) {
+      if (o < 0) {
         outSnGrad[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = __uint_as_float(0x00000000u);
       } else {
-        if ((o >= ((int)(params[0])))) {
+        if (o >= ((int)(params[0]))) {
           outSnGrad[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = __uint_as_float(0x00000000u);
         } else {
           float uxF = ux[o];
           float uyF = uy[o];
           float uzF = uz[o];
           unsigned int bcm = uBcMask[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
-          if ((((int)(bcm)) == 2)) {
+          if (((int)(bcm)) == 2) {
             uxF = uBcX[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
             uyF = uBcY[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
             uzF = uBcZ[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
@@ -44,7 +44,7 @@ extern "C" __global__ void navatala_cfd_pressure_sn_grad(const float* phiHbyA, c
           float ms = magSf[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
           float denom = (rf * ms);
           float ph = phiHbyA[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
-          if ((abs(denom) < __uint_as_float(0x1e3ce508u))) {
+          if (abs(denom) < __uint_as_float(0x1e3ce508u)) {
             outSnGrad[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = __uint_as_float(0x00000000u);
           } else {
             outSnGrad[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = ((ph - (rf * phiU)) / denom);

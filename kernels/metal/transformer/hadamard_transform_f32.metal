@@ -25,7 +25,7 @@ kernel void navatala_transformer_hadamard_transform_f32(device const float* _inp
   bool batchValid = (batchIdx < bs);
   bool threadValid = (lid < vs);
   uint globalIdx = ((batchIdx * vs) + lid);
-  if ((batchValid && threadValid)) {
+  if (batchValid && threadValid) {
     float val = _input[globalIdx];
     sharedBuf[lid] = val;
   } else {
@@ -104,7 +104,7 @@ kernel void navatala_transformer_hadamard_transform_f32(device const float* _inp
   float vsF32 = ((float)(vs));
   float scale = sqrt(vsF32);
   float normalized = (newVal8 / scale);
-  if ((batchValid && threadValid)) {
+  if (batchValid && threadValid) {
     _output[globalIdx] = normalized;
   }
 }

@@ -15,7 +15,7 @@
 
 __kernel void navatala_dataframe_moments_merge_f32(__global const uint* nA, __global const float* M1A, __global const float* M2A, __global const float* M3A, __global const float* M4A, __global const uint* nB, __global const float* M1B, __global const float* M2B, __global const float* M3B, __global const float* M4B, __global uint* nOut, __global float* M1Out, __global float* M2Out, __global float* M3Out, __global float* M4Out) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint nAVal = nA[0];
     float m1AVal = M1A[0];
     float m2AVal = M2A[0];

@@ -43,14 +43,14 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int gid = int(gl_GlobalInvocationID.x);
   int N = int(nRows[0]);
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = int(rowPtr[gid]);
     int re = int(rowPtr[(gid + 1)]);
     double diag = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
     for (int jd = 0; jd < int((re - rs)); ++jd) {
       int kd = (rs + jd);
       int colD = int(colIdx[kd]);
-      if ((colD == gid)) {
+      if (colD == gid) {
         diag = values[kd];
       }
     }

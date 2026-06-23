@@ -30,7 +30,7 @@ kernel void navatala_sparse_knn_csr_row_distance_f32(device const float* sparseD
   uint sparseLen = (sEnd - sStart);
   for (int sLoop = 0; sLoop < (int)(sparseLen); ++sLoop) {
     uint sPos = sIdxAccum;
-    if ((sPos < sEnd)) {
+    if (sPos < sEnd) {
       float sVal = sparseData[sPos];
       int sCol = sparseIndices[sPos];
       uint sColU32 = ((uint)(sCol));
@@ -52,7 +52,7 @@ kernel void navatala_sparse_knn_csr_row_distance_f32(device const float* sparseD
   uint dIdxAccum = 0u;
   for (int dLoop = 0; dLoop < (int)(nColsVal); ++dLoop) {
     uint dPos = dIdxAccum;
-    if ((dPos < nColsVal)) {
+    if (dPos < nColsVal) {
       float dValLoop = denseQuery[dPos];
       float dValSq = (dValLoop * dValLoop);
       float currDNorm = denseNormAccum;

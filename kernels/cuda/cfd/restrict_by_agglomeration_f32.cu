@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_cfd_restrict_by_agglomeration_f32(const floa
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nFineCells[0]));
-  if ((i < N)) {
+  if (i < N) {
     int coarseIdx = ((int)(fineToCoarse[i]));
     float val = fineField[i];
     float _a = atomicAdd(&(coarseField[coarseIdx]), val);

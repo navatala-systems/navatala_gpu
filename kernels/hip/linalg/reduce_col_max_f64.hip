@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_linalg_reduce_col_max_f64(const double* A, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int col = gid;
-  if ((col < n[0u])) {
+  if (col < n[0u]) {
     double initMaxVal = A[col];
     double maxAccum = initMaxVal;
     for (int i = 0; i < (int)(m[0u]); ++i) {

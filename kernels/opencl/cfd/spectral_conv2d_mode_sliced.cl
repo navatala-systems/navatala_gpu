@@ -25,7 +25,7 @@ __kernel void navatala_cfd_spectral_conv2d_mode_sliced(__global const float* xFt
   int m2 = 8;
   int plane = (fth * ftw);
   int total = ((nb * outCh) * plane);
-  if ((gid < total)) {
+  if (gid < total) {
     int boc = (gid / plane);
     int hwFlat = (gid % plane);
     int b = (boc / outCh);
@@ -34,7 +34,7 @@ __kernel void navatala_cfd_spectral_conv2d_mode_sliced(__global const float* xFt
     int w = (hwFlat % ftw);
     float accR = as_float(0x00000000u);
     float accI = as_float(0x00000000u);
-    if (((h < m1) && (w < m2))) {
+    if ((h < m1) && (w < m2)) {
       for (int ic = 0; ic < (int)(inCh); ++ic) {
         int xBase = ((((((b * inCh) + ic) * fth) + h) * ftw) + w);
         int wBase = ((((((oc * inCh) + ic) * m1) + h) * m2) + w);
@@ -47,7 +47,7 @@ __kernel void navatala_cfd_spectral_conv2d_mode_sliced(__global const float* xFt
       }
     } else {
       int negStart = (fth - m1);
-      if (((h >= negStart) && (w < m2))) {
+      if ((h >= negStart) && (w < m2)) {
         int hLocal = (h - negStart);
         for (int ic = 0; ic < (int)(inCh); ++ic) {
           int xBase = ((((((b * inCh) + ic) * fth) + h) * ftw) + w);

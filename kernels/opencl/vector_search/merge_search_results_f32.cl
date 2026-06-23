@@ -20,7 +20,7 @@ __kernel void navatala_vector_search_merge_search_results_f32(__global const uin
   uint ka = k_a[0];
   uint kb = k_b[0];
   uint ko = k_out[0];
-  if ((query_id < nq)) {
+  if (query_id < nq) {
     uint ptr_a = (uint)(0u);
     uint ptr_b = (uint)(0u);
     uint out_idx = (uint)(0u);

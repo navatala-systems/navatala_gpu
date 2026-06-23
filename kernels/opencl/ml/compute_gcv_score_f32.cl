@@ -34,7 +34,7 @@ __kernel void navatala_ml_compute_gcv_score_f32(__global const float* y, __globa
   uint gcv32_reductionStride = (uint)(128u);
   for (int gcv32_reductionStep = 0; gcv32_reductionStep < (int)(8); ++gcv32_reductionStep) {
     uint gcv32_stride = gcv32_reductionStride;
-    if ((lid < gcv32_stride)) {
+    if (lid < gcv32_stride) {
       float gcv32_other = sdata[(lid + gcv32_stride)];
       float gcv32_mine = sdata[lid];
       float gcv32_sum = (gcv32_mine + gcv32_other);
@@ -45,7 +45,7 @@ __kernel void navatala_ml_compute_gcv_score_f32(__global const float* y, __globa
     gcv32_reductionStride = gcv32_nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float rss = sdata[0];
     float nFloat = ((float)(nVal));
     float traceHOverN = (traceHVal / nFloat);

@@ -42,7 +42,7 @@ kernel void navatala_transformer_simple_attention_with_mask_f16(device const hal
   uint seqStride = (sl * headStride);
   uint qBase = ((batchIdx * seqStride) + ((queryPos * headStride) + (headIdx * headDimStride)));
   uint kBase = ((batchIdx * seqStride) + ((lid * headStride) + (headIdx * headDimStride)));
-  if ((valid && (!causalMasked))) {
+  if (valid && (!causalMasked)) {
     float dotProd = as_type<float>(0x00000000u);
     for (int d = 0; d < (int)(hd); ++d) {
       uint qIdx = (qBase + ((uint)(d)));
@@ -143,7 +143,7 @@ kernel void navatala_transformer_simple_attention_with_mask_f16(device const hal
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float maxScore = attnScores[0u];
-  if ((valid && (!causalMasked))) {
+  if (valid && (!causalMasked)) {
     float myScore = attnScores[lid];
     float shiftedScore = (myScore - maxScore);
     float expScore = exp(shiftedScore);
@@ -225,7 +225,7 @@ kernel void navatala_transformer_simple_attention_with_mask_f16(device const hal
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float sumExp = sumBuf[0u];
-  if ((valid && (!causalMasked))) {
+  if (valid && (!causalMasked)) {
     float myExpScore = attnScores[lid];
     float shiftedExp = (myExpScore - maxScore);
     float expVal = exp(shiftedExp);
@@ -311,7 +311,7 @@ kernel void navatala_transformer_simple_attention_with_mask_f16(device const hal
     sumBuf[lid] = sumVal_sum_p2_sumBuf_1;
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((batchValid && (lid == 0u))) {
+  if (batchValid && (lid == 0u)) {
     float outVal = sumBuf[0u];
     half outF16 = ((half)(outVal));
     uint outIdx = (qBase + 0u);

@@ -34,13 +34,13 @@ __kernel void navatala_sparse_knn_sparse_inner_product_f64(__global const double
     uint idxLen = (idxEnd - idxStart);
     for (int qLoop = 0; qLoop < (int)(qLen); ++qLoop) {
       uint qPos = qIdxAccum;
-      if ((qPos < qEnd)) {
+      if (qPos < qEnd) {
         double qVal = queryData[qPos];
         int qCol = queryIndices[qPos];
         uint iIdxAccum = idxStart;
         for (int iLoop = 0; iLoop < (int)(idxLen); ++iLoop) {
           uint iPos = iIdxAccum;
-          if ((iPos < idxEnd)) {
+          if (iPos < idxEnd) {
             int iCol = idxIndices[iPos];
             bool colMatch = (qCol == iCol);
             if (colMatch) {

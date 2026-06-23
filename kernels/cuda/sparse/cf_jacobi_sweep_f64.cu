@@ -18,14 +18,14 @@ extern "C" __global__ void navatala_sparse_cf_jacobi_sweep_f64(const unsigned in
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int row = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     double offDiag = __longlong_as_double(0x0000000000000000ull);
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != row)) {
+      if (col != row) {
         double a = values[k];
         double xj = x[col];
         offDiag = (offDiag + (a * xj));

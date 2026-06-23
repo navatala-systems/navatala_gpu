@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_dataframe_correlation_f64(const double* covariance, const double* stddevX, const double* stddevY, double* correlation) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     double covVal = covariance[0];
     double sigmaX = stddevX[0];
     double sigmaY = stddevY[0];

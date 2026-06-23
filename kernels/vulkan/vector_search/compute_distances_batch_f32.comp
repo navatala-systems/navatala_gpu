@@ -41,7 +41,7 @@ void main() {
   uint gid = uint(int(gl_GlobalInvocationID.x));
   uint n_cand = n_candidates[0];
   uint d = dim[0];
-  if ((gid < n_cand)) {
+  if (gid < n_cand) {
     uint cand_id = candidate_ids[gid];
     float acc = uintBitsToFloat(0x00000000u);
     for (int k = 0; k < int(d); ++k) {

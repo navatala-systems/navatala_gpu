@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_ldu_to_csr_init_diagonal_count_f64(co
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int cell = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nCells[0]));
-  if ((cell < N)) {
+  if (cell < N) {
     rowNnz[cell] = 1u;
   }
 }

@@ -36,7 +36,7 @@ kernel void navatala_ml_compute_gcv_score_f32(device const float* y [[buffer(0)]
   uint gcv32_reductionStride = 128u;
   for (int gcv32_reductionStep = 0; gcv32_reductionStep < (int)(8); ++gcv32_reductionStep) {
     uint gcv32_stride = gcv32_reductionStride;
-    if ((lid < gcv32_stride)) {
+    if (lid < gcv32_stride) {
       float gcv32_other = sdata[(lid + gcv32_stride)];
       float gcv32_mine = sdata[lid];
       float gcv32_sum = (gcv32_mine + gcv32_other);
@@ -47,7 +47,7 @@ kernel void navatala_ml_compute_gcv_score_f32(device const float* y [[buffer(0)]
     gcv32_reductionStride = gcv32_nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float rss = sdata[0];
     float nFloat = ((float)(nVal));
     float traceHOverN = (traceHVal / nFloat);

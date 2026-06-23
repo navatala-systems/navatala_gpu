@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_compute_so_c_ldu_fill_f64(const unsig
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int cell = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nCells[0]));
-  if ((cell < N)) {
+  if (cell < N) {
     int fStart = ((int)(cellFaceOffsets[cell]));
     int fEnd = ((int)(cellFaceOffsets[(cell + 1)]));
     double maxCoeff = __longlong_as_double(0x0000000000000000ull);
@@ -27,7 +27,7 @@ extern "C" __global__ void navatala_sparse_compute_so_c_ldu_fill_f64(const unsig
       int face = ((int)(cellFaceIdx[fIdx]));
       int own = ((int)(owner[face]));
       double coeff = abs((((cell == own)) ? (upper[face]) : (lower[face])));
-      if ((coeff > maxCoeff)) {
+      if (coeff > maxCoeff) {
         maxCoeff = coeff;
       }
     }
@@ -40,7 +40,7 @@ extern "C" __global__ void navatala_sparse_compute_so_c_ldu_fill_f64(const unsig
       int face2 = ((int)(cellFaceIdx[fIdx2]));
       int own2 = ((int)(owner[face2]));
       double coeff2 = abs((((cell == own2)) ? (upper[face2]) : (lower[face2])));
-      if ((coeff2 > threshold)) {
+      if (coeff2 > threshold) {
         int nbr2 = ((int)((((cell == own2)) ? (neighbour[face2]) : (owner[face2]))));
         strongColIdx[(rowStart + off)] = ((unsigned int)(nbr2));
         off = (off + 1);

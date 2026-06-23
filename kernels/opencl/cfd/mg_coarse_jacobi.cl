@@ -15,11 +15,11 @@
 
 __kernel void navatala_cfd_mg_coarse_jacobi(__global float* x, __global const float* r, __global const float* diag, __global const int* mgCounts) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(mgCounts[1])))) {
+  if ((int)(get_global_id(0)) >= ((int)(mgCounts[1]))) {
     return;
   } else {
     float d = diag[(int)(get_global_id(0))];
-    if ((d == as_float(0x00000000u))) {
+    if (d == as_float(0x00000000u)) {
       return;
     } else {
       float omega = as_float(0x3f4ccccdu);

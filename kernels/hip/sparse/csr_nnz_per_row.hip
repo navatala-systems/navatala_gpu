@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_csr_nnz_per_row(const unsigned int* r
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     unsigned int rs = rowPtr[gid];
     unsigned int re = rowPtr[(gid + 1)];
     nnzPerRow[gid] = (re - rs);

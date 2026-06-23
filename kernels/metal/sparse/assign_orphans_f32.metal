@@ -19,9 +19,9 @@ using namespace metal;
 kernel void navatala_sparse_assign_orphans_f32(device const uint* rowPtr [[buffer(0)]], device const uint* colIdx [[buffer(1)]], device const float* values [[buffer(2)]], device const uint* nRows [[buffer(3)]], device int* aggregateId [[buffer(4)]], device uint* nAggregates [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int gid = int(__gid.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int curAgg = aggregateId[gid];
-    if ((curAgg < 0)) {
+    if (curAgg < 0) {
       int rs = ((int)(rowPtr[gid]));
       int re = ((int)(rowPtr[(gid + 1)]));
       int bestAgg = -1;
@@ -30,15 +30,15 @@ kernel void navatala_sparse_assign_orphans_f32(device const uint* rowPtr [[buffe
         int k = (rs + j);
         int col = ((int)(colIdx[k]));
         int neighAgg = aggregateId[col];
-        if ((neighAgg >= 0)) {
+        if (neighAgg >= 0) {
           float a = values[k];
-          if ((abs(a) > bestVal)) {
+          if (abs(a) > bestVal) {
             bestVal = abs(a);
             bestAgg = neighAgg;
           }
         }
       }
-      if ((bestAgg >= 0)) {
+      if (bestAgg >= 0) {
         aggregateId[gid] = bestAgg;
       }
     }

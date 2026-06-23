@@ -19,7 +19,7 @@ using namespace metal;
 kernel void navatala_nccl_ring_all_reduce_sum_i32(device const int* sendbuf [[buffer(0)]], device const int* peer_buf [[buffer(1)]], device const uint* count [[buffer(2)]], device int* recvbuf [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int myVal = sendbuf[gid];
     int peerVal = peer_buf[gid];
     int reduced = (myVal + peerVal);

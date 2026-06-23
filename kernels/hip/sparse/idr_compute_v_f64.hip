@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_sparse_idr_compute_v_f64(const double* r, co
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
   int S = ((int)(s[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double acc = __longlong_as_double(0x0000000000000000ull);
     for (int k = 0; k < (int)(S); ++k) {
       double ck = c[k];

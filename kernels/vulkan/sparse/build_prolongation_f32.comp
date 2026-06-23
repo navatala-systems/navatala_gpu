@@ -37,7 +37,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int row = int(gl_GlobalInvocationID.x);
   int N = int(nRows[0]);
-  if ((row < N)) {
+  if (row < N) {
     ProwPtr[row] = uint(row);
     int aggId = aggregateId[row];
     PcolIdx[row] = uint(aggId);

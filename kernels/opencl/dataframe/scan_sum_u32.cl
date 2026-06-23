@@ -43,7 +43,7 @@ __kernel void navatala_dataframe_scan_sum_u32(__global const uint* _input, __glo
     }
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     sdata[(uint)(511u)] = (uint)(0u);
   }
   barrier(CLK_LOCAL_MEM_FENCE);

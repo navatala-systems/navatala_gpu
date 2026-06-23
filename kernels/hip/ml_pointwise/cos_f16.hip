@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_ml_pointwise_cos_f16(const __half* _input, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = cos(x);

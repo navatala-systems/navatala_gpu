@@ -22,7 +22,7 @@ kernel void navatala_linalg_scatter_rows_f32(device const float* src [[buffer(0)
   uint kVal = k[0u];
   uint nVal = n[0u];
   uint totalElems = (kVal * nVal);
-  if ((tid < totalElems)) {
+  if (tid < totalElems) {
     uint rowIdx = (tid / nVal);
     uint colIdx = (tid % nVal);
     uint dstRow = indices[rowIdx];

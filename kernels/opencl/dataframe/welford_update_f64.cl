@@ -16,7 +16,7 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_welford_update_f64(__global const double* x, __global uint* count, __global double* mean, __global double* M2) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint nOld = count[0];
     double meanOld = mean[0];
     double m2Old = M2[0];

@@ -42,7 +42,7 @@ extern "C" __global__ void navatala_dataframe_explained_variance_f64(const doubl
   unsigned int evF64_reductionStride = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     unsigned int evF64_stride = evF64_reductionStride;
-    if ((lid < evF64_stride)) {
+    if (lid < evF64_stride) {
       unsigned int evF64_partnerIdx = (lid + evF64_stride);
       double otherRes = sdata_var_res[evF64_partnerIdx];
       double mineRes = sdata_var_res[lid];
@@ -59,7 +59,7 @@ extern "C" __global__ void navatala_dataframe_explained_variance_f64(const doubl
     __syncthreads();
   }
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     double sumSqRes = sdata_var_res[0];
     double sumSqTrue = sdata_var_true[0];
     double countFloat = ((double)(countVal));

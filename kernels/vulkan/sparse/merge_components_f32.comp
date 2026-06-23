@@ -39,15 +39,15 @@ layout(std430, binding = 5) buffer buf_mstEdges {
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   uint nodeId = uint(int(gl_GlobalInvocationID.x));
-  if ((nodeId < numNodes[0u])) {
+  if (nodeId < numNodes[0u]) {
     uint comp = components[nodeId];
-    if ((comp == nodeId)) {
+    if (comp == nodeId) {
       uint edgeIdx = minEdgeIdx[nodeId];
-      if ((edgeIdx != 4294967295u)) {
+      if (edgeIdx != 4294967295u) {
         uint src = srcNodes[edgeIdx];
         uint dst = dstNodes[edgeIdx];
         uint dstComp = components[dst];
-        if ((nodeId != dstComp)) {
+        if (nodeId != dstComp) {
           uint smaller = (((nodeId < dstComp)) ? (nodeId) : (dstComp));
           uint larger = (((nodeId < dstComp)) ? (dstComp) : (nodeId));
           atomicMin(components[larger], smaller);

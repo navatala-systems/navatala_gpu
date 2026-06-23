@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_cfd_gamg_proc_add_gather_f32(const unsigned 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int c = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nCells[0]));
-  if ((c < N)) {
+  if (c < N) {
     int begin = ((int)(entryOffsets[c]));
     int end = ((int)(entryOffsets[(c + 1)]));
     float acc = y[c];

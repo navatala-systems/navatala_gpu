@@ -15,7 +15,7 @@
 
 __kernel void navatala_dataframe_init_e_w_m_c_f32(__global const float* alphaIn, __global float* alpha, __global float* nEff, __global float* meanX, __global float* meanY, __global float* Cxy, __global float* varX, __global float* varY) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float a = alphaIn[0];
     alpha[0] = a;
     nEff[0] = as_float(0x00000000u);

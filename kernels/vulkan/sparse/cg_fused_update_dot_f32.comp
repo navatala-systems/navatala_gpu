@@ -55,7 +55,7 @@ void main() {
   float pi = (((gid < N)) ? (p[gid]) : (uintBitsToFloat(0x00000000u)));
   float api = (((gid < N)) ? (Ap[gid]) : (uintBitsToFloat(0x00000000u)));
   float zi = (((gid < N)) ? (z[gid]) : (uintBitsToFloat(0x00000000u)));
-  if ((gid < N)) {
+  if (gid < N) {
     float xi = x[gid];
     float ri = r[gid];
     float xnew = (xi + (a * pi));
@@ -66,15 +66,15 @@ void main() {
   float rz = ((r[gid] - (a * api)) * zi);
   float warpSum = subgroupAdd(rz);
   int lane = int(gl_SubgroupInvocationID);
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier();
-  if ((lid < 8)) {
+  if (lid < 8) {
     float val = sdata[lid];
     float finalSum = subgroupAdd(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       int grpId = int(gl_WorkGroupID.x);
       rTzPartials[grpId] = finalSum;
     }

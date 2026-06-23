@@ -59,7 +59,7 @@ layout(std430, binding = 12) buffer buf_count {
 // kernel: navatala_dataframe_p2_update_f64
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) == 0)) {
+  if (int(gl_GlobalInvocationID.x) == 0) {
     double xVal = x[0];
     uint n = count[0];
     double pVal = targetP[0];

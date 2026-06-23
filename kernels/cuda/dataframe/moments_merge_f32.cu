@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_dataframe_moments_merge_f32(const unsigned int* nA, const float* M1A, const float* M2A, const float* M3A, const float* M4A, const unsigned int* nB, const float* M1B, const float* M2B, const float* M3B, const float* M4B, unsigned int* nOut, float* M1Out, float* M2Out, float* M3Out, float* M4Out) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int nAVal = nA[0];
     float m1AVal = M1A[0];
     float m2AVal = M2A[0];

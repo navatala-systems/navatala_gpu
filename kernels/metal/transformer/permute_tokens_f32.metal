@@ -43,7 +43,7 @@ kernel void navatala_transformer_permute_tokens_f32(device const float* hiddenSt
     uint expertIdxU32 = ((uint)(expertIdx));
     bool expertValid = (expertIdxU32 < ne);
     if (expertValid) {
-      if ((lid == 0u)) {
+      if (lid == 0u) {
         uint localPosition = atomic_fetch_add_explicit(((device atomic_uint*)(&(expertCounters[expertIdxU32]))), 1u, memory_order_relaxed);
         uint expertOffset = expertOffsets[expertIdxU32];
         uint destTokenIdx = (expertOffset + localPosition);
@@ -55,7 +55,7 @@ kernel void navatala_transformer_permute_tokens_f32(device const float* hiddenSt
       uint destTokenIdx = sharedDestTokenIdx[0u];
       for (int hIter = 0; hIter < (int)(hs); ++hIter) {
         uint hIdx = (lid + (256u * hIter));
-        if ((hIdx < hs)) {
+        if (hIdx < hs) {
           uint srcIdx = ((tokenIdx * hs) + hIdx);
           uint dstIdx = ((destTokenIdx * hs) + hIdx);
           float val = hiddenStates[srcIdx];

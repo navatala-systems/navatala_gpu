@@ -32,7 +32,7 @@ extern "C" __global__ void navatala_ml_compute_m_s_e_f64(const double* targets, 
   unsigned int mseF64_reductionStride = 128u;
   for (int mseF64_reductionStep = 0; mseF64_reductionStep < (int)(8); ++mseF64_reductionStep) {
     unsigned int mseF64_stride = mseF64_reductionStride;
-    if ((lid < mseF64_stride)) {
+    if (lid < mseF64_stride) {
       unsigned int otherIdx = (lid + mseF64_stride);
       double mine = sdata[lid];
       double other = sdata[otherIdx];
@@ -66,7 +66,7 @@ extern "C" __global__ void navatala_ml_compute_m_s_e_f64(const double* targets, 
   unsigned int mseF64b_reductionStride = 128u;
   for (int mseF64b_reductionStep = 0; mseF64b_reductionStep < (int)(8); ++mseF64b_reductionStep) {
     unsigned int mseF64b_stride = mseF64b_reductionStride;
-    if ((lid < mseF64b_stride)) {
+    if (lid < mseF64b_stride) {
       unsigned int otherIdx2 = (lid + mseF64b_stride);
       double mine2 = sdata[lid];
       double other2 = sdata[otherIdx2];

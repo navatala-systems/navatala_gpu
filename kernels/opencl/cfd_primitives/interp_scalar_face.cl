@@ -15,24 +15,24 @@
 
 __kernel void navatala_cfd_primitives_interp_scalar_face(__global const int* owner, __global const int* neighbour, __global const float* weights, __global const float* cellPhi, __global const float* bcValue, __global const uint* bcMask, __global const int* params, __global float* outPhiF) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
     int o = owner[((int)((int)(get_global_id(0))))];
     float po = cellPhi[o];
-    if ((((int)((int)(get_global_id(0)))) < params[1])) {
+    if (((int)((int)(get_global_id(0)))) < params[1]) {
       int n = neighbour[((int)((int)(get_global_id(0))))];
       float pn = cellPhi[n];
       float w = weights[((int)((int)(get_global_id(0))))];
       float iw = (as_float(0x3f800000u) - w);
       outPhiF[((int)((int)(get_global_id(0))))] = ((w * po) + (iw * pn));
     } else {
-      if ((bcMask[((int)((int)(get_global_id(0))))] == (uint)(1u))) {
+      if (bcMask[((int)((int)(get_global_id(0))))] == (uint)(1u)) {
         float w = weights[((int)((int)(get_global_id(0))))];
         float iw = (as_float(0x3f800000u) - w);
         outPhiF[((int)((int)(get_global_id(0))))] = ((w * po) + (iw * bcValue[((int)((int)(get_global_id(0))))]));
       } else {
-        if ((bcMask[((int)((int)(get_global_id(0))))] == (uint)(2u))) {
+        if (bcMask[((int)((int)(get_global_id(0))))] == (uint)(2u)) {
           outPhiF[((int)((int)(get_global_id(0))))] = bcValue[((int)((int)(get_global_id(0))))];
         } else {
           outPhiF[((int)((int)(get_global_id(0))))] = po;

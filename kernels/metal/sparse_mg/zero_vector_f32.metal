@@ -19,7 +19,7 @@ using namespace metal;
 kernel void navatala_sparse_mg_zero_vector_f32(device const uint* n [[buffer(0)]], device float* v [[buffer(1)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int i = int(__gid.x);
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     v[i] = as_type<float>(0x00000000u);
   }
 }

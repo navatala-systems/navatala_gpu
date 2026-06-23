@@ -33,7 +33,7 @@ void main() {
   int N = int(n[0]);
   int kVal = int(k[0]);
   for (int j = 0; j < int(kVal); ++j) {
-    if ((gid < N)) {
+    if (gid < N) {
       double xij = X[((j * N) + gid)];
       double v = xij;
       for (int ii = 0; ii < int(j); ++ii) {

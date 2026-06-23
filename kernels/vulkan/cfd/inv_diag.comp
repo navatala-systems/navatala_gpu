@@ -32,12 +32,12 @@ layout(std430, binding = 3) writeonly buffer buf_z {
 // kernel: navatala_cfd_inv_diag
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) >= counts[0])) {
+  if (int(gl_GlobalInvocationID.x) >= counts[0]) {
     return;
   } else {
     float d = diag[int(gl_GlobalInvocationID.x)];
     float v = r[int(gl_GlobalInvocationID.x)];
-    if ((d != uintBitsToFloat(0x00000000u))) {
+    if (d != uintBitsToFloat(0x00000000u)) {
       z[int(gl_GlobalInvocationID.x)] = (v / d);
     } else {
       z[int(gl_GlobalInvocationID.x)] = v;

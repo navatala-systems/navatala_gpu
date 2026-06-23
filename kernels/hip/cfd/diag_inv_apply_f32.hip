@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_cfd_diag_inv_apply_f32(const float* r, const
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     float ri = r[i];
     float di = diagInv[i];
     z[i] = (di * ri);

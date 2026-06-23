@@ -17,7 +17,7 @@ __kernel void navatala_cfd_gamg_proc_add_gather_f32(__global const uint* entryOf
   int gid0 = (int)get_global_id(0);
   int c = (int)(get_global_id(0));
   int N = ((int)(nCells[0]));
-  if ((c < N)) {
+  if (c < N) {
     int begin = ((int)(entryOffsets[c]));
     int end = ((int)(entryOffsets[(c + 1)]));
     float acc = y[c];

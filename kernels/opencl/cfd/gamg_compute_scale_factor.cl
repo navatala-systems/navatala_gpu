@@ -15,13 +15,13 @@
 
 __kernel void navatala_cfd_gamg_compute_scale_factor(__global const float* num, __global const float* den, __global float* sf) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= 1)) {
+  if ((int)(get_global_id(0)) >= 1) {
     return;
   } else {
     float n = num[0];
     float d = den[0];
     float dAbs = fabs(d);
-    if ((dAbs > as_float(0x0da24260u))) {
+    if (dAbs > as_float(0x0da24260u)) {
       sf[0] = (n / d);
     } else {
       sf[0] = as_float(0x3f800000u);

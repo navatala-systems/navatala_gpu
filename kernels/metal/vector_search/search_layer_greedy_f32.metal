@@ -20,7 +20,7 @@ kernel void navatala_vector_search_search_layer_greedy_f32(device const float* q
   uint query_id = ((uint)(int(__gid.x)));
   uint nq = n_queries[0];
   uint d = dim[0];
-  if ((query_id < nq)) {
+  if (query_id < nq) {
     uint entry = entry_points[query_id];
     float best_dist = as_type<float>(0x00000000u);
     for (int k = 0; k < (int)(d); ++k) {

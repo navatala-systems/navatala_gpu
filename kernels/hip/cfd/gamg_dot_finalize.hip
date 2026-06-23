@@ -16,7 +16,7 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_cfd_gamg_dot_finalize(const float* partials, const unsigned int* count, float* result) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= 1)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= 1) {
     return;
   } else {
     float s = __uint_as_float(0x00000000u);

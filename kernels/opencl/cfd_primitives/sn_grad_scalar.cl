@@ -15,17 +15,17 @@
 
 __kernel void navatala_cfd_primitives_sn_grad_scalar(__global const float* cellVal, __global const int* owner, __global const int* neighbour, __global const float* delta, __global const float* faceVal, __global const uint* faceMask, __global const int* params, __global float* outSnGrad) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
     int o = owner[((int)((int)(get_global_id(0))))];
     float aO = cellVal[o];
-    if ((((int)((int)(get_global_id(0)))) < params[1])) {
+    if (((int)((int)(get_global_id(0)))) < params[1]) {
       int n = neighbour[((int)((int)(get_global_id(0))))];
       float aN = cellVal[n];
       outSnGrad[((int)((int)(get_global_id(0))))] = (delta[((int)((int)(get_global_id(0))))] * (aN - aO));
     } else {
-      if ((faceMask[((int)((int)(get_global_id(0))))] != (uint)(0u))) {
+      if (faceMask[((int)((int)(get_global_id(0))))] != (uint)(0u)) {
         float aN = faceVal[((int)((int)(get_global_id(0))))];
         outSnGrad[((int)((int)(get_global_id(0))))] = (delta[((int)((int)(get_global_id(0))))] * (aN - aO));
       } else {

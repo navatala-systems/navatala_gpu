@@ -123,7 +123,7 @@ kernel void navatala_transformer_rms_norm_backward_f32(device const float* _inpu
   float totalDyGammaXhat = sumDyGammaXhat[0u];
   float hsF32 = ((float)(hs));
   float meanDyGammaXhat = (totalDyGammaXhat / hsF32);
-  if ((batchValid && hiddenValid)) {
+  if (batchValid && hiddenValid) {
     float term1 = dyGamma;
     float term2 = (xHat * meanDyGammaXhat);
     float inner = (term1 - term2);

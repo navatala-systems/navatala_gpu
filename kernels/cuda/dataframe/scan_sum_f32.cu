@@ -44,7 +44,7 @@ extern "C" __global__ void navatala_dataframe_scan_sum_f32(const float* _input, 
     }
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float total = sdata[511u];
     sdata[511u] = __uint_as_float(0x00000000u);
   }

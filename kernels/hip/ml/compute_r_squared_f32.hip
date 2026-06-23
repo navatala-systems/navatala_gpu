@@ -40,7 +40,7 @@ extern "C" __global__ void navatala_ml_compute_r_squared_f32(const float* y, con
   unsigned int r2F32Stride = 128u;
   for (int reductionStep3 = 0; reductionStep3 < (int)(8); ++reductionStep3) {
     unsigned int stride3 = r2F32Stride;
-    if ((lid < stride3)) {
+    if (lid < stride3) {
       float otherRes = sdataRes[(lid + stride3)];
       float mineRes = sdataRes[lid];
       float sumRes = (mineRes + otherRes);
@@ -55,7 +55,7 @@ extern "C" __global__ void navatala_ml_compute_r_squared_f32(const float* y, con
     r2F32Stride = nextStride3;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float ssRes = sdataRes[0];
     float ssTot = sdataTot[0];
     float ratio = (ssRes / ssTot);

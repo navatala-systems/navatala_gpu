@@ -16,36 +16,36 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_interp_scalar_face_all(const float* cellPhi, const int* owner, const int* neighbour, const float* weights, const float* bcValue, const int* params, float* outPhiF) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0]) {
     return;
   } else {
-    if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < params[1])) {
+    if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < params[1]) {
       int o = owner[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       int n = neighbour[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       float po = cellPhi[o];
       float pn = cellPhi[n];
       float wf = weights[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
-      if ((wf < __uint_as_float(0x00000000u))) {
+      if (wf < __uint_as_float(0x00000000u)) {
         wf = __uint_as_float(0x00000000u);
       }
-      if ((wf > __uint_as_float(0x3f800000u))) {
+      if (wf > __uint_as_float(0x3f800000u)) {
         wf = __uint_as_float(0x3f800000u);
       }
       float iw = (__uint_as_float(0x3f800000u) - wf);
       float a = ((wf * po) + (iw * pn));
-      if ((a < __uint_as_float(0x00000000u))) {
+      if (a < __uint_as_float(0x00000000u)) {
         a = __uint_as_float(0x00000000u);
       }
-      if ((a > __uint_as_float(0x3f800000u))) {
+      if (a > __uint_as_float(0x3f800000u)) {
         a = __uint_as_float(0x3f800000u);
       }
       outPhiF[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = a;
     } else {
       float a = bcValue[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
-      if ((a < __uint_as_float(0x00000000u))) {
+      if (a < __uint_as_float(0x00000000u)) {
         a = __uint_as_float(0x00000000u);
       }
-      if ((a > __uint_as_float(0x3f800000u))) {
+      if (a > __uint_as_float(0x3f800000u)) {
         a = __uint_as_float(0x3f800000u);
       }
       outPhiF[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = a;

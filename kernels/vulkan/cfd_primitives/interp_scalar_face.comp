@@ -44,24 +44,24 @@ layout(std430, binding = 7) writeonly buffer buf_outPhiF {
 // kernel: navatala_cfd_primitives_interp_scalar_face
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= params[0])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= params[0]) {
     return;
   } else {
     int o = owner[int(int(gl_GlobalInvocationID.x))];
     float po = cellPhi[o];
-    if ((int(int(gl_GlobalInvocationID.x)) < params[1])) {
+    if (int(int(gl_GlobalInvocationID.x)) < params[1]) {
       int n = neighbour[int(int(gl_GlobalInvocationID.x))];
       float pn = cellPhi[n];
       float w = weights[int(int(gl_GlobalInvocationID.x))];
       float iw = (uintBitsToFloat(0x3f800000u) - w);
       outPhiF[int(int(gl_GlobalInvocationID.x))] = ((w * po) + (iw * pn));
     } else {
-      if ((bcMask[int(int(gl_GlobalInvocationID.x))] == 1u)) {
+      if (bcMask[int(int(gl_GlobalInvocationID.x))] == 1u) {
         float w = weights[int(int(gl_GlobalInvocationID.x))];
         float iw = (uintBitsToFloat(0x3f800000u) - w);
         outPhiF[int(int(gl_GlobalInvocationID.x))] = ((w * po) + (iw * bcValue[int(int(gl_GlobalInvocationID.x))]));
       } else {
-        if ((bcMask[int(int(gl_GlobalInvocationID.x))] == 2u)) {
+        if (bcMask[int(int(gl_GlobalInvocationID.x))] == 2u) {
           outPhiF[int(int(gl_GlobalInvocationID.x))] = bcValue[int(int(gl_GlobalInvocationID.x))];
         } else {
           outPhiF[int(int(gl_GlobalInvocationID.x))] = po;

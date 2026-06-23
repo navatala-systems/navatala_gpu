@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_graph_uniform_random_walk_u32(const unsigned
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int numW = numWalks[0];
-  if ((gid < numW)) {
+  if (gid < numW) {
     unsigned int maxL = maxLen[0];
     unsigned int seedV = seed[0];
     unsigned int rowBase = (gid * maxL);
@@ -34,7 +34,7 @@ extern "C" __global__ void navatala_graph_uniform_random_walk_u32(const unsigned
       unsigned int rng = rngAccum;
       unsigned int rngNext = ((rng * 1103515245u) + 12345u);
       rngAccum = rngNext;
-      if ((deg > 0u)) {
+      if (deg > 0u) {
         unsigned int pick = (rngNext % deg);
         unsigned int nbr = indices[(off + pick)];
         curAccum = nbr;

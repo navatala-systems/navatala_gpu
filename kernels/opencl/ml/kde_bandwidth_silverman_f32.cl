@@ -16,7 +16,7 @@
 __kernel void navatala_ml_kde_bandwidth_silverman_f32(__global const float* stddev, __global const uint* n, __global float* bandwidth) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     float sigma = stddev[0];
     uint count = n[0];
     float countF = ((float)(count));

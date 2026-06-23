@@ -45,7 +45,7 @@ extern "C" __global__ void navatala_transformer_simple_attention_with_padding_f1
   unsigned int seqStride = (sl * headStride);
   unsigned int qBase = ((batchIdx * seqStride) + ((queryPos * headStride) + (headIdx * headDimStride)));
   unsigned int kBase = ((batchIdx * seqStride) + ((lid * headStride) + (headIdx * headDimStride)));
-  if ((valid && (!anyMasked))) {
+  if (valid && (!anyMasked)) {
     float dotProd = __uint_as_float(0x00000000u);
     for (int d = 0; d < (int)(hd); ++d) {
       unsigned int qIdx = (qBase + ((unsigned int)(d)));
@@ -146,7 +146,7 @@ extern "C" __global__ void navatala_transformer_simple_attention_with_padding_f1
   }
   __syncthreads();
   float maxScore = attnScores[0u];
-  if ((valid && (!anyMasked))) {
+  if (valid && (!anyMasked)) {
     float myScore = attnScores[lid];
     float shiftedScore = (myScore - maxScore);
     float expScore = exp(shiftedScore);
@@ -228,7 +228,7 @@ extern "C" __global__ void navatala_transformer_simple_attention_with_padding_f1
   }
   __syncthreads();
   float sumExp = sumBuf[0u];
-  if ((valid && (!anyMasked))) {
+  if (valid && (!anyMasked)) {
     float myExpScore = attnScores[lid];
     float shiftedExp = (myExpScore - maxScore);
     float expVal = exp(shiftedExp);
@@ -314,7 +314,7 @@ extern "C" __global__ void navatala_transformer_simple_attention_with_padding_f1
     sumBuf[lid] = sumVal_sum_p2_sumBuf_1;
   }
   __syncthreads();
-  if ((batchValid && (lid == 0u))) {
+  if (batchValid && (lid == 0u)) {
     float outVal = sumBuf[0u];
     __half outF16 = ((__half)(outVal));
     unsigned int outIdx = (qBase + 0u);

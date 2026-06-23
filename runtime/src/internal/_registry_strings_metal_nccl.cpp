@@ -16,7 +16,7 @@ using namespace metal;
 kernel void navatala_nccl_direct_send_f32(device const float* src [[buffer(0)]], device const uint* count [[buffer(1)]], device float* dst [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float val = src[gid];
     dst[gid] = val;
   }
@@ -30,7 +30,7 @@ using namespace metal;
 kernel void navatala_nccl_direct_send_f16(device const half* src [[buffer(0)]], device const uint* count [[buffer(1)]], device half* dst [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half val = src[gid];
     dst[gid] = val;
   }
@@ -44,7 +44,7 @@ using namespace metal;
 kernel void navatala_nccl_direct_send_i32(device const int* src [[buffer(0)]], device const uint* count [[buffer(1)]], device int* dst [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int val = src[gid];
     dst[gid] = val;
   }
@@ -58,7 +58,7 @@ using namespace metal;
 kernel void navatala_nccl_direct_recv_f32(device const float* src [[buffer(0)]], device const uint* count [[buffer(1)]], device float* dst [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float val = src[gid];
     dst[gid] = val;
   }
@@ -72,7 +72,7 @@ using namespace metal;
 kernel void navatala_nccl_direct_recv_f16(device const half* src [[buffer(0)]], device const uint* count [[buffer(1)]], device half* dst [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half val = src[gid];
     dst[gid] = val;
   }
@@ -86,7 +86,7 @@ using namespace metal;
 kernel void navatala_nccl_direct_recv_i32(device const int* src [[buffer(0)]], device const uint* count [[buffer(1)]], device int* dst [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int val = src[gid];
     dst[gid] = val;
   }
@@ -100,7 +100,7 @@ using namespace metal;
 kernel void navatala_nccl_reduce_local_sum_f32(device const float* a [[buffer(0)]], device const float* b [[buffer(1)]], device const uint* count [[buffer(2)]], device float* _out [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float va = a[gid];
     float vb = b[gid];
     float result = (va + vb);
@@ -116,7 +116,7 @@ using namespace metal;
 kernel void navatala_nccl_reduce_local_sum_f16(device const half* a [[buffer(0)]], device const half* b [[buffer(1)]], device const uint* count [[buffer(2)]], device half* _out [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half va = a[gid];
     half vb = b[gid];
     half result = (va + vb);
@@ -132,7 +132,7 @@ using namespace metal;
 kernel void navatala_nccl_reduce_local_sum_i32(device const int* a [[buffer(0)]], device const int* b [[buffer(1)]], device const uint* count [[buffer(2)]], device int* _out [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int va = a[gid];
     int vb = b[gid];
     int result = (va + vb);
@@ -148,7 +148,7 @@ using namespace metal;
 kernel void navatala_nccl_reduce_local_min_f32(device const float* a [[buffer(0)]], device const float* b [[buffer(1)]], device const uint* count [[buffer(2)]], device float* _out [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float va = a[gid];
     float vb = b[gid];
     bool aLtB = (va < vb);
@@ -165,7 +165,7 @@ using namespace metal;
 kernel void navatala_nccl_reduce_local_min_f16(device const half* a [[buffer(0)]], device const half* b [[buffer(1)]], device const uint* count [[buffer(2)]], device half* _out [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half va = a[gid];
     half vb = b[gid];
     bool aLtB = (va < vb);
@@ -182,7 +182,7 @@ using namespace metal;
 kernel void navatala_nccl_reduce_local_min_i32(device const int* a [[buffer(0)]], device const int* b [[buffer(1)]], device const uint* count [[buffer(2)]], device int* _out [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int va = a[gid];
     int vb = b[gid];
     bool aLtB = (va < vb);
@@ -199,7 +199,7 @@ using namespace metal;
 kernel void navatala_nccl_reduce_local_max_f32(device const float* a [[buffer(0)]], device const float* b [[buffer(1)]], device const uint* count [[buffer(2)]], device float* _out [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float va = a[gid];
     float vb = b[gid];
     bool aGtB = (va > vb);
@@ -216,7 +216,7 @@ using namespace metal;
 kernel void navatala_nccl_reduce_local_max_f16(device const half* a [[buffer(0)]], device const half* b [[buffer(1)]], device const uint* count [[buffer(2)]], device half* _out [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half va = a[gid];
     half vb = b[gid];
     bool aGtB = (va > vb);
@@ -233,7 +233,7 @@ using namespace metal;
 kernel void navatala_nccl_reduce_local_max_i32(device const int* a [[buffer(0)]], device const int* b [[buffer(1)]], device const uint* count [[buffer(2)]], device int* _out [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int va = a[gid];
     int vb = b[gid];
     bool aGtB = (va > vb);
@@ -250,7 +250,7 @@ using namespace metal;
 kernel void navatala_nccl_ring_reduce_scatter_step_sum_f32(device const float* incoming [[buffer(0)]], device const float* local_buf [[buffer(1)]], device const uint* count [[buffer(2)]], device float* outgoing [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float inVal = incoming[gid];
     float locVal = local_buf[gid];
     float reduced = (inVal + locVal);
@@ -266,7 +266,7 @@ using namespace metal;
 kernel void navatala_nccl_ring_reduce_scatter_step_sum_f16(device const half* incoming [[buffer(0)]], device const half* local_buf [[buffer(1)]], device const uint* count [[buffer(2)]], device half* outgoing [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half inVal = incoming[gid];
     half locVal = local_buf[gid];
     half reduced = (inVal + locVal);
@@ -282,7 +282,7 @@ using namespace metal;
 kernel void navatala_nccl_ring_reduce_scatter_step_sum_i32(device const int* incoming [[buffer(0)]], device const int* local_buf [[buffer(1)]], device const uint* count [[buffer(2)]], device int* outgoing [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int inVal = incoming[gid];
     int locVal = local_buf[gid];
     int reduced = (inVal + locVal);
@@ -298,7 +298,7 @@ using namespace metal;
 kernel void navatala_nccl_ring_reduce_scatter_step_min_f32(device const float* incoming [[buffer(0)]], device const float* local_buf [[buffer(1)]], device const uint* count [[buffer(2)]], device float* outgoing [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float inVal = incoming[gid];
     float locVal = local_buf[gid];
     bool cmp = (inVal < locVal);
@@ -315,7 +315,7 @@ using namespace metal;
 kernel void navatala_nccl_ring_reduce_scatter_step_min_f16(device const half* incoming [[buffer(0)]], device const half* local_buf [[buffer(1)]], device const uint* count [[buffer(2)]], device half* outgoing [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half inVal = incoming[gid];
     half locVal = local_buf[gid];
     bool cmp = (inVal < locVal);
@@ -332,7 +332,7 @@ using namespace metal;
 kernel void navatala_nccl_ring_reduce_scatter_step_min_i32(device const int* incoming [[buffer(0)]], device const int* local_buf [[buffer(1)]], device const uint* count [[buffer(2)]], device int* outgoing [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int inVal = incoming[gid];
     int locVal = local_buf[gid];
     bool cmp = (inVal < locVal);
@@ -349,7 +349,7 @@ using namespace metal;
 kernel void navatala_nccl_ring_reduce_scatter_step_max_f32(device const float* incoming [[buffer(0)]], device const float* local_buf [[buffer(1)]], device const uint* count [[buffer(2)]], device float* outgoing [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float inVal = incoming[gid];
     float locVal = local_buf[gid];
     bool cmp = (inVal > locVal);
@@ -366,7 +366,7 @@ using namespace metal;
 kernel void navatala_nccl_ring_reduce_scatter_step_max_f16(device const half* incoming [[buffer(0)]], device const half* local_buf [[buffer(1)]], device const uint* count [[buffer(2)]], device half* outgoing [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half inVal = incoming[gid];
     half locVal = local_buf[gid];
     bool cmp = (inVal > locVal);
@@ -383,7 +383,7 @@ using namespace metal;
 kernel void navatala_nccl_ring_reduce_scatter_step_max_i32(device const int* incoming [[buffer(0)]], device const int* local_buf [[buffer(1)]], device const uint* count [[buffer(2)]], device int* outgoing [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int inVal = incoming[gid];
     int locVal = local_buf[gid];
     bool cmp = (inVal > locVal);
@@ -400,7 +400,7 @@ using namespace metal;
 kernel void navatala_nccl_ring_all_gather_step_f32(device const float* incoming [[buffer(0)]], device const uint* count [[buffer(1)]], device float* local_chunk [[buffer(2)]], device float* outgoing [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float val = incoming[gid];
     local_chunk[gid] = val;
     outgoing[gid] = val;
@@ -415,7 +415,7 @@ using namespace metal;
 kernel void navatala_nccl_ring_all_gather_step_f16(device const half* incoming [[buffer(0)]], device const uint* count [[buffer(1)]], device half* local_chunk [[buffer(2)]], device half* outgoing [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half val = incoming[gid];
     local_chunk[gid] = val;
     outgoing[gid] = val;
@@ -430,7 +430,7 @@ using namespace metal;
 kernel void navatala_nccl_ring_all_gather_step_i32(device const int* incoming [[buffer(0)]], device const uint* count [[buffer(1)]], device int* local_chunk [[buffer(2)]], device int* outgoing [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int val = incoming[gid];
     local_chunk[gid] = val;
     outgoing[gid] = val;
@@ -445,7 +445,7 @@ using namespace metal;
 kernel void navatala_nccl_ring_all_reduce_sum_f32(device const float* sendbuf [[buffer(0)]], device const float* peer_buf [[buffer(1)]], device const uint* count [[buffer(2)]], device float* recvbuf [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float myVal = sendbuf[gid];
     float peerVal = peer_buf[gid];
     float reduced = (myVal + peerVal);
@@ -461,7 +461,7 @@ using namespace metal;
 kernel void navatala_nccl_ring_all_reduce_sum_f16(device const half* sendbuf [[buffer(0)]], device const half* peer_buf [[buffer(1)]], device const uint* count [[buffer(2)]], device half* recvbuf [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half myVal = sendbuf[gid];
     half peerVal = peer_buf[gid];
     half reduced = (myVal + peerVal);
@@ -477,7 +477,7 @@ using namespace metal;
 kernel void navatala_nccl_ring_all_reduce_sum_i32(device const int* sendbuf [[buffer(0)]], device const int* peer_buf [[buffer(1)]], device const uint* count [[buffer(2)]], device int* recvbuf [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int myVal = sendbuf[gid];
     int peerVal = peer_buf[gid];
     int reduced = (myVal + peerVal);
@@ -493,7 +493,7 @@ using namespace metal;
 kernel void navatala_nccl_ring_all_gather_f32(device const float* incoming [[buffer(0)]], device const uint* count [[buffer(1)]], device float* local_slot [[buffer(2)]], device float* outgoing [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float val = incoming[gid];
     local_slot[gid] = val;
     outgoing[gid] = val;
@@ -508,7 +508,7 @@ using namespace metal;
 kernel void navatala_nccl_ring_all_gather_f16(device const half* incoming [[buffer(0)]], device const uint* count [[buffer(1)]], device half* local_slot [[buffer(2)]], device half* outgoing [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half val = incoming[gid];
     local_slot[gid] = val;
     outgoing[gid] = val;
@@ -523,7 +523,7 @@ using namespace metal;
 kernel void navatala_nccl_ring_all_gather_i32(device const int* incoming [[buffer(0)]], device const uint* count [[buffer(1)]], device int* local_slot [[buffer(2)]], device int* outgoing [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int val = incoming[gid];
     local_slot[gid] = val;
     outgoing[gid] = val;
@@ -538,7 +538,7 @@ using namespace metal;
 kernel void navatala_nccl_linear_broadcast_f32(device const float* src [[buffer(0)]], device const uint* count [[buffer(1)]], device float* dst [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float val = src[gid];
     dst[gid] = val;
   }
@@ -552,7 +552,7 @@ using namespace metal;
 kernel void navatala_nccl_linear_broadcast_f16(device const half* src [[buffer(0)]], device const uint* count [[buffer(1)]], device half* dst [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half val = src[gid];
     dst[gid] = val;
   }
@@ -566,7 +566,7 @@ using namespace metal;
 kernel void navatala_nccl_linear_broadcast_i32(device const int* src [[buffer(0)]], device const uint* count [[buffer(1)]], device int* dst [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int val = src[gid];
     dst[gid] = val;
   }

@@ -16,7 +16,7 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_cfd_primitives_div_face_flux_csr_f64(__global const int* offsets, __global const int* faceIdx, __global const float* sign, __global const double* faceFlux, __global const double* vol, __global const int* params, __global double* outDiv) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
     int beg = offsets[((int)((int)(get_global_id(0))))];

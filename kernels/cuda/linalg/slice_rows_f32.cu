@@ -23,7 +23,7 @@ extern "C" __global__ void navatala_linalg_slice_rows_f32(const float* A, const 
   unsigned int n = numCols[0u];
   unsigned int numRows = (re - rs);
   unsigned int totalElems = (numRows * n);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     unsigned int outRow = (idx / n);
     unsigned int outCol = (idx % n);
     unsigned int srcRow = (rs + outRow);

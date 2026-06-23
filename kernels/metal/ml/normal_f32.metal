@@ -20,7 +20,7 @@ kernel void navatala_ml_normal_f32(device const uint* count [[buffer(0)]], devic
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
   uint seedVal = seed[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint ak0 = ((seedVal + (gid * 2654435769u)) + 0u);
     uint ak1 = ((ak0 ^ (ak0 >> 16u)) * 2246822519u);
     uint ak2 = ((ak1 ^ (ak1 >> 13u)) * 3266489917u);

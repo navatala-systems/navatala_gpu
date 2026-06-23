@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_jd_subspace_expand_f32(const float* V
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float ti = t[gid];
     float w = ti;
     int kVal = ((int)(k[0]));

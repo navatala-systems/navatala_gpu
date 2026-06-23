@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_cfd_u_correct_reconstruct(device const float* pCell [[buffer(0)]], device const float* rAU [[buffer(1)]], device const float* hbx [[buffer(2)]], device const float* hby [[buffer(3)]], device const float* hbz [[buffer(4)]], device const float* rAUf [[buffer(5)]], device const float* phig [[buffer(6)]], device const int* owner [[buffer(7)]], device const int* neighbour [[buffer(8)]], device const float* sfX [[buffer(9)]], device const float* sfY [[buffer(10)]], device const float* sfZ [[buffer(11)]], device const float* magSf [[buffer(12)]], device const float* deltaCoeffs [[buffer(13)]], device const int* offsets [[buffer(14)]], device const int* faceIdx [[buffer(15)]], device const float* sign [[buffer(16)]], device const float* vol [[buffer(17)]], device const float* bcVal [[buffer(18)]], device const int* bcMask [[buffer(19)]], device const float* bcSnGrad [[buffer(20)]], device const int* bcSnGradMask [[buffer(21)]], device const float* faceFluxCorrection [[buffer(22)]], device const int* counts [[buffer(23)]], device const float* paramsF [[buffer(24)]], device float* outX [[buffer(25)]], device float* outY [[buffer(26)]], device float* outZ [[buffer(27)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     int beg = offsets[((int)(int(__gid.x)))];
@@ -39,35 +39,35 @@ kernel void navatala_cfd_u_correct_reconstruct(device const float* pCell [[buffe
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < counts[1])) {
+      if (f < counts[1]) {
         int o = owner[f];
         float po = pCell[o];
         float other = po;
-        if ((f < counts[2])) {
+        if (f < counts[2]) {
           int n = neighbour[f];
           other = pCell[n];
         } else {
-          if ((bcMask[f] != 0)) {
+          if (bcMask[f] != 0) {
             other = bcVal[f];
           }
         }
         float snGrad = (deltaCoeffs[f] * (other - po));
         float phiTerm = as_type<float>(0x00000000u);
-        if ((bcSnGradMask[f] == 2)) {
+        if (bcSnGradMask[f] == 2) {
           phiTerm = bcSnGrad[f];
         } else {
-          if ((bcSnGradMask[f] == 1)) {
+          if (bcSnGradMask[f] == 1) {
             snGrad = bcSnGrad[f];
           }
           float gradFace = (magSf[f] * snGrad);
           float denom = rAUf[f];
           float pFlux = ((paramsF[0] * (denom * gradFace)) + faceFluxCorrection[f]);
-          if ((denom != as_type<float>(0x00000000u))) {
+          if (denom != as_type<float>(0x00000000u)) {
             phiTerm = ((phig[f] - pFlux) / denom);
           }
         }
         float ms = magSf[f];
-        if ((ms > as_type<float>(0x00000000u))) {
+        if (ms > as_type<float>(0x00000000u)) {
           float nx = (sfX[f] / ms);
           float ny = (sfY[f] / ms);
           float nz = (sfZ[f] / ms);
@@ -117,7 +117,7 @@ kernel void navatala_cfd_u_correct_reconstruct(device const float* pCell [[buffe
     float rx = as_type<float>(0x00000000u);
     float ry = as_type<float>(0x00000000u);
     float rz = as_type<float>(0x00000000u);
-    if ((abs(det) >= rootVSmall)) {
+    if (abs(det) >= rootVSmall) {
       float invDet = (as_type<float>(0x3f800000u) / det);
       float i00 = (((w11 * w22) - (w21 * w12)) * invDet);
       float i01 = (((w02 * w21) - (w01 * w22)) * invDet);

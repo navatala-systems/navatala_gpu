@@ -27,7 +27,7 @@ kernel void navatala_linalg_slice_block_f32(device const float* A [[buffer(0)]],
   uint outRows = (re - rs);
   uint outCols = (ce - cs);
   uint totalElems = (outRows * outCols);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     uint outRow = (idx / outCols);
     uint outCol = (idx % outCols);
     uint srcRow = (rs + outRow);

@@ -40,7 +40,7 @@ kernel void navatala_dataframe_count_unmatched_right(device const uint* rightMat
     uint word = rightMatched[wordIdx];
     uint bit = ((word >> bitIdx) & 1u);
     bool isMatched = (bit == 1u);
-    if ((isMatched == false)) {
+    if (isMatched == false) {
       atomic_fetch_add_explicit((device atomic_uint*)(&unmatchedCount[0u]), 1u, memory_order_relaxed);
     }
   }

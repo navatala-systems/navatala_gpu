@@ -37,7 +37,7 @@ void main() {
   uint size = n[0u];
   uint offset = k[0u];
   uint diagLen = (size - offset);
-  if ((idx < diagLen)) {
+  if (idx < diagLen) {
     uint row = idx;
     uint col = (idx + offset);
     uint srcIdx = ((row * size) + col);

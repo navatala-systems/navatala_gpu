@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_linalg_extract_lower_f32(const float* A, con
   unsigned int idx = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int nVal = n[0u];
   unsigned int totalElements = (nVal * nVal);
-  if ((idx < totalElements)) {
+  if (idx < totalElements) {
     unsigned int i = (idx / nVal);
     unsigned int j = (idx % nVal);
     float aVal = A[idx];

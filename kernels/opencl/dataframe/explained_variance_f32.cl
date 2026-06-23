@@ -41,7 +41,7 @@ __kernel void navatala_dataframe_explained_variance_f32(__global const float* y_
   uint evF32_reductionStride = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint evF32_stride = evF32_reductionStride;
-    if ((lid < evF32_stride)) {
+    if (lid < evF32_stride) {
       uint evF32_partnerIdx = (lid + evF32_stride);
       float otherRes = sdata_var_res[evF32_partnerIdx];
       float mineRes = sdata_var_res[lid];
@@ -58,7 +58,7 @@ __kernel void navatala_dataframe_explained_variance_f32(__global const float* y_
     barrier(CLK_LOCAL_MEM_FENCE);
   }
   uint zeroU32 = ((uint)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     float sumSqRes = sdata_var_res[0];
     float sumSqTrue = sdata_var_true[0];
     float countFloat = ((float)(countVal));

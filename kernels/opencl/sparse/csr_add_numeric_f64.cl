@@ -18,7 +18,7 @@ __kernel void navatala_sparse_csr_add_numeric_f64(__global const uint* ArowPtr, 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int ars = ((int)(ArowPtr[gid]));
     int are = ((int)(ArowPtr[(gid + 1)]));
     int brs = ((int)(BrowPtr[gid]));
@@ -30,10 +30,10 @@ __kernel void navatala_sparse_csr_add_numeric_f64(__global const uint* ArowPtr, 
     int ai = 0;
     int bi = 0;
     for (int __iter = 0; __iter < 256; ++__iter) {
-      if (!(((ai < (are - ars)) && (bi < (bre - brs))))) break;
+      if (!((ai < (are - ars)) && (bi < (bre - brs)))) break;
       int acol = ((int)(AcolIdx[(ars + ai)]));
       int bcol = ((int)(BcolIdx[(brs + bi)]));
-      if ((acol == bcol)) {
+      if (acol == bcol) {
         int tgt = (crs + ci);
         CcolIdx[tgt] = ((uint)(acol));
         Cvalues[tgt] = ((a * Avalues[(ars + ai)]) + (b * Bvalues[(brs + bi)]));
@@ -41,7 +41,7 @@ __kernel void navatala_sparse_csr_add_numeric_f64(__global const uint* ArowPtr, 
         ai = (ai + 1);
         bi = (bi + 1);
       } else {
-        if ((acol < bcol)) {
+        if (acol < bcol) {
           int tgt2 = (crs + ci);
           CcolIdx[tgt2] = ((uint)(acol));
           Cvalues[tgt2] = (a * Avalues[(ars + ai)]);
@@ -57,7 +57,7 @@ __kernel void navatala_sparse_csr_add_numeric_f64(__global const uint* ArowPtr, 
       }
     }
     for (int __iter = 0; __iter < 256; ++__iter) {
-      if (!((ai < (are - ars)))) break;
+      if (!(ai < (are - ars))) break;
       int tgt4 = (crs + ci);
       int acol2 = ((int)(AcolIdx[(ars + ai)]));
       CcolIdx[tgt4] = ((uint)(acol2));
@@ -66,7 +66,7 @@ __kernel void navatala_sparse_csr_add_numeric_f64(__global const uint* ArowPtr, 
       ai = (ai + 1);
     }
     for (int __iter = 0; __iter < 256; ++__iter) {
-      if (!((bi < (bre - brs)))) break;
+      if (!(bi < (bre - brs))) break;
       int tgt5 = (crs + ci);
       int bcol2 = ((int)(BcolIdx[(brs + bi)]));
       CcolIdx[tgt5] = ((uint)(bcol2));

@@ -50,7 +50,7 @@ extern "C" __global__ void navatala_dataframe_mcd_compute_covariance_f64(const d
   unsigned int cov2ReductionStride = 128u;
   for (int cov2ReductionStep = 0; cov2ReductionStep < (int)(8); ++cov2ReductionStep) {
     unsigned int cov2Stride = cov2ReductionStride;
-    if ((lid < cov2Stride)) {
+    if (lid < cov2Stride) {
       double otherCov = scov[(lid + cov2Stride)];
       double otherVX = svarX[(lid + cov2Stride)];
       double otherVY = svarY[(lid + cov2Stride)];
@@ -73,7 +73,7 @@ extern "C" __global__ void navatala_dataframe_mcd_compute_covariance_f64(const d
     cov2ReductionStride = cov2NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double totalCov = scov[0];
     double totalVX = svarX[0];
     double totalVY = svarY[0];

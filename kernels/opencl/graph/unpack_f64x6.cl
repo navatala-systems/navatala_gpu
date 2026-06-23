@@ -17,7 +17,7 @@
 __kernel void navatala_graph_unpack_f64x6(__global const int* indices, __global const double* src, __global const int* count, __global const int* n, __global double* dst) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(6); ++c) {
       int srcLin = ((c * count[0]) + i);
       int dstLin = ((c * n[0]) + indices[((int)((int)(get_global_id(0))))]);

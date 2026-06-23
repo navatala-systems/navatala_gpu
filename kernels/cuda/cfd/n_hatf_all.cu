@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_cfd_n_hatf_all(const float* gx, const float*
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1]) {
     return;
   } else {
     int o = owner[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
@@ -36,21 +36,21 @@ extern "C" __global__ void navatala_cfd_n_hatf_all(const float* gx, const float*
     float ny = (gfy * inv);
     float nz = (gfz * inv);
     contactGrad[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = __uint_as_float(0x00000000u);
-    if ((thetaMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] != 0u)) {
+    if (thetaMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] != 0u) {
       float sfx = sfX[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       float sfy = sfY[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       float sfz = sfZ[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
       float magSf = sqrt((((sfx * sfx) + (sfy * sfy)) + (sfz * sfz)));
-      if ((magSf > __uint_as_float(0x1e3ce508u))) {
+      if (magSf > __uint_as_float(0x1e3ce508u)) {
         float nfx = (sfx / magSf);
         float nfy = (sfy / magSf);
         float nfz = (sfz / magSf);
         float a12raw = (((nx * nfx) + (ny * nfy)) + (nz * nfz));
         float a12 = a12raw;
-        if ((a12 < __uint_as_float(0xbf800000u))) {
+        if (a12 < __uint_as_float(0xbf800000u)) {
           a12 = __uint_as_float(0xbf800000u);
         } else {
-          if ((a12 > __uint_as_float(0x3f800000u))) {
+          if (a12 > __uint_as_float(0x3f800000u)) {
             a12 = __uint_as_float(0x3f800000u);
           }
         }
@@ -59,7 +59,7 @@ extern "C" __global__ void navatala_cfd_n_hatf_all(const float* gx, const float*
         float acosA12 = acos(a12);
         float b2 = cos((acosA12 - th));
         float det = (__uint_as_float(0x3f800000u) - (a12 * a12));
-        if ((det < __uint_as_float(0x358637bdu))) {
+        if (det < __uint_as_float(0x358637bdu)) {
           det = __uint_as_float(0x358637bdu);
         }
         float a = ((b1 - (a12 * b2)) / det);

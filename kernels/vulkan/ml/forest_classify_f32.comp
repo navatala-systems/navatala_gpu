@@ -103,7 +103,7 @@ void main() {
             uint probIdx = (absLeafBase + classIdxU32);
             float prob = forest_leaves[probIdx];
             float currBest = bestProb;
-            if ((prob > currBest)) {
+            if (prob > currBest) {
               bestClass = classIdx;
               bestProb = prob;
             }
@@ -137,7 +137,7 @@ void main() {
       uint voteIdx = (voteBase + cU32);
       uint votes = vote_counts[voteIdx];
       uint currMax = maxVotes;
-      if ((votes > currMax)) {
+      if (votes > currMax) {
         finalClass = c;
         maxVotes = votes;
       }

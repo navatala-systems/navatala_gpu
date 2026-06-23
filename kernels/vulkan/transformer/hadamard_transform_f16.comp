@@ -43,7 +43,7 @@ void main() {
   bool batchValid = (batchIdx < bs);
   bool threadValid = (lid < vs);
   uint globalIdx = ((batchIdx * vs) + lid);
-  if ((batchValid && threadValid)) {
+  if (batchValid && threadValid) {
     float16_t valF16 = _input[globalIdx];
     float val = float(valF16);
     sharedBuf[lid] = val;
@@ -88,7 +88,7 @@ void main() {
   float scale = sqrt(vsF32);
   float normalized = (newVal4 / scale);
   float16_t resultF16 = float16_t(normalized);
-  if ((batchValid && threadValid)) {
+  if (batchValid && threadValid) {
     _output[globalIdx] = resultF16;
   }
 }

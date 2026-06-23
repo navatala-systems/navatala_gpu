@@ -17,7 +17,7 @@
 __kernel void navatala_dataframe_tdigest_max_f64(__global const double* maxVal, __global const uint* centroidCount, __global double* maxOut) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint count = centroidCount[0];
     double maxV = maxVal[0];
     bool isEmpty = (count == (uint)(0u));

@@ -745,7 +745,7 @@ extern "C" __global__ void navatala_transformer_rms_norm_forward_f32(const float
   float meanSq = (totalSumSq / hsF32);
   float meanSqEps = (meanSq + eps);
   float rms = sqrt(meanSqEps);
-  if ((batchValid && hiddenValid)) {
+  if (batchValid && hiddenValid) {
     float g = gamma[lid];
     float xNorm = (x / rms);
     float result = (g * xNorm);
@@ -850,7 +850,7 @@ extern "C" __global__ void navatala_transformer_rms_norm_forward_f16(const __hal
   float meanSq = (totalSumSq / hsF32);
   float meanSqEps = (meanSq + eps);
   float rms = sqrt(meanSqEps);
-  if ((batchValid && hiddenValid)) {
+  if (batchValid && hiddenValid) {
     __half gF16 = gamma[lid];
     float g = ((float)(gF16));
     float xNorm = (x / rms);
@@ -957,7 +957,7 @@ extern "C" __global__ void navatala_transformer_rms_norm_forward_bf16(const __hi
   float meanSq = (totalSumSq / hsF32);
   float meanSqEps = (meanSq + eps);
   float rms = sqrt(meanSqEps);
-  if ((batchValid && hiddenValid)) {
+  if (batchValid && hiddenValid) {
     __hip_bfloat16 gBF16 = gamma[lid];
     float g = ((float)(gBF16));
     float xNorm = (x / rms);
@@ -1140,7 +1140,7 @@ extern "C" __global__ void navatala_transformer_layer_norm_forward_f32(const flo
   float variance = (totalSumSq / hsF32);
   float varEps = (variance + eps);
   float std = sqrt(varEps);
-  if ((batchValid && hiddenValid)) {
+  if (batchValid && hiddenValid) {
     float g = gamma[lid];
     float b = beta[lid];
     float xNorm = (xMinusMean / std);
@@ -1325,7 +1325,7 @@ extern "C" __global__ void navatala_transformer_layer_norm_forward_f16(const __h
   float variance = (totalSumSq / hsF32);
   float varEps = (variance + eps);
   float std = sqrt(varEps);
-  if ((batchValid && hiddenValid)) {
+  if (batchValid && hiddenValid) {
     __half gF16 = gamma[lid];
     __half bF16 = beta[lid];
     float g = ((float)(gF16));
@@ -1513,7 +1513,7 @@ extern "C" __global__ void navatala_transformer_layer_norm_forward_bf16(const __
   float variance = (totalSumSq / hsF32);
   float varEps = (variance + eps);
   float std = sqrt(varEps);
-  if ((batchValid && hiddenValid)) {
+  if (batchValid && hiddenValid) {
     __hip_bfloat16 gBF16 = gamma[lid];
     __hip_bfloat16 bBF16 = beta[lid];
     float g = ((float)(gBF16));
@@ -1702,7 +1702,7 @@ extern "C" __global__ void navatala_transformer_layer_norm_backward_f32(const fl
   float hsF32 = ((float)(hs));
   float meanDyGamma = (totalDyGamma / hsF32);
   float meanDyGammaXhat = (totalDyGammaXhat / hsF32);
-  if ((batchValid && hiddenValid)) {
+  if (batchValid && hiddenValid) {
     float term1 = dyGamma;
     float term2 = meanDyGamma;
     float term3 = (xHat * meanDyGammaXhat);
@@ -1895,7 +1895,7 @@ extern "C" __global__ void navatala_transformer_layer_norm_backward_f16(const __
   float hsF32 = ((float)(hs));
   float meanDyGamma = (totalDyGamma / hsF32);
   float meanDyGammaXhat = (totalDyGammaXhat / hsF32);
-  if ((batchValid && hiddenValid)) {
+  if (batchValid && hiddenValid) {
     float term1 = dyGamma;
     float term2 = meanDyGamma;
     float term3 = (xHat * meanDyGammaXhat);
@@ -2006,7 +2006,7 @@ extern "C" __global__ void navatala_transformer_rms_norm_backward_f32(const floa
   float totalDyGammaXhat = sumDyGammaXhat[0u];
   float hsF32 = ((float)(hs));
   float meanDyGammaXhat = (totalDyGammaXhat / hsF32);
-  if ((batchValid && hiddenValid)) {
+  if (batchValid && hiddenValid) {
     float term1 = dyGamma;
     float term2 = (xHat * meanDyGammaXhat);
     float inner = (term1 - term2);
@@ -2118,7 +2118,7 @@ extern "C" __global__ void navatala_transformer_rms_norm_backward_f16(const __ha
   float totalDyGammaXhat = sumDyGammaXhat[0u];
   float hsF32 = ((float)(hs));
   float meanDyGammaXhat = (totalDyGammaXhat / hsF32);
-  if ((batchValid && hiddenValid)) {
+  if (batchValid && hiddenValid) {
     float term1 = dyGamma;
     float term2 = (xHat * meanDyGammaXhat);
     float inner = (term1 - term2);
@@ -2149,7 +2149,7 @@ extern "C" __global__ void navatala_transformer_layer_norm_multi_pass_f32(const 
   unsigned int iterIdx = lid;
   unsigned int workgroupSize = 256u;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < hs))) break;
+    if (!(iterIdx < hs)) break;
     unsigned int globalIdx = (baseIdx + iterIdx);
     float xVal = ((batchValid) ? (_input[globalIdx]) : (__uint_as_float(0x00000000u)));
     partialSum = (partialSum + xVal);
@@ -2316,7 +2316,7 @@ extern "C" __global__ void navatala_transformer_layer_norm_multi_pass_f32(const 
   float std = sqrt(varEps);
   iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < hs))) break;
+    if (!(iterIdx < hs)) break;
     if (batchValid) {
       unsigned int globalIdx2 = (baseIdx + iterIdx);
       float xVal2 = _input[globalIdx2];
@@ -2351,7 +2351,7 @@ extern "C" __global__ void navatala_transformer_layer_norm_multi_pass_f16(const 
   unsigned int iterIdx = lid;
   unsigned int workgroupSize = 256u;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < hs))) break;
+    if (!(iterIdx < hs)) break;
     unsigned int globalIdx = (baseIdx + iterIdx);
     __half xF16 = ((batchValid) ? (_input[globalIdx]) : (__float2half(0.000000f)));
     float xVal = ((float)(xF16));
@@ -2519,7 +2519,7 @@ extern "C" __global__ void navatala_transformer_layer_norm_multi_pass_f16(const 
   float std = sqrt(varEps);
   iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < hs))) break;
+    if (!(iterIdx < hs)) break;
     if (batchValid) {
       unsigned int globalIdx2 = (baseIdx + iterIdx);
       __half xF16_2 = _input[globalIdx2];
@@ -2555,7 +2555,7 @@ extern "C" __global__ void navatala_transformer_rms_norm_multi_pass_f32(const fl
   unsigned int iterIdx = lid;
   unsigned int workgroupSize = 256u;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < hs))) break;
+    if (!(iterIdx < hs)) break;
     unsigned int globalIdx = (baseIdx + iterIdx);
     float xVal = ((batchValid) ? (_input[globalIdx]) : (__uint_as_float(0x00000000u)));
     float xSq = (xVal * xVal);
@@ -2643,7 +2643,7 @@ extern "C" __global__ void navatala_transformer_rms_norm_multi_pass_f32(const fl
   float rms = sqrt(meanSqEps);
   iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < hs))) break;
+    if (!(iterIdx < hs)) break;
     if (batchValid) {
       unsigned int globalIdx2 = (baseIdx + iterIdx);
       float xVal2 = _input[globalIdx2];
@@ -2674,7 +2674,7 @@ extern "C" __global__ void navatala_transformer_rms_norm_multi_pass_f16(const __
   unsigned int iterIdx = lid;
   unsigned int workgroupSize = 256u;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < hs))) break;
+    if (!(iterIdx < hs)) break;
     unsigned int globalIdx = (baseIdx + iterIdx);
     __half xF16 = ((batchValid) ? (_input[globalIdx]) : (__float2half(0.000000f)));
     float xVal = ((float)(xF16));
@@ -2763,7 +2763,7 @@ extern "C" __global__ void navatala_transformer_rms_norm_multi_pass_f16(const __
   float rms = sqrt(meanSqEps);
   iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < hs))) break;
+    if (!(iterIdx < hs)) break;
     if (batchValid) {
       unsigned int globalIdx2 = (baseIdx + iterIdx);
       __half xF16_2 = _input[globalIdx2];
@@ -2955,7 +2955,7 @@ extern "C" __global__ void navatala_transformer_softmax_forward_f32(const float*
   }
   __syncthreads();
   float sumExp = sumBuf[0u];
-  if ((batchValid && seqValid)) {
+  if (batchValid && seqValid) {
     float result = (expVal / sumExp);
     _output[globalIdx] = result;
   }
@@ -3139,7 +3139,7 @@ extern "C" __global__ void navatala_transformer_softmax_forward_f16(const __half
   }
   __syncthreads();
   float sumExp = sumBuf[0u];
-  if ((batchValid && seqValid)) {
+  if (batchValid && seqValid) {
     float resultF32 = (expVal / sumExp);
     __half result = ((__half)(resultF32));
     _output[globalIdx] = result;
@@ -3324,7 +3324,7 @@ extern "C" __global__ void navatala_transformer_softmax_forward_bf16(const __hip
   }
   __syncthreads();
   float sumExp = sumBuf[0u];
-  if ((batchValid && seqValid)) {
+  if (batchValid && seqValid) {
     float resultF32 = (expVal / sumExp);
     __hip_bfloat16 result = ((__hip_bfloat16)(resultF32));
     _output[globalIdx] = result;
@@ -3422,7 +3422,7 @@ extern "C" __global__ void navatala_transformer_softmax_backward_f32(const float
   }
   __syncthreads();
   float dot = dotBuf[0u];
-  if ((batchValid && seqValid)) {
+  if (batchValid && seqValid) {
     float dyMinusDot = (dy - dot);
     float dx = (y * dyMinusDot);
     gradInput[globalIdx] = dx;
@@ -3523,7 +3523,7 @@ extern "C" __global__ void navatala_transformer_softmax_backward_f16(const __hal
   }
   __syncthreads();
   float dot = dotBuf[0u];
-  if ((batchValid && seqValid)) {
+  if (batchValid && seqValid) {
     float dyMinusDot = (dy - dot);
     float dxF32 = (y * dyMinusDot);
     __half dx = ((__half)(dxF32));
@@ -4140,7 +4140,7 @@ extern "C" __global__ void navatala_transformer_softmax_multi_pass_f32(const flo
   float partialSum = __uint_as_float(0x00000000u);
   unsigned int iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < sl))) break;
+    if (!(iterIdx < sl)) break;
     unsigned int globalIdx = (baseIdx + iterIdx);
     float xVal = ((batchValid) ? (_input[globalIdx]) : (__uint_as_float(0xf149f2cau)));
     bool isGreater = (xVal > partialMax);
@@ -4232,7 +4232,7 @@ extern "C" __global__ void navatala_transformer_softmax_multi_pass_f32(const flo
   float globalMax = maxBuf[0u];
   iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < sl))) break;
+    if (!(iterIdx < sl)) break;
     if (batchValid) {
       unsigned int globalIdx2 = (baseIdx + iterIdx);
       float xVal2 = _input[globalIdx2];
@@ -4319,7 +4319,7 @@ extern "C" __global__ void navatala_transformer_softmax_multi_pass_f32(const flo
   float globalSum = sumBuf[0u];
   iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < sl))) break;
+    if (!(iterIdx < sl)) break;
     if (batchValid) {
       unsigned int globalIdx3 = (baseIdx + iterIdx);
       float xVal3 = _input[globalIdx3];
@@ -4351,7 +4351,7 @@ extern "C" __global__ void navatala_transformer_softmax_multi_pass_f16(const __h
   float partialSum = __uint_as_float(0x00000000u);
   unsigned int iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < sl))) break;
+    if (!(iterIdx < sl)) break;
     unsigned int globalIdx = (baseIdx + iterIdx);
     __half xF16 = ((batchValid) ? (_input[globalIdx]) : (__float2half(0.000000f)));
     float xVal = ((float)(xF16));
@@ -4445,7 +4445,7 @@ extern "C" __global__ void navatala_transformer_softmax_multi_pass_f16(const __h
   float globalMax = maxBuf[0u];
   iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < sl))) break;
+    if (!(iterIdx < sl)) break;
     if (batchValid) {
       unsigned int globalIdx2 = (baseIdx + iterIdx);
       __half xF16_2 = _input[globalIdx2];
@@ -4533,7 +4533,7 @@ extern "C" __global__ void navatala_transformer_softmax_multi_pass_f16(const __h
   float globalSum = sumBuf[0u];
   iterIdx = lid;
   for (int __iter = 0; __iter < 16384; ++__iter) {
-    if (!((iterIdx < sl))) break;
+    if (!(iterIdx < sl)) break;
     if (batchValid) {
       unsigned int globalIdx3 = (baseIdx + iterIdx);
       __half xF16_3 = _input[globalIdx3];
@@ -5798,7 +5798,7 @@ extern "C" __global__ void navatala_transformer_simple_attention_f16(const __hal
     sumBuf[lid] = sumVal_sum_p2_sumBuf_1;
   }
   __syncthreads();
-  if ((batchValid && (lid == 0u))) {
+  if (batchValid && (lid == 0u)) {
     float outVal = sumBuf[0u];
     __half outF16 = ((__half)(outVal));
     unsigned int outIdx = (qBase + 0u);
@@ -6101,7 +6101,7 @@ extern "C" __global__ void navatala_transformer_simple_attention_f32(const float
     sumBuf[lid] = sumVal_sum_p2_sumBuf_1;
   }
   __syncthreads();
-  if ((batchValid && (lid == 0u))) {
+  if (batchValid && (lid == 0u)) {
     float outVal = sumBuf[0u];
     unsigned int outIdx = (qBase + 0u);
     _output[outIdx] = outVal;
@@ -6405,7 +6405,7 @@ extern "C" __global__ void navatala_transformer_paged_attention_f32(const float*
       sumBuf[lid] = sumVal_sum_p2_sumBuf_1;
     }
     __syncthreads();
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       float outVal = sumBuf[0u];
       unsigned int outIdx = (qBase + outD);
       _output[outIdx] = outVal;
@@ -6443,7 +6443,7 @@ extern "C" __global__ void navatala_transformer_simple_attention_with_mask_f32(c
   unsigned int seqStride = (sl * headStride);
   unsigned int qBase = ((batchIdx * seqStride) + ((queryPos * headStride) + (headIdx * headDimStride)));
   unsigned int kBase = ((batchIdx * seqStride) + ((lid * headStride) + (headIdx * headDimStride)));
-  if ((valid && (!causalMasked))) {
+  if (valid && (!causalMasked)) {
     float dotProd = __uint_as_float(0x00000000u);
     for (int d = 0; d < (int)(hd); ++d) {
       unsigned int qIdx = (qBase + ((unsigned int)(d)));
@@ -6542,7 +6542,7 @@ extern "C" __global__ void navatala_transformer_simple_attention_with_mask_f32(c
   }
   __syncthreads();
   float maxScore = attnScores[0u];
-  if ((valid && (!causalMasked))) {
+  if (valid && (!causalMasked)) {
     float myScore = attnScores[lid];
     float shiftedScore = (myScore - maxScore);
     float expScore = exp(shiftedScore);
@@ -6624,7 +6624,7 @@ extern "C" __global__ void navatala_transformer_simple_attention_with_mask_f32(c
   }
   __syncthreads();
   float sumExp = sumBuf[0u];
-  if ((valid && (!causalMasked))) {
+  if (valid && (!causalMasked)) {
     float myExpScore = attnScores[lid];
     float shiftedExp = (myExpScore - maxScore);
     float expVal = exp(shiftedExp);
@@ -6709,7 +6709,7 @@ extern "C" __global__ void navatala_transformer_simple_attention_with_mask_f32(c
     sumBuf[lid] = sumVal_sum_p2_sumBuf_1;
   }
   __syncthreads();
-  if ((batchValid && (lid == 0u))) {
+  if (batchValid && (lid == 0u)) {
     float outVal = sumBuf[0u];
     unsigned int outIdx = (qBase + 0u);
     _output[outIdx] = outVal;
@@ -6747,7 +6747,7 @@ extern "C" __global__ void navatala_transformer_simple_attention_with_mask_f16(c
   unsigned int seqStride = (sl * headStride);
   unsigned int qBase = ((batchIdx * seqStride) + ((queryPos * headStride) + (headIdx * headDimStride)));
   unsigned int kBase = ((batchIdx * seqStride) + ((lid * headStride) + (headIdx * headDimStride)));
-  if ((valid && (!causalMasked))) {
+  if (valid && (!causalMasked)) {
     float dotProd = __uint_as_float(0x00000000u);
     for (int d = 0; d < (int)(hd); ++d) {
       unsigned int qIdx = (qBase + ((unsigned int)(d)));
@@ -6848,7 +6848,7 @@ extern "C" __global__ void navatala_transformer_simple_attention_with_mask_f16(c
   }
   __syncthreads();
   float maxScore = attnScores[0u];
-  if ((valid && (!causalMasked))) {
+  if (valid && (!causalMasked)) {
     float myScore = attnScores[lid];
     float shiftedScore = (myScore - maxScore);
     float expScore = exp(shiftedScore);
@@ -6930,7 +6930,7 @@ extern "C" __global__ void navatala_transformer_simple_attention_with_mask_f16(c
   }
   __syncthreads();
   float sumExp = sumBuf[0u];
-  if ((valid && (!causalMasked))) {
+  if (valid && (!causalMasked)) {
     float myExpScore = attnScores[lid];
     float shiftedExp = (myExpScore - maxScore);
     float expVal = exp(shiftedExp);
@@ -7016,7 +7016,7 @@ extern "C" __global__ void navatala_transformer_simple_attention_with_mask_f16(c
     sumBuf[lid] = sumVal_sum_p2_sumBuf_1;
   }
   __syncthreads();
-  if ((batchValid && (lid == 0u))) {
+  if (batchValid && (lid == 0u)) {
     float outVal = sumBuf[0u];
     __half outF16 = ((__half)(outVal));
     unsigned int outIdx = (qBase + 0u);
@@ -7057,7 +7057,7 @@ extern "C" __global__ void navatala_transformer_simple_attention_with_padding_f3
   unsigned int seqStride = (sl * headStride);
   unsigned int qBase = ((batchIdx * seqStride) + ((queryPos * headStride) + (headIdx * headDimStride)));
   unsigned int kBase = ((batchIdx * seqStride) + ((lid * headStride) + (headIdx * headDimStride)));
-  if ((valid && (!anyMasked))) {
+  if (valid && (!anyMasked)) {
     float dotProd = __uint_as_float(0x00000000u);
     for (int d = 0; d < (int)(hd); ++d) {
       unsigned int qIdx = (qBase + ((unsigned int)(d)));
@@ -7156,7 +7156,7 @@ extern "C" __global__ void navatala_transformer_simple_attention_with_padding_f3
   }
   __syncthreads();
   float maxScore = attnScores[0u];
-  if ((valid && (!anyMasked))) {
+  if (valid && (!anyMasked)) {
     float myScore = attnScores[lid];
     float shiftedScore = (myScore - maxScore);
     float expScore = exp(shiftedScore);
@@ -7238,7 +7238,7 @@ extern "C" __global__ void navatala_transformer_simple_attention_with_padding_f3
   }
   __syncthreads();
   float sumExp = sumBuf[0u];
-  if ((valid && (!anyMasked))) {
+  if (valid && (!anyMasked)) {
     float myExpScore = attnScores[lid];
     float shiftedExp = (myExpScore - maxScore);
     float expVal = exp(shiftedExp);
@@ -7323,7 +7323,7 @@ extern "C" __global__ void navatala_transformer_simple_attention_with_padding_f3
     sumBuf[lid] = sumVal_sum_p2_sumBuf_1;
   }
   __syncthreads();
-  if ((batchValid && (lid == 0u))) {
+  if (batchValid && (lid == 0u)) {
     float outVal = sumBuf[0u];
     unsigned int outIdx = (qBase + 0u);
     _output[outIdx] = outVal;
@@ -7364,7 +7364,7 @@ extern "C" __global__ void navatala_transformer_simple_attention_with_padding_f1
   unsigned int seqStride = (sl * headStride);
   unsigned int qBase = ((batchIdx * seqStride) + ((queryPos * headStride) + (headIdx * headDimStride)));
   unsigned int kBase = ((batchIdx * seqStride) + ((lid * headStride) + (headIdx * headDimStride)));
-  if ((valid && (!anyMasked))) {
+  if (valid && (!anyMasked)) {
     float dotProd = __uint_as_float(0x00000000u);
     for (int d = 0; d < (int)(hd); ++d) {
       unsigned int qIdx = (qBase + ((unsigned int)(d)));
@@ -7465,7 +7465,7 @@ extern "C" __global__ void navatala_transformer_simple_attention_with_padding_f1
   }
   __syncthreads();
   float maxScore = attnScores[0u];
-  if ((valid && (!anyMasked))) {
+  if (valid && (!anyMasked)) {
     float myScore = attnScores[lid];
     float shiftedScore = (myScore - maxScore);
     float expScore = exp(shiftedScore);
@@ -7547,7 +7547,7 @@ extern "C" __global__ void navatala_transformer_simple_attention_with_padding_f1
   }
   __syncthreads();
   float sumExp = sumBuf[0u];
-  if ((valid && (!anyMasked))) {
+  if (valid && (!anyMasked)) {
     float myExpScore = attnScores[lid];
     float shiftedExp = (myExpScore - maxScore);
     float expVal = exp(shiftedExp);
@@ -7633,7 +7633,7 @@ extern "C" __global__ void navatala_transformer_simple_attention_with_padding_f1
     sumBuf[lid] = sumVal_sum_p2_sumBuf_1;
   }
   __syncthreads();
-  if ((batchValid && (lid == 0u))) {
+  if (batchValid && (lid == 0u)) {
     float outVal = sumBuf[0u];
     __half outF16 = ((__half)(outVal));
     unsigned int outIdx = (qBase + 0u);
@@ -8757,7 +8757,7 @@ extern "C" __global__ void navatala_transformer_multi_tensor_l2_norm_f32(const f
     sumSq[lid] = sumVal_sumSq_1;
   }
   __syncthreads();
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float partialSum = sumSq[0u];
     partialSums[gid] = partialSum;
   }
@@ -8852,7 +8852,7 @@ extern "C" __global__ void navatala_transformer_multi_tensor_l2_norm_f16(const _
     sumSq[lid] = sumVal_sumSq_1;
   }
   __syncthreads();
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float partialSum = sumSq[0u];
     partialSums[gid] = partialSum;
   }
@@ -9092,7 +9092,7 @@ extern "C" __global__ void navatala_transformer_top_k_gating_f32(const float* ro
   indexBuf[lid] = lidI32;
   __syncthreads();
   for (int kIter = 0; kIter < (int)(k); ++kIter) {
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       int bestIdx = 0;
       float bestVal = __uint_as_float(0xf149f2cau);
       for (int scanIdx = 0; scanIdx < (int)(ne); ++scanIdx) {
@@ -9308,7 +9308,7 @@ extern "C" __global__ void navatala_transformer_top_k_gating_f16(const __half* r
   indexBuf[lid] = lidI32_2;
   __syncthreads();
   for (int kIter = 0; kIter < (int)(k); ++kIter) {
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       int bestIdx = 0;
       float bestVal = __uint_as_float(0xf149f2cau);
       for (int scanIdx = 0; scanIdx < (int)(ne); ++scanIdx) {
@@ -9346,7 +9346,7 @@ extern "C" __global__ void navatala_transformer_expert_capacity_mask_f32(const i
   unsigned int cap = capacity[0u];
   __shared__ unsigned int expertCounts[256];
   unsigned int lid = ((unsigned int)((int)(threadIdx.x)));
-  if ((lid < ne)) {
+  if (lid < ne) {
     expertCounts[lid] = 0u;
   }
   __syncthreads();
@@ -9380,7 +9380,7 @@ extern "C" __global__ void navatala_transformer_expert_capacity_mask_f16(const i
   unsigned int cap = capacity[0u];
   __shared__ unsigned int expertCounts[256];
   unsigned int lid = ((unsigned int)((int)(threadIdx.x)));
-  if ((lid < ne)) {
+  if (lid < ne) {
     expertCounts[lid] = 0u;
   }
   __syncthreads();
@@ -9418,7 +9418,7 @@ extern "C" __global__ void navatala_transformer_permute_tokens_f32(const float* 
     unsigned int expertIdxU32 = ((unsigned int)(expertIdx));
     bool expertValid = (expertIdxU32 < ne);
     if (expertValid) {
-      if ((lid == 0u)) {
+      if (lid == 0u) {
         unsigned int localPosition = atomicAdd(&(expertCounters[expertIdxU32]), 1u);
         unsigned int expertOffset = expertOffsets[expertIdxU32];
         unsigned int destTokenIdx = (expertOffset + localPosition);
@@ -9430,7 +9430,7 @@ extern "C" __global__ void navatala_transformer_permute_tokens_f32(const float* 
       unsigned int destTokenIdx = sharedDestTokenIdx[0u];
       for (int hIter = 0; hIter < (int)(hs); ++hIter) {
         unsigned int hIdx = (lid + (256u * hIter));
-        if ((hIdx < hs)) {
+        if (hIdx < hs) {
           unsigned int srcIdx = ((tokenIdx * hs) + hIdx);
           unsigned int dstIdx = ((destTokenIdx * hs) + hIdx);
           float val = hiddenStates[srcIdx];
@@ -9459,7 +9459,7 @@ extern "C" __global__ void navatala_transformer_permute_tokens_f16(const __half*
     unsigned int expertIdxU32 = ((unsigned int)(expertIdx));
     bool expertValid = (expertIdxU32 < ne);
     if (expertValid) {
-      if ((lid == 0u)) {
+      if (lid == 0u) {
         unsigned int localPosition = atomicAdd(&(expertCounters[expertIdxU32]), 1u);
         unsigned int expertOffset = expertOffsets[expertIdxU32];
         unsigned int destTokenIdx = (expertOffset + localPosition);
@@ -9471,7 +9471,7 @@ extern "C" __global__ void navatala_transformer_permute_tokens_f16(const __half*
       unsigned int destTokenIdx = sharedDestTokenIdx[0u];
       for (int hIter = 0; hIter < (int)(hs); ++hIter) {
         unsigned int hIdx = (lid + (256u * hIter));
-        if ((hIdx < hs)) {
+        if (hIdx < hs) {
           unsigned int srcIdx = ((tokenIdx * hs) + hIdx);
           unsigned int dstIdx = ((destTokenIdx * hs) + hIdx);
           __half val = hiddenStates[srcIdx];
@@ -9499,7 +9499,7 @@ extern "C" __global__ void navatala_transformer_unpermute_tokens_f32(const float
     if (origValid) {
       for (int hIter = 0; hIter < (int)(hs); ++hIter) {
         unsigned int hIdx = (lid + (256u * hIter));
-        if ((hIdx < hs)) {
+        if (hIdx < hs) {
           unsigned int srcIdx = ((permutedIdx * hs) + hIdx);
           unsigned int dstIdx = ((origIdx * hs) + hIdx);
           float val = permutedStates[srcIdx];
@@ -9528,7 +9528,7 @@ extern "C" __global__ void navatala_transformer_unpermute_tokens_f16(const __hal
     if (origValid) {
       for (int hIter = 0; hIter < (int)(hs); ++hIter) {
         unsigned int hIdx = (lid + (256u * hIter));
-        if ((hIdx < hs)) {
+        if (hIdx < hs) {
           unsigned int srcIdx = ((permutedIdx * hs) + hIdx);
           unsigned int dstIdx = ((origIdx * hs) + hIdx);
           __half val = permutedStates[srcIdx];
@@ -9741,7 +9741,7 @@ extern "C" __global__ void navatala_transformer_hadamard_transform_f32(const flo
   bool batchValid = (batchIdx < bs);
   bool threadValid = (lid < vs);
   unsigned int globalIdx = ((batchIdx * vs) + lid);
-  if ((batchValid && threadValid)) {
+  if (batchValid && threadValid) {
     float val = _input[globalIdx];
     sharedBuf[lid] = val;
   } else {
@@ -9820,7 +9820,7 @@ extern "C" __global__ void navatala_transformer_hadamard_transform_f32(const flo
   float vsF32 = ((float)(vs));
   float scale = sqrt(vsF32);
   float normalized = (newVal8 / scale);
-  if ((batchValid && threadValid)) {
+  if (batchValid && threadValid) {
     _output[globalIdx] = normalized;
   }
 }
@@ -9839,7 +9839,7 @@ extern "C" __global__ void navatala_transformer_hadamard_transform_f16(const __h
   bool batchValid = (batchIdx < bs);
   bool threadValid = (lid < vs);
   unsigned int globalIdx = ((batchIdx * vs) + lid);
-  if ((batchValid && threadValid)) {
+  if (batchValid && threadValid) {
     __half valF16 = _input[globalIdx];
     float val = ((float)(valF16));
     sharedBuf[lid] = val;
@@ -9884,7 +9884,7 @@ extern "C" __global__ void navatala_transformer_hadamard_transform_f16(const __h
   float scale = sqrt(vsF32);
   float normalized = (newVal4 / scale);
   __half resultF16 = ((__half)(normalized));
-  if ((batchValid && threadValid)) {
+  if (batchValid && threadValid) {
     _output[globalIdx] = resultF16;
   }
 }

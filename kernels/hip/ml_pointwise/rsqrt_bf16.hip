@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_ml_pointwise_rsqrt_bf16(const __hip_bfloat16
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __hip_bfloat16 xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (__uint_as_float(0x3f800000u) / sqrt(x));

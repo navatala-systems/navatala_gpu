@@ -65,14 +65,14 @@ layout(std430, binding = 14) writeonly buffer buf_outPhi {
 // kernel: navatala_cfd_primitives_phi_from_u
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= params[0])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= params[0]) {
     return;
   } else {
     int o = owner[int(int(gl_GlobalInvocationID.x))];
     float uox = ux[o];
     float uoy = uy[o];
     float uoz = uz[o];
-    if ((int(int(gl_GlobalInvocationID.x)) < params[1])) {
+    if (int(int(gl_GlobalInvocationID.x)) < params[1]) {
       int n = neighbour[int(int(gl_GlobalInvocationID.x))];
       float w = weights[int(int(gl_GlobalInvocationID.x))];
       float iw = (uintBitsToFloat(0x3f800000u) - w);
@@ -81,7 +81,7 @@ void main() {
       float ufz = ((w * uoz) + (iw * uz[n]));
       outPhi[int(int(gl_GlobalInvocationID.x))] = (((sfX[int(int(gl_GlobalInvocationID.x))] * ufx) + (sfY[int(int(gl_GlobalInvocationID.x))] * ufy)) + (sfZ[int(int(gl_GlobalInvocationID.x))] * ufz));
     } else {
-      if ((bcMask[int(int(gl_GlobalInvocationID.x))] == 1u)) {
+      if (bcMask[int(int(gl_GlobalInvocationID.x))] == 1u) {
         float w = weights[int(int(gl_GlobalInvocationID.x))];
         float iw = (uintBitsToFloat(0x3f800000u) - w);
         float ufx = ((w * uox) + (iw * bcX[int(int(gl_GlobalInvocationID.x))]));
@@ -89,7 +89,7 @@ void main() {
         float ufz = ((w * uoz) + (iw * bcZ[int(int(gl_GlobalInvocationID.x))]));
         outPhi[int(int(gl_GlobalInvocationID.x))] = (((sfX[int(int(gl_GlobalInvocationID.x))] * ufx) + (sfY[int(int(gl_GlobalInvocationID.x))] * ufy)) + (sfZ[int(int(gl_GlobalInvocationID.x))] * ufz));
       } else {
-        if ((bcMask[int(int(gl_GlobalInvocationID.x))] == 2u)) {
+        if (bcMask[int(int(gl_GlobalInvocationID.x))] == 2u) {
           float ufx = bcX[int(int(gl_GlobalInvocationID.x))];
           float ufy = bcY[int(int(gl_GlobalInvocationID.x))];
           float ufz = bcZ[int(int(gl_GlobalInvocationID.x))];

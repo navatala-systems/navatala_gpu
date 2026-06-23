@@ -95,7 +95,7 @@ layout(std430, binding = 24) writeonly buffer buf_outZ {
 // kernel: navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_grad_v2
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= params[0])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= params[0]) {
     return;
   } else {
     float sumX = uintBitsToFloat(0x00000000u);
@@ -108,7 +108,7 @@ void main() {
     for (int t = 0; t < int(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < params[1])) {
+      if (f < params[1]) {
         float s = signF[k];
         int o = owner[f];
         float muO = muCell[o];
@@ -151,7 +151,7 @@ void main() {
         float tauFzy = tauOzy;
         float tauFzz = tauOzz;
         int n = neighbour[f];
-        if ((n >= 0)) {
+        if (n >= 0) {
           float muN = muCell[n];
           float gnXX = gXX[n];
           float gnXY = gXY[n];
@@ -210,7 +210,7 @@ void main() {
     }
     float v = vol[int(int(gl_GlobalInvocationID.x))];
     float invV = uintBitsToFloat(0x00000000u);
-    if ((v != uintBitsToFloat(0x00000000u))) {
+    if (v != uintBitsToFloat(0x00000000u)) {
       invV = (uintBitsToFloat(0x3f800000u) / v);
     }
     outX[int(int(gl_GlobalInvocationID.x))] = (sumX * invV);

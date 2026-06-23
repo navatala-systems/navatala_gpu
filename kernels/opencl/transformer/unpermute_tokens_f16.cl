@@ -28,7 +28,7 @@ __kernel void navatala_transformer_unpermute_tokens_f16(__global const half* per
     if (origValid) {
       for (int hIter = 0; hIter < (int)(hs); ++hIter) {
         uint hIdx = (lid + ((uint)(256u) * hIter));
-        if ((hIdx < hs)) {
+        if (hIdx < hs) {
           uint srcIdx = ((permutedIdx * hs) + hIdx);
           uint dstIdx = ((origIdx * hs) + hIdx);
           half val = permutedStates[srcIdx];

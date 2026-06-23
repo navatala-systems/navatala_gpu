@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_em_normalize_p_f64(const unsigned int
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(ProwPtr[gid]));
     int re = ((int)(ProwPtr[(gid + 1)]));
     double rowSum = __longlong_as_double(0x0000000000000000ull);

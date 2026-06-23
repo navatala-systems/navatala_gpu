@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_sparse_scale_f64(const double* values
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   double alphaVal = alpha[0u];
-  if ((i < nnz[0u])) {
+  if (i < nnz[0u]) {
     double a = valuesA[i];
     valuesB[i] = (alphaVal * a);
   }

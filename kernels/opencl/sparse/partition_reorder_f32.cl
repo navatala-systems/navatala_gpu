@@ -17,7 +17,7 @@ __kernel void navatala_sparse_partition_reorder_f32(__global const uint* rowPtr,
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int origRow = ((int)(perm[gid]));
     int rs = ((int)(rowPtr[origRow]));
     int re = ((int)(rowPtr[(origRow + 1)]));

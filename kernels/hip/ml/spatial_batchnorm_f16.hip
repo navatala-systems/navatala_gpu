@@ -31,7 +31,7 @@ extern "C" __global__ void navatala_ml_spatial_batchnorm_f16(const __half* x, co
   float epsVal = eps[0];
   float gsM = __uint_as_float(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((unsigned int)(itM)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itM)) * 256u)) < countVal) {
       gsM = (gsM + ((float)(x[(((((lid + (((unsigned int)(itM)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((unsigned int)(itM)) * 256u)) % HWv))])));
     }
   }
@@ -40,7 +40,7 @@ extern "C" __global__ void navatala_ml_spatial_batchnorm_f16(const __half* x, co
   unsigned int meanStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -55,7 +55,7 @@ extern "C" __global__ void navatala_ml_spatial_batchnorm_f16(const __half* x, co
   __syncthreads();
   float gsV = __uint_as_float(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((unsigned int)(itV)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itV)) * 256u)) < countVal) {
       gsV = (gsV + ((((float)(x[(((((lid + (((unsigned int)(itV)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((unsigned int)(itV)) * 256u)) % HWv))])) - mean) * (((float)(x[(((((lid + (((unsigned int)(itV)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((unsigned int)(itV)) * 256u)) % HWv))])) - mean)));
     }
   }
@@ -64,7 +64,7 @@ extern "C" __global__ void navatala_ml_spatial_batchnorm_f16(const __half* x, co
   unsigned int varStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -78,7 +78,7 @@ extern "C" __global__ void navatala_ml_spatial_batchnorm_f16(const __half* x, co
   float var = (sdata[0] / n);
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
-    if (((lid + (((unsigned int)(itW)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itW)) * 256u)) < countVal) {
       float gv = ((float)(gamma[grp]));
       float bv = ((float)(beta[grp]));
       float xv = ((float)(x[(((((lid + (((unsigned int)(itW)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((unsigned int)(itW)) * 256u)) % HWv))]));

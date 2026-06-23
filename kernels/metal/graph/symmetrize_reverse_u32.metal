@@ -19,7 +19,7 @@ using namespace metal;
 kernel void navatala_graph_symmetrize_reverse_u32(device const uint* srcs [[buffer(0)]], device const uint* dsts [[buffer(1)]], device const uint* numEdges [[buffer(2)]], device uint* outSrcs [[buffer(3)]], device uint* outDsts [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint numE = numEdges[0];
-  if ((gid < numE)) {
+  if (gid < numE) {
     uint u = srcs[gid];
     uint v = dsts[gid];
     outSrcs[gid] = v;

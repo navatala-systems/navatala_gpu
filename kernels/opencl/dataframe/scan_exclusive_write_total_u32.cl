@@ -16,9 +16,9 @@
 __kernel void navatala_dataframe_scan_exclusive_write_total_u32(__global const uint* _input, __global const uint* count, __global uint* _output) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint n = count[(uint)(0u)];
-    if ((n == (uint)(0u))) {
+    if (n == (uint)(0u)) {
       _output[(uint)(0u)] = (uint)(0u);
     } else {
       uint nMinus1 = (n - (uint)(1u));

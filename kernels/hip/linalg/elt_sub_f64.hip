@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_linalg_elt_sub_f64(const double* A, const double* B, const unsigned int* n, double* C) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int i = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     double a = A[i];
     double b = B[i];
     C[i] = (a - b);

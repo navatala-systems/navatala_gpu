@@ -46,7 +46,7 @@ void main() {
   uint colIdx = uint(int(gl_LocalInvocationID.x));
   uint mVal = m[0u];
   uint nVal = n[0u];
-  if ((rowIdx < mVal)) {
+  if (rowIdx < mVal) {
     bool inBounds = (colIdx < nVal);
     uint linearIdx = ((rowIdx * nVal) + colIdx);
     if (inBounds) {
@@ -73,7 +73,7 @@ void main() {
         uint partnerIdxVal = loopPartnerIdx;
         loopPartnerVal = svals[partnerIdxVal];
         double partnerValRead = loopPartnerVal;
-        if ((myValRead > partnerValRead)) {
+        if (myValRead > partnerValRead) {
           svals[colIdx] = partnerValRead;
           svals[partnerIdxVal] = myValRead;
         }

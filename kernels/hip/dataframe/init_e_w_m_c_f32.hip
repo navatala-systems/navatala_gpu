@@ -16,7 +16,7 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_init_e_w_m_c_f32(const float* alphaIn, float* alpha, float* nEff, float* meanX, float* meanY, float* Cxy, float* varX, float* varY) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float a = alphaIn[0];
     alpha[0] = a;
     nEff[0] = __uint_as_float(0x00000000u);

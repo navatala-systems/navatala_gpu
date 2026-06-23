@@ -44,7 +44,7 @@ extern "C" __global__ void navatala_ml_compute_k_l_divergence_f32(const float* P
   unsigned int klF32ReductionStride = 128u;
   for (int klF32ReductionStep = 0; klF32ReductionStep < (int)(8); ++klF32ReductionStep) {
     unsigned int klF32Stride = klF32ReductionStride;
-    if ((lid < klF32Stride)) {
+    if (lid < klF32Stride) {
       float klF32Other = sdata[(lid + klF32Stride)];
       float klF32Mine = sdata[lid];
       float klF32Sum = (klF32Mine + klF32Other);
@@ -55,7 +55,7 @@ extern "C" __global__ void navatala_ml_compute_k_l_divergence_f32(const float* P
     klF32ReductionStride = klF32NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float klVal = sdata[0];
     kl_divergence[0] = klVal;
   }

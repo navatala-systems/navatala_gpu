@@ -16,13 +16,13 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_linear_upwind_scalar_face(const float* flux, const float* xCell, const float* gradX, const float* gradY, const float* gradZ, const float* limiter, const int* owner, const int* nei, const float* cx, const float* cy, const float* cz, const float* cfx, const float* cfy, const float* cfz, const float* bcValue, const unsigned int* bcMask, const unsigned int* params, float* outFace) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(params[0])))) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(params[0]))) {
     return;
   } else {
     float phif = flux[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
     int own = owner[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
-    if (((int)(blockIdx.x * blockDim.x + threadIdx.x) < ((int)(params[1])))) {
-      if ((phif >= __uint_as_float(0x00000000u))) {
+    if ((int)(blockIdx.x * blockDim.x + threadIdx.x) < ((int)(params[1]))) {
+      if (phif >= __uint_as_float(0x00000000u)) {
         float dx = (cfx[(int)(blockIdx.x * blockDim.x + threadIdx.x)] - cx[own]);
         float dy = (cfy[(int)(blockIdx.x * blockDim.x + threadIdx.x)] - cy[own]);
         float dz = (cfz[(int)(blockIdx.x * blockDim.x + threadIdx.x)] - cz[own]);
@@ -37,11 +37,11 @@ extern "C" __global__ void navatala_cfd_primitives_linear_upwind_scalar_face(con
         outFace[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = (xCell[neiCell] + (limiter[neiCell] * corr));
       }
     } else {
-      if ((phif >= __uint_as_float(0x00000000u))) {
+      if (phif >= __uint_as_float(0x00000000u)) {
         outFace[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = xCell[own];
       } else {
         unsigned int mask = bcMask[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
-        if ((((int)(mask)) == 0)) {
+        if (((int)(mask)) == 0) {
           outFace[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = xCell[own];
         } else {
           outFace[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = bcValue[(int)(blockIdx.x * blockDim.x + threadIdx.x)];

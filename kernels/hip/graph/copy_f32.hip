@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_graph_copy_f32(const float* x, const unsigne
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xv = x[gid];
     y[gid] = xv;
   }

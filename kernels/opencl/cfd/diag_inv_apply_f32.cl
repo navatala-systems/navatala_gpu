@@ -17,7 +17,7 @@ __kernel void navatala_cfd_diag_inv_apply_f32(__global const float* r, __global 
   int gid0 = (int)get_global_id(0);
   int i = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     float ri = r[i];
     float di = diagInv[i];
     z[i] = (di * ri);

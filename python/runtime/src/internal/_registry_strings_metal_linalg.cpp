@@ -29,7 +29,7 @@ kernel void navatala_linalg_norm_linf_f32(device const float* _input [[buffer(0)
   uint linfF32RedStride = 128u;
   for (int linfF32RedStep = 0; linfF32RedStep < (int)(8); ++linfF32RedStep) {
     uint linfF32Stride = linfF32RedStride;
-    if ((lid < linfF32Stride)) {
+    if (lid < linfF32Stride) {
       float other = sdata[(lid + linfF32Stride)];
       float mine = sdata[lid];
       bool mineGtOther = (mine > other);
@@ -41,7 +41,7 @@ kernel void navatala_linalg_norm_linf_f32(device const float* _input [[buffer(0)
     linfF32RedStride = linfF32NextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0] = sdata[0];
   }
 }
@@ -125,7 +125,7 @@ kernel void navatala_linalg_reduce_sum_f16(device const half* _input [[buffer(0)
   uint sumF16ReductionStride = 128u;
   for (int sumF16ReductionStep = 0; sumF16ReductionStep < (int)(8); ++sumF16ReductionStep) {
     uint sumF16Stride = sumF16ReductionStride;
-    if ((lid < sumF16Stride)) {
+    if (lid < sumF16Stride) {
       float other = sdata[(lid + sumF16Stride)];
       float mine = sdata[lid];
       float sum = (mine + other);
@@ -136,7 +136,7 @@ kernel void navatala_linalg_reduce_sum_f16(device const half* _input [[buffer(0)
     sumF16ReductionStride = sumF16NextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float partialSum = sdata[0];
     result[0] = partialSum;
   }
@@ -164,7 +164,7 @@ kernel void navatala_linalg_reduce_max_f16(device const half* _input [[buffer(0)
   uint maxF16ReductionStride = 128u;
   for (int maxF16ReductionStep = 0; maxF16ReductionStep < (int)(8); ++maxF16ReductionStep) {
     uint maxF16Stride = maxF16ReductionStride;
-    if ((lid < maxF16Stride)) {
+    if (lid < maxF16Stride) {
       float other = sdata[(lid + maxF16Stride)];
       float mine = sdata[lid];
       bool isGreater = (mine > other);
@@ -176,7 +176,7 @@ kernel void navatala_linalg_reduce_max_f16(device const half* _input [[buffer(0)
     maxF16ReductionStride = maxF16NextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float maxResult = sdata[0];
     result[0] = maxResult;
   }
@@ -189,7 +189,7 @@ using namespace metal;
 
 kernel void navatala_linalg_elt_add_f32(device const float* A [[buffer(0)]], device const float* B [[buffer(1)]], device const uint* n [[buffer(2)]], device float* C [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint i = ((uint)(int(__gid.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     float a = A[i];
     float b = B[i];
     C[i] = (a + b);
@@ -203,7 +203,7 @@ using namespace metal;
 
 kernel void navatala_linalg_elt_sub_f32(device const float* A [[buffer(0)]], device const float* B [[buffer(1)]], device const uint* n [[buffer(2)]], device float* C [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint i = ((uint)(int(__gid.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     float a = A[i];
     float b = B[i];
     C[i] = (a - b);
@@ -217,7 +217,7 @@ using namespace metal;
 
 kernel void navatala_linalg_elt_mul_f32(device const float* A [[buffer(0)]], device const float* B [[buffer(1)]], device const uint* n [[buffer(2)]], device float* C [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint i = ((uint)(int(__gid.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     float a = A[i];
     float b = B[i];
     C[i] = (a * b);
@@ -231,7 +231,7 @@ using namespace metal;
 
 kernel void navatala_linalg_elt_div_f32(device const float* A [[buffer(0)]], device const float* B [[buffer(1)]], device const uint* n [[buffer(2)]], device float* C [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint i = ((uint)(int(__gid.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     float a = A[i];
     float b = B[i];
     C[i] = (a / b);
@@ -246,7 +246,7 @@ using namespace metal;
 kernel void navatala_linalg_elt_pow_f32(device const float* A [[buffer(0)]], device const float* p [[buffer(1)]], device const uint* n [[buffer(2)]], device float* C [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint i = ((uint)(int(__gid.x)));
   float pVal = p[0u];
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     float a = A[i];
     float logA = log(a);
     float pLogA = (pVal * logA);
@@ -261,7 +261,7 @@ using namespace metal;
 
 kernel void navatala_linalg_elt_sqrt_f32(device const float* A [[buffer(0)]], device const uint* n [[buffer(1)]], device float* C [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint i = ((uint)(int(__gid.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     float a = A[i];
     C[i] = sqrt(a);
   }
@@ -274,7 +274,7 @@ using namespace metal;
 
 kernel void navatala_linalg_elt_exp_f32(device const float* A [[buffer(0)]], device const uint* n [[buffer(1)]], device float* C [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint i = ((uint)(int(__gid.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     float a = A[i];
     C[i] = exp(a);
   }
@@ -287,7 +287,7 @@ using namespace metal;
 
 kernel void navatala_linalg_elt_log_f32(device const float* A [[buffer(0)]], device const uint* n [[buffer(1)]], device float* C [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint i = ((uint)(int(__gid.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     float a = A[i];
     C[i] = log(a);
   }
@@ -300,7 +300,7 @@ using namespace metal;
 
 kernel void navatala_linalg_elt_abs_f32(device const float* A [[buffer(0)]], device const uint* n [[buffer(1)]], device float* C [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint i = ((uint)(int(__gid.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     float a = A[i];
     C[i] = abs(a);
   }
@@ -313,7 +313,7 @@ using namespace metal;
 
 kernel void navatala_linalg_elt_sign_f32(device const float* A [[buffer(0)]], device const uint* n [[buffer(1)]], device float* C [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint i = ((uint)(int(__gid.x)));
-  if ((i < n[0u])) {
+  if (i < n[0u]) {
     float a = A[i];
     bool isNeg = (a < as_type<float>(0x00000000u));
     float negOrZero = ((isNeg) ? (as_type<float>(0xbf800000u)) : (as_type<float>(0x00000000u)));
@@ -407,7 +407,7 @@ using namespace metal;
 kernel void navatala_linalg_map_f32(device const float* A [[buffer(0)]], device const uint* m [[buffer(1)]], device const uint* n [[buffer(2)]], device float* result [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint idx = gid;
-  if ((idx < (m[0u] * n[0u]))) {
+  if (idx < (m[0u] * n[0u])) {
     float val = A[idx];
     result[idx] = val;
   }
@@ -421,7 +421,7 @@ using namespace metal;
 kernel void navatala_linalg_reduce_row_sum_f32(device const float* A [[buffer(0)]], device const uint* m [[buffer(1)]], device const uint* n [[buffer(2)]], device float* result [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint row = gid;
-  if ((row < m[0u])) {
+  if (row < m[0u]) {
     float sumAccum = as_type<float>(0x00000000u);
     for (int j = 0; j < (int)(n[0u]); ++j) {
       uint jU32 = ((uint)(j));
@@ -444,7 +444,7 @@ using namespace metal;
 kernel void navatala_linalg_reduce_col_sum_f32(device const float* A [[buffer(0)]], device const uint* m [[buffer(1)]], device const uint* n [[buffer(2)]], device float* result [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint col = gid;
-  if ((col < n[0u])) {
+  if (col < n[0u]) {
     float sumAccum = as_type<float>(0x00000000u);
     for (int i = 0; i < (int)(m[0u]); ++i) {
       uint iU32 = ((uint)(i));
@@ -467,7 +467,7 @@ using namespace metal;
 kernel void navatala_linalg_reduce_row_max_f32(device const float* A [[buffer(0)]], device const uint* m [[buffer(1)]], device const uint* n [[buffer(2)]], device float* result [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint row = gid;
-  if ((row < m[0u])) {
+  if (row < m[0u]) {
     uint firstIdx = (row * n[0u]);
     float initMaxVal = A[firstIdx];
     float maxAccum = initMaxVal;
@@ -492,7 +492,7 @@ using namespace metal;
 kernel void navatala_linalg_reduce_col_max_f32(device const float* A [[buffer(0)]], device const uint* m [[buffer(1)]], device const uint* n [[buffer(2)]], device float* result [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint col = gid;
-  if ((col < n[0u])) {
+  if (col < n[0u]) {
     float initMaxVal = A[col];
     float maxAccum = initMaxVal;
     for (int i = 0; i < (int)(m[0u]); ++i) {
@@ -530,7 +530,7 @@ static inline uint gpu_atomic_cas_uint(device atomic_uint* ptr, uint expected, u
 kernel void navatala_linalg_map_reduce_sum_f32(device const float* A [[buffer(0)]], device const uint* m [[buffer(1)]], device const uint* n [[buffer(2)]], device float* result [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint idx = gid;
-  if ((idx < (m[0u] * n[0u]))) {
+  if (idx < (m[0u] * n[0u])) {
     float val = A[idx];
     atomic_fetch_add_explicit((device atomic_float*)(&result[0u]), val, memory_order_relaxed);
   }
@@ -647,7 +647,7 @@ kernel void navatala_linalg_extract_upper_f32(device const float* A [[buffer(0)]
   uint idx = ((uint)(int(__gid.x)));
   uint nVal = n[0u];
   uint totalElements = (nVal * nVal);
-  if ((idx < totalElements)) {
+  if (idx < totalElements) {
     uint i = (idx / nVal);
     uint j = (idx % nVal);
     float aVal = A[idx];
@@ -666,7 +666,7 @@ kernel void navatala_linalg_extract_lower_f32(device const float* A [[buffer(0)]
   uint idx = ((uint)(int(__gid.x)));
   uint nVal = n[0u];
   uint totalElements = (nVal * nVal);
-  if ((idx < totalElements)) {
+  if (idx < totalElements) {
     uint i = (idx / nVal);
     uint j = (idx % nVal);
     float aVal = A[idx];
@@ -686,7 +686,7 @@ kernel void navatala_linalg_set_upper_f32(device const float* val [[buffer(0)]],
   uint nVal = n[0u];
   float fillVal = val[0u];
   uint totalElements = (nVal * nVal);
-  if ((idx < totalElements)) {
+  if (idx < totalElements) {
     uint i = (idx / nVal);
     uint j = (idx % nVal);
     bool isStrictUpper = (i < j);
@@ -706,7 +706,7 @@ kernel void navatala_linalg_set_lower_f32(device const float* val [[buffer(0)]],
   uint nVal = n[0u];
   float fillVal = val[0u];
   uint totalElements = (nVal * nVal);
-  if ((idx < totalElements)) {
+  if (idx < totalElements) {
     uint i = (idx / nVal);
     uint j = (idx % nVal);
     bool isStrictLower = (i > j);
@@ -727,7 +727,7 @@ kernel void navatala_linalg_gather_rows_f32(device const float* A [[buffer(0)]],
   uint kVal = k[0u];
   uint nVal = n[0u];
   uint totalElems = (kVal * nVal);
-  if ((tid < totalElems)) {
+  if (tid < totalElems) {
     uint rowIdx = (tid / nVal);
     uint colIdx = (tid % nVal);
     uint srcRow = indices[rowIdx];
@@ -749,7 +749,7 @@ kernel void navatala_linalg_gather_cols_f32(device const float* A [[buffer(0)]],
   uint nVal = n[0u];
   uint kVal = kCount[0u];
   uint totalElems = (mVal * kVal);
-  if ((tid < totalElems)) {
+  if (tid < totalElems) {
     uint rowIdx = (tid / kVal);
     uint outColIdx = (tid % kVal);
     uint srcCol = indices[outColIdx];
@@ -769,7 +769,7 @@ kernel void navatala_linalg_gather_elements_f32(device const float* A [[buffer(0
   uint tid = gid;
   uint countVal = count[0u];
   uint nVal = n[0u];
-  if ((tid < countVal)) {
+  if (tid < countVal) {
     uint row = rowIdx[tid];
     uint col = colIdx[tid];
     uint srcIdx = ((row * nVal) + col);
@@ -792,7 +792,7 @@ kernel void navatala_linalg_gather_batched_f32(device const float* A [[buffer(0)
   uint kVal = kCount[0u];
   uint outBatchStride = (kVal * nVal);
   uint totalElems = (batchVal * outBatchStride);
-  if ((tid < totalElems)) {
+  if (tid < totalElems) {
     uint batchIdx = (tid / outBatchStride);
     uint withinBatch = (tid % outBatchStride);
     uint rowIdx = (withinBatch / nVal);
@@ -817,7 +817,7 @@ kernel void navatala_linalg_scatter_rows_f32(device const float* src [[buffer(0)
   uint kVal = k[0u];
   uint nVal = n[0u];
   uint totalElems = (kVal * nVal);
-  if ((tid < totalElems)) {
+  if (tid < totalElems) {
     uint rowIdx = (tid / nVal);
     uint colIdx = (tid % nVal);
     uint dstRow = indices[rowIdx];
@@ -839,7 +839,7 @@ kernel void navatala_linalg_scatter_cols_f32(device const float* src [[buffer(0)
   uint kVal = k[0u];
   uint nVal = n[0u];
   uint totalElems = (mVal * kVal);
-  if ((tid < totalElems)) {
+  if (tid < totalElems) {
     uint row = (tid / kVal);
     uint srcColIdx = (tid % kVal);
     uint dstCol = indices[srcColIdx];
@@ -872,7 +872,7 @@ kernel void navatala_linalg_scatter_add_f32(device const float* src [[buffer(0)]
   uint gid = ((uint)(int(__gid.x)));
   uint tid = gid;
   uint n = count[0u];
-  if ((tid < n)) {
+  if (tid < n) {
     uint dstIdx = indices[tid];
     float val = src[tid];
     atomic_fetch_add_explicit((device atomic_float*)(&A[dstIdx]), val, memory_order_relaxed);
@@ -920,7 +920,7 @@ kernel void navatala_linalg_scatter_max_f32(device const float* src [[buffer(0)]
   uint gid = ((uint)(int(__gid.x)));
   uint tid = gid;
   uint n = count[0u];
-  if ((tid < n)) {
+  if (tid < n) {
     uint dstIdx = indices[tid];
     float val = src[tid];
     gpu_atomic_max_float((device atomic_float*)(&A[dstIdx]), val);
@@ -940,7 +940,7 @@ kernel void navatala_linalg_slice_rows_f32(device const float* A [[buffer(0)]], 
   uint n = numCols[0u];
   uint numRows = (re - rs);
   uint totalElems = (numRows * n);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     uint outRow = (idx / n);
     uint outCol = (idx % n);
     uint srcRow = (rs + outRow);
@@ -964,7 +964,7 @@ kernel void navatala_linalg_slice_cols_f32(device const float* A [[buffer(0)]], 
   uint n = srcCols[0u];
   uint outCols = (ce - cs);
   uint totalElems = (m * outCols);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     uint outRow = (idx / outCols);
     uint outCol = (idx % outCols);
     uint srcCol = (cs + outCol);
@@ -990,7 +990,7 @@ kernel void navatala_linalg_slice_block_f32(device const float* A [[buffer(0)]],
   uint outRows = (re - rs);
   uint outCols = (ce - cs);
   uint totalElems = (outRows * outCols);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     uint outRow = (idx / outCols);
     uint outCol = (idx % outCols);
     uint srcRow = (rs + outRow);
@@ -1012,7 +1012,7 @@ kernel void navatala_linalg_strided_slice_f32(device const float* A [[buffer(0)]
   uint s = start[0u];
   uint st = stride[0u];
   uint n = count[0u];
-  if ((idx < n)) {
+  if (idx < n) {
     uint srcIdx = (s + (idx * st));
     float val = A[srcIdx];
     _out[idx] = val;
@@ -1028,7 +1028,7 @@ kernel void navatala_linalg_extract_diagonal_f32(device const float* A [[buffer(
   uint gid = ((uint)(int(__gid.x)));
   uint idx = gid;
   uint size = n[0u];
-  if ((idx < size)) {
+  if (idx < size) {
     uint stride = (size + 1u);
     uint srcIdx = (idx * stride);
     float val = A[srcIdx];
@@ -1047,7 +1047,7 @@ kernel void navatala_linalg_extract_diagonal_k_f32(device const float* A [[buffe
   uint size = n[0u];
   uint offset = k[0u];
   uint diagLen = (size - offset);
-  if ((idx < diagLen)) {
+  if (idx < diagLen) {
     uint row = idx;
     uint col = (idx + offset);
     uint srcIdx = ((row * size) + col);
@@ -1065,7 +1065,7 @@ kernel void navatala_linalg_set_diagonal_f32(device const float* val [[buffer(0)
   uint gid = ((uint)(int(__gid.x)));
   uint idx = gid;
   uint size = n[0u];
-  if ((idx < size)) {
+  if (idx < size) {
     uint stride = (size + 1u);
     uint destIdx = (idx * stride);
     float v = val[idx];
@@ -1083,7 +1083,7 @@ kernel void navatala_linalg_diag_to_matrix_f32(device const float* v [[buffer(0)
   uint idx = gid;
   uint size = n[0u];
   uint totalElems = (size * size);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     uint row = (idx / size);
     uint col = (idx % size);
     bool isDiag = (row == col);
@@ -1105,7 +1105,7 @@ kernel void navatala_linalg_shift_rows_f32(device const float* A [[buffer(0)]], 
   uint mVal = m[0u];
   uint nVal = n[0u];
   uint totalElems = (mVal * nVal);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     uint row = (idx / nVal);
     uint col = (idx % nVal);
     bool inBounds = (row >= kVal);
@@ -1129,7 +1129,7 @@ kernel void navatala_linalg_shift_cols_f32(device const float* A [[buffer(0)]], 
   uint mVal = m[0u];
   uint nVal = n[0u];
   uint totalElems = (mVal * nVal);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     uint row = (idx / nVal);
     uint col = (idx % nVal);
     bool inBounds = (col >= kVal);
@@ -1153,7 +1153,7 @@ kernel void navatala_linalg_roll_rows_f32(device const float* A [[buffer(0)]], d
   uint mVal = m[0u];
   uint nVal = n[0u];
   uint totalElems = (mVal * nVal);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     uint row = (idx / nVal);
     uint col = (idx % nVal);
     uint kMod = (kVal % mVal);
@@ -1178,7 +1178,7 @@ kernel void navatala_linalg_roll_cols_f32(device const float* A [[buffer(0)]], d
   uint mVal = m[0u];
   uint nVal = n[0u];
   uint totalElems = (mVal * nVal);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     uint row = (idx / nVal);
     uint col = (idx % nVal);
     uint kMod = (kVal % nVal);
@@ -1210,7 +1210,7 @@ kernel void navatala_linalg_sort_rows_f32(device const float* A [[buffer(0)]], d
   uint colIdx = ((uint)(int(__tid.x)));
   uint mVal = m[0u];
   uint nVal = n[0u];
-  if ((rowIdx < mVal)) {
+  if (rowIdx < mVal) {
     bool inBounds = (colIdx < nVal);
     uint linearIdx = ((rowIdx * nVal) + colIdx);
     if (inBounds) {
@@ -1237,7 +1237,7 @@ kernel void navatala_linalg_sort_rows_f32(device const float* A [[buffer(0)]], d
         uint partnerIdxVal = loopPartnerIdx;
         loopPartnerVal = svals[partnerIdxVal];
         float partnerValRead = loopPartnerVal;
-        if ((myValRead > partnerValRead)) {
+        if (myValRead > partnerValRead) {
           svals[colIdx] = partnerValRead;
           svals[partnerIdxVal] = myValRead;
         }
@@ -1270,7 +1270,7 @@ kernel void navatala_linalg_sort_cols_f32(device const float* A [[buffer(0)]], d
   uint rowIdx = ((uint)(int(__tid.x)));
   uint mVal = m[0u];
   uint nVal = n[0u];
-  if ((colIdx < nVal)) {
+  if (colIdx < nVal) {
     bool inBounds = (rowIdx < mVal);
     uint linearIdx = ((rowIdx * nVal) + colIdx);
     if (inBounds) {
@@ -1297,7 +1297,7 @@ kernel void navatala_linalg_sort_cols_f32(device const float* A [[buffer(0)]], d
         uint partnerIdxVal = loopPartnerIdx;
         loopPartnerVal = svals[partnerIdxVal];
         float partnerValRead = loopPartnerVal;
-        if ((myValRead > partnerValRead)) {
+        if (myValRead > partnerValRead) {
           svals[rowIdx] = partnerValRead;
           svals[partnerIdxVal] = myValRead;
         }
@@ -1333,7 +1333,7 @@ kernel void navatala_linalg_argsort_rows_f32(device const float* A [[buffer(0)]]
   uint colIdx = ((uint)(int(__tid.x)));
   uint mVal = m[0u];
   uint nVal = n[0u];
-  if ((rowIdx < mVal)) {
+  if (rowIdx < mVal) {
     bool inBounds = (colIdx < nVal);
     uint linearIdx = ((rowIdx * nVal) + colIdx);
     if (inBounds) {
@@ -1366,7 +1366,7 @@ kernel void navatala_linalg_argsort_rows_f32(device const float* A [[buffer(0)]]
         float partnerValRead = loopPartnerVal;
         loopPartnerIdx = sidxs[partnerPosVal];
         uint partnerIdxRead = loopPartnerIdx;
-        if ((myValRead > partnerValRead)) {
+        if (myValRead > partnerValRead) {
           svals[colIdx] = partnerValRead;
           sidxs[colIdx] = partnerIdxRead;
           svals[partnerPosVal] = myValRead;
@@ -1404,7 +1404,7 @@ kernel void navatala_linalg_argsort_cols_f32(device const float* A [[buffer(0)]]
   uint rowIdx = ((uint)(int(__tid.x)));
   uint mVal = m[0u];
   uint nVal = n[0u];
-  if ((colIdx < nVal)) {
+  if (colIdx < nVal) {
     bool inBounds = (rowIdx < mVal);
     uint linearIdx = ((rowIdx * nVal) + colIdx);
     if (inBounds) {
@@ -1437,7 +1437,7 @@ kernel void navatala_linalg_argsort_cols_f32(device const float* A [[buffer(0)]]
         float partnerValRead = loopPartnerVal;
         loopPartnerIdx = sidxs[partnerPosVal];
         uint partnerIdxRead = loopPartnerIdx;
-        if ((myValRead > partnerValRead)) {
+        if (myValRead > partnerValRead) {
           svals[rowIdx] = partnerValRead;
           sidxs[rowIdx] = partnerIdxRead;
           svals[partnerPosVal] = myValRead;

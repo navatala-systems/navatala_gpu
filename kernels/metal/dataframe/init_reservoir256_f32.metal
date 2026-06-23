@@ -21,7 +21,7 @@ kernel void navatala_dataframe_init_reservoir256_f32(device const uint* initialS
   if (inBounds) {
     reservoir[int(__gid.x)] = as_type<float>(0x00000000u);
   }
-  if ((int(__gid.x) == 0)) {
+  if (int(__gid.x) == 0) {
     uint initSeed = initialSeed[0];
     count[0] = 0u;
     seed[0] = initSeed;

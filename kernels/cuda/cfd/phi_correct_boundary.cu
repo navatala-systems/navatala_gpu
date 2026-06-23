@@ -20,17 +20,17 @@ extern "C" __global__ void navatala_cfd_phi_correct_boundary(const float* phiIn,
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
   int f = (counts[1] + ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))));
-  if ((f >= counts[0])) {
+  if (f >= counts[0]) {
     return;
   } else {
     int o = owner[f];
     float po = pCell[o];
     float other = po;
-    if ((bcMask[f] != 0)) {
+    if (bcMask[f] != 0) {
       other = bcVal[f];
     }
     float snGrad = (deltaCoeffs[f] * (other - po));
-    if ((bcSnGradMask[f] != 0)) {
+    if (bcSnGradMask[f] != 0) {
       snGrad = bcSnGrad[f];
     }
     float gradFace = (magSf[f] * snGrad);

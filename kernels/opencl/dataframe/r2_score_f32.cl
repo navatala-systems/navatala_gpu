@@ -39,7 +39,7 @@ __kernel void navatala_dataframe_r2_score_f32(__global const float* y_true, __gl
   uint r2F32_reductionStride = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint r2F32_stride = r2F32_reductionStride;
-    if ((lid < r2F32_stride)) {
+    if (lid < r2F32_stride) {
       uint r2F32_partnerIdx = (lid + r2F32_stride);
       float otherRes = sdata_res[r2F32_partnerIdx];
       float mineRes = sdata_res[lid];
@@ -56,7 +56,7 @@ __kernel void navatala_dataframe_r2_score_f32(__global const float* y_true, __gl
     barrier(CLK_LOCAL_MEM_FENCE);
   }
   uint zeroU32 = ((uint)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     float ssRes = sdata_res[0];
     float ssTot = sdata_tot[0];
     float ratio = (ssRes / ssTot);

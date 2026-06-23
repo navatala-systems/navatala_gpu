@@ -31,7 +31,7 @@ extern "C" __global__ void navatala_runtime_deterministic_reduce_f64(const doubl
   unsigned int f64RedStride = 128u;
   for (int f64RedStep = 0; f64RedStep < (int)(8); ++f64RedStep) {
     unsigned int f64Stride = f64RedStride;
-    if ((lid < f64Stride)) {
+    if (lid < f64Stride) {
       double other = sdata[(lid + f64Stride)];
       double mine = sdata[lid];
       double sum = (mine + other);
@@ -42,7 +42,7 @@ extern "C" __global__ void navatala_runtime_deterministic_reduce_f64(const doubl
     f64RedStride = f64NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double totalSum = sdata[0];
     result[0] = totalSum;
   }

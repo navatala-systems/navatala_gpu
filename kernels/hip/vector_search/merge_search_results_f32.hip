@@ -21,7 +21,7 @@ extern "C" __global__ void navatala_vector_search_merge_search_results_f32(const
   unsigned int ka = k_a[0];
   unsigned int kb = k_b[0];
   unsigned int ko = k_out[0];
-  if ((query_id < nq)) {
+  if (query_id < nq) {
     unsigned int ptr_a = 0u;
     unsigned int ptr_b = 0u;
     unsigned int out_idx = 0u;

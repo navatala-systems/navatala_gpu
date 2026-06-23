@@ -31,7 +31,7 @@ kernel void navatala_cfd_spectral_conv4d_mode_sliced(device const float* xFt [[b
   int m4 = 2;
   int hyper = (((ftt * ftd) * fth) * ftw);
   int total = ((nb * outCh) * hyper);
-  if ((gid < total)) {
+  if (gid < total) {
     int boc = (gid / hyper);
     int tdhwFlat = (gid % hyper);
     int b = (boc / outCh);
@@ -47,7 +47,7 @@ kernel void navatala_cfd_spectral_conv4d_mode_sliced(device const float* xFt [[b
     int negStartH = (fth - m3);
     float accR = as_type<float>(0x00000000u);
     float accI = as_type<float>(0x00000000u);
-    if (((((t < m1) && (d < m2)) && (h < m3)) && (w < m4))) {
+    if ((((t < m1) && (d < m2)) && (h < m3)) && (w < m4)) {
       for (int ic = 0; ic < (int)(inCh); ++ic) {
         int xBase = ((((((((((b * inCh) + ic) * ftt) + t) * ftd) + d) * fth) + h) * ftw) + w);
         int wBase = ((((((((((((oc * inCh) + ic) * m1) + t) * m2) + d) * m3) + h) * m4) + w) * 1) + 0);
@@ -59,7 +59,7 @@ kernel void navatala_cfd_spectral_conv4d_mode_sliced(device const float* xFt [[b
         accI = (accI + ((xr * wi) + (xi * wr)));
       }
     } else {
-      if (((((t >= negStartT) && (d < m2)) && (h < m3)) && (w < m4))) {
+      if ((((t >= negStartT) && (d < m2)) && (h < m3)) && (w < m4)) {
         for (int ic = 0; ic < (int)(inCh); ++ic) {
           int xBase = ((((((((((b * inCh) + ic) * ftt) + t) * ftd) + d) * fth) + h) * ftw) + w);
           int wBase = ((((((((((((oc * inCh) + ic) * m1) + (t - negStartT)) * m2) + d) * m3) + h) * m4) + w) * 1) + 0);
@@ -71,7 +71,7 @@ kernel void navatala_cfd_spectral_conv4d_mode_sliced(device const float* xFt [[b
           accI = (accI + ((xr * wi) + (xi * wr)));
         }
       } else {
-        if (((((t < m1) && (d >= negStartD)) && (h < m3)) && (w < m4))) {
+        if ((((t < m1) && (d >= negStartD)) && (h < m3)) && (w < m4)) {
           for (int ic = 0; ic < (int)(inCh); ++ic) {
             int xBase = ((((((((((b * inCh) + ic) * ftt) + t) * ftd) + d) * fth) + h) * ftw) + w);
             int wBase = ((((((((((((oc * inCh) + ic) * m1) + t) * m2) + (d - negStartD)) * m3) + h) * m4) + w) * 1) + 0);
@@ -83,7 +83,7 @@ kernel void navatala_cfd_spectral_conv4d_mode_sliced(device const float* xFt [[b
             accI = (accI + ((xr * wi) + (xi * wr)));
           }
         } else {
-          if (((((t >= negStartT) && (d >= negStartD)) && (h < m3)) && (w < m4))) {
+          if ((((t >= negStartT) && (d >= negStartD)) && (h < m3)) && (w < m4)) {
             for (int ic = 0; ic < (int)(inCh); ++ic) {
               int xBase = ((((((((((b * inCh) + ic) * ftt) + t) * ftd) + d) * fth) + h) * ftw) + w);
               int wBase = ((((((((((((oc * inCh) + ic) * m1) + (t - negStartT)) * m2) + (d - negStartD)) * m3) + h) * m4) + w) * 1) + 0);
@@ -95,7 +95,7 @@ kernel void navatala_cfd_spectral_conv4d_mode_sliced(device const float* xFt [[b
               accI = (accI + ((xr * wi) + (xi * wr)));
             }
           } else {
-            if (((((t < m1) && (d < m2)) && (h >= negStartH)) && (w < m4))) {
+            if ((((t < m1) && (d < m2)) && (h >= negStartH)) && (w < m4)) {
               for (int ic = 0; ic < (int)(inCh); ++ic) {
                 int xBase = ((((((((((b * inCh) + ic) * ftt) + t) * ftd) + d) * fth) + h) * ftw) + w);
                 int wBase = ((((((((((((oc * inCh) + ic) * m1) + t) * m2) + d) * m3) + (h - negStartH)) * m4) + w) * 1) + 0);
@@ -107,7 +107,7 @@ kernel void navatala_cfd_spectral_conv4d_mode_sliced(device const float* xFt [[b
                 accI = (accI + ((xr * wi) + (xi * wr)));
               }
             } else {
-              if (((((t >= negStartT) && (d < m2)) && (h >= negStartH)) && (w < m4))) {
+              if ((((t >= negStartT) && (d < m2)) && (h >= negStartH)) && (w < m4)) {
                 for (int ic = 0; ic < (int)(inCh); ++ic) {
                   int xBase = ((((((((((b * inCh) + ic) * ftt) + t) * ftd) + d) * fth) + h) * ftw) + w);
                   int wBase = ((((((((((((oc * inCh) + ic) * m1) + (t - negStartT)) * m2) + d) * m3) + (h - negStartH)) * m4) + w) * 1) + 0);
@@ -119,7 +119,7 @@ kernel void navatala_cfd_spectral_conv4d_mode_sliced(device const float* xFt [[b
                   accI = (accI + ((xr * wi) + (xi * wr)));
                 }
               } else {
-                if (((((t < m1) && (d >= negStartD)) && (h >= negStartH)) && (w < m4))) {
+                if ((((t < m1) && (d >= negStartD)) && (h >= negStartH)) && (w < m4)) {
                   for (int ic = 0; ic < (int)(inCh); ++ic) {
                     int xBase = ((((((((((b * inCh) + ic) * ftt) + t) * ftd) + d) * fth) + h) * ftw) + w);
                     int wBase = ((((((((((((oc * inCh) + ic) * m1) + t) * m2) + (d - negStartD)) * m3) + (h - negStartH)) * m4) + w) * 1) + 0);
@@ -131,7 +131,7 @@ kernel void navatala_cfd_spectral_conv4d_mode_sliced(device const float* xFt [[b
                     accI = (accI + ((xr * wi) + (xi * wr)));
                   }
                 } else {
-                  if (((((t >= negStartT) && (d >= negStartD)) && (h >= negStartH)) && (w < m4))) {
+                  if ((((t >= negStartT) && (d >= negStartD)) && (h >= negStartH)) && (w < m4)) {
                     for (int ic = 0; ic < (int)(inCh); ++ic) {
                       int xBase = ((((((((((b * inCh) + ic) * ftt) + t) * ftd) + d) * fth) + h) * ftw) + w);
                       int wBase = ((((((((((((oc * inCh) + ic) * m1) + (t - negStartT)) * m2) + (d - negStartD)) * m3) + (h - negStartH)) * m4) + w) * 1) + 0);

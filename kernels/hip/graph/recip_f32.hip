@@ -17,9 +17,9 @@
 extern "C" __global__ void navatala_graph_recip_f32(const float* x, float* y) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     float xv = x[0];
-    if ((xv == __uint_as_float(0x00000000u))) {
+    if (xv == __uint_as_float(0x00000000u)) {
       y[0] = __uint_as_float(0x00000000u);
     } else {
       y[0] = (__uint_as_float(0x3f800000u) / xv);

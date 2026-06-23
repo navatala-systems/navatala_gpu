@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_ml_resize_bilinear_f16(const __half* _input,
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int outSizeVal = outSize[0];
-  if ((gid < outSizeVal)) {
+  if (gid < outSizeVal) {
     unsigned int inSizeVal = inSize[0];
     unsigned int inM1 = (inSizeVal - 1u);
     unsigned int outM1 = (outSizeVal - 1u);

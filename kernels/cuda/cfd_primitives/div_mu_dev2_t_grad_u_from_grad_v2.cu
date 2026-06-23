@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_grad_v2(const float* muCell, const float* muBc, const float* gXX, const float* gXY, const float* gXZ, const float* gYX, const float* gYY, const float* gYZ, const float* gZX, const float* gZY, const float* gZZ, const int* owner, const int* neighbour, const float* weights, const float* sfX, const float* sfY, const float* sfZ, const int* offsets, const int* faceIdx, const float* signF, const float* vol, const int* params, float* outX, float* outY, float* outZ) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= params[0]) {
     return;
   } else {
     float sumX = __uint_as_float(0x00000000u);
@@ -29,7 +29,7 @@ extern "C" __global__ void navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_gra
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < params[1])) {
+      if (f < params[1]) {
         float s = signF[k];
         int o = owner[f];
         float muO = muCell[o];
@@ -72,7 +72,7 @@ extern "C" __global__ void navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_gra
         float tauFzy = tauOzy;
         float tauFzz = tauOzz;
         int n = neighbour[f];
-        if ((n >= 0)) {
+        if (n >= 0) {
           float muN = muCell[n];
           float gnXX = gXX[n];
           float gnXY = gXY[n];
@@ -131,7 +131,7 @@ extern "C" __global__ void navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_gra
     }
     float v = vol[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float invV = __uint_as_float(0x00000000u);
-    if ((v != __uint_as_float(0x00000000u))) {
+    if (v != __uint_as_float(0x00000000u)) {
       invV = (__uint_as_float(0x3f800000u) / v);
     }
     outX[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (sumX * invV);

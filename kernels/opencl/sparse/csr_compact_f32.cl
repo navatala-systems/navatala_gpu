@@ -17,7 +17,7 @@ __kernel void navatala_sparse_csr_compact_f32(__global const uint* rowPtr, __glo
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int newRs = ((int)(newRowPtr[gid]));
@@ -25,7 +25,7 @@ __kernel void navatala_sparse_csr_compact_f32(__global const uint* rowPtr, __glo
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       uint keep = keepMask[k];
-      if ((keep == (uint)(1u))) {
+      if (keep == (uint)(1u)) {
         int tgt = (newRs + pos);
         uint c = colIdx[k];
         float v = values[k];

@@ -17,7 +17,7 @@
 __kernel void navatala_dataframe_v_measure_f64(__global const double* homogeneity, __global const double* completeness, __global double* vMeasure) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     double h = homogeneity[(uint)(0u)];
     double c = completeness[(uint)(0u)];
     double hPlusC = (h + c);

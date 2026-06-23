@@ -18,16 +18,16 @@ extern "C" __global__ void navatala_sparse_saturation_coloring(const unsigned in
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int minColor = 0;
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != gid)) {
+      if (col != gid) {
         int cc = colors[col];
-        if ((cc == minColor)) {
+        if (cc == minColor) {
           minColor = (minColor + 1);
         }
       }

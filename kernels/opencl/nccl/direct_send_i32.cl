@@ -17,7 +17,7 @@ __kernel void navatala_nccl_direct_send_i32(__global const int* src, __global co
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     int val = src[gid];
     dst[gid] = val;
   }

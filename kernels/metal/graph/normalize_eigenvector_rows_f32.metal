@@ -39,7 +39,7 @@ kernel void navatala_graph_normalize_eigenvector_rows_f32(device const float* V 
     uint normF32RedStride = 128u;
     for (int normF32RedStep = 0; normF32RedStep < (int)(8); ++normF32RedStep) {
       uint normF32Stride = normF32RedStride;
-      if ((lid < normF32Stride)) {
+      if (lid < normF32Stride) {
         float other = sdata[(lid + normF32Stride)];
         float mine = sdata[lid];
         float sum = (mine + other);
@@ -50,7 +50,7 @@ kernel void navatala_graph_normalize_eigenvector_rows_f32(device const float* V 
       normF32RedStride = normF32NextStride;
       threadgroup_barrier(mem_flags::mem_threadgroup);
     }
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       float sumSq = sdata[0];
       float normVal = sqrt(sumSq);
       sdata[0] = normVal;

@@ -35,17 +35,17 @@ layout(std430, binding = 4) writeonly buffer buf_alphaPhiAllOut {
 // kernel: navatala_cfd_vof_alpha_phi_all
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= params[0])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= params[0]) {
     return;
   } else {
-    if ((int(int(gl_GlobalInvocationID.x)) < params[1])) {
+    if (int(int(gl_GlobalInvocationID.x)) < params[1]) {
       alphaPhiAllOut[int(int(gl_GlobalInvocationID.x))] = alphaPhiInt[int(int(gl_GlobalInvocationID.x))];
     } else {
       float a = alphaF[int(int(gl_GlobalInvocationID.x))];
-      if ((a < uintBitsToFloat(0x00000000u))) {
+      if (a < uintBitsToFloat(0x00000000u)) {
         a = uintBitsToFloat(0x00000000u);
       }
-      if ((a > uintBitsToFloat(0x3f800000u))) {
+      if (a > uintBitsToFloat(0x3f800000u)) {
         a = uintBitsToFloat(0x3f800000u);
       }
       alphaPhiAllOut[int(int(gl_GlobalInvocationID.x))] = (phiAll[int(int(gl_GlobalInvocationID.x))] * a);

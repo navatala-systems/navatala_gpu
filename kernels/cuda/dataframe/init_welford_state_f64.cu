@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_dataframe_init_welford_state_f64(unsigned int* count, double* mean, double* M2) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     count[0] = 0u;
     mean[0] = __longlong_as_double(0x0000000000000000ull);
     M2[0] = __longlong_as_double(0x0000000000000000ull);

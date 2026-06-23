@@ -40,7 +40,7 @@ extern "C" __global__ void navatala_ml_compute_xt_y_f32(const float* X, const fl
     unsigned int xtyF32Stride = 128u;
     for (int reductionStep1 = 0; reductionStep1 < (int)(8); ++reductionStep1) {
       unsigned int stride1 = xtyF32Stride;
-      if ((lid < stride1)) {
+      if (lid < stride1) {
         float other = sdata[(lid + stride1)];
         float mine = sdata[lid];
         float sum = (mine + other);
@@ -51,7 +51,7 @@ extern "C" __global__ void navatala_ml_compute_xt_y_f32(const float* X, const fl
       xtyF32Stride = nextStride1;
       __syncthreads();
     }
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       float totalSum = sdata[0];
       Xty[featureIdx] = totalSum;
     }

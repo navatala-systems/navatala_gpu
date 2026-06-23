@@ -17,7 +17,7 @@
 __kernel void navatala_dataframe_winsorized_mean_f64(__global const double* sortedData, __global const uint* n, __global const double* trimFraction, __global double* winsorizedMean) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint len = n[0];
     uint midIdx = (len / (uint)(2u));
     double midVal = sortedData[midIdx];

@@ -61,7 +61,7 @@ void main() {
     }
     barrier();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     sdata[511u] = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
   }
   barrier();

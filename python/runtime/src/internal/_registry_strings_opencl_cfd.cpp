@@ -17,7 +17,7 @@ __kernel void navatala_cfd_boundary_force_partials(__global const float* pAllFac
   if (gid0 >= ((int)(counts[0]))) return;
   __local float tmp[256];
   float v = as_float(0x00000000u);
-  if ((((int)((int)(get_global_id(0)))) < counts[0])) {
+  if (((int)((int)(get_global_id(0)))) < counts[0]) {
     int faceIdx = (counts[1] + ((int)((int)(get_global_id(0)))));
     float pVal = pAllFaces[faceIdx];
     float sfVal = sfComponent[faceIdx];
@@ -25,39 +25,39 @@ __kernel void navatala_cfd_boundary_force_partials(__global const float* pAllFac
   }
   tmp[((int)((int)(get_local_id(0))))] = v;
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 128)) {
+  if (((int)((int)(get_local_id(0)))) < 128) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 128)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 64)) {
+  if (((int)((int)(get_local_id(0)))) < 64) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 64)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 32)) {
+  if (((int)((int)(get_local_id(0)))) < 32) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 32)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 16)) {
+  if (((int)((int)(get_local_id(0)))) < 16) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 16)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 8)) {
+  if (((int)((int)(get_local_id(0)))) < 8) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 8)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 4)) {
+  if (((int)((int)(get_local_id(0)))) < 4) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 4)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 2)) {
+  if (((int)((int)(get_local_id(0)))) < 2) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 2)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 1)) {
+  if (((int)((int)(get_local_id(0)))) < 1) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 1)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) == 0)) {
+  if (((int)((int)(get_local_id(0)))) == 0) {
     outPartials[((int)((int)(get_group_id(0))))] = tmp[0];
   }
 }
@@ -69,7 +69,7 @@ __kernel void navatala_cfd_pack_owner_values(__global const float* x, __global c
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= counts[0])) {
+  if ((int)(get_global_id(0)) >= counts[0]) {
     return;
   } else {
     int face = procFaces[(int)(get_global_id(0))];
@@ -86,7 +86,7 @@ __kernel void navatala_cfd_scatter_values_and_mask(__global const int* procFaces
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= counts[0])) {
+  if ((int)(get_global_id(0)) >= counts[0]) {
     return;
   } else {
     int face = procFaces[(int)(get_global_id(0))];
@@ -102,7 +102,7 @@ __kernel void navatala_cfd_pack_mu_grad_owner(__global const float* muCell, __gl
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
     int f = procFaces[(int)(get_global_id(0))];
@@ -137,7 +137,7 @@ __kernel void navatala_cfd_pack_owner_rho_vec3(__global const float* rhoCell, __
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
     int f = procFaces[(int)(get_global_id(0))];
@@ -160,7 +160,7 @@ __kernel void navatala_cfd_pack_owner_vec3(__global const float* x, __global con
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
     int f = procFaces[(int)(get_global_id(0))];
@@ -181,7 +181,7 @@ __kernel void navatala_cfd_pack_owner_vec3_mu(__global const float* ux, __global
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
     int f = procFaces[(int)(get_global_id(0))];
@@ -204,7 +204,7 @@ __kernel void navatala_cfd_scatter_mu_grad_ghost(__global const float* recvVals,
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
     int idx = (((int)(counts[1])) + (int)(get_global_id(0)));
@@ -238,7 +238,7 @@ __kernel void navatala_cfd_scatter_rho_vec3_and_mask(__global const int* procFac
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
     int f = procFaces[(int)(get_global_id(0))];
@@ -262,7 +262,7 @@ __kernel void navatala_cfd_scatter_vec3_and_mask(__global const int* procFaces, 
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
     int f = procFaces[(int)(get_global_id(0))];
@@ -283,7 +283,7 @@ __kernel void navatala_cfd_scatter_vec3_mu_and_mask(__global const int* procFace
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
     int f = procFaces[(int)(get_global_id(0))];
@@ -303,7 +303,7 @@ __kernel void navatala_cfd_scatter_vec3_mu_and_mask(__global const int* procFace
 const char* k_opencl_navatala_cfd_add_vol_vector = R"kernel(
 __kernel void navatala_cfd_add_vol_vector(__global const float* ax, __global const float* ay, __global const float* az, __global const float* bx, __global const float* by_, __global const float* bz, __global const int* params, __global float* outX, __global float* outY, __global float* outZ) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
     outX[((int)((int)(get_global_id(0))))] = (ax[((int)((int)(get_global_id(0))))] + bx[((int)((int)(get_global_id(0))))]);
@@ -316,7 +316,7 @@ __kernel void navatala_cfd_add_vol_vector(__global const float* ax, __global con
 const char* k_opencl_navatala_cfd_div_rho_phi_u_explicit = R"kernel(
 __kernel void navatala_cfd_div_rho_phi_u_explicit(__global const float* phi, __global const float* rhoCell, __global const float* ux, __global const float* uy, __global const float* uz, __global const int* owner, __global const int* neighbour, __global const float* weights, __global const int* offsets, __global const int* faceIdx, __global const float* sign, __global const float* vol, __global const float* rhoBcVal, __global const uint* rhoBcMask, __global const float* uBcX, __global const float* uBcY, __global const float* uBcZ, __global const uint* uBcMask, __global const int* params, __global float* outX, __global float* outY, __global float* outZ) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
     float sumX = as_float(0x00000000u);
@@ -329,7 +329,7 @@ __kernel void navatala_cfd_div_rho_phi_u_explicit(__global const float* phi, __g
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < params[1])) {
+      if (f < params[1]) {
         float s = sign[k];
         float flux = phi[f];
         int o = owner[f];
@@ -337,7 +337,7 @@ __kernel void navatala_cfd_div_rho_phi_u_explicit(__global const float* phi, __g
         float ufx = ux[o];
         float ufy = uy[o];
         float ufz = uz[o];
-        if ((f < params[2])) {
+        if (f < params[2]) {
           int n = neighbour[f];
           float w0 = weights[f];
           float iw = (as_float(0x3f800000u) - w0);
@@ -347,23 +347,23 @@ __kernel void navatala_cfd_div_rho_phi_u_explicit(__global const float* phi, __g
           ufz = ((w0 * uz[o]) + (iw * uz[n]));
         } else {
           uint rm = rhoBcMask[f];
-          if ((rm == (uint)(1u))) {
+          if (rm == (uint)(1u)) {
             float w0 = weights[f];
             float iw = (as_float(0x3f800000u) - w0);
             rhoF = ((w0 * rhoCell[o]) + (iw * rhoBcVal[f]));
           }
-          if ((rm == (uint)(2u))) {
+          if (rm == (uint)(2u)) {
             rhoF = rhoBcVal[f];
           }
           uint um = uBcMask[f];
-          if ((um == (uint)(1u))) {
+          if (um == (uint)(1u)) {
             float w0 = weights[f];
             float iw = (as_float(0x3f800000u) - w0);
             ufx = ((w0 * ux[o]) + (iw * uBcX[f]));
             ufy = ((w0 * uy[o]) + (iw * uBcY[f]));
             ufz = ((w0 * uz[o]) + (iw * uBcZ[f]));
           }
-          if ((um == (uint)(2u))) {
+          if (um == (uint)(2u)) {
             ufx = uBcX[f];
             ufy = uBcY[f];
             ufz = uBcZ[f];
@@ -377,7 +377,7 @@ __kernel void navatala_cfd_div_rho_phi_u_explicit(__global const float* phi, __g
     }
     float v = vol[((int)((int)(get_global_id(0))))];
     float invV = as_float(0x00000000u);
-    if ((v != as_float(0x00000000u))) {
+    if (v != as_float(0x00000000u)) {
       invV = (as_float(0x3f800000u) / v);
     }
     outX[((int)((int)(get_global_id(0))))] = (sumX * invV);
@@ -393,18 +393,18 @@ __kernel void navatala_cfd_hby_a_from_u_and_terms(__global const float* ux, __gl
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float tx = lapx[((int)((int)(get_global_id(0))))];
     float ty = lapy[((int)((int)(get_global_id(0))))];
     float tz = lapz[((int)((int)(get_global_id(0))))];
-    if (((modeBuf[0] == 1) || (modeBuf[0] == 3))) {
+    if ((modeBuf[0] == 1) || (modeBuf[0] == 3)) {
       tx = (tx - divx[((int)((int)(get_global_id(0))))]);
       ty = (ty - divy[((int)((int)(get_global_id(0))))]);
       tz = (tz - divz[((int)((int)(get_global_id(0))))]);
     }
-    if (((modeBuf[0] == 2) || (modeBuf[0] == 3))) {
+    if ((modeBuf[0] == 2) || (modeBuf[0] == 3)) {
       tx = (tx + extrax[((int)((int)(get_global_id(0))))]);
       ty = (ty + extray[((int)((int)(get_global_id(0))))]);
       tz = (tz + extraz[((int)((int)(get_global_id(0))))]);
@@ -423,7 +423,7 @@ __kernel void navatala_cfd_apply_sp_to_hby_a(__global float* hx, __global float*
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float fac = (sp[((int)((int)(get_global_id(0))))] * rAU[((int)((int)(get_global_id(0))))]);
@@ -437,7 +437,7 @@ __kernel void navatala_cfd_apply_sp_to_hby_a(__global float* hx, __global float*
 const char* k_opencl_navatala_cfd_laplacian_scalar_explicit = R"kernel(
 __kernel void navatala_cfd_laplacian_scalar_explicit(__global const float* muCell, __global const float* phiCell, __global const int* owner, __global const int* neighbour, __global const float* weights, __global const float* magSf, __global const float* deltaCoeffs, __global const int* offsets, __global const int* faceIdx, __global const int* sign, __global const float* vol, __global const float* bcMu, __global const uint* bcMuMask, __global const float* bcPhi, __global const uint* bcPhiMask, __global const int* params, __global float* outL) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
     float phiC = phiCell[((int)((int)(get_global_id(0))))];
@@ -450,23 +450,23 @@ __kernel void navatala_cfd_laplacian_scalar_explicit(__global const float* muCel
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < params[1])) {
+      if (f < params[1]) {
         int sgn = sign[k];
         int o = owner[f];
         float phiOther = phiCell[o];
         float muF = muC;
-        if ((sgn > 0)) {
-          if ((f < params[2])) {
+        if (sgn > 0) {
+          if (f < params[2]) {
             int n = neighbour[f];
             phiOther = phiCell[n];
             float w0 = weights[f];
             float iw = (as_float(0x3f800000u) - w0);
             muF = ((w0 * muC) + (iw * muCell[n]));
           } else {
-            if ((bcPhiMask[f] != (uint)(0u))) {
+            if (bcPhiMask[f] != (uint)(0u)) {
               phiOther = bcPhi[f];
             }
-            if ((bcMuMask[f] != (uint)(0u))) {
+            if (bcMuMask[f] != (uint)(0u)) {
               muF = bcMu[f];
             }
           }
@@ -481,7 +481,7 @@ __kernel void navatala_cfd_laplacian_scalar_explicit(__global const float* muCel
     }
     float v = vol[((int)((int)(get_global_id(0))))];
     float invV = as_float(0x00000000u);
-    if ((v != as_float(0x00000000u))) {
+    if (v != as_float(0x00000000u)) {
       invV = (as_float(0x3f800000u) / v);
     }
     outL[((int)((int)(get_global_id(0))))] = (sum * invV);
@@ -492,7 +492,7 @@ __kernel void navatala_cfd_laplacian_scalar_explicit(__global const float* muCel
 const char* k_opencl_navatala_cfd_laplacian_vector_explicit = R"kernel(
 __kernel void navatala_cfd_laplacian_vector_explicit(__global const float* muCell, __global const float* muBc, __global const float* ux, __global const float* uy, __global const float* uz, __global const int* owner, __global const int* neighbour, __global const float* weights, __global const float* magSf, __global const float* deltaCoeffs, __global const float* corrX, __global const float* corrY, __global const float* corrZ, __global const float* gradRow0, __global const float* gradRow1, __global const float* gradRow2, __global const int* offsets, __global const int* faceIdx, __global const int* sign, __global const float* vol, __global const float* bcX, __global const float* bcY, __global const float* bcZ, __global const int* bcMask, __global const int* params, __global float* outX, __global float* outY, __global float* outZ) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
     float ucx = ux[((int)((int)(get_global_id(0))))];
@@ -509,15 +509,15 @@ __kernel void navatala_cfd_laplacian_vector_explicit(__global const float* muCel
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < params[1])) {
+      if (f < params[1]) {
         int sgn = sign[k];
         int o = owner[f];
         float otherX = ux[o];
         float otherY = uy[o];
         float otherZ = uz[o];
         float muF = muC;
-        if ((sgn > 0)) {
-          if ((f < params[2])) {
+        if (sgn > 0) {
+          if (f < params[2]) {
             int n = neighbour[f];
             otherX = ux[n];
             otherY = uy[n];
@@ -527,7 +527,7 @@ __kernel void navatala_cfd_laplacian_vector_explicit(__global const float* muCel
             muF = ((w0 * muC) + (iw * muCell[n]));
           } else {
             muF = muBc[f];
-            if ((bcMask[f] == 1)) {
+            if (bcMask[f] == 1) {
               float w0 = weights[f];
               float iw = (as_float(0x3f800000u) - w0);
               muF = ((w0 * muC) + (iw * muBc[f]));
@@ -535,7 +535,7 @@ __kernel void navatala_cfd_laplacian_vector_explicit(__global const float* muCel
               otherY = bcY[f];
               otherZ = bcZ[f];
             } else {
-              if ((bcMask[f] != 0)) {
+              if (bcMask[f] != 0) {
                 otherX = bcX[f];
                 otherY = bcY[f];
                 otherZ = bcZ[f];
@@ -563,7 +563,7 @@ __kernel void navatala_cfd_laplacian_vector_explicit(__global const float* muCel
         float gzxF = gradRow2[((o)*3 + 0)];
         float gzyF = gradRow2[((o)*3 + 1)];
         float gzzF = gradRow2[((o)*3 + 2)];
-        if ((f < params[2])) {
+        if (f < params[2]) {
           int n2 = neighbour[f];
           float w1 = weights[f];
           float iw1 = (as_float(0x3f800000u) - w1);
@@ -589,7 +589,7 @@ __kernel void navatala_cfd_laplacian_vector_explicit(__global const float* muCel
     }
     float v = vol[((int)((int)(get_global_id(0))))];
     float invV = as_float(0x00000000u);
-    if ((v != as_float(0x00000000u))) {
+    if (v != as_float(0x00000000u)) {
       invV = (as_float(0x3f800000u) / v);
     }
     outX[((int)((int)(get_global_id(0))))] = (sumX * invV);
@@ -602,7 +602,7 @@ __kernel void navatala_cfd_laplacian_vector_explicit(__global const float* muCel
 const char* k_opencl_navatala_cfd_predictor_hby_a_from_source = R"kernel(
 __kernel void navatala_cfd_predictor_hby_a_from_source(__global const float* rAU, __global const float* sourceX, __global const float* sourceY, __global const float* sourceZ, __global const int* counts1, __global float* outHbyAX, __global float* outHbyAY, __global float* outHbyAZ) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= counts1[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts1[0]) {
     return;
   } else {
     float r = rAU[((int)((int)(get_global_id(0))))];
@@ -616,11 +616,11 @@ __kernel void navatala_cfd_predictor_hby_a_from_source(__global const float* rAU
 const char* k_opencl_navatala_cfd_predictor_inverse_diag = R"kernel(
 __kernel void navatala_cfd_predictor_inverse_diag(__global const float* inputDiag, __global const int* counts1, __global float* outRAU) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= counts1[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts1[0]) {
     return;
   } else {
     float a = inputDiag[((int)((int)(get_global_id(0))))];
-    if ((a != as_float(0x00000000u))) {
+    if (a != as_float(0x00000000u)) {
       outRAU[((int)((int)(get_global_id(0))))] = (as_float(0x3f800000u) / a);
     } else {
       outRAU[((int)((int)(get_global_id(0))))] = as_float(0x00000000u);
@@ -632,7 +632,7 @@ __kernel void navatala_cfd_predictor_inverse_diag(__global const float* inputDia
 const char* k_opencl_navatala_cfd_predictor_phi_hby_a_fuse = R"kernel(
 __kernel void navatala_cfd_predictor_phi_hby_a_fuse(__global const float* fluxHbyA, __global const float* rhoRauFace, __global const float* ddtCorr, __global const int* counts1, __global float* outPhiHbyA) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= counts1[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts1[0]) {
     return;
   } else {
     float f = fluxHbyA[((int)((int)(get_global_id(0))))];
@@ -649,7 +649,7 @@ __kernel void navatala_cfd_axpy_cells(__global const float* x, __global const in
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float xVal = x[((int)((int)(get_global_id(0))))];
@@ -666,7 +666,7 @@ __kernel void navatala_cfd_ddt_diagonal(__global const float* rho, __global cons
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float rhoVal = rho[((int)((int)(get_global_id(0))))];
@@ -683,7 +683,7 @@ __kernel void navatala_cfd_div_upwind_coeffs(__global const float* weights, __gl
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float w = weights[((int)((int)(get_global_id(0))))];
@@ -702,7 +702,7 @@ __kernel void navatala_cfd_fvm_sp(__global const float* sp, __global const float
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float spVal = sp[((int)((int)(get_global_id(0))))];
@@ -721,14 +721,14 @@ __kernel void navatala_cfd_fvm_su_sp(__global const float* sp, __global const fl
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float spVal = sp[((int)((int)(get_global_id(0))))];
     float psiVal = psi[((int)((int)(get_global_id(0))))];
     float volVal = vol[((int)((int)(get_global_id(0))))];
     float spVol = (spVal * volVal);
-    if ((spVal >= as_float(0x00000000u))) {
+    if (spVal >= as_float(0x00000000u)) {
       float prevDiag = outDiag[((int)((int)(get_global_id(0))))];
       float newDiag = (prevDiag + spVol);
       outDiag[((int)((int)(get_global_id(0))))] = newDiag;
@@ -748,7 +748,7 @@ __kernel void navatala_cfd_laplacian_coeffs(__global const float* gamma, __globa
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float gammaF = gamma[((int)((int)(get_global_id(0))))];
@@ -765,7 +765,7 @@ __kernel void navatala_cfd_laplacian_coeffs_accum(__global const float* gamma, _
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float coeff = (deltaCoeffs[((int)((int)(get_global_id(0))))] * (gamma[((int)((int)(get_global_id(0))))] * magSf[((int)((int)(get_global_id(0))))]));
@@ -783,7 +783,7 @@ __kernel void navatala_cfd_linear_upwind_correction_source(__global const float*
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float sum = as_float(0x00000000u);
@@ -794,7 +794,7 @@ __kernel void navatala_cfd_linear_upwind_correction_source(__global const float*
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < counts[1])) {
+      if (f < counts[1]) {
         float fluxVal = flux[f];
         float luVal = luFaceVals[f];
         float sgnF = signF[k];
@@ -814,7 +814,7 @@ __kernel void navatala_cfd_matrix_relax(__global const float* diagOld, __global 
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float d0 = diagOld[((int)((int)(get_global_id(0))))];
@@ -839,7 +839,7 @@ __kernel void navatala_cfd_neg_sum_diag(__global const float* upper, __global co
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float sum = as_float(0x00000000u);
@@ -850,9 +850,9 @@ __kernel void navatala_cfd_neg_sum_diag(__global const float* upper, __global co
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < counts[1])) {
+      if (f < counts[1]) {
         int sgn = sign[k];
-        if ((sgn > 0)) {
+        if (sgn > 0) {
           sum = (sum - upper[f]);
         } else {
           sum = (sum - lower[f]);
@@ -871,7 +871,7 @@ __kernel void navatala_cfd_pack_boundary_adjacent_cells(__global const float* ce
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     int cellIdx = indexMap[((int)((int)(get_global_id(0))))];
@@ -887,12 +887,12 @@ __kernel void navatala_cfd_scalar_jacobi_clamp_min(__global const float* lowerBo
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
     float lb = lowerBound[0];
     float xi = x[(int)(get_global_id(0))];
-    if ((xi > lb)) {
+    if (xi > lb) {
       x[(int)(get_global_id(0))] = xi;
     } else {
       x[(int)(get_global_id(0))] = lb;
@@ -907,15 +907,15 @@ __kernel void navatala_cfd_scalar_jacobi_update(__global const float* ax, __glob
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
     float smallDiag = params[0];
     float omega = params[1];
     float d = diag[(int)(get_global_id(0))];
     float absD = fabs(d);
-    if ((absD < smallDiag)) {
-      if ((d >= as_float(0x00000000u))) {
+    if (absD < smallDiag) {
+      if (d >= as_float(0x00000000u)) {
         d = smallDiag;
       } else {
         d = (-smallDiag);
@@ -934,7 +934,7 @@ __kernel void navatala_cfd_scalar_ldu_mat_vec(__global const float* diag, __glob
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
     float s = (diag[(int)(get_global_id(0))] * x[(int)(get_global_id(0))]);
@@ -946,8 +946,8 @@ __kernel void navatala_cfd_scalar_ldu_mat_vec(__global const float* diag, __glob
       int k = (beg + t);
       uint f = faceIdx[k];
       int sg = sign[k];
-      if ((((int)(f)) < ((int)(counts[1])))) {
-        if ((sg >= 0)) {
+      if (((int)(f)) < ((int)(counts[1]))) {
+        if (sg >= 0) {
           int nb = neighbour[((int)(f))];
           s = (s + (upper[((int)(f))] * x[nb]));
         } else {
@@ -968,7 +968,7 @@ __kernel void navatala_cfd_scalar_ldu_multi_color_gs_sweep(__global const float*
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
   int colorSize = (((int)(colorRange[1])) - ((int)(colorRange[0])));
-  if (((int)(get_global_id(0)) >= colorSize)) {
+  if ((int)(get_global_id(0)) >= colorSize) {
     return;
   } else {
     int cellIdx = (((int)(colorRange[0])) + (int)(get_global_id(0)));
@@ -978,8 +978,8 @@ __kernel void navatala_cfd_scalar_ldu_multi_color_gs_sweep(__global const float*
     float omega = params[1];
     float d = diag[ci];
     float absD = fabs(d);
-    if ((absD < smallDiag)) {
-      if ((d >= as_float(0x00000000u))) {
+    if (absD < smallDiag) {
+      if (d >= as_float(0x00000000u)) {
         d = smallDiag;
       } else {
         d = (-smallDiag);
@@ -994,8 +994,8 @@ __kernel void navatala_cfd_scalar_ldu_multi_color_gs_sweep(__global const float*
       int k = (beg + t);
       uint f = faceIdx[k];
       int sg = sign[k];
-      if ((((int)(f)) < ((int)(counts[1])))) {
-        if ((sg >= 0)) {
+      if (((int)(f)) < ((int)(counts[1]))) {
+        if (sg >= 0) {
           int nb = neighbour[((int)(f))];
           s = (s + (upper[((int)(f))] * x[nb]));
         } else {
@@ -1015,7 +1015,7 @@ __kernel void navatala_cfd_sum_mag_off_diag(__global const float* upper, __globa
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float sum = as_float(0x00000000u);
@@ -1026,9 +1026,9 @@ __kernel void navatala_cfd_sum_mag_off_diag(__global const float* upper, __globa
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < counts[1])) {
+      if (f < counts[1]) {
         int sgn = sign[k];
-        if ((sgn > 0)) {
+        if (sgn > 0) {
           float val = upper[f];
           float negVal = (as_float(0x00000000u) - val);
           float absVal = (((val >= as_float(0x00000000u))) ? (val) : (negVal));
@@ -1049,7 +1049,7 @@ __kernel void navatala_cfd_sum_mag_off_diag(__global const float* upper, __globa
 const char* k_opencl_navatala_cfd_gamg_axpy_in_place = R"kernel(
 __kernel void navatala_cfd_gamg_axpy_in_place(__global const float* x, __global const float* alpha, __global const uint* nRows, __global float* y) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(nRows[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(nRows[0]))) {
     return;
   } else {
     float a = alpha[0];
@@ -1063,13 +1063,13 @@ __kernel void navatala_cfd_gamg_axpy_in_place(__global const float* x, __global 
 const char* k_opencl_navatala_cfd_gamg_compute_scale_factor = R"kernel(
 __kernel void navatala_cfd_gamg_compute_scale_factor(__global const float* num, __global const float* den, __global float* sf) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= 1)) {
+  if ((int)(get_global_id(0)) >= 1) {
     return;
   } else {
     float n = num[0];
     float d = den[0];
     float dAbs = fabs(d);
-    if ((dAbs > as_float(0x0da24260u))) {
+    if (dAbs > as_float(0x0da24260u)) {
       sf[0] = (n / d);
     } else {
       sf[0] = as_float(0x3f800000u);
@@ -1081,7 +1081,7 @@ __kernel void navatala_cfd_gamg_compute_scale_factor(__global const float* num, 
 const char* k_opencl_navatala_cfd_gamg_dot_finalize = R"kernel(
 __kernel void navatala_cfd_gamg_dot_finalize(__global const float* partials, __global const uint* count, __global float* result) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= 1)) {
+  if ((int)(get_global_id(0)) >= 1) {
     return;
   } else {
     float s = as_float(0x00000000u);
@@ -1096,7 +1096,7 @@ __kernel void navatala_cfd_gamg_dot_finalize(__global const float* partials, __g
 const char* k_opencl_navatala_cfd_gamg_negate_scalar = R"kernel(
 __kernel void navatala_cfd_gamg_negate_scalar(__global const float* _input, __global float* _output) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= 1)) {
+  if ((int)(get_global_id(0)) >= 1) {
     return;
   } else {
     float v = _input[0];
@@ -1108,7 +1108,7 @@ __kernel void navatala_cfd_gamg_negate_scalar(__global const float* _input, __gl
 const char* k_opencl_navatala_cfd_gamg_scale_correction = R"kernel(
 __kernel void navatala_cfd_gamg_scale_correction(__global const float* z, __global const float* r, __global const float* Az, __global const float* diagInv, __global const float* sfPtr, __global const uint* nRows, __global float* corr) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(nRows[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(nRows[0]))) {
     return;
   } else {
     float sf = sfPtr[0];
@@ -1132,7 +1132,7 @@ __kernel void navatala_cfd_mg_dic_build(__global const float* diag, __global con
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= 1)) {
+  if ((int)(get_global_id(0)) >= 1) {
     return;
   } else {
     int nCells = counts[1];
@@ -1144,14 +1144,14 @@ __kernel void navatala_cfd_mg_dic_build(__global const float* diag, __global con
       int u = edgeU[e];
       int v = edgeV[e];
       double dl = rD[u];
-      if ((dl > as_double(0x01a56e1fc2f8f359ul))) {
+      if (dl > as_double(0x01a56e1fc2f8f359ul)) {
         double cf = ((double)(edgeCf[e]));
         rD[v] = (rD[v] - ((cf * cf) / dl));
       }
     }
     for (int c2 = 0; c2 < (int)(nCells); ++c2) {
       double d = rD[c2];
-      if ((d > as_double(0x01a56e1fc2f8f359ul))) {
+      if (d > as_double(0x01a56e1fc2f8f359ul)) {
         rD[c2] = (as_double(0x3ff0000000000000ul) / d);
       } else {
         rD[c2] = as_double(0x0000000000000000ul);
@@ -1168,7 +1168,7 @@ __kernel void navatala_cfd_mg_dic_smooth(__global const float* b, __global const
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= 1)) {
+  if ((int)(get_global_id(0)) >= 1) {
     return;
   } else {
     int nCells = counts[1];
@@ -1197,11 +1197,11 @@ __kernel void navatala_cfd_mg_dic_smooth(__global const float* b, __global const
 const char* k_opencl_navatala_cfd_mg_coarse_jacobi = R"kernel(
 __kernel void navatala_cfd_mg_coarse_jacobi(__global float* x, __global const float* r, __global const float* diag, __global const int* mgCounts) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(mgCounts[1])))) {
+  if ((int)(get_global_id(0)) >= ((int)(mgCounts[1]))) {
     return;
   } else {
     float d = diag[(int)(get_global_id(0))];
-    if ((d == as_float(0x00000000u))) {
+    if (d == as_float(0x00000000u)) {
       return;
     } else {
       float omega = as_float(0x3f4ccccdu);
@@ -1215,10 +1215,10 @@ const char* k_opencl_navatala_cfd_mg_coarse_matvec = R"kernel(
 __kernel void navatala_cfd_mg_coarse_matvec(__global const int* edgeU, __global const int* edgeV, __global const float* edgeCf, __global const float* diag, __global const float* x, __global float* outAx, __global const int* mgCounts) {
   int gid0 = (int)get_global_id(0);
   int total = (((int)(mgCounts[1])) + ((int)(mgCounts[2])));
-  if (((int)(get_global_id(0)) >= total)) {
+  if ((int)(get_global_id(0)) >= total) {
     return;
   } else {
-    if (((int)(get_global_id(0)) < ((int)(mgCounts[1])))) {
+    if ((int)(get_global_id(0)) < ((int)(mgCounts[1]))) {
       atomic_add(&outAx[(int)(get_global_id(0))], (diag[(int)(get_global_id(0))] * x[(int)(get_global_id(0))]));
     } else {
       int e = ((int)(get_global_id(0)) - ((int)(mgCounts[1])));
@@ -1235,7 +1235,7 @@ __kernel void navatala_cfd_mg_coarse_matvec(__global const int* edgeU, __global 
 const char* k_opencl_navatala_cfd_mg_coarse_rhs = R"kernel(
 __kernel void navatala_cfd_mg_coarse_rhs(__global const float* b, __global const float* ax, __global float* r, __global const int* mgCounts) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(mgCounts[1])))) {
+  if ((int)(get_global_id(0)) >= ((int)(mgCounts[1]))) {
     return;
   } else {
     r[(int)(get_global_id(0))] = (b[(int)(get_global_id(0))] - ax[(int)(get_global_id(0))]);
@@ -1249,7 +1249,7 @@ __kernel void navatala_cfd_mg_find_best_match(__global const uint* csrOffsets, _
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
     float bestS = as_float(0xbf800000u);
@@ -1262,10 +1262,10 @@ __kernel void navatala_cfd_mg_find_best_match(__global const uint* csrOffsets, _
       int k = (((int)(beg)) + t);
       uint f = csrFaceIdx[k];
       float s = strength[((int)(f))];
-      if ((s > bestS)) {
+      if (s > bestS) {
         bestS = s;
         int sg = csrSign[k];
-        if ((sg > 0)) {
+        if (sg > 0) {
           bestN = nei[((int)(f))];
         } else {
           bestN = owner[((int)(f))];
@@ -1283,12 +1283,12 @@ __kernel void navatala_cfd_mg_pair_match(__global const int* bestNeighbor, __glo
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
     int n = bestNeighbor[(int)(get_global_id(0))];
-    if ((n >= 0)) {
-      if (((int)(get_global_id(0)) < n)) {
+    if (n >= 0) {
+      if ((int)(get_global_id(0)) < n) {
         aggMap[(int)(get_global_id(0))] = (int)(get_global_id(0));
       } else {
         aggMap[(int)(get_global_id(0))] = n;
@@ -1303,7 +1303,7 @@ __kernel void navatala_cfd_mg_pair_match(__global const int* bestNeighbor, __glo
 const char* k_opencl_navatala_cfd_mg_prolong_add = R"kernel(
 __kernel void navatala_cfd_mg_prolong_add(__global const float* xCoarse, __global const int* prolongRowOffsets, __global const int* prolongCols, __global const float* prolongVals, __global float* zFine, __global const int* mgCounts) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(mgCounts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(mgCounts[0]))) {
     return;
   } else {
     float accum = as_float(0x00000000u);
@@ -1327,10 +1327,10 @@ __kernel void navatala_cfd_mg_renumber_aggregates(__global int* aggMap, __global
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
-    if ((aggMap[(int)(get_global_id(0))] == (int)(get_global_id(0)))) {
+    if (aggMap[(int)(get_global_id(0))] == (int)(get_global_id(0))) {
       int oldCount = atomic_fetch_add_explicit((volatile __global atomic_int*)(&(counter[0])), (int)(1), memory_order_relaxed, memory_scope_device);
       aggMap[(int)(get_global_id(0))] = (-(oldCount + 1));
     }
@@ -1344,15 +1344,15 @@ __kernel void navatala_cfd_mg_renumber_propagate(__global int* aggMap, __global 
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
     int root = aggMap[(int)(get_global_id(0))];
-    if ((root < 0)) {
+    if (root < 0) {
       aggMap[(int)(get_global_id(0))] = (-(root + 1));
     } else {
       int rootVal = aggMap[root];
-      if ((rootVal < 0)) {
+      if (rootVal < 0) {
         aggMap[(int)(get_global_id(0))] = (-(rootVal + 1));
       } else {
         aggMap[(int)(get_global_id(0))] = rootVal;
@@ -1368,16 +1368,16 @@ __kernel void navatala_cfd_mg_resolve_chains(__global int* aggMap, __global cons
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
     int root = aggMap[(int)(get_global_id(0))];
-    if ((root >= 0)) {
-      if ((root < ((int)(counts[0])))) {
-        if ((root != (int)(get_global_id(0)))) {
+    if (root >= 0) {
+      if (root < ((int)(counts[0]))) {
+        if (root != (int)(get_global_id(0))) {
           int next = aggMap[root];
-          if ((next >= 0)) {
-            if ((next < ((int)(counts[0])))) {
+          if (next >= 0) {
+            if (next < ((int)(counts[0]))) {
               aggMap[(int)(get_global_id(0))] = next;
             }
           }
@@ -1391,7 +1391,7 @@ __kernel void navatala_cfd_mg_resolve_chains(__global int* aggMap, __global cons
 const char* k_opencl_navatala_cfd_mg_restrict_sum = R"kernel(
 __kernel void navatala_cfd_mg_restrict_sum(__global const float* rFine, __global const int* prolongRowOffsets, __global const int* prolongCols, __global const float* prolongVals, __global float* rCoarse, __global const int* mgCounts) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(mgCounts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(mgCounts[0]))) {
     return;
   } else {
     int beg = prolongRowOffsets[(int)(get_global_id(0))];
@@ -1414,7 +1414,7 @@ __kernel void navatala_cfd_mg_strength_of_connection(__global const float* diag,
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[1])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[1]))) {
     return;
   } else {
     int o = owner[(int)(get_global_id(0))];
@@ -1422,7 +1422,7 @@ __kernel void navatala_cfd_mg_strength_of_connection(__global const float* diag,
     float dO = fabs(diag[o]);
     float dN = fabs(diag[n]);
     float denomSq = (dO * dN);
-    if ((denomSq > as_float(0x0da24260u))) {
+    if (denomSq > as_float(0x0da24260u)) {
       strength[(int)(get_global_id(0))] = (fabs(upper[(int)(get_global_id(0))]) / sqrt(denomSq));
     } else {
       strength[(int)(get_global_id(0))] = as_float(0x00000000u);
@@ -1434,7 +1434,7 @@ __kernel void navatala_cfd_mg_strength_of_connection(__global const float* diag,
 const char* k_opencl_navatala_cfd_mg_zero_coarse = R"kernel(
 __kernel void navatala_cfd_mg_zero_coarse(__global float* x, __global const int* mgCounts) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(mgCounts[1])))) {
+  if ((int)(get_global_id(0)) >= ((int)(mgCounts[1]))) {
     return;
   } else {
     x[(int)(get_global_id(0))] = as_float(0x00000000u);
@@ -1448,23 +1448,23 @@ __kernel void navatala_cfd_phi_correct(__global const float* phiIn, __global con
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     int o = owner[((int)((int)(get_global_id(0))))];
     float po = pCell[o];
     float other = po;
     float snGrad = as_float(0x00000000u);
-    if ((((int)((int)(get_global_id(0)))) < counts[1])) {
+    if (((int)((int)(get_global_id(0)))) < counts[1]) {
       int n = neighbour[((int)((int)(get_global_id(0))))];
       other = pCell[n];
     } else {
-      if ((bcMask[((int)((int)(get_global_id(0))))] != 0)) {
+      if (bcMask[((int)((int)(get_global_id(0))))] != 0) {
         other = bcVal[((int)((int)(get_global_id(0))))];
       }
     }
     snGrad = (deltaCoeffs[((int)((int)(get_global_id(0))))] * (other - po));
-    if ((bcSnGradMask[((int)((int)(get_global_id(0))))] != 0)) {
+    if (bcSnGradMask[((int)((int)(get_global_id(0))))] != 0) {
       snGrad = bcSnGrad[((int)((int)(get_global_id(0))))];
     }
     float gradFace = (magSf[((int)((int)(get_global_id(0))))] * snGrad);
@@ -1480,17 +1480,17 @@ __kernel void navatala_cfd_phi_correct_boundary(__global const float* phiIn, __g
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
   int f = (counts[1] + ((int)((int)(get_global_id(0)))));
-  if ((f >= counts[0])) {
+  if (f >= counts[0]) {
     return;
   } else {
     int o = owner[f];
     float po = pCell[o];
     float other = po;
-    if ((bcMask[f] != 0)) {
+    if (bcMask[f] != 0) {
       other = bcVal[f];
     }
     float snGrad = (deltaCoeffs[f] * (other - po));
-    if ((bcSnGradMask[f] != 0)) {
+    if (bcSnGradMask[f] != 0) {
       snGrad = bcSnGrad[f];
     }
     float gradFace = (magSf[f] * snGrad);
@@ -1505,7 +1505,7 @@ __kernel void navatala_cfd_phi_correct_internal(__global const float* phiIn, __g
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[1])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[1]) {
     return;
   } else {
     int o = owner[((int)((int)(get_global_id(0))))];
@@ -1525,7 +1525,7 @@ __kernel void navatala_cfd_axpy_in_place(__global const float* x, __global float
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= counts[0])) {
+  if ((int)(get_global_id(0)) >= counts[0]) {
     return;
   } else {
     float yi = y[(int)(get_global_id(0))];
@@ -1540,11 +1540,11 @@ __kernel void navatala_cfd_bc_dirichlet_face_flux(__global const float* cf, __gl
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[1])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[1]) {
     return;
   } else {
     float flux = as_float(0x00000000u);
-    if ((bcMask[((int)((int)(get_global_id(0))))] == 2)) {
+    if (bcMask[((int)((int)(get_global_id(0))))] == 2) {
       flux = (cf[((int)((int)(get_global_id(0))))] * bcVal[((int)((int)(get_global_id(0))))]);
     }
     outFlux[((int)((int)(get_global_id(0))))] = flux;
@@ -1558,14 +1558,14 @@ __kernel void navatala_cfd_bc_sn_grad_face_flux(__global const float* cf, __glob
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[1])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[1]) {
     return;
   } else {
     float d = delta[((int)((int)(get_global_id(0))))];
     float sg = bcSnGrad[((int)((int)(get_global_id(0))))];
     float flux = as_float(0x00000000u);
-    if ((bcSnGradMask[((int)((int)(get_global_id(0))))] != 0)) {
-      if ((d != as_float(0x00000000u))) {
+    if (bcSnGradMask[((int)((int)(get_global_id(0))))] != 0) {
+      if (d != as_float(0x00000000u)) {
         flux = (cf[((int)((int)(get_global_id(0))))] * (sg / d));
       }
     }
@@ -1580,7 +1580,7 @@ __kernel void navatala_cfd_coeff_to_cf_in_place(__global float* cf, __global con
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[1])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[1]) {
     return;
   } else {
     float v = cf[((int)((int)(get_global_id(0))))];
@@ -1595,7 +1595,7 @@ __kernel void navatala_cfd_diag_from_cf(__global const float* cf, __global const
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= counts[0])) {
+  if ((int)(get_global_id(0)) >= counts[0]) {
     return;
   } else {
     int beg = offsets[(int)(get_global_id(0))];
@@ -1657,7 +1657,7 @@ __kernel void navatala_cfd_dic_build_reciprocal_d(__global const float* diag, __
   }
   for (int c2 = 0; c2 < (int)(counts[0]); ++c2) {
     float v = rD[c2];
-    if ((v != as_float(0x00000000u))) {
+    if (v != as_float(0x00000000u)) {
       rD[c2] = (as_float(0x3f800000u) / v);
     } else {
       rD[c2] = as_float(0x00000000u);
@@ -1671,44 +1671,44 @@ __kernel void navatala_cfd_dot_partials(__global const float* a, __global const 
   int gid0 = (int)get_global_id(0);
   __local float tmp[256];
   float v = as_float(0x00000000u);
-  if ((((int)((int)(get_global_id(0)))) < counts[0])) {
+  if (((int)((int)(get_global_id(0)))) < counts[0]) {
     v = (a[((int)((int)(get_global_id(0))))] * b[((int)((int)(get_global_id(0))))]);
   }
   tmp[((int)((int)(get_local_id(0))))] = v;
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 128)) {
+  if (((int)((int)(get_local_id(0)))) < 128) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 128)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 64)) {
+  if (((int)((int)(get_local_id(0)))) < 64) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 64)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 32)) {
+  if (((int)((int)(get_local_id(0)))) < 32) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 32)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 16)) {
+  if (((int)((int)(get_local_id(0)))) < 16) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 16)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 8)) {
+  if (((int)((int)(get_local_id(0)))) < 8) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 8)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 4)) {
+  if (((int)((int)(get_local_id(0)))) < 4) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 4)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 2)) {
+  if (((int)((int)(get_local_id(0)))) < 2) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 2)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 1)) {
+  if (((int)((int)(get_local_id(0)))) < 1) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 1)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) == 0)) {
+  if (((int)((int)(get_local_id(0)))) == 0) {
     outPartials[((int)((int)(get_group_id(0))))] = tmp[0];
   }
 }
@@ -1720,24 +1720,24 @@ __kernel void navatala_cfd_face_flux(__global const float* x, __global const int
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[1])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[1]) {
     return;
   } else {
     int o = owner[((int)((int)(get_global_id(0))))];
     float xo = x[o];
     float other = xo;
-    if ((((int)((int)(get_global_id(0)))) < counts[2])) {
+    if (((int)((int)(get_global_id(0)))) < counts[2]) {
       int n = neighbour[((int)((int)(get_global_id(0))))];
       other = x[n];
     } else {
       int m = bcMask[((int)((int)(get_global_id(0))))];
-      if (((m == 1) || (m == 3))) {
+      if ((m == 1) || (m == 3)) {
         other = bcVal[((int)((int)(get_global_id(0))))];
       } else {
-        if ((m == 2)) {
+        if (m == 2) {
           other = as_float(0x00000000u);
         } else {
-          if ((m == 4)) {
+          if (m == 4) {
             outFlux[((int)((int)(get_global_id(0))))] = bcVal[((int)((int)(get_global_id(0))))];
             return;
           }
@@ -1755,12 +1755,12 @@ __kernel void navatala_cfd_inv_diag(__global const float* r, __global const floa
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= counts[0])) {
+  if ((int)(get_global_id(0)) >= counts[0]) {
     return;
   } else {
     float d = diag[(int)(get_global_id(0))];
     float v = r[(int)(get_global_id(0))];
-    if ((d != as_float(0x00000000u))) {
+    if (d != as_float(0x00000000u)) {
       z[(int)(get_global_id(0))] = (v / d);
     } else {
       z[(int)(get_global_id(0))] = v;
@@ -1772,7 +1772,7 @@ __kernel void navatala_cfd_inv_diag(__global const float* r, __global const floa
 const char* k_opencl_navatala_cfd_laplacian_from_face_flux = R"kernel(
 __kernel void navatala_cfd_laplacian_from_face_flux(__global const float* faceFlux, __global const int* offsets, __global const int* faceIdx, __global const float* signF, __global const float* vol, __global const int* counts, __global float* outLap) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= counts[0])) {
+  if ((int)(get_global_id(0)) >= counts[0]) {
     return;
   } else {
     int beg = offsets[(int)(get_global_id(0))];
@@ -1796,7 +1796,7 @@ __kernel void navatala_cfd_mul_by_vol_in_place(__global float* b, __global const
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float v = b[((int)((int)(get_global_id(0))))];
@@ -1809,7 +1809,7 @@ const char* k_opencl_navatala_cfd_ref_add_ax = R"kernel(
 __kernel void navatala_cfd_ref_add_ax(__global const float* diag, __global const float* x, __global float* outAx, __global const int* refCell) {
   int gid0 = (int)get_global_id(0);
   int c = refCell[0];
-  if ((c < 0)) {
+  if (c < 0) {
     return;
   } else {
     float cur = outAx[c];
@@ -1822,7 +1822,7 @@ const char* k_opencl_navatala_cfd_ref_add_b = R"kernel(
 __kernel void navatala_cfd_ref_add_b(__global const float* diag, __global float* b, __global const int* refCell, __global const float* refVal) {
   int gid0 = (int)get_global_id(0);
   int c = refCell[0];
-  if ((c < 0)) {
+  if (c < 0) {
     return;
   } else {
     float cur = b[c];
@@ -1837,7 +1837,7 @@ __kernel void navatala_cfd_rhs_sub(__global const float* b, __global const float
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= counts[0])) {
+  if ((int)(get_global_id(0)) >= counts[0]) {
     return;
   } else {
     r[(int)(get_global_id(0))] = (b[(int)(get_global_id(0))] - ax[(int)(get_global_id(0))]);
@@ -1851,7 +1851,7 @@ __kernel void navatala_cfd_shift_in_place(__global float* x, __global const int*
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float xi = x[((int)((int)(get_global_id(0))))];
@@ -1865,9 +1865,9 @@ __kernel void navatala_cfd_sum_abs_partials(__global const float* a, __global co
   int gid0 = (int)get_global_id(0);
   __local float tmp[256];
   float v = as_float(0x00000000u);
-  if ((((int)((int)(get_global_id(0)))) < counts[0])) {
+  if (((int)((int)(get_global_id(0)))) < counts[0]) {
     float ai = a[((int)((int)(get_global_id(0))))];
-    if ((ai >= as_float(0x00000000u))) {
+    if (ai >= as_float(0x00000000u)) {
       v = ai;
     } else {
       v = (as_float(0x00000000u) - ai);
@@ -1875,39 +1875,39 @@ __kernel void navatala_cfd_sum_abs_partials(__global const float* a, __global co
   }
   tmp[((int)((int)(get_local_id(0))))] = v;
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 128)) {
+  if (((int)((int)(get_local_id(0)))) < 128) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 128)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 64)) {
+  if (((int)((int)(get_local_id(0)))) < 64) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 64)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 32)) {
+  if (((int)((int)(get_local_id(0)))) < 32) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 32)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 16)) {
+  if (((int)((int)(get_local_id(0)))) < 16) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 16)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 8)) {
+  if (((int)((int)(get_local_id(0)))) < 8) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 8)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 4)) {
+  if (((int)((int)(get_local_id(0)))) < 4) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 4)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 2)) {
+  if (((int)((int)(get_local_id(0)))) < 2) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 2)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) < 1)) {
+  if (((int)((int)(get_local_id(0)))) < 1) {
     tmp[((int)((int)(get_local_id(0))))] = (tmp[((int)((int)(get_local_id(0))))] + tmp[(((int)((int)(get_local_id(0)))) + 1)]);
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((((int)((int)(get_local_id(0)))) == 0)) {
+  if (((int)((int)(get_local_id(0)))) == 0) {
     outPartials[((int)((int)(get_group_id(0))))] = tmp[0];
   }
 }
@@ -1919,7 +1919,7 @@ __kernel void navatala_cfd_upper_from_cf(__global const float* cf, __global cons
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[2])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[2]) {
     return;
   } else {
     upper[((int)((int)(get_global_id(0))))] = cf[((int)((int)(get_global_id(0))))];
@@ -1933,7 +1933,7 @@ __kernel void navatala_cfd_xpay_in_place(__global const float* z, __global const
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= counts[0])) {
+  if ((int)(get_global_id(0)) >= counts[0]) {
     return;
   } else {
     pOut[(int)(get_global_id(0))] = (z[(int)(get_global_id(0))] + (paramsF[0] * pIn[(int)(get_global_id(0))]));
@@ -1945,7 +1945,7 @@ const char* k_opencl_navatala_cfd_dot_finalize_partials = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_cfd_dot_finalize_partials(__global const double* partials, __global const uint* count, __global double* result) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= 1)) {
+  if ((int)(get_global_id(0)) >= 1) {
     return;
   } else {
     double s = as_double(0x0000000000000000ul);
@@ -1960,7 +1960,7 @@ __kernel void navatala_cfd_dot_finalize_partials(__global const double* partials
 const char* k_opencl_navatala_cfd_negate_scalar = R"kernel(
 __kernel void navatala_cfd_negate_scalar(__global const float* _input, __global float* _output) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= 1)) {
+  if ((int)(get_global_id(0)) >= 1) {
     return;
   } else {
     float v = _input[0];
@@ -1973,12 +1973,12 @@ const char* k_opencl_navatala_cfd_pcg_compute_alpha = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_cfd_pcg_compute_alpha(__global const double* rz, __global const double* pAp, __global float* alpha) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= 1)) {
+  if ((int)(get_global_id(0)) >= 1) {
     return;
   } else {
     double rz_val = rz[0];
     double pAp_val = pAp[0];
-    if ((pAp_val != as_double(0x0000000000000000ul))) {
+    if (pAp_val != as_double(0x0000000000000000ul)) {
       alpha[0] = ((float)((rz_val / pAp_val)));
     } else {
       alpha[0] = as_float(0x00000000u);
@@ -1991,12 +1991,12 @@ const char* k_opencl_navatala_cfd_pcg_compute_beta = R"kernel(
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_cfd_pcg_compute_beta(__global const double* rzNew, __global const double* rzOld, __global float* beta) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= 1)) {
+  if ((int)(get_global_id(0)) >= 1) {
     return;
   } else {
     double new_val = rzNew[0];
     double old_val = rzOld[0];
-    if ((old_val != as_double(0x0000000000000000ul))) {
+    if (old_val != as_double(0x0000000000000000ul)) {
       beta[0] = ((float)((new_val / old_val)));
     } else {
       beta[0] = as_float(0x00000000u);
@@ -2011,7 +2011,7 @@ __kernel void navatala_cfd_exact_mat_vec(__global const float* x, __global const
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
     float s = (diag[(int)(get_global_id(0))] * x[(int)(get_global_id(0))]);
@@ -2022,9 +2022,9 @@ __kernel void navatala_cfd_exact_mat_vec(__global const float* x, __global const
     for (int t = 0; t < (int)(len); ++t) {
       int k = (((int)(beg)) + t);
       uint f = faceIdx[k];
-      if ((((int)(f)) < ((int)(counts[2])))) {
+      if (((int)(f)) < ((int)(counts[2]))) {
         int sg = sign[k];
-        if ((sg >= 0)) {
+        if (sg >= 0) {
           int nb = neighbour[((int)(f))];
           s = (s + (upper[((int)(f))] * x[nb]));
         } else {
@@ -2045,7 +2045,7 @@ __kernel void navatala_cfd_exact_mat_vec_f64(__global const float* x, __global c
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
     double s = (diag[(int)(get_global_id(0))] * ((double)(x[(int)(get_global_id(0))])));
@@ -2056,9 +2056,9 @@ __kernel void navatala_cfd_exact_mat_vec_f64(__global const float* x, __global c
     for (int t = 0; t < (int)(len); ++t) {
       int k = (((int)(beg)) + t);
       uint f = faceIdx[k];
-      if ((((int)(f)) < ((int)(counts[2])))) {
+      if (((int)(f)) < ((int)(counts[2]))) {
         int sg = sign[k];
-        if ((sg >= 0)) {
+        if (sg >= 0) {
           int nb = neighbour[((int)(f))];
           s = (s + (upper[((int)(f))] * ((double)(x[nb]))));
         } else {
@@ -2075,7 +2075,7 @@ __kernel void navatala_cfd_exact_mat_vec_f64(__global const float* x, __global c
 const char* k_opencl_navatala_cfd_face_flux_boundary = R"kernel(
 __kernel void navatala_cfd_face_flux_boundary(__global const float* x, __global const int* owner, __global const float* cf, __global const float* bcVal, __global const uint* bcMask, __global const uint* params, __global float* faceFlux) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(params[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(params[0]))) {
     return;
   } else {
     int gf = (((int)(params[1])) + (int)(get_global_id(0)));
@@ -2083,17 +2083,17 @@ __kernel void navatala_cfd_face_flux_boundary(__global const float* x, __global 
     float xo = x[o];
     uint m = bcMask[gf];
     int mInt = ((int)(m));
-    if ((mInt == 4)) {
+    if (mInt == 4) {
       faceFlux[gf] = bcVal[gf];
     } else {
       float other = xo;
-      if ((mInt == 1)) {
+      if (mInt == 1) {
         other = bcVal[gf];
       } else {
-        if ((mInt == 3)) {
+        if (mInt == 3) {
           other = bcVal[gf];
         } else {
-          if ((mInt == 2)) {
+          if (mInt == 2) {
             other = as_float(0x00000000u);
           }
         }
@@ -2107,7 +2107,7 @@ __kernel void navatala_cfd_face_flux_boundary(__global const float* x, __global 
 const char* k_opencl_navatala_cfd_face_flux_internal = R"kernel(
 __kernel void navatala_cfd_face_flux_internal(__global const float* x, __global const int* owner, __global const int* neighbour, __global const float* cf, __global const uint* params, __global float* faceFlux) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(params[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(params[0]))) {
     return;
   } else {
     int o = owner[(int)(get_global_id(0))];
@@ -2120,10 +2120,10 @@ __kernel void navatala_cfd_face_flux_internal(__global const float* x, __global 
 const char* k_opencl_navatala_cfd_pressure_face_flux_correction_corrected = R"kernel(
 __kernel void navatala_cfd_pressure_face_flux_correction_corrected(__global const int* owner, __global const int* neighbour, __global const float* weights, __global const float* gradX, __global const float* gradY, __global const float* gradZ, __global const float* magSf, __global const float* dCorrX, __global const float* dCorrY, __global const float* dCorrZ, __global const float* rAUf, __global const uint* params, __global float* outFaceFlux) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(params[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(params[0]))) {
     return;
   } else {
-    if (((int)(get_global_id(0)) >= ((int)(params[1])))) {
+    if ((int)(get_global_id(0)) >= ((int)(params[1]))) {
       outFaceFlux[(int)(get_global_id(0))] = as_float(0x00000000u);
     } else {
       int own = owner[(int)(get_global_id(0))];
@@ -2143,25 +2143,25 @@ __kernel void navatala_cfd_pressure_face_flux_correction_corrected(__global cons
 const char* k_opencl_navatala_cfd_pressure_sn_grad = R"kernel(
 __kernel void navatala_cfd_pressure_sn_grad(__global const float* phiHbyA, __global const int* ownerAll, __global const float* sfX, __global const float* sfY, __global const float* sfZ, __global const float* magSf, __global const float* ux, __global const float* uy, __global const float* uz, __global const float* uBcX, __global const float* uBcY, __global const float* uBcZ, __global const uint* uBcMask, __global const float* rAUf, __global const uint* snGradMask, __global const uint* params, __global float* outSnGrad) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(params[1])))) {
+  if ((int)(get_global_id(0)) >= ((int)(params[1]))) {
     return;
   } else {
     uint mask = snGradMask[(int)(get_global_id(0))];
-    if ((((int)(mask)) == 0)) {
+    if (((int)(mask)) == 0) {
       outSnGrad[(int)(get_global_id(0))] = as_float(0x00000000u);
     } else {
       int o = ownerAll[(int)(get_global_id(0))];
-      if ((o < 0)) {
+      if (o < 0) {
         outSnGrad[(int)(get_global_id(0))] = as_float(0x00000000u);
       } else {
-        if ((o >= ((int)(params[0])))) {
+        if (o >= ((int)(params[0]))) {
           outSnGrad[(int)(get_global_id(0))] = as_float(0x00000000u);
         } else {
           float uxF = ux[o];
           float uyF = uy[o];
           float uzF = uz[o];
           uint bcm = uBcMask[(int)(get_global_id(0))];
-          if ((((int)(bcm)) == 2)) {
+          if (((int)(bcm)) == 2) {
             uxF = uBcX[(int)(get_global_id(0))];
             uyF = uBcY[(int)(get_global_id(0))];
             uzF = uBcZ[(int)(get_global_id(0))];
@@ -2171,7 +2171,7 @@ __kernel void navatala_cfd_pressure_sn_grad(__global const float* phiHbyA, __glo
           float ms = magSf[(int)(get_global_id(0))];
           float denom = (rf * ms);
           float ph = phiHbyA[(int)(get_global_id(0))];
-          if ((fabs(denom) < as_float(0x1e3ce508u))) {
+          if (fabs(denom) < as_float(0x1e3ce508u)) {
             outSnGrad[(int)(get_global_id(0))] = as_float(0x00000000u);
           } else {
             outSnGrad[(int)(get_global_id(0))] = ((ph - (rf * phiU)) / denom);
@@ -2189,7 +2189,7 @@ __kernel void navatala_cfd_u_correct(__global const float* pCell, __global const
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     int beg = offsets[((int)((int)(get_global_id(0))))];
@@ -2204,11 +2204,11 @@ __kernel void navatala_cfd_u_correct(__global const float* pCell, __global const
       int f = faceIdx[k];
       int o = owner[f];
       float pf = pCell[o];
-      if ((f < counts[2])) {
+      if (f < counts[2]) {
         int n = neighbour[f];
         pf = (as_float(0x3f000000u) * (pCell[o] + pCell[n]));
       } else {
-        if ((bcMask[f] != 0)) {
+        if (bcMask[f] != 0) {
           pf = bcVal[f];
         }
       }
@@ -2235,7 +2235,7 @@ __kernel void navatala_cfd_u_correct_reconstruct(__global const float* pCell, __
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     int beg = offsets[((int)((int)(get_global_id(0))))];
@@ -2257,35 +2257,35 @@ __kernel void navatala_cfd_u_correct_reconstruct(__global const float* pCell, __
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < counts[1])) {
+      if (f < counts[1]) {
         int o = owner[f];
         float po = pCell[o];
         float other = po;
-        if ((f < counts[2])) {
+        if (f < counts[2]) {
           int n = neighbour[f];
           other = pCell[n];
         } else {
-          if ((bcMask[f] != 0)) {
+          if (bcMask[f] != 0) {
             other = bcVal[f];
           }
         }
         float snGrad = (deltaCoeffs[f] * (other - po));
         float phiTerm = as_float(0x00000000u);
-        if ((bcSnGradMask[f] == 2)) {
+        if (bcSnGradMask[f] == 2) {
           phiTerm = bcSnGrad[f];
         } else {
-          if ((bcSnGradMask[f] == 1)) {
+          if (bcSnGradMask[f] == 1) {
             snGrad = bcSnGrad[f];
           }
           float gradFace = (magSf[f] * snGrad);
           float denom = rAUf[f];
           float pFlux = ((paramsF[0] * (denom * gradFace)) + faceFluxCorrection[f]);
-          if ((denom != as_float(0x00000000u))) {
+          if (denom != as_float(0x00000000u)) {
             phiTerm = ((phig[f] - pFlux) / denom);
           }
         }
         float ms = magSf[f];
-        if ((ms > as_float(0x00000000u))) {
+        if (ms > as_float(0x00000000u)) {
           float nx = (sfX[f] / ms);
           float ny = (sfY[f] / ms);
           float nz = (sfZ[f] / ms);
@@ -2335,7 +2335,7 @@ __kernel void navatala_cfd_u_correct_reconstruct(__global const float* pCell, __
     float rx = as_float(0x00000000u);
     float ry = as_float(0x00000000u);
     float rz = as_float(0x00000000u);
-    if ((fabs(det) >= rootVSmall)) {
+    if (fabs(det) >= rootVSmall) {
       float invDet = (as_float(0x3f800000u) / det);
       float i00 = (((w11 * w22) - (w21 * w12)) * invDet);
       float i01 = (((w02 * w21) - (w01 * w22)) * invDet);
@@ -2373,7 +2373,7 @@ __kernel void navatala_cfd_grad_alpha_cell(__global const float* alphaF, __globa
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     int beg = offsets[((int)((int)(get_global_id(0))))];
@@ -2406,7 +2406,7 @@ __kernel void navatala_cfd_grad_alpha_cell_f64(__global const double* alphaF, __
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     int beg = offsets[((int)((int)(get_global_id(0))))];
@@ -2443,7 +2443,7 @@ __kernel void navatala_cfd_n_hatf_all(__global const float* gx, __global const f
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[1])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[1]) {
     return;
   } else {
     int o = owner[((int)((int)(get_global_id(0))))];
@@ -2460,21 +2460,21 @@ __kernel void navatala_cfd_n_hatf_all(__global const float* gx, __global const f
     float ny = (gfy * inv);
     float nz = (gfz * inv);
     contactGrad[((int)((int)(get_global_id(0))))] = as_float(0x00000000u);
-    if ((thetaMask[((int)((int)(get_global_id(0))))] != (uint)(0u))) {
+    if (thetaMask[((int)((int)(get_global_id(0))))] != (uint)(0u)) {
       float sfx = sfX[((int)((int)(get_global_id(0))))];
       float sfy = sfY[((int)((int)(get_global_id(0))))];
       float sfz = sfZ[((int)((int)(get_global_id(0))))];
       float magSf = sqrt((((sfx * sfx) + (sfy * sfy)) + (sfz * sfz)));
-      if ((magSf > as_float(0x1e3ce508u))) {
+      if (magSf > as_float(0x1e3ce508u)) {
         float nfx = (sfx / magSf);
         float nfy = (sfy / magSf);
         float nfz = (sfz / magSf);
         float a12raw = (((nx * nfx) + (ny * nfy)) + (nz * nfz));
         float a12 = a12raw;
-        if ((a12 < as_float(0xbf800000u))) {
+        if (a12 < as_float(0xbf800000u)) {
           a12 = as_float(0xbf800000u);
         } else {
-          if ((a12 > as_float(0x3f800000u))) {
+          if (a12 > as_float(0x3f800000u)) {
             a12 = as_float(0x3f800000u);
           }
         }
@@ -2483,7 +2483,7 @@ __kernel void navatala_cfd_n_hatf_all(__global const float* gx, __global const f
         float acosA12 = acos(a12);
         float b2 = cos((acosA12 - th));
         float det = (as_float(0x3f800000u) - (a12 * a12));
-        if ((det < as_float(0x358637bdu))) {
+        if (det < as_float(0x358637bdu)) {
           det = as_float(0x358637bdu);
         }
         float a = ((b1 - (a12 * b2)) / det);
@@ -2512,7 +2512,7 @@ __kernel void navatala_cfd_n_hatf_all_f64(__global const double* gx, __global co
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[1])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[1]) {
     return;
   } else {
     int o = owner[((int)((int)(get_global_id(0))))];
@@ -2529,21 +2529,21 @@ __kernel void navatala_cfd_n_hatf_all_f64(__global const double* gx, __global co
     double ny = (gfy * inv);
     double nz = (gfz * inv);
     contactGrad[((int)((int)(get_global_id(0))))] = as_double(0x0000000000000000ul);
-    if ((thetaMask[((int)((int)(get_global_id(0))))] != (uint)(0u))) {
+    if (thetaMask[((int)((int)(get_global_id(0))))] != (uint)(0u)) {
       double sfx = ((double)(sfX[((int)((int)(get_global_id(0))))]));
       double sfy = ((double)(sfY[((int)((int)(get_global_id(0))))]));
       double sfz = ((double)(sfZ[((int)((int)(get_global_id(0))))]));
       double magSf = sqrt((((sfx * sfx) + (sfy * sfy)) + (sfz * sfz)));
-      if ((magSf > as_double(0x3bc79ca10c924223ul))) {
+      if (magSf > as_double(0x3bc79ca10c924223ul)) {
         double nfx = (sfx / magSf);
         double nfy = (sfy / magSf);
         double nfz = (sfz / magSf);
         double a12raw = (((nx * nfx) + (ny * nfy)) + (nz * nfz));
         double a12 = a12raw;
-        if ((a12 < as_double(0xbff0000000000000ul))) {
+        if (a12 < as_double(0xbff0000000000000ul)) {
           a12 = as_double(0xbff0000000000000ul);
         } else {
-          if ((a12 > as_double(0x3ff0000000000000ul))) {
+          if (a12 > as_double(0x3ff0000000000000ul)) {
             a12 = as_double(0x3ff0000000000000ul);
           }
         }
@@ -2552,7 +2552,7 @@ __kernel void navatala_cfd_n_hatf_all_f64(__global const double* gx, __global co
         double acosA12 = acos(a12);
         double b2 = cos((acosA12 - th));
         double det = (as_double(0x3ff0000000000000ul) - (a12 * a12));
-        if ((det < as_double(0x3eb0c6f7a0b5ed8dul))) {
+        if (det < as_double(0x3eb0c6f7a0b5ed8dul)) {
           det = as_double(0x3eb0c6f7a0b5ed8dul);
         }
         double a = ((b1 - (a12 * b2)) / det);
@@ -2580,7 +2580,7 @@ __kernel void navatala_cfd_stf_all_faces(__global const float* divN, __global co
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[1])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[1]) {
     return;
   } else {
     int o = owner[((int)((int)(get_global_id(0))))];
@@ -2590,10 +2590,10 @@ __kernel void navatala_cfd_stf_all_faces(__global const float* divN, __global co
     float divInterp = ((w * divN[o]) + (wm * divN[n]));
     float Kf = (as_float(0xbf800000u) * divInterp);
     float snGrad = as_float(0x00000000u);
-    if ((((int)((int)(get_global_id(0)))) < counts[2])) {
+    if (((int)((int)(get_global_id(0)))) < counts[2]) {
       snGrad = (delta[((int)((int)(get_global_id(0))))] * (alpha[n] - alpha[o]));
     } else {
-      if ((thetaMask[((int)((int)(get_global_id(0))))] != (uint)(0u))) {
+      if (thetaMask[((int)((int)(get_global_id(0))))] != (uint)(0u)) {
         snGrad = contactGrad[((int)((int)(get_global_id(0))))];
       } else {
         snGrad = (delta[((int)((int)(get_global_id(0))))] * (alphaF[((int)((int)(get_global_id(0))))] - alpha[o]));
@@ -2611,7 +2611,7 @@ __kernel void navatala_cfd_stf_all_faces_f64(__global const double* divN, __glob
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[1])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[1]) {
     return;
   } else {
     int o = owner[((int)((int)(get_global_id(0))))];
@@ -2621,10 +2621,10 @@ __kernel void navatala_cfd_stf_all_faces_f64(__global const double* divN, __glob
     double divInterp = ((w * divN[o]) + (wm * divN[n]));
     double Kf = (-divInterp);
     double snGrad = as_double(0x0000000000000000ul);
-    if ((((int)((int)(get_global_id(0)))) < counts[2])) {
+    if (((int)((int)(get_global_id(0)))) < counts[2]) {
       snGrad = (((double)(delta[((int)((int)(get_global_id(0))))])) * (((double)(alpha[n])) - ((double)(alpha[o]))));
     } else {
-      if ((thetaMask[((int)((int)(get_global_id(0))))] != (uint)(0u))) {
+      if (thetaMask[((int)((int)(get_global_id(0))))] != (uint)(0u)) {
         snGrad = contactGrad[((int)((int)(get_global_id(0))))];
       } else {
         snGrad = (((double)(delta[((int)((int)(get_global_id(0))))])) * (((double)(alphaF[((int)((int)(get_global_id(0))))])) - ((double)(alpha[o]))));
@@ -2641,7 +2641,7 @@ __kernel void navatala_cfd_k_omega_s_s_t_blending(__global const float* k, __glo
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float kC = k[((int)((int)(get_global_id(0))))];
@@ -2697,7 +2697,7 @@ __kernel void navatala_cfd_k_omega_s_s_t_nut_compute(__global const float* kVals
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
     float a1 = params[0];
@@ -2709,14 +2709,14 @@ __kernel void navatala_cfd_k_omega_s_s_t_nut_compute(__global const float* kVals
     float denomA = (a1 * om);
     float denomB = ((b1 * f23) * sqrt((s2raw * ((float)((s2raw > as_float(0x00000000u)))))));
     float num = (a1 * k);
-    if ((denomA > denomB)) {
-      if ((denomA > as_float(0x00000000u))) {
+    if (denomA > denomB) {
+      if (denomA > as_float(0x00000000u)) {
         outNut[(int)(get_global_id(0))] = (num / denomA);
       } else {
         outNut[(int)(get_global_id(0))] = as_float(0x00000000u);
       }
     } else {
-      if ((denomB > as_float(0x00000000u))) {
+      if (denomB > as_float(0x00000000u)) {
         outNut[(int)(get_global_id(0))] = (num / denomB);
       } else {
         outNut[(int)(get_global_id(0))] = as_float(0x00000000u);
@@ -2732,7 +2732,7 @@ __kernel void navatala_cfd_k_omega_s_s_t_sources(__global const float* k, __glob
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float kC = k[((int)((int)(get_global_id(0))))];
@@ -2788,7 +2788,7 @@ __kernel void navatala_cfd_k_omega_s_s_t_sources(__global const float* k, __glob
 const char* k_opencl_navatala_cfd_mu_eff_from_rho_nu_eff = R"kernel(
 __kernel void navatala_cfd_mu_eff_from_rho_nu_eff(__global const float* rho, __global const float* nuEff, __global const int* params, __global float* outMuEff) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
     float r = rho[((int)((int)(get_global_id(0))))];
@@ -2801,7 +2801,7 @@ __kernel void navatala_cfd_mu_eff_from_rho_nu_eff(__global const float* rho, __g
 const char* k_opencl_navatala_cfd_mu_eff_from_rho_nut_and_nu_mix = R"kernel(
 __kernel void navatala_cfd_mu_eff_from_rho_nut_and_nu_mix(__global const float* rho, __global const float* nut, __global const float* nuMix, __global const uint* params, __global float* outMu) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(params[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(params[0]))) {
     return;
   } else {
     outMu[(int)(get_global_id(0))] = (rho[(int)(get_global_id(0))] * (nuMix[(int)(get_global_id(0))] + nut[(int)(get_global_id(0))]));
@@ -2815,7 +2815,7 @@ __kernel void navatala_cfd_turbulence_add_explicit_source_device(__global const 
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
     outVals[(int)(get_global_id(0))] = (explicitSrc[(int)(get_global_id(0))] * vol[(int)(get_global_id(0))]);
@@ -2826,11 +2826,11 @@ __kernel void navatala_cfd_turbulence_add_explicit_source_device(__global const 
 const char* k_opencl_navatala_cfd_turbulence_dirichlet_cell_source = R"kernel(
 __kernel void navatala_cfd_turbulence_dirichlet_cell_source(__global const int* constrainedMask, __global const float* constrainedValue, __global const float* diag, __global const int* nCells, __global float* source) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= nCells[0])) {
+  if (((int)((int)(get_global_id(0)))) >= nCells[0]) {
     return;
   } else {
     int mask = constrainedMask[((int)((int)(get_global_id(0))))];
-    if ((mask == 0)) {
+    if (mask == 0) {
       return;
     } else {
       source[((int)((int)(get_global_id(0))))] = (diag[((int)((int)(get_global_id(0))))] * constrainedValue[((int)((int)(get_global_id(0))))]);
@@ -2842,23 +2842,23 @@ __kernel void navatala_cfd_turbulence_dirichlet_cell_source(__global const int* 
 const char* k_opencl_navatala_cfd_turbulence_dirichlet_face_elimination = R"kernel(
 __kernel void navatala_cfd_turbulence_dirichlet_face_elimination(__global const int* owner, __global const int* neighbour, __global const int* constrainedMask, __global const float* constrainedValue, __global const int* nIntFaces, __global float* upper, __global float* lower, __global float* source) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= nIntFaces[0])) {
+  if (((int)((int)(get_global_id(0)))) >= nIntFaces[0]) {
     return;
   } else {
     int o = owner[((int)((int)(get_global_id(0))))];
     int n = neighbour[((int)((int)(get_global_id(0))))];
     int oC = constrainedMask[o];
     int nC = constrainedMask[n];
-    if (((oC | nC) == 0)) {
+    if ((oC | nC) == 0) {
       return;
     } else {
       float up = upper[((int)((int)(get_global_id(0))))];
       float lo = lower[((int)((int)(get_global_id(0))))];
-      if ((oC != 0)) {
+      if (oC != 0) {
         float cv = constrainedValue[o];
         atomic_add(&source[n], (-(lo * cv)));
       }
-      if ((nC != 0)) {
+      if (nC != 0) {
         float cv = constrainedValue[n];
         atomic_add(&source[o], (-(up * cv)));
       }
@@ -2875,7 +2875,7 @@ __kernel void navatala_cfd_two_mag_sqr_symm_grad_u(__global const float* ufX, __
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     int beg = offsets[((int)((int)(get_global_id(0))))];
@@ -2913,7 +2913,7 @@ __kernel void navatala_cfd_two_mag_sqr_symm_grad_u(__global const float* ufX, __
     }
     float v = vol[((int)((int)(get_global_id(0))))];
     float invV = as_float(0x00000000u);
-    if ((v != as_float(0x00000000u))) {
+    if (v != as_float(0x00000000u)) {
       invV = (as_float(0x3f800000u) / v);
     }
     g00 = (g00 * invV);
@@ -2950,7 +2950,7 @@ __kernel void navatala_cfd_attention_row_softmax(__global const float* scores, _
   int qi = (int)(get_global_id(0));
   int nq = numQ[0];
   int nk = numK[0];
-  if ((qi < nq)) {
+  if (qi < nq) {
     int rowBase = (qi * nk);
     float maxScore = as_float(0xf149f2cau);
     for (int j = 0; j < (int)(nk); ++j) {
@@ -2985,7 +2985,7 @@ __kernel void navatala_cfd_attention_value_projection(__global const float* weig
   int nk = numK[0];
   int hd = headDim[0];
   int total = (nq * hd);
-  if ((gid < total)) {
+  if (gid < total) {
     int qi = (gid / hd);
     int d = (gid % hd);
     float acc = as_float(0x00000000u);
@@ -3006,7 +3006,7 @@ __kernel void navatala_cfd_gather_mean(__global const float* features, __global 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int nNodes = numNodes[0];
-  if ((gid < nNodes)) {
+  if (gid < nNodes) {
     int cnt = neighborCounts[gid];
     int fd = featureDim[0];
     for (int f = 0; f < (int)(fd); ++f) {
@@ -3032,7 +3032,7 @@ __kernel void navatala_cfd_layer_norm_forward(__global const float* x, __global 
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int nRows = numRows[0];
-  if ((row < nRows)) {
+  if (row < nRows) {
     int hd = 16;
     int rowBase = (row * hd);
     float sum = as_float(0x00000000u);
@@ -3071,7 +3071,7 @@ __kernel void navatala_cfd_radius_count(__global const float* query, __global co
   int qid = (int)(get_global_id(0));
   int nq = numQuery[0];
   int nr = numRef[0];
-  if ((qid < nq)) {
+  if (qid < nq) {
     float qx = query[((qid)*3 + 0)];
     float qy = query[((qid)*3 + 1)];
     float qz = query[((qid)*3 + 2)];
@@ -3086,7 +3086,7 @@ __kernel void navatala_cfd_radius_count(__global const float* query, __global co
       float dy = (qy - ry);
       float dz = (qz - rz);
       float d2 = (((dx * dx) + (dy * dy)) + (dz * dz));
-      if ((d2 <= rCmp)) {
+      if (d2 <= rCmp) {
         cnt = (cnt + 1);
       }
     }
@@ -3103,7 +3103,7 @@ __kernel void navatala_cfd_scaled_dot_product(__global const float* q, __global 
   int nk = numK[0];
   int hd = headDim[0];
   int total = (nq * nk);
-  if ((gid < total)) {
+  if (gid < total) {
     int qi = (gid / nk);
     int kj = (gid % nk);
     float acc = as_float(0x00000000u);
@@ -3124,7 +3124,7 @@ __kernel void navatala_cfd_scatter_add_atomic(__global const int* values, __glob
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int nEdges = numEdges[0];
-  if ((gid < nEdges)) {
+  if (gid < nEdges) {
     int dstIdx = indices[gid];
     int fd = featureDim[0];
     for (int f = 0; f < (int)(fd); ++f) {
@@ -3142,7 +3142,7 @@ __kernel void navatala_cfd_spectral_complex_mul(__global const float* x, __globa
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int count = n[0];
-  if ((gid < count)) {
+  if (gid < count) {
     float xr = x[((gid)*2 + 0)];
     float xi = x[((gid)*2 + 1)];
     float wr = w[((gid)*2 + 0)];
@@ -3165,14 +3165,14 @@ __kernel void navatala_cfd_spectral_conv1d_mode_sliced(__global const float* xFt
   int inCh = 2;
   int m1 = 8;
   int total = ((nb * outCh) * ftw);
-  if ((gid < total)) {
+  if (gid < total) {
     int boc = (gid / ftw);
     int w = (gid % ftw);
     int b = (boc / outCh);
     int oc = (boc % outCh);
     float accR = as_float(0x00000000u);
     float accI = as_float(0x00000000u);
-    if ((w < m1)) {
+    if (w < m1) {
       for (int ic = 0; ic < (int)(inCh); ++ic) {
         int xBase = ((((b * inCh) + ic) * ftw) + w);
         int wBase = ((((oc * inCh) + ic) * m1) + w);
@@ -3185,7 +3185,7 @@ __kernel void navatala_cfd_spectral_conv1d_mode_sliced(__global const float* xFt
       }
     } else {
       int negStart = (ftw - m1);
-      if ((w >= negStart)) {
+      if (w >= negStart) {
         int wLocal = (w - negStart);
         for (int ic = 0; ic < (int)(inCh); ++ic) {
           int xBase = ((((b * inCh) + ic) * ftw) + w);
@@ -3218,7 +3218,7 @@ __kernel void navatala_cfd_spectral_conv2d_mode_sliced(__global const float* xFt
   int m2 = 8;
   int plane = (fth * ftw);
   int total = ((nb * outCh) * plane);
-  if ((gid < total)) {
+  if (gid < total) {
     int boc = (gid / plane);
     int hwFlat = (gid % plane);
     int b = (boc / outCh);
@@ -3227,7 +3227,7 @@ __kernel void navatala_cfd_spectral_conv2d_mode_sliced(__global const float* xFt
     int w = (hwFlat % ftw);
     float accR = as_float(0x00000000u);
     float accI = as_float(0x00000000u);
-    if (((h < m1) && (w < m2))) {
+    if ((h < m1) && (w < m2)) {
       for (int ic = 0; ic < (int)(inCh); ++ic) {
         int xBase = ((((((b * inCh) + ic) * fth) + h) * ftw) + w);
         int wBase = ((((((oc * inCh) + ic) * m1) + h) * m2) + w);
@@ -3240,7 +3240,7 @@ __kernel void navatala_cfd_spectral_conv2d_mode_sliced(__global const float* xFt
       }
     } else {
       int negStart = (fth - m1);
-      if (((h >= negStart) && (w < m2))) {
+      if ((h >= negStart) && (w < m2)) {
         int hLocal = (h - negStart);
         for (int ic = 0; ic < (int)(inCh); ++ic) {
           int xBase = ((((((b * inCh) + ic) * fth) + h) * ftw) + w);
@@ -3275,7 +3275,7 @@ __kernel void navatala_cfd_spectral_conv3d_mode_sliced(__global const float* xFt
   int m3 = 4;
   int plane = ((ftd * fth) * ftw);
   int total = ((nb * outCh) * plane);
-  if ((gid < total)) {
+  if (gid < total) {
     int boc = (gid / plane);
     int dhwFlat = (gid % plane);
     int b = (boc / outCh);
@@ -3288,7 +3288,7 @@ __kernel void navatala_cfd_spectral_conv3d_mode_sliced(__global const float* xFt
     int negStartH = (fth - m2);
     float accR = as_float(0x00000000u);
     float accI = as_float(0x00000000u);
-    if ((((d < m1) && (h < m2)) && (w < m3))) {
+    if (((d < m1) && (h < m2)) && (w < m3)) {
       for (int ic = 0; ic < (int)(inCh); ++ic) {
         int xBase = ((((((((b * inCh) + ic) * ftd) + d) * fth) + h) * ftw) + w);
         int wBase = ((((((((oc * inCh) + ic) * m1) + d) * m2) + h) * m3) + w);
@@ -3300,7 +3300,7 @@ __kernel void navatala_cfd_spectral_conv3d_mode_sliced(__global const float* xFt
         accI = (accI + ((xr * wi) + (xi * wr)));
       }
     } else {
-      if ((((d >= negStartD) && (h < m2)) && (w < m3))) {
+      if (((d >= negStartD) && (h < m2)) && (w < m3)) {
         for (int ic = 0; ic < (int)(inCh); ++ic) {
           int xBase = ((((((((b * inCh) + ic) * ftd) + d) * fth) + h) * ftw) + w);
           int wBase = ((((((((oc * inCh) + ic) * m1) + (d - negStartD)) * m2) + h) * m3) + w);
@@ -3312,7 +3312,7 @@ __kernel void navatala_cfd_spectral_conv3d_mode_sliced(__global const float* xFt
           accI = (accI + ((xr * wi) + (xi * wr)));
         }
       } else {
-        if ((((d < m1) && (h >= negStartH)) && (w < m3))) {
+        if (((d < m1) && (h >= negStartH)) && (w < m3)) {
           for (int ic = 0; ic < (int)(inCh); ++ic) {
             int xBase = ((((((((b * inCh) + ic) * ftd) + d) * fth) + h) * ftw) + w);
             int wBase = ((((((((oc * inCh) + ic) * m1) + d) * m2) + (h - negStartH)) * m3) + w);
@@ -3324,7 +3324,7 @@ __kernel void navatala_cfd_spectral_conv3d_mode_sliced(__global const float* xFt
             accI = (accI + ((xr * wi) + (xi * wr)));
           }
         } else {
-          if ((((d >= negStartD) && (h >= negStartH)) && (w < m3))) {
+          if (((d >= negStartD) && (h >= negStartH)) && (w < m3)) {
             for (int ic = 0; ic < (int)(inCh); ++ic) {
               int xBase = ((((((((b * inCh) + ic) * ftd) + d) * fth) + h) * ftw) + w);
               int wBase = ((((((((oc * inCh) + ic) * m1) + (d - negStartD)) * m2) + (h - negStartH)) * m3) + w);
@@ -3362,7 +3362,7 @@ __kernel void navatala_cfd_spectral_conv4d_mode_sliced(__global const float* xFt
   int m4 = 2;
   int hyper = (((ftt * ftd) * fth) * ftw);
   int total = ((nb * outCh) * hyper);
-  if ((gid < total)) {
+  if (gid < total) {
     int boc = (gid / hyper);
     int tdhwFlat = (gid % hyper);
     int b = (boc / outCh);
@@ -3378,7 +3378,7 @@ __kernel void navatala_cfd_spectral_conv4d_mode_sliced(__global const float* xFt
     int negStartH = (fth - m3);
     float accR = as_float(0x00000000u);
     float accI = as_float(0x00000000u);
-    if (((((t < m1) && (d < m2)) && (h < m3)) && (w < m4))) {
+    if ((((t < m1) && (d < m2)) && (h < m3)) && (w < m4)) {
       for (int ic = 0; ic < (int)(inCh); ++ic) {
         int xBase = ((((((((((b * inCh) + ic) * ftt) + t) * ftd) + d) * fth) + h) * ftw) + w);
         int wBase = ((((((((((((oc * inCh) + ic) * m1) + t) * m2) + d) * m3) + h) * m4) + w) * 1) + 0);
@@ -3390,7 +3390,7 @@ __kernel void navatala_cfd_spectral_conv4d_mode_sliced(__global const float* xFt
         accI = (accI + ((xr * wi) + (xi * wr)));
       }
     } else {
-      if (((((t >= negStartT) && (d < m2)) && (h < m3)) && (w < m4))) {
+      if ((((t >= negStartT) && (d < m2)) && (h < m3)) && (w < m4)) {
         for (int ic = 0; ic < (int)(inCh); ++ic) {
           int xBase = ((((((((((b * inCh) + ic) * ftt) + t) * ftd) + d) * fth) + h) * ftw) + w);
           int wBase = ((((((((((((oc * inCh) + ic) * m1) + (t - negStartT)) * m2) + d) * m3) + h) * m4) + w) * 1) + 0);
@@ -3402,7 +3402,7 @@ __kernel void navatala_cfd_spectral_conv4d_mode_sliced(__global const float* xFt
           accI = (accI + ((xr * wi) + (xi * wr)));
         }
       } else {
-        if (((((t < m1) && (d >= negStartD)) && (h < m3)) && (w < m4))) {
+        if ((((t < m1) && (d >= negStartD)) && (h < m3)) && (w < m4)) {
           for (int ic = 0; ic < (int)(inCh); ++ic) {
             int xBase = ((((((((((b * inCh) + ic) * ftt) + t) * ftd) + d) * fth) + h) * ftw) + w);
             int wBase = ((((((((((((oc * inCh) + ic) * m1) + t) * m2) + (d - negStartD)) * m3) + h) * m4) + w) * 1) + 0);
@@ -3414,7 +3414,7 @@ __kernel void navatala_cfd_spectral_conv4d_mode_sliced(__global const float* xFt
             accI = (accI + ((xr * wi) + (xi * wr)));
           }
         } else {
-          if (((((t >= negStartT) && (d >= negStartD)) && (h < m3)) && (w < m4))) {
+          if ((((t >= negStartT) && (d >= negStartD)) && (h < m3)) && (w < m4)) {
             for (int ic = 0; ic < (int)(inCh); ++ic) {
               int xBase = ((((((((((b * inCh) + ic) * ftt) + t) * ftd) + d) * fth) + h) * ftw) + w);
               int wBase = ((((((((((((oc * inCh) + ic) * m1) + (t - negStartT)) * m2) + (d - negStartD)) * m3) + h) * m4) + w) * 1) + 0);
@@ -3426,7 +3426,7 @@ __kernel void navatala_cfd_spectral_conv4d_mode_sliced(__global const float* xFt
               accI = (accI + ((xr * wi) + (xi * wr)));
             }
           } else {
-            if (((((t < m1) && (d < m2)) && (h >= negStartH)) && (w < m4))) {
+            if ((((t < m1) && (d < m2)) && (h >= negStartH)) && (w < m4)) {
               for (int ic = 0; ic < (int)(inCh); ++ic) {
                 int xBase = ((((((((((b * inCh) + ic) * ftt) + t) * ftd) + d) * fth) + h) * ftw) + w);
                 int wBase = ((((((((((((oc * inCh) + ic) * m1) + t) * m2) + d) * m3) + (h - negStartH)) * m4) + w) * 1) + 0);
@@ -3438,7 +3438,7 @@ __kernel void navatala_cfd_spectral_conv4d_mode_sliced(__global const float* xFt
                 accI = (accI + ((xr * wi) + (xi * wr)));
               }
             } else {
-              if (((((t >= negStartT) && (d < m2)) && (h >= negStartH)) && (w < m4))) {
+              if ((((t >= negStartT) && (d < m2)) && (h >= negStartH)) && (w < m4)) {
                 for (int ic = 0; ic < (int)(inCh); ++ic) {
                   int xBase = ((((((((((b * inCh) + ic) * ftt) + t) * ftd) + d) * fth) + h) * ftw) + w);
                   int wBase = ((((((((((((oc * inCh) + ic) * m1) + (t - negStartT)) * m2) + d) * m3) + (h - negStartH)) * m4) + w) * 1) + 0);
@@ -3450,7 +3450,7 @@ __kernel void navatala_cfd_spectral_conv4d_mode_sliced(__global const float* xFt
                   accI = (accI + ((xr * wi) + (xi * wr)));
                 }
               } else {
-                if (((((t < m1) && (d >= negStartD)) && (h >= negStartH)) && (w < m4))) {
+                if ((((t < m1) && (d >= negStartD)) && (h >= negStartH)) && (w < m4)) {
                   for (int ic = 0; ic < (int)(inCh); ++ic) {
                     int xBase = ((((((((((b * inCh) + ic) * ftt) + t) * ftd) + d) * fth) + h) * ftw) + w);
                     int wBase = ((((((((((((oc * inCh) + ic) * m1) + t) * m2) + (d - negStartD)) * m3) + (h - negStartH)) * m4) + w) * 1) + 0);
@@ -3462,7 +3462,7 @@ __kernel void navatala_cfd_spectral_conv4d_mode_sliced(__global const float* xFt
                     accI = (accI + ((xr * wi) + (xi * wr)));
                   }
                 } else {
-                  if (((((t >= negStartT) && (d >= negStartD)) && (h >= negStartH)) && (w < m4))) {
+                  if ((((t >= negStartT) && (d >= negStartD)) && (h >= negStartH)) && (w < m4)) {
                     for (int ic = 0; ic < (int)(inCh); ++ic) {
                       int xBase = ((((((((((b * inCh) + ic) * ftt) + t) * ftd) + d) * fth) + h) * ftw) + w);
                       int wBase = ((((((((((((oc * inCh) + ic) * m1) + (t - negStartT)) * m2) + (d - negStartD)) * m3) + (h - negStartH)) * m4) + w) * 1) + 0);
@@ -3492,7 +3492,7 @@ __kernel void navatala_cfd_compute_face_area_pair_weights_f32(__global const flo
   int gid0 = (int)get_global_id(0);
   int f = (int)(get_global_id(0));
   int N = ((int)(nFaces[0]));
-  if ((f < N)) {
+  if (f < N) {
     float sx = sfX[f];
     float sy = sfY[f];
     float sz = sfZ[f];
@@ -3512,7 +3512,7 @@ __kernel void navatala_cfd_restrict_by_agglomeration_gather_f32(__global const f
   int gid0 = (int)get_global_id(0);
   int c = (int)(get_global_id(0));
   int N = ((int)(nCoarseCells[0]));
-  if ((c < N)) {
+  if (c < N) {
     int begin = ((int)(coarseToFineOffsets[c]));
     int end = ((int)(coarseToFineOffsets[(c + 1)]));
     float sum = as_float(0x00000000u);
@@ -3532,7 +3532,7 @@ __kernel void navatala_cfd_prolongate_by_agglomeration_f32(__global const float*
   int gid0 = (int)get_global_id(0);
   int i = (int)(get_global_id(0));
   int N = ((int)(nFineCells[0]));
-  if ((i < N)) {
+  if (i < N) {
     int coarseIdx = ((int)(fineToCoarse[i]));
     float val = coarseField[coarseIdx];
     float cur = fineField[i];
@@ -3546,7 +3546,7 @@ __kernel void navatala_cfd_diag_inv_apply_f32(__global const float* r, __global 
   int gid0 = (int)get_global_id(0);
   int i = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     float ri = r[i];
     float di = diagInv[i];
     z[i] = (di * ri);
@@ -3560,7 +3560,7 @@ __kernel void navatala_cfd_csr_sp_m_v_mixed_f32_f64(__global const uint* rowPtr,
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int start = ((int)(rowPtr[row]));
     int end = ((int)(rowPtr[(row + 1)]));
     double acc = as_double(0x0000000000000000ul);
@@ -3582,7 +3582,7 @@ __kernel void navatala_cfd_chebyshev_sweep_mixed_f32_f64(__global const float* r
   int gid0 = (int)get_global_id(0);
   int i = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     double cA = coeffA[0];
     double cB = coeffB[0];
     double ri = ((double)(r[i]));
@@ -3601,7 +3601,7 @@ __kernel void navatala_cfd_ell_sp_m_v_mixed_f32_f64(__global const uint* colIdx,
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int W = ((int)(maxWidth[0]));
     double acc = as_double(0x0000000000000000ul);
     for (int col = 0; col < (int)(W); ++col) {
@@ -3622,7 +3622,7 @@ __kernel void navatala_cfd_chebyshev_smooth_post_fused_mixed(__global const floa
   int gid0 = (int)get_global_id(0);
   int i = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     double cA = coeffA[0];
     double cB = coeffB[0];
     double az_i = ((double)(Az[i]));
@@ -3644,7 +3644,7 @@ __kernel void navatala_cfd_gamg_proc_pack_f32(__global const float* x, __global 
   int gid0 = (int)get_global_id(0);
   int i = (int)(get_global_id(0));
   int N = ((int)(count[0]));
-  if ((i < N)) {
+  if (i < N) {
     int cell = ((int)(localCells[i]));
     float v = x[cell];
     sendVals[i] = v;
@@ -3657,7 +3657,7 @@ __kernel void navatala_cfd_gamg_proc_add_gather_f32(__global const uint* entryOf
   int gid0 = (int)get_global_id(0);
   int c = (int)(get_global_id(0));
   int N = ((int)(nCells[0]));
-  if ((c < N)) {
+  if (c < N) {
     int begin = ((int)(entryOffsets[c]));
     int end = ((int)(entryOffsets[(c + 1)]));
     float acc = y[c];

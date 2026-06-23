@@ -17,16 +17,16 @@ __kernel void navatala_sparse_greedy_recolor_f64(__global const uint* rowPtr, __
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int minColor = 0;
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != gid)) {
+      if (col != gid) {
         int cc = colors[col];
-        if ((cc == minColor)) {
+        if (cc == minColor) {
           minColor = (minColor + 1);
         }
       }

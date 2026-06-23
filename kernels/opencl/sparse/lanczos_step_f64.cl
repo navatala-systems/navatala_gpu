@@ -18,7 +18,7 @@ __kernel void navatala_sparse_lanczos_step_f64(__global const double* Av, __glob
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double avi = Av[gid];
     double vc = vCurrent[gid];
     double vp = vPrevious[gid];

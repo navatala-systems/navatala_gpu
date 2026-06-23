@@ -17,7 +17,7 @@ __kernel void navatala_sparse_halo_unpack_f32(__global const float* recvBuf, __g
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(recvCount[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int idx = ((int)(recvMap[gid]));
     float val = recvBuf[gid];
     xHalo[idx] = val;

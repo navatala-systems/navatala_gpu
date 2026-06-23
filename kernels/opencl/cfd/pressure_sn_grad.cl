@@ -15,25 +15,25 @@
 
 __kernel void navatala_cfd_pressure_sn_grad(__global const float* phiHbyA, __global const int* ownerAll, __global const float* sfX, __global const float* sfY, __global const float* sfZ, __global const float* magSf, __global const float* ux, __global const float* uy, __global const float* uz, __global const float* uBcX, __global const float* uBcY, __global const float* uBcZ, __global const uint* uBcMask, __global const float* rAUf, __global const uint* snGradMask, __global const uint* params, __global float* outSnGrad) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(params[1])))) {
+  if ((int)(get_global_id(0)) >= ((int)(params[1]))) {
     return;
   } else {
     uint mask = snGradMask[(int)(get_global_id(0))];
-    if ((((int)(mask)) == 0)) {
+    if (((int)(mask)) == 0) {
       outSnGrad[(int)(get_global_id(0))] = as_float(0x00000000u);
     } else {
       int o = ownerAll[(int)(get_global_id(0))];
-      if ((o < 0)) {
+      if (o < 0) {
         outSnGrad[(int)(get_global_id(0))] = as_float(0x00000000u);
       } else {
-        if ((o >= ((int)(params[0])))) {
+        if (o >= ((int)(params[0]))) {
           outSnGrad[(int)(get_global_id(0))] = as_float(0x00000000u);
         } else {
           float uxF = ux[o];
           float uyF = uy[o];
           float uzF = uz[o];
           uint bcm = uBcMask[(int)(get_global_id(0))];
-          if ((((int)(bcm)) == 2)) {
+          if (((int)(bcm)) == 2) {
             uxF = uBcX[(int)(get_global_id(0))];
             uyF = uBcY[(int)(get_global_id(0))];
             uzF = uBcZ[(int)(get_global_id(0))];
@@ -43,7 +43,7 @@ __kernel void navatala_cfd_pressure_sn_grad(__global const float* phiHbyA, __glo
           float ms = magSf[(int)(get_global_id(0))];
           float denom = (rf * ms);
           float ph = phiHbyA[(int)(get_global_id(0))];
-          if ((fabs(denom) < as_float(0x1e3ce508u))) {
+          if (fabs(denom) < as_float(0x1e3ce508u)) {
             outSnGrad[(int)(get_global_id(0))] = as_float(0x00000000u);
           } else {
             outSnGrad[(int)(get_global_id(0))] = ((ph - (rf * phiU)) / denom);

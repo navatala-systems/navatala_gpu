@@ -46,7 +46,7 @@ kernel void navatala_dataframe_arg_max_f32(device const float* _input [[buffer(0
   uint amf32_reductionStride = 128u;
   for (int amf32_reductionStep = 0; amf32_reductionStep < (int)(8); ++amf32_reductionStep) {
     uint amf32_stride = amf32_reductionStride;
-    if ((lid < amf32_stride)) {
+    if (lid < amf32_stride) {
       otherVal = svals[(lid + amf32_stride)];
       otherIdx = sidxs[(lid + amf32_stride)];
       myVal = svals[lid];
@@ -66,7 +66,7 @@ kernel void navatala_dataframe_arg_max_f32(device const float* _input [[buffer(0
     amf32_reductionStride = amf32_nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     maxValue[0] = svals[0];
     maxIndex[0] = sidxs[0];
   }

@@ -36,7 +36,7 @@ __kernel void navatala_dataframe_covariance_f32(__global const float* inputX, __
   uint covF32_reductionStride = (uint)(128u);
   for (int covF32_reductionStep = 0; covF32_reductionStep < (int)(8); ++covF32_reductionStep) {
     uint covF32_stride = covF32_reductionStride;
-    if ((lid < covF32_stride)) {
+    if (lid < covF32_stride) {
       float covF32_other = sdata[(lid + covF32_stride)];
       float covF32_mine = sdata[lid];
       float covF32_sum = (covF32_mine + covF32_other);
@@ -47,7 +47,7 @@ __kernel void navatala_dataframe_covariance_f32(__global const float* inputX, __
     covF32_reductionStride = covF32_nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float totalSum = sdata[(uint)(0u)];
     float countFloat = ((float)(countVal));
     float covVal = (totalSum / countFloat);

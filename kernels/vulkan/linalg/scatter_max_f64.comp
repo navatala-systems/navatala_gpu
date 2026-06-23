@@ -37,7 +37,7 @@ void main() {
   uint gid = uint(int(gl_GlobalInvocationID.x));
   uint tid = gid;
   uint n = count[0u];
-  if ((tid < n)) {
+  if (tid < n) {
     uint dstIdx = indices[tid];
     double val = src[tid];
     atomicMax(A[dstIdx], val);

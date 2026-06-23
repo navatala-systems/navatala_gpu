@@ -34,7 +34,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int i = int(int(gl_GlobalInvocationID.x));
   float thresh = threshold[0u];
-  if ((i < nnz[0u])) {
+  if (i < nnz[0u]) {
     float a = valuesA[i];
     float absA = abs(a);
     float result = (((absA >= thresh)) ? (a) : (uintBitsToFloat(0x00000000u)));

@@ -35,7 +35,7 @@ layout(std430, binding = 4) readonly buffer buf_paramsF {
 // kernel: navatala_cfd_xpay_in_place
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) >= counts[0])) {
+  if (int(gl_GlobalInvocationID.x) >= counts[0]) {
     return;
   } else {
     pOut[int(gl_GlobalInvocationID.x)] = (z[int(gl_GlobalInvocationID.x)] + (paramsF[0] * pIn[int(gl_GlobalInvocationID.x)]));

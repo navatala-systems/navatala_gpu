@@ -18,7 +18,7 @@ __kernel void navatala_ml_pointwise_swish_f16(__global const half* _input, __glo
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (x * (as_float(0x3f800000u) / (as_float(0x3f800000u) + exp((-x)))));

@@ -70,7 +70,7 @@ __kernel void navatala_dataframe_completeness_score_f64(__global const double* c
   barrier(CLK_LOCAL_MEM_FENCE);
   for (int stride = 0; stride < (int)((uint)(128u)); ++stride) {
     uint strideU32 = ((uint)(stride));
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       double otherHCY = hcySum[(lid + strideU32)];
       double mineHCY = hcySum[lid];
       hcySum[lid] = (mineHCY + otherHCY);
@@ -80,7 +80,7 @@ __kernel void navatala_dataframe_completeness_score_f64(__global const double* c
     }
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     double hcyFinal = hcySum[(uint)(0u)];
     double hcFinal = hcSum[(uint)(0u)];
     bool hcIsZero = (hcFinal == as_double(0x0000000000000000ul));

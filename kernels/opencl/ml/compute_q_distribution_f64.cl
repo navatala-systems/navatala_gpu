@@ -60,7 +60,7 @@ __kernel void navatala_ml_compute_q_distribution_f64(__global const double* Y, _
   uint qF64ReductionStride = (uint)(128u);
   for (int qF64ReductionStep = 0; qF64ReductionStep < (int)(8); ++qF64ReductionStep) {
     uint qF64Stride = qF64ReductionStride;
-    if ((lid < qF64Stride)) {
+    if (lid < qF64Stride) {
       double qF64Other = sdata[(lid + qF64Stride)];
       double qF64Mine = sdata[lid];
       double qF64Sum = (qF64Mine + qF64Other);
@@ -71,7 +71,7 @@ __kernel void navatala_ml_compute_q_distribution_f64(__global const double* Y, _
     qF64ReductionStride = qF64NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     double partialSum = sdata[0];
     double oldSum = sumQ[0];
     double newSum = (oldSum + partialSum);

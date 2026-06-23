@@ -19,15 +19,15 @@ using namespace metal;
 kernel void navatala_ml_concatenate2_f32(device const float* a [[buffer(0)]], device const float* b [[buffer(1)]], device const uint* nA [[buffer(2)]], device const uint* nB [[buffer(3)]], device const uint* count [[buffer(4)]], device float* _output [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint nAVal = nA[0];
-    if ((gid < nAVal)) {
+    if (gid < nAVal) {
       float v = a[gid];
       _output[gid] = v;
     } else {
       uint srcIdx = (gid - nAVal);
       uint nBVal = nB[0];
-      if ((srcIdx < nBVal)) {
+      if (srcIdx < nBVal) {
         float v = b[srcIdx];
         _output[gid] = v;
       }

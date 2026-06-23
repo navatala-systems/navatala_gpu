@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_cfd_scatter_rho_vec3_and_mask(device const int* procFaces [[buffer(0)]], device const float* recvVals [[buffer(1)]], device const int* counts [[buffer(2)]], device float* rhoBcVal [[buffer(3)]], device float* uBcX [[buffer(4)]], device float* uBcY [[buffer(5)]], device float* uBcZ [[buffer(6)]], device uint* rhoBcMask [[buffer(7)]], device uint* uBcMask [[buffer(8)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(counts[0])))) {
+  if (int(__gid.x) >= ((int)(counts[0]))) {
     return;
   } else {
     int f = procFaces[int(__gid.x)];

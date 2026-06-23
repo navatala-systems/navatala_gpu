@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_sparse_sparse_bicgstab_iter_f32(const float*
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int i = gid;
   unsigned int nVal = n[0u];
-  if ((i < nVal)) {
+  if (i < nVal) {
     float alphaVal = alpha[0u];
     float omegaVal = omega[0u];
     float xi = x[i];

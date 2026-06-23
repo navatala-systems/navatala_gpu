@@ -50,7 +50,7 @@ void main() {
   double range = (maxValF - minValF);
   double numBinsFloat = double(numBinsVal);
   double binWidth = (range / numBinsFloat);
-  if ((lid < numBinsVal)) {
+  if (lid < numBinsVal) {
     localHist[lid] = 0u;
   }
   bool inBounds = (gid < countVal);
@@ -66,15 +66,15 @@ void main() {
     binIndices[lid] = numBinsVal;
   }
   barrier();
-  if ((lid < numBinsVal)) {
+  if (lid < numBinsVal) {
     uint myBin = lid;
     uint histF64RedStride = 128u;
     for (int histF64RedStep = 0; histF64RedStep < int(8); ++histF64RedStep) {
       uint histF64Stride = histF64RedStride;
-      if ((lid < histF64Stride)) {
+      if (lid < histF64Stride) {
         uint partnerIdx = (lid + histF64Stride);
         uint storedBin = binIndices[partnerIdx];
-        if ((storedBin == myBin)) {
+        if (storedBin == myBin) {
           uint oldCount = localHist[lid];
           uint newCount = (oldCount + 1u);
           localHist[lid] = newCount;
@@ -87,7 +87,7 @@ void main() {
     }
   }
   barrier();
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     for (int bin = 0; bin < int(numBinsVal); ++bin) {
       uint binU32 = uint(bin);
       uint localCount = localHist[binU32];

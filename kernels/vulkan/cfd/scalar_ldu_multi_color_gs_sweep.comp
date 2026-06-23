@@ -63,7 +63,7 @@ layout(std430, binding = 13) buffer buf_x {
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int colorSize = (int(colorRange[1]) - int(colorRange[0]));
-  if ((int(gl_GlobalInvocationID.x) >= colorSize)) {
+  if (int(gl_GlobalInvocationID.x) >= colorSize) {
     return;
   } else {
     int cellIdx = (int(colorRange[0]) + int(gl_GlobalInvocationID.x));
@@ -73,8 +73,8 @@ void main() {
     float omega = params[1];
     float d = diag[ci];
     float absD = abs(d);
-    if ((absD < smallDiag)) {
-      if ((d >= uintBitsToFloat(0x00000000u))) {
+    if (absD < smallDiag) {
+      if (d >= uintBitsToFloat(0x00000000u)) {
         d = smallDiag;
       } else {
         d = (-smallDiag);
@@ -89,8 +89,8 @@ void main() {
       int k = (beg + t);
       uint f = faceIdx[k];
       int sg = sign[k];
-      if ((int(f) < int(counts[1]))) {
-        if ((sg >= 0)) {
+      if (int(f) < int(counts[1])) {
+        if (sg >= 0) {
           int nb = neighbour[int(f)];
           s = (s + (upper[int(f)] * x[nb]));
         } else {

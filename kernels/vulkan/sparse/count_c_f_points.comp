@@ -34,12 +34,12 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int gid = int(gl_GlobalInvocationID.x);
   int N = int(nRows[0]);
-  if ((gid < N)) {
+  if (gid < N) {
     int mark = cfMarking[gid];
-    if ((mark == 1)) {
+    if (mark == 1) {
       uint _nc = atomicAdd(nCoarse[0], 1u);
     }
-    if ((mark == -1)) {
+    if (mark == -1) {
       uint _nf = atomicAdd(nFine[0], 1u);
     }
   }

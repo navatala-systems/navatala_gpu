@@ -17,7 +17,7 @@ __kernel void navatala_sparse_sparse_scale_f32(__global const float* valuesA, __
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
   float alphaVal = alpha[(uint)(0u)];
-  if ((i < nnz[(uint)(0u)])) {
+  if (i < nnz[(uint)(0u)]) {
     float a = valuesA[i];
     valuesB[i] = (alphaVal * a);
   }

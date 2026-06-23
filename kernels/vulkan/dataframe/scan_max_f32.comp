@@ -62,7 +62,7 @@ void main() {
     }
     barrier();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     sdata[511u] = uintBitsToFloat(0xff7fffffu);
   }
   barrier();

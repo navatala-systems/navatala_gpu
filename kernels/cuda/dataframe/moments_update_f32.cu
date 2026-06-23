@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_dataframe_moments_update_f32(const float* x, unsigned int* n, float* M1, float* M2, float* M3, float* M4) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     unsigned int nOld = n[0];
     float m1Old = M1[0];
     float m2Old = M2[0];

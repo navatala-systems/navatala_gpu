@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_cfd_vof_mules_apply(const float* phiBD, cons
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1]) {
     return;
   } else {
     alphaPhi[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (phiBD[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] + (lambda[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] * phiCorr[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]));

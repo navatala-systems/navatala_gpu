@@ -35,7 +35,7 @@ void main() {
   int gid = int(gl_GlobalInvocationID.x);
   int N = int(nRows[0]);
   int nC = int(nTargetColors[0]);
-  if ((gid < N)) {
+  if (gid < N) {
     colors[gid] = (gid % nC);
   }
 }

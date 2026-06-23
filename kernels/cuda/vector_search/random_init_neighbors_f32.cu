@@ -21,7 +21,7 @@ extern "C" __global__ void navatala_vector_search_random_init_neighbors_f32(cons
   unsigned int md = max_degree[0];
   unsigned int id = init_degree[0];
   unsigned int s = seed[0];
-  if ((vid < nv)) {
+  if (vid < nv) {
     unsigned int rng = (vid + s);
     for (int i = 0; i < (int)(id); ++i) {
       unsigned int old_rng = rng;

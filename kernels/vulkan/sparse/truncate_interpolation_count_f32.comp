@@ -40,7 +40,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int row = int(gl_GlobalInvocationID.x);
   int N = int(nRows[0]);
-  if ((row < N)) {
+  if (row < N) {
     int rs = int(ProwPtr[row]);
     int re = int(ProwPtr[(row + 1)]);
     float maxAbs = uintBitsToFloat(0x00000000u);
@@ -54,7 +54,7 @@ void main() {
     for (int j2 = 0; j2 < int((re - rs)); ++j2) {
       int k2 = (rs + j2);
       float v2 = Pvalues[k2];
-      if ((abs(v2) >= thresh)) {
+      if (abs(v2) >= thresh) {
         nnz = (nnz + 1u);
       }
     }

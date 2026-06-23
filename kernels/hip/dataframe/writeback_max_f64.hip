@@ -17,11 +17,11 @@
 extern "C" __global__ void navatala_dataframe_writeback_max_f64(const unsigned int* keys, const double* vals, const int* count, double* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int j = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((j < count[0u])) {
+  if (j < count[0u]) {
     unsigned int key = keys[j];
     double newVal = vals[j];
     double oldVal = dst[key];
-    if ((newVal > oldVal)) {
+    if (newVal > oldVal) {
       dst[key] = newVal;
     }
   }

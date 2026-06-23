@@ -15,7 +15,7 @@
 
 __kernel void navatala_dataframe_reservoir_max256_f32(__global const float* reservoir, __global const uint* count, __global float* maxVal) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint n = count[0];
     float max0 = reservoir[0];
     maxVal[0] = max0;

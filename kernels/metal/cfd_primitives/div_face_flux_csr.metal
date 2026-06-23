@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_cfd_primitives_div_face_flux_csr(device const int* offsets [[buffer(0)]], device const int* faceIdx [[buffer(1)]], device const float* sign [[buffer(2)]], device const float* faceFlux [[buffer(3)]], device const float* vol [[buffer(4)]], device const int* params [[buffer(5)]], device float* outDiv [[buffer(6)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= params[0])) {
+  if (((int)(int(__gid.x))) >= params[0]) {
     return;
   } else {
     int beg = offsets[((int)(int(__gid.x)))];

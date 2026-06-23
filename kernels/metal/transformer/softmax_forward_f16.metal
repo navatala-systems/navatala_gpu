@@ -189,7 +189,7 @@ kernel void navatala_transformer_softmax_forward_f16(device const half* _input [
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float sumExp = sumBuf[0u];
-  if ((batchValid && seqValid)) {
+  if (batchValid && seqValid) {
     float resultF32 = (expVal / sumExp);
     half result = ((half)(resultF32));
     _output[globalIdx] = result;

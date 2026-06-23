@@ -15,7 +15,7 @@
 
 __kernel void navatala_cfd_laplacian_vector_explicit(__global const float* muCell, __global const float* muBc, __global const float* ux, __global const float* uy, __global const float* uz, __global const int* owner, __global const int* neighbour, __global const float* weights, __global const float* magSf, __global const float* deltaCoeffs, __global const float* corrX, __global const float* corrY, __global const float* corrZ, __global const float* gradRow0, __global const float* gradRow1, __global const float* gradRow2, __global const int* offsets, __global const int* faceIdx, __global const int* sign, __global const float* vol, __global const float* bcX, __global const float* bcY, __global const float* bcZ, __global const int* bcMask, __global const int* params, __global float* outX, __global float* outY, __global float* outZ) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
     float ucx = ux[((int)((int)(get_global_id(0))))];
@@ -32,15 +32,15 @@ __kernel void navatala_cfd_laplacian_vector_explicit(__global const float* muCel
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < params[1])) {
+      if (f < params[1]) {
         int sgn = sign[k];
         int o = owner[f];
         float otherX = ux[o];
         float otherY = uy[o];
         float otherZ = uz[o];
         float muF = muC;
-        if ((sgn > 0)) {
-          if ((f < params[2])) {
+        if (sgn > 0) {
+          if (f < params[2]) {
             int n = neighbour[f];
             otherX = ux[n];
             otherY = uy[n];
@@ -50,7 +50,7 @@ __kernel void navatala_cfd_laplacian_vector_explicit(__global const float* muCel
             muF = ((w0 * muC) + (iw * muCell[n]));
           } else {
             muF = muBc[f];
-            if ((bcMask[f] == 1)) {
+            if (bcMask[f] == 1) {
               float w0 = weights[f];
               float iw = (as_float(0x3f800000u) - w0);
               muF = ((w0 * muC) + (iw * muBc[f]));
@@ -58,7 +58,7 @@ __kernel void navatala_cfd_laplacian_vector_explicit(__global const float* muCel
               otherY = bcY[f];
               otherZ = bcZ[f];
             } else {
-              if ((bcMask[f] != 0)) {
+              if (bcMask[f] != 0) {
                 otherX = bcX[f];
                 otherY = bcY[f];
                 otherZ = bcZ[f];
@@ -86,7 +86,7 @@ __kernel void navatala_cfd_laplacian_vector_explicit(__global const float* muCel
         float gzxF = gradRow2[((o)*3 + 0)];
         float gzyF = gradRow2[((o)*3 + 1)];
         float gzzF = gradRow2[((o)*3 + 2)];
-        if ((f < params[2])) {
+        if (f < params[2]) {
           int n2 = neighbour[f];
           float w1 = weights[f];
           float iw1 = (as_float(0x3f800000u) - w1);
@@ -112,7 +112,7 @@ __kernel void navatala_cfd_laplacian_vector_explicit(__global const float* muCel
     }
     float v = vol[((int)((int)(get_global_id(0))))];
     float invV = as_float(0x00000000u);
-    if ((v != as_float(0x00000000u))) {
+    if (v != as_float(0x00000000u)) {
       invV = (as_float(0x3f800000u) / v);
     }
     outX[((int)((int)(get_global_id(0))))] = (sumX * invV);

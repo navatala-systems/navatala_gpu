@@ -32,7 +32,7 @@ layout(std430, binding = 3) readonly buffer buf_counts {
 // kernel: navatala_cfd_coeff_to_cf_in_place
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= counts[1])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= counts[1]) {
     return;
   } else {
     float v = cf[int(int(gl_GlobalInvocationID.x))];

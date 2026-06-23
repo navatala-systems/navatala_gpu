@@ -19,7 +19,7 @@ using namespace metal;
 kernel void navatala_sparse_em_update_prolongation_f32(device const float* gradient [[buffer(0)]], device const float* stepSize [[buffer(1)]], device const uint* nnzP [[buffer(2)]], device float* Pvalues [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int gid = int(__gid.x);
   int N = ((int)(nnzP[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float g = gradient[gid];
     float step = stepSize[0];
     float p = Pvalues[gid];

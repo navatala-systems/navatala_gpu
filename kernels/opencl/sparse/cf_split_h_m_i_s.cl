@@ -17,7 +17,7 @@ __kernel void navatala_sparse_cf_split_h_m_i_s(__global const uint* rowPtr, __gl
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     uint priority = (((uint)(row)) ^ seed[0]);
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
@@ -25,7 +25,7 @@ __kernel void navatala_sparse_cf_split_h_m_i_s(__global const uint* rowPtr, __gl
     for (int jd = 0; jd < (int)((re - rs)); ++jd) {
       int kd = (rs + jd);
       uint isStr = strongMask[kd];
-      if ((isStr == (uint)(1u))) {
+      if (isStr == (uint)(1u)) {
         deg = (deg + (uint)(1u));
       }
     }
@@ -34,10 +34,10 @@ __kernel void navatala_sparse_cf_split_h_m_i_s(__global const uint* rowPtr, __gl
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       uint isStrong = strongMask[k];
-      if ((isStrong == (uint)(1u))) {
+      if (isStrong == (uint)(1u)) {
         int nbr = ((int)(colIdx[k]));
         int nbrMark = cfMarking[nbr];
-        if ((nbrMark == 0)) {
+        if (nbrMark == 0) {
           uint nbrRs = rowPtr[nbr];
           uint nbrRe = rowPtr[(nbr + 1)];
           uint nbrDeg = (nbrRe - nbrRs);
@@ -49,7 +49,7 @@ __kernel void navatala_sparse_cf_split_h_m_i_s(__global const uint* rowPtr, __gl
         }
       }
     }
-    if ((!hasHigherNbr)) {
+    if (!hasHigherNbr) {
       cfMarking[row] = 1;
     } else {
       cfMarking[row] = -1;

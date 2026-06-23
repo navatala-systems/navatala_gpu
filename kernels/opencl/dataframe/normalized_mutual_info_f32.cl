@@ -90,7 +90,7 @@ __kernel void navatala_dataframe_normalized_mutual_info_f32(__global const float
   barrier(CLK_LOCAL_MEM_FENCE);
   for (int stride = 0; stride < (int)((uint)(128u)); ++stride) {
     uint strideU32 = ((uint)(stride));
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       float otherMI = miSum[(lid + strideU32)];
       float mineMI = miSum[lid];
       miSum[lid] = (mineMI + otherMI);
@@ -103,7 +103,7 @@ __kernel void navatala_dataframe_normalized_mutual_info_f32(__global const float
     }
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float miFinal = miSum[(uint)(0u)];
     float hyFinal = hySum[(uint)(0u)];
     float hcFinal = hcSum[(uint)(0u)];

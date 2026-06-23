@@ -15,7 +15,7 @@
 
 __kernel void navatala_dataframe_extract_weighted_reliability_variance_f32(__global const float* weightSum, __global const float* M2, __global float* variance) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float w = weightSum[0];
     float m2Val = M2[0];
     float wMinus1 = (w - as_float(0x3f800000u));

@@ -35,7 +35,7 @@ layout(std430, binding = 4) writeonly buffer buf_outMu {
 // kernel: navatala_cfd_mu_eff_from_rho_nut_and_nu_mix
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) >= int(params[0]))) {
+  if (int(gl_GlobalInvocationID.x) >= int(params[0])) {
     return;
   } else {
     outMu[int(gl_GlobalInvocationID.x)] = (rho[int(gl_GlobalInvocationID.x)] * (nuMix[int(gl_GlobalInvocationID.x)] + nut[int(gl_GlobalInvocationID.x)]));

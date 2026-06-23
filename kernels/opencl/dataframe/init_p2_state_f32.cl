@@ -15,7 +15,7 @@
 
 __kernel void navatala_dataframe_init_p2_state_f32(__global const float* p, __global float* q0, __global float* q1, __global float* q2, __global float* q3, __global float* q4, __global uint* pos0, __global uint* pos1, __global uint* pos2, __global uint* pos3, __global uint* pos4, __global float* targetP, __global uint* count) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float pVal = p[0];
     q0[0] = as_float(0x00000000u);
     q1[0] = as_float(0x00000000u);

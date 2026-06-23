@@ -103,7 +103,7 @@ kernel void navatala_transformer_softmax_backward_f32(device const float* _outpu
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
   float dot = dotBuf[0u];
-  if ((batchValid && seqValid)) {
+  if (batchValid && seqValid) {
     float dyMinusDot = (dy - dot);
     float dx = (y * dyMinusDot);
     gradInput[globalIdx] = dx;

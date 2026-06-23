@@ -45,7 +45,7 @@ void main() {
   uint meanF32Stride = 128u;
   for (int reductionStep5 = 0; reductionStep5 < int(8); ++reductionStep5) {
     uint stride5 = meanF32Stride;
-    if ((lid < stride5)) {
+    if (lid < stride5) {
       float other = sdata[(lid + stride5)];
       float mine = sdata[lid];
       float sum = (mine + other);
@@ -56,7 +56,7 @@ void main() {
     meanF32Stride = nextStride5;
     barrier();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float totalSum = sdata[0];
     float nFloat = float(n);
     float meanVal = (totalSum / nFloat);

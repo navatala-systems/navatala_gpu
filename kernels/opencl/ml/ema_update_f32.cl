@@ -15,7 +15,7 @@
 
 __kernel void navatala_ml_ema_update_f32(__global const float* x, __global const float* alpha, __global float* ema, __global uint* count) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float xVal = x[0];
     float a = alpha[0];
     float oldEma = ema[0];

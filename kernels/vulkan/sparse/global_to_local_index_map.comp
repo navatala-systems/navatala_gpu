@@ -37,7 +37,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int gid = int(gl_GlobalInvocationID.x);
   int N = int(nIndices[0]);
-  if ((gid < N)) {
+  if (gid < N) {
     uint gIdx = globalIndices[gid];
     uint offset = localOffset[0];
     uint nLoc = nLocal[0];

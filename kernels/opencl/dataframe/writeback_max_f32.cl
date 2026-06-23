@@ -16,11 +16,11 @@
 __kernel void navatala_dataframe_writeback_max_f32(__global const uint* keys, __global const float* vals, __global const int* count, __global float* dst) {
   int gid0 = (int)get_global_id(0);
   int j = ((int)((int)(get_global_id(0))));
-  if ((j < count[(uint)(0u)])) {
+  if (j < count[(uint)(0u)]) {
     uint key = keys[j];
     float newVal = vals[j];
     float oldVal = dst[key];
-    if ((newVal > oldVal)) {
+    if (newVal > oldVal) {
       dst[key] = newVal;
     }
   }

@@ -15,7 +15,7 @@
 
 __kernel void navatala_cfd_primitives_phi_from_u_internal(__global const int* owner, __global const int* neighbour, __global const float* weights, __global const float* sfX, __global const float* sfY, __global const float* sfZ, __global const float* ux, __global const float* uy, __global const float* uz, __global const uint* params, __global float* outPhi) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(params[1])))) {
+  if ((int)(get_global_id(0)) >= ((int)(params[1]))) {
     return;
   } else {
     int o = owner[(int)(get_global_id(0))];

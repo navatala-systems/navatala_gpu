@@ -61,7 +61,7 @@ void main() {
   uint klF32ReductionStride = 128u;
   for (int klF32ReductionStep = 0; klF32ReductionStep < int(8); ++klF32ReductionStep) {
     uint klF32Stride = klF32ReductionStride;
-    if ((lid < klF32Stride)) {
+    if (lid < klF32Stride) {
       float klF32Other = sdata[(lid + klF32Stride)];
       float klF32Mine = sdata[lid];
       float klF32Sum = (klF32Mine + klF32Other);
@@ -72,7 +72,7 @@ void main() {
     klF32ReductionStride = klF32NextStride;
     barrier();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float klVal = sdata[0];
     kl_divergence[0] = klVal;
   }

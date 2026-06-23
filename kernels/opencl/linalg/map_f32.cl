@@ -17,7 +17,7 @@ __kernel void navatala_linalg_map_f32(__global const float* A, __global const ui
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint idx = gid;
-  if ((idx < (m[(uint)(0u)] * n[(uint)(0u)]))) {
+  if (idx < (m[(uint)(0u)] * n[(uint)(0u)])) {
     float val = A[idx];
     result[idx] = val;
   }

@@ -15,7 +15,7 @@
 
 __kernel void navatala_dataframe_ewmc_extract_correlation_f32(__global const float* Cxy, __global const float* varX, __global const float* varY, __global const float* nEff, __global float* result) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float c = Cxy[0];
     float vx = varX[0];
     float vy = varY[0];

@@ -310,7 +310,7 @@ extern "C" __global__ void navatala_transformer_simple_attention_f16(const __hal
     sumBuf[lid] = sumVal_sum_p2_sumBuf_1;
   }
   __syncthreads();
-  if ((batchValid && (lid == 0u))) {
+  if (batchValid && (lid == 0u)) {
     float outVal = sumBuf[0u];
     __half outF16 = ((__half)(outVal));
     unsigned int outIdx = (qBase + 0u);

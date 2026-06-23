@@ -16,10 +16,10 @@
 __kernel void navatala_cfd_mg_coarse_matvec(__global const int* edgeU, __global const int* edgeV, __global const float* edgeCf, __global const float* diag, __global const float* x, __global float* outAx, __global const int* mgCounts) {
   int gid0 = (int)get_global_id(0);
   int total = (((int)(mgCounts[1])) + ((int)(mgCounts[2])));
-  if (((int)(get_global_id(0)) >= total)) {
+  if ((int)(get_global_id(0)) >= total) {
     return;
   } else {
-    if (((int)(get_global_id(0)) < ((int)(mgCounts[1])))) {
+    if ((int)(get_global_id(0)) < ((int)(mgCounts[1]))) {
       atomic_add(&outAx[(int)(get_global_id(0))], (diag[(int)(get_global_id(0))] * x[(int)(get_global_id(0))]));
     } else {
       int e = ((int)(get_global_id(0)) - ((int)(mgCounts[1])));

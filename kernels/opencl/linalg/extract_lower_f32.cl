@@ -18,7 +18,7 @@ __kernel void navatala_linalg_extract_lower_f32(__global const float* A, __globa
   uint idx = ((uint)((int)(get_global_id(0))));
   uint nVal = n[(uint)(0u)];
   uint totalElements = (nVal * nVal);
-  if ((idx < totalElements)) {
+  if (idx < totalElements) {
     uint i = (idx / nVal);
     uint j = (idx % nVal);
     float aVal = A[idx];

@@ -22,7 +22,7 @@ __kernel void navatala_linalg_scatter_cols_f64(__global const double* src, __glo
   uint kVal = k[(uint)(0u)];
   uint nVal = n[(uint)(0u)];
   uint totalElems = (mVal * kVal);
-  if ((tid < totalElems)) {
+  if (tid < totalElems) {
     uint row = (tid / kVal);
     uint srcColIdx = (tid % kVal);
     uint dstCol = indices[srcColIdx];

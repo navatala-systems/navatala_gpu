@@ -15,7 +15,7 @@
 
 __kernel void navatala_cfd_mg_coarse_rhs(__global const float* b, __global const float* ax, __global float* r, __global const int* mgCounts) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(mgCounts[1])))) {
+  if ((int)(get_global_id(0)) >= ((int)(mgCounts[1]))) {
     return;
   } else {
     r[(int)(get_global_id(0))] = (b[(int)(get_global_id(0))] - ax[(int)(get_global_id(0))]);

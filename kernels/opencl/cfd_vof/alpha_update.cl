@@ -18,14 +18,14 @@ __kernel void navatala_cfd_vof_alpha_update(__global const float* alpha, __globa
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float a = (alpha[((int)((int)(get_global_id(0))))] - (divA[((int)((int)(get_global_id(0))))] / rSubDeltaT[((int)((int)(get_global_id(0))))]));
-    if ((a < as_float(0x00000000u))) {
+    if (a < as_float(0x00000000u)) {
       a = as_float(0x00000000u);
     }
-    if ((a > as_float(0x3f800000u))) {
+    if (a > as_float(0x3f800000u)) {
       a = as_float(0x3f800000u);
     }
     alphaNew[((int)((int)(get_global_id(0))))] = a;

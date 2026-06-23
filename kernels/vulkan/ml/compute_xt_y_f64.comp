@@ -60,7 +60,7 @@ void main() {
     uint xtyF64Stride = 128u;
     for (int reductionStep2 = 0; reductionStep2 < int(8); ++reductionStep2) {
       uint stride2 = xtyF64Stride;
-      if ((lid < stride2)) {
+      if (lid < stride2) {
         double other = sdata[(lid + stride2)];
         double mine = sdata[lid];
         double sum = (mine + other);
@@ -71,7 +71,7 @@ void main() {
       xtyF64Stride = nextStride2;
       barrier();
     }
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       double totalSum = sdata[0];
       Xty[featureIdx] = totalSum;
     }

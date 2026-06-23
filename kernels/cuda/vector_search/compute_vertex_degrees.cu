@@ -20,12 +20,12 @@ extern "C" __global__ void navatala_vector_search_compute_vertex_degrees(const u
   unsigned int nv = n_vertices[0];
   unsigned int md = max_degree[0];
   unsigned int inv = invalid_id[0];
-  if ((vid < nv)) {
+  if (vid < nv) {
     unsigned int count = 0u;
     for (int i = 0; i < (int)(md); ++i) {
       unsigned int idx = ((vid * md) + i);
       unsigned int neighbor = graph[idx];
-      if ((neighbor != inv)) {
+      if (neighbor != inv) {
         unsigned int old_cnt = count;
         count = (old_cnt + 1u);
       }

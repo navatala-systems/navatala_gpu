@@ -28,7 +28,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int i = int(gl_GlobalInvocationID.x);
   int N = int(n[0]);
-  if ((i < N)) {
+  if (i < N) {
     v[i] = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
   }
 }

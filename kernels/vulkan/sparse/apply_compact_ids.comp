@@ -31,9 +31,9 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int gid = int(gl_GlobalInvocationID.x);
   int N = int(nRows[0]);
-  if ((gid < N)) {
+  if (gid < N) {
     int leader = aggregateId[gid];
-    if ((leader >= 0)) {
+    if (leader >= 0) {
       int compactId = compactMap[leader];
       aggregateId[gid] = compactId;
     }

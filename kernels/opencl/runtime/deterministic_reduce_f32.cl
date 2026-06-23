@@ -30,7 +30,7 @@ __kernel void navatala_runtime_deterministic_reduce_f32(__global const float* _i
   uint f32RedStride = (uint)(128u);
   for (int f32RedStep = 0; f32RedStep < (int)(8); ++f32RedStep) {
     uint f32Stride = f32RedStride;
-    if ((lid < f32Stride)) {
+    if (lid < f32Stride) {
       float other = sdata[(lid + f32Stride)];
       float mine = sdata[lid];
       float sum = (mine + other);
@@ -41,7 +41,7 @@ __kernel void navatala_runtime_deterministic_reduce_f32(__global const float* _i
     f32RedStride = f32NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float totalSum = sdata[0];
     result[0] = totalSum;
   }

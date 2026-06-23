@@ -36,7 +36,7 @@ __kernel void navatala_dataframe_mape_f64(__global const double* y_true, __globa
   uint mapeF64_reductionStride = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint mapeF64_stride = mapeF64_reductionStride;
-    if ((lid < mapeF64_stride)) {
+    if (lid < mapeF64_stride) {
       uint mapeF64_partnerIdx = (lid + mapeF64_stride);
       double other = sdata[mapeF64_partnerIdx];
       double mine = sdata[lid];
@@ -49,7 +49,7 @@ __kernel void navatala_dataframe_mape_f64(__global const double* y_true, __globa
     barrier(CLK_LOCAL_MEM_FENCE);
   }
   uint zeroU32 = ((uint)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     double totalSum = sdata[0];
     double countFloat = ((double)(countVal));
     double avgPctErr = (totalSum / countFloat);

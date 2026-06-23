@@ -18,13 +18,13 @@ __kernel void navatala_sparse_csr_to_ell_f64(__global const uint* rowPtr, __glob
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int nnz = (re - rs);
     int maxNnz = ((int)(maxNnzPerRow[0]));
     for (int j = 0; j < (int)(maxNnz); ++j) {
-      if ((j < nnz)) {
+      if (j < nnz) {
         int k = (rs + j);
         ellColIdx[((gid * maxNnz) + j)] = colIdx[k];
         ellValues[((gid * maxNnz) + j)] = values[k];

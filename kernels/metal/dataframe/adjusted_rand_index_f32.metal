@@ -74,7 +74,7 @@ kernel void navatala_dataframe_adjusted_rand_index_f32(device const float* conti
   threadgroup_barrier(mem_flags::mem_threadgroup);
   for (int stride = 0; stride < (int)(128u); ++stride) {
     uint strideU32 = ((uint)(stride));
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       float otherNij = sumNij[(lid + strideU32)];
       float mineNij = sumNij[lid];
       sumNij[lid] = (mineNij + otherNij);
@@ -87,7 +87,7 @@ kernel void navatala_dataframe_adjusted_rand_index_f32(device const float* conti
     }
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float sumNijFinal = sumNij[0u];
     float sumAiFinal = sumAi[0u];
     float sumBjFinal = sumBj[0u];

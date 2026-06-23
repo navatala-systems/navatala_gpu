@@ -33,7 +33,7 @@ void main() {
   uint nVal = n[0u];
   double fillVal = val[0u];
   uint totalElements = (nVal * nVal);
-  if ((idx < totalElements)) {
+  if (idx < totalElements) {
     uint i = (idx / nVal);
     uint j = (idx % nVal);
     bool isStrictUpper = (i < j);

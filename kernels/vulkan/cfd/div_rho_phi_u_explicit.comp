@@ -86,7 +86,7 @@ layout(std430, binding = 21) writeonly buffer buf_outZ {
 // kernel: navatala_cfd_div_rho_phi_u_explicit
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= params[0])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= params[0]) {
     return;
   } else {
     float sumX = uintBitsToFloat(0x00000000u);
@@ -99,7 +99,7 @@ void main() {
     for (int t = 0; t < int(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < params[1])) {
+      if (f < params[1]) {
         float s = sign[k];
         float flux = phi[f];
         int o = owner[f];
@@ -107,7 +107,7 @@ void main() {
         float ufx = ux[o];
         float ufy = uy[o];
         float ufz = uz[o];
-        if ((f < params[2])) {
+        if (f < params[2]) {
           int n = neighbour[f];
           float w0 = weights[f];
           float iw = (uintBitsToFloat(0x3f800000u) - w0);
@@ -117,23 +117,23 @@ void main() {
           ufz = ((w0 * uz[o]) + (iw * uz[n]));
         } else {
           uint rm = rhoBcMask[f];
-          if ((rm == 1u)) {
+          if (rm == 1u) {
             float w0 = weights[f];
             float iw = (uintBitsToFloat(0x3f800000u) - w0);
             rhoF = ((w0 * rhoCell[o]) + (iw * rhoBcVal[f]));
           }
-          if ((rm == 2u)) {
+          if (rm == 2u) {
             rhoF = rhoBcVal[f];
           }
           uint um = uBcMask[f];
-          if ((um == 1u)) {
+          if (um == 1u) {
             float w0 = weights[f];
             float iw = (uintBitsToFloat(0x3f800000u) - w0);
             ufx = ((w0 * ux[o]) + (iw * uBcX[f]));
             ufy = ((w0 * uy[o]) + (iw * uBcY[f]));
             ufz = ((w0 * uz[o]) + (iw * uBcZ[f]));
           }
-          if ((um == 2u)) {
+          if (um == 2u) {
             ufx = uBcX[f];
             ufy = uBcY[f];
             ufz = uBcZ[f];
@@ -147,7 +147,7 @@ void main() {
     }
     float v = vol[int(int(gl_GlobalInvocationID.x))];
     float invV = uintBitsToFloat(0x00000000u);
-    if ((v != uintBitsToFloat(0x00000000u))) {
+    if (v != uintBitsToFloat(0x00000000u)) {
       invV = (uintBitsToFloat(0x3f800000u) / v);
     }
     outX[int(int(gl_GlobalInvocationID.x))] = (sumX * invV);

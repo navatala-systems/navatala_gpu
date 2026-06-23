@@ -23,14 +23,14 @@ extern "C" __global__ void navatala_vector_search_batched_greedy_search_f32(cons
   unsigned int entry = entry_point[0];
   unsigned int k_val = k[0];
   __shared__ float partial_sums[64];
-  if ((query_id < nq)) {
-    if ((tid == 0u)) {
+  if (query_id < nq) {
+    if (tid == 0u) {
       unsigned int base_idx = (query_id * k_val);
       result_ids[base_idx] = entry;
       result_dists[base_idx] = __uint_as_float(0x00000000u);
     }
-    if ((tid < k_val)) {
-      if ((tid != 0u)) {
+    if (tid < k_val) {
+      if (tid != 0u) {
         unsigned int out_idx = ((query_id * k_val) + tid);
         result_ids[out_idx] = 4294967295u;
         result_dists[out_idx] = __uint_as_float(0x7e967699u);

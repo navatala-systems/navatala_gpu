@@ -41,7 +41,7 @@ layout(std430, binding = 6) writeonly buffer buf_outAlpha {
 // kernel: navatala_cfd_vof_average_face_scalar_to_cell
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) >= int(counts[0]))) {
+  if (int(gl_GlobalInvocationID.x) >= int(counts[0])) {
     return;
   } else {
     float s = uintBitsToFloat(0x00000000u);
@@ -55,7 +55,7 @@ void main() {
       s = (s + (magSf[int(f)] * alphaF[int(f)]));
     }
     float d = sumMag[int(gl_GlobalInvocationID.x)];
-    if ((d < uintBitsToFloat(0x1e3ce508u))) {
+    if (d < uintBitsToFloat(0x1e3ce508u)) {
       outAlpha[int(gl_GlobalInvocationID.x)] = (s / uintBitsToFloat(0x1e3ce508u));
     } else {
       outAlpha[int(gl_GlobalInvocationID.x)] = (s / d);

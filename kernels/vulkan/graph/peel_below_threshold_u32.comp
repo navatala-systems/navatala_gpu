@@ -34,10 +34,10 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   uint gid = uint(int(gl_GlobalInvocationID.x));
   uint numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     uint deg = degrees[gid];
     uint k = threshold[0];
-    if ((deg < k)) {
+    if (deg < k) {
       _active[gid] = 0u;
     }
   }

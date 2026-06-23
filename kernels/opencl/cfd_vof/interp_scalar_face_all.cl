@@ -15,17 +15,17 @@
 
 __kernel void navatala_cfd_vof_interp_scalar_face_all(__global const float* alpha, __global const int* owner, __global const int* nei, __global const float* w, __global const float* bcAlphaF, __global const uint* params, __global float* alphaF) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(params[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(params[0]))) {
     return;
   } else {
-    if (((int)(get_global_id(0)) < ((int)(params[1])))) {
+    if ((int)(get_global_id(0)) < ((int)(params[1]))) {
       int o = owner[(int)(get_global_id(0))];
       int n = nei[(int)(get_global_id(0))];
       float wf = w[(int)(get_global_id(0))];
       float wc = (wf * ((float)((wf > as_float(0x00000000u)))));
       float a = ((wc * alpha[o]) + ((as_float(0x3f800000u) - wc) * alpha[n]));
       float ac = (a * ((float)((a > as_float(0x00000000u)))));
-      if ((ac > as_float(0x3f800000u))) {
+      if (ac > as_float(0x3f800000u)) {
         alphaF[(int)(get_global_id(0))] = as_float(0x3f800000u);
       } else {
         alphaF[(int)(get_global_id(0))] = ac;
@@ -33,7 +33,7 @@ __kernel void navatala_cfd_vof_interp_scalar_face_all(__global const float* alph
     } else {
       float a = bcAlphaF[(int)(get_global_id(0))];
       float ac = (a * ((float)((a > as_float(0x00000000u)))));
-      if ((ac > as_float(0x3f800000u))) {
+      if (ac > as_float(0x3f800000u)) {
         alphaF[(int)(get_global_id(0))] = as_float(0x3f800000u);
       } else {
         alphaF[(int)(get_global_id(0))] = ac;

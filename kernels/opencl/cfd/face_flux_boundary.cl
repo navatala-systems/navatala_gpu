@@ -15,7 +15,7 @@
 
 __kernel void navatala_cfd_face_flux_boundary(__global const float* x, __global const int* owner, __global const float* cf, __global const float* bcVal, __global const uint* bcMask, __global const uint* params, __global float* faceFlux) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(params[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(params[0]))) {
     return;
   } else {
     int gf = (((int)(params[1])) + (int)(get_global_id(0)));
@@ -23,17 +23,17 @@ __kernel void navatala_cfd_face_flux_boundary(__global const float* x, __global 
     float xo = x[o];
     uint m = bcMask[gf];
     int mInt = ((int)(m));
-    if ((mInt == 4)) {
+    if (mInt == 4) {
       faceFlux[gf] = bcVal[gf];
     } else {
       float other = xo;
-      if ((mInt == 1)) {
+      if (mInt == 1) {
         other = bcVal[gf];
       } else {
-        if ((mInt == 3)) {
+        if (mInt == 3) {
           other = bcVal[gf];
         } else {
-          if ((mInt == 2)) {
+          if (mInt == 2) {
             other = as_float(0x00000000u);
           }
         }

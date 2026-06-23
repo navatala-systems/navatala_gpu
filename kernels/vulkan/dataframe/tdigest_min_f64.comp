@@ -30,7 +30,7 @@ layout(std430, binding = 2) writeonly buffer buf_minOut {
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   uint gid = uint(int(gl_GlobalInvocationID.x));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     uint count = centroidCount[0];
     double minV = minVal[0];
     bool isEmpty = (count == 0u);

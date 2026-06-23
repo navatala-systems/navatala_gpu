@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_reorder_c_s_r_by_color(const unsigned
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int origRow = ((int)(reorderPerm[gid]));
     int rs = ((int)(rowPtr[origRow]));
     int re = ((int)(rowPtr[(origRow + 1)]));

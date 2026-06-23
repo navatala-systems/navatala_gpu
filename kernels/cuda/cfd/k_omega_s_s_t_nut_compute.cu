@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_cfd_k_omega_s_s_t_nut_compute(const float* k
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0])))) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0]))) {
     return;
   } else {
     float a1 = params[0];
@@ -31,14 +31,14 @@ extern "C" __global__ void navatala_cfd_k_omega_s_s_t_nut_compute(const float* k
     float denomA = (a1 * om);
     float denomB = ((b1 * f23) * sqrt((s2raw * ((float)((s2raw > __uint_as_float(0x00000000u)))))));
     float num = (a1 * k);
-    if ((denomA > denomB)) {
-      if ((denomA > __uint_as_float(0x00000000u))) {
+    if (denomA > denomB) {
+      if (denomA > __uint_as_float(0x00000000u)) {
         outNut[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = (num / denomA);
       } else {
         outNut[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = __uint_as_float(0x00000000u);
       }
     } else {
-      if ((denomB > __uint_as_float(0x00000000u))) {
+      if (denomB > __uint_as_float(0x00000000u)) {
         outNut[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = (num / denomB);
       } else {
         outNut[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = __uint_as_float(0x00000000u);

@@ -29,13 +29,13 @@ layout(std430, binding = 2) writeonly buffer buf_sf {
 // kernel: navatala_cfd_gamg_compute_scale_factor
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) >= 1)) {
+  if (int(gl_GlobalInvocationID.x) >= 1) {
     return;
   } else {
     float n = num[0];
     float d = den[0];
     float dAbs = abs(d);
-    if ((dAbs > uintBitsToFloat(0x0da24260u))) {
+    if (dAbs > uintBitsToFloat(0x0da24260u)) {
       sf[0] = (n / d);
     } else {
       sf[0] = uintBitsToFloat(0x3f800000u);

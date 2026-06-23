@@ -21,7 +21,7 @@ kernel void navatala_sparse_csr_row_slice_f32(device const uint* rowPtr [[buffer
   int begin = ((int)(rowBegin[0]));
   int end = ((int)(rowEnd[0]));
   int nRows = (end - begin);
-  if ((gid < nRows)) {
+  if (gid < nRows) {
     int origRow = (begin + gid);
     int rs = ((int)(rowPtr[origRow]));
     int re = ((int)(rowPtr[(origRow + 1)]));

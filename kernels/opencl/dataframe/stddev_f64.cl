@@ -18,7 +18,7 @@ __kernel void navatala_dataframe_stddev_f64(__global const double* variance, __g
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint zeroU32 = ((uint)(0));
-  if ((gid == zeroU32)) {
+  if (gid == zeroU32) {
     double varianceVal = variance[0];
     double stddevVal = sqrt(varianceVal);
     stddev[0] = stddevVal;

@@ -38,15 +38,15 @@ layout(std430, binding = 5) buffer buf_x {
 // kernel: navatala_cfd_scalar_jacobi_update
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) >= int(counts[0]))) {
+  if (int(gl_GlobalInvocationID.x) >= int(counts[0])) {
     return;
   } else {
     float smallDiag = params[0];
     float omega = params[1];
     float d = diag[int(gl_GlobalInvocationID.x)];
     float absD = abs(d);
-    if ((absD < smallDiag)) {
-      if ((d >= uintBitsToFloat(0x00000000u))) {
+    if (absD < smallDiag) {
+      if (d >= uintBitsToFloat(0x00000000u)) {
         d = smallDiag;
       } else {
         d = (-smallDiag);

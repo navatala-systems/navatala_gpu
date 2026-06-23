@@ -53,7 +53,7 @@ layout(std430, binding = 10) writeonly buffer buf_outAx {
 // kernel: navatala_cfd_exact_mat_vec
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) >= int(counts[0]))) {
+  if (int(gl_GlobalInvocationID.x) >= int(counts[0])) {
     return;
   } else {
     float s = (diag[int(gl_GlobalInvocationID.x)] * x[int(gl_GlobalInvocationID.x)]);
@@ -64,9 +64,9 @@ void main() {
     for (int t = 0; t < int(len); ++t) {
       int k = (int(beg) + t);
       uint f = faceIdx[k];
-      if ((int(f) < int(counts[2]))) {
+      if (int(f) < int(counts[2])) {
         int sg = sign[k];
-        if ((sg >= 0)) {
+        if (sg >= 0) {
           int nb = neighbour[int(f)];
           s = (s + (upper[int(f)] * x[nb]));
         } else {

@@ -33,7 +33,7 @@ __kernel void navatala_dataframe_mae_f32(__global const float* y_true, __global 
   uint maeF32_reductionStride = (uint)(128u);
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     uint maeF32_stride = maeF32_reductionStride;
-    if ((lid < maeF32_stride)) {
+    if (lid < maeF32_stride) {
       uint maeF32_partnerIdx = (lid + maeF32_stride);
       float other = sdata[maeF32_partnerIdx];
       float mine = sdata[lid];
@@ -46,7 +46,7 @@ __kernel void navatala_dataframe_mae_f32(__global const float* y_true, __global 
     barrier(CLK_LOCAL_MEM_FENCE);
   }
   uint zeroU32 = ((uint)(0));
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     float totalSum = sdata[0];
     float countFloat = ((float)(countVal));
     float maeVal = (totalSum / countFloat);

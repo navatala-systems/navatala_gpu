@@ -53,7 +53,7 @@ layout(std430, binding = 10) writeonly buffer buf_outZ {
 // kernel: navatala_cfd_primitives_div_face_flux_vector_csr
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= params[0])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= params[0]) {
     return;
   } else {
     int beg = offsets[int(int(gl_GlobalInvocationID.x))];

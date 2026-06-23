@@ -23,7 +23,7 @@ __kernel void navatala_linalg_slice_cols_f32(__global const float* A, __global c
   uint n = srcCols[(uint)(0u)];
   uint outCols = (ce - cs);
   uint totalElems = (m * outCols);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     uint outRow = (idx / outCols);
     uint outCol = (idx % outCols);
     uint srcCol = (cs + outCol);

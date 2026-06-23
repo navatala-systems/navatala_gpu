@@ -49,7 +49,7 @@ __kernel void navatala_dataframe_mcd_compute_covariance_f32(__global const float
   uint cov1ReductionStride = (uint)(128u);
   for (int cov1ReductionStep = 0; cov1ReductionStep < (int)(8); ++cov1ReductionStep) {
     uint cov1Stride = cov1ReductionStride;
-    if ((lid < cov1Stride)) {
+    if (lid < cov1Stride) {
       float otherCov = scov[(lid + cov1Stride)];
       float otherVX = svarX[(lid + cov1Stride)];
       float otherVY = svarY[(lid + cov1Stride)];
@@ -72,7 +72,7 @@ __kernel void navatala_dataframe_mcd_compute_covariance_f32(__global const float
     cov1ReductionStride = cov1NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float totalCov = scov[0];
     float totalVX = svarX[0];
     float totalVY = svarY[0];

@@ -15,7 +15,7 @@
 
 __kernel void navatala_dataframe_reservoir_min256_f32(__global const float* reservoir, __global const uint* count, __global float* minVal) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint n = count[0];
     uint effectiveN = (((n < (uint)(256u))) ? (n) : ((uint)(256u)));
     float min0 = reservoir[0];

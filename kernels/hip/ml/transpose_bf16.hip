@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_ml_transpose_bf16(const __hip_bfloat16* _inp
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     unsigned int ncolsVal = ncols[0];
     unsigned int nrowsVal = nrows[0];
     unsigned int r = (gid / ncolsVal);

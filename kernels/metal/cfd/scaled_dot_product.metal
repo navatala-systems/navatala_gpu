@@ -22,7 +22,7 @@ kernel void navatala_cfd_scaled_dot_product(device const float* q [[buffer(0)]],
   int nk = numK[0];
   int hd = headDim[0];
   int total = (nq * nk);
-  if ((gid < total)) {
+  if (gid < total) {
     int qi = (gid / nk);
     int kj = (gid % nk);
     float acc = as_type<float>(0x00000000u);

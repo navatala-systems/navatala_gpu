@@ -24,7 +24,7 @@ kernel void navatala_graph_l1norm_f32(device const float* _input [[buffer(0)]], 
   float gsAcc = as_type<float>(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     uint idx = (lid + (((uint)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       float val = abs(_input[idx]);
       gsAcc = (gsAcc + val);
     }
@@ -34,7 +34,7 @@ kernel void navatala_graph_l1norm_f32(device const float* _input [[buffer(0)]], 
   uint redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -45,7 +45,7 @@ kernel void navatala_graph_l1norm_f32(device const float* _input [[buffer(0)]], 
     redStride = nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0] = sdata[0];
   }
 }

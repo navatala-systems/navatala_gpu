@@ -65,7 +65,7 @@ layout(std430, binding = 14) writeonly buffer buf_nHatf {
 // kernel: navatala_cfd_n_hatf_all_f64
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= counts[1])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= counts[1]) {
     return;
   } else {
     int o = owner[int(int(gl_GlobalInvocationID.x))];
@@ -82,21 +82,21 @@ void main() {
     double ny = (gfy * inv);
     double nz = (gfz * inv);
     contactGrad[int(int(gl_GlobalInvocationID.x))] = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
-    if ((thetaMask[int(int(gl_GlobalInvocationID.x))] != 0u)) {
+    if (thetaMask[int(int(gl_GlobalInvocationID.x))] != 0u) {
       double sfx = double(sfX[int(int(gl_GlobalInvocationID.x))]);
       double sfy = double(sfY[int(int(gl_GlobalInvocationID.x))]);
       double sfz = double(sfZ[int(int(gl_GlobalInvocationID.x))]);
       double magSf = sqrt((((sfx * sfx) + (sfy * sfy)) + (sfz * sfz)));
-      if ((magSf > packDouble2x32(uvec2(0x0c924223u, 0x3bc79ca1u)))) {
+      if (magSf > packDouble2x32(uvec2(0x0c924223u, 0x3bc79ca1u))) {
         double nfx = (sfx / magSf);
         double nfy = (sfy / magSf);
         double nfz = (sfz / magSf);
         double a12raw = (((nx * nfx) + (ny * nfy)) + (nz * nfz));
         double a12 = a12raw;
-        if ((a12 < packDouble2x32(uvec2(0x00000000u, 0xbff00000u)))) {
+        if (a12 < packDouble2x32(uvec2(0x00000000u, 0xbff00000u))) {
           a12 = packDouble2x32(uvec2(0x00000000u, 0xbff00000u));
         } else {
-          if ((a12 > packDouble2x32(uvec2(0x00000000u, 0x3ff00000u)))) {
+          if (a12 > packDouble2x32(uvec2(0x00000000u, 0x3ff00000u))) {
             a12 = packDouble2x32(uvec2(0x00000000u, 0x3ff00000u));
           }
         }
@@ -105,7 +105,7 @@ void main() {
         double acosA12 = double(acos(float(a12)));
         double b2 = double(cos(float((acosA12 - th))));
         double det = (packDouble2x32(uvec2(0x00000000u, 0x3ff00000u)) - (a12 * a12));
-        if ((det < packDouble2x32(uvec2(0xa0b5ed8du, 0x3eb0c6f7u)))) {
+        if (det < packDouble2x32(uvec2(0xa0b5ed8du, 0x3eb0c6f7u))) {
           det = packDouble2x32(uvec2(0xa0b5ed8du, 0x3eb0c6f7u));
         }
         double a = ((b1 - (a12 * b2)) / det);

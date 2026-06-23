@@ -19,17 +19,17 @@ extern "C" __global__ void navatala_vector_search_validate_graph_integrity(const
   unsigned int vid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int nv = n_vertices[0];
   unsigned int md = max_degree[0];
-  if ((vid < nv)) {
+  if (vid < nv) {
     unsigned int errors = 0u;
     unsigned int deg = degrees[vid];
     for (int i = 0; i < (int)(deg); ++i) {
       unsigned int idx = ((vid * md) + i);
       unsigned int neighbor = graph[idx];
-      if ((neighbor == vid)) {
+      if (neighbor == vid) {
         unsigned int old_err = errors;
         errors = (old_err | 1u);
       }
-      if ((neighbor >= nv)) {
+      if (neighbor >= nv) {
         unsigned int old_err2 = errors;
         errors = (old_err2 | 2u);
       }

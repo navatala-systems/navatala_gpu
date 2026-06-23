@@ -18,7 +18,7 @@ __kernel void navatala_sparse_page_rank_iter_f64(__global const double* Ax, __gl
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double axi = Ax[gid];
     double d = damping[0];
     double nInv = (as_double(0x3ff0000000000000ul) / ((double)(N)));

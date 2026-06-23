@@ -19,14 +19,14 @@ extern "C" __global__ void navatala_cfd_bc_sn_grad_face_flux(const float* cf, co
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1]) {
     return;
   } else {
     float d = delta[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float sg = bcSnGrad[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
     float flux = __uint_as_float(0x00000000u);
-    if ((bcSnGradMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] != 0)) {
-      if ((d != __uint_as_float(0x00000000u))) {
+    if (bcSnGradMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] != 0) {
+      if (d != __uint_as_float(0x00000000u)) {
         flux = (cf[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] * (sg / d));
       }
     }

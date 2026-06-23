@@ -15,7 +15,7 @@
 
 __kernel void navatala_dataframe_extract_stddev_f32(__global const uint* count, __global const float* M2, __global float* stddev) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint n = count[0];
     float m2Val = M2[0];
     float nf = ((float)(n));

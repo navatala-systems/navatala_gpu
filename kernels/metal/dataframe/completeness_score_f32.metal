@@ -71,7 +71,7 @@ kernel void navatala_dataframe_completeness_score_f32(device const float* contin
   threadgroup_barrier(mem_flags::mem_threadgroup);
   for (int stride = 0; stride < (int)(128u); ++stride) {
     uint strideU32 = ((uint)(stride));
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       float otherHCY = hcySum[(lid + strideU32)];
       float mineHCY = hcySum[lid];
       hcySum[lid] = (mineHCY + otherHCY);
@@ -81,7 +81,7 @@ kernel void navatala_dataframe_completeness_score_f32(device const float* contin
     }
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float hcyFinal = hcySum[0u];
     float hcFinal = hcSum[0u];
     bool hcIsZero = (hcFinal == as_type<float>(0x00000000u));

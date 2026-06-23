@@ -105,7 +105,7 @@ extern "C" __global__ void navatala_transformer_softmax_backward_f16(const __hal
   }
   __syncthreads();
   float dot = dotBuf[0u];
-  if ((batchValid && seqValid)) {
+  if (batchValid && seqValid) {
     float dyMinusDot = (dy - dot);
     float dxF32 = (y * dyMinusDot);
     __half dx = ((__half)(dxF32));

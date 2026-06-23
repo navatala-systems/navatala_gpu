@@ -34,7 +34,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int gid = int(gl_GlobalInvocationID.x);
   int N = int(recvCount[0]);
-  if ((gid < N)) {
+  if (gid < N) {
     int idx = int(recvMap[gid]);
     float val = recvBuf[gid];
     xHalo[idx] = val;

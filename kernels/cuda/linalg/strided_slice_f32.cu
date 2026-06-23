@@ -21,7 +21,7 @@ extern "C" __global__ void navatala_linalg_strided_slice_f32(const float* A, con
   unsigned int s = start[0u];
   unsigned int st = stride[0u];
   unsigned int n = count[0u];
-  if ((idx < n)) {
+  if (idx < n) {
     unsigned int srcIdx = (s + (idx * st));
     float val = A[srcIdx];
     _out[idx] = val;

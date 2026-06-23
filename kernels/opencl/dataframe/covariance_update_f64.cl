@@ -16,7 +16,7 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_covariance_update_f64(__global const double* x, __global const double* y, __global uint* count, __global double* meanX, __global double* meanY, __global double* Cxy) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint nOld = count[0];
     double muXOld = meanX[0];
     double muYOld = meanY[0];

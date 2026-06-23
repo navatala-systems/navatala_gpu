@@ -18,7 +18,7 @@ __kernel void navatala_sparse_gmres_store_basis_f32(__global const float* w, __g
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
   int col = ((int)(colIdx[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float wi = w[gid];
     V[(gid + (col * N))] = wi;
   }

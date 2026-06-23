@@ -20,7 +20,7 @@ kernel void navatala_sparse_round_robin_coloring(device const uint* rowPtr [[buf
   int gid = int(__gid.x);
   int N = ((int)(nRows[0]));
   int nC = ((int)(nTargetColors[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     colors[gid] = (gid % nC);
   }
 }

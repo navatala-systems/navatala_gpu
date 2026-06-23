@@ -19,7 +19,7 @@ __kernel void navatala_vector_search_decode_p_q_vectors_f32(__global const uchar
   uint nv = n_vectors[0];
   uint sd = sub_dim[0];
   uint total = (nv * sd);
-  if ((gid < total)) {
+  if (gid < total) {
     uint vid = (gid / sd);
     uint k = (gid % sd);
     uchar code = codes[vid];

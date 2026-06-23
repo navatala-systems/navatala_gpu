@@ -25,7 +25,7 @@ extern "C" __global__ void navatala_dataframe_gather_unmatched_left_indices(cons
     unsigned int word = leftMatched[wordIdx];
     unsigned int bit = ((word >> bitIdx) & 1u);
     bool isMatched = (bit == 1u);
-    if ((isMatched == false)) {
+    if (isMatched == false) {
       unmatchedIndices[gid] = gid;
     }
   }

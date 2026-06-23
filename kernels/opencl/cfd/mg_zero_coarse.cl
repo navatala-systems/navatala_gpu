@@ -15,7 +15,7 @@
 
 __kernel void navatala_cfd_mg_zero_coarse(__global float* x, __global const int* mgCounts) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(mgCounts[1])))) {
+  if ((int)(get_global_id(0)) >= ((int)(mgCounts[1]))) {
     return;
   } else {
     x[(int)(get_global_id(0))] = as_float(0x00000000u);

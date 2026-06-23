@@ -19,9 +19,9 @@ using namespace metal;
 kernel void navatala_cfd_sum_abs_partials(device const float* a [[buffer(0)]], device const int* counts [[buffer(1)]], device float* outPartials [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   threadgroup float tmp[256];
   float v = as_type<float>(0x00000000u);
-  if ((((int)(int(__gid.x))) < counts[0])) {
+  if (((int)(int(__gid.x))) < counts[0]) {
     float ai = a[((int)(int(__gid.x)))];
-    if ((ai >= as_type<float>(0x00000000u))) {
+    if (ai >= as_type<float>(0x00000000u)) {
       v = ai;
     } else {
       v = (as_type<float>(0x00000000u) - ai);
@@ -29,39 +29,39 @@ kernel void navatala_cfd_sum_abs_partials(device const float* a [[buffer(0)]], d
   }
   tmp[((int)(int(__tid.x)))] = v;
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 128)) {
+  if (((int)(int(__tid.x))) < 128) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 128)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 64)) {
+  if (((int)(int(__tid.x))) < 64) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 64)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 32)) {
+  if (((int)(int(__tid.x))) < 32) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 32)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 16)) {
+  if (((int)(int(__tid.x))) < 16) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 16)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 8)) {
+  if (((int)(int(__tid.x))) < 8) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 8)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 4)) {
+  if (((int)(int(__tid.x))) < 4) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 4)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 2)) {
+  if (((int)(int(__tid.x))) < 2) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 2)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) < 1)) {
+  if (((int)(int(__tid.x))) < 1) {
     tmp[((int)(int(__tid.x)))] = (tmp[((int)(int(__tid.x)))] + tmp[(((int)(int(__tid.x))) + 1)]);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((((int)(int(__tid.x))) == 0)) {
+  if (((int)(int(__tid.x))) == 0) {
     outPartials[((int)(int(__tgid.x)))] = tmp[0];
   }
 }

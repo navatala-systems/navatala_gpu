@@ -17,7 +17,7 @@ __kernel void navatala_sparse_block_gram_schmidt_f32(__global const float* X, __
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int jVal = ((int)(j[0]));
     float xij = X[((jVal * N) + gid)];
     float v = xij;

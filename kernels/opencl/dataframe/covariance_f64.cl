@@ -37,7 +37,7 @@ __kernel void navatala_dataframe_covariance_f64(__global const double* inputX, _
   uint covF64_reductionStride = (uint)(128u);
   for (int covF64_reductionStep = 0; covF64_reductionStep < (int)(8); ++covF64_reductionStep) {
     uint covF64_stride = covF64_reductionStride;
-    if ((lid < covF64_stride)) {
+    if (lid < covF64_stride) {
       double covF64_other = sdata[(lid + covF64_stride)];
       double covF64_mine = sdata[lid];
       double covF64_sum = (covF64_mine + covF64_other);
@@ -48,7 +48,7 @@ __kernel void navatala_dataframe_covariance_f64(__global const double* inputX, _
     covF64_reductionStride = covF64_nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     double totalSum = sdata[(uint)(0u)];
     double countFloat = ((double)(countVal));
     double covVal = (totalSum / countFloat);

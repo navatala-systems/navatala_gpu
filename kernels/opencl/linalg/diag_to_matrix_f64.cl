@@ -20,7 +20,7 @@ __kernel void navatala_linalg_diag_to_matrix_f64(__global const double* v, __glo
   uint idx = gid;
   uint size = n[(uint)(0u)];
   uint totalElems = (size * size);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     uint row = (idx / size);
     uint col = (idx % size);
     bool isDiag = (row == col);

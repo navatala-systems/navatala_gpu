@@ -15,7 +15,7 @@
 
 __kernel void navatala_cfd_primitives_face_scalar_product(__global const float* aAllFaces, __global const float* bAllFaces, __global const int* params, __global float* outProd) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
     float a = aAllFaces[((int)((int)(get_global_id(0))))];

@@ -41,7 +41,7 @@ void main() {
   uint vid = uint(int(gl_GlobalInvocationID.x));
   uint nv = n_vertices[0];
   uint nb = n_bins[0];
-  if ((vid < nv)) {
+  if (vid < nv) {
     uint deg = degrees[vid];
     uint bin = (((deg >= nb)) ? ((nb - 1u)) : (deg));
     uint new_id = atomicAdd(prefix_sums[bin], 1u);

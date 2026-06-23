@@ -18,7 +18,7 @@ __kernel void navatala_sparse_merge_local_halo_result_f64(__global const double*
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double yl = yLocal[gid];
     double yh = yHalo[gid];
     y[gid] = (yl + yh);

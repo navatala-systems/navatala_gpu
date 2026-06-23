@@ -17,7 +17,7 @@
 __kernel void navatala_dataframe_correlation_f64(__global const double* covariance, __global const double* stddevX, __global const double* stddevY, __global double* correlation) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     double covVal = covariance[0];
     double sigmaX = stddevX[0];
     double sigmaY = stddevY[0];

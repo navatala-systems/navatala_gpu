@@ -21,7 +21,7 @@ __kernel void navatala_linalg_scatter_cols_f32(__global const float* src, __glob
   uint kVal = k[(uint)(0u)];
   uint nVal = n[(uint)(0u)];
   uint totalElems = (mVal * kVal);
-  if ((tid < totalElems)) {
+  if (tid < totalElems) {
     uint row = (tid / kVal);
     uint srcColIdx = (tid % kVal);
     uint dstCol = indices[srcColIdx];

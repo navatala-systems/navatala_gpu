@@ -17,7 +17,7 @@ __kernel void navatala_sparse_build_prolongation_f32(__global const int* aggrega
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     ProwPtr[row] = ((uint)(row));
     int aggId = aggregateId[row];
     PcolIdx[row] = ((uint)(aggId));

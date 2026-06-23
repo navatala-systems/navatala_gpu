@@ -44,17 +44,17 @@ layout(std430, binding = 7) writeonly buffer buf_outSnGrad {
 // kernel: navatala_cfd_primitives_sn_grad_scalar
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= params[0])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= params[0]) {
     return;
   } else {
     int o = owner[int(int(gl_GlobalInvocationID.x))];
     float aO = cellVal[o];
-    if ((int(int(gl_GlobalInvocationID.x)) < params[1])) {
+    if (int(int(gl_GlobalInvocationID.x)) < params[1]) {
       int n = neighbour[int(int(gl_GlobalInvocationID.x))];
       float aN = cellVal[n];
       outSnGrad[int(int(gl_GlobalInvocationID.x))] = (delta[int(int(gl_GlobalInvocationID.x))] * (aN - aO));
     } else {
-      if ((faceMask[int(int(gl_GlobalInvocationID.x))] != 0u)) {
+      if (faceMask[int(int(gl_GlobalInvocationID.x))] != 0u) {
         float aN = faceVal[int(int(gl_GlobalInvocationID.x))];
         outSnGrad[int(int(gl_GlobalInvocationID.x))] = (delta[int(int(gl_GlobalInvocationID.x))] * (aN - aO));
       } else {

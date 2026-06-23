@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_merge_local_halo_result_f32(const flo
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float yl = yLocal[gid];
     float yh = yHalo[gid];
     y[gid] = (yl + yh);

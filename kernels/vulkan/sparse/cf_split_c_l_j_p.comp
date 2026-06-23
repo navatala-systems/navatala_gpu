@@ -43,7 +43,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int row = int(gl_GlobalInvocationID.x);
   int N = int(nRows[0]);
-  if ((row < N)) {
+  if (row < N) {
     uint hash = (uint(row) ^ seed[0]);
     float w = weights[row];
     uint priority = (hash + uint(w));
@@ -53,12 +53,12 @@ void main() {
     for (int j = 0; j < int((re - rs)); ++j) {
       int k = (rs + j);
       uint isStr = strongMask[k];
-      if ((isStr == 1u)) {
+      if (isStr == 1u) {
         int nbr = int(colIdx[k]);
         uint nbrHash = (uint(nbr) ^ seed[0]);
         float nbrW = weights[nbr];
         uint nbrPri = (nbrHash + uint(nbrW));
-        if ((nbrPri > priority)) {
+        if (nbrPri > priority) {
           isHighest = false;
         }
       }
@@ -70,10 +70,10 @@ void main() {
       for (int j2 = 0; j2 < int((re - rs)); ++j2) {
         int k2 = (rs + j2);
         uint isStr2 = strongMask[k2];
-        if ((isStr2 == 1u)) {
+        if (isStr2 == 1u) {
           int nbr2 = int(colIdx[k2]);
           int nbrM = cfMarking[nbr2];
-          if ((nbrM == 1)) {
+          if (nbrM == 1) {
             hasCoarse = true;
           }
         }

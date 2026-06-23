@@ -18,7 +18,7 @@ __kernel void navatala_linalg_reduce_row_max_f64(__global const double* A, __glo
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint row = gid;
-  if ((row < m[(uint)(0u)])) {
+  if (row < m[(uint)(0u)]) {
     uint firstIdx = (row * n[(uint)(0u)]);
     double initMaxVal = A[firstIdx];
     double maxAccum = initMaxVal;

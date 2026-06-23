@@ -38,7 +38,7 @@ layout(std430, binding = 5) readonly buffer buf_counts {
 // kernel: navatala_cfd_mg_strength_of_connection
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) >= int(counts[1]))) {
+  if (int(gl_GlobalInvocationID.x) >= int(counts[1])) {
     return;
   } else {
     int o = owner[int(gl_GlobalInvocationID.x)];
@@ -46,7 +46,7 @@ void main() {
     float dO = abs(diag[o]);
     float dN = abs(diag[n]);
     float denomSq = (dO * dN);
-    if ((denomSq > uintBitsToFloat(0x0da24260u))) {
+    if (denomSq > uintBitsToFloat(0x0da24260u)) {
       strength[int(gl_GlobalInvocationID.x)] = (abs(upper[int(gl_GlobalInvocationID.x)]) / sqrt(denomSq));
     } else {
       strength[int(gl_GlobalInvocationID.x)] = uintBitsToFloat(0x00000000u);

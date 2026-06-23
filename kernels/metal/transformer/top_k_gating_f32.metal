@@ -199,7 +199,7 @@ kernel void navatala_transformer_top_k_gating_f32(device const float* routerLogi
   indexBuf[lid] = lidI32;
   threadgroup_barrier(mem_flags::mem_threadgroup);
   for (int kIter = 0; kIter < (int)(k); ++kIter) {
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       int bestIdx = 0;
       float bestVal = as_type<float>(0xf149f2cau);
       for (int scanIdx = 0; scanIdx < (int)(ne); ++scanIdx) {

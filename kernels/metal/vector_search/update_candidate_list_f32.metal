@@ -23,14 +23,14 @@ kernel void navatala_vector_search_update_candidate_list_f32(device uint* candid
   uint ef_val = ef[0];
   threadgroup uint merge_ids[512];
   threadgroup float merge_dists[512];
-  if ((tid < n_curr)) {
+  if (tid < n_curr) {
     uint cid = candidates[tid];
     float cdist = distances[tid];
     merge_ids[tid] = cid;
     merge_dists[tid] = cdist;
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((tid < n_new_val)) {
+  if (tid < n_new_val) {
     uint offset = (n_curr + tid);
     uint nid = new_candidates[tid];
     float ndist = new_distances[tid];
@@ -38,7 +38,7 @@ kernel void navatala_vector_search_update_candidate_list_f32(device uint* candid
     merge_dists[offset] = ndist;
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((tid == 0u)) {
+  if (tid == 0u) {
     uint total = (n_curr + n_new_val);
     uint final_n = (((total < ef_val)) ? (total) : (ef_val));
     n_merged[0u] = final_n;

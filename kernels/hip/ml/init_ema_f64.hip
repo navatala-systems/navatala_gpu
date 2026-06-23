@@ -16,7 +16,7 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_ml_init_ema_f64(const double* alphaIn, double* ema, double* alpha, unsigned int* count) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double a = alphaIn[0];
     ema[0] = __longlong_as_double(0x0000000000000000ull);
     alpha[0] = a;

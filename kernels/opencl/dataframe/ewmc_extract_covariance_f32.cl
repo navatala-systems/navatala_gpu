@@ -15,7 +15,7 @@
 
 __kernel void navatala_dataframe_ewmc_extract_covariance_f32(__global const float* Cxy, __global const float* nEff, __global float* result) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float c = Cxy[0];
     float n = nEff[0];
     float eps = as_float(0x2edbe6ffu);

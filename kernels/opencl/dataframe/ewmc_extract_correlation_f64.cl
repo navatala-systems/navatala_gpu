@@ -16,7 +16,7 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_ewmc_extract_correlation_f64(__global const double* Cxy, __global const double* varX, __global const double* varY, __global const double* nEff, __global double* result) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double c = Cxy[0];
     double vx = varX[0];
     double vy = varY[0];

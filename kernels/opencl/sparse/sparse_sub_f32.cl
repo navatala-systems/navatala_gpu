@@ -16,7 +16,7 @@
 __kernel void navatala_sparse_sparse_sub_f32(__global const float* valuesA, __global const float* valuesB, __global const int* nnz, __global float* valuesC) {
   int gid0 = (int)get_global_id(0);
   int i = ((int)((int)(get_global_id(0))));
-  if ((i < nnz[(uint)(0u)])) {
+  if (i < nnz[(uint)(0u)]) {
     float a = valuesA[i];
     float b = valuesB[i];
     valuesC[i] = (a - b);

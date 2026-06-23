@@ -42,7 +42,7 @@ void main() {
   uint gridSize = uint(int(gl_NumWorkGroups.x * gl_WorkGroupSize.x));
   for (int loopIdx = 0; loopIdx < int(nnzVal); ++loopIdx) {
     uint currentIdx = idxAccum;
-    if ((currentIdx < nnzVal)) {
+    if (currentIdx < nnzVal) {
       double aVal = a[currentIdx];
       double bVal = b[currentIdx];
       double diff = (aVal - bVal);
@@ -61,7 +61,7 @@ void main() {
   uint strideAccum = 128u;
   for (int reductionStep = 0; reductionStep < int(8); ++reductionStep) {
     uint currentStride = strideAccum;
-    if ((lidU32 < currentStride)) {
+    if (lidU32 < currentStride) {
       uint otherIdx = (lidU32 + currentStride);
       double myVal = sdata[lidU32];
       double otherVal = sdata[otherIdx];
@@ -72,7 +72,7 @@ void main() {
     strideAccum = nextStride;
     barrier();
   }
-  if ((lidU32 == 0u)) {
+  if (lidU32 == 0u) {
     double sumSq = sdata[0u];
     double dist = sqrt(sumSq);
     result[0u] = dist;

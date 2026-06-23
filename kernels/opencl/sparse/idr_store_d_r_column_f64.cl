@@ -19,7 +19,7 @@ __kernel void navatala_sparse_idr_store_d_r_column_f64(__global const double* rN
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
   int col = ((int)(colIdx[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double rn = rNew[gid];
     double ro = rOld[gid];
     dR[(gid + (col * N))] = (rn - ro);

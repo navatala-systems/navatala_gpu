@@ -45,7 +45,7 @@ kernel void navatala_dataframe_scan_sum_u32(device const uint* _input [[buffer(0
     }
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     sdata[511u] = 0u;
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);

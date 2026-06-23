@@ -16,12 +16,12 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_cfd_pcg_compute_alpha(__global const double* rz, __global const double* pAp, __global float* alpha) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= 1)) {
+  if ((int)(get_global_id(0)) >= 1) {
     return;
   } else {
     double rz_val = rz[0];
     double pAp_val = pAp[0];
-    if ((pAp_val != as_double(0x0000000000000000ul))) {
+    if (pAp_val != as_double(0x0000000000000000ul)) {
       alpha[0] = ((float)((rz_val / pAp_val)));
     } else {
       alpha[0] = as_float(0x00000000u);

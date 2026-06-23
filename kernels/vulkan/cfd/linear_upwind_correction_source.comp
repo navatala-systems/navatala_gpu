@@ -50,7 +50,7 @@ layout(std430, binding = 9) buffer buf_outSource {
 // kernel: navatala_cfd_linear_upwind_correction_source
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= counts[0])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= counts[0]) {
     return;
   } else {
     float sum = uintBitsToFloat(0x00000000u);
@@ -61,7 +61,7 @@ void main() {
     for (int t = 0; t < int(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < counts[1])) {
+      if (f < counts[1]) {
         float fluxVal = flux[f];
         float luVal = luFaceVals[f];
         float sgnF = signF[k];

@@ -37,7 +37,7 @@ __kernel void navatala_dataframe_kl_divergence_f32(__global const float* p, __gl
   uint kl32_reductionStride = (uint)(128u);
   for (int kl32_reductionStep = 0; kl32_reductionStep < (int)(8); ++kl32_reductionStep) {
     uint kl32_stride = kl32_reductionStride;
-    if ((lid < kl32_stride)) {
+    if (lid < kl32_stride) {
       float kl32_other = sdata[(lid + kl32_stride)];
       float kl32_mine = sdata[lid];
       float kl32_sum = (kl32_mine + kl32_other);
@@ -48,7 +48,7 @@ __kernel void navatala_dataframe_kl_divergence_f32(__global const float* p, __gl
     kl32_reductionStride = kl32_nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     result[(uint)(0u)] = sdata[(uint)(0u)];
   }
 }

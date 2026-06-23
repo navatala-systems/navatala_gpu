@@ -34,7 +34,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int gid = int(gl_GlobalInvocationID.x);
   int N = int(n[0]);
-  if ((gid < N)) {
+  if (gid < N) {
     double nm = norm[0];
     double wi = w[gid];
     v[gid] = (wi / nm);

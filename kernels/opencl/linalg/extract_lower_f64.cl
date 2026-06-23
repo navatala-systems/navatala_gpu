@@ -19,7 +19,7 @@ __kernel void navatala_linalg_extract_lower_f64(__global const double* A, __glob
   uint idx = ((uint)((int)(get_global_id(0))));
   uint nVal = n[(uint)(0u)];
   uint totalElements = (nVal * nVal);
-  if ((idx < totalElements)) {
+  if (idx < totalElements) {
     uint i = (idx / nVal);
     uint j = (idx % nVal);
     double aVal = A[idx];

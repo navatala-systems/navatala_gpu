@@ -41,7 +41,7 @@ layout(std430, binding = 6) writeonly buffer buf_outNut {
 // kernel: navatala_cfd_k_omega_s_s_t_nut_compute
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) >= int(counts[0]))) {
+  if (int(gl_GlobalInvocationID.x) >= int(counts[0])) {
     return;
   } else {
     float a1 = params[0];
@@ -53,14 +53,14 @@ void main() {
     float denomA = (a1 * om);
     float denomB = ((b1 * f23) * sqrt((s2raw * float((s2raw > uintBitsToFloat(0x00000000u))))));
     float num = (a1 * k);
-    if ((denomA > denomB)) {
-      if ((denomA > uintBitsToFloat(0x00000000u))) {
+    if (denomA > denomB) {
+      if (denomA > uintBitsToFloat(0x00000000u)) {
         outNut[int(gl_GlobalInvocationID.x)] = (num / denomA);
       } else {
         outNut[int(gl_GlobalInvocationID.x)] = uintBitsToFloat(0x00000000u);
       }
     } else {
-      if ((denomB > uintBitsToFloat(0x00000000u))) {
+      if (denomB > uintBitsToFloat(0x00000000u)) {
         outNut[int(gl_GlobalInvocationID.x)] = (num / denomB);
       } else {
         outNut[int(gl_GlobalInvocationID.x)] = uintBitsToFloat(0x00000000u);

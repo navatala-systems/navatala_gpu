@@ -17,7 +17,7 @@ __kernel void navatala_ml_pointwise_cos_f32(__global const float* _input, __glob
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = cos(x);

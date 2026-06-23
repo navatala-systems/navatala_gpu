@@ -35,7 +35,7 @@ kernel void navatala_ml_knn_regress_median_f32(device const uint* neighborIndice
     for (int i = 0; i < (int)(kVal); ++i) {
       uint iU32 = ((uint)(i));
       uint zeroU32 = ((uint)(0));
-      if ((iU32 > zeroU32)) {
+      if (iU32 > zeroU32) {
         float key = sortBuf[iU32];
         uint initialJIdx = (iU32 - 1u);
         jIdxAccum = initialJIdx;

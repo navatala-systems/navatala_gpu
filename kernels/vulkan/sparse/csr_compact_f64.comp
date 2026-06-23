@@ -46,7 +46,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int gid = int(gl_GlobalInvocationID.x);
   int N = int(nRows[0]);
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = int(rowPtr[gid]);
     int re = int(rowPtr[(gid + 1)]);
     int newRs = int(newRowPtr[gid]);
@@ -54,7 +54,7 @@ void main() {
     for (int j = 0; j < int((re - rs)); ++j) {
       int k = (rs + j);
       uint keep = keepMask[k];
-      if ((keep == 1u)) {
+      if (keep == 1u) {
         int tgt = (newRs + pos);
         uint c = colIdx[k];
         double v = values[k];

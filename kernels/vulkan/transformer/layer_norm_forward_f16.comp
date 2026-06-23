@@ -213,7 +213,7 @@ void main() {
   float variance = (totalSumSq / hsF32);
   float varEps = (variance + eps);
   float std = sqrt(varEps);
-  if ((batchValid && hiddenValid)) {
+  if (batchValid && hiddenValid) {
     float16_t gF16 = gamma[lid];
     float16_t bF16 = beta[lid];
     float g = float(gF16);

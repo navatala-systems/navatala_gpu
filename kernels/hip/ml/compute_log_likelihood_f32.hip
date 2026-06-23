@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_ml_compute_log_likelihood_f32(const float* logPdf, const float* weights, const unsigned int* n, const unsigned int* k, float* logLikelihood) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int numN = n[0];
     unsigned int numK = k[0];
     float totalLLAccum = __uint_as_float(0x00000000u);

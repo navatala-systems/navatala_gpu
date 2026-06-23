@@ -23,7 +23,7 @@ __kernel void navatala_ml_layernorm_f32(__global const float* x, __global const 
   float epsVal = eps[0];
   float gsM = as_float(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((uint)(itM)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itM)) * (uint)(256u))) < countVal) {
       gsM = (gsM + x[(lid + (((uint)(itM)) * (uint)(256u)))]);
     }
   }
@@ -32,7 +32,7 @@ __kernel void navatala_ml_layernorm_f32(__global const float* x, __global const 
   uint meanStr = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -47,7 +47,7 @@ __kernel void navatala_ml_layernorm_f32(__global const float* x, __global const 
   barrier(CLK_LOCAL_MEM_FENCE);
   float gsV = as_float(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((uint)(itV)) * (uint)(256u))) < countVal)) {
+    if ((lid + (((uint)(itV)) * (uint)(256u))) < countVal) {
       gsV = (gsV + ((x[(lid + (((uint)(itV)) * (uint)(256u)))] - mean) * (x[(lid + (((uint)(itV)) * (uint)(256u)))] - mean)));
     }
   }
@@ -56,7 +56,7 @@ __kernel void navatala_ml_layernorm_f32(__global const float* x, __global const 
   uint varStr = (uint)(128u);
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     uint stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -71,7 +71,7 @@ __kernel void navatala_ml_layernorm_f32(__global const float* x, __global const 
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
     uint idxW = (lid + (((uint)(itW)) * (uint)(256u)));
-    if ((idxW < countVal)) {
+    if (idxW < countVal) {
       float xnW = ((x[idxW] - mean) / denom);
       float outF = ((gamma[idxW] * xnW) + beta[idxW]);
       _output[idxW] = outF;

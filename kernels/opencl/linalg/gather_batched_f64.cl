@@ -24,7 +24,7 @@ __kernel void navatala_linalg_gather_batched_f64(__global const double* A, __glo
   uint kVal = kCount[(uint)(0u)];
   uint outBatchStride = (kVal * nVal);
   uint totalElems = (batchVal * outBatchStride);
-  if ((tid < totalElems)) {
+  if (tid < totalElems) {
     uint batchIdx = (tid / outBatchStride);
     uint withinBatch = (tid % outBatchStride);
     uint rowIdx = (withinBatch / nVal);

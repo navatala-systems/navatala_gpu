@@ -53,7 +53,7 @@ void main() {
   float epsVal = eps[0];
   float gM = uintBitsToFloat(0x00000000u);
   for (int itm = 0; itm < int(numIters); ++itm) {
-    if (((lid + (uint(itm) * 256u)) < countVal)) {
+    if ((lid + (uint(itm) * 256u)) < countVal) {
       gM = (gM + x[(lid + (uint(itm) * 256u))]);
     }
   }
@@ -62,7 +62,7 @@ void main() {
   uint mStr = 128u;
   for (int redStep = 0; redStep < int(8); ++redStep) {
     uint stride = mStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -77,7 +77,7 @@ void main() {
   barrier();
   float gV = uintBitsToFloat(0x00000000u);
   for (int itv = 0; itv < int(numIters); ++itv) {
-    if (((lid + (uint(itv) * 256u)) < countVal)) {
+    if ((lid + (uint(itv) * 256u)) < countVal) {
       gV = (gV + ((x[(lid + (uint(itv) * 256u))] - mean) * (x[(lid + (uint(itv) * 256u))] - mean)));
     }
   }
@@ -86,7 +86,7 @@ void main() {
   uint vStr = 128u;
   for (int redStep = 0; redStep < int(8); ++redStep) {
     uint stride = vStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -102,7 +102,7 @@ void main() {
   barrier();
   float g1 = uintBitsToFloat(0x00000000u);
   for (int it1 = 0; it1 < int(numIters); ++it1) {
-    if (((lid + (uint(it1) * 256u)) < countVal)) {
+    if ((lid + (uint(it1) * 256u)) < countVal) {
       g1 = (g1 + (dy[(lid + (uint(it1) * 256u))] * gamma[(lid + (uint(it1) * 256u))]));
     }
   }
@@ -111,7 +111,7 @@ void main() {
   uint s1Str = 128u;
   for (int redStep = 0; redStep < int(8); ++redStep) {
     uint stride = s1Str;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -126,7 +126,7 @@ void main() {
   barrier();
   float g2 = uintBitsToFloat(0x00000000u);
   for (int it2 = 0; it2 < int(numIters); ++it2) {
-    if (((lid + (uint(it2) * 256u)) < countVal)) {
+    if ((lid + (uint(it2) * 256u)) < countVal) {
       g2 = (g2 + ((dy[(lid + (uint(it2) * 256u))] * gamma[(lid + (uint(it2) * 256u))]) * ((x[(lid + (uint(it2) * 256u))] - mean) / std)));
     }
   }
@@ -135,7 +135,7 @@ void main() {
   uint s2Str = 128u;
   for (int redStep = 0; redStep < int(8); ++redStep) {
     uint stride = s2Str;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -149,7 +149,7 @@ void main() {
   float m2 = (sdata[0] / n);
   for (int itw = 0; itw < int(numIters); ++itw) {
     uint idw = (lid + (uint(itw) * 256u));
-    if ((idw < countVal)) {
+    if (idw < countVal) {
       float xhatw = ((x[idw] - mean) / std);
       float dyvw = dy[idw];
       float dxhw = (dyvw * gamma[idw]);

@@ -24,15 +24,15 @@ __kernel void navatala_sparse_mg_error_norm_partials_f64(__global const double* 
   double warpSum = sub_group_reduce_add(sq);
   __local double sdata[32];
   int lane = (int)(get_sub_group_local_id());
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sdata[warpIdx] = warpSum;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < 8)) {
+  if (lid < 8) {
     double val = sdata[lid];
     double finalSum = sub_group_reduce_add(val);
-    if ((lid == 0)) {
+    if (lid == 0) {
       int grpId = (int)(get_group_id(0));
       partials[grpId] = finalSum;
     }

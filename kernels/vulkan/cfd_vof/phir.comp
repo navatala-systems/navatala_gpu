@@ -59,10 +59,10 @@ layout(std430, binding = 12) writeonly buffer buf_outPhir {
 // kernel: navatala_cfd_vof_phir
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= faceParams[0])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= faceParams[0]) {
     return;
   } else {
-    if ((paramsF[0] == uintBitsToFloat(0x00000000u))) {
+    if (paramsF[0] == uintBitsToFloat(0x00000000u)) {
       outPhir[int(int(gl_GlobalInvocationID.x))] = uintBitsToFloat(0x00000000u);
       return;
     }

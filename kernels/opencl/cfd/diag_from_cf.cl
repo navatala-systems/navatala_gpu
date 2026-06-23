@@ -18,7 +18,7 @@ __kernel void navatala_cfd_diag_from_cf(__global const float* cf, __global const
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= counts[0])) {
+  if ((int)(get_global_id(0)) >= counts[0]) {
     return;
   } else {
     int beg = offsets[(int)(get_global_id(0))];

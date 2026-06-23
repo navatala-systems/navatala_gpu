@@ -17,7 +17,7 @@
 __kernel void navatala_dataframe_iqr_f64(__global const double* sortedInput, __global const uint* count, __global double* iqr) {
   int gid0 = (int)get_global_id(0);
   uint gidU32 = ((uint)((int)(get_global_id(0))));
-  if ((gidU32 == (uint)(0u))) {
+  if (gidU32 == (uint)(0u)) {
     uint n = count[(uint)(0u)];
     uint nMinus1 = (n - (uint)(1u));
     double nMinus1Float = ((double)(nMinus1));

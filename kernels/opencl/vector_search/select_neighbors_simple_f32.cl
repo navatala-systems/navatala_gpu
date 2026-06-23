@@ -18,7 +18,7 @@ __kernel void navatala_vector_search_select_neighbors_simple_f32(__global const 
   uint tid = ((uint)((int)(get_global_id(0))));
   uint n_cand = n_candidates[0];
   uint m_val = m[0];
-  if ((tid == (uint)(0u))) {
+  if (tid == (uint)(0u)) {
     uint limit = (((n_cand < m_val)) ? (n_cand) : (m_val));
     for (int i = 0; i < (int)(limit); ++i) {
       uint cand = candidates[i];

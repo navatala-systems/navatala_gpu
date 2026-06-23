@@ -19,14 +19,14 @@ extern "C" __global__ void navatala_sparse_chebyshev_smooth_f64(const unsigned i
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int i = gid;
   unsigned int nVal = n[0u];
-  if ((i < nVal)) {
+  if (i < nVal) {
     unsigned int rowStart = rowPtr[i];
     unsigned int iPlusOne = (i + 1u);
     unsigned int rowEnd = rowPtr[iPlusOne];
     double sumAccum = __longlong_as_double(0x0000000000000000ull);
     for (int j = 0; j < (int)(rowEnd); ++j) {
       unsigned int jU32 = ((unsigned int)(j));
-      if ((jU32 >= rowStart)) {
+      if (jU32 >= rowStart) {
         unsigned int col = colInd[jU32];
         double aVal = values[jU32];
         double xj = x[col];

@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_dataframe_rmse_f64(const double* mse, double
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int zeroU32 = ((unsigned int)(0));
-  if ((gid == zeroU32)) {
+  if (gid == zeroU32) {
     double mseVal = mse[0];
     double rmseVal = sqrt(mseVal);
     rmse[0] = rmseVal;

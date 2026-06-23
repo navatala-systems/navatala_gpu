@@ -40,7 +40,7 @@ __kernel void navatala_ml_coordinate_update_f32(__global const float* X, __globa
   uint cu32RedStride = (uint)(128u);
   for (int cu32RedStep = 0; cu32RedStep < (int)(8); ++cu32RedStep) {
     uint cu32RedStrideVal = cu32RedStride;
-    if ((lid < cu32RedStrideVal)) {
+    if (lid < cu32RedStrideVal) {
       float otherDot = sdataDot[(lid + cu32RedStrideVal)];
       float mineDot = sdataDot[lid];
       float sumDot = (mineDot + otherDot);
@@ -55,7 +55,7 @@ __kernel void navatala_ml_coordinate_update_f32(__global const float* X, __globa
     cu32RedStride = cu32RedNextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float totalDot = sdataDot[0];
     float totalNorm = sdataNorm[0];
     float rho = (totalDot / totalNorm);

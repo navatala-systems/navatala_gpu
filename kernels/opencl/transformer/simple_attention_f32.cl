@@ -305,7 +305,7 @@ __kernel void navatala_transformer_simple_attention_f32(__global const float* qu
     sumBuf[lid] = sumVal_sum_p2_sumBuf_1;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((batchValid && (lid == (uint)(0u)))) {
+  if (batchValid && (lid == (uint)(0u))) {
     float outVal = sumBuf[(uint)(0u)];
     uint outIdx = (qBase + (uint)(0u));
     _output[outIdx] = outVal;

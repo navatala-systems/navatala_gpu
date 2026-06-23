@@ -52,7 +52,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int gid = int(gl_GlobalInvocationID.x);
   int N = int(nRows[0]);
-  if ((gid < N)) {
+  if (gid < N) {
     uint myAgg = PcolIdx[gid];
     double myPval = Pvalues[gid];
     int aStart = int(ArowPtr[gid]);
@@ -63,7 +63,7 @@ void main() {
       int col = int(AcolIdx[idx]);
       double aVal = Avalues[idx];
       uint colAgg = PcolIdx[col];
-      if ((colAgg == myAgg)) {
+      if (colAgg == myAgg) {
         sumAP = (sumAP + aVal);
       }
     }

@@ -19,7 +19,7 @@ using namespace metal;
 kernel void navatala_sparse_compute_so_c_ldu_fill_f32(device const uint* owner [[buffer(0)]], device const uint* neighbour [[buffer(1)]], device const float* upper [[buffer(2)]], device const float* lower [[buffer(3)]], device const uint* cellFaceOffsets [[buffer(4)]], device const uint* cellFaceIdx [[buffer(5)]], device const uint* strongRowPtr [[buffer(6)]], device const float* theta [[buffer(7)]], device const uint* nCells [[buffer(8)]], device uint* strongColIdx [[buffer(9)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int cell = int(__gid.x);
   int N = ((int)(nCells[0]));
-  if ((cell < N)) {
+  if (cell < N) {
     int fStart = ((int)(cellFaceOffsets[cell]));
     int fEnd = ((int)(cellFaceOffsets[(cell + 1)]));
     float maxCoeff = as_type<float>(0x00000000u);
@@ -28,7 +28,7 @@ kernel void navatala_sparse_compute_so_c_ldu_fill_f32(device const uint* owner [
       int face = ((int)(cellFaceIdx[fIdx]));
       int own = ((int)(owner[face]));
       float coeff = abs((((cell == own)) ? (upper[face]) : (lower[face])));
-      if ((coeff > maxCoeff)) {
+      if (coeff > maxCoeff) {
         maxCoeff = coeff;
       }
     }
@@ -41,7 +41,7 @@ kernel void navatala_sparse_compute_so_c_ldu_fill_f32(device const uint* owner [
       int face2 = ((int)(cellFaceIdx[fIdx2]));
       int own2 = ((int)(owner[face2]));
       float coeff2 = abs((((cell == own2)) ? (upper[face2]) : (lower[face2])));
-      if ((coeff2 > threshold)) {
+      if (coeff2 > threshold) {
         int nbr2 = ((int)((((cell == own2)) ? (neighbour[face2]) : (owner[face2]))));
         strongColIdx[(rowStart + off)] = ((uint)(nbr2));
         off = (off + 1);

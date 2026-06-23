@@ -51,7 +51,7 @@ void main() {
   uint mseF64_reductionStride = 128u;
   for (int reductionStep = 0; reductionStep < int(8); ++reductionStep) {
     uint mseF64_stride = mseF64_reductionStride;
-    if ((lid < mseF64_stride)) {
+    if (lid < mseF64_stride) {
       uint mseF64_partnerIdx = (lid + mseF64_stride);
       double other = sdata[mseF64_partnerIdx];
       double mine = sdata[lid];
@@ -64,7 +64,7 @@ void main() {
     barrier();
   }
   uint zeroU32 = uint(0);
-  if ((lid == zeroU32)) {
+  if (lid == zeroU32) {
     double totalSum = sdata[0];
     double countFloat = double(countVal);
     double mseVal = (totalSum / countFloat);

@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_csr_permute_rows_f64(const unsigned i
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int origRow = ((int)(perm[gid]));
     int rs = ((int)(rowPtr[origRow]));
     int re = ((int)(rowPtr[(origRow + 1)]));

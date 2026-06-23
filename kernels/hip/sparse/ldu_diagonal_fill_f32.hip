@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_ldu_diagonal_fill_f32(const float* di
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int row = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nCells[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rEnd = ((int)(rowPtr[(row + 1)]));
     int dPos = (rEnd - 1);
     colInd[dPos] = ((unsigned int)(row));

@@ -28,7 +28,7 @@ kernel void navatala_runtime_deterministic_histogram_f32(device const float* val
   float range = (maxValF - minValF);
   float numBinsFloat = ((float)(numBinsVal));
   float binWidth = (range / numBinsFloat);
-  if ((lid < numBinsVal)) {
+  if (lid < numBinsVal) {
     localHist[lid] = 0u;
   }
   bool inBounds = (gid < countVal);
@@ -44,15 +44,15 @@ kernel void navatala_runtime_deterministic_histogram_f32(device const float* val
     binIndices[lid] = numBinsVal;
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((lid < numBinsVal)) {
+  if (lid < numBinsVal) {
     uint myBin = lid;
     uint histF32RedStride = 128u;
     for (int histF32RedStep = 0; histF32RedStep < (int)(8); ++histF32RedStep) {
       uint histF32Stride = histF32RedStride;
-      if ((lid < histF32Stride)) {
+      if (lid < histF32Stride) {
         uint partnerIdx = (lid + histF32Stride);
         uint storedBin = binIndices[partnerIdx];
-        if ((storedBin == myBin)) {
+        if (storedBin == myBin) {
           uint oldCount = localHist[lid];
           uint newCount = (oldCount + 1u);
           localHist[lid] = newCount;
@@ -65,7 +65,7 @@ kernel void navatala_runtime_deterministic_histogram_f32(device const float* val
     }
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     for (int bin = 0; bin < (int)(numBinsVal); ++bin) {
       uint binU32 = ((uint)(bin));
       uint localCount = localHist[binU32];

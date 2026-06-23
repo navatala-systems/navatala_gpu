@@ -18,7 +18,7 @@ __kernel void navatala_sparse_copy_f64(__global const double* x, __global const 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     y[gid] = x[gid];
   }
 }

@@ -50,15 +50,15 @@ static inline float gpu_atomic_max_float(device atomic_float* ptr, float value) 
 
 kernel void navatala_sparse_find_min_edge_per_component_f32(device const uint* srcNodes [[buffer(0)]], device const uint* dstNodes [[buffer(1)]], device const float* weights [[buffer(2)]], device const uint* components [[buffer(3)]], device const uint* numEdges [[buffer(4)]], device const uint* numNodes [[buffer(5)]], device uint* minEdgeIdx [[buffer(6)]], device float* minEdgeWeight [[buffer(7)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint edgeIdx = ((uint)(int(__gid.x)));
-  if ((edgeIdx < numEdges[0u])) {
+  if (edgeIdx < numEdges[0u]) {
     uint src = srcNodes[edgeIdx];
     uint dst = dstNodes[edgeIdx];
     uint srcComp = components[src];
     uint dstComp = components[dst];
-    if ((srcComp != dstComp)) {
+    if (srcComp != dstComp) {
       float w = weights[edgeIdx];
       float currWeight = minEdgeWeight[srcComp];
-      if ((w < currWeight)) {
+      if (w < currWeight) {
         gpu_atomic_min_float((device atomic_float*)(&minEdgeWeight[srcComp]), w);
         minEdgeIdx[srcComp] = edgeIdx;
       }

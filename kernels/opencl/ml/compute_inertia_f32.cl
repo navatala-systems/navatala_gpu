@@ -49,7 +49,7 @@ __kernel void navatala_ml_compute_inertia_f32(__global const float* data, __glob
   uint inertiaF32RedStride = (uint)(128u);
   for (int inertiaF32RedStep = 0; inertiaF32RedStep < (int)(8); ++inertiaF32RedStep) {
     uint inertiaF32Stride = inertiaF32RedStride;
-    if ((lid < inertiaF32Stride)) {
+    if (lid < inertiaF32Stride) {
       float other = sdata[(lid + inertiaF32Stride)];
       float mine = sdata[lid];
       float sum = (mine + other);
@@ -60,7 +60,7 @@ __kernel void navatala_ml_compute_inertia_f32(__global const float* data, __glob
     inertiaF32RedStride = inertiaF32NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     inertia[0] = sdata[0];
   }
 }

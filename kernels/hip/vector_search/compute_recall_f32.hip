@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_vector_search_compute_recall_f32(const unsig
   unsigned int query_id = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int nq = n_queries[0];
   unsigned int k_val = k[0];
-  if ((query_id < nq)) {
+  if (query_id < nq) {
     unsigned int hits = 0u;
     for (int i = 0; i < (int)(k_val); ++i) {
       unsigned int approx_idx = ((query_id * k_val) + i);
@@ -28,7 +28,7 @@ extern "C" __global__ void navatala_vector_search_compute_recall_f32(const unsig
       for (int j = 0; j < (int)(k_val); ++j) {
         unsigned int gt_idx = ((query_id * k_val) + j);
         unsigned int gt_id = ground_truth_ids[gt_idx];
-        if ((approx_id == gt_id)) {
+        if (approx_id == gt_id) {
           found = 1u;
         }
       }

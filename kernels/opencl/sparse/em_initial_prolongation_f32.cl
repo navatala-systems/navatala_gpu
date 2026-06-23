@@ -17,13 +17,13 @@ __kernel void navatala_sparse_em_initial_prolongation_f32(__global const int* ag
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int aggId = aggregateId[gid];
     ProwPtr[gid] = ((uint)(gid));
     PcolIdx[gid] = ((uint)(aggId));
     Pvalues[gid] = as_float(0x3f800000u);
   }
-  if ((gid == N)) {
+  if (gid == N) {
     ProwPtr[N] = ((uint)(N));
   }
 }

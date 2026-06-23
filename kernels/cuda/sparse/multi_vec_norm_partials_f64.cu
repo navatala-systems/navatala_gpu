@@ -20,7 +20,7 @@ extern "C" __global__ void navatala_sparse_multi_vec_norm_partials_f64(const dou
   int N = ((int)(n[0]));
   int kVal = ((int)(k[0]));
   int total = (N * kVal);
-  if ((gid < total)) {
+  if (gid < total) {
     double x = X[gid];
     partials[gid] = (x * x);
   }

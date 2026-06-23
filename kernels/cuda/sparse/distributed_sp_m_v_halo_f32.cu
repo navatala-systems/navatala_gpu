@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_distributed_sp_m_v_halo_f32(const uns
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     float sum = __uint_as_float(0x00000000u);

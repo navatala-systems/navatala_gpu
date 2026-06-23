@@ -35,7 +35,7 @@ layout(std430, binding = 4) buffer buf_count {
 // kernel: navatala_ml_dema_update_f64
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) == 0)) {
+  if (int(gl_GlobalInvocationID.x) == 0) {
     double xVal = x[0];
     double a = alpha[0];
     double old1 = ema1[0];

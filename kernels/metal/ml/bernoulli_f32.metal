@@ -20,7 +20,7 @@ kernel void navatala_ml_bernoulli_f32(device const uint* count [[buffer(0)]], de
   uint gid = ((uint)(int(__gid.x)));
   uint countVal = count[0];
   uint seedVal = seed[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     uint uk0 = ((seedVal + (gid * 2654435769u)) + 0u);
     uint uk1 = ((uk0 ^ (uk0 >> 16u)) * 2246822519u);
     uint uk2 = ((uk1 ^ (uk1 >> 13u)) * 3266489917u);

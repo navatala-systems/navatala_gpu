@@ -33,7 +33,7 @@ static inline uint gpu_atomic_cas_uint(device atomic_uint* ptr, uint expected, u
 kernel void navatala_sparse_partition_count_per_rank(device const uint* partitionVector [[buffer(0)]], device const uint* nRows [[buffer(1)]], device const uint* nRanks [[buffer(2)]], device atomic_uint* countPerRank [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int gid = int(__gid.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rank = ((int)(partitionVector[gid]));
     uint _aod1 = atomic_fetch_add_explicit(((device atomic_uint*)(&(countPerRank[rank]))), 1u, memory_order_relaxed);
   }

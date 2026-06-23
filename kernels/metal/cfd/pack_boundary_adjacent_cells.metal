@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_cfd_pack_boundary_adjacent_cells(device const float* cellField [[buffer(0)]], device const int* indexMap [[buffer(1)]], device const int* counts [[buffer(2)]], device float* outPacked [[buffer(3)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     int cellIdx = indexMap[((int)(int(__gid.x)))];

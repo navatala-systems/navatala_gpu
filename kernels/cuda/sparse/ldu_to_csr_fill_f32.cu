@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_ldu_to_csr_fill_f32(const unsigned in
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int face = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int nFaces = ((int)(nInternalFaces[0]));
-  if ((face < nFaces)) {
+  if (face < nFaces) {
     int own = ((int)(owner[face]));
     int nbr = ((int)(neighbour[face]));
     unsigned int posOwn = atomicAdd(&(insertIdx[own]), 1u);

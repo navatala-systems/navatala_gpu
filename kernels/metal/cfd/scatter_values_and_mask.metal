@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_cfd_scatter_values_and_mask(device const int* procFaces [[buffer(0)]], device const float* recv [[buffer(1)]], device const int* counts [[buffer(2)]], device float* bcVal [[buffer(3)]], device int* bcMask [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= counts[0])) {
+  if (int(__gid.x) >= counts[0]) {
     return;
   } else {
     int face = procFaces[int(__gid.x)];

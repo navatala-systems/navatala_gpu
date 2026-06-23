@@ -17,7 +17,7 @@ __kernel void navatala_cfd_gather_mean(__global const float* features, __global 
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int nNodes = numNodes[0];
-  if ((gid < nNodes)) {
+  if (gid < nNodes) {
     int cnt = neighborCounts[gid];
     int fd = featureDim[0];
     for (int f = 0; f < (int)(fd); ++f) {

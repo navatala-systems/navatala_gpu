@@ -16,7 +16,7 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_dataframe_moments_merge_f64(__global const uint* nA, __global const double* M1A, __global const double* M2A, __global const double* M3A, __global const double* M4A, __global const uint* nB, __global const double* M1B, __global const double* M2B, __global const double* M3B, __global const double* M4B, __global uint* nOut, __global double* M1Out, __global double* M2Out, __global double* M3Out, __global double* M4Out) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     uint nAVal = nA[0];
     double m1AVal = M1A[0];
     double m2AVal = M2A[0];

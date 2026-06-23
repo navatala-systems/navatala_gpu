@@ -32,20 +32,20 @@ __kernel void navatala_sparse_pbicgstab_triple_dot_partials_f64(__global const d
   __local double sd1[32];
   __local double sd2[32];
   int lane = (int)(get_sub_group_local_id());
-  if ((lane == 0)) {
+  if (lane == 0) {
     int warpIdx = (lid / 32);
     sd0[warpIdx] = ws0;
     sd1[warpIdx] = ws1;
     sd2[warpIdx] = ws2;
   }
   barrier(CLK_LOCAL_MEM_FENCE);
-  if ((lid < 8)) {
+  if (lid < 8) {
     int grpId = (int)(get_group_id(0));
     int base = (grpId * 3);
     double f0 = sub_group_reduce_add(sd0[lid]);
     double f1 = sub_group_reduce_add(sd1[lid]);
     double f2 = sub_group_reduce_add(sd2[lid]);
-    if ((lid == 0)) {
+    if (lid == 0) {
       partials[base] = f0;
       partials[(base + 1)] = f1;
       partials[(base + 2)] = f2;

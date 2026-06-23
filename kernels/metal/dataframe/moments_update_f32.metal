@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_dataframe_moments_update_f32(device const float* x [[buffer(0)]], device uint* n [[buffer(1)]], device float* M1 [[buffer(2)]], device float* M2 [[buffer(3)]], device float* M3 [[buffer(4)]], device float* M4 [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) == 0)) {
+  if (int(__gid.x) == 0) {
     uint nOld = n[0];
     float m1Old = M1[0];
     float m2Old = M2[0];

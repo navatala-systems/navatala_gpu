@@ -31,7 +31,7 @@ kernel void navatala_sparse_knn_sparse_k_n_n_distance_f32(device const float* qu
     uint qLen = (qEnd - qStart);
     for (int qLoop = 0; qLoop < (int)(qLen); ++qLoop) {
       uint qPos = qIdxAccum;
-      if ((qPos < qEnd)) {
+      if (qPos < qEnd) {
         float qVal = queryData[qPos];
         float qValSq = (qVal * qVal);
         float currQNorm = queryNormSqAccum;
@@ -48,7 +48,7 @@ kernel void navatala_sparse_knn_sparse_k_n_n_distance_f32(device const float* qu
     uint idxLen = (idxEnd - idxStart);
     for (int iLoop = 0; iLoop < (int)(idxLen); ++iLoop) {
       uint iPos = iIdxAccum;
-      if ((iPos < idxEnd)) {
+      if (iPos < idxEnd) {
         float iVal = idxData[iPos];
         float iValSq = (iVal * iVal);
         float currINorm = idxNormSqAccum;
@@ -64,13 +64,13 @@ kernel void navatala_sparse_knn_sparse_k_n_n_distance_f32(device const float* qu
     uint qIdx2Accum = qStart;
     for (int dotQLoop = 0; dotQLoop < (int)(qLen); ++dotQLoop) {
       uint qPos2 = qIdx2Accum;
-      if ((qPos2 < qEnd)) {
+      if (qPos2 < qEnd) {
         float qVal2 = queryData[qPos2];
         int qCol = queryIndices[qPos2];
         uint iIdx2Accum = idxStart;
         for (int dotILoop = 0; dotILoop < (int)(idxLen); ++dotILoop) {
           uint iPos2 = iIdx2Accum;
-          if ((iPos2 < idxEnd)) {
+          if (iPos2 < idxEnd) {
             int iCol = idxIndices[iPos2];
             bool colMatch = (qCol == iCol);
             if (colMatch) {
@@ -122,13 +122,13 @@ kernel void navatala_sparse_knn_sparse_inner_product_f32(device const float* que
     uint idxLen = (idxEnd - idxStart);
     for (int qLoop = 0; qLoop < (int)(qLen); ++qLoop) {
       uint qPos = qIdxAccum;
-      if ((qPos < qEnd)) {
+      if (qPos < qEnd) {
         float qVal = queryData[qPos];
         int qCol = queryIndices[qPos];
         uint iIdxAccum = idxStart;
         for (int iLoop = 0; iLoop < (int)(idxLen); ++iLoop) {
           uint iPos = iIdxAccum;
-          if ((iPos < idxEnd)) {
+          if (iPos < idxEnd) {
             int iCol = idxIndices[iPos];
             bool colMatch = (qCol == iCol);
             if (colMatch) {
@@ -225,7 +225,7 @@ kernel void navatala_sparse_knn_csr_row_distance_f32(device const float* sparseD
   uint sparseLen = (sEnd - sStart);
   for (int sLoop = 0; sLoop < (int)(sparseLen); ++sLoop) {
     uint sPos = sIdxAccum;
-    if ((sPos < sEnd)) {
+    if (sPos < sEnd) {
       float sVal = sparseData[sPos];
       int sCol = sparseIndices[sPos];
       uint sColU32 = ((uint)(sCol));
@@ -247,7 +247,7 @@ kernel void navatala_sparse_knn_csr_row_distance_f32(device const float* sparseD
   uint dIdxAccum = 0u;
   for (int dLoop = 0; dLoop < (int)(nColsVal); ++dLoop) {
     uint dPos = dIdxAccum;
-    if ((dPos < nColsVal)) {
+    if (dPos < nColsVal) {
       float dValLoop = denseQuery[dPos];
       float dValSq = (dValLoop * dValLoop);
       float currDNorm = denseNormAccum;

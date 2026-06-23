@@ -31,7 +31,7 @@ __kernel void navatala_linalg_norm_linf_f64(__global const double* _input, __glo
   uint linfF64RedStride = (uint)(128u);
   for (int linfF64RedStep = 0; linfF64RedStep < (int)(8); ++linfF64RedStep) {
     uint linfF64Stride = linfF64RedStride;
-    if ((lid < linfF64Stride)) {
+    if (lid < linfF64Stride) {
       double other = sdata[(lid + linfF64Stride)];
       double mine = sdata[lid];
       bool mineGtOther = (mine > other);
@@ -43,7 +43,7 @@ __kernel void navatala_linalg_norm_linf_f64(__global const double* _input, __glo
     linfF64RedStride = linfF64NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     result[0] = sdata[0];
   }
 }

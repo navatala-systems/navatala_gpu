@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_ml_init_ema_from_span_f32(const float* span, float* ema, float* alpha, unsigned int* count) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float s = span[0];
     float spanPlus1 = (s + __uint_as_float(0x3f800000u));
     float a = (__uint_as_float(0x40000000u) / spanPlus1);

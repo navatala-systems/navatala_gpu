@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_cfd_exact_mat_vec(const float* x, const int*
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0])))) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0]))) {
     return;
   } else {
     float s = (diag[(int)(blockIdx.x * blockDim.x + threadIdx.x)] * x[(int)(blockIdx.x * blockDim.x + threadIdx.x)]);
@@ -30,9 +30,9 @@ extern "C" __global__ void navatala_cfd_exact_mat_vec(const float* x, const int*
     for (int t = 0; t < (int)(len); ++t) {
       int k = (((int)(beg)) + t);
       unsigned int f = faceIdx[k];
-      if ((((int)(f)) < ((int)(counts[2])))) {
+      if (((int)(f)) < ((int)(counts[2]))) {
         int sg = sign[k];
-        if ((sg >= 0)) {
+        if (sg >= 0) {
           int nb = neighbour[((int)(f))];
           s = (s + (upper[((int)(f))] * x[nb]));
         } else {

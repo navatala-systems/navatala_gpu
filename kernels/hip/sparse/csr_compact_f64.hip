@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_csr_compact_f64(const unsigned int* r
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int rs = ((int)(rowPtr[gid]));
     int re = ((int)(rowPtr[(gid + 1)]));
     int newRs = ((int)(newRowPtr[gid]));
@@ -26,7 +26,7 @@ extern "C" __global__ void navatala_sparse_csr_compact_f64(const unsigned int* r
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       unsigned int keep = keepMask[k];
-      if ((keep == 1u)) {
+      if (keep == 1u) {
         int tgt = (newRs + pos);
         unsigned int c = colIdx[k];
         double v = values[k];

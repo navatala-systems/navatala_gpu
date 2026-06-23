@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_cfd_sum_mag_off_diag(const float* upper, con
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0]) {
     return;
   } else {
     float sum = __uint_as_float(0x00000000u);
@@ -30,9 +30,9 @@ extern "C" __global__ void navatala_cfd_sum_mag_off_diag(const float* upper, con
     for (int t = 0; t < (int)(len); ++t) {
       int k = (beg + t);
       int f = faceIdx[k];
-      if ((f < counts[1])) {
+      if (f < counts[1]) {
         int sgn = sign[k];
-        if ((sgn > 0)) {
+        if (sgn > 0) {
           float val = upper[f];
           float negVal = (__uint_as_float(0x00000000u) - val);
           float absVal = (((val >= __uint_as_float(0x00000000u))) ? (val) : (negVal));

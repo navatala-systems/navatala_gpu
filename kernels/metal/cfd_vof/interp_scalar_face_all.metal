@@ -17,17 +17,17 @@
 using namespace metal;
 
 kernel void navatala_cfd_vof_interp_scalar_face_all(device const float* alpha [[buffer(0)]], device const int* owner [[buffer(1)]], device const int* nei [[buffer(2)]], device const float* w [[buffer(3)]], device const float* bcAlphaF [[buffer(4)]], device const uint* params [[buffer(5)]], device float* alphaF [[buffer(6)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) >= ((int)(params[0])))) {
+  if (int(__gid.x) >= ((int)(params[0]))) {
     return;
   } else {
-    if ((int(__gid.x) < ((int)(params[1])))) {
+    if (int(__gid.x) < ((int)(params[1]))) {
       int o = owner[int(__gid.x)];
       int n = nei[int(__gid.x)];
       float wf = w[int(__gid.x)];
       float wc = (wf * ((float)((wf > as_type<float>(0x00000000u)))));
       float a = ((wc * alpha[o]) + ((as_type<float>(0x3f800000u) - wc) * alpha[n]));
       float ac = (a * ((float)((a > as_type<float>(0x00000000u)))));
-      if ((ac > as_type<float>(0x3f800000u))) {
+      if (ac > as_type<float>(0x3f800000u)) {
         alphaF[int(__gid.x)] = as_type<float>(0x3f800000u);
       } else {
         alphaF[int(__gid.x)] = ac;
@@ -35,7 +35,7 @@ kernel void navatala_cfd_vof_interp_scalar_face_all(device const float* alpha [[
     } else {
       float a = bcAlphaF[int(__gid.x)];
       float ac = (a * ((float)((a > as_type<float>(0x00000000u)))));
-      if ((ac > as_type<float>(0x3f800000u))) {
+      if (ac > as_type<float>(0x3f800000u)) {
         alphaF[int(__gid.x)] = as_type<float>(0x3f800000u);
       } else {
         alphaF[int(__gid.x)] = ac;

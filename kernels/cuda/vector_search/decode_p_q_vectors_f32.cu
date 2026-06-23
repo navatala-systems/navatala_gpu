@@ -20,7 +20,7 @@ extern "C" __global__ void navatala_vector_search_decode_p_q_vectors_f32(const u
   unsigned int nv = n_vectors[0];
   unsigned int sd = sub_dim[0];
   unsigned int total = (nv * sd);
-  if ((gid < total)) {
+  if (gid < total) {
     unsigned int vid = (gid / sd);
     unsigned int k = (gid % sd);
     unsigned char code = codes[vid];

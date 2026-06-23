@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_cfd_u_correct(device const float* pCell [[buffer(0)]], device const int* owner [[buffer(1)]], device const int* neighbour [[buffer(2)]], device const float* sfX [[buffer(3)]], device const float* sfY [[buffer(4)]], device const float* sfZ [[buffer(5)]], device const float* bcVal [[buffer(6)]], device const int* bcMask [[buffer(7)]], device const int* offsets [[buffer(8)]], device const int* faceIdx [[buffer(9)]], device const float* sign [[buffer(10)]], device const float* vol [[buffer(11)]], device const float* rAU [[buffer(12)]], device const float* ux [[buffer(13)]], device const float* uy [[buffer(14)]], device const float* uz [[buffer(15)]], device const int* counts [[buffer(16)]], device const float* paramsF [[buffer(17)]], device float* outX [[buffer(18)]], device float* outY [[buffer(19)]], device float* outZ [[buffer(20)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((((int)(int(__gid.x))) >= counts[0])) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
     int beg = offsets[((int)(int(__gid.x)))];
@@ -32,11 +32,11 @@ kernel void navatala_cfd_u_correct(device const float* pCell [[buffer(0)]], devi
       int f = faceIdx[k];
       int o = owner[f];
       float pf = pCell[o];
-      if ((f < counts[2])) {
+      if (f < counts[2]) {
         int n = neighbour[f];
         pf = (as_type<float>(0x3f000000u) * (pCell[o] + pCell[n]));
       } else {
-        if ((bcMask[f] != 0)) {
+        if (bcMask[f] != 0) {
           pf = bcVal[f];
         }
       }

@@ -21,7 +21,7 @@ kernel void navatala_sparse_multi_vec_scale_f32(device const float* norms [[buff
   int N = ((int)(n[0]));
   int kVal = ((int)(k[0]));
   int total = (N * kVal);
-  if ((gid < total)) {
+  if (gid < total) {
     int vecIdx = (gid / N);
     float x = X[gid];
     float nrm = norms[vecIdx];

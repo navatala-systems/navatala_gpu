@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_ml_kde_find_mode_f64(const double* densities, const double* queryPoints, const unsigned int* m, double* modeValue, double* modeLocation) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int numPoints = m[0];
     double maxDensity = densities[0];
     double maxLocation = queryPoints[0];

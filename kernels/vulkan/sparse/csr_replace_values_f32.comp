@@ -31,7 +31,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int gid = int(gl_GlobalInvocationID.x);
   int N = int(nnz[0]);
-  if ((gid < N)) {
+  if (gid < N) {
     float v = newValues[gid];
     values[gid] = v;
   }

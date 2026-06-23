@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_sparse_zero_scalar_u32(unsigned int* x) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     x[0] = 0u;
   }
 }

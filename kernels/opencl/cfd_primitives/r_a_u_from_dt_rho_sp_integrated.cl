@@ -18,14 +18,14 @@ __kernel void navatala_cfd_primitives_r_a_u_from_dt_rho_sp_integrated(__global c
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
     return;
   } else {
     float r = rho[((int)((int)(get_global_id(0))))];
     float s = sp[((int)((int)(get_global_id(0))))];
     float v = vol[((int)((int)(get_global_id(0))))];
     float denom = ((r + (paramsF[0] * s)) * v);
-    if ((denom != as_float(0x00000000u))) {
+    if (denom != as_float(0x00000000u)) {
       outRAU[((int)((int)(get_global_id(0))))] = (paramsF[0] / denom);
     } else {
       outRAU[((int)((int)(get_global_id(0))))] = as_float(0x00000000u);

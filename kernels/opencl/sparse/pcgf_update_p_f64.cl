@@ -18,7 +18,7 @@ __kernel void navatala_sparse_pcgf_update_p_f64(__global const double* z, __glob
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double b = beta[0];
     double zi = z[gid];
     double pi = p[gid];

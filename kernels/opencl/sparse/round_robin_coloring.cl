@@ -18,7 +18,7 @@ __kernel void navatala_sparse_round_robin_coloring(__global const uint* rowPtr, 
   int gid = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
   int nC = ((int)(nTargetColors[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     colors[gid] = (gid % nC);
   }
 }

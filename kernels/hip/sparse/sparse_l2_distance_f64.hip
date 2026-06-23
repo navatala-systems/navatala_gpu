@@ -25,7 +25,7 @@ extern "C" __global__ void navatala_sparse_sparse_l2_distance_f64(const double* 
   unsigned int gridSize = ((unsigned int)((int)(gridDim.x * blockDim.x)));
   for (int loopIdx = 0; loopIdx < (int)(nnzVal); ++loopIdx) {
     unsigned int currentIdx = idxAccum;
-    if ((currentIdx < nnzVal)) {
+    if (currentIdx < nnzVal) {
       double aVal = a[currentIdx];
       double bVal = b[currentIdx];
       double diff = (aVal - bVal);
@@ -44,7 +44,7 @@ extern "C" __global__ void navatala_sparse_sparse_l2_distance_f64(const double* 
   unsigned int strideAccum = 128u;
   for (int reductionStep = 0; reductionStep < (int)(8); ++reductionStep) {
     unsigned int currentStride = strideAccum;
-    if ((lidU32 < currentStride)) {
+    if (lidU32 < currentStride) {
       unsigned int otherIdx = (lidU32 + currentStride);
       double myVal = sdata[lidU32];
       double otherVal = sdata[otherIdx];
@@ -55,7 +55,7 @@ extern "C" __global__ void navatala_sparse_sparse_l2_distance_f64(const double* 
     strideAccum = nextStride;
     __syncthreads();
   }
-  if ((lidU32 == 0u)) {
+  if (lidU32 == 0u) {
     double sumSq = sdata[0u];
     double dist = sqrt(sumSq);
     result[0u] = dist;

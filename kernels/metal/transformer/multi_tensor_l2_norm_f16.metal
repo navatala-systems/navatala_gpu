@@ -100,7 +100,7 @@ kernel void navatala_transformer_multi_tensor_l2_norm_f16(device const half* _in
     sumSq[lid] = sumVal_sumSq_1;
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float partialSum = sumSq[0u];
     partialSums[gid] = partialSum;
   }

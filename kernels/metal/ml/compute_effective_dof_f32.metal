@@ -35,7 +35,7 @@ kernel void navatala_ml_compute_effective_dof_f32(device const float* eigenvalue
   uint dof32_reductionStride = 128u;
   for (int dof32_reductionStep = 0; dof32_reductionStep < (int)(8); ++dof32_reductionStep) {
     uint dof32_stride = dof32_reductionStride;
-    if ((lid < dof32_stride)) {
+    if (lid < dof32_stride) {
       float dof32_other = sdata[(lid + dof32_stride)];
       float dof32_mine = sdata[lid];
       float dof32_sum = (dof32_mine + dof32_other);
@@ -46,7 +46,7 @@ kernel void navatala_ml_compute_effective_dof_f32(device const float* eigenvalue
     dof32_reductionStride = dof32_nextStride;
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float dofVal = sdata[0];
     dof[0] = dofVal;
   }

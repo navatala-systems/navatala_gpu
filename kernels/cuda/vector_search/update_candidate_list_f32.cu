@@ -22,14 +22,14 @@ extern "C" __global__ void navatala_vector_search_update_candidate_list_f32(unsi
   unsigned int ef_val = ef[0];
   __shared__ unsigned int merge_ids[512];
   __shared__ float merge_dists[512];
-  if ((tid < n_curr)) {
+  if (tid < n_curr) {
     unsigned int cid = candidates[tid];
     float cdist = distances[tid];
     merge_ids[tid] = cid;
     merge_dists[tid] = cdist;
   }
   __syncthreads();
-  if ((tid < n_new_val)) {
+  if (tid < n_new_val) {
     unsigned int offset = (n_curr + tid);
     unsigned int nid = new_candidates[tid];
     float ndist = new_distances[tid];
@@ -37,7 +37,7 @@ extern "C" __global__ void navatala_vector_search_update_candidate_list_f32(unsi
     merge_dists[offset] = ndist;
   }
   __syncthreads();
-  if ((tid == 0u)) {
+  if (tid == 0u) {
     unsigned int total = (n_curr + n_new_val);
     unsigned int final_n = (((total < ef_val)) ? (total) : (ef_val));
     n_merged[0u] = final_n;

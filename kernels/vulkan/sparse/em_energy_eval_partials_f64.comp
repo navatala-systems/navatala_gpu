@@ -37,7 +37,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int gid = int(gl_GlobalInvocationID.x);
   int N = int(nnzP[0]);
-  if ((gid < N)) {
+  if (gid < N) {
     double ap = APvalues[gid];
     double p = Pvalues[gid];
     numPartials[gid] = (p * ap);

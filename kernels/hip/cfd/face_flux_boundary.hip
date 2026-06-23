@@ -16,7 +16,7 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_cfd_face_flux_boundary(const float* x, const int* owner, const float* cf, const float* bcVal, const unsigned int* bcMask, const unsigned int* params, float* faceFlux) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(params[0])))) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(params[0]))) {
     return;
   } else {
     int gf = (((int)(params[1])) + (int)(blockIdx.x * blockDim.x + threadIdx.x));
@@ -24,17 +24,17 @@ extern "C" __global__ void navatala_cfd_face_flux_boundary(const float* x, const
     float xo = x[o];
     unsigned int m = bcMask[gf];
     int mInt = ((int)(m));
-    if ((mInt == 4)) {
+    if (mInt == 4) {
       faceFlux[gf] = bcVal[gf];
     } else {
       float other = xo;
-      if ((mInt == 1)) {
+      if (mInt == 1) {
         other = bcVal[gf];
       } else {
-        if ((mInt == 3)) {
+        if (mInt == 3) {
           other = bcVal[gf];
         } else {
-          if ((mInt == 2)) {
+          if (mInt == 2) {
             other = __uint_as_float(0x00000000u);
           }
         }

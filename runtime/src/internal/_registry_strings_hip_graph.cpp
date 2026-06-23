@@ -14,7 +14,7 @@ const char* k_hip_navatala_graph_pack_f32 = R"kernel(
 extern "C" __global__ void navatala_graph_pack_f32(const int* indices, const float* src, const int* count, float* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     dst[i] = src[indices[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]];
   }
 }
@@ -25,7 +25,7 @@ const char* k_hip_navatala_graph_pack_f64 = R"kernel(
 extern "C" __global__ void navatala_graph_pack_f64(const int* indices, const double* src, const int* count, double* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     dst[i] = src[indices[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]];
   }
 }
@@ -36,7 +36,7 @@ const char* k_hip_navatala_graph_pack_i32 = R"kernel(
 extern "C" __global__ void navatala_graph_pack_i32(const int* indices, const int* src, const int* count, int* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     dst[i] = src[indices[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]];
   }
 }
@@ -47,7 +47,7 @@ const char* k_hip_navatala_graph_pack_u32 = R"kernel(
 extern "C" __global__ void navatala_graph_pack_u32(const int* indices, const unsigned int* src, const int* count, unsigned int* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     dst[i] = src[indices[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]];
   }
 }
@@ -58,7 +58,7 @@ const char* k_hip_navatala_graph_unpack_f32 = R"kernel(
 extern "C" __global__ void navatala_graph_unpack_f32(const int* indices, const float* src, const int* count, float* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     dst[indices[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]] = src[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
   }
 }
@@ -69,7 +69,7 @@ const char* k_hip_navatala_graph_unpack_f64 = R"kernel(
 extern "C" __global__ void navatala_graph_unpack_f64(const int* indices, const double* src, const int* count, double* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     dst[indices[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]] = src[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
   }
 }
@@ -80,7 +80,7 @@ const char* k_hip_navatala_graph_unpack_i32 = R"kernel(
 extern "C" __global__ void navatala_graph_unpack_i32(const int* indices, const int* src, const int* count, int* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     dst[indices[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]] = src[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
   }
 }
@@ -91,7 +91,7 @@ const char* k_hip_navatala_graph_unpack_u32 = R"kernel(
 extern "C" __global__ void navatala_graph_unpack_u32(const int* indices, const unsigned int* src, const int* count, unsigned int* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     dst[indices[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]] = src[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
   }
 }
@@ -102,7 +102,7 @@ const char* k_hip_navatala_graph_pack_f32x3 = R"kernel(
 extern "C" __global__ void navatala_graph_pack_f32x3(const int* indices, const float* src, const int* count, const int* n, float* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(3); ++c) {
       int dstLin = ((c * count[0]) + i);
       int srcLin = ((c * n[0]) + indices[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]);
@@ -117,7 +117,7 @@ const char* k_hip_navatala_graph_unpack_f32x3 = R"kernel(
 extern "C" __global__ void navatala_graph_unpack_f32x3(const int* indices, const float* src, const int* count, const int* n, float* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(3); ++c) {
       int srcLin = ((c * count[0]) + i);
       int dstLin = ((c * n[0]) + indices[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]);
@@ -132,7 +132,7 @@ const char* k_hip_navatala_graph_pack_f32x6 = R"kernel(
 extern "C" __global__ void navatala_graph_pack_f32x6(const int* indices, const float* src, const int* count, const int* n, float* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(6); ++c) {
       int dstLin = ((c * count[0]) + i);
       int srcLin = ((c * n[0]) + indices[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]);
@@ -147,7 +147,7 @@ const char* k_hip_navatala_graph_unpack_f32x6 = R"kernel(
 extern "C" __global__ void navatala_graph_unpack_f32x6(const int* indices, const float* src, const int* count, const int* n, float* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(6); ++c) {
       int srcLin = ((c * count[0]) + i);
       int dstLin = ((c * n[0]) + indices[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]);
@@ -162,7 +162,7 @@ const char* k_hip_navatala_graph_pack_f32x9 = R"kernel(
 extern "C" __global__ void navatala_graph_pack_f32x9(const int* indices, const float* src, const int* count, const int* n, float* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(9); ++c) {
       int dstLin = ((c * count[0]) + i);
       int srcLin = ((c * n[0]) + indices[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]);
@@ -177,7 +177,7 @@ const char* k_hip_navatala_graph_unpack_f32x9 = R"kernel(
 extern "C" __global__ void navatala_graph_unpack_f32x9(const int* indices, const float* src, const int* count, const int* n, float* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(9); ++c) {
       int srcLin = ((c * count[0]) + i);
       int dstLin = ((c * n[0]) + indices[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]);
@@ -192,7 +192,7 @@ const char* k_hip_navatala_graph_pack_f64x3 = R"kernel(
 extern "C" __global__ void navatala_graph_pack_f64x3(const int* indices, const double* src, const int* count, const int* n, double* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(3); ++c) {
       int dstLin = ((c * count[0]) + i);
       int srcLin = ((c * n[0]) + indices[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]);
@@ -207,7 +207,7 @@ const char* k_hip_navatala_graph_unpack_f64x3 = R"kernel(
 extern "C" __global__ void navatala_graph_unpack_f64x3(const int* indices, const double* src, const int* count, const int* n, double* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(3); ++c) {
       int srcLin = ((c * count[0]) + i);
       int dstLin = ((c * n[0]) + indices[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]);
@@ -222,7 +222,7 @@ const char* k_hip_navatala_graph_pack_f64x6 = R"kernel(
 extern "C" __global__ void navatala_graph_pack_f64x6(const int* indices, const double* src, const int* count, const int* n, double* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(6); ++c) {
       int dstLin = ((c * count[0]) + i);
       int srcLin = ((c * n[0]) + indices[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]);
@@ -237,7 +237,7 @@ const char* k_hip_navatala_graph_unpack_f64x6 = R"kernel(
 extern "C" __global__ void navatala_graph_unpack_f64x6(const int* indices, const double* src, const int* count, const int* n, double* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(6); ++c) {
       int srcLin = ((c * count[0]) + i);
       int dstLin = ((c * n[0]) + indices[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]);
@@ -252,7 +252,7 @@ const char* k_hip_navatala_graph_pack_f64x9 = R"kernel(
 extern "C" __global__ void navatala_graph_pack_f64x9(const int* indices, const double* src, const int* count, const int* n, double* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(9); ++c) {
       int dstLin = ((c * count[0]) + i);
       int srcLin = ((c * n[0]) + indices[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]);
@@ -267,7 +267,7 @@ const char* k_hip_navatala_graph_unpack_f64x9 = R"kernel(
 extern "C" __global__ void navatala_graph_unpack_f64x9(const int* indices, const double* src, const int* count, const int* n, double* dst) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int i = ((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((i < count[0])) {
+  if (i < count[0]) {
     for (int c = 0; c < (int)(9); ++c) {
       int srcLin = ((c * count[0]) + i);
       int dstLin = ((c * n[0]) + indices[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]);
@@ -283,7 +283,7 @@ extern "C" __global__ void navatala_graph_degree_out_u32(const unsigned int* off
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     unsigned int hi = offsets[(gid + 1u)];
     unsigned int lo = offsets[gid];
     unsigned int deg = (hi - lo);
@@ -298,7 +298,7 @@ extern "C" __global__ void navatala_graph_degree_in_u32(const unsigned int* offs
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     unsigned int hi = offsets[(gid + 1u)];
     unsigned int lo = offsets[gid];
     unsigned int deg = (hi - lo);
@@ -313,7 +313,7 @@ extern "C" __global__ void navatala_graph_spmv_weighted_f32(const unsigned int* 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     unsigned int base = offsets[gid];
     unsigned int endv = offsets[(gid + 1u)];
     unsigned int rowlen = (endv - base);
@@ -346,7 +346,7 @@ extern "C" __global__ void navatala_graph_spmv_weighted_subgroup_f32(const unsig
   unsigned int subgroupSize = ((unsigned int)((int)(warpSize)));
   unsigned int row = (gid / subgroupSize);
   unsigned int numV = numVertices[0];
-  if ((row < numV)) {
+  if (row < numV) {
     unsigned int base = offsets[row];
     unsigned int endv = offsets[(row + 1u)];
     unsigned int rowlen = (endv - base);
@@ -354,7 +354,7 @@ extern "C" __global__ void navatala_graph_spmv_weighted_subgroup_f32(const unsig
     float laneAcc = __uint_as_float(0x00000000u);
     for (int k = 0; k < (int)(rowIters); ++k) {
       unsigned int rel = ((((unsigned int)(k)) * subgroupSize) + lane);
-      if ((rel < rowlen)) {
+      if (rel < rowlen) {
         unsigned int eidx = (base + rel);
         unsigned int col = indices[eidx];
         float w = weights[eidx];
@@ -363,7 +363,7 @@ extern "C" __global__ void navatala_graph_spmv_weighted_subgroup_f32(const unsig
       }
     }
     float rowSum = gpu_warp_reduce_sum(laneAcc);
-    if ((lane == 0u)) {
+    if (lane == 0u) {
       y[row] = rowSum;
     }
   }
@@ -376,7 +376,7 @@ extern "C" __global__ void navatala_graph_spmv_unweighted_f32(const unsigned int
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     unsigned int base = offsets[gid];
     unsigned int endv = offsets[(gid + 1u)];
     unsigned int rowlen = (endv - base);
@@ -408,7 +408,7 @@ extern "C" __global__ void navatala_graph_spmv_unweighted_subgroup_f32(const uns
   unsigned int subgroupSize = ((unsigned int)((int)(warpSize)));
   unsigned int row = (gid / subgroupSize);
   unsigned int numV = numVertices[0];
-  if ((row < numV)) {
+  if (row < numV) {
     unsigned int base = offsets[row];
     unsigned int endv = offsets[(row + 1u)];
     unsigned int rowlen = (endv - base);
@@ -416,7 +416,7 @@ extern "C" __global__ void navatala_graph_spmv_unweighted_subgroup_f32(const uns
     float laneAcc = __uint_as_float(0x00000000u);
     for (int k = 0; k < (int)(rowIters); ++k) {
       unsigned int rel = ((((unsigned int)(k)) * subgroupSize) + lane);
-      if ((rel < rowlen)) {
+      if (rel < rowlen) {
         unsigned int eidx = (base + rel);
         unsigned int col = indices[eidx];
         float xv = x[col];
@@ -424,7 +424,7 @@ extern "C" __global__ void navatala_graph_spmv_unweighted_subgroup_f32(const uns
       }
     }
     float rowSum = gpu_warp_reduce_sum(laneAcc);
-    if ((lane == 0u)) {
+    if (lane == 0u) {
       y[row] = rowSum;
     }
   }
@@ -437,7 +437,7 @@ extern "C" __global__ void navatala_graph_axpy2_f32(const float* x, const float*
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float alphaV = alpha[0];
     float betaV = beta[0];
     float xv = x[gid];
@@ -454,7 +454,7 @@ extern "C" __global__ void navatala_graph_scale_f32(const float* x, const float*
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float alphaV = alpha[0];
     float xv = x[gid];
     y[gid] = (alphaV * xv);
@@ -468,7 +468,7 @@ extern "C" __global__ void navatala_graph_scale_add_bias_f32(const float* x, con
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float alphaV = alpha[0];
     float biasV = bias[0];
     float xv = x[gid];
@@ -488,7 +488,7 @@ extern "C" __global__ void navatala_graph_l1norm_f32(const float* _input, const 
   float gsAcc = __uint_as_float(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       float val = abs(_input[idx]);
       gsAcc = (gsAcc + val);
     }
@@ -498,7 +498,7 @@ extern "C" __global__ void navatala_graph_l1norm_f32(const float* _input, const 
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -509,7 +509,7 @@ extern "C" __global__ void navatala_graph_l1norm_f32(const float* _input, const 
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0] = sdata[0];
   }
 }
@@ -520,9 +520,9 @@ const char* k_hip_navatala_graph_recip_f32 = R"kernel(
 extern "C" __global__ void navatala_graph_recip_f32(const float* x, float* y) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     float xv = x[0];
-    if ((xv == __uint_as_float(0x00000000u))) {
+    if (xv == __uint_as_float(0x00000000u)) {
       y[0] = __uint_as_float(0x00000000u);
     } else {
       y[0] = (__uint_as_float(0x3f800000u) / xv);
@@ -542,7 +542,7 @@ extern "C" __global__ void navatala_graph_l1_diff_f32(const float* a, const floa
   float gsAcc = __uint_as_float(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       float av = a[idx];
       float bv = b[idx];
       float d = abs((av - bv));
@@ -554,7 +554,7 @@ extern "C" __global__ void navatala_graph_l1_diff_f32(const float* a, const floa
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -565,7 +565,7 @@ extern "C" __global__ void navatala_graph_l1_diff_f32(const float* a, const floa
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0] = sdata[0];
   }
 }
@@ -582,7 +582,7 @@ extern "C" __global__ void navatala_graph_count_diff_u32(const unsigned int* a, 
   float gsAcc = __uint_as_float(0x00000000u);
   for (int it = 0; it < (int)(numIters); ++it) {
     unsigned int idx = (lid + (((unsigned int)(it)) * 256u));
-    if ((idx < countVal)) {
+    if (idx < countVal) {
       unsigned int av = a[idx];
       unsigned int bv = b[idx];
       float diff = (((av == bv)) ? (__uint_as_float(0x00000000u)) : (__uint_as_float(0x3f800000u)));
@@ -594,7 +594,7 @@ extern "C" __global__ void navatala_graph_count_diff_u32(const unsigned int* a, 
   unsigned int redStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = redStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -605,7 +605,7 @@ extern "C" __global__ void navatala_graph_count_diff_u32(const unsigned int* a, 
     redStride = nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     result[0] = sdata[0];
   }
 }
@@ -617,7 +617,7 @@ extern "C" __global__ void navatala_graph_copy_f32(const float* x, const unsigne
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xv = x[gid];
     y[gid] = xv;
   }
@@ -630,7 +630,7 @@ extern "C" __global__ void navatala_graph_copy_u32(const unsigned int* x, const 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     unsigned int xv = x[gid];
     y[gid] = xv;
   }
@@ -643,7 +643,7 @@ extern "C" __global__ void navatala_graph_relax_vertex_pull_f32(const unsigned i
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     unsigned int base = inOffsets[gid];
     unsigned int endv = inOffsets[(gid + 1u)];
     unsigned int deg = (endv - base);
@@ -654,7 +654,7 @@ extern "C" __global__ void navatala_graph_relax_vertex_pull_f32(const unsigned i
       unsigned int u = inSrcs[eidx];
       float w = inWeights[eidx];
       float du = dist[u];
-      if ((du < infV)) {
+      if (du < infV) {
         float cand = (du + w);
         float cur = best;
         best = (((cand < cur)) ? (cand) : (cur));
@@ -671,7 +671,7 @@ extern "C" __global__ void navatala_graph_label_propagate_edges_u32(const unsign
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int numE = numEdges[0];
-  if ((gid < numE)) {
+  if (gid < numE) {
     unsigned int u = srcs[gid];
     unsigned int v = dsts[gid];
     unsigned int lu = labels[u];
@@ -688,7 +688,7 @@ extern "C" __global__ void navatala_graph_symmetrize_reverse_u32(const unsigned 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int numE = numEdges[0];
-  if ((gid < numE)) {
+  if (gid < numE) {
     unsigned int u = srcs[gid];
     unsigned int v = dsts[gid];
     outSrcs[gid] = v;
@@ -703,7 +703,7 @@ extern "C" __global__ void navatala_graph_apply_renumber_u32(const unsigned int*
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     newIds[gid] = mapping[gid];
   }
 }
@@ -715,10 +715,10 @@ extern "C" __global__ void navatala_graph_peel_below_threshold_u32(unsigned int*
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     unsigned int deg = degrees[gid];
     unsigned int k = threshold[0];
-    if ((deg < k)) {
+    if (deg < k) {
       _active[gid] = 0u;
     }
   }
@@ -731,7 +731,7 @@ extern "C" __global__ void navatala_graph_pair_intersection_u32(const unsigned i
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int numP = numPairs[0];
-  if ((gid < numP)) {
+  if (gid < numP) {
     unsigned int a = pairsA[gid];
     unsigned int b = pairsB[gid];
     unsigned int baseU = offsets[a];
@@ -750,7 +750,7 @@ extern "C" __global__ void navatala_graph_pair_intersection_u32(const unsigned i
       for (int _bs = 0; _bs < (int)(32u); ++_bs) {
         unsigned int lo = loAccum;
         unsigned int hi = hiAccum;
-        if ((lo < hi)) {
+        if (lo < hi) {
           unsigned int mid = ((lo + hi) / 2u);
           unsigned int midval = indices[mid];
           bool goRight = (midval < w);
@@ -761,9 +761,9 @@ extern "C" __global__ void navatala_graph_pair_intersection_u32(const unsigned i
         }
       }
       unsigned int lb = loAccum;
-      if ((lb < endV)) {
+      if (lb < endV) {
         unsigned int cand = indices[lb];
-        if ((cand == w)) {
+        if (cand == w) {
           interAccum = (interAccum + 1u);
         }
       }
@@ -779,7 +779,7 @@ extern "C" __global__ void navatala_graph_jaccard_f32(const unsigned int* inter,
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int numP = numPairs[0];
-  if ((gid < numP)) {
+  if (gid < numP) {
     unsigned int a = pairsA[gid];
     unsigned int b = pairsB[gid];
     unsigned int iU = inter[gid];
@@ -799,7 +799,7 @@ extern "C" __global__ void navatala_graph_overlap_f32(const unsigned int* inter,
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int numP = numPairs[0];
-  if ((gid < numP)) {
+  if (gid < numP) {
     unsigned int a = pairsA[gid];
     unsigned int b = pairsB[gid];
     unsigned int iU = inter[gid];
@@ -819,7 +819,7 @@ extern "C" __global__ void navatala_graph_sorensen_f32(const unsigned int* inter
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int numP = numPairs[0];
-  if ((gid < numP)) {
+  if (gid < numP) {
     unsigned int a = pairsA[gid];
     unsigned int b = pairsB[gid];
     unsigned int iU = inter[gid];
@@ -839,7 +839,7 @@ extern "C" __global__ void navatala_graph_cosine_f32(const unsigned int* inter, 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int numP = numPairs[0];
-  if ((gid < numP)) {
+  if (gid < numP) {
     unsigned int a = pairsA[gid];
     unsigned int b = pairsB[gid];
     unsigned int iU = inter[gid];
@@ -859,7 +859,7 @@ extern "C" __global__ void navatala_graph_uniform_random_walk_u32(const unsigned
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int numW = numWalks[0];
-  if ((gid < numW)) {
+  if (gid < numW) {
     unsigned int maxL = maxLen[0];
     unsigned int seedV = seed[0];
     unsigned int rowBase = (gid * maxL);
@@ -875,7 +875,7 @@ extern "C" __global__ void navatala_graph_uniform_random_walk_u32(const unsigned
       unsigned int rng = rngAccum;
       unsigned int rngNext = ((rng * 1103515245u) + 12345u);
       rngAccum = rngNext;
-      if ((deg > 0u)) {
+      if (deg > 0u) {
         unsigned int pick = (rngNext % deg);
         unsigned int nbr = indices[(off + pick)];
         curAccum = nbr;
@@ -891,7 +891,7 @@ extern "C" __global__ void navatala_graph_out_degree_u32(const unsigned int* off
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     unsigned int hi = offsets[(gid + 1u)];
     unsigned int lo = offsets[gid];
     unsigned int deg = (hi - lo);
@@ -906,7 +906,7 @@ extern "C" __global__ void navatala_graph_in_degree_u32(const unsigned int* offs
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int numV = numVertices[0];
-  if ((gid < numV)) {
+  if (gid < numV) {
     unsigned int hi = offsets[(gid + 1u)];
     unsigned int lo = offsets[gid];
     unsigned int deg = (hi - lo);
@@ -1011,7 +1011,7 @@ extern "C" __global__ void navatala_graph_compute_degree_matrix_f32(const float*
     unsigned int degF32RedStride = 128u;
     for (int degF32RedStep = 0; degF32RedStep < (int)(8); ++degF32RedStep) {
       unsigned int degF32Stride = degF32RedStride;
-      if ((lid < degF32Stride)) {
+      if (lid < degF32Stride) {
         float other = sdata[(lid + degF32Stride)];
         float mine = sdata[lid];
         float sum = (mine + other);
@@ -1022,7 +1022,7 @@ extern "C" __global__ void navatala_graph_compute_degree_matrix_f32(const float*
       degF32RedStride = degF32NextStride;
       __syncthreads();
     }
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       float degreeVal = sdata[0];
       D[rowIdx] = degreeVal;
     }
@@ -1054,7 +1054,7 @@ extern "C" __global__ void navatala_graph_compute_degree_matrix_f64(const double
     unsigned int degF64RedStride = 128u;
     for (int degF64RedStep = 0; degF64RedStep < (int)(8); ++degF64RedStep) {
       unsigned int degF64Stride = degF64RedStride;
-      if ((lid < degF64Stride)) {
+      if (lid < degF64Stride) {
         double other = sdata[(lid + degF64Stride)];
         double mine = sdata[lid];
         double sum = (mine + other);
@@ -1065,7 +1065,7 @@ extern "C" __global__ void navatala_graph_compute_degree_matrix_f64(const double
       degF64RedStride = degF64NextStride;
       __syncthreads();
     }
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       double degreeVal = sdata[0];
       D[rowIdx] = degreeVal;
     }
@@ -1229,7 +1229,7 @@ extern "C" __global__ void navatala_graph_normalize_eigenvector_rows_f32(const f
     unsigned int normF32RedStride = 128u;
     for (int normF32RedStep = 0; normF32RedStep < (int)(8); ++normF32RedStep) {
       unsigned int normF32Stride = normF32RedStride;
-      if ((lid < normF32Stride)) {
+      if (lid < normF32Stride) {
         float other = sdata[(lid + normF32Stride)];
         float mine = sdata[lid];
         float sum = (mine + other);
@@ -1240,7 +1240,7 @@ extern "C" __global__ void navatala_graph_normalize_eigenvector_rows_f32(const f
       normF32RedStride = normF32NextStride;
       __syncthreads();
     }
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       float sumSq = sdata[0];
       float normVal = sqrt(sumSq);
       sdata[0] = normVal;
@@ -1288,7 +1288,7 @@ extern "C" __global__ void navatala_graph_normalize_eigenvector_rows_f64(const d
     unsigned int normF64RedStride = 128u;
     for (int normF64RedStep = 0; normF64RedStep < (int)(8); ++normF64RedStep) {
       unsigned int normF64Stride = normF64RedStride;
-      if ((lid < normF64Stride)) {
+      if (lid < normF64Stride) {
         double other = sdata[(lid + normF64Stride)];
         double mine = sdata[lid];
         double sum = (mine + other);
@@ -1299,7 +1299,7 @@ extern "C" __global__ void navatala_graph_normalize_eigenvector_rows_f64(const d
       normF64RedStride = normF64NextStride;
       __syncthreads();
     }
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       double sumSq = sdata[0];
       double normVal = sqrt(sumSq);
       sdata[0] = normVal;

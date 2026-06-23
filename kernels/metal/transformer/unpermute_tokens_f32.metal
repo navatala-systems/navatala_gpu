@@ -29,7 +29,7 @@ kernel void navatala_transformer_unpermute_tokens_f32(device const float* permut
     if (origValid) {
       for (int hIter = 0; hIter < (int)(hs); ++hIter) {
         uint hIdx = (lid + (256u * hIter));
-        if ((hIdx < hs)) {
+        if (hIdx < hs) {
           uint srcIdx = ((permutedIdx * hs) + hIdx);
           uint dstIdx = ((origIdx * hs) + hIdx);
           float val = permutedStates[srcIdx];

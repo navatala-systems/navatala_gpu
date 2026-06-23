@@ -21,7 +21,7 @@ extern "C" __global__ void navatala_vector_search_normalize_p_q_codebook_f32(con
   unsigned int sd = sub_dim[0];
   unsigned int total = (nc * sd);
   float scale = __uint_as_float(0x47800000u);
-  if ((tid < total)) {
+  if (tid < total) {
     unsigned int cw = (tid / sd);
     unsigned int count_u32 = codebook_counts[cw];
     int sum_i32 = codebook_sums_i32[tid];

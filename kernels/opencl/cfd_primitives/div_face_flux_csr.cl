@@ -15,7 +15,7 @@
 
 __kernel void navatala_cfd_primitives_div_face_flux_csr(__global const int* offsets, __global const int* faceIdx, __global const float* sign, __global const float* faceFlux, __global const float* vol, __global const int* params, __global float* outDiv) {
   int gid0 = (int)get_global_id(0);
-  if ((((int)((int)(get_global_id(0)))) >= params[0])) {
+  if (((int)((int)(get_global_id(0)))) >= params[0]) {
     return;
   } else {
     int beg = offsets[((int)((int)(get_global_id(0))))];

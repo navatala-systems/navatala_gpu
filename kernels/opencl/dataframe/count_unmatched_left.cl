@@ -24,7 +24,7 @@ __kernel void navatala_dataframe_count_unmatched_left(__global const uint* leftM
     uint word = leftMatched[wordIdx];
     uint bit = ((word >> bitIdx) & (uint)(1u));
     bool isMatched = (bit == (uint)(1u));
-    if ((isMatched == false)) {
+    if (isMatched == false) {
       atomic_add(&unmatchedCount[(uint)(0u)], (uint)(1u));
     }
   }

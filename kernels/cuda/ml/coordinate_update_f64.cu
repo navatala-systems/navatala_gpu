@@ -41,7 +41,7 @@ extern "C" __global__ void navatala_ml_coordinate_update_f64(const double* X, co
   unsigned int cu64RedStride = 128u;
   for (int cu64RedStep = 0; cu64RedStep < (int)(8); ++cu64RedStep) {
     unsigned int cu64RedStrideVal = cu64RedStride;
-    if ((lid < cu64RedStrideVal)) {
+    if (lid < cu64RedStrideVal) {
       double otherDot = sdataDot[(lid + cu64RedStrideVal)];
       double mineDot = sdataDot[lid];
       double sumDot = (mineDot + otherDot);
@@ -56,7 +56,7 @@ extern "C" __global__ void navatala_ml_coordinate_update_f64(const double* X, co
     cu64RedStride = cu64RedNextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double totalDot = sdataDot[0];
     double totalNorm = sdataNorm[0];
     double rho = (totalDot / totalNorm);

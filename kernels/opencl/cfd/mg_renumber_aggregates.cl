@@ -18,10 +18,10 @@ __kernel void navatala_cfd_mg_renumber_aggregates(__global int* aggMap, __global
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
     return;
   } else {
-    if ((aggMap[(int)(get_global_id(0))] == (int)(get_global_id(0)))) {
+    if (aggMap[(int)(get_global_id(0))] == (int)(get_global_id(0))) {
       int oldCount = atomic_fetch_add_explicit((volatile __global atomic_int*)(&(counter[0])), (int)(1), memory_order_relaxed, memory_scope_device);
       aggMap[(int)(get_global_id(0))] = (-(oldCount + 1));
     }

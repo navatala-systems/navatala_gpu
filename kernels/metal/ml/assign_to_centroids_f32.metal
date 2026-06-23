@@ -45,7 +45,7 @@ kernel void navatala_ml_assign_to_centroids_f32(device const float* data [[buffe
       }
       float distSum = distSumAccum;
       float bestDist = bestDistAccum;
-      if ((distSum < bestDist)) {
+      if (distSum < bestDist) {
         bestDistAccum = distSum;
         bestClusterAccum = cU32;
       }

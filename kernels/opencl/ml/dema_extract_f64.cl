@@ -16,7 +16,7 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_ml_dema_extract_f64(__global const double* ema1, __global const double* ema2, __global double* result) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     double e1 = ema1[0];
     double e2 = ema2[0];
     double t2 = (as_double(0x4000000000000000ul) * e1);

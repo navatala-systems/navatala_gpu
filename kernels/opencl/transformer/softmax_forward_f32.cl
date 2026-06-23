@@ -186,7 +186,7 @@ __kernel void navatala_transformer_softmax_forward_f32(__global const float* _in
   }
   barrier(CLK_LOCAL_MEM_FENCE);
   float sumExp = sumBuf[(uint)(0u)];
-  if ((batchValid && seqValid)) {
+  if (batchValid && seqValid) {
     float result = (expVal / sumExp);
     _output[globalIdx] = result;
   }

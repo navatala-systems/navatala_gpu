@@ -21,7 +21,7 @@ __kernel void navatala_linalg_roll_rows_f32(__global const float* A, __global co
   uint mVal = m[(uint)(0u)];
   uint nVal = n[(uint)(0u)];
   uint totalElems = (mVal * nVal);
-  if ((idx < totalElems)) {
+  if (idx < totalElems) {
     uint row = (idx / nVal);
     uint col = (idx % nVal);
     uint kMod = (kVal % mVal);

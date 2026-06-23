@@ -27,9 +27,9 @@ layout(std430, binding = 1) writeonly buffer buf_y {
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   uint gid = uint(int(gl_GlobalInvocationID.x));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     float xv = x[0];
-    if ((xv == uintBitsToFloat(0x00000000u))) {
+    if (xv == uintBitsToFloat(0x00000000u)) {
       y[0] = uintBitsToFloat(0x00000000u);
     } else {
       y[0] = (uintBitsToFloat(0x3f800000u) / xv);

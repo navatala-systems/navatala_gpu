@@ -44,29 +44,29 @@ layout(std430, binding = 7) writeonly buffer buf_outAlphaPhi {
 // kernel: navatala_cfd_vof_alpha_phi_int
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(int(gl_GlobalInvocationID.x)) >= faceParams[0])) {
+  if (int(int(gl_GlobalInvocationID.x)) >= faceParams[0]) {
     return;
   } else {
     float ph = phi[int(int(gl_GlobalInvocationID.x))];
     int o = owner[int(int(gl_GlobalInvocationID.x))];
     int n = nei[int(int(gl_GlobalInvocationID.x))];
     float a = uintBitsToFloat(0x00000000u);
-    if ((ph >= uintBitsToFloat(0x00000000u))) {
+    if (ph >= uintBitsToFloat(0x00000000u)) {
       a = alpha[o];
     } else {
       a = alpha[n];
     }
-    if ((a < uintBitsToFloat(0x00000000u))) {
+    if (a < uintBitsToFloat(0x00000000u)) {
       a = uintBitsToFloat(0x00000000u);
     }
-    if ((a > uintBitsToFloat(0x3f800000u))) {
+    if (a > uintBitsToFloat(0x3f800000u)) {
       a = uintBitsToFloat(0x3f800000u);
     }
     float ac = alphaF[int(int(gl_GlobalInvocationID.x))];
-    if ((ac < uintBitsToFloat(0x00000000u))) {
+    if (ac < uintBitsToFloat(0x00000000u)) {
       ac = uintBitsToFloat(0x00000000u);
     }
-    if ((ac > uintBitsToFloat(0x3f800000u))) {
+    if (ac > uintBitsToFloat(0x3f800000u)) {
       ac = uintBitsToFloat(0x3f800000u);
     }
     float oneMinus = (uintBitsToFloat(0x3f800000u) - ac);

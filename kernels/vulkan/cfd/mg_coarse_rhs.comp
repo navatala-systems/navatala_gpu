@@ -32,7 +32,7 @@ layout(std430, binding = 3) readonly buffer buf_mgCounts {
 // kernel: navatala_cfd_mg_coarse_rhs
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) >= int(mgCounts[1]))) {
+  if (int(gl_GlobalInvocationID.x) >= int(mgCounts[1])) {
     return;
   } else {
     r[int(gl_GlobalInvocationID.x)] = (b[int(gl_GlobalInvocationID.x)] - ax[int(gl_GlobalInvocationID.x)]);

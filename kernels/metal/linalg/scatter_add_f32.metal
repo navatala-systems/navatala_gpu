@@ -34,7 +34,7 @@ kernel void navatala_linalg_scatter_add_f32(device const float* src [[buffer(0)]
   uint gid = ((uint)(int(__gid.x)));
   uint tid = gid;
   uint n = count[0u];
-  if ((tid < n)) {
+  if (tid < n) {
     uint dstIdx = indices[tid];
     float val = src[tid];
     atomic_fetch_add_explicit((device atomic_float*)(&A[dstIdx]), val, memory_order_relaxed);

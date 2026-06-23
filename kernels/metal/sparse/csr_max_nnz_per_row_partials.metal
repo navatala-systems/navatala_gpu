@@ -19,7 +19,7 @@ using namespace metal;
 kernel void navatala_sparse_csr_max_nnz_per_row_partials(device const uint* nnzPerRow [[buffer(0)]], device const uint* nRows [[buffer(1)]], device uint* partials [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int gid = int(__gid.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     partials[gid] = nnzPerRow[gid];
   } else {
     partials[gid] = 0u;

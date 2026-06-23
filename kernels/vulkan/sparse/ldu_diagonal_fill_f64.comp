@@ -37,7 +37,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int row = int(gl_GlobalInvocationID.x);
   int N = int(nCells[0]);
-  if ((row < N)) {
+  if (row < N) {
     int rEnd = int(rowPtr[(row + 1)]);
     int dPos = (rEnd - 1);
     colInd[dPos] = uint(row);

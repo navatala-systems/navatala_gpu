@@ -17,7 +17,7 @@
 using namespace metal;
 
 kernel void navatala_dataframe_init_welford_state_f32(device uint* count [[buffer(0)]], device float* mean [[buffer(1)]], device float* M2 [[buffer(2)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if ((int(__gid.x) == 0)) {
+  if (int(__gid.x) == 0) {
     count[0] = 0u;
     mean[0] = as_type<float>(0x00000000u);
     M2[0] = as_type<float>(0x00000000u);

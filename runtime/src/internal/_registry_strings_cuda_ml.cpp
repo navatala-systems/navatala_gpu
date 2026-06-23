@@ -13,7 +13,7 @@ const char* k_cuda_navatala_ml_init_ema_f32 = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_ml_init_ema_f32(const float* alphaIn, float* ema, float* alpha, unsigned int* count) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float a = alphaIn[0];
     ema[0] = __uint_as_float(0x00000000u);
     alpha[0] = a;
@@ -26,7 +26,7 @@ const char* k_cuda_navatala_ml_init_ema_f64 = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_ml_init_ema_f64(const double* alphaIn, double* ema, double* alpha, unsigned int* count) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double a = alphaIn[0];
     ema[0] = __longlong_as_double(0x0000000000000000ull);
     alpha[0] = a;
@@ -39,7 +39,7 @@ const char* k_cuda_navatala_ml_init_ema_from_span_f32 = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_ml_init_ema_from_span_f32(const float* span, float* ema, float* alpha, unsigned int* count) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float s = span[0];
     float spanPlus1 = (s + __uint_as_float(0x3f800000u));
     float a = (__uint_as_float(0x40000000u) / spanPlus1);
@@ -54,7 +54,7 @@ const char* k_cuda_navatala_ml_init_ema_from_span_f64 = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_ml_init_ema_from_span_f64(const double* span, double* ema, double* alpha, unsigned int* count) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double s = span[0];
     double spanPlus1 = (s + __longlong_as_double(0x3ff0000000000000ull));
     double a = (__longlong_as_double(0x4000000000000000ull) / spanPlus1);
@@ -69,7 +69,7 @@ const char* k_cuda_navatala_ml_ema_update_f32 = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_ml_ema_update_f32(const float* x, const float* alpha, float* ema, unsigned int* count) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float xVal = x[0];
     float a = alpha[0];
     float oldEma = ema[0];
@@ -90,7 +90,7 @@ const char* k_cuda_navatala_ml_ema_update_f64 = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_ml_ema_update_f64(const double* x, const double* alpha, double* ema, unsigned int* count) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double xVal = x[0];
     double a = alpha[0];
     double oldEma = ema[0];
@@ -111,7 +111,7 @@ const char* k_cuda_navatala_ml_ema_extract_f32 = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_ml_ema_extract_f32(const float* ema, float* result) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float v = ema[0];
     result[0] = v;
   }
@@ -122,7 +122,7 @@ const char* k_cuda_navatala_ml_ema_extract_f64 = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_ml_ema_extract_f64(const double* ema, double* result) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double v = ema[0];
     result[0] = v;
   }
@@ -133,7 +133,7 @@ const char* k_cuda_navatala_ml_ema_reset_f32 = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_ml_ema_reset_f32(float* ema, unsigned int* count) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     ema[0] = __uint_as_float(0x00000000u);
     count[0] = 0u;
   }
@@ -144,7 +144,7 @@ const char* k_cuda_navatala_ml_ema_reset_f64 = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_ml_ema_reset_f64(double* ema, unsigned int* count) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     ema[0] = __longlong_as_double(0x0000000000000000ull);
     count[0] = 0u;
   }
@@ -155,7 +155,7 @@ const char* k_cuda_navatala_ml_init_dema_f32 = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_ml_init_dema_f32(const float* alphaIn, float* ema1, float* ema2, float* alpha, unsigned int* count) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float a = alphaIn[0];
     ema1[0] = __uint_as_float(0x00000000u);
     ema2[0] = __uint_as_float(0x00000000u);
@@ -169,7 +169,7 @@ const char* k_cuda_navatala_ml_init_dema_f64 = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_ml_init_dema_f64(const double* alphaIn, double* ema1, double* ema2, double* alpha, unsigned int* count) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double a = alphaIn[0];
     ema1[0] = __longlong_as_double(0x0000000000000000ull);
     ema2[0] = __longlong_as_double(0x0000000000000000ull);
@@ -183,7 +183,7 @@ const char* k_cuda_navatala_ml_dema_update_f32 = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_ml_dema_update_f32(const float* x, const float* alpha, float* ema1, float* ema2, unsigned int* count) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float xVal = x[0];
     float a = alpha[0];
     float old1 = ema1[0];
@@ -210,7 +210,7 @@ const char* k_cuda_navatala_ml_dema_update_f64 = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_ml_dema_update_f64(const double* x, const double* alpha, double* ema1, double* ema2, unsigned int* count) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double xVal = x[0];
     double a = alpha[0];
     double old1 = ema1[0];
@@ -237,7 +237,7 @@ const char* k_cuda_navatala_ml_dema_extract_f32 = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_ml_dema_extract_f32(const float* ema1, const float* ema2, float* result) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float e1 = ema1[0];
     float e2 = ema2[0];
     float t2 = (__uint_as_float(0x40000000u) * e1);
@@ -251,7 +251,7 @@ const char* k_cuda_navatala_ml_dema_extract_f64 = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_ml_dema_extract_f64(const double* ema1, const double* ema2, double* result) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     double e1 = ema1[0];
     double e2 = ema2[0];
     double t2 = (__longlong_as_double(0x4000000000000000ull) * e1);
@@ -267,7 +267,7 @@ extern "C" __global__ void navatala_ml_maxpool_f32(const float* _input, const un
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     unsigned int windowVal = window[0];
     unsigned int strideVal = stride[0];
     unsigned int inCountVal = inCount[0];
@@ -275,7 +275,7 @@ extern "C" __global__ void navatala_ml_maxpool_f32(const float* _input, const un
     float acc = __uint_as_float(0xff7fc99eu);
     for (int w = 0; w < (int)(windowVal); ++w) {
       unsigned int idx = (base + ((unsigned int)(w)));
-      if ((idx < inCountVal)) {
+      if (idx < inCountVal) {
         float v = _input[idx];
         acc = (((acc > v)) ? (acc) : (v));
       }
@@ -291,7 +291,7 @@ extern "C" __global__ void navatala_ml_avgpool_exclude_pad_f32(const float* _inp
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     unsigned int windowVal = window[0];
     unsigned int strideVal = stride[0];
     unsigned int inCountVal = inCount[0];
@@ -300,7 +300,7 @@ extern "C" __global__ void navatala_ml_avgpool_exclude_pad_f32(const float* _inp
     float cnt = __uint_as_float(0x00000000u);
     for (int w = 0; w < (int)(windowVal); ++w) {
       unsigned int idx = (base + ((unsigned int)(w)));
-      if ((idx < inCountVal)) {
+      if (idx < inCountVal) {
         float v = _input[idx];
         sum = (sum + v);
         cnt = (cnt + __uint_as_float(0x3f800000u));
@@ -317,7 +317,7 @@ extern "C" __global__ void navatala_ml_avgpool_include_pad_f32(const float* _inp
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     unsigned int windowVal = window[0];
     unsigned int strideVal = stride[0];
     unsigned int inCountVal = inCount[0];
@@ -326,7 +326,7 @@ extern "C" __global__ void navatala_ml_avgpool_include_pad_f32(const float* _inp
     float cnt = __uint_as_float(0x00000000u);
     for (int w = 0; w < (int)(windowVal); ++w) {
       unsigned int idx = (base + ((unsigned int)(w)));
-      if ((idx < inCountVal)) {
+      if (idx < inCountVal) {
         float v = _input[idx];
         sum = (sum + v);
         cnt = (cnt + __uint_as_float(0x3f800000u));
@@ -343,7 +343,7 @@ extern "C" __global__ void navatala_ml_resize_nearest_f32(const float* _input, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int outSizeVal = outSize[0];
-  if ((gid < outSizeVal)) {
+  if (gid < outSizeVal) {
     unsigned int inSizeVal = inSize[0];
     unsigned int idx = ((gid * inSizeVal) / outSizeVal);
     float v = _input[idx];
@@ -358,7 +358,7 @@ extern "C" __global__ void navatala_ml_resize_bilinear_f32(const float* _input, 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int outSizeVal = outSize[0];
-  if ((gid < outSizeVal)) {
+  if (gid < outSizeVal) {
     unsigned int inSizeVal = inSize[0];
     unsigned int inM1 = (inSizeVal - 1u);
     unsigned int outM1 = (outSizeVal - 1u);
@@ -383,7 +383,7 @@ extern "C" __global__ void navatala_ml_maxpool_f16(const __half* _input, const u
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     unsigned int windowVal = window[0];
     unsigned int strideVal = stride[0];
     unsigned int inCountVal = inCount[0];
@@ -391,7 +391,7 @@ extern "C" __global__ void navatala_ml_maxpool_f16(const __half* _input, const u
     float acc = __uint_as_float(0xff7fc99eu);
     for (int w = 0; w < (int)(windowVal); ++w) {
       unsigned int idx = (base + ((unsigned int)(w)));
-      if ((idx < inCountVal)) {
+      if (idx < inCountVal) {
         float v = ((float)(_input[idx]));
         acc = (((acc > v)) ? (acc) : (v));
       }
@@ -408,7 +408,7 @@ extern "C" __global__ void navatala_ml_avgpool_exclude_pad_f16(const __half* _in
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     unsigned int windowVal = window[0];
     unsigned int strideVal = stride[0];
     unsigned int inCountVal = inCount[0];
@@ -417,7 +417,7 @@ extern "C" __global__ void navatala_ml_avgpool_exclude_pad_f16(const __half* _in
     float cnt = __uint_as_float(0x00000000u);
     for (int w = 0; w < (int)(windowVal); ++w) {
       unsigned int idx = (base + ((unsigned int)(w)));
-      if ((idx < inCountVal)) {
+      if (idx < inCountVal) {
         float v = ((float)(_input[idx]));
         sum = (sum + v);
         cnt = (cnt + __uint_as_float(0x3f800000u));
@@ -435,7 +435,7 @@ extern "C" __global__ void navatala_ml_avgpool_include_pad_f16(const __half* _in
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     unsigned int windowVal = window[0];
     unsigned int strideVal = stride[0];
     unsigned int inCountVal = inCount[0];
@@ -444,7 +444,7 @@ extern "C" __global__ void navatala_ml_avgpool_include_pad_f16(const __half* _in
     float cnt = __uint_as_float(0x00000000u);
     for (int w = 0; w < (int)(windowVal); ++w) {
       unsigned int idx = (base + ((unsigned int)(w)));
-      if ((idx < inCountVal)) {
+      if (idx < inCountVal) {
         float v = ((float)(_input[idx]));
         sum = (sum + v);
         cnt = (cnt + __uint_as_float(0x3f800000u));
@@ -462,7 +462,7 @@ extern "C" __global__ void navatala_ml_resize_nearest_f16(const __half* _input, 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int outSizeVal = outSize[0];
-  if ((gid < outSizeVal)) {
+  if (gid < outSizeVal) {
     unsigned int inSizeVal = inSize[0];
     unsigned int idx = ((gid * inSizeVal) / outSizeVal);
     __half v = _input[idx];
@@ -478,7 +478,7 @@ extern "C" __global__ void navatala_ml_resize_bilinear_f16(const __half* _input,
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int outSizeVal = outSize[0];
-  if ((gid < outSizeVal)) {
+  if (gid < outSizeVal) {
     unsigned int inSizeVal = inSize[0];
     unsigned int inM1 = (inSizeVal - 1u);
     unsigned int outM1 = (outSizeVal - 1u);
@@ -503,7 +503,7 @@ extern "C" __global__ void navatala_ml_maxpool_bf16(const __nv_bfloat16* _input,
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     unsigned int windowVal = window[0];
     unsigned int strideVal = stride[0];
     unsigned int inCountVal = inCount[0];
@@ -511,7 +511,7 @@ extern "C" __global__ void navatala_ml_maxpool_bf16(const __nv_bfloat16* _input,
     float acc = __uint_as_float(0xff7fc99eu);
     for (int w = 0; w < (int)(windowVal); ++w) {
       unsigned int idx = (base + ((unsigned int)(w)));
-      if ((idx < inCountVal)) {
+      if (idx < inCountVal) {
         float v = ((float)(_input[idx]));
         acc = (((acc > v)) ? (acc) : (v));
       }
@@ -528,7 +528,7 @@ extern "C" __global__ void navatala_ml_avgpool_exclude_pad_bf16(const __nv_bfloa
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     unsigned int windowVal = window[0];
     unsigned int strideVal = stride[0];
     unsigned int inCountVal = inCount[0];
@@ -537,7 +537,7 @@ extern "C" __global__ void navatala_ml_avgpool_exclude_pad_bf16(const __nv_bfloa
     float cnt = __uint_as_float(0x00000000u);
     for (int w = 0; w < (int)(windowVal); ++w) {
       unsigned int idx = (base + ((unsigned int)(w)));
-      if ((idx < inCountVal)) {
+      if (idx < inCountVal) {
         float v = ((float)(_input[idx]));
         sum = (sum + v);
         cnt = (cnt + __uint_as_float(0x3f800000u));
@@ -555,7 +555,7 @@ extern "C" __global__ void navatala_ml_avgpool_include_pad_bf16(const __nv_bfloa
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     unsigned int windowVal = window[0];
     unsigned int strideVal = stride[0];
     unsigned int inCountVal = inCount[0];
@@ -564,7 +564,7 @@ extern "C" __global__ void navatala_ml_avgpool_include_pad_bf16(const __nv_bfloa
     float cnt = __uint_as_float(0x00000000u);
     for (int w = 0; w < (int)(windowVal); ++w) {
       unsigned int idx = (base + ((unsigned int)(w)));
-      if ((idx < inCountVal)) {
+      if (idx < inCountVal) {
         float v = ((float)(_input[idx]));
         sum = (sum + v);
         cnt = (cnt + __uint_as_float(0x3f800000u));
@@ -582,7 +582,7 @@ extern "C" __global__ void navatala_ml_resize_nearest_bf16(const __nv_bfloat16* 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int outSizeVal = outSize[0];
-  if ((gid < outSizeVal)) {
+  if (gid < outSizeVal) {
     unsigned int inSizeVal = inSize[0];
     unsigned int idx = ((gid * inSizeVal) / outSizeVal);
     __nv_bfloat16 v = _input[idx];
@@ -598,7 +598,7 @@ extern "C" __global__ void navatala_ml_resize_bilinear_bf16(const __nv_bfloat16*
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int outSizeVal = outSize[0];
-  if ((gid < outSizeVal)) {
+  if (gid < outSizeVal) {
     unsigned int inSizeVal = inSize[0];
     unsigned int inM1 = (inSizeVal - 1u);
     unsigned int outM1 = (outSizeVal - 1u);
@@ -622,7 +622,7 @@ extern "C" __global__ void navatala_ml_reshape_f32(const float* _input, const un
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float v = _input[gid];
     _output[gid] = v;
   }
@@ -635,7 +635,7 @@ extern "C" __global__ void navatala_ml_slice_f32(const float* _input, const unsi
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     unsigned int offsetVal = offset[0];
     unsigned int srcIdx = (offsetVal + gid);
     float v = _input[srcIdx];
@@ -650,7 +650,7 @@ extern "C" __global__ void navatala_ml_transpose_f32(const float* _input, const 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     unsigned int ncolsVal = ncols[0];
     unsigned int nrowsVal = nrows[0];
     unsigned int r = (gid / ncolsVal);
@@ -668,15 +668,15 @@ extern "C" __global__ void navatala_ml_concatenate2_f32(const float* a, const fl
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     unsigned int nAVal = nA[0];
-    if ((gid < nAVal)) {
+    if (gid < nAVal) {
       float v = a[gid];
       _output[gid] = v;
     } else {
       unsigned int srcIdx = (gid - nAVal);
       unsigned int nBVal = nB[0];
-      if ((srcIdx < nBVal)) {
+      if (srcIdx < nBVal) {
         float v = b[srcIdx];
         _output[gid] = v;
       }
@@ -692,7 +692,7 @@ extern "C" __global__ void navatala_ml_reshape_f16(const __half* _input, const u
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __half v = _input[gid];
     _output[gid] = v;
   }
@@ -706,7 +706,7 @@ extern "C" __global__ void navatala_ml_slice_f16(const __half* _input, const uns
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     unsigned int offsetVal = offset[0];
     unsigned int srcIdx = (offsetVal + gid);
     __half v = _input[srcIdx];
@@ -722,7 +722,7 @@ extern "C" __global__ void navatala_ml_transpose_f16(const __half* _input, const
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     unsigned int ncolsVal = ncols[0];
     unsigned int nrowsVal = nrows[0];
     unsigned int r = (gid / ncolsVal);
@@ -741,15 +741,15 @@ extern "C" __global__ void navatala_ml_concatenate2_f16(const __half* a, const _
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     unsigned int nAVal = nA[0];
-    if ((gid < nAVal)) {
+    if (gid < nAVal) {
       __half v = a[gid];
       _output[gid] = v;
     } else {
       unsigned int srcIdx = (gid - nAVal);
       unsigned int nBVal = nB[0];
-      if ((srcIdx < nBVal)) {
+      if (srcIdx < nBVal) {
         __half v = b[srcIdx];
         _output[gid] = v;
       }
@@ -765,7 +765,7 @@ extern "C" __global__ void navatala_ml_reshape_bf16(const __nv_bfloat16* _input,
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 v = _input[gid];
     _output[gid] = v;
   }
@@ -779,7 +779,7 @@ extern "C" __global__ void navatala_ml_slice_bf16(const __nv_bfloat16* _input, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int outCountVal = outCount[0];
-  if ((gid < outCountVal)) {
+  if (gid < outCountVal) {
     unsigned int offsetVal = offset[0];
     unsigned int srcIdx = (offsetVal + gid);
     __nv_bfloat16 v = _input[srcIdx];
@@ -795,7 +795,7 @@ extern "C" __global__ void navatala_ml_transpose_bf16(const __nv_bfloat16* _inpu
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     unsigned int ncolsVal = ncols[0];
     unsigned int nrowsVal = nrows[0];
     unsigned int r = (gid / ncolsVal);
@@ -814,15 +814,15 @@ extern "C" __global__ void navatala_ml_concatenate2_bf16(const __nv_bfloat16* a,
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     unsigned int nAVal = nA[0];
-    if ((gid < nAVal)) {
+    if (gid < nAVal) {
       __nv_bfloat16 v = a[gid];
       _output[gid] = v;
     } else {
       unsigned int srcIdx = (gid - nAVal);
       unsigned int nBVal = nB[0];
-      if ((srcIdx < nBVal)) {
+      if (srcIdx < nBVal) {
         __nv_bfloat16 v = b[srcIdx];
         _output[gid] = v;
       }
@@ -842,7 +842,7 @@ extern "C" __global__ void navatala_ml_softmax_f32(const float* _input, const un
   float gsMax = __uint_as_float(0xff7fc99eu);
   for (int itA = 0; itA < (int)(numIters); ++itA) {
     unsigned int idxA = (lid + (((unsigned int)(itA)) * 256u));
-    if ((idxA < countVal)) {
+    if (idxA < countVal) {
       float xA = _input[idxA];
       gsMax = (((gsMax > xA)) ? (gsMax) : (xA));
     }
@@ -852,7 +852,7 @@ extern "C" __global__ void navatala_ml_softmax_f32(const float* _input, const un
   unsigned int maxStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = maxStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (((mine > other)) ? (mine) : (other));
@@ -868,7 +868,7 @@ extern "C" __global__ void navatala_ml_softmax_f32(const float* _input, const un
   float gsSum = __uint_as_float(0x00000000u);
   for (int itB = 0; itB < (int)(numIters); ++itB) {
     unsigned int idxB = (lid + (((unsigned int)(itB)) * 256u));
-    if ((idxB < countVal)) {
+    if (idxB < countVal) {
       float eB = exp((_input[idxB] - maxVal));
       gsSum = (gsSum + eB);
     }
@@ -878,7 +878,7 @@ extern "C" __global__ void navatala_ml_softmax_f32(const float* _input, const un
   unsigned int sumStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = sumStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -892,7 +892,7 @@ extern "C" __global__ void navatala_ml_softmax_f32(const float* _input, const un
   float sumVal = sdata[0];
   for (int itC = 0; itC < (int)(numIters); ++itC) {
     unsigned int idxC = (lid + (((unsigned int)(itC)) * 256u));
-    if ((idxC < countVal)) {
+    if (idxC < countVal) {
       float eC = exp((_input[idxC] - maxVal));
       _output[idxC] = (eC / sumVal);
     }
@@ -912,7 +912,7 @@ extern "C" __global__ void navatala_ml_softmax_f16(const __half* _input, const u
   float gsMax = __uint_as_float(0xff7fc99eu);
   for (int itA = 0; itA < (int)(numIters); ++itA) {
     unsigned int idxA = (lid + (((unsigned int)(itA)) * 256u));
-    if ((idxA < countVal)) {
+    if (idxA < countVal) {
       float xA = ((float)(_input[idxA]));
       gsMax = (((gsMax > xA)) ? (gsMax) : (xA));
     }
@@ -922,7 +922,7 @@ extern "C" __global__ void navatala_ml_softmax_f16(const __half* _input, const u
   unsigned int maxStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = maxStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (((mine > other)) ? (mine) : (other));
@@ -938,7 +938,7 @@ extern "C" __global__ void navatala_ml_softmax_f16(const __half* _input, const u
   float gsSum = __uint_as_float(0x00000000u);
   for (int itB = 0; itB < (int)(numIters); ++itB) {
     unsigned int idxB = (lid + (((unsigned int)(itB)) * 256u));
-    if ((idxB < countVal)) {
+    if (idxB < countVal) {
       float eB = exp((((float)(_input[idxB])) - maxVal));
       gsSum = (gsSum + eB);
     }
@@ -948,7 +948,7 @@ extern "C" __global__ void navatala_ml_softmax_f16(const __half* _input, const u
   unsigned int sumStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = sumStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -962,7 +962,7 @@ extern "C" __global__ void navatala_ml_softmax_f16(const __half* _input, const u
   float sumVal = sdata[0];
   for (int itC = 0; itC < (int)(numIters); ++itC) {
     unsigned int idxC = (lid + (((unsigned int)(itC)) * 256u));
-    if ((idxC < countVal)) {
+    if (idxC < countVal) {
       float eC = exp((((float)(_input[idxC])) - maxVal));
       _output[idxC] = ((__half)((eC / sumVal)));
     }
@@ -982,7 +982,7 @@ extern "C" __global__ void navatala_ml_softmax_bf16(const __nv_bfloat16* _input,
   float gsMax = __uint_as_float(0xff7fc99eu);
   for (int itA = 0; itA < (int)(numIters); ++itA) {
     unsigned int idxA = (lid + (((unsigned int)(itA)) * 256u));
-    if ((idxA < countVal)) {
+    if (idxA < countVal) {
       float xA = ((float)(_input[idxA]));
       gsMax = (((gsMax > xA)) ? (gsMax) : (xA));
     }
@@ -992,7 +992,7 @@ extern "C" __global__ void navatala_ml_softmax_bf16(const __nv_bfloat16* _input,
   unsigned int maxStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = maxStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (((mine > other)) ? (mine) : (other));
@@ -1008,7 +1008,7 @@ extern "C" __global__ void navatala_ml_softmax_bf16(const __nv_bfloat16* _input,
   float gsSum = __uint_as_float(0x00000000u);
   for (int itB = 0; itB < (int)(numIters); ++itB) {
     unsigned int idxB = (lid + (((unsigned int)(itB)) * 256u));
-    if ((idxB < countVal)) {
+    if (idxB < countVal) {
       float eB = exp((((float)(_input[idxB])) - maxVal));
       gsSum = (gsSum + eB);
     }
@@ -1018,7 +1018,7 @@ extern "C" __global__ void navatala_ml_softmax_bf16(const __nv_bfloat16* _input,
   unsigned int sumStride = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = sumStride;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1032,7 +1032,7 @@ extern "C" __global__ void navatala_ml_softmax_bf16(const __nv_bfloat16* _input,
   float sumVal = sdata[0];
   for (int itC = 0; itC < (int)(numIters); ++itC) {
     unsigned int idxC = (lid + (((unsigned int)(itC)) * 256u));
-    if ((idxC < countVal)) {
+    if (idxC < countVal) {
       float eC = exp((((float)(_input[idxC])) - maxVal));
       _output[idxC] = ((__nv_bfloat16)((eC / sumVal)));
     }
@@ -1052,7 +1052,7 @@ extern "C" __global__ void navatala_ml_layernorm_f32(const float* x, const float
   float epsVal = eps[0];
   float gsM = __uint_as_float(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((unsigned int)(itM)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itM)) * 256u)) < countVal) {
       gsM = (gsM + x[(lid + (((unsigned int)(itM)) * 256u))]);
     }
   }
@@ -1061,7 +1061,7 @@ extern "C" __global__ void navatala_ml_layernorm_f32(const float* x, const float
   unsigned int meanStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1076,7 +1076,7 @@ extern "C" __global__ void navatala_ml_layernorm_f32(const float* x, const float
   __syncthreads();
   float gsV = __uint_as_float(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((unsigned int)(itV)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itV)) * 256u)) < countVal) {
       gsV = (gsV + ((x[(lid + (((unsigned int)(itV)) * 256u))] - mean) * (x[(lid + (((unsigned int)(itV)) * 256u))] - mean)));
     }
   }
@@ -1085,7 +1085,7 @@ extern "C" __global__ void navatala_ml_layernorm_f32(const float* x, const float
   unsigned int varStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1100,7 +1100,7 @@ extern "C" __global__ void navatala_ml_layernorm_f32(const float* x, const float
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
     unsigned int idxW = (lid + (((unsigned int)(itW)) * 256u));
-    if ((idxW < countVal)) {
+    if (idxW < countVal) {
       float xnW = ((x[idxW] - mean) / denom);
       float outF = ((gamma[idxW] * xnW) + beta[idxW]);
       _output[idxW] = outF;
@@ -1127,7 +1127,7 @@ extern "C" __global__ void navatala_ml_spatial_batchnorm_f32(const float* x, con
   float epsVal = eps[0];
   float gsM = __uint_as_float(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((unsigned int)(itM)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itM)) * 256u)) < countVal) {
       gsM = (gsM + x[(((((lid + (((unsigned int)(itM)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((unsigned int)(itM)) * 256u)) % HWv))]);
     }
   }
@@ -1136,7 +1136,7 @@ extern "C" __global__ void navatala_ml_spatial_batchnorm_f32(const float* x, con
   unsigned int meanStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1151,7 +1151,7 @@ extern "C" __global__ void navatala_ml_spatial_batchnorm_f32(const float* x, con
   __syncthreads();
   float gsV = __uint_as_float(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((unsigned int)(itV)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itV)) * 256u)) < countVal) {
       gsV = (gsV + ((x[(((((lid + (((unsigned int)(itV)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((unsigned int)(itV)) * 256u)) % HWv))] - mean) * (x[(((((lid + (((unsigned int)(itV)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((unsigned int)(itV)) * 256u)) % HWv))] - mean)));
     }
   }
@@ -1160,7 +1160,7 @@ extern "C" __global__ void navatala_ml_spatial_batchnorm_f32(const float* x, con
   unsigned int varStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1174,7 +1174,7 @@ extern "C" __global__ void navatala_ml_spatial_batchnorm_f32(const float* x, con
   float var = (sdata[0] / n);
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
-    if (((lid + (((unsigned int)(itW)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itW)) * 256u)) < countVal) {
       float gv = gamma[grp];
       float bv = beta[grp];
       float xv = x[(((((lid + (((unsigned int)(itW)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((unsigned int)(itW)) * 256u)) % HWv))];
@@ -1202,7 +1202,7 @@ extern "C" __global__ void navatala_ml_instancenorm_f32(const float* x, const fl
   float epsVal = eps[0];
   float gsM = __uint_as_float(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((unsigned int)(itM)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itM)) * 256u)) < countVal) {
       gsM = (gsM + x[(base + (lid + (((unsigned int)(itM)) * 256u)))]);
     }
   }
@@ -1211,7 +1211,7 @@ extern "C" __global__ void navatala_ml_instancenorm_f32(const float* x, const fl
   unsigned int meanStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1226,7 +1226,7 @@ extern "C" __global__ void navatala_ml_instancenorm_f32(const float* x, const fl
   __syncthreads();
   float gsV = __uint_as_float(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((unsigned int)(itV)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itV)) * 256u)) < countVal) {
       gsV = (gsV + ((x[(base + (lid + (((unsigned int)(itV)) * 256u)))] - mean) * (x[(base + (lid + (((unsigned int)(itV)) * 256u)))] - mean)));
     }
   }
@@ -1235,7 +1235,7 @@ extern "C" __global__ void navatala_ml_instancenorm_f32(const float* x, const fl
   unsigned int varStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1249,7 +1249,7 @@ extern "C" __global__ void navatala_ml_instancenorm_f32(const float* x, const fl
   float var = (sdata[0] / n);
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
-    if (((lid + (((unsigned int)(itW)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itW)) * 256u)) < countVal) {
       float gv = gamma[chan];
       float bv = beta[chan];
       float xv = x[(base + (lid + (((unsigned int)(itW)) * 256u)))];
@@ -1266,7 +1266,7 @@ extern "C" __global__ void navatala_ml_batchnorm_inference_f32(const float* x, c
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float epsVal = eps[0];
     float d = (x[gid] - mean[gid]);
     float denom = sqrt((var[gid] + epsVal));
@@ -1289,7 +1289,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_f32(const float* x, co
   float epsVal = eps[0];
   float gM = __uint_as_float(0x00000000u);
   for (int itm = 0; itm < (int)(numIters); ++itm) {
-    if (((lid + (((unsigned int)(itm)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itm)) * 256u)) < countVal) {
       gM = (gM + x[(lid + (((unsigned int)(itm)) * 256u))]);
     }
   }
@@ -1298,7 +1298,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_f32(const float* x, co
   unsigned int mStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = mStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1313,7 +1313,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_f32(const float* x, co
   __syncthreads();
   float gV = __uint_as_float(0x00000000u);
   for (int itv = 0; itv < (int)(numIters); ++itv) {
-    if (((lid + (((unsigned int)(itv)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itv)) * 256u)) < countVal) {
       gV = (gV + ((x[(lid + (((unsigned int)(itv)) * 256u))] - mean) * (x[(lid + (((unsigned int)(itv)) * 256u))] - mean)));
     }
   }
@@ -1322,7 +1322,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_f32(const float* x, co
   unsigned int vStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = vStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1338,7 +1338,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_f32(const float* x, co
   __syncthreads();
   float g1 = __uint_as_float(0x00000000u);
   for (int it1 = 0; it1 < (int)(numIters); ++it1) {
-    if (((lid + (((unsigned int)(it1)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(it1)) * 256u)) < countVal) {
       g1 = (g1 + (dy[(lid + (((unsigned int)(it1)) * 256u))] * gamma[(lid + (((unsigned int)(it1)) * 256u))]));
     }
   }
@@ -1347,7 +1347,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_f32(const float* x, co
   unsigned int s1Str = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = s1Str;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1362,7 +1362,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_f32(const float* x, co
   __syncthreads();
   float g2 = __uint_as_float(0x00000000u);
   for (int it2 = 0; it2 < (int)(numIters); ++it2) {
-    if (((lid + (((unsigned int)(it2)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(it2)) * 256u)) < countVal) {
       g2 = (g2 + ((dy[(lid + (((unsigned int)(it2)) * 256u))] * gamma[(lid + (((unsigned int)(it2)) * 256u))]) * ((x[(lid + (((unsigned int)(it2)) * 256u))] - mean) / std)));
     }
   }
@@ -1371,7 +1371,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_f32(const float* x, co
   unsigned int s2Str = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = s2Str;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1385,7 +1385,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_f32(const float* x, co
   float m2 = (sdata[0] / n);
   for (int itw = 0; itw < (int)(numIters); ++itw) {
     unsigned int idw = (lid + (((unsigned int)(itw)) * 256u));
-    if ((idw < countVal)) {
+    if (idw < countVal) {
       float xhatw = ((x[idw] - mean) / std);
       float dyvw = dy[idw];
       float dxhw = (dyvw * gamma[idw]);
@@ -1411,7 +1411,7 @@ extern "C" __global__ void navatala_ml_layernorm_f16(const __half* x, const __ha
   float epsVal = eps[0];
   float gsM = __uint_as_float(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((unsigned int)(itM)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itM)) * 256u)) < countVal) {
       gsM = (gsM + ((float)(x[(lid + (((unsigned int)(itM)) * 256u))])));
     }
   }
@@ -1420,7 +1420,7 @@ extern "C" __global__ void navatala_ml_layernorm_f16(const __half* x, const __ha
   unsigned int meanStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1435,7 +1435,7 @@ extern "C" __global__ void navatala_ml_layernorm_f16(const __half* x, const __ha
   __syncthreads();
   float gsV = __uint_as_float(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((unsigned int)(itV)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itV)) * 256u)) < countVal) {
       gsV = (gsV + ((((float)(x[(lid + (((unsigned int)(itV)) * 256u))])) - mean) * (((float)(x[(lid + (((unsigned int)(itV)) * 256u))])) - mean)));
     }
   }
@@ -1444,7 +1444,7 @@ extern "C" __global__ void navatala_ml_layernorm_f16(const __half* x, const __ha
   unsigned int varStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1459,7 +1459,7 @@ extern "C" __global__ void navatala_ml_layernorm_f16(const __half* x, const __ha
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
     unsigned int idxW = (lid + (((unsigned int)(itW)) * 256u));
-    if ((idxW < countVal)) {
+    if (idxW < countVal) {
       float xnW = ((((float)(x[idxW])) - mean) / denom);
       float outF = ((((float)(gamma[idxW])) * xnW) + ((float)(beta[idxW])));
       _output[idxW] = ((__half)(outF));
@@ -1487,7 +1487,7 @@ extern "C" __global__ void navatala_ml_spatial_batchnorm_f16(const __half* x, co
   float epsVal = eps[0];
   float gsM = __uint_as_float(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((unsigned int)(itM)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itM)) * 256u)) < countVal) {
       gsM = (gsM + ((float)(x[(((((lid + (((unsigned int)(itM)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((unsigned int)(itM)) * 256u)) % HWv))])));
     }
   }
@@ -1496,7 +1496,7 @@ extern "C" __global__ void navatala_ml_spatial_batchnorm_f16(const __half* x, co
   unsigned int meanStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1511,7 +1511,7 @@ extern "C" __global__ void navatala_ml_spatial_batchnorm_f16(const __half* x, co
   __syncthreads();
   float gsV = __uint_as_float(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((unsigned int)(itV)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itV)) * 256u)) < countVal) {
       gsV = (gsV + ((((float)(x[(((((lid + (((unsigned int)(itV)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((unsigned int)(itV)) * 256u)) % HWv))])) - mean) * (((float)(x[(((((lid + (((unsigned int)(itV)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((unsigned int)(itV)) * 256u)) % HWv))])) - mean)));
     }
   }
@@ -1520,7 +1520,7 @@ extern "C" __global__ void navatala_ml_spatial_batchnorm_f16(const __half* x, co
   unsigned int varStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1534,7 +1534,7 @@ extern "C" __global__ void navatala_ml_spatial_batchnorm_f16(const __half* x, co
   float var = (sdata[0] / n);
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
-    if (((lid + (((unsigned int)(itW)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itW)) * 256u)) < countVal) {
       float gv = ((float)(gamma[grp]));
       float bv = ((float)(beta[grp]));
       float xv = ((float)(x[(((((lid + (((unsigned int)(itW)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((unsigned int)(itW)) * 256u)) % HWv))]));
@@ -1563,7 +1563,7 @@ extern "C" __global__ void navatala_ml_instancenorm_f16(const __half* x, const _
   float epsVal = eps[0];
   float gsM = __uint_as_float(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((unsigned int)(itM)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itM)) * 256u)) < countVal) {
       gsM = (gsM + ((float)(x[(base + (lid + (((unsigned int)(itM)) * 256u)))])));
     }
   }
@@ -1572,7 +1572,7 @@ extern "C" __global__ void navatala_ml_instancenorm_f16(const __half* x, const _
   unsigned int meanStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1587,7 +1587,7 @@ extern "C" __global__ void navatala_ml_instancenorm_f16(const __half* x, const _
   __syncthreads();
   float gsV = __uint_as_float(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((unsigned int)(itV)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itV)) * 256u)) < countVal) {
       gsV = (gsV + ((((float)(x[(base + (lid + (((unsigned int)(itV)) * 256u)))])) - mean) * (((float)(x[(base + (lid + (((unsigned int)(itV)) * 256u)))])) - mean)));
     }
   }
@@ -1596,7 +1596,7 @@ extern "C" __global__ void navatala_ml_instancenorm_f16(const __half* x, const _
   unsigned int varStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1610,7 +1610,7 @@ extern "C" __global__ void navatala_ml_instancenorm_f16(const __half* x, const _
   float var = (sdata[0] / n);
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
-    if (((lid + (((unsigned int)(itW)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itW)) * 256u)) < countVal) {
       float gv = ((float)(gamma[chan]));
       float bv = ((float)(beta[chan]));
       float xv = ((float)(x[(base + (lid + (((unsigned int)(itW)) * 256u)))]));
@@ -1628,7 +1628,7 @@ extern "C" __global__ void navatala_ml_batchnorm_inference_f16(const __half* x, 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float epsVal = eps[0];
     float d = (((float)(x[gid])) - ((float)(mean[gid])));
     float denom = sqrt((((float)(var[gid])) + epsVal));
@@ -1652,7 +1652,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_f16(const __half* x, c
   float epsVal = eps[0];
   float gM = __uint_as_float(0x00000000u);
   for (int itm = 0; itm < (int)(numIters); ++itm) {
-    if (((lid + (((unsigned int)(itm)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itm)) * 256u)) < countVal) {
       gM = (gM + ((float)(x[(lid + (((unsigned int)(itm)) * 256u))])));
     }
   }
@@ -1661,7 +1661,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_f16(const __half* x, c
   unsigned int mStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = mStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1676,7 +1676,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_f16(const __half* x, c
   __syncthreads();
   float gV = __uint_as_float(0x00000000u);
   for (int itv = 0; itv < (int)(numIters); ++itv) {
-    if (((lid + (((unsigned int)(itv)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itv)) * 256u)) < countVal) {
       gV = (gV + ((((float)(x[(lid + (((unsigned int)(itv)) * 256u))])) - mean) * (((float)(x[(lid + (((unsigned int)(itv)) * 256u))])) - mean)));
     }
   }
@@ -1685,7 +1685,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_f16(const __half* x, c
   unsigned int vStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = vStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1701,7 +1701,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_f16(const __half* x, c
   __syncthreads();
   float g1 = __uint_as_float(0x00000000u);
   for (int it1 = 0; it1 < (int)(numIters); ++it1) {
-    if (((lid + (((unsigned int)(it1)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(it1)) * 256u)) < countVal) {
       g1 = (g1 + (((float)(dy[(lid + (((unsigned int)(it1)) * 256u))])) * ((float)(gamma[(lid + (((unsigned int)(it1)) * 256u))]))));
     }
   }
@@ -1710,7 +1710,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_f16(const __half* x, c
   unsigned int s1Str = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = s1Str;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1725,7 +1725,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_f16(const __half* x, c
   __syncthreads();
   float g2 = __uint_as_float(0x00000000u);
   for (int it2 = 0; it2 < (int)(numIters); ++it2) {
-    if (((lid + (((unsigned int)(it2)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(it2)) * 256u)) < countVal) {
       g2 = (g2 + ((((float)(dy[(lid + (((unsigned int)(it2)) * 256u))])) * ((float)(gamma[(lid + (((unsigned int)(it2)) * 256u))]))) * ((((float)(x[(lid + (((unsigned int)(it2)) * 256u))])) - mean) / std)));
     }
   }
@@ -1734,7 +1734,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_f16(const __half* x, c
   unsigned int s2Str = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = s2Str;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1748,7 +1748,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_f16(const __half* x, c
   float m2 = (sdata[0] / n);
   for (int itw = 0; itw < (int)(numIters); ++itw) {
     unsigned int idw = (lid + (((unsigned int)(itw)) * 256u));
-    if ((idw < countVal)) {
+    if (idw < countVal) {
       float xhatw = ((((float)(x[idw])) - mean) / std);
       float dyvw = ((float)(dy[idw]));
       float dxhw = (dyvw * ((float)(gamma[idw])));
@@ -1774,7 +1774,7 @@ extern "C" __global__ void navatala_ml_layernorm_bf16(const __nv_bfloat16* x, co
   float epsVal = eps[0];
   float gsM = __uint_as_float(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((unsigned int)(itM)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itM)) * 256u)) < countVal) {
       gsM = (gsM + ((float)(x[(lid + (((unsigned int)(itM)) * 256u))])));
     }
   }
@@ -1783,7 +1783,7 @@ extern "C" __global__ void navatala_ml_layernorm_bf16(const __nv_bfloat16* x, co
   unsigned int meanStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1798,7 +1798,7 @@ extern "C" __global__ void navatala_ml_layernorm_bf16(const __nv_bfloat16* x, co
   __syncthreads();
   float gsV = __uint_as_float(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((unsigned int)(itV)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itV)) * 256u)) < countVal) {
       gsV = (gsV + ((((float)(x[(lid + (((unsigned int)(itV)) * 256u))])) - mean) * (((float)(x[(lid + (((unsigned int)(itV)) * 256u))])) - mean)));
     }
   }
@@ -1807,7 +1807,7 @@ extern "C" __global__ void navatala_ml_layernorm_bf16(const __nv_bfloat16* x, co
   unsigned int varStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1822,7 +1822,7 @@ extern "C" __global__ void navatala_ml_layernorm_bf16(const __nv_bfloat16* x, co
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
     unsigned int idxW = (lid + (((unsigned int)(itW)) * 256u));
-    if ((idxW < countVal)) {
+    if (idxW < countVal) {
       float xnW = ((((float)(x[idxW])) - mean) / denom);
       float outF = ((((float)(gamma[idxW])) * xnW) + ((float)(beta[idxW])));
       _output[idxW] = ((__nv_bfloat16)(outF));
@@ -1850,7 +1850,7 @@ extern "C" __global__ void navatala_ml_spatial_batchnorm_bf16(const __nv_bfloat1
   float epsVal = eps[0];
   float gsM = __uint_as_float(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((unsigned int)(itM)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itM)) * 256u)) < countVal) {
       gsM = (gsM + ((float)(x[(((((lid + (((unsigned int)(itM)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((unsigned int)(itM)) * 256u)) % HWv))])));
     }
   }
@@ -1859,7 +1859,7 @@ extern "C" __global__ void navatala_ml_spatial_batchnorm_bf16(const __nv_bfloat1
   unsigned int meanStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1874,7 +1874,7 @@ extern "C" __global__ void navatala_ml_spatial_batchnorm_bf16(const __nv_bfloat1
   __syncthreads();
   float gsV = __uint_as_float(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((unsigned int)(itV)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itV)) * 256u)) < countVal) {
       gsV = (gsV + ((((float)(x[(((((lid + (((unsigned int)(itV)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((unsigned int)(itV)) * 256u)) % HWv))])) - mean) * (((float)(x[(((((lid + (((unsigned int)(itV)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((unsigned int)(itV)) * 256u)) % HWv))])) - mean)));
     }
   }
@@ -1883,7 +1883,7 @@ extern "C" __global__ void navatala_ml_spatial_batchnorm_bf16(const __nv_bfloat1
   unsigned int varStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1897,7 +1897,7 @@ extern "C" __global__ void navatala_ml_spatial_batchnorm_bf16(const __nv_bfloat1
   float var = (sdata[0] / n);
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
-    if (((lid + (((unsigned int)(itW)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itW)) * 256u)) < countVal) {
       float gv = ((float)(gamma[grp]));
       float bv = ((float)(beta[grp]));
       float xv = ((float)(x[(((((lid + (((unsigned int)(itW)) * 256u)) / HWv) * CHW) + chBase) + ((lid + (((unsigned int)(itW)) * 256u)) % HWv))]));
@@ -1926,7 +1926,7 @@ extern "C" __global__ void navatala_ml_instancenorm_bf16(const __nv_bfloat16* x,
   float epsVal = eps[0];
   float gsM = __uint_as_float(0x00000000u);
   for (int itM = 0; itM < (int)(numIters); ++itM) {
-    if (((lid + (((unsigned int)(itM)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itM)) * 256u)) < countVal) {
       gsM = (gsM + ((float)(x[(base + (lid + (((unsigned int)(itM)) * 256u)))])));
     }
   }
@@ -1935,7 +1935,7 @@ extern "C" __global__ void navatala_ml_instancenorm_bf16(const __nv_bfloat16* x,
   unsigned int meanStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = meanStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1950,7 +1950,7 @@ extern "C" __global__ void navatala_ml_instancenorm_bf16(const __nv_bfloat16* x,
   __syncthreads();
   float gsV = __uint_as_float(0x00000000u);
   for (int itV = 0; itV < (int)(numIters); ++itV) {
-    if (((lid + (((unsigned int)(itV)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itV)) * 256u)) < countVal) {
       gsV = (gsV + ((((float)(x[(base + (lid + (((unsigned int)(itV)) * 256u)))])) - mean) * (((float)(x[(base + (lid + (((unsigned int)(itV)) * 256u)))])) - mean)));
     }
   }
@@ -1959,7 +1959,7 @@ extern "C" __global__ void navatala_ml_instancenorm_bf16(const __nv_bfloat16* x,
   unsigned int varStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = varStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -1973,7 +1973,7 @@ extern "C" __global__ void navatala_ml_instancenorm_bf16(const __nv_bfloat16* x,
   float var = (sdata[0] / n);
   float denom = sqrt((var + epsVal));
   for (int itW = 0; itW < (int)(numIters); ++itW) {
-    if (((lid + (((unsigned int)(itW)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itW)) * 256u)) < countVal) {
       float gv = ((float)(gamma[chan]));
       float bv = ((float)(beta[chan]));
       float xv = ((float)(x[(base + (lid + (((unsigned int)(itW)) * 256u)))]));
@@ -1991,7 +1991,7 @@ extern "C" __global__ void navatala_ml_batchnorm_inference_bf16(const __nv_bfloa
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float epsVal = eps[0];
     float d = (((float)(x[gid])) - ((float)(mean[gid])));
     float denom = sqrt((((float)(var[gid])) + epsVal));
@@ -2015,7 +2015,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_bf16(const __nv_bfloat
   float epsVal = eps[0];
   float gM = __uint_as_float(0x00000000u);
   for (int itm = 0; itm < (int)(numIters); ++itm) {
-    if (((lid + (((unsigned int)(itm)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itm)) * 256u)) < countVal) {
       gM = (gM + ((float)(x[(lid + (((unsigned int)(itm)) * 256u))])));
     }
   }
@@ -2024,7 +2024,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_bf16(const __nv_bfloat
   unsigned int mStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = mStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -2039,7 +2039,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_bf16(const __nv_bfloat
   __syncthreads();
   float gV = __uint_as_float(0x00000000u);
   for (int itv = 0; itv < (int)(numIters); ++itv) {
-    if (((lid + (((unsigned int)(itv)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(itv)) * 256u)) < countVal) {
       gV = (gV + ((((float)(x[(lid + (((unsigned int)(itv)) * 256u))])) - mean) * (((float)(x[(lid + (((unsigned int)(itv)) * 256u))])) - mean)));
     }
   }
@@ -2048,7 +2048,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_bf16(const __nv_bfloat
   unsigned int vStr = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = vStr;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -2064,7 +2064,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_bf16(const __nv_bfloat
   __syncthreads();
   float g1 = __uint_as_float(0x00000000u);
   for (int it1 = 0; it1 < (int)(numIters); ++it1) {
-    if (((lid + (((unsigned int)(it1)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(it1)) * 256u)) < countVal) {
       g1 = (g1 + (((float)(dy[(lid + (((unsigned int)(it1)) * 256u))])) * ((float)(gamma[(lid + (((unsigned int)(it1)) * 256u))]))));
     }
   }
@@ -2073,7 +2073,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_bf16(const __nv_bfloat
   unsigned int s1Str = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = s1Str;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -2088,7 +2088,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_bf16(const __nv_bfloat
   __syncthreads();
   float g2 = __uint_as_float(0x00000000u);
   for (int it2 = 0; it2 < (int)(numIters); ++it2) {
-    if (((lid + (((unsigned int)(it2)) * 256u)) < countVal)) {
+    if ((lid + (((unsigned int)(it2)) * 256u)) < countVal) {
       g2 = (g2 + ((((float)(dy[(lid + (((unsigned int)(it2)) * 256u))])) * ((float)(gamma[(lid + (((unsigned int)(it2)) * 256u))]))) * ((((float)(x[(lid + (((unsigned int)(it2)) * 256u))])) - mean) / std)));
     }
   }
@@ -2097,7 +2097,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_bf16(const __nv_bfloat
   unsigned int s2Str = 128u;
   for (int redStep = 0; redStep < (int)(8); ++redStep) {
     unsigned int stride = s2Str;
-    if ((lid < stride)) {
+    if (lid < stride) {
       float other = sdata[(lid + stride)];
       float mine = sdata[lid];
       float acc = (mine + other);
@@ -2111,7 +2111,7 @@ extern "C" __global__ void navatala_ml_layernorm_backward_bf16(const __nv_bfloat
   float m2 = (sdata[0] / n);
   for (int itw = 0; itw < (int)(numIters); ++itw) {
     unsigned int idw = (lid + (((unsigned int)(itw)) * 256u));
-    if ((idw < countVal)) {
+    if (idw < countVal) {
       float xhatw = ((((float)(x[idw])) - mean) / std);
       float dyvw = ((float)(dy[idw]));
       float dxhw = (dyvw * ((float)(gamma[idw])));
@@ -2131,7 +2131,7 @@ extern "C" __global__ void navatala_ml_uniform_f32(const unsigned int* count, co
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
   unsigned int seedVal = seed[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     unsigned int uk0 = ((seedVal + (gid * 2654435769u)) + 0u);
     unsigned int uk1 = ((uk0 ^ (uk0 >> 16u)) * 2246822519u);
     unsigned int uk2 = ((uk1 ^ (uk1 >> 13u)) * 3266489917u);
@@ -2150,7 +2150,7 @@ extern "C" __global__ void navatala_ml_bernoulli_f32(const unsigned int* count, 
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
   unsigned int seedVal = seed[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     unsigned int uk0 = ((seedVal + (gid * 2654435769u)) + 0u);
     unsigned int uk1 = ((uk0 ^ (uk0 >> 16u)) * 2246822519u);
     unsigned int uk2 = ((uk1 ^ (uk1 >> 13u)) * 3266489917u);
@@ -2171,7 +2171,7 @@ extern "C" __global__ void navatala_ml_normal_f32(const unsigned int* count, con
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
   unsigned int seedVal = seed[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     unsigned int ak0 = ((seedVal + (gid * 2654435769u)) + 0u);
     unsigned int ak1 = ((ak0 ^ (ak0 >> 16u)) * 2246822519u);
     unsigned int ak2 = ((ak1 ^ (ak1 >> 13u)) * 3266489917u);
@@ -2199,7 +2199,7 @@ extern "C" __global__ void navatala_ml_uniform_f16(const unsigned int* count, co
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
   unsigned int seedVal = seed[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     unsigned int uk0 = ((seedVal + (gid * 2654435769u)) + 0u);
     unsigned int uk1 = ((uk0 ^ (uk0 >> 16u)) * 2246822519u);
     unsigned int uk2 = ((uk1 ^ (uk1 >> 13u)) * 3266489917u);
@@ -2219,7 +2219,7 @@ extern "C" __global__ void navatala_ml_bernoulli_f16(const unsigned int* count, 
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
   unsigned int seedVal = seed[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     unsigned int uk0 = ((seedVal + (gid * 2654435769u)) + 0u);
     unsigned int uk1 = ((uk0 ^ (uk0 >> 16u)) * 2246822519u);
     unsigned int uk2 = ((uk1 ^ (uk1 >> 13u)) * 3266489917u);
@@ -2241,7 +2241,7 @@ extern "C" __global__ void navatala_ml_normal_f16(const unsigned int* count, con
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
   unsigned int seedVal = seed[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     unsigned int ak0 = ((seedVal + (gid * 2654435769u)) + 0u);
     unsigned int ak1 = ((ak0 ^ (ak0 >> 16u)) * 2246822519u);
     unsigned int ak2 = ((ak1 ^ (ak1 >> 13u)) * 3266489917u);
@@ -2269,7 +2269,7 @@ extern "C" __global__ void navatala_ml_uniform_bf16(const unsigned int* count, c
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
   unsigned int seedVal = seed[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     unsigned int uk0 = ((seedVal + (gid * 2654435769u)) + 0u);
     unsigned int uk1 = ((uk0 ^ (uk0 >> 16u)) * 2246822519u);
     unsigned int uk2 = ((uk1 ^ (uk1 >> 13u)) * 3266489917u);
@@ -2289,7 +2289,7 @@ extern "C" __global__ void navatala_ml_bernoulli_bf16(const unsigned int* count,
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
   unsigned int seedVal = seed[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     unsigned int uk0 = ((seedVal + (gid * 2654435769u)) + 0u);
     unsigned int uk1 = ((uk0 ^ (uk0 >> 16u)) * 2246822519u);
     unsigned int uk2 = ((uk1 ^ (uk1 >> 13u)) * 3266489917u);
@@ -2311,7 +2311,7 @@ extern "C" __global__ void navatala_ml_normal_bf16(const unsigned int* count, co
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
   unsigned int seedVal = seed[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     unsigned int ak0 = ((seedVal + (gid * 2654435769u)) + 0u);
     unsigned int ak1 = ((ak0 ^ (ak0 >> 16u)) * 2246822519u);
     unsigned int ak2 = ((ak1 ^ (ak1 >> 13u)) * 3266489917u);
@@ -2336,7 +2336,7 @@ const char* k_cuda_navatala_ml_kde_bandwidth_silverman_f32 = R"kernel(
 extern "C" __global__ void navatala_ml_kde_bandwidth_silverman_f32(const float* stddev, const unsigned int* n, float* bandwidth) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     float sigma = stddev[0];
     unsigned int count = n[0];
     float countF = ((float)(count));
@@ -2354,7 +2354,7 @@ const char* k_cuda_navatala_ml_kde_bandwidth_silverman_f64 = R"kernel(
 extern "C" __global__ void navatala_ml_kde_bandwidth_silverman_f64(const double* stddev, const unsigned int* n, double* bandwidth) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     double sigma = stddev[0];
     unsigned int count = n[0];
     double countF = ((double)(count));
@@ -2372,7 +2372,7 @@ const char* k_cuda_navatala_ml_kde_bandwidth_scott_f32 = R"kernel(
 extern "C" __global__ void navatala_ml_kde_bandwidth_scott_f32(const float* stddev, const unsigned int* n, float* bandwidth) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     float sigma = stddev[0];
     unsigned int count = n[0];
     float countF = ((float)(count));
@@ -2390,7 +2390,7 @@ const char* k_cuda_navatala_ml_kde_bandwidth_scott_f64 = R"kernel(
 extern "C" __global__ void navatala_ml_kde_bandwidth_scott_f64(const double* stddev, const unsigned int* n, double* bandwidth) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     double sigma = stddev[0];
     unsigned int count = n[0];
     double countF = ((double)(count));
@@ -2546,7 +2546,7 @@ const char* k_cuda_navatala_ml_kde_find_mode_f32 = R"kernel(
 extern "C" __global__ void navatala_ml_kde_find_mode_f32(const float* densities, const float* queryPoints, const unsigned int* m, float* modeValue, float* modeLocation) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int numPoints = m[0];
     float maxDensity = densities[0];
     float maxLocation = queryPoints[0];
@@ -2575,7 +2575,7 @@ const char* k_cuda_navatala_ml_kde_find_mode_f64 = R"kernel(
 extern "C" __global__ void navatala_ml_kde_find_mode_f64(const double* densities, const double* queryPoints, const unsigned int* m, double* modeValue, double* modeLocation) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int numPoints = m[0];
     double maxDensity = densities[0];
     double maxLocation = queryPoints[0];
@@ -3125,7 +3125,7 @@ extern "C" __global__ void navatala_ml_assign_to_centroids_f32(const float* data
       }
       float distSum = distSumAccum;
       float bestDist = bestDistAccum;
-      if ((distSum < bestDist)) {
+      if (distSum < bestDist) {
         bestDistAccum = distSum;
         bestClusterAccum = cU32;
       }
@@ -3168,7 +3168,7 @@ extern "C" __global__ void navatala_ml_assign_to_centroids_f64(const double* dat
       }
       double distSum = distSumAccum;
       double bestDist = bestDistAccum;
-      if ((distSum < bestDist)) {
+      if (distSum < bestDist) {
         bestDistAccum = distSum;
         bestClusterAccum = cU32;
       }
@@ -3311,7 +3311,7 @@ extern "C" __global__ void navatala_ml_compute_inertia_f32(const float* data, co
   unsigned int inertiaF32RedStride = 128u;
   for (int inertiaF32RedStep = 0; inertiaF32RedStep < (int)(8); ++inertiaF32RedStep) {
     unsigned int inertiaF32Stride = inertiaF32RedStride;
-    if ((lid < inertiaF32Stride)) {
+    if (lid < inertiaF32Stride) {
       float other = sdata[(lid + inertiaF32Stride)];
       float mine = sdata[lid];
       float sum = (mine + other);
@@ -3322,7 +3322,7 @@ extern "C" __global__ void navatala_ml_compute_inertia_f32(const float* data, co
     inertiaF32RedStride = inertiaF32NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     inertia[0] = sdata[0];
   }
 }
@@ -3366,7 +3366,7 @@ extern "C" __global__ void navatala_ml_compute_inertia_f64(const double* data, c
   unsigned int inertiaF64RedStride = 128u;
   for (int inertiaF64RedStep = 0; inertiaF64RedStep < (int)(8); ++inertiaF64RedStep) {
     unsigned int inertiaF64Stride = inertiaF64RedStride;
-    if ((lid < inertiaF64Stride)) {
+    if (lid < inertiaF64Stride) {
       double other = sdata[(lid + inertiaF64Stride)];
       double mine = sdata[lid];
       double sum = (mine + other);
@@ -3377,7 +3377,7 @@ extern "C" __global__ void navatala_ml_compute_inertia_f64(const double* data, c
     inertiaF64RedStride = inertiaF64NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     inertia[0] = sdata[0];
   }
 }
@@ -3846,7 +3846,7 @@ const char* k_cuda_navatala_ml_compute_log_likelihood_f32 = R"kernel(
 extern "C" __global__ void navatala_ml_compute_log_likelihood_f32(const float* logPdf, const float* weights, const unsigned int* n, const unsigned int* k, float* logLikelihood) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int numN = n[0];
     unsigned int numK = k[0];
     float totalLLAccum = __uint_as_float(0x00000000u);
@@ -3900,7 +3900,7 @@ const char* k_cuda_navatala_ml_compute_log_likelihood_f64 = R"kernel(
 extern "C" __global__ void navatala_ml_compute_log_likelihood_f64(const double* logPdf, const double* weights, const unsigned int* n, const unsigned int* k, double* logLikelihood) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     unsigned int numN = n[0];
     unsigned int numK = k[0];
     double totalLLAccum = __longlong_as_double(0x0000000000000000ull);
@@ -4025,7 +4025,7 @@ extern "C" __global__ void navatala_ml_compute_xt_y_f32(const float* X, const fl
     unsigned int xtyF32Stride = 128u;
     for (int reductionStep1 = 0; reductionStep1 < (int)(8); ++reductionStep1) {
       unsigned int stride1 = xtyF32Stride;
-      if ((lid < stride1)) {
+      if (lid < stride1) {
         float other = sdata[(lid + stride1)];
         float mine = sdata[lid];
         float sum = (mine + other);
@@ -4036,7 +4036,7 @@ extern "C" __global__ void navatala_ml_compute_xt_y_f32(const float* X, const fl
       xtyF32Stride = nextStride1;
       __syncthreads();
     }
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       float totalSum = sdata[0];
       Xty[featureIdx] = totalSum;
     }
@@ -4072,7 +4072,7 @@ extern "C" __global__ void navatala_ml_compute_xt_y_f64(const double* X, const d
     unsigned int xtyF64Stride = 128u;
     for (int reductionStep2 = 0; reductionStep2 < (int)(8); ++reductionStep2) {
       unsigned int stride2 = xtyF64Stride;
-      if ((lid < stride2)) {
+      if (lid < stride2) {
         double other = sdata[(lid + stride2)];
         double mine = sdata[lid];
         double sum = (mine + other);
@@ -4083,7 +4083,7 @@ extern "C" __global__ void navatala_ml_compute_xt_y_f64(const double* X, const d
       xtyF64Stride = nextStride2;
       __syncthreads();
     }
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       double totalSum = sdata[0];
       Xty[featureIdx] = totalSum;
     }
@@ -4189,7 +4189,7 @@ extern "C" __global__ void navatala_ml_compute_r_squared_f32(const float* y, con
   unsigned int r2F32Stride = 128u;
   for (int reductionStep3 = 0; reductionStep3 < (int)(8); ++reductionStep3) {
     unsigned int stride3 = r2F32Stride;
-    if ((lid < stride3)) {
+    if (lid < stride3) {
       float otherRes = sdataRes[(lid + stride3)];
       float mineRes = sdataRes[lid];
       float sumRes = (mineRes + otherRes);
@@ -4204,7 +4204,7 @@ extern "C" __global__ void navatala_ml_compute_r_squared_f32(const float* y, con
     r2F32Stride = nextStride3;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float ssRes = sdataRes[0];
     float ssTot = sdataTot[0];
     float ratio = (ssRes / ssTot);
@@ -4242,7 +4242,7 @@ extern "C" __global__ void navatala_ml_compute_r_squared_f64(const double* y, co
   unsigned int r2F64Stride = 128u;
   for (int reductionStep4 = 0; reductionStep4 < (int)(8); ++reductionStep4) {
     unsigned int stride4 = r2F64Stride;
-    if ((lid < stride4)) {
+    if (lid < stride4) {
       double otherRes = sdataRes[(lid + stride4)];
       double mineRes = sdataRes[lid];
       double sumRes = (mineRes + otherRes);
@@ -4257,7 +4257,7 @@ extern "C" __global__ void navatala_ml_compute_r_squared_f64(const double* y, co
     r2F64Stride = nextStride4;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double ssRes = sdataRes[0];
     double ssTot = sdataTot[0];
     double ratio = (ssRes / ssTot);
@@ -4286,7 +4286,7 @@ extern "C" __global__ void navatala_ml_compute_mean_f32(const float* y, const un
   unsigned int meanF32Stride = 128u;
   for (int reductionStep5 = 0; reductionStep5 < (int)(8); ++reductionStep5) {
     unsigned int stride5 = meanF32Stride;
-    if ((lid < stride5)) {
+    if (lid < stride5) {
       float other = sdata[(lid + stride5)];
       float mine = sdata[lid];
       float sum = (mine + other);
@@ -4297,7 +4297,7 @@ extern "C" __global__ void navatala_ml_compute_mean_f32(const float* y, const un
     meanF32Stride = nextStride5;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float totalSum = sdata[0];
     float nFloat = ((float)(n));
     float meanVal = (totalSum / nFloat);
@@ -4325,7 +4325,7 @@ extern "C" __global__ void navatala_ml_compute_mean_f64(const double* y, const u
   unsigned int meanF64Stride = 128u;
   for (int reductionStep6 = 0; reductionStep6 < (int)(8); ++reductionStep6) {
     unsigned int stride6 = meanF64Stride;
-    if ((lid < stride6)) {
+    if (lid < stride6) {
       double other = sdata[(lid + stride6)];
       double mine = sdata[lid];
       double sum = (mine + other);
@@ -4336,7 +4336,7 @@ extern "C" __global__ void navatala_ml_compute_mean_f64(const double* y, const u
     meanF64Stride = nextStride6;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double totalSum = sdata[0];
     double nFloat = ((double)(n));
     double meanVal = (totalSum / nFloat);
@@ -4407,7 +4407,7 @@ extern "C" __global__ void navatala_ml_ridge_predict_f32(const float* X, const f
     unsigned int pred32_reductionStride = 128u;
     for (int pred32_reductionStep = 0; pred32_reductionStep < (int)(8); ++pred32_reductionStep) {
       unsigned int pred32_stride = pred32_reductionStride;
-      if ((lid < pred32_stride)) {
+      if (lid < pred32_stride) {
         float pred32_other = sdata[(lid + pred32_stride)];
         float pred32_mine = sdata[lid];
         float pred32_sum = (pred32_mine + pred32_other);
@@ -4418,7 +4418,7 @@ extern "C" __global__ void navatala_ml_ridge_predict_f32(const float* X, const f
       pred32_reductionStride = pred32_nextStride;
       __syncthreads();
     }
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       float dotProduct = sdata[0];
       yPred[rowIdx] = dotProduct;
     }
@@ -4454,7 +4454,7 @@ extern "C" __global__ void navatala_ml_ridge_predict_f64(const double* X, const 
     unsigned int pred64_reductionStride = 128u;
     for (int pred64_reductionStep = 0; pred64_reductionStep < (int)(8); ++pred64_reductionStep) {
       unsigned int pred64_stride = pred64_reductionStride;
-      if ((lid < pred64_stride)) {
+      if (lid < pred64_stride) {
         double pred64_other = sdata[(lid + pred64_stride)];
         double pred64_mine = sdata[lid];
         double pred64_sum = (pred64_mine + pred64_other);
@@ -4465,7 +4465,7 @@ extern "C" __global__ void navatala_ml_ridge_predict_f64(const double* X, const 
       pred64_reductionStride = pred64_nextStride;
       __syncthreads();
     }
-    if ((lid == 0u)) {
+    if (lid == 0u) {
       double dotProduct = sdata[0];
       yPred[rowIdx] = dotProduct;
     }
@@ -4496,7 +4496,7 @@ extern "C" __global__ void navatala_ml_compute_gcv_score_f32(const float* y, con
   unsigned int gcv32_reductionStride = 128u;
   for (int gcv32_reductionStep = 0; gcv32_reductionStep < (int)(8); ++gcv32_reductionStep) {
     unsigned int gcv32_stride = gcv32_reductionStride;
-    if ((lid < gcv32_stride)) {
+    if (lid < gcv32_stride) {
       float gcv32_other = sdata[(lid + gcv32_stride)];
       float gcv32_mine = sdata[lid];
       float gcv32_sum = (gcv32_mine + gcv32_other);
@@ -4507,7 +4507,7 @@ extern "C" __global__ void navatala_ml_compute_gcv_score_f32(const float* y, con
     gcv32_reductionStride = gcv32_nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float rss = sdata[0];
     float nFloat = ((float)(nVal));
     float traceHOverN = (traceHVal / nFloat);
@@ -4543,7 +4543,7 @@ extern "C" __global__ void navatala_ml_compute_gcv_score_f64(const double* y, co
   unsigned int gcv64_reductionStride = 128u;
   for (int gcv64_reductionStep = 0; gcv64_reductionStep < (int)(8); ++gcv64_reductionStep) {
     unsigned int gcv64_stride = gcv64_reductionStride;
-    if ((lid < gcv64_stride)) {
+    if (lid < gcv64_stride) {
       double gcv64_other = sdata[(lid + gcv64_stride)];
       double gcv64_mine = sdata[lid];
       double gcv64_sum = (gcv64_mine + gcv64_other);
@@ -4554,7 +4554,7 @@ extern "C" __global__ void navatala_ml_compute_gcv_score_f64(const double* y, co
     gcv64_reductionStride = gcv64_nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double rss = sdata[0];
     double nFloat = ((double)(nVal));
     double traceHOverN = (traceHVal / nFloat);
@@ -4589,7 +4589,7 @@ extern "C" __global__ void navatala_ml_compute_effective_dof_f32(const float* ei
   unsigned int dof32_reductionStride = 128u;
   for (int dof32_reductionStep = 0; dof32_reductionStep < (int)(8); ++dof32_reductionStep) {
     unsigned int dof32_stride = dof32_reductionStride;
-    if ((lid < dof32_stride)) {
+    if (lid < dof32_stride) {
       float dof32_other = sdata[(lid + dof32_stride)];
       float dof32_mine = sdata[lid];
       float dof32_sum = (dof32_mine + dof32_other);
@@ -4600,7 +4600,7 @@ extern "C" __global__ void navatala_ml_compute_effective_dof_f32(const float* ei
     dof32_reductionStride = dof32_nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float dofVal = sdata[0];
     dof[0] = dofVal;
   }
@@ -4629,7 +4629,7 @@ extern "C" __global__ void navatala_ml_compute_effective_dof_f64(const double* e
   unsigned int dof64_reductionStride = 128u;
   for (int dof64_reductionStep = 0; dof64_reductionStep < (int)(8); ++dof64_reductionStep) {
     unsigned int dof64_stride = dof64_reductionStride;
-    if ((lid < dof64_stride)) {
+    if (lid < dof64_stride) {
       double dof64_other = sdata[(lid + dof64_stride)];
       double dof64_mine = sdata[lid];
       double dof64_sum = (dof64_mine + dof64_other);
@@ -4640,7 +4640,7 @@ extern "C" __global__ void navatala_ml_compute_effective_dof_f64(const double* e
     dof64_reductionStride = dof64_nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double dofVal = sdata[0];
     dof[0] = dofVal;
   }
@@ -4826,7 +4826,7 @@ extern "C" __global__ void navatala_ml_coordinate_update_f32(const float* X, con
   unsigned int cu32RedStride = 128u;
   for (int cu32RedStep = 0; cu32RedStep < (int)(8); ++cu32RedStep) {
     unsigned int cu32RedStrideVal = cu32RedStride;
-    if ((lid < cu32RedStrideVal)) {
+    if (lid < cu32RedStrideVal) {
       float otherDot = sdataDot[(lid + cu32RedStrideVal)];
       float mineDot = sdataDot[lid];
       float sumDot = (mineDot + otherDot);
@@ -4841,7 +4841,7 @@ extern "C" __global__ void navatala_ml_coordinate_update_f32(const float* X, con
     cu32RedStride = cu32RedNextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float totalDot = sdataDot[0];
     float totalNorm = sdataNorm[0];
     float rho = (totalDot / totalNorm);
@@ -4887,7 +4887,7 @@ extern "C" __global__ void navatala_ml_coordinate_update_f64(const double* X, co
   unsigned int cu64RedStride = 128u;
   for (int cu64RedStep = 0; cu64RedStep < (int)(8); ++cu64RedStep) {
     unsigned int cu64RedStrideVal = cu64RedStride;
-    if ((lid < cu64RedStrideVal)) {
+    if (lid < cu64RedStrideVal) {
       double otherDot = sdataDot[(lid + cu64RedStrideVal)];
       double mineDot = sdataDot[lid];
       double sumDot = (mineDot + otherDot);
@@ -4902,7 +4902,7 @@ extern "C" __global__ void navatala_ml_coordinate_update_f64(const double* X, co
     cu64RedStride = cu64RedNextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double totalDot = sdataDot[0];
     double totalNorm = sdataNorm[0];
     double rho = (totalDot / totalNorm);
@@ -4964,7 +4964,7 @@ extern "C" __global__ void navatala_ml_compute_objective_f32(const float* X, con
   unsigned int obj32RedStride = 128u;
   for (int obj32RedStep = 0; obj32RedStep < (int)(8); ++obj32RedStep) {
     unsigned int obj32RedStrideVal = obj32RedStride;
-    if ((lid < obj32RedStrideVal)) {
+    if (lid < obj32RedStrideVal) {
       float otherMse = sdataMse[(lid + obj32RedStrideVal)];
       float mineMse = sdataMse[lid];
       float sumMse = (mineMse + otherMse);
@@ -4979,7 +4979,7 @@ extern "C" __global__ void navatala_ml_compute_objective_f32(const float* X, con
     obj32RedStride = obj32RedNextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float totalMse = sdataMse[0];
     float totalL1 = sdataL1[0];
     float halfMse = (__uint_as_float(0x3f000000u) * totalMse);
@@ -5035,7 +5035,7 @@ extern "C" __global__ void navatala_ml_compute_objective_f64(const double* X, co
   unsigned int obj64RedStride = 128u;
   for (int obj64RedStep = 0; obj64RedStep < (int)(8); ++obj64RedStep) {
     unsigned int obj64RedStrideVal = obj64RedStride;
-    if ((lid < obj64RedStrideVal)) {
+    if (lid < obj64RedStrideVal) {
       double otherMse = sdataMse[(lid + obj64RedStrideVal)];
       double mineMse = sdataMse[lid];
       double sumMse = (mineMse + otherMse);
@@ -5050,7 +5050,7 @@ extern "C" __global__ void navatala_ml_compute_objective_f64(const double* X, co
     obj64RedStride = obj64RedNextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double totalMse = sdataMse[0];
     double totalL1 = sdataL1[0];
     double halfMse = (__longlong_as_double(0x3fe0000000000000ull) * totalMse);
@@ -5281,7 +5281,7 @@ extern "C" __global__ void navatala_ml_explained_variance_ratio_f32(const float*
   unsigned int varRatioF32RedStride = 128u;
   for (int varRatioF32RedStep = 0; varRatioF32RedStep < (int)(8); ++varRatioF32RedStep) {
     unsigned int varRatioF32Stride = varRatioF32RedStride;
-    if ((lid < varRatioF32Stride)) {
+    if (lid < varRatioF32Stride) {
       float other = sdata[(lid + varRatioF32Stride)];
       float mine = sdata[lid];
       float sumVal = (mine + other);
@@ -5323,7 +5323,7 @@ extern "C" __global__ void navatala_ml_explained_variance_ratio_f64(const double
   unsigned int varRatioF64RedStride = 128u;
   for (int varRatioF64RedStep = 0; varRatioF64RedStep < (int)(8); ++varRatioF64RedStep) {
     unsigned int varRatioF64Stride = varRatioF64RedStride;
-    if ((lid < varRatioF64Stride)) {
+    if (lid < varRatioF64Stride) {
       double other = sdata[(lid + varRatioF64Stride)];
       double mine = sdata[lid];
       double sumVal = (mine + other);
@@ -5587,7 +5587,7 @@ extern "C" __global__ void navatala_ml_compute_q_distribution_f32(const float* Y
   unsigned int qF32ReductionStride = 128u;
   for (int qF32ReductionStep = 0; qF32ReductionStep < (int)(8); ++qF32ReductionStep) {
     unsigned int qF32Stride = qF32ReductionStride;
-    if ((lid < qF32Stride)) {
+    if (lid < qF32Stride) {
       float qF32Other = sdata[(lid + qF32Stride)];
       float qF32Mine = sdata[lid];
       float qF32Sum = (qF32Mine + qF32Other);
@@ -5598,7 +5598,7 @@ extern "C" __global__ void navatala_ml_compute_q_distribution_f32(const float* Y
     qF32ReductionStride = qF32NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float partialSum = sdata[0];
     float oldSum = sumQ[0];
     float newSum = (oldSum + partialSum);
@@ -5655,7 +5655,7 @@ extern "C" __global__ void navatala_ml_compute_q_distribution_f64(const double* 
   unsigned int qF64ReductionStride = 128u;
   for (int qF64ReductionStep = 0; qF64ReductionStep < (int)(8); ++qF64ReductionStep) {
     unsigned int qF64Stride = qF64ReductionStride;
-    if ((lid < qF64Stride)) {
+    if (lid < qF64Stride) {
       double qF64Other = sdata[(lid + qF64Stride)];
       double qF64Mine = sdata[lid];
       double qF64Sum = (qF64Mine + qF64Other);
@@ -5666,7 +5666,7 @@ extern "C" __global__ void navatala_ml_compute_q_distribution_f64(const double* 
     qF64ReductionStride = qF64NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double partialSum = sdata[0];
     double oldSum = sumQ[0];
     double newSum = (oldSum + partialSum);
@@ -5865,7 +5865,7 @@ extern "C" __global__ void navatala_ml_compute_k_l_divergence_f32(const float* P
   unsigned int klF32ReductionStride = 128u;
   for (int klF32ReductionStep = 0; klF32ReductionStep < (int)(8); ++klF32ReductionStep) {
     unsigned int klF32Stride = klF32ReductionStride;
-    if ((lid < klF32Stride)) {
+    if (lid < klF32Stride) {
       float klF32Other = sdata[(lid + klF32Stride)];
       float klF32Mine = sdata[lid];
       float klF32Sum = (klF32Mine + klF32Other);
@@ -5876,7 +5876,7 @@ extern "C" __global__ void navatala_ml_compute_k_l_divergence_f32(const float* P
     klF32ReductionStride = klF32NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float klVal = sdata[0];
     kl_divergence[0] = klVal;
   }
@@ -5915,7 +5915,7 @@ extern "C" __global__ void navatala_ml_compute_k_l_divergence_f64(const double* 
   unsigned int klF64ReductionStride = 128u;
   for (int klF64ReductionStep = 0; klF64ReductionStep < (int)(8); ++klF64ReductionStep) {
     unsigned int klF64Stride = klF64ReductionStride;
-    if ((lid < klF64Stride)) {
+    if (lid < klF64Stride) {
       double klF64Other = sdata[(lid + klF64Stride)];
       double klF64Mine = sdata[lid];
       double klF64Sum = (klF64Mine + klF64Other);
@@ -5926,7 +5926,7 @@ extern "C" __global__ void navatala_ml_compute_k_l_divergence_f64(const double* 
     klF64ReductionStride = klF64NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double klVal = sdata[0];
     kl_divergence[0] = klVal;
   }
@@ -6177,7 +6177,7 @@ extern "C" __global__ void navatala_ml_compute_neighbor_counts_f32(const float* 
         distSqAccum = newDistSq;
       }
       float finalDistSq = distSqAccum;
-      if ((finalDistSq < epsSq)) {
+      if (finalDistSq < epsSq) {
         unsigned int currentCount = countAccum;
         unsigned int newCount = (currentCount + 1u);
         countAccum = newCount;
@@ -6219,7 +6219,7 @@ extern "C" __global__ void navatala_ml_compute_neighbor_counts_f64(const double*
         distSqAccum = newDistSq;
       }
       double finalDistSq = distSqAccum;
-      if ((finalDistSq < epsSq)) {
+      if (finalDistSq < epsSq) {
         unsigned int currentCount = countAccum;
         unsigned int newCount = (currentCount + 1u);
         countAccum = newCount;
@@ -6330,7 +6330,7 @@ extern "C" __global__ void navatala_ml_expand_cluster_step_f32(const float* poin
             distSqAccum = newDistSq;
           }
           float finalDistSq = distSqAccum;
-          if ((finalDistSq < epsSq)) {
+          if (finalDistSq < epsSq) {
             newLabelAccum = jLabel;
           }
         }
@@ -6381,7 +6381,7 @@ extern "C" __global__ void navatala_ml_expand_cluster_step_f64(const double* poi
             distSqAccum = newDistSq;
           }
           double finalDistSq = distSqAccum;
-          if ((finalDistSq < epsSq)) {
+          if (finalDistSq < epsSq) {
             newLabelAccum = jLabel;
           }
         }
@@ -6560,7 +6560,7 @@ extern "C" __global__ void navatala_ml_count_clusters_f32(const int* labels, con
   unsigned int countClstF32RedStride = 128u;
   for (int countClstF32RedStep = 0; countClstF32RedStep < (int)(8); ++countClstF32RedStep) {
     unsigned int countClstF32Stride = countClstF32RedStride;
-    if ((lid < countClstF32Stride)) {
+    if (lid < countClstF32Stride) {
       unsigned int otherIdx = (lid + countClstF32Stride);
       int other = sdata[otherIdx];
       int mine = sdata[lid];
@@ -6573,7 +6573,7 @@ extern "C" __global__ void navatala_ml_count_clusters_f32(const int* labels, con
     countClstF32RedStride = countClstF32NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     int maxLabel = sdata[0];
     int count = (maxLabel + 1);
     numClusters[0] = count;
@@ -6596,7 +6596,7 @@ extern "C" __global__ void navatala_ml_count_clusters_f64(const int* labels, con
   unsigned int countClstF64RedStride = 128u;
   for (int countClstF64RedStep = 0; countClstF64RedStep < (int)(8); ++countClstF64RedStep) {
     unsigned int countClstF64Stride = countClstF64RedStride;
-    if ((lid < countClstF64Stride)) {
+    if (lid < countClstF64Stride) {
       unsigned int otherIdx = (lid + countClstF64Stride);
       int other = sdata[otherIdx];
       int mine = sdata[lid];
@@ -6609,7 +6609,7 @@ extern "C" __global__ void navatala_ml_count_clusters_f64(const int* labels, con
     countClstF64RedStride = countClstF64NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     int maxLabel = sdata[0];
     int count = (maxLabel + 1);
     numClusters[0] = count;
@@ -8576,7 +8576,7 @@ extern "C" __global__ void navatala_ml_knn_regress_median_f32(const unsigned int
     for (int i = 0; i < (int)(kVal); ++i) {
       unsigned int iU32 = ((unsigned int)(i));
       unsigned int zeroU32 = ((unsigned int)(0));
-      if ((iU32 > zeroU32)) {
+      if (iU32 > zeroU32) {
         float key = sortBuf[iU32];
         unsigned int initialJIdx = (iU32 - 1u);
         jIdxAccum = initialJIdx;
@@ -8632,7 +8632,7 @@ extern "C" __global__ void navatala_ml_knn_regress_median_f64(const unsigned int
     for (int i = 0; i < (int)(kVal); ++i) {
       unsigned int iU32 = ((unsigned int)(i));
       unsigned int zeroU32 = ((unsigned int)(0));
-      if ((iU32 > zeroU32)) {
+      if (iU32 > zeroU32) {
         double key = sortBuf[iU32];
         unsigned int initialJIdx = (iU32 - 1u);
         jIdxAccum = initialJIdx;
@@ -8694,7 +8694,7 @@ extern "C" __global__ void navatala_ml_traverse_tree_classify_f32(const float* X
           unsigned int probIdx = (leafBase + cU32);
           float prob = leaf_values[probIdx];
           float currBest = bestProb;
-          if ((prob > currBest)) {
+          if (prob > currBest) {
             bestClass = c;
             bestProb = prob;
           }
@@ -8748,7 +8748,7 @@ extern "C" __global__ void navatala_ml_traverse_tree_classify_f64(const double* 
           unsigned int probIdx = (leafBase + cU32);
           double prob = leaf_values[probIdx];
           double currBest = bestProb;
-          if ((prob > currBest)) {
+          if (prob > currBest) {
             bestClass = c;
             bestProb = prob;
           }
@@ -8951,7 +8951,7 @@ extern "C" __global__ void navatala_ml_compute_m_s_e_f32(const float* targets, c
   unsigned int mseF32_reductionStride = 128u;
   for (int mseF32_reductionStep = 0; mseF32_reductionStep < (int)(8); ++mseF32_reductionStep) {
     unsigned int mseF32_stride = mseF32_reductionStride;
-    if ((lid < mseF32_stride)) {
+    if (lid < mseF32_stride) {
       unsigned int otherIdx = (lid + mseF32_stride);
       float mine = sdata[lid];
       float other = sdata[otherIdx];
@@ -8985,7 +8985,7 @@ extern "C" __global__ void navatala_ml_compute_m_s_e_f32(const float* targets, c
   unsigned int mseF32b_reductionStride = 128u;
   for (int mseF32b_reductionStep = 0; mseF32b_reductionStep < (int)(8); ++mseF32b_reductionStep) {
     unsigned int mseF32b_stride = mseF32b_reductionStride;
-    if ((lid < mseF32b_stride)) {
+    if (lid < mseF32b_stride) {
       unsigned int otherIdx2 = (lid + mseF32b_stride);
       float mine2 = sdata[lid];
       float other2 = sdata[otherIdx2];
@@ -9026,7 +9026,7 @@ extern "C" __global__ void navatala_ml_compute_m_s_e_f64(const double* targets, 
   unsigned int mseF64_reductionStride = 128u;
   for (int mseF64_reductionStep = 0; mseF64_reductionStep < (int)(8); ++mseF64_reductionStep) {
     unsigned int mseF64_stride = mseF64_reductionStride;
-    if ((lid < mseF64_stride)) {
+    if (lid < mseF64_stride) {
       unsigned int otherIdx = (lid + mseF64_stride);
       double mine = sdata[lid];
       double other = sdata[otherIdx];
@@ -9060,7 +9060,7 @@ extern "C" __global__ void navatala_ml_compute_m_s_e_f64(const double* targets, 
   unsigned int mseF64b_reductionStride = 128u;
   for (int mseF64b_reductionStep = 0; mseF64b_reductionStep < (int)(8); ++mseF64b_reductionStep) {
     unsigned int mseF64b_stride = mseF64b_reductionStride;
-    if ((lid < mseF64b_stride)) {
+    if (lid < mseF64b_stride) {
       unsigned int otherIdx2 = (lid + mseF64b_stride);
       double mine2 = sdata[lid];
       double other2 = sdata[otherIdx2];
@@ -9239,7 +9239,7 @@ extern "C" __global__ void navatala_ml_forest_classify_f32(const float* X, const
             unsigned int probIdx = (absLeafBase + classIdxU32);
             float prob = forest_leaves[probIdx];
             float currBest = bestProb;
-            if ((prob > currBest)) {
+            if (prob > currBest) {
               bestClass = classIdx;
               bestProb = prob;
             }
@@ -9273,7 +9273,7 @@ extern "C" __global__ void navatala_ml_forest_classify_f32(const float* X, const
       unsigned int voteIdx = (voteBase + cU32);
       unsigned int votes = vote_counts[voteIdx];
       unsigned int currMax = maxVotes;
-      if ((votes > currMax)) {
+      if (votes > currMax) {
         finalClass = c;
         maxVotes = votes;
       }
@@ -9326,7 +9326,7 @@ extern "C" __global__ void navatala_ml_forest_classify_f64(const double* X, cons
             unsigned int probIdx = (absLeafBase + classIdxU32);
             double prob = forest_leaves[probIdx];
             double currBest = bestProb;
-            if ((prob > currBest)) {
+            if (prob > currBest) {
               bestClass = classIdx;
               bestProb = prob;
             }
@@ -9360,7 +9360,7 @@ extern "C" __global__ void navatala_ml_forest_classify_f64(const double* X, cons
       unsigned int voteIdx = (voteBase + cU32);
       unsigned int votes = vote_counts[voteIdx];
       unsigned int currMax = maxVotes;
-      if ((votes > currMax)) {
+      if (votes > currMax) {
         finalClass = c;
         maxVotes = votes;
       }
@@ -9702,7 +9702,7 @@ extern "C" __global__ void navatala_ml_fil_infer_classification_f32(const float*
       unsigned int voteIdx = (voteBase + cU32);
       unsigned int votes = vote_counts[voteIdx];
       unsigned int currMax = maxVotes;
-      if ((votes > currMax)) {
+      if (votes > currMax) {
         finalClass = c;
         maxVotes = votes;
       }
@@ -9772,7 +9772,7 @@ extern "C" __global__ void navatala_ml_fil_infer_classification_f64(const double
       unsigned int voteIdx = (voteBase + cU32);
       unsigned int votes = vote_counts[voteIdx];
       unsigned int currMax = maxVotes;
-      if ((votes > currMax)) {
+      if (votes > currMax) {
         finalClass = c;
         maxVotes = votes;
       }
@@ -10756,7 +10756,7 @@ extern "C" __global__ void navatala_ml_compute_fuzzy_simplicial_set_f32(const in
         membershipSum = newSum;
       }
       float sum = membershipSum;
-      if ((sum > targetSum)) {
+      if (sum > targetSum) {
         sigmaHigh = mid;
       } else {
         sigmaLow = mid;
@@ -10823,7 +10823,7 @@ extern "C" __global__ void navatala_ml_compute_fuzzy_simplicial_set_f64(const in
         membershipSum = newSum;
       }
       double sum = membershipSum;
-      if ((sum > targetSum)) {
+      if (sum > targetSum) {
         sigmaHigh = mid;
       } else {
         sigmaLow = mid;
@@ -11582,7 +11582,7 @@ extern "C" __global__ void navatala_ml_find_max_correlation_f32(const float* cor
   unsigned int maxCorrF32RedStride = 128u;
   for (int maxCorrF32RedStep = 0; maxCorrF32RedStep < (int)(8); ++maxCorrF32RedStep) {
     unsigned int maxCorrF32Stride = maxCorrF32RedStride;
-    if ((lid < maxCorrF32Stride)) {
+    if (lid < maxCorrF32Stride) {
       otherVal = svals[(lid + maxCorrF32Stride)];
       otherIdx = sidxs[(lid + maxCorrF32Stride)];
       myVal = svals[lid];
@@ -11598,7 +11598,7 @@ extern "C" __global__ void navatala_ml_find_max_correlation_f32(const float* cor
     maxCorrF32RedStride = maxCorrF32NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     maxValue[0] = svals[0];
     maxIndex[0] = sidxs[0];
   }
@@ -11636,7 +11636,7 @@ extern "C" __global__ void navatala_ml_find_max_correlation_f64(const double* co
   unsigned int maxCorrF64RedStride = 128u;
   for (int maxCorrF64RedStep = 0; maxCorrF64RedStep < (int)(8); ++maxCorrF64RedStep) {
     unsigned int maxCorrF64Stride = maxCorrF64RedStride;
-    if ((lid < maxCorrF64Stride)) {
+    if (lid < maxCorrF64Stride) {
       otherVal = svals[(lid + maxCorrF64Stride)];
       otherIdx = sidxs[(lid + maxCorrF64Stride)];
       myVal = svals[lid];
@@ -11652,7 +11652,7 @@ extern "C" __global__ void navatala_ml_find_max_correlation_f64(const double* co
     maxCorrF64RedStride = maxCorrF64NextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     maxValue[0] = svals[0];
     maxIndex[0] = sidxs[0];
   }

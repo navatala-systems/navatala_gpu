@@ -40,7 +40,7 @@ __kernel void navatala_ml_compute_r_squared_f64(__global const double* y, __glob
   uint r2F64Stride = (uint)(128u);
   for (int reductionStep4 = 0; reductionStep4 < (int)(8); ++reductionStep4) {
     uint stride4 = r2F64Stride;
-    if ((lid < stride4)) {
+    if (lid < stride4) {
       double otherRes = sdataRes[(lid + stride4)];
       double mineRes = sdataRes[lid];
       double sumRes = (mineRes + otherRes);
@@ -55,7 +55,7 @@ __kernel void navatala_ml_compute_r_squared_f64(__global const double* y, __glob
     r2F64Stride = nextStride4;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     double ssRes = sdataRes[0];
     double ssTot = sdataTot[0];
     double ratio = (ssRes / ssTot);

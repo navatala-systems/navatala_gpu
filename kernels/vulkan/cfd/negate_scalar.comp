@@ -26,7 +26,7 @@ layout(std430, binding = 1) writeonly buffer buf__output {
 // kernel: navatala_cfd_negate_scalar
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) >= 1)) {
+  if (int(gl_GlobalInvocationID.x) >= 1) {
     return;
   } else {
     float v = _input[0];

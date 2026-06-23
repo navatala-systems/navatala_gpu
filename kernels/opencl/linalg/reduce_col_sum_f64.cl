@@ -18,7 +18,7 @@ __kernel void navatala_linalg_reduce_col_sum_f64(__global const double* A, __glo
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint col = gid;
-  if ((col < n[(uint)(0u)])) {
+  if (col < n[(uint)(0u)]) {
     double sumAccum = as_double(0x0000000000000000ul);
     for (int i = 0; i < (int)(m[(uint)(0u)]); ++i) {
       uint iU32 = ((uint)(i));

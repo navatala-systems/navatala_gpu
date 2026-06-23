@@ -44,7 +44,7 @@ void main() {
   uint gid = uint(int(gl_GlobalInvocationID.x));
   uint i = gid;
   uint nVal = n[0u];
-  if ((i < nVal)) {
+  if (i < nVal) {
     uint rowStart = rowPtr[i];
     uint iPlusOne = (i + 1u);
     uint rowEnd = rowPtr[iPlusOne];
@@ -53,7 +53,7 @@ void main() {
     double bi = b[i];
     for (int j = 0; j < int(rowEnd); ++j) {
       uint jU32 = uint(j);
-      if ((jU32 >= rowStart)) {
+      if (jU32 >= rowStart) {
         uint col = colInd[jU32];
         double aVal = values[jU32];
         bool isDiag = (col == i);

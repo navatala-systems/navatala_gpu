@@ -19,7 +19,7 @@ using namespace metal;
 kernel void navatala_sparse_build_smoothed_prolongation_f32(device const uint* ArowPtr [[buffer(0)]], device const uint* AcolIdx [[buffer(1)]], device const float* Avalues [[buffer(2)]], device const float* diagInv [[buffer(3)]], device const uint* ProwPtr [[buffer(4)]], device const uint* PcolIdx [[buffer(5)]], device const float* Pvalues [[buffer(6)]], device const float* omega [[buffer(7)]], device const uint* nRows [[buffer(8)]], device float* PsmoothValues [[buffer(9)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   int row = int(__gid.x);
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     uint myAgg = PcolIdx[row];
     float myPval = Pvalues[row];
     int aStart = ((int)(ArowPtr[row]));
@@ -30,7 +30,7 @@ kernel void navatala_sparse_build_smoothed_prolongation_f32(device const uint* A
       int col = ((int)(AcolIdx[idx]));
       float aVal = Avalues[idx];
       uint colAgg = PcolIdx[col];
-      if ((colAgg == myAgg)) {
+      if (colAgg == myAgg) {
         sumAP = (sumAP + aVal);
       }
     }

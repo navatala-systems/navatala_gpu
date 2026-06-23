@@ -16,7 +16,7 @@
 __kernel void navatala_dataframe_tdigest_min_f32(__global const float* minVal, __global const uint* centroidCount, __global float* minOut) {
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
-  if ((gid == (uint)(0u))) {
+  if (gid == (uint)(0u)) {
     uint count = centroidCount[0];
     float minV = minVal[0];
     bool isEmpty = (count == (uint)(0u));

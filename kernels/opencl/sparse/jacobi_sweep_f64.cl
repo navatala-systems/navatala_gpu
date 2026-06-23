@@ -18,14 +18,14 @@ __kernel void navatala_sparse_jacobi_sweep_f64(__global const uint* rowPtr, __gl
   int gid0 = (int)get_global_id(0);
   int row = (int)(get_global_id(0));
   int N = ((int)(nRows[0]));
-  if ((row < N)) {
+  if (row < N) {
     int rs = ((int)(rowPtr[row]));
     int re = ((int)(rowPtr[(row + 1)]));
     double offDiag = as_double(0x0000000000000000ul);
     for (int j = 0; j < (int)((re - rs)); ++j) {
       int k = (rs + j);
       int col = ((int)(colIdx[k]));
-      if ((col != row)) {
+      if (col != row) {
         double a = values[k];
         double xj = x[col];
         offDiag = (offDiag + (a * xj));

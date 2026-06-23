@@ -20,7 +20,7 @@ __kernel void navatala_linalg_set_lower_f64(__global const double* val, __global
   uint nVal = n[(uint)(0u)];
   double fillVal = val[(uint)(0u)];
   uint totalElements = (nVal * nVal);
-  if ((idx < totalElements)) {
+  if (idx < totalElements) {
     uint i = (idx / nVal);
     uint j = (idx % nVal);
     bool isStrictLower = (i > j);

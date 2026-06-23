@@ -18,17 +18,17 @@ __kernel void navatala_vector_search_validate_graph_integrity(__global const uin
   uint vid = ((uint)((int)(get_global_id(0))));
   uint nv = n_vertices[0];
   uint md = max_degree[0];
-  if ((vid < nv)) {
+  if (vid < nv) {
     uint errors = (uint)(0u);
     uint deg = degrees[vid];
     for (int i = 0; i < (int)(deg); ++i) {
       uint idx = ((vid * md) + i);
       uint neighbor = graph[idx];
-      if ((neighbor == vid)) {
+      if (neighbor == vid) {
         uint old_err = errors;
         errors = (old_err | (uint)(1u));
       }
-      if ((neighbor >= nv)) {
+      if (neighbor >= nv) {
         uint old_err2 = errors;
         errors = (old_err2 | (uint)(2u));
       }

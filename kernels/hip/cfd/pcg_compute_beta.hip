@@ -16,12 +16,12 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_cfd_pcg_compute_beta(const double* rzNew, const double* rzOld, float* beta) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= 1)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= 1) {
     return;
   } else {
     double new_val = rzNew[0];
     double old_val = rzOld[0];
-    if ((old_val != __longlong_as_double(0x0000000000000000ull))) {
+    if (old_val != __longlong_as_double(0x0000000000000000ull)) {
       beta[0] = ((float)((new_val / old_val)));
     } else {
       beta[0] = __uint_as_float(0x00000000u);

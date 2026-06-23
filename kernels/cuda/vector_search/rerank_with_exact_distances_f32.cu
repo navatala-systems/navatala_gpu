@@ -21,7 +21,7 @@ extern "C" __global__ void navatala_vector_search_rerank_with_exact_distances_f3
   unsigned int k_val = k[0];
   unsigned int d = dim[0];
   unsigned int total = (nq * k_val);
-  if ((gid < total)) {
+  if (gid < total) {
     unsigned int query_id = (gid / k_val);
     unsigned int k_idx = (gid % k_val);
     unsigned int cand_id = candidate_ids[gid];

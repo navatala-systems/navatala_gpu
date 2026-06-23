@@ -17,7 +17,7 @@ __kernel void navatala_sparse_deflated_project_f32(__global const float* x, __gl
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     float xi = x[gid];
     float proj = as_float(0x00000000u);
     int kVal = ((int)(k[0]));

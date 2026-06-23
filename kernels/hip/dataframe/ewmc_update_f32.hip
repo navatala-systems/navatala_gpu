@@ -16,7 +16,7 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_dataframe_ewmc_update_f32(const float* x, const float* y, const float* alpha, float* nEff, float* meanX, float* meanY, float* Cxy, float* varX, float* varY) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0)) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) == 0) {
     float xVal = x[0];
     float yVal = y[0];
     float a = alpha[0];

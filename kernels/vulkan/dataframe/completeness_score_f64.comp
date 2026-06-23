@@ -96,7 +96,7 @@ void main() {
   barrier();
   for (int stride = 0; stride < int(128u); ++stride) {
     uint strideU32 = uint(stride);
-    if ((lid < strideU32)) {
+    if (lid < strideU32) {
       double otherHCY = hcySum[(lid + strideU32)];
       double mineHCY = hcySum[lid];
       hcySum[lid] = (mineHCY + otherHCY);
@@ -106,7 +106,7 @@ void main() {
     }
     barrier();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     double hcyFinal = hcySum[0u];
     double hcFinal = hcSum[0u];
     bool hcIsZero = (hcFinal == packDouble2x32(uvec2(0x00000000u, 0x00000000u)));

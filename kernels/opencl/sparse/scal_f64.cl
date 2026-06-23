@@ -18,7 +18,7 @@ __kernel void navatala_sparse_scal_f64(__global const double* alpha, __global co
   int gid0 = (int)get_global_id(0);
   int gid = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double a = alpha[0];
     double xi = x[gid];
     x[gid] = (a * xi);

@@ -18,13 +18,13 @@ extern "C" __global__ void navatala_sparse_em_initial_prolongation_f32(const int
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int aggId = aggregateId[gid];
     ProwPtr[gid] = ((unsigned int)(gid));
     PcolIdx[gid] = ((unsigned int)(aggId));
     Pvalues[gid] = __uint_as_float(0x3f800000u);
   }
-  if ((gid == N)) {
+  if (gid == N) {
     ProwPtr[N] = ((unsigned int)(N));
   }
 }

@@ -59,7 +59,7 @@ __kernel void navatala_ml_compute_q_distribution_f32(__global const float* Y, __
   uint qF32ReductionStride = (uint)(128u);
   for (int qF32ReductionStep = 0; qF32ReductionStep < (int)(8); ++qF32ReductionStep) {
     uint qF32Stride = qF32ReductionStride;
-    if ((lid < qF32Stride)) {
+    if (lid < qF32Stride) {
       float qF32Other = sdata[(lid + qF32Stride)];
       float qF32Mine = sdata[lid];
       float qF32Sum = (qF32Mine + qF32Other);
@@ -70,7 +70,7 @@ __kernel void navatala_ml_compute_q_distribution_f32(__global const float* Y, __
     qF32ReductionStride = qF32NextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     float partialSum = sdata[0];
     float oldSum = sumQ[0];
     float newSum = (oldSum + partialSum);

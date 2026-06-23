@@ -17,7 +17,7 @@
 extern "C" __global__ void navatala_ml_kde_bandwidth_scott_f32(const float* stddev, const unsigned int* n, float* bandwidth) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     float sigma = stddev[0];
     unsigned int count = n[0];
     float countF = ((float)(count));

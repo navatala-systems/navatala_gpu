@@ -20,7 +20,7 @@ __kernel void navatala_linalg_strided_slice_f32(__global const float* A, __globa
   uint s = start[(uint)(0u)];
   uint st = stride[(uint)(0u)];
   uint n = count[(uint)(0u)];
-  if ((idx < n)) {
+  if (idx < n) {
     uint srcIdx = (s + (idx * st));
     float val = A[srcIdx];
     _out[idx] = val;

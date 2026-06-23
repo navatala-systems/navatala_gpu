@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_sparse_diag_inv_sqrt_f64(const double* diag,
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(n[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     double d = diag[gid];
     dinvsqrt[gid] = (__longlong_as_double(0x3ff0000000000000ull) / sqrt(d));
   }

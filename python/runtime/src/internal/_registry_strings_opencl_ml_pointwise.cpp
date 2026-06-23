@@ -14,7 +14,7 @@ __kernel void navatala_ml_pointwise_neg_f32(__global const float* _input, __glob
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = (-x);
@@ -29,7 +29,7 @@ __kernel void navatala_ml_pointwise_abs_f32(__global const float* _input, __glob
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = fabs(x);
@@ -44,7 +44,7 @@ __kernel void navatala_ml_pointwise_sqrt_f32(__global const float* _input, __glo
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = sqrt(x);
@@ -59,7 +59,7 @@ __kernel void navatala_ml_pointwise_rsqrt_f32(__global const float* _input, __gl
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = (as_float(0x3f800000u) / sqrt(x));
@@ -74,7 +74,7 @@ __kernel void navatala_ml_pointwise_reciprocal_f32(__global const float* _input,
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = (as_float(0x3f800000u) / x);
@@ -89,7 +89,7 @@ __kernel void navatala_ml_pointwise_exp_f32(__global const float* _input, __glob
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = exp(x);
@@ -104,7 +104,7 @@ __kernel void navatala_ml_pointwise_log_f32(__global const float* _input, __glob
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = log(x);
@@ -119,7 +119,7 @@ __kernel void navatala_ml_pointwise_sin_f32(__global const float* _input, __glob
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = sin(x);
@@ -134,7 +134,7 @@ __kernel void navatala_ml_pointwise_cos_f32(__global const float* _input, __glob
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = cos(x);
@@ -149,7 +149,7 @@ __kernel void navatala_ml_pointwise_tan_f32(__global const float* _input, __glob
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = (sin(x) / cos(x));
@@ -164,7 +164,7 @@ __kernel void navatala_ml_pointwise_floor_f32(__global const float* _input, __gl
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = floor(x);
@@ -179,7 +179,7 @@ __kernel void navatala_ml_pointwise_ceil_f32(__global const float* _input, __glo
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = ceil(x);
@@ -194,7 +194,7 @@ __kernel void navatala_ml_pointwise_round_f32(__global const float* _input, __gl
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = round(x);
@@ -209,7 +209,7 @@ __kernel void navatala_ml_pointwise_relu_f32(__global const float* _input, __glo
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = (((x > as_float(0x00000000u))) ? (x) : (as_float(0x00000000u)));
@@ -224,7 +224,7 @@ __kernel void navatala_ml_pointwise_leaky_relu_f32(__global const float* _input,
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = (((x > as_float(0x00000000u))) ? (x) : ((as_float(0x3c23d70au) * x)));
@@ -239,7 +239,7 @@ __kernel void navatala_ml_pointwise_elu_f32(__global const float* _input, __glob
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = (((x > as_float(0x00000000u))) ? (x) : ((exp(x) - as_float(0x3f800000u))));
@@ -254,7 +254,7 @@ __kernel void navatala_ml_pointwise_tanh_f32(__global const float* _input, __glo
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = tanh(x);
@@ -269,7 +269,7 @@ __kernel void navatala_ml_pointwise_sigmoid_f32(__global const float* _input, __
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = (as_float(0x3f800000u) / (as_float(0x3f800000u) + exp((-x))));
@@ -284,7 +284,7 @@ __kernel void navatala_ml_pointwise_softplus_f32(__global const float* _input, _
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = log((as_float(0x3f800000u) + exp(x)));
@@ -299,7 +299,7 @@ __kernel void navatala_ml_pointwise_swish_f32(__global const float* _input, __gl
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = (x * (as_float(0x3f800000u) / (as_float(0x3f800000u) + exp((-x)))));
@@ -314,7 +314,7 @@ __kernel void navatala_ml_pointwise_gelu_tanh_f32(__global const float* _input, 
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = ((as_float(0x3f000000u) * x) * (as_float(0x3f800000u) + tanh((as_float(0x3f4c422au) * (x + (as_float(0x3d372713u) * (x * (x * x))))))));
@@ -329,7 +329,7 @@ __kernel void navatala_ml_pointwise_add_f32(__global const float* a, __global co
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -346,7 +346,7 @@ __kernel void navatala_ml_pointwise_sub_f32(__global const float* a, __global co
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -363,7 +363,7 @@ __kernel void navatala_ml_pointwise_mul_f32(__global const float* a, __global co
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -380,7 +380,7 @@ __kernel void navatala_ml_pointwise_div_f32(__global const float* a, __global co
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -397,7 +397,7 @@ __kernel void navatala_ml_pointwise_max_f32(__global const float* a, __global co
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -414,7 +414,7 @@ __kernel void navatala_ml_pointwise_min_f32(__global const float* a, __global co
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -431,7 +431,7 @@ __kernel void navatala_ml_pointwise_cmp_eq_f32(__global const float* a, __global
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -448,7 +448,7 @@ __kernel void navatala_ml_pointwise_cmp_ne_f32(__global const float* a, __global
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -465,7 +465,7 @@ __kernel void navatala_ml_pointwise_cmp_lt_f32(__global const float* a, __global
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -482,7 +482,7 @@ __kernel void navatala_ml_pointwise_cmp_le_f32(__global const float* a, __global
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -499,7 +499,7 @@ __kernel void navatala_ml_pointwise_cmp_gt_f32(__global const float* a, __global
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -516,7 +516,7 @@ __kernel void navatala_ml_pointwise_cmp_ge_f32(__global const float* a, __global
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -533,7 +533,7 @@ __kernel void navatala_ml_pointwise_relu_bwd_f32(__global const float* a, __glob
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -550,7 +550,7 @@ __kernel void navatala_ml_pointwise_sigmoid_bwd_f32(__global const float* a, __g
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -567,7 +567,7 @@ __kernel void navatala_ml_pointwise_tanh_bwd_f32(__global const float* a, __glob
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float aRaw = a[gid];
     float bRaw = b[gid];
     float av = aRaw;
@@ -585,7 +585,7 @@ __kernel void navatala_ml_pointwise_neg_f16(__global const half* _input, __globa
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (-x);
@@ -601,7 +601,7 @@ __kernel void navatala_ml_pointwise_abs_f16(__global const half* _input, __globa
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = fabs(x);
@@ -617,7 +617,7 @@ __kernel void navatala_ml_pointwise_sqrt_f16(__global const half* _input, __glob
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = sqrt(x);
@@ -633,7 +633,7 @@ __kernel void navatala_ml_pointwise_rsqrt_f16(__global const half* _input, __glo
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (as_float(0x3f800000u) / sqrt(x));
@@ -649,7 +649,7 @@ __kernel void navatala_ml_pointwise_reciprocal_f16(__global const half* _input, 
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (as_float(0x3f800000u) / x);
@@ -665,7 +665,7 @@ __kernel void navatala_ml_pointwise_exp_f16(__global const half* _input, __globa
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = exp(x);
@@ -681,7 +681,7 @@ __kernel void navatala_ml_pointwise_log_f16(__global const half* _input, __globa
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = log(x);
@@ -697,7 +697,7 @@ __kernel void navatala_ml_pointwise_sin_f16(__global const half* _input, __globa
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = sin(x);
@@ -713,7 +713,7 @@ __kernel void navatala_ml_pointwise_cos_f16(__global const half* _input, __globa
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = cos(x);
@@ -729,7 +729,7 @@ __kernel void navatala_ml_pointwise_tan_f16(__global const half* _input, __globa
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (sin(x) / cos(x));
@@ -745,7 +745,7 @@ __kernel void navatala_ml_pointwise_floor_f16(__global const half* _input, __glo
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = floor(x);
@@ -761,7 +761,7 @@ __kernel void navatala_ml_pointwise_ceil_f16(__global const half* _input, __glob
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = ceil(x);
@@ -777,7 +777,7 @@ __kernel void navatala_ml_pointwise_round_f16(__global const half* _input, __glo
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = round(x);
@@ -793,7 +793,7 @@ __kernel void navatala_ml_pointwise_relu_f16(__global const half* _input, __glob
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (((x > as_float(0x00000000u))) ? (x) : (as_float(0x00000000u)));
@@ -809,7 +809,7 @@ __kernel void navatala_ml_pointwise_leaky_relu_f16(__global const half* _input, 
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (((x > as_float(0x00000000u))) ? (x) : ((as_float(0x3c23d70au) * x)));
@@ -825,7 +825,7 @@ __kernel void navatala_ml_pointwise_elu_f16(__global const half* _input, __globa
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (((x > as_float(0x00000000u))) ? (x) : ((exp(x) - as_float(0x3f800000u))));
@@ -841,7 +841,7 @@ __kernel void navatala_ml_pointwise_tanh_f16(__global const half* _input, __glob
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = tanh(x);
@@ -857,7 +857,7 @@ __kernel void navatala_ml_pointwise_sigmoid_f16(__global const half* _input, __g
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (as_float(0x3f800000u) / (as_float(0x3f800000u) + exp((-x))));
@@ -873,7 +873,7 @@ __kernel void navatala_ml_pointwise_softplus_f16(__global const half* _input, __
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = log((as_float(0x3f800000u) + exp(x)));
@@ -889,7 +889,7 @@ __kernel void navatala_ml_pointwise_swish_f16(__global const half* _input, __glo
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (x * (as_float(0x3f800000u) / (as_float(0x3f800000u) + exp((-x)))));
@@ -905,7 +905,7 @@ __kernel void navatala_ml_pointwise_gelu_tanh_f16(__global const half* _input, _
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = ((as_float(0x3f000000u) * x) * (as_float(0x3f800000u) + tanh((as_float(0x3f4c422au) * (x + (as_float(0x3d372713u) * (x * (x * x))))))));
@@ -921,7 +921,7 @@ __kernel void navatala_ml_pointwise_add_f16(__global const half* a, __global con
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -939,7 +939,7 @@ __kernel void navatala_ml_pointwise_sub_f16(__global const half* a, __global con
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -957,7 +957,7 @@ __kernel void navatala_ml_pointwise_mul_f16(__global const half* a, __global con
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -975,7 +975,7 @@ __kernel void navatala_ml_pointwise_div_f16(__global const half* a, __global con
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -993,7 +993,7 @@ __kernel void navatala_ml_pointwise_max_f16(__global const half* a, __global con
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1011,7 +1011,7 @@ __kernel void navatala_ml_pointwise_min_f16(__global const half* a, __global con
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1029,7 +1029,7 @@ __kernel void navatala_ml_pointwise_cmp_eq_f16(__global const half* a, __global 
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1047,7 +1047,7 @@ __kernel void navatala_ml_pointwise_cmp_ne_f16(__global const half* a, __global 
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1065,7 +1065,7 @@ __kernel void navatala_ml_pointwise_cmp_lt_f16(__global const half* a, __global 
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1083,7 +1083,7 @@ __kernel void navatala_ml_pointwise_cmp_le_f16(__global const half* a, __global 
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1101,7 +1101,7 @@ __kernel void navatala_ml_pointwise_cmp_gt_f16(__global const half* a, __global 
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1119,7 +1119,7 @@ __kernel void navatala_ml_pointwise_cmp_ge_f16(__global const half* a, __global 
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1137,7 +1137,7 @@ __kernel void navatala_ml_pointwise_relu_bwd_f16(__global const half* a, __globa
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1155,7 +1155,7 @@ __kernel void navatala_ml_pointwise_sigmoid_bwd_f16(__global const half* a, __gl
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));
@@ -1173,7 +1173,7 @@ __kernel void navatala_ml_pointwise_tanh_bwd_f16(__global const half* a, __globa
   int gid0 = (int)get_global_id(0);
   uint gid = ((uint)((int)(get_global_id(0))));
   uint countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     half aRaw = a[gid];
     half bRaw = b[gid];
     float av = ((float)(aRaw));

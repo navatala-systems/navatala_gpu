@@ -18,7 +18,7 @@ extern "C" __global__ void navatala_ml_pointwise_softplus_f32(const float* _inpu
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     float xRaw = _input[gid];
     float x = xRaw;
     float yF = log((__uint_as_float(0x3f800000u) + exp(x)));

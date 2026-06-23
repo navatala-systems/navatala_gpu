@@ -19,7 +19,7 @@ __kernel void navatala_cfd_n_hatf_all_f64(__global const double* gx, __global co
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(get_global_id(0)))) >= counts[1])) {
+  if (((int)((int)(get_global_id(0)))) >= counts[1]) {
     return;
   } else {
     int o = owner[((int)((int)(get_global_id(0))))];
@@ -36,21 +36,21 @@ __kernel void navatala_cfd_n_hatf_all_f64(__global const double* gx, __global co
     double ny = (gfy * inv);
     double nz = (gfz * inv);
     contactGrad[((int)((int)(get_global_id(0))))] = as_double(0x0000000000000000ul);
-    if ((thetaMask[((int)((int)(get_global_id(0))))] != (uint)(0u))) {
+    if (thetaMask[((int)((int)(get_global_id(0))))] != (uint)(0u)) {
       double sfx = ((double)(sfX[((int)((int)(get_global_id(0))))]));
       double sfy = ((double)(sfY[((int)((int)(get_global_id(0))))]));
       double sfz = ((double)(sfZ[((int)((int)(get_global_id(0))))]));
       double magSf = sqrt((((sfx * sfx) + (sfy * sfy)) + (sfz * sfz)));
-      if ((magSf > as_double(0x3bc79ca10c924223ul))) {
+      if (magSf > as_double(0x3bc79ca10c924223ul)) {
         double nfx = (sfx / magSf);
         double nfy = (sfy / magSf);
         double nfz = (sfz / magSf);
         double a12raw = (((nx * nfx) + (ny * nfy)) + (nz * nfz));
         double a12 = a12raw;
-        if ((a12 < as_double(0xbff0000000000000ul))) {
+        if (a12 < as_double(0xbff0000000000000ul)) {
           a12 = as_double(0xbff0000000000000ul);
         } else {
-          if ((a12 > as_double(0x3ff0000000000000ul))) {
+          if (a12 > as_double(0x3ff0000000000000ul)) {
             a12 = as_double(0x3ff0000000000000ul);
           }
         }
@@ -59,7 +59,7 @@ __kernel void navatala_cfd_n_hatf_all_f64(__global const double* gx, __global co
         double acosA12 = acos(a12);
         double b2 = cos((acosA12 - th));
         double det = (as_double(0x3ff0000000000000ul) - (a12 * a12));
-        if ((det < as_double(0x3eb0c6f7a0b5ed8dul))) {
+        if (det < as_double(0x3eb0c6f7a0b5ed8dul)) {
           det = as_double(0x3eb0c6f7a0b5ed8dul);
         }
         double a = ((b1 - (a12 * b2)) / det);

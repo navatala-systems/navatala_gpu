@@ -45,7 +45,7 @@ extern "C" __global__ void navatala_dataframe_arg_min_f32(const float* _input, c
   unsigned int aminf32_reductionStride = 128u;
   for (int aminf32_reductionStep = 0; aminf32_reductionStep < (int)(8); ++aminf32_reductionStep) {
     unsigned int aminf32_stride = aminf32_reductionStride;
-    if ((lid < aminf32_stride)) {
+    if (lid < aminf32_stride) {
       otherVal = svals[(lid + aminf32_stride)];
       otherIdx = sidxs[(lid + aminf32_stride)];
       myVal = svals[lid];
@@ -65,7 +65,7 @@ extern "C" __global__ void navatala_dataframe_arg_min_f32(const float* _input, c
     aminf32_reductionStride = aminf32_nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     minValue[0] = svals[0];
     minIndex[0] = sidxs[0];
   }

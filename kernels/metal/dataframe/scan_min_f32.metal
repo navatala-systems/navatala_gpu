@@ -46,7 +46,7 @@ kernel void navatala_dataframe_scan_min_f32(device const float* _input [[buffer(
     }
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     sdata[511u] = as_type<float>(0x7f7fffffu);
   }
   threadgroup_barrier(mem_flags::mem_threadgroup);

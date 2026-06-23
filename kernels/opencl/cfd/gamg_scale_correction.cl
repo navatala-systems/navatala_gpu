@@ -15,7 +15,7 @@
 
 __kernel void navatala_cfd_gamg_scale_correction(__global const float* z, __global const float* r, __global const float* Az, __global const float* diagInv, __global const float* sfPtr, __global const uint* nRows, __global float* corr) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) >= ((int)(nRows[0])))) {
+  if ((int)(get_global_id(0)) >= ((int)(nRows[0]))) {
     return;
   } else {
     float sf = sfPtr[0];

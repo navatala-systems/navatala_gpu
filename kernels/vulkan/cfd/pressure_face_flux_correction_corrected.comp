@@ -59,10 +59,10 @@ layout(std430, binding = 12) writeonly buffer buf_outFaceFlux {
 // kernel: navatala_cfd_pressure_face_flux_correction_corrected
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if ((int(gl_GlobalInvocationID.x) >= int(params[0]))) {
+  if (int(gl_GlobalInvocationID.x) >= int(params[0])) {
     return;
   } else {
-    if ((int(gl_GlobalInvocationID.x) >= int(params[1]))) {
+    if (int(gl_GlobalInvocationID.x) >= int(params[1])) {
       outFaceFlux[int(gl_GlobalInvocationID.x)] = uintBitsToFloat(0x00000000u);
     } else {
       int own = owner[int(gl_GlobalInvocationID.x)];

@@ -34,7 +34,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   uint gid = uint(int(gl_GlobalInvocationID.x));
   uint row = gid;
-  if ((row < m[0u])) {
+  if (row < m[0u]) {
     uint firstIdx = (row * n[0u]);
     double initMaxVal = A[firstIdx];
     double maxAccum = initMaxVal;

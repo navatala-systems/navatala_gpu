@@ -32,7 +32,7 @@ extern "C" __global__ void navatala_ml_explained_variance_ratio_f32(const float*
   unsigned int varRatioF32RedStride = 128u;
   for (int varRatioF32RedStep = 0; varRatioF32RedStep < (int)(8); ++varRatioF32RedStep) {
     unsigned int varRatioF32Stride = varRatioF32RedStride;
-    if ((lid < varRatioF32Stride)) {
+    if (lid < varRatioF32Stride) {
       float other = sdata[(lid + varRatioF32Stride)];
       float mine = sdata[lid];
       float sumVal = (mine + other);

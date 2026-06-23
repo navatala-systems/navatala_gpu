@@ -19,7 +19,7 @@ extern "C" __global__ void navatala_ml_pointwise_elu_bf16(const __nv_bfloat16* _
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
   unsigned int countVal = count[0];
-  if ((gid < countVal)) {
+  if (gid < countVal) {
     __nv_bfloat16 xRaw = _input[gid];
     float x = ((float)(xRaw));
     float yF = (((x > __uint_as_float(0x00000000u))) ? (x) : ((exp(x) - __uint_as_float(0x3f800000u))));

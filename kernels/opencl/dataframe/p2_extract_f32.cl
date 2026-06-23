@@ -15,7 +15,7 @@
 
 __kernel void navatala_dataframe_p2_extract_f32(__global const float* q2, __global float* quantile) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     float val = q2[0];
     quantile[0] = val;
   }

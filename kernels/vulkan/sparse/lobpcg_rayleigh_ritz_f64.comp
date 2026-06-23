@@ -41,7 +41,7 @@ void main() {
   int gid = int(gl_GlobalInvocationID.x);
   int N = int(n[0]);
   int kVal = int(k[0]);
-  if ((gid < (kVal * kVal))) {
+  if (gid < (kVal * kVal)) {
     int row = (gid / kVal);
     int col = (gid % kVal);
     double dotAX = packDouble2x32(uvec2(0x00000000u, 0x00000000u));

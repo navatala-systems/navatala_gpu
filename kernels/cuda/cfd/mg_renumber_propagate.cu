@@ -19,15 +19,15 @@ extern "C" __global__ void navatala_cfd_mg_renumber_propagate(int* aggMap, const
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0])))) {
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0]))) {
     return;
   } else {
     int root = aggMap[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
-    if ((root < 0)) {
+    if (root < 0) {
       aggMap[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = (-(root + 1));
     } else {
       int rootVal = aggMap[root];
-      if ((rootVal < 0)) {
+      if (rootVal < 0) {
         aggMap[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = (-(rootVal + 1));
       } else {
         aggMap[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = rootVal;

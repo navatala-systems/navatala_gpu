@@ -18,7 +18,7 @@ __kernel void navatala_vector_search_mark_visited_batch(__global const uint* nod
   uint tid = ((uint)((int)(get_global_id(0))));
   uint nn = n_nodes[0];
   uint stride = visited_stride[0];
-  if ((tid < nn)) {
+  if (tid < nn) {
     uint node = node_ids[tid];
     uint query = query_ids[tid];
     uint word_idx = (node / (uint)(32u));

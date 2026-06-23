@@ -37,7 +37,7 @@ extern "C" __global__ void navatala_dataframe_covariance_f32(const float* inputX
   unsigned int covF32_reductionStride = 128u;
   for (int covF32_reductionStep = 0; covF32_reductionStep < (int)(8); ++covF32_reductionStep) {
     unsigned int covF32_stride = covF32_reductionStride;
-    if ((lid < covF32_stride)) {
+    if (lid < covF32_stride) {
       float covF32_other = sdata[(lid + covF32_stride)];
       float covF32_mine = sdata[lid];
       float covF32_sum = (covF32_mine + covF32_other);
@@ -48,7 +48,7 @@ extern "C" __global__ void navatala_dataframe_covariance_f32(const float* inputX
     covF32_reductionStride = covF32_nextStride;
     __syncthreads();
   }
-  if ((lid == 0u)) {
+  if (lid == 0u) {
     float totalSum = sdata[0u];
     float countFloat = ((float)(countVal));
     float covVal = (totalSum / countFloat);

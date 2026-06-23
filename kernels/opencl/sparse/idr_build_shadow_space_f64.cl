@@ -20,7 +20,7 @@ __kernel void navatala_sparse_idr_build_shadow_space_f64(__global const uint* n,
   int N = ((int)(n[0]));
   int S = ((int)(s[0]));
   int total = (N * S);
-  if ((gid < total)) {
+  if (gid < total) {
     int row = (gid % N);
     int col = (gid / N);
     double val = (((row == col)) ? (as_double(0x3ff0000000000000ul)) : (as_double(0x0000000000000000ul)));

@@ -15,7 +15,7 @@
 
 __kernel void navatala_sparse_compute_grid_complexity(__global const uint* levelNnz, __global const uint* nLevels, __global float* gridComplexity) {
   int gid0 = (int)get_global_id(0);
-  if (((int)(get_global_id(0)) == 0)) {
+  if ((int)(get_global_id(0)) == 0) {
     int nLev = ((int)(nLevels[0]));
     uint finestNnz = levelNnz[0];
     float total = as_float(0x00000000u);

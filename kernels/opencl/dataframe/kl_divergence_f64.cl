@@ -38,7 +38,7 @@ __kernel void navatala_dataframe_kl_divergence_f64(__global const double* p, __g
   uint kl64_reductionStride = (uint)(128u);
   for (int kl64_reductionStep = 0; kl64_reductionStep < (int)(8); ++kl64_reductionStep) {
     uint kl64_stride = kl64_reductionStride;
-    if ((lid < kl64_stride)) {
+    if (lid < kl64_stride) {
       double kl64_other = sdata[(lid + kl64_stride)];
       double kl64_mine = sdata[lid];
       double kl64_sum = (kl64_mine + kl64_other);
@@ -49,7 +49,7 @@ __kernel void navatala_dataframe_kl_divergence_f64(__global const double* p, __g
     kl64_reductionStride = kl64_nextStride;
     barrier(CLK_LOCAL_MEM_FENCE);
   }
-  if ((lid == (uint)(0u))) {
+  if (lid == (uint)(0u)) {
     result[(uint)(0u)] = sdata[(uint)(0u)];
   }
 }

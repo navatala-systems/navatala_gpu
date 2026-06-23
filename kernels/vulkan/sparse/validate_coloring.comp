@@ -40,7 +40,7 @@ void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
   int gid = int(gl_GlobalInvocationID.x);
   int N = int(nRows[0]);
-  if ((gid < N)) {
+  if (gid < N) {
     int myColor = colors[gid];
     int rs = int(rowPtr[gid]);
     int re = int(rowPtr[(gid + 1)]);
@@ -49,12 +49,12 @@ void main() {
       int k = (rs + j);
       int col = int(colIdx[k]);
       int cc = colors[col];
-      if (((col != gid) && (cc == myColor))) {
+      if ((col != gid) && (cc == myColor)) {
         conflict = 1u;
       }
     }
     conflictFlags[gid] = conflict;
-    if ((conflict == 1u)) {
+    if (conflict == 1u) {
       uint _aod1 = atomicAdd(nConflicts[0], 1u);
     }
   }

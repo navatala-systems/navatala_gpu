@@ -18,9 +18,9 @@ using namespace metal;
 
 kernel void navatala_graph_recip_f32(device const float* x [[buffer(0)]], device float* y [[buffer(1)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   uint gid = ((uint)(int(__gid.x)));
-  if ((gid == 0u)) {
+  if (gid == 0u) {
     float xv = x[0];
-    if ((xv == as_type<float>(0x00000000u))) {
+    if (xv == as_type<float>(0x00000000u)) {
       y[0] = as_type<float>(0x00000000u);
     } else {
       y[0] = (as_type<float>(0x3f800000u) / xv);

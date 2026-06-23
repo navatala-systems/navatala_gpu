@@ -20,7 +20,7 @@ kernel void navatala_cfd_radius_count(device const float* query [[buffer(0)]], d
   int qid = int(__gid.x);
   int nq = numQuery[0];
   int nr = numRef[0];
-  if ((qid < nq)) {
+  if (qid < nq) {
     float qx = query[((qid)*3 + 0)];
     float qy = query[((qid)*3 + 1)];
     float qz = query[((qid)*3 + 2)];
@@ -35,7 +35,7 @@ kernel void navatala_cfd_radius_count(device const float* query [[buffer(0)]], d
       float dy = (qy - ry);
       float dz = (qz - rz);
       float d2 = (((dx * dx) + (dy * dy)) + (dz * dz));
-      if ((d2 <= rCmp)) {
+      if (d2 <= rCmp) {
         cnt = (cnt + 1);
       }
     }

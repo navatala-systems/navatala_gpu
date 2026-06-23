@@ -17,7 +17,7 @@ __kernel void navatala_sparse_mg_compute_residual_f32(__global const float* b, _
   int gid0 = (int)get_global_id(0);
   int i = (int)(get_global_id(0));
   int N = ((int)(n[0]));
-  if ((i < N)) {
+  if (i < N) {
     float bi = b[i];
     float axi = Ax[i];
     r[i] = (bi - axi);

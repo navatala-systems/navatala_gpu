@@ -19,11 +19,11 @@ extern "C" __global__ void navatala_cfd_bc_dirichlet_face_flux(const float* cf, 
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
-  if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1])) {
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1]) {
     return;
   } else {
     float flux = __uint_as_float(0x00000000u);
-    if ((bcMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] == 2)) {
+    if (bcMask[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] == 2) {
       flux = (cf[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] * bcVal[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]);
     }
     outFlux[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = flux;

@@ -18,9 +18,9 @@ extern "C" __global__ void navatala_sparse_min_max_coloring(const unsigned int* 
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int gid = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   int N = ((int)(nRows[0]));
-  if ((gid < N)) {
+  if (gid < N) {
     int myColor = colors[gid];
-    if ((myColor < 0)) {
+    if (myColor < 0) {
       int myHash = (((((((gid ^ 0) + 2127912214) ^ ((gid ^ 0) << 12)) ^ 3345072700) + ((((gid ^ 0) + 2127912214) ^ ((gid ^ 0) << 12)) >> 7)) + 374761393) ^ ((((((gid ^ 0) + 2127912214) ^ ((gid ^ 0) << 12)) ^ 3345072700) + ((((gid ^ 0) + 2127912214) ^ ((gid ^ 0) << 12)) >> 7)) << 5));
       int rs = ((int)(rowPtr[gid]));
       int re = ((int)(rowPtr[(gid + 1)]));
@@ -29,24 +29,24 @@ extern "C" __global__ void navatala_sparse_min_max_coloring(const unsigned int* 
       for (int j = 0; j < (int)((re - rs)); ++j) {
         int k = (rs + j);
         int col = ((int)(colIdx[k]));
-        if (((col != gid) && (col < N))) {
+        if ((col != gid) && (col < N)) {
           int cc = colors[col];
-          if ((cc < 0)) {
+          if (cc < 0) {
             int nHash = (((((((col ^ 0) + 2127912214) ^ ((col ^ 0) << 12)) ^ 3345072700) + ((((col ^ 0) + 2127912214) ^ ((col ^ 0) << 12)) >> 7)) + 374761393) ^ ((((((col ^ 0) + 2127912214) ^ ((col ^ 0) << 12)) ^ 3345072700) + ((((col ^ 0) + 2127912214) ^ ((col ^ 0) << 12)) >> 7)) << 5));
-            if ((nHash >= myHash)) {
+            if (nHash >= myHash) {
               isMax = 0;
             }
-            if ((nHash <= myHash)) {
+            if (nHash <= myHash) {
               isMin = 0;
             }
           }
         }
       }
       int round = ((int)(nColors[0]));
-      if ((isMax == 1)) {
+      if (isMax == 1) {
         colors[gid] = (2 * round);
       } else {
-        if ((isMin == 1)) {
+        if (isMin == 1) {
           colors[gid] = ((2 * round) + 1);
         }
       }
