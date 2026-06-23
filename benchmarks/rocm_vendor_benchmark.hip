@@ -229,7 +229,7 @@ void printBenchmarkList() {
     std::printf("  GEMM_F16_MFMA_CTA64_SHARED_PADDED: generated navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_padded vs rocBLAS F16/F32 rocblas_gemm_ex (opt-in, gfx942/ROCm 6.2+, low-pressure padded LDS row)\n");
     std::printf("  GEMM_F16_MFMA_CTA64_PIPELINED: generated navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined vs rocBLAS F16/F32 rocblas_gemm_ex (opt-in, gfx942/ROCm 6.2+, R6 two-slot staged-panel row)\n");
     std::printf("  GEMM_F16_MFMA_CTA128: generated navatala_transformer_tiled_gemm_f16_mfma_cta128 vs rocBLAS F16/F32 rocblas_gemm_ex (opt-in, gfx942/ROCm 6.2+, tile-divisible only)\n");
-    std::printf("  CSR_SPMV_F32: adaptive generated SpMV (thread-per-row or subgroup-per-row) vs rocSPARSE rocsparse_spmv\n");
+    std::printf("  CSR_SPMV_F32: adaptive generated SpMV (thread-per-row or subgroup-per-row) vs rocSPARSE rocsparse_v2_spmv\n");
     std::printf("  HIPSPARSELT_STRUCTURED_GEMM_F16: hipSPARSELt structured sparse matmul vs rocBLAS dense pruned-A reference (opt-in)\n");
     std::printf("  CSR_SPMV_F32_CFD_FIXTURE: persisted CSR pressure-matrix fixture vs rocSPARSE (fixture mode)\n");
     std::printf("benchmark matrices: standard, broad, cta128-evidence, cfd-fixture (quick mode overrides matrix to smoke shapes)\n");
@@ -1886,6 +1886,7 @@ Result benchSpmv(
     rocsparse_spmat_descr mat = nullptr;
     rocsparse_dnvec_descr xvec = nullptr;
     rocsparse_dnvec_descr yvec = nullptr;
+    rocsparse_spmv_descr spmvDescr = nullptr;
     check("rocsparse_create_csr_descr",
           rocsparse_create_csr_descr(&mat,
                                      rows,
@@ -1904,38 +1905,89 @@ Result benchSpmv(
           rocsparse_create_dnvec_descr(&yvec, rows, dyVendor, rocsparse_datatype_f32_r));
     const float alpha = 1.0f;
     const float beta = 0.0f;
-    std::size_t tempBytes = 0;
-    check("rocsparse_spmv buffer size",
-          rocsparse_spmv(sparse,
-                         rocsparse_operation_none,
-                         &alpha,
-                         mat,
-                         xvec,
-                         &beta,
-                         yvec,
-                         rocsparse_datatype_f32_r,
-                         rocsparse_spmv_alg_default,
-                         rocsparse_spmv_stage_buffer_size,
-                         &tempBytes,
-                         nullptr));
+    rocsparse_operation spmvOperation = rocsparse_operation_none;
+    rocsparse_datatype spmvDatatype = rocsparse_datatype_f32_r;
+    rocsparse_spmv_alg spmvAlg = rocsparse_spmv_alg_default;
+    check("rocsparse_create_spmv_descr",
+          rocsparse_create_spmv_descr(&spmvDescr));
+    check("rocsparse_spmv_set_input operation",
+          rocsparse_spmv_set_input(sparse,
+                                   spmvDescr,
+                                   rocsparse_spmv_input_operation,
+                                   &spmvOperation,
+                                   sizeof(spmvOperation),
+                                   nullptr));
+    check("rocsparse_spmv_set_input scalar datatype",
+          rocsparse_spmv_set_input(sparse,
+                                   spmvDescr,
+                                   rocsparse_spmv_input_scalar_datatype,
+                                   &spmvDatatype,
+                                   sizeof(spmvDatatype),
+                                   nullptr));
+    check("rocsparse_spmv_set_input compute datatype",
+          rocsparse_spmv_set_input(sparse,
+                                   spmvDescr,
+                                   rocsparse_spmv_input_compute_datatype,
+                                   &spmvDatatype,
+                                   sizeof(spmvDatatype),
+                                   nullptr));
+    check("rocsparse_spmv_set_input algorithm",
+          rocsparse_spmv_set_input(sparse,
+                                   spmvDescr,
+                                   rocsparse_spmv_input_alg,
+                                   &spmvAlg,
+                                   sizeof(spmvAlg),
+                                   nullptr));
+    std::size_t analysisBytes = 0;
+    std::size_t computeBytes = 0;
+    check("rocsparse_v2_spmv analysis buffer size",
+          rocsparse_v2_spmv_buffer_size(sparse,
+                                        spmvDescr,
+                                        mat,
+                                        xvec,
+                                        yvec,
+                                        rocsparse_v2_spmv_stage_analysis,
+                                        &analysisBytes,
+                                        nullptr));
+    check("rocsparse_v2_spmv compute buffer size",
+          rocsparse_v2_spmv_buffer_size(sparse,
+                                        spmvDescr,
+                                        mat,
+                                        xvec,
+                                        yvec,
+                                        rocsparse_v2_spmv_stage_compute,
+                                        &computeBytes,
+                                        nullptr));
+    const std::size_t tempBytes = std::max(analysisBytes, computeBytes);
     void* temp = nullptr;
     if (tempBytes != 0) {
         check("hipMalloc SpMV temp", hipMalloc(&temp, tempBytes));
     }
+    check("rocsparse_v2_spmv analysis",
+          rocsparse_v2_spmv(sparse,
+                            spmvDescr,
+                            &alpha,
+                            mat,
+                            xvec,
+                            &beta,
+                            yvec,
+                            rocsparse_v2_spmv_stage_analysis,
+                            tempBytes,
+                            temp,
+                            nullptr));
     const double vendorMs = measureMs(options.warmup, options.iterations, [&]() {
-        check("rocsparse_spmv",
-              rocsparse_spmv(sparse,
-                             rocsparse_operation_none,
-                             &alpha,
-                             mat,
-                             xvec,
-                             &beta,
-                             yvec,
-                             rocsparse_datatype_f32_r,
-                             rocsparse_spmv_alg_default,
-                             rocsparse_spmv_stage_compute,
-                             &tempBytes,
-                             temp));
+        check("rocsparse_v2_spmv",
+              rocsparse_v2_spmv(sparse,
+                                spmvDescr,
+                                &alpha,
+                                mat,
+                                xvec,
+                                &beta,
+                                yvec,
+                                rocsparse_v2_spmv_stage_compute,
+                                tempBytes,
+                                temp,
+                                nullptr));
     });
 
     auto generated = copyToHost(dyGenerated, rows);
@@ -1943,6 +1995,7 @@ Result benchSpmv(
     const double err = maxAbsDiff(generated, vendor);
 
     if (temp) releaseHip(temp);
+    rocsparse_destroy_spmv_descr(spmvDescr);
     rocsparse_destroy_dnvec_descr(xvec);
     rocsparse_destroy_dnvec_descr(yvec);
     rocsparse_destroy_spmat_descr(mat);
@@ -1959,7 +2012,7 @@ Result benchSpmv(
                   useSubgroupPath
                       ? "generated HIP kernel navatala_graph_spmv_weighted_subgroup_f32"
                       : "generated HIP kernel navatala_graph_spmv_weighted_f32",
-                  "rocSPARSE rocsparse_spmv",
+                  "rocSPARSE rocsparse_v2_spmv",
                   err <= 1.0e-4,
                   generatedMs,
                   vendorMs,
@@ -2019,6 +2072,7 @@ Result benchCsrFixtureSpmv(
     rocsparse_spmat_descr mat = nullptr;
     rocsparse_dnvec_descr xvec = nullptr;
     rocsparse_dnvec_descr yvec = nullptr;
+    rocsparse_spmv_descr spmvDescr = nullptr;
     check("rocsparse_create_csr_descr(fixture)",
           rocsparse_create_csr_descr(&mat,
                                      rows,
@@ -2037,38 +2091,89 @@ Result benchCsrFixtureSpmv(
           rocsparse_create_dnvec_descr(&yvec, rows, dyVendor, rocsparse_datatype_f32_r));
     const float alpha = 1.0f;
     const float beta = 0.0f;
-    std::size_t tempBytes = 0;
-    check("rocsparse_spmv fixture buffer size",
-          rocsparse_spmv(sparse,
-                         rocsparse_operation_none,
-                         &alpha,
-                         mat,
-                         xvec,
-                         &beta,
-                         yvec,
-                         rocsparse_datatype_f32_r,
-                         rocsparse_spmv_alg_default,
-                         rocsparse_spmv_stage_buffer_size,
-                         &tempBytes,
-                         nullptr));
+    rocsparse_operation spmvOperation = rocsparse_operation_none;
+    rocsparse_datatype spmvDatatype = rocsparse_datatype_f32_r;
+    rocsparse_spmv_alg spmvAlg = rocsparse_spmv_alg_default;
+    check("rocsparse_create_spmv_descr(fixture)",
+          rocsparse_create_spmv_descr(&spmvDescr));
+    check("rocsparse_spmv_set_input fixture operation",
+          rocsparse_spmv_set_input(sparse,
+                                   spmvDescr,
+                                   rocsparse_spmv_input_operation,
+                                   &spmvOperation,
+                                   sizeof(spmvOperation),
+                                   nullptr));
+    check("rocsparse_spmv_set_input fixture scalar datatype",
+          rocsparse_spmv_set_input(sparse,
+                                   spmvDescr,
+                                   rocsparse_spmv_input_scalar_datatype,
+                                   &spmvDatatype,
+                                   sizeof(spmvDatatype),
+                                   nullptr));
+    check("rocsparse_spmv_set_input fixture compute datatype",
+          rocsparse_spmv_set_input(sparse,
+                                   spmvDescr,
+                                   rocsparse_spmv_input_compute_datatype,
+                                   &spmvDatatype,
+                                   sizeof(spmvDatatype),
+                                   nullptr));
+    check("rocsparse_spmv_set_input fixture algorithm",
+          rocsparse_spmv_set_input(sparse,
+                                   spmvDescr,
+                                   rocsparse_spmv_input_alg,
+                                   &spmvAlg,
+                                   sizeof(spmvAlg),
+                                   nullptr));
+    std::size_t analysisBytes = 0;
+    std::size_t computeBytes = 0;
+    check("rocsparse_v2_spmv fixture analysis buffer size",
+          rocsparse_v2_spmv_buffer_size(sparse,
+                                        spmvDescr,
+                                        mat,
+                                        xvec,
+                                        yvec,
+                                        rocsparse_v2_spmv_stage_analysis,
+                                        &analysisBytes,
+                                        nullptr));
+    check("rocsparse_v2_spmv fixture compute buffer size",
+          rocsparse_v2_spmv_buffer_size(sparse,
+                                        spmvDescr,
+                                        mat,
+                                        xvec,
+                                        yvec,
+                                        rocsparse_v2_spmv_stage_compute,
+                                        &computeBytes,
+                                        nullptr));
+    const std::size_t tempBytes = std::max(analysisBytes, computeBytes);
     void* temp = nullptr;
     if (tempBytes != 0) {
         check("hipMalloc fixture SpMV temp", hipMalloc(&temp, tempBytes));
     }
+    check("rocsparse_v2_spmv fixture analysis",
+          rocsparse_v2_spmv(sparse,
+                            spmvDescr,
+                            &alpha,
+                            mat,
+                            xvec,
+                            &beta,
+                            yvec,
+                            rocsparse_v2_spmv_stage_analysis,
+                            tempBytes,
+                            temp,
+                            nullptr));
     const double vendorMs = measureMs(options.warmup, options.iterations, [&]() {
-        check("rocsparse_spmv fixture",
-              rocsparse_spmv(sparse,
-                             rocsparse_operation_none,
-                             &alpha,
-                             mat,
-                             xvec,
-                             &beta,
-                             yvec,
-                             rocsparse_datatype_f32_r,
-                             rocsparse_spmv_alg_default,
-                             rocsparse_spmv_stage_compute,
-                             &tempBytes,
-                             temp));
+        check("rocsparse_v2_spmv fixture",
+              rocsparse_v2_spmv(sparse,
+                                spmvDescr,
+                                &alpha,
+                                mat,
+                                xvec,
+                                &beta,
+                                yvec,
+                                rocsparse_v2_spmv_stage_compute,
+                                tempBytes,
+                                temp,
+                                nullptr));
     });
 
     auto generated = copyToHost(dyGenerated, rows);
@@ -2076,6 +2181,7 @@ Result benchCsrFixtureSpmv(
     const double err = maxAbsDiff(generated, vendor);
 
     if (temp) releaseHip(temp);
+    rocsparse_destroy_spmv_descr(spmvDescr);
     rocsparse_destroy_dnvec_descr(xvec);
     rocsparse_destroy_dnvec_descr(yvec);
     rocsparse_destroy_spmat_descr(mat);
@@ -2094,7 +2200,7 @@ Result benchCsrFixtureSpmv(
                   useSubgroupPath
                       ? "generated HIP kernel navatala_graph_spmv_weighted_subgroup_f32"
                       : "generated HIP kernel navatala_graph_spmv_weighted_f32",
-                  "rocSPARSE rocsparse_spmv",
+                  "rocSPARSE rocsparse_v2_spmv",
                   err <= 1.0e-4,
                   generatedMs,
                   vendorMs,

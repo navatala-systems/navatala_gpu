@@ -414,6 +414,36 @@ rocBLAS, rocSPARSE, generated MFMA rows, and hipSPARSELt structured sparse GEMM
 on the same ROCm installation. The hipSPARSELt row computes a structured-sparse
 operation and must not be compared directly with dense MFMA/rocBLAS GEMM rows.
 
+The follow-up 2026-06-24 v2-SpMV fixture reruns the same broad matrix after the
+benchmark harness was migrated from deprecated `rocsparse_spmv` to
+`rocsparse_v2_spmv`:
+
+```bash
+python3 scripts/validate_rocm_benchmark_json.py \
+  benchmarks/fixtures/hardware_runs/20260624_mi300x_broad_v2spmv_mfma_hipsparselt/rocm_vendor_benchmark.json \
+  --require-full \
+  --require-hipsparselt
+python3 scripts/render_rocm_benchmark_report.py \
+  benchmarks/fixtures/hardware_runs/20260624_mi300x_broad_v2spmv_mfma_hipsparselt/rocm_vendor_benchmark.json \
+  --output /tmp/rocm_vendor_benchmark_mi300x_broad_v2spmv_mfma_hipsparselt.md
+```
+
+This is the preferred current broad fixture for SpMV vendor comparisons because
+it uses the non-deprecated rocSPARSE v2 API. Key rows:
+
+| Row | Shape | Generated mean ms | Vendor mean ms | Ratio |
+| --- | --- | ---: | ---: | ---: |
+| `GEMM_F16_MFMA_CTA64_SHARED` | 512³ | 0.020580 | 0.025724 | 0.800x |
+| `GEMM_F16_MFMA_CTA128` | 1024³ | 0.053409 | 0.042726 | 1.250x |
+| `CSR_SPMV_F32` | rows=262144,rowNnz=15 | 0.024228 | 0.010192 | 2.377x |
+| `CSR_SPMV_F32` | rows=262144,rowNnz=27 | 0.044558 | 0.019642 | 2.269x |
+| `HIPSPARSELT_STRUCTURED_GEMM_F16` | 512³, 50% sparsity | 0.012455 | 0.019395 | 0.642x |
+
+The rowNnz=27 result remains within the SpMV tuning gate (`<= 3x`) with the v2
+rocSPARSE baseline. Low-rowNnz large-row-count SpMV is still slower than
+rocSPARSE (`rows=1048576,rowNnz=7` is 2.425x), so short-row large-matrix tuning
+is a separate follow-up rather than a reason to reopen the high-rowNnz fix.
+
 The older `rocm_vendor_benchmark_mi300x_20260619.json` fixture is retained as a
 historical pre-provenance baseline. Validator warnings about missing `rocminfo`
 and `kernelClass` on that older fixture are expected because those schema fields
