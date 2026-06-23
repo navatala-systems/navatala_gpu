@@ -4,7 +4,25 @@ All notable user-visible changes to `navatala_gpu` are recorded here. This
 file follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the
 project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.2] — Pre-alpha (unreleased)
+## [0.1.3] — Pre-alpha (2026-06-24)
+
+### Changed
+
+- HIP/gfx942 F16-input/F32-output MFMA GEMM dispatch now uses full-tile
+  CTA64/CTA128 fast paths for aligned `NN`, `alpha=1`, `beta=0`,
+  single-batch public wrapper calls.
+- ROCm benchmark fixtures now include direct EDGE rows and a 30-iteration
+  public-wrapper fast-path run on MI300X.
+- Public wrapper timings for aligned MFMA GEMM now track direct full-tile
+  kernels within measurement noise in the recorded MI300X fixture.
+
+### Notes
+
+- EDGE-capable CTA64/CTA128 kernels pass the sampled correctness rows, but
+  unaligned-tail performance tuning remains active. CTA128_EDGE is not yet the
+  default recommendation for unaligned large shapes.
+
+## [0.1.2] — Pre-alpha (2026-06-23)
 
 ### Packaging
 

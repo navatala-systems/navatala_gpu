@@ -8,7 +8,7 @@ the projected `navatala_gpu/` copy of this file directly.
 
 - Distribution name: `navatala-gpu`
 - Import package: `navatala_gpu`
-- Current packaging version: `0.1.2`
+- Current packaging version: `0.1.3`
 - Initial PyPI version: `0.1.0` (published 2026-06-17)
 - License: Apache-2.0
 - Python: `>=3.9`
