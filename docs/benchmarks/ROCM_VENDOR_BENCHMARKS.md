@@ -345,8 +345,74 @@ resource diagnosis. The performance result is shape-dependent: CTA64 shared
 remains the medium-shape candidate, while CTA128 is the best generated row for
 1024³ and most tall/large rectangular cases. The public runtime exposes
 `navatala_gpu_gemm_f16_f32` as the shape-aware MFMA dispatch entrypoint for
-tile-divisible HIP/gfx942 F16-input/F32-output GEMM; non-tile-divisible,
-alpha/beta, transpose, and batched production coverage remains Phase-1/2 work.
+HIP/gfx942 F16-input/F32-output GEMM. The benchmark rows in this fixture still
+measure the tile-divisible Phase-0 prototype kernels; wrapper-level correctness
+for edge sizes, alpha/beta, transpose, and batched calls is covered by the FFI
+test fixture.
+
+The 2026-06-24 CTA128 edge-wrapper fixture reruns the focused CTA128 evidence
+matrix after the public FFI wrapper was extended to dispatch the edge-capable
+CTA64/CTA128 kernels:
+
+```bash
+python3 scripts/validate_rocm_benchmark_json.py \
+  benchmarks/fixtures/hardware_runs/20260624_mi300x_cta128_edge_wrapper/rocm_vendor_benchmark.json \
+  --require-full
+python3 scripts/render_rocm_benchmark_report.py \
+  benchmarks/fixtures/hardware_runs/20260624_mi300x_cta128_edge_wrapper/rocm_vendor_benchmark.json \
+  --output /tmp/rocm_vendor_benchmark_mi300x_cta128_edge_wrapper.md
+```
+
+The same run was paired with a full HIP CTest pass on MI300X VF / ROCm 7.2.4.
+The FFI test explicitly executed:
+
+```text
+running F16/F32 GEMM FFI suite: default backend=hip
+running F16/F32 GEMM FFI suite: forced-mfma-cta64 backend=hip
+running F16/F32 GEMM FFI suite: forced-mfma-cta128 backend=hip
+```
+
+That test covers small edge-sized GEMMs, alpha/beta accumulation, NT/TN/TT
+transpose modes, strided batching, broadcast input batching, and rejection of
+overlapping output batches. Treat this as wrapper-correctness evidence; the
+performance report remains a Phase-0 timing fixture for the tile-divisible MFMA
+prototype rows.
+
+The paired profile summary confirms CTA128 is still scratch-free after the
+wrapper changes:
+
+| Kernel | LDS bytes | Scratch bytes | VGPR | Accum VGPR | SGPR | Workgroup |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| `navatala_transformer_tiled_gemm_f16_mfma_cta128` | 16384 | 0 | 84 | 68 | 112 | 256x1x1 |
+
+The 2026-06-24 broad MFMA + hipSPARSELt fixture keeps the wider AMD-facing
+comparison matrix in one durable artifact:
+
+```bash
+python3 scripts/validate_rocm_benchmark_json.py \
+  benchmarks/fixtures/hardware_runs/20260624_mi300x_broad_mfma_hipsparselt/rocm_vendor_benchmark.json \
+  --require-full \
+  --require-hipsparselt
+python3 scripts/render_rocm_benchmark_report.py \
+  benchmarks/fixtures/hardware_runs/20260624_mi300x_broad_mfma_hipsparselt/rocm_vendor_benchmark.json \
+  --output /tmp/rocm_vendor_benchmark_mi300x_broad_mfma_hipsparselt.md
+```
+
+Key rows from that run:
+
+| Row | Shape | Generated mean ms | Vendor mean ms | Ratio |
+| --- | --- | ---: | ---: | ---: |
+| `GEMM_F16_MFMA_CTA64_SHARED` | 512³ | 0.020594 | 0.025680 | 0.802x |
+| `GEMM_F16_MFMA_CTA64_SHARED` | 1024³ | 0.059771 | 0.042855 | 1.395x |
+| `GEMM_F16_MFMA_CTA128` | 512³ | 0.026327 | 0.026231 | 1.004x |
+| `GEMM_F16_MFMA_CTA128` | 1024³ | 0.053358 | 0.042992 | 1.241x |
+| `CSR_SPMV_F32` | rows=262144,rowNnz=27 | 0.043721 | 0.020461 | 2.137x |
+| `HIPSPARSELT_STRUCTURED_GEMM_F16` | 512³, 50% sparsity | 0.012567 | 0.022986 | 0.547x |
+
+This fixture demonstrates that the public benchmark harness now exercises
+rocBLAS, rocSPARSE, generated MFMA rows, and hipSPARSELt structured sparse GEMM
+on the same ROCm installation. The hipSPARSELt row computes a structured-sparse
+operation and must not be compared directly with dense MFMA/rocBLAS GEMM rows.
 
 The older `rocm_vendor_benchmark_mi300x_20260619.json` fixture is retained as a
 historical pre-provenance baseline. Validator warnings about missing `rocminfo`
@@ -396,6 +462,12 @@ The opt-in MFMA rows currently distinguish two implementation stages:
 | `GEMM_F16_MFMA_CTA64_SHARED_PADDED` | `navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_padded` | Diagnostic CTA64 shared variant with padded LDS strides (`64x9` A, `8x65` B). Correct and zero-scratch, but slower than CTA64 shared on MI300X. |
 | `GEMM_F16_MFMA_CTA64_PIPELINED` | `navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined` | R6 two-slot staged-panel row: four wave64s per workgroup, one accumulator per wave, typed shared panels, `b16` copy requests, exact dynamic copy-group matching, tile-divisible NN only, alpha=1, beta=0. HIP/gfx942 now lowers aligned panel copies through direct global-to-LDS dword loads and waits with `s_waitcnt vmcnt(0)`, but this row is still a tuning/resource-validation path rather than the production GEMM dispatch. |
 | `GEMM_F16_MFMA_CTA128` | `navatala_transformer_tiled_gemm_f16_mfma_cta128` | Phase-0 128x128x32 CTA prototype with shared-memory staging, four wave64s per workgroup, tile-divisible NN only, alpha=1, beta=0. This row measures the shared-memory production-hardening path on MI300/gfx942 hardware. |
+
+The public FFI wrapper dispatches different edge-capable kernels for production
+calls: `navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_edge` and
+`navatala_transformer_tiled_gemm_f16_mfma_cta128_edge`. Those kernels cover
+tail tiles, alpha/beta, transpose flags, and batching. They are validated by
+the runtime FFI test, not by the timing rows above.
 
 The broad matrix emits `GEMM_F16_PORTABLE_F32OUT` at 128³, 512³, and 1024³.
 Those rows run the generated `navatala_transformer_tiled_gemm_f16_f32_out`
@@ -506,13 +578,15 @@ MFMA/WMMA-style tuned kernels. A fresh post-tuning run is required before making
 any performance claim for the portable fallback path.
 
 The opt-in `GEMM_F16_MFMA*` rows exercise generated HIP MFMA kernels. They are
-intentionally narrower than production GEMM replacements: matrix sizes must be
-multiples of the tile constraints, and the current kernels do not implement edge
-predicates, alpha/beta, transpose flags, batching, or public wrapper dispatch.
-Use these rows as matrix-intrinsic correctness and tuning signals, not as
-general rocBLAS replacement claims. The CTA64 direct row is specifically a
+intentionally narrower than the public FFI wrapper path: matrix sizes must be
+multiples of the timing-row tile constraints, and the timing rows keep
+alpha=1/beta=0 NN semantics so same-host comparisons stay stable. Use these
+rows as matrix-intrinsic correctness and tuning signals, not as general rocBLAS
+replacement claims. The CTA64 direct row is specifically a
 register-pressure/scratch-reduction experiment relative to the shared-memory
-CTA128 row.
+CTA128 row. The public wrapper dispatch has broader correctness coverage through
+the FFI tests, but it should not be marketed as a full rocBLAS replacement until
+larger edge/transpose/batched benchmark gates are added.
 
 The `GEMM_F16_PORTABLE_F32OUT` row is not a tuned-kernel claim. It exists so
 MFMA reports can compare against a portable F16-input/F32-output tiled kernel

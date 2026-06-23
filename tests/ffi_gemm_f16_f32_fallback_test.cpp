@@ -6,22 +6,43 @@
 #include <cmath>
 #include <cstdint>
 #include <cstdlib>
+#include <cstring>
 #include <iostream>
+#include <string>
 #include <vector>
 
 namespace {
 
+int set_env_value(const char* key, const char* value) {
+#if defined(_WIN32)
+    return _putenv_s(key, value);
+#else
+    return setenv(key, value, 1);
+#endif
+}
+
+int unset_env_value(const char* key) {
+#if defined(_WIN32)
+    return _putenv_s(key, "");
+#else
+    return unsetenv(key);
+#endif
+}
+
 struct Runtime {
     NavatalaGpuContext* ctx = nullptr;
     NavatalaGpuQueue* queue = nullptr;
+    NavatalaBackend backend = NAVATALA_BACKEND_AUTO_FFI;
 
     Runtime() {
-        if (navatala_gpu_create_context(NAVATALA_BACKEND_CUDA_FFI, 0, &ctx) != NAVATALA_SUCCESS) {
-            std::cerr << "failed to create stub context\n";
+        const NavatalaBackend requested = requested_backend();
+        if (navatala_gpu_create_context(requested, 0, &ctx) != NAVATALA_SUCCESS) {
+            std::cerr << "failed to create context for backend " << backend_name(requested) << "\n";
             std::exit(2);
         }
+        backend = navatala_gpu_context_get_backend(ctx);
         if (navatala_gpu_create_queue(ctx, -1, &queue) != NAVATALA_SUCCESS) {
-            std::cerr << "failed to create stub queue\n";
+            std::cerr << "failed to create queue for backend " << backend_name(backend) << "\n";
             std::exit(2);
         }
     }
@@ -29,6 +50,60 @@ struct Runtime {
     ~Runtime() {
         navatala_gpu_destroy_queue(queue);
         navatala_gpu_destroy_context(ctx);
+    }
+
+    static const char* backend_name(NavatalaBackend value) {
+        switch (value) {
+            case NAVATALA_BACKEND_CUDA_FFI: return "cuda";
+            case NAVATALA_BACKEND_HIP_FFI: return "hip";
+            case NAVATALA_BACKEND_METAL_FFI: return "metal";
+            case NAVATALA_BACKEND_OPENCL_FFI: return "opencl";
+            case NAVATALA_BACKEND_VULKAN_FFI: return "vulkan";
+            case NAVATALA_BACKEND_AUTO_FFI: return "auto";
+            default: return "unknown";
+        }
+    }
+
+    static NavatalaBackend requested_backend() {
+        const char* value = std::getenv("NAVATALA_GPU_TEST_BACKEND");
+        if (!value || value[0] == '\0' || std::strcmp(value, "auto") == 0) {
+            return NAVATALA_BACKEND_AUTO_FFI;
+        }
+        if (std::strcmp(value, "cuda") == 0) return NAVATALA_BACKEND_CUDA_FFI;
+        if (std::strcmp(value, "hip") == 0 || std::strcmp(value, "rocm") == 0) {
+            return NAVATALA_BACKEND_HIP_FFI;
+        }
+        if (std::strcmp(value, "metal") == 0) return NAVATALA_BACKEND_METAL_FFI;
+        if (std::strcmp(value, "opencl") == 0) return NAVATALA_BACKEND_OPENCL_FFI;
+        if (std::strcmp(value, "vulkan") == 0) return NAVATALA_BACKEND_VULKAN_FFI;
+        std::cerr << "unknown NAVATALA_GPU_TEST_BACKEND=" << value << "\n";
+        std::exit(2);
+    }
+};
+
+struct EnvOverride {
+    const char* name;
+    std::string oldValue;
+    bool hadOldValue;
+
+    EnvOverride(const char* key, const char* value)
+        : name(key)
+    {
+        const char* old = std::getenv(key);
+        hadOldValue = old != nullptr;
+        oldValue = old ? old : "";
+        if (set_env_value(name, value) != 0) {
+            std::cerr << "failed to set " << name << "\n";
+            std::exit(2);
+        }
+    }
+
+    ~EnvOverride() {
+        if (hadOldValue) {
+            set_env_value(name, oldValue.c_str());
+        } else {
+            unset_env_value(name);
+        }
     }
 };
 
@@ -190,12 +265,29 @@ void test_broadcast_input_batches(Runtime& rt) {
     }
 }
 
+void run_suite(Runtime& rt, const char* label) {
+    std::cout << "running F16/F32 GEMM FFI suite: " << label
+              << " backend=" << Runtime::backend_name(rt.backend) << "\n";
+    test_transposed_alpha_beta(rt);
+    test_strided_batched(rt);
+    test_broadcast_input_batches(rt);
+}
+
 } // namespace
 
 int main() {
     Runtime rt;
-    test_transposed_alpha_beta(rt);
-    test_strided_batched(rt);
-    test_broadcast_input_batches(rt);
+    run_suite(rt, "default");
+    if (rt.backend == NAVATALA_BACKEND_HIP_FFI) {
+        EnvOverride impl("NAVATALA_GPU_GEMM_IMPL", "mfma");
+        {
+            EnvOverride mode("NAVATALA_GPU_GEMM_MFMA_MODE", "cta64");
+            run_suite(rt, "forced-mfma-cta64");
+        }
+        {
+            EnvOverride mode("NAVATALA_GPU_GEMM_MFMA_MODE", "cta128");
+            run_suite(rt, "forced-mfma-cta128");
+        }
+    }
     return 0;
 }
