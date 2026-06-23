@@ -7,7 +7,7 @@
 This generated SDK exposes Python bindings for the public Navatala GPU C ABI.
 Security fixes are supported for the generated Python package, generated C++ binding scaffold, and public runtime ABI surface shipped with the SDK.
 
-The Lean specifications and generator implementation are not part of this generated SDK package.
+The private formal specifications and generator implementation are not part of this generated SDK package.
 
 ## Reporting A Vulnerability
 

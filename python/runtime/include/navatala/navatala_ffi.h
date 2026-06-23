@@ -41,7 +41,7 @@ extern "C" {
 
 #ifndef NAVATALA_GPU_FFI_ABI_VERSION
 // Per #1513 §2.5: bumped from 5 → 6 alongside the kernel symbol/filename
-// rename. The matching Lean-side value is `PythonBindingManifest.abiVersion`.
+// rename. Package metadata must expose the same ABI revision.
 #define NAVATALA_GPU_FFI_ABI_VERSION 6
 #endif
 
@@ -116,6 +116,12 @@ typedef enum NavatalaProgramSourceKind {
     NAVATALA_PROGRAM_SOURCE_HSACO = 9,
     NAVATALA_PROGRAM_SOURCE_METALLIB = 10
 } NavatalaProgramSourceKind;
+
+/** Matrix operand orientation for GEMM-like operations. */
+typedef enum NavatalaMatrixTranspose {
+    NAVATALA_MATRIX_OP_NONE = 0,
+    NAVATALA_MATRIX_OP_TRANSPOSE = 1
+} NavatalaMatrixTranspose;
 
 // ============================================================================
 // Backend Capability Structure
@@ -576,6 +582,90 @@ NavatalaErrorCode navatala_gpu_gemm_f32(
     size_t k,
     float alpha,
     float beta,
+    NavatalaGpuQueue* queue);
+
+/**
+ * Compute C = A @ B for row-major half-precision input matrices with
+ * single-precision accumulation/output.
+ *
+ * A has shape [m, k], B has shape [k, n], and C has shape [m, n]. This wrapper
+ * is the public entry point for generated HIP/gfx942 MFMA kernels. The current
+ * production MFMA path supports NN layout with F32 alpha/beta epilogue scaling
+ * and edge-tile bounds checks. Transpose and batched modes are exposed through
+ * navatala_gpu_gemm_f16_f32_ex and navatala_gpu_gemm_f16_f32_strided_batched.
+ * Unsupported forced-MFMA calls return a loud error instead of silently
+ * launching the wrong kernel.
+ *
+ * @return NAVATALA_SUCCESS on success, error code on failure.
+ */
+NavatalaErrorCode navatala_gpu_gemm_f16_f32(
+    const NavatalaGpuBuffer* a,
+    const NavatalaGpuBuffer* b,
+    NavatalaGpuBuffer* c,
+    size_t m,
+    size_t n,
+    size_t k,
+    float alpha,
+    float beta,
+    NavatalaGpuQueue* queue);
+
+/**
+ * Compute C = alpha * op(A) @ op(B) + beta * C for row-major half-precision
+ * input matrices with single-precision accumulation/output.
+ *
+ * Logical op(A) has shape [m, k], logical op(B) has shape [k, n], and C has
+ * shape [m, n]. When trans_a is NONE, A is stored as [m, k]; when TRANSPOSE,
+ * A is stored as [k, m]. B follows the analogous [k, n] / [n, k] rule.
+ *
+ * The current HIP/gfx942 MFMA fast path supports all four orientation
+ * combinations for single-batch calls and delegates strided-batched calls to
+ * navatala_gpu_gemm_f16_f32_strided_batched.
+ *
+ * @return NAVATALA_SUCCESS on success, error code on failure.
+ */
+NavatalaErrorCode navatala_gpu_gemm_f16_f32_ex(
+    const NavatalaGpuBuffer* a,
+    const NavatalaGpuBuffer* b,
+    NavatalaGpuBuffer* c,
+    size_t m,
+    size_t n,
+    size_t k,
+    float alpha,
+    float beta,
+    NavatalaMatrixTranspose trans_a,
+    NavatalaMatrixTranspose trans_b,
+    NavatalaGpuQueue* queue);
+
+/**
+ * Strided-batched form of navatala_gpu_gemm_f16_f32_ex.
+ *
+ * Strides are expressed in elements, not bytes. Each batch computes:
+ *   C_i = alpha * op(A_i) @ op(B_i) + beta * C_i
+ * where A_i/B_i/C_i start at base + i * stride_{a,b,c}. Strides are expressed
+ * in elements, not bytes. A zero stride for A and/or B broadcasts that input
+ * matrix across all batches; C must use a non-overlapping positive stride for
+ * multi-batch calls to avoid concurrent writes to the same output matrix. On
+ * HIP/gfx942 the MFMA fast path launches one 3D grid across all batches; other
+ * backends use the portable correctness fallback until backend-specific batched
+ * kernels are introduced.
+ *
+ * @return NAVATALA_SUCCESS on success, error code on failure.
+ */
+NavatalaErrorCode navatala_gpu_gemm_f16_f32_strided_batched(
+    const NavatalaGpuBuffer* a,
+    const NavatalaGpuBuffer* b,
+    NavatalaGpuBuffer* c,
+    size_t m,
+    size_t n,
+    size_t k,
+    float alpha,
+    float beta,
+    NavatalaMatrixTranspose trans_a,
+    NavatalaMatrixTranspose trans_b,
+    size_t stride_a,
+    size_t stride_b,
+    size_t stride_c,
+    size_t batch_count,
     NavatalaGpuQueue* queue);
 
 /**

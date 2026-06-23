@@ -1,0 +1,161 @@
+{
+  "schema": "navatala_gpu.rocm_vendor_benchmark.v1",
+  "timingMode": "back_to_back_throughput_mean_per_launch",
+  "iterations": 30,
+  "warmup": 10,
+  "quickMode": false,
+  "matrix": "broad",
+  "device": {
+    "name": "AMD Instinct MI300X VF",
+    "gcnArch": "gfx942:sramecc+:xnack-",
+    "globalMemoryMiB": 196288
+  },
+  "hipSPARSELtAvailable": true,
+  "hipSPARSELtMode": "vendor_benchmark",
+  "results": [
+    {
+      "operation": "AXPY_F32",
+      "shape": "n=65536",
+      "navatalaPath": "generated HIP kernel navatala_sparse_axpy_f32",
+      "vendorPath": "rocBLAS rocblas_saxpy",
+      "correctness": true,
+      "generatedMeanMs": 0.0023988667,
+      "vendorMeanMs": 0.0031874001,
+      "generatedOverVendorRatio": 0.75260921,
+      "maxAbsError": 0,
+      "notes": ""
+    },
+    {
+      "operation": "AXPY_F32",
+      "shape": "n=1048576",
+      "navatalaPath": "generated HIP kernel navatala_sparse_axpy_f32",
+      "vendorPath": "rocBLAS rocblas_saxpy",
+      "correctness": true,
+      "generatedMeanMs": 0.0058187336,
+      "vendorMeanMs": 0.0057598998,
+      "generatedOverVendorRatio": 1.0102144,
+      "maxAbsError": 0,
+      "notes": ""
+    },
+    {
+      "operation": "AXPY_F32",
+      "shape": "n=4194304",
+      "navatalaPath": "generated HIP kernel navatala_sparse_axpy_f32",
+      "vendorPath": "rocBLAS rocblas_saxpy",
+      "correctness": true,
+      "generatedMeanMs": 0.017753734,
+      "vendorMeanMs": 0.018602367,
+      "generatedOverVendorRatio": 0.95438037,
+      "maxAbsError": 0,
+      "notes": ""
+    },
+    {
+      "operation": "GEMM_F32",
+      "shape": "m=128,n=128,k=128",
+      "navatalaPath": "generated HIP kernel navatala_transformer_tiled_gemm_f32",
+      "vendorPath": "rocBLAS rocblas_sgemm",
+      "correctness": true,
+      "generatedMeanMs": 0.018618433,
+      "vendorMeanMs": 0.0070922002,
+      "generatedOverVendorRatio": 2.6251984,
+      "maxAbsError": 1.7881393e-07,
+      "notes": ""
+    },
+    {
+      "operation": "GEMM_F32",
+      "shape": "m=512,n=512,k=512",
+      "navatalaPath": "generated HIP kernel navatala_transformer_tiled_gemm_f32",
+      "vendorPath": "rocBLAS rocblas_sgemm",
+      "correctness": true,
+      "generatedMeanMs": 0.071458197,
+      "vendorMeanMs": 0.0093119671,
+      "generatedOverVendorRatio": 7.6738025,
+      "maxAbsError": 7.1525574e-07,
+      "notes": ""
+    },
+    {
+      "operation": "GEMM_F32",
+      "shape": "m=1024,n=1024,k=1024",
+      "navatalaPath": "generated HIP kernel navatala_transformer_tiled_gemm_f32",
+      "vendorPath": "rocBLAS rocblas_sgemm",
+      "correctness": true,
+      "generatedMeanMs": 0.54001598,
+      "vendorMeanMs": 0.0252832,
+      "generatedOverVendorRatio": 21.358689,
+      "maxAbsError": 1.6689301e-06,
+      "notes": ""
+    },
+    {
+      "operation": "CSR_SPMV_F32",
+      "shape": "rows=16384,rowNnz=7,nnz=114688",
+      "navatalaPath": "generated HIP kernel navatala_graph_spmv_weighted_f32",
+      "vendorPath": "rocSPARSE rocsparse_spmv",
+      "correctness": true,
+      "generatedMeanMs": 0.0032822,
+      "vendorMeanMs": 0.0037204665,
+      "generatedOverVendorRatio": 0.8822012,
+      "maxAbsError": 1.4901161e-08,
+      "notes": ""
+    },
+    {
+      "operation": "CSR_SPMV_F32",
+      "shape": "rows=262144,rowNnz=7,nnz=1835008",
+      "navatalaPath": "generated HIP kernel navatala_graph_spmv_weighted_f32",
+      "vendorPath": "rocSPARSE rocsparse_spmv",
+      "correctness": true,
+      "generatedMeanMs": 0.0066845998,
+      "vendorMeanMs": 0.0053696002,
+      "generatedOverVendorRatio": 1.2448971,
+      "maxAbsError": 2.9802322e-08,
+      "notes": ""
+    },
+    {
+      "operation": "CSR_SPMV_F32",
+      "shape": "rows=1048576,rowNnz=7,nnz=7340032",
+      "navatalaPath": "generated HIP kernel navatala_graph_spmv_weighted_f32",
+      "vendorPath": "rocSPARSE rocsparse_spmv",
+      "correctness": true,
+      "generatedMeanMs": 0.050016967,
+      "vendorMeanMs": 0.021295333,
+      "generatedOverVendorRatio": 2.3487291,
+      "maxAbsError": 1.4901161e-08,
+      "notes": ""
+    },
+    {
+      "operation": "CSR_SPMV_F32",
+      "shape": "rows=262144,rowNnz=27,nnz=7077888",
+      "navatalaPath": "generated HIP kernel navatala_graph_spmv_weighted_f32",
+      "vendorPath": "rocSPARSE rocsparse_spmv",
+      "correctness": true,
+      "generatedMeanMs": 0.29019899,
+      "vendorMeanMs": 0.019513899,
+      "generatedOverVendorRatio": 14.8714,
+      "maxAbsError": 8.9406967e-08,
+      "notes": ""
+    },
+    {
+      "operation": "HIPSPARSELT_STRUCTURED_GEMM_F16",
+      "shape": "m=128,n=128,k=128,sparsity=50%,compute=F32",
+      "navatalaPath": "hipSPARSELt prune/compress/matmul path for SparseLt_StructuredMatmul",
+      "vendorPath": "rocBLAS rocblas_hgemm dense pruned-A reference",
+      "correctness": true,
+      "generatedMeanMs": 0.012229233,
+      "vendorMeanMs": 0.0088040998,
+      "generatedOverVendorRatio": 1.3890384,
+      "maxAbsError": 0,
+      "notes": "hipSPARSELt benchmark row; setup/prune/compress are outside timed matmul loop"
+    },
+    {
+      "operation": "HIPSPARSELT_STRUCTURED_GEMM_F16",
+      "shape": "m=512,n=512,k=512,sparsity=50%,compute=F32",
+      "navatalaPath": "hipSPARSELt prune/compress/matmul path for SparseLt_StructuredMatmul",
+      "vendorPath": "rocBLAS rocblas_hgemm dense pruned-A reference",
+      "correctness": true,
+      "generatedMeanMs": 0.0138209,
+      "vendorMeanMs": 0.020176733,
+      "generatedOverVendorRatio": 0.68499196,
+      "maxAbsError": 0,
+      "notes": "hipSPARSELt benchmark row; setup/prune/compress are outside timed matmul loop"
+    }
+  ]
+}

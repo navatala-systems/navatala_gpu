@@ -15,9 +15,9 @@
 
 __kernel void navatala_cfd_u_correct(__global const float* pCell, __global const int* owner, __global const int* neighbour, __global const float* sfX, __global const float* sfY, __global const float* sfZ, __global const float* bcVal, __global const int* bcMask, __global const int* offsets, __global const int* faceIdx, __global const float* sign, __global const float* vol, __global const float* rAU, __global const float* ux, __global const float* uy, __global const float* uz, __global const int* counts, __global const float* paramsF, __global float* outX, __global float* outY, __global float* outZ) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
     return;
   } else {

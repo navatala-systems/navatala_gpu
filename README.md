@@ -8,7 +8,8 @@ This distribution bundles two cooperating layers:
 1. **`runtime/`** — a C++20 abstraction that presents one API over CUDA, HIP,
    Vulkan compute, OpenCL, and Metal. Handles device enumeration, memory
    allocation (device, pinned, managed), execution queues, event-based
-   synchronization, and CUDA/HIP graph capture.
+   synchronization, CUDA/HIP graph capture, and a small stable C++ facade for
+   common operations such as `navatala::linalg::axpy`.
 
 2. **`kernels/`** — a corpus of compute kernels covering finite-volume CFD
    primitives, algebraic multigrid (AMG), classical iterative solvers
@@ -68,18 +69,20 @@ cmake -S . -B build \
     -DNAVATALA_GPU_USE_OPENCL=OFF
 ```
 
-## Quick example
+## Quick examples
 
-A complete, runnable example that loads one CUDA kernel from `kernels/cuda/`
-and verifies the result is at [`examples/axpy_example.cpp`](examples/axpy_example.cpp).
-After building, run it with:
+Complete, runnable examples are in [`examples/`](examples/). The C ABI example
+uses `navatala_gpu_axpy_f32`; the C++ wrapper example uses
+`navatala::resources`, `navatala::buffer`, and `navatala::linalg::axpy`.
+After building, run:
 
 ```bash
 ./build/examples/axpy_example
+./build/examples/wrapper_axpy_example
 ```
 
-The example exits 0 with a `[skip]` message on hosts without a GPU, so it
-is safe to wire into CI even on CPU-only runners.
+Both examples exit 0 with a `[skip]` message on hosts without a GPU, so they
+are safe to wire into CI even on CPU-only runners.
 
 For a fuller tour, see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
@@ -89,11 +92,16 @@ For a fuller tour, see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 - [`docs/BACKENDS.md`](docs/BACKENDS.md) — per-backend capabilities and limitations.
 - [`docs/KERNELS.md`](docs/KERNELS.md) — what's in the kernel corpus and how to read it.
 - [`docs/BACKEND_COVERAGE.md`](docs/BACKEND_COVERAGE.md) — generated backend coverage matrix.
+- [`docs/NUMERICAL_CONFORMANCE.md`](docs/NUMERICAL_CONFORMANCE.md) — validation status and pending backend evidence.
+- [`docs/TUNING_ROADMAP.md`](docs/TUNING_ROADMAP.md) — selective backend tuning priorities and benchmark evidence rules.
+- [`docs/benchmarks/ROCM_VENDOR_BENCHMARKS.md`](docs/benchmarks/ROCM_VENDOR_BENCHMARKS.md) — optional HIP benchmark harness comparing selected generated kernels against rocBLAS/rocSPARSE.
+- [`docs/benchmarks/ROCM_VALIDATION_TEMPLATE.md`](docs/benchmarks/ROCM_VALIDATION_TEMPLATE.md) — template for public ROCm correctness/benchmark reports.
 - [`docs/KERNEL_INDEX.md`](docs/KERNEL_INDEX.md) — generated domain-grouped kernel index.
 - [`docs/PUBLIC_PRIVATE_BOUNDARY.md`](docs/PUBLIC_PRIVATE_BOUNDARY.md) — what is public, private, and generated.
 - [`docs/SBOM.md`](docs/SBOM.md) — dependency and license summary for the release tree.
 - [`docs/PYPI_RELEASE.md`](docs/PYPI_RELEASE.md) — TestPyPI/PyPI release procedure.
 - [`docs/ALPHA_RELEASE_CHECKLIST.md`](docs/ALPHA_RELEASE_CHECKLIST.md) — release-readiness checklist.
+- [`docs/release/ALPHA_0_1_1_EVIDENCE.md`](docs/release/ALPHA_0_1_1_EVIDENCE.md) — local alpha-candidate gate evidence.
 - [`SECURITY.md`](SECURITY.md) — vulnerability reporting policy.
 
 ## Contributing

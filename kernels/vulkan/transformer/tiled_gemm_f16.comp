@@ -64,20 +64,41 @@ void main() {
   bool rowValid = (row < mDim);
   bool colValid = (col < nDim);
   bool valid = (rowValid && colValid);
-  if (valid) {
-    float acc = uintBitsToFloat(0x00000000u);
-    for (int kIter = 0; kIter < int(kDim); ++kIter) {
-      uint aIdx = ((row * kDim) + kIter);
-      uint bIdx = ((kIter * nDim) + col);
-      float16_t aValF16 = a[aIdx];
-      float16_t bValF16 = b[bIdx];
-      float aVal = float(aValF16);
-      float bVal = float(bValF16);
-      float prod = (aVal * bVal);
+  float acc = uintBitsToFloat(0x00000000u);
+  uint tileCount = ((kDim + (tileSize - 1u)) / tileSize);
+  for (int tileIter = 0; tileIter < int(tileCount); ++tileIter) {
+    uint tileIterU32 = uint(tileIter);
+    uint tileBase = (tileIterU32 * tileSize);
+    uint aK = (tileBase + tidX);
+    uint bK = (tileBase + tidY);
+    uint tileOffset = ((tidY * tileSize) + tidX);
+    bool aKValid = (aK < kDim);
+    bool bKValid = (bK < kDim);
+    bool aLoadValid = (rowValid && aKValid);
+    bool bLoadValid = (colValid && bKValid);
+    uint aIdx = ((row * kDim) + aK);
+    uint bIdx = ((bK * nDim) + col);
+    float16_t aValF16 = ((aLoadValid) ? (a[aIdx]) : (float16_t(0.000000)));
+    float16_t bValF16 = ((bLoadValid) ? (b[bIdx]) : (float16_t(0.000000)));
+    float aTileVal = float(aValF16);
+    float bTileVal = float(bValF16);
+    tileA[tileOffset] = aTileVal;
+    tileB[tileOffset] = bTileVal;
+    barrier();
+    for (int kk = 0; kk < int(tileSize); ++kk) {
+      uint kkU32 = uint(kk);
+      uint tileAIdx = ((tidY * tileSize) + kkU32);
+      uint tileBIdx = ((kkU32 * tileSize) + tidX);
+      float aTile = tileA[tileAIdx];
+      float bTile = tileB[tileBIdx];
+      float prod = (aTile * bTile);
       float oldAcc = acc;
       acc = (oldAcc + prod);
     }
-    float finalAcc = acc;
+    barrier();
+  }
+  float finalAcc = acc;
+  if (valid) {
     uint cIdx = ((row * nDim) + col);
     float16_t cOldF16 = c[cIdx];
     float cOld = float(cOldF16);

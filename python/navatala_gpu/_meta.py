@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from typing import Optional
 
-_MANIFEST_ID = "pyabi6-3906333046"
+_MANIFEST_ID = "pyabi6-2675513039"
 
 _CONTRACTS = {
     "linalg.axpy": "navatala://python/linalg/axpy",

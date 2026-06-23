@@ -15,9 +15,9 @@
 
 __kernel void navatala_cfd_k_omega_s_s_t_blending(__global const float* k, __global const float* omega, __global const float* nut, __global const float* nu, __global const float* y, __global const float* gradKx, __global const float* gradKy, __global const float* gradKz, __global const float* gradOmegax, __global const float* gradOmegay, __global const float* gradOmegaz, __global const int* counts, __global float* outF1, __global float* outF23, __global float* outCDkOmega) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
     return;
   } else {

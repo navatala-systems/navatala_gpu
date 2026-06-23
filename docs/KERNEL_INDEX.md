@@ -480,7 +480,7 @@ Compact navigation aid for the kernel corpus, grouped by domain.
 
 ## Miscellaneous
 
-1,398 kernels.
+1,409 kernels.
 
 | Kernel | CUDA | HIP | OpenCL | Vulkan | Metal |
 |--------|:----:|:---:|:------:|:------:|:-----:|
@@ -1791,6 +1791,17 @@ Compact navigation aid for the kernel corpus, grouped by domain.
 | `navatala_transformer_tiled_gemm_backward_f16` | yes | yes | yes | yes | yes |
 | `navatala_transformer_tiled_gemm_backward_f32` | yes | yes | yes | yes | yes |
 | `navatala_transformer_tiled_gemm_f16` | yes | yes | yes | yes | yes |
+| `navatala_transformer_tiled_gemm_f16_f32_out` | yes | yes | yes | yes | yes |
+| `navatala_transformer_tiled_gemm_f16_mfma` | - | yes | - | - | - |
+| `navatala_transformer_tiled_gemm_f16_mfma_cta128` | - | yes | - | - | - |
+| `navatala_transformer_tiled_gemm_f16_mfma_cta128_edge` | - | yes | - | - | - |
+| `navatala_transformer_tiled_gemm_f16_mfma_cta64_direct` | - | yes | - | - | - |
+| `navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined` | - | yes | - | - | - |
+| `navatala_transformer_tiled_gemm_f16_mfma_cta64_shared` | - | yes | - | - | - |
+| `navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_early_barrier` | - | yes | - | - | - |
+| `navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_edge` | - | yes | - | - | - |
+| `navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_padded` | - | yes | - | - | - |
+| `navatala_transformer_tiled_gemm_f16_mfma_k_loop` | - | yes | - | - | - |
 | `navatala_transformer_tiled_gemm_f32` | yes | yes | yes | yes | yes |
 | `navatala_transformer_top_k_gating_f16` | yes | yes | yes | yes | yes |
 | `navatala_transformer_top_k_gating_f32` | yes | yes | yes | yes | yes |
@@ -1925,12 +1936,14 @@ Compact navigation aid for the kernel corpus, grouped by domain.
 
 ## Sparse linear algebra
 
-52 kernels.
+54 kernels.
 
 | Kernel | CUDA | HIP | OpenCL | Vulkan | Metal |
 |--------|:----:|:---:|:------:|:------:|:-----:|
 | `navatala_graph_spmv_unweighted_f32` | yes | yes | yes | yes | yes |
+| `navatala_graph_spmv_unweighted_subgroup_f32` | yes | yes | yes | yes | yes |
 | `navatala_graph_spmv_weighted_f32` | yes | yes | yes | yes | yes |
+| `navatala_graph_spmv_weighted_subgroup_f32` | yes | yes | yes | yes | yes |
 | `navatala_ml_make_sparse_uncorrelated_f32` | yes | yes | yes | yes | yes |
 | `navatala_ml_make_sparse_uncorrelated_f64` | yes | yes | yes | yes | - |
 | `navatala_sparse_compute_residual_f32` | yes | yes | yes | yes | yes |

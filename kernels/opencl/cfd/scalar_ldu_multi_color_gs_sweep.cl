@@ -15,9 +15,9 @@
 
 __kernel void navatala_cfd_scalar_ldu_multi_color_gs_sweep(__global const float* diag, __global const float* upper, __global const float* lower, __global const float* rhs, __global const int* owner, __global const int* neighbour, __global const uint* offsets, __global const uint* faceIdx, __global const int* sign, __global const uint* colorOrder, __global const uint* colorRange, __global const float* params, __global const uint* counts, __global float* x) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   int colorSize = (((int)(colorRange[1])) - ((int)(colorRange[0])));
   if (((int)(get_global_id(0)) >= colorSize)) {
     return;

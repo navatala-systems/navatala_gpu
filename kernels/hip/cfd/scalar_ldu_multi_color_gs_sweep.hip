@@ -16,9 +16,9 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_cfd_scalar_ldu_multi_color_gs_sweep(const float* diag, const float* upper, const float* lower, const float* rhs, const int* owner, const int* neighbour, const unsigned int* offsets, const unsigned int* faceIdx, const int* sign, const unsigned int* colorOrder, const unsigned int* colorRange, const float* params, const unsigned int* counts, float* x) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   int colorSize = (((int)(colorRange[1])) - ((int)(colorRange[0])));
   if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= colorSize)) {
     return;

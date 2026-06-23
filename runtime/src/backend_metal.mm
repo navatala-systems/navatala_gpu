@@ -19,6 +19,8 @@
 
 #include <gpu_runtime.h>
 
+#include "device_mem_telemetry_internal.h"
+
 #import <CoreFoundation/CoreFoundation.h>
 #import <Foundation/Foundation.h>
 #import <Metal/Metal.h>
@@ -364,30 +366,6 @@ private:
 // MetalBuffer
 // ============================================================================
 
-// ----------------------------------------------------------------------------
-// Metal Shared-buffer telemetry (NAVATALA_GPU_MEMORY_PROFILE).
-// On Apple Silicon, MTLStorageModeShared buffers live in system RAM, so this
-// total IS the GPU-side contribution to host memory pressure. Tracked as a
-// running sum (alloc/free) plus peak and largest-single-buffer high-water.
-// ----------------------------------------------------------------------------
-static std::atomic<std::size_t> g_metalBytes{0};
-static std::atomic<std::size_t> g_metalPeakBytes{0};
-static std::atomic<std::size_t> g_metalCount{0};
-static std::atomic<std::size_t> g_metalLargest{0};
-
-static void metalNoteAlloc(std::size_t n) {
-    const std::size_t cur = g_metalBytes.fetch_add(n) + n;
-    g_metalCount.fetch_add(1);
-    std::size_t pk = g_metalPeakBytes.load();
-    while (cur > pk && !g_metalPeakBytes.compare_exchange_weak(pk, cur)) {}
-    std::size_t lg = g_metalLargest.load();
-    while (n > lg && !g_metalLargest.compare_exchange_weak(lg, n)) {}
-}
-static void metalNoteFree(std::size_t n) {
-    g_metalBytes.fetch_sub(n);
-    g_metalCount.fetch_sub(1);
-}
-
 class MetalBuffer final : public Buffer {
 public:
     MetalBuffer(id<MTLDevice> device, size_t size, MemoryKind kind)
@@ -419,7 +397,7 @@ public:
         metalContents_ = buffer_.contents;
         contents_ = metalContents_;
         storageMode_ = buffer_.storageMode;
-        metalNoteAlloc(size_);
+        noteDeviceMemAlloc(size_);
         countedBytes_ = size_;
         if (std::getenv("GPU_RUNTIME_DEBUG_METAL_BUFFER") != nullptr) {
             fprintf(stderr,
@@ -436,7 +414,7 @@ public:
 
     ~MetalBuffer() override {
         if (countedBytes_ != 0) {
-            metalNoteFree(countedBytes_);
+            noteDeviceMemFree(countedBytes_);
         }
     }
 
@@ -1159,15 +1137,6 @@ std::unique_ptr<Device> MetalDevice_tryCreate(int device_id) {
     } catch (...) {
         return nullptr;
     }
-}
-
-DeviceMemTelemetry deviceMemTelemetry() {
-    DeviceMemTelemetry t;
-    t.currentBytes = g_metalBytes.load();
-    t.peakBytes = g_metalPeakBytes.load();
-    t.count = g_metalCount.load();
-    t.largestBytes = g_metalLargest.load();
-    return t;
 }
 
 }  // namespace GpuRuntime

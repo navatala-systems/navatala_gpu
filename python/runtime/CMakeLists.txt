@@ -8,7 +8,7 @@
 # silently skipped at configure time.
 
 cmake_minimum_required(VERSION 3.18)
-project(gpu_runtime VERSION 0.1.1 LANGUAGES CXX)
+project(gpu_runtime VERSION 0.1.2 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -45,6 +45,7 @@ option(GPU_RUNTIME_BUILD_TESTS "Build the runtime test suite" ON)
 
 set(GPU_RUNTIME_HAVE_CUDA   0)
 set(GPU_RUNTIME_HAVE_HIP    0)
+set(GPU_RUNTIME_HAVE_ROCBLAS 0)
 set(GPU_RUNTIME_HAVE_VULKAN 0)
 set(GPU_RUNTIME_HAVE_OPENCL 0)
 set(GPU_RUNTIME_HAVE_METAL  0)
@@ -52,6 +53,7 @@ set(GPU_RUNTIME_HAVE_METAL  0)
 set(BACKEND_SOURCES "")
 set(BACKEND_LIBS    "")
 set(BACKEND_INCLUDE_DIRS "")
+set(GPU_LIBRARY_OPS_SOURCES "")
 
 if(GPU_RUNTIME_USE_CUDA)
     find_package(CUDAToolkit QUIET)
@@ -76,6 +78,30 @@ if(GPU_RUNTIME_USE_HIP)
             list(APPEND BACKEND_LIBS ${HIPRTC_LIBRARY})
         endif()
         message(STATUS "[Navatala GPU] HIP backend enabled")
+
+        find_package(rocblas CONFIG QUIET HINTS /opt/rocm PATHS /opt/rocm)
+        if(TARGET roc::rocblas)
+            set(GPU_RUNTIME_HAVE_ROCBLAS 1)
+            list(APPEND GPU_LIBRARY_OPS_SOURCES src/gpu_library_hip_blas.cpp)
+            list(APPEND BACKEND_LIBS roc::rocblas)
+            message(STATUS "[Navatala GPU] rocBLAS LibraryOps enabled")
+        else()
+            find_path(ROCBLAS_INCLUDE_DIR
+                NAMES rocblas/rocblas.h rocblas.h
+                HINTS /opt/rocm/include)
+            find_library(ROCBLAS_LIBRARY
+                NAMES rocblas
+                HINTS /opt/rocm/lib /opt/rocm/lib64)
+            if(ROCBLAS_LIBRARY AND ROCBLAS_INCLUDE_DIR)
+                set(GPU_RUNTIME_HAVE_ROCBLAS 1)
+                list(APPEND GPU_LIBRARY_OPS_SOURCES src/gpu_library_hip_blas.cpp)
+                list(APPEND BACKEND_LIBS "${ROCBLAS_LIBRARY}")
+                list(APPEND BACKEND_INCLUDE_DIRS "${ROCBLAS_INCLUDE_DIR}")
+                message(STATUS "[Navatala GPU] rocBLAS LibraryOps enabled (manual probe)")
+            else()
+                message(STATUS "[Navatala GPU] rocBLAS not found; HIP LibraryOps BLAS dispatch disabled")
+            endif()
+        endif()
     else()
         message(STATUS "[Navatala GPU] HIP backend requested but ROCm not found — skipping")
     endif()
@@ -128,9 +154,20 @@ set(CORE_SOURCES
     src/program_cache.cpp
     src/stream_pool.cpp
     src/resource_adaptors.cpp
+    src/public_runtime_stubs.cpp
+    ${GPU_LIBRARY_OPS_SOURCES}
 )
 
 set(NAVATALA_FFI_SOURCES "")
+set(NAVATALA_CPP_WRAPPER_SOURCES
+    src/navatala_backend.cpp
+    src/navatala_resource.cpp
+    src/navatala_memory.cpp
+    src/navatala_buffer.cpp
+    src/navatala_index.cpp
+    src/navatala_neural_operators.cpp
+    src/navatala_profiling.cpp
+)
 if(GPU_RUNTIME_NAVATALA_WRAPPER)
     if(GPU_RUNTIME_NAVATALA_FFI_STUB)
         set(NAVATALA_FFI_SOURCES src/navatala_ffi_stub.cpp)
@@ -148,12 +185,36 @@ if(GPU_RUNTIME_NAVATALA_WRAPPER)
 else()
     message(STATUS "[Navatala GPU] public FFI disabled")
 endif()
+if(GPU_RUNTIME_NAVATALA_WRAPPER)
+    foreach(wrapper_src IN LISTS NAVATALA_CPP_WRAPPER_SOURCES)
+        if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${wrapper_src}")
+            list(APPEND NAVATALA_FFI_SOURCES ${wrapper_src})
+        endif()
+    endforeach()
+endif()
+
+set(GPU_RUNTIME_HAVE_HIP_TRANSFORMER_REGISTRY 0)
+if(GPU_RUNTIME_NAVATALA_WRAPPER AND NOT GPU_RUNTIME_NAVATALA_FFI_STUB AND GPU_RUNTIME_HAVE_HIP)
+    set(NAVATALA_HIP_TRANSFORMER_REGISTRY_SOURCE
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/internal/_registry_strings_hip_transformer.cpp")
+    if(EXISTS "${NAVATALA_HIP_TRANSFORMER_REGISTRY_SOURCE}")
+        list(APPEND NAVATALA_FFI_SOURCES src/internal/_registry_strings_hip_transformer.cpp)
+        set(GPU_RUNTIME_HAVE_HIP_TRANSFORMER_REGISTRY 1)
+        message(STATUS "[Navatala GPU] HIP transformer registry shard enabled for MFMA wrapper dispatch")
+    else()
+        message(STATUS "[Navatala GPU] HIP transformer registry shard not found; MFMA wrapper dispatch disabled")
+    endif()
+endif()
 
 # ============================================================================
 # Library target
 # ============================================================================
 
 add_library(gpu_runtime SHARED ${CORE_SOURCES} ${BACKEND_SOURCES} ${NAVATALA_FFI_SOURCES})
+
+if(GPU_RUNTIME_NAVATALA_WRAPPER)
+    target_compile_definitions(gpu_runtime PUBLIC NAVATALA_ENABLE_EXCEPTIONS=1)
+endif()
 
 target_include_directories(gpu_runtime
     PUBLIC
@@ -166,9 +227,11 @@ target_include_directories(gpu_runtime
 target_compile_definitions(gpu_runtime PRIVATE
     GPU_RUNTIME_HAVE_CUDA=${GPU_RUNTIME_HAVE_CUDA}
     GPU_RUNTIME_HAVE_HIP=${GPU_RUNTIME_HAVE_HIP}
+    GPU_RUNTIME_HAVE_ROCBLAS=${GPU_RUNTIME_HAVE_ROCBLAS}
     GPU_RUNTIME_HAVE_VULKAN=${GPU_RUNTIME_HAVE_VULKAN}
     GPU_RUNTIME_HAVE_OPENCL=${GPU_RUNTIME_HAVE_OPENCL}
     GPU_RUNTIME_HAVE_METAL=${GPU_RUNTIME_HAVE_METAL}
+    NAVATALA_GPU_HAVE_HIP_TRANSFORMER_REGISTRY=${GPU_RUNTIME_HAVE_HIP_TRANSFORMER_REGISTRY}
 )
 
 target_link_libraries(gpu_runtime PRIVATE ${BACKEND_LIBS})

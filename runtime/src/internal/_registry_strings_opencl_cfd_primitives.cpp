@@ -41,9 +41,9 @@ __kernel void navatala_cfd_primitives_average_face_scalar_to_cell(__global const
 const char* k_opencl_navatala_cfd_primitives_evaluate_scalar_bc = R"kernel(
 __kernel void navatala_cfd_primitives_evaluate_scalar_bc(__global const float* internalField, __global const int* faceCells, __global const uint* bcTypeMask, __global const float* fixedValues, __global const uint* counts, __global float* boundaryOut) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
     return;
   } else {
@@ -61,9 +61,9 @@ __kernel void navatala_cfd_primitives_evaluate_scalar_bc(__global const float* i
 const char* k_opencl_navatala_cfd_primitives_evaluate_vector_bc = R"kernel(
 __kernel void navatala_cfd_primitives_evaluate_vector_bc(__global const float* inX, __global const float* inY, __global const float* inZ, __global const int* faceCells, __global const uint* bcTypeMask, __global const float* fvX, __global const float* fvY, __global const float* fvZ, __global const uint* counts, __global float* outX, __global float* outY, __global float* outZ) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
     return;
   } else {
@@ -709,9 +709,9 @@ __kernel void navatala_cfd_primitives_phig_gravity(__global const float* ghf, __
 const char* k_opencl_navatala_cfd_primitives_r_a_u_from_dt_rho = R"kernel(
 __kernel void navatala_cfd_primitives_r_a_u_from_dt_rho(__global const float* rho, __global const float* paramsF, __global const int* counts, __global float* outRAU) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
     return;
   } else {
@@ -724,9 +724,9 @@ __kernel void navatala_cfd_primitives_r_a_u_from_dt_rho(__global const float* rh
 const char* k_opencl_navatala_cfd_primitives_r_a_u_from_dt_rho_integrated = R"kernel(
 __kernel void navatala_cfd_primitives_r_a_u_from_dt_rho_integrated(__global const float* rho, __global const float* vol, __global const float* paramsF, __global const int* counts, __global float* outRAU) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
     return;
   } else {
@@ -745,9 +745,9 @@ __kernel void navatala_cfd_primitives_r_a_u_from_dt_rho_integrated(__global cons
 const char* k_opencl_navatala_cfd_primitives_r_a_u_from_dt_rho_sp = R"kernel(
 __kernel void navatala_cfd_primitives_r_a_u_from_dt_rho_sp(__global const float* rho, __global const float* sp, __global const float* paramsF, __global const int* counts, __global float* outRAU) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
     return;
   } else {
@@ -762,9 +762,9 @@ __kernel void navatala_cfd_primitives_r_a_u_from_dt_rho_sp(__global const float*
 const char* k_opencl_navatala_cfd_primitives_r_a_u_from_dt_rho_sp_integrated = R"kernel(
 __kernel void navatala_cfd_primitives_r_a_u_from_dt_rho_sp_integrated(__global const float* rho, __global const float* sp, __global const float* vol, __global const float* paramsF, __global const int* counts, __global float* outRAU) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
     return;
   } else {
@@ -921,9 +921,9 @@ __kernel void navatala_cfd_primitives_r_a_u_from_u_eqn_approx_sp(__global const 
 const char* k_opencl_navatala_cfd_primitives_rho_from_alpha = R"kernel(
 __kernel void navatala_cfd_primitives_rho_from_alpha(__global const float* alpha, __global const float* paramsF, __global const int* counts, __global float* outRho) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
     return;
   } else {

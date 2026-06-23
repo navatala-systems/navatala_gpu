@@ -1,6 +1,11 @@
 GPU_RUNTIME_0.1 {
     global:
         navatala_*;
+        _ZNK8navatala*;
+        _ZN8navatala*;
+        _ZTIN8navatala*;
+        _ZTSN8navatala*;
+        _ZTVN8navatala*;
     local:
         *;
 };

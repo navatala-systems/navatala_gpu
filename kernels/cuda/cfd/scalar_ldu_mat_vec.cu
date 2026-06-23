@@ -16,9 +16,9 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_scalar_ldu_mat_vec(const float* diag, const float* upper, const float* lower, const float* x, const int* owner, const int* neighbour, const unsigned int* offsets, const unsigned int* faceIdx, const int* sign, const unsigned int* counts, float* ax) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0])))) {
     return;
   } else {

@@ -7506,20 +7506,41 @@ __kernel void navatala_transformer_tiled_gemm_f16(__global const half* a, __glob
   bool valid = (rowValid && colValid);
   __local float tileA[256];
   __local float tileB[256];
-  if (valid) {
-    float acc = as_float(0x00000000u);
-    for (int kIter = 0; kIter < (int)(kDim); ++kIter) {
-      uint aIdx = ((row * kDim) + kIter);
-      uint bIdx = ((kIter * nDim) + col);
-      half aValF16 = a[aIdx];
-      half bValF16 = b[bIdx];
-      float aVal = ((float)(aValF16));
-      float bVal = ((float)(bValF16));
-      float prod = (aVal * bVal);
+  float acc = as_float(0x00000000u);
+  uint tileCount = ((kDim + (tileSize - (uint)(1u))) / tileSize);
+  for (int tileIter = 0; tileIter < (int)(tileCount); ++tileIter) {
+    uint tileIterU32 = ((uint)(tileIter));
+    uint tileBase = (tileIterU32 * tileSize);
+    uint aK = (tileBase + tidX);
+    uint bK = (tileBase + tidY);
+    uint tileOffset = ((tidY * tileSize) + tidX);
+    bool aKValid = (aK < kDim);
+    bool bKValid = (bK < kDim);
+    bool aLoadValid = (rowValid && aKValid);
+    bool bLoadValid = (colValid && bKValid);
+    uint aIdx = ((row * kDim) + aK);
+    uint bIdx = ((bK * nDim) + col);
+    half aValF16 = ((aLoadValid) ? (a[aIdx]) : ((half)(0.000000f)));
+    half bValF16 = ((bLoadValid) ? (b[bIdx]) : ((half)(0.000000f)));
+    float aTileVal = ((float)(aValF16));
+    float bTileVal = ((float)(bValF16));
+    tileA[tileOffset] = aTileVal;
+    tileB[tileOffset] = bTileVal;
+    barrier(CLK_LOCAL_MEM_FENCE);
+    for (int kk = 0; kk < (int)(tileSize); ++kk) {
+      uint kkU32 = ((uint)(kk));
+      uint tileAIdx = ((tidY * tileSize) + kkU32);
+      uint tileBIdx = ((kkU32 * tileSize) + tidX);
+      float aTile = tileA[tileAIdx];
+      float bTile = tileB[tileBIdx];
+      float prod = (aTile * bTile);
       float oldAcc = acc;
       acc = (oldAcc + prod);
     }
-    float finalAcc = acc;
+    barrier(CLK_LOCAL_MEM_FENCE);
+  }
+  float finalAcc = acc;
+  if (valid) {
     uint cIdx = ((row * nDim) + col);
     half cOldF16 = c[cIdx];
     float cOld = ((float)(cOldF16));
@@ -7528,6 +7549,72 @@ __kernel void navatala_transformer_tiled_gemm_f16(__global const half* a, __glob
     float result = (scaledProd + scaledOld);
     half resultF16 = ((half)(result));
     c[cIdx] = resultF16;
+  }
+}
+
+)kernel";
+const char* k_opencl_navatala_transformer_tiled_gemm_f16_f32_out = R"kernel(
+#pragma OPENCL EXTENSION cl_khr_fp16 : enable
+__kernel void navatala_transformer_tiled_gemm_f16_f32_out(__global const half* a, __global const half* b, __global const uint* m, __global const uint* n, __global const uint* k, __global const float* alpha, __global const float* beta, __global float* c) {
+  int gid0 = (int)get_global_id(0);
+  uint tidX = ((uint)((int)(get_local_id(0))));
+  uint tidY = ((uint)((int)(get_local_id(1))));
+  uint gidX = ((uint)((int)(get_group_id(0))));
+  uint gidY = ((uint)((int)(get_group_id(1))));
+  uint mDim = m[(uint)(0u)];
+  uint nDim = n[(uint)(0u)];
+  uint kDim = k[(uint)(0u)];
+  float alphaVal = alpha[(uint)(0u)];
+  float betaVal = beta[(uint)(0u)];
+  uint tileSize = (uint)(16u);
+  uint row = ((gidY * tileSize) + tidY);
+  uint col = ((gidX * tileSize) + tidX);
+  bool rowValid = (row < mDim);
+  bool colValid = (col < nDim);
+  bool valid = (rowValid && colValid);
+  __local float tileA[256];
+  __local float tileB[256];
+  float acc = as_float(0x00000000u);
+  uint tileCount = ((kDim + (tileSize - (uint)(1u))) / tileSize);
+  for (int tileIter = 0; tileIter < (int)(tileCount); ++tileIter) {
+    uint tileIterU32 = ((uint)(tileIter));
+    uint tileBase = (tileIterU32 * tileSize);
+    uint aK = (tileBase + tidX);
+    uint bK = (tileBase + tidY);
+    uint tileOffset = ((tidY * tileSize) + tidX);
+    bool aKValid = (aK < kDim);
+    bool bKValid = (bK < kDim);
+    bool aLoadValid = (rowValid && aKValid);
+    bool bLoadValid = (colValid && bKValid);
+    uint aIdx = ((row * kDim) + aK);
+    uint bIdx = ((bK * nDim) + col);
+    half aValF16 = ((aLoadValid) ? (a[aIdx]) : ((half)(0.000000f)));
+    half bValF16 = ((bLoadValid) ? (b[bIdx]) : ((half)(0.000000f)));
+    float aTileVal = ((float)(aValF16));
+    float bTileVal = ((float)(bValF16));
+    tileA[tileOffset] = aTileVal;
+    tileB[tileOffset] = bTileVal;
+    barrier(CLK_LOCAL_MEM_FENCE);
+    for (int kk = 0; kk < (int)(tileSize); ++kk) {
+      uint kkU32 = ((uint)(kk));
+      uint tileAIdx = ((tidY * tileSize) + kkU32);
+      uint tileBIdx = ((kkU32 * tileSize) + tidX);
+      float aTile = tileA[tileAIdx];
+      float bTile = tileB[tileBIdx];
+      float prod = (aTile * bTile);
+      float oldAcc = acc;
+      acc = (oldAcc + prod);
+    }
+    barrier(CLK_LOCAL_MEM_FENCE);
+  }
+  float finalAcc = acc;
+  if (valid) {
+    uint cIdx = ((row * nDim) + col);
+    float cOld = c[cIdx];
+    float scaledProd = (alphaVal * finalAcc);
+    float scaledOld = (betaVal * cOld);
+    float result = (scaledProd + scaledOld);
+    c[cIdx] = result;
   }
 }
 
@@ -7552,18 +7639,39 @@ __kernel void navatala_transformer_tiled_gemm_f32(__global const float* a, __glo
   bool valid = (rowValid && colValid);
   __local float tileA[256];
   __local float tileB[256];
-  if (valid) {
-    float acc = as_float(0x00000000u);
-    for (int kIter = 0; kIter < (int)(kDim); ++kIter) {
-      uint aIdx = ((row * kDim) + kIter);
-      uint bIdx = ((kIter * nDim) + col);
-      float aVal = a[aIdx];
-      float bVal = b[bIdx];
-      float prod = (aVal * bVal);
+  float acc = as_float(0x00000000u);
+  uint tileCount = ((kDim + (tileSize - (uint)(1u))) / tileSize);
+  for (int tileIter = 0; tileIter < (int)(tileCount); ++tileIter) {
+    uint tileIterU32 = ((uint)(tileIter));
+    uint tileBase = (tileIterU32 * tileSize);
+    uint aK = (tileBase + tidX);
+    uint bK = (tileBase + tidY);
+    uint tileOffset = ((tidY * tileSize) + tidX);
+    bool aKValid = (aK < kDim);
+    bool bKValid = (bK < kDim);
+    bool aLoadValid = (rowValid && aKValid);
+    bool bLoadValid = (colValid && bKValid);
+    uint aIdx = ((row * kDim) + aK);
+    uint bIdx = ((bK * nDim) + col);
+    float aTileVal = ((aLoadValid) ? (a[aIdx]) : (as_float(0x00000000u)));
+    float bTileVal = ((bLoadValid) ? (b[bIdx]) : (as_float(0x00000000u)));
+    tileA[tileOffset] = aTileVal;
+    tileB[tileOffset] = bTileVal;
+    barrier(CLK_LOCAL_MEM_FENCE);
+    for (int kk = 0; kk < (int)(tileSize); ++kk) {
+      uint kkU32 = ((uint)(kk));
+      uint tileAIdx = ((tidY * tileSize) + kkU32);
+      uint tileBIdx = ((kkU32 * tileSize) + tidX);
+      float aTile = tileA[tileAIdx];
+      float bTile = tileB[tileBIdx];
+      float prod = (aTile * bTile);
       float oldAcc = acc;
       acc = (oldAcc + prod);
     }
-    float finalAcc = acc;
+    barrier(CLK_LOCAL_MEM_FENCE);
+  }
+  float finalAcc = acc;
+  if (valid) {
     uint cIdx = ((row * nDim) + col);
     float cOld = c[cIdx];
     float scaledProd = (alphaVal * finalAcc);
@@ -10794,6 +10902,28 @@ const KernelAbiManifestInfo kAbiManifest_opencl_navatala_transformer_tiled_gemm_
   kAbiArgs_opencl_navatala_transformer_tiled_gemm_f16
 };
 
+const KernelArgumentInfo kAbiArgs_opencl_navatala_transformer_tiled_gemm_f16_f32_out[] = {
+  { "a", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "b", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "m", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "n", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "k", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "alpha", 5, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "beta", 6, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "c", 7, KernelArgumentRole::InputOutput, KernelAccessMode::ReadWrite, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_opencl_navatala_transformer_tiled_gemm_f16_f32_out = {
+  1,
+  "navatala_transformer_tiled_gemm_f16_f32_out",
+  "opencl",
+  "navatala_transformer_tiled_gemm_f16_f32_out",
+  "kernel:opencl:navatala_transformer_tiled_gemm_f16_f32_out",
+  "abi-r1:opencl:navatala_transformer_tiled_gemm_f16_f32_out",
+  "abi-r1:opencl:navatala_transformer_tiled_gemm_f16_f32_out",
+  8,
+  kAbiArgs_opencl_navatala_transformer_tiled_gemm_f16_f32_out
+};
+
 const KernelArgumentInfo kAbiArgs_opencl_navatala_transformer_tiled_gemm_f32[] = {
   { "a", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
   { "b", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
@@ -11845,6 +11975,10 @@ bool tryGetKernelAbiManifest_opencl_transformer(const std::string& backend, cons
     out = &kAbiManifest_opencl_navatala_transformer_tiled_gemm_f16;
     return true;
   }
+  if (backend == "opencl" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out = &kAbiManifest_opencl_navatala_transformer_tiled_gemm_f16_f32_out;
+    return true;
+  }
   if (backend == "opencl" && kernelName == "navatala_transformer_tiled_gemm_f32") {
     out = &kAbiManifest_opencl_navatala_transformer_tiled_gemm_f32;
     return true;
@@ -12586,6 +12720,13 @@ bool tryGetKernelSource_opencl_transformer(const std::string& backend, const std
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }
+  if (backend == "opencl" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_opencl_navatala_transformer_tiled_gemm_f16_f32_out);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
   if (backend == "opencl" && kernelName == "navatala_transformer_tiled_gemm_f32") {
     out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
     out.entryPoint = "navatala_transformer_tiled_gemm_f32";
@@ -12842,6 +12983,76 @@ bool tryGetKernelSource_opencl_transformer(const std::string& backend, const std
     out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
     out.entryPoint = "navatala_transformer_precompute_rotary_emb_f16";
     std::string_view sv(k_opencl_navatala_transformer_precompute_rotary_emb_f16);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_transformer_tiled_gemm_f16") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16";
+    std::string_view sv(k_opencl_navatala_transformer_tiled_gemm_f16);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_transformer_tiled_gemm_f16") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16";
+    std::string_view sv(k_opencl_navatala_transformer_tiled_gemm_f16);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_opencl_navatala_transformer_tiled_gemm_f16_f32_out);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_opencl_navatala_transformer_tiled_gemm_f16_f32_out);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_opencl_navatala_transformer_tiled_gemm_f16_f32_out);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_opencl_navatala_transformer_tiled_gemm_f16_f32_out);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_opencl_navatala_transformer_tiled_gemm_f16_f32_out);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_opencl_navatala_transformer_tiled_gemm_f16_f32_out);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_opencl_navatala_transformer_tiled_gemm_f16_f32_out);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_opencl_navatala_transformer_tiled_gemm_f16_f32_out);
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }

@@ -32,18 +32,39 @@ __kernel void navatala_transformer_tiled_gemm_f32(__global const float* a, __glo
   bool valid = (rowValid && colValid);
   __local float tileA[256];
   __local float tileB[256];
-  if (valid) {
-    float acc = as_float(0x00000000u);
-    for (int kIter = 0; kIter < (int)(kDim); ++kIter) {
-      uint aIdx = ((row * kDim) + kIter);
-      uint bIdx = ((kIter * nDim) + col);
-      float aVal = a[aIdx];
-      float bVal = b[bIdx];
-      float prod = (aVal * bVal);
+  float acc = as_float(0x00000000u);
+  uint tileCount = ((kDim + (tileSize - (uint)(1u))) / tileSize);
+  for (int tileIter = 0; tileIter < (int)(tileCount); ++tileIter) {
+    uint tileIterU32 = ((uint)(tileIter));
+    uint tileBase = (tileIterU32 * tileSize);
+    uint aK = (tileBase + tidX);
+    uint bK = (tileBase + tidY);
+    uint tileOffset = ((tidY * tileSize) + tidX);
+    bool aKValid = (aK < kDim);
+    bool bKValid = (bK < kDim);
+    bool aLoadValid = (rowValid && aKValid);
+    bool bLoadValid = (colValid && bKValid);
+    uint aIdx = ((row * kDim) + aK);
+    uint bIdx = ((bK * nDim) + col);
+    float aTileVal = ((aLoadValid) ? (a[aIdx]) : (as_float(0x00000000u)));
+    float bTileVal = ((bLoadValid) ? (b[bIdx]) : (as_float(0x00000000u)));
+    tileA[tileOffset] = aTileVal;
+    tileB[tileOffset] = bTileVal;
+    barrier(CLK_LOCAL_MEM_FENCE);
+    for (int kk = 0; kk < (int)(tileSize); ++kk) {
+      uint kkU32 = ((uint)(kk));
+      uint tileAIdx = ((tidY * tileSize) + kkU32);
+      uint tileBIdx = ((kkU32 * tileSize) + tidX);
+      float aTile = tileA[tileAIdx];
+      float bTile = tileB[tileBIdx];
+      float prod = (aTile * bTile);
       float oldAcc = acc;
       acc = (oldAcc + prod);
     }
-    float finalAcc = acc;
+    barrier(CLK_LOCAL_MEM_FENCE);
+  }
+  float finalAcc = acc;
+  if (valid) {
     uint cIdx = ((row * nDim) + col);
     float cOld = c[cIdx];
     float scaledProd = (alphaVal * finalAcc);

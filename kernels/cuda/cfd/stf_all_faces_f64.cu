@@ -16,9 +16,9 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_stf_all_faces_f64(const double* divN, const float* alpha, const float* alphaF, const float* delta, const int* owner, const int* nei, const float* weights, const double* contactGrad, const unsigned int* thetaMask, const float* paramsF, const int* counts, double* stf) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1])) {
     return;
   } else {

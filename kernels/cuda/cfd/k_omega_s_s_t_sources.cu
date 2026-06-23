@@ -16,9 +16,9 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_k_omega_s_s_t_sources(const float* k, const float* omega, const float* nut, const float* nu, const float* alpha, const float* rho, const float* F1, const float* F23, const float* CDkOmega, const float* S2, const float* divU, const int* counts, float* outOmegaSp, float* outOmegaSuSp1, float* outOmegaSuSp2, float* outOmegaExpl, float* outKSp, float* outKSuSp, float* outKExpl, float* outDomegaEff, float* outDkEff) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
     return;
   } else {

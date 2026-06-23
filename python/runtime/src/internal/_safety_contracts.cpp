@@ -260,6 +260,8 @@ bool backendCompilerMatches(const char* backend, const char* runtimeCompilerKind
   return (std::strcmp(safe(backend), "cuda") == 0 && std::strcmp(safe(runtimeCompilerKind), "nvrtc") == 0)
       || (std::strcmp(safe(backend), "hip") == 0 && std::strcmp(safe(runtimeCompilerKind), "hiprtc") == 0)
       || (std::strcmp(safe(backend), "metal") == 0 && std::strcmp(safe(runtimeCompilerKind), "metal") == 0)
+      || (std::strcmp(safe(backend), "vulkan") == 0 && std::strcmp(safe(runtimeCompilerKind), "glslang") == 0)
+      || (std::strcmp(safe(backend), "opencl") == 0 && std::strcmp(safe(runtimeCompilerKind), "opencl") == 0)
       || (std::strcmp(safe(backend), "cpu") == 0 && std::strcmp(safe(runtimeCompilerKind), "none") == 0);
 }
 
@@ -424,9 +426,13 @@ const std::vector<BackendCapability>& backendCapabilities() {
     {"cuda", "nvrtc", false, true, false, true, false, true, true, 256, 32, "hostStaged"},
     {"hip", "hiprtc", false, true, false, true, false, true, true, 256, 64, "hostStaged"},
     {"metal", "metal", false, true, false, false, false, true, false, 256, 32, "hostStaged"},
+    {"vulkan", "glslang", false, true, false, true, false, true, false, 256, 64, "hostStaged"},
+    {"opencl", "opencl", false, true, false, true, false, true, false, 256, 64, "hostStaged"},
     {"cuda", "nvrtc", false, true, false, true, false, true, true, 256, 32, "hostStaged"},
     {"hip", "hiprtc", false, true, false, true, false, true, true, 256, 64, "hostStaged"},
     {"metal", "metal", false, true, false, false, false, true, false, 256, 32, "hostStaged"},
+    {"vulkan", "glslang", false, true, false, true, false, true, false, 256, 64, "hostStaged"},
+    {"opencl", "opencl", false, true, false, true, false, true, false, 256, 64, "hostStaged"},
   };
   return values;
 }

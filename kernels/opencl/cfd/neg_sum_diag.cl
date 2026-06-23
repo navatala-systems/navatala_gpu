@@ -15,9 +15,9 @@
 
 __kernel void navatala_cfd_neg_sum_diag(__global const float* upper, __global const float* lower, __global const int* offsets, __global const int* faceIdx, __global const int* sign, __global const int* counts, __global float* outDiag) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
     return;
   } else {

@@ -81,6 +81,16 @@ static bool readFileBytes(const std::string& path, std::vector<std::uint8_t>* ou
     return true;
 }
 
+static bool commandAvailable(const char* command) {
+    if (!command || command[0] == '\0') {
+        return false;
+    }
+    std::string cmd = "command -v ";
+    cmd += command;
+    cmd += " >/dev/null 2>&1";
+    return std::system(cmd.c_str()) == 0;
+}
+
 static bool compileCudaToPtx(const std::string& cudaSrc, std::vector<std::uint8_t>* outPtx, std::string* err) {
     // Create temp paths.
     char cuPath[] = "/tmp/gpu_runtime_kernel_XXXXXX.cu";
@@ -709,6 +719,10 @@ void test_square_hip() {
         std::cout << "SKIP: HIP backend not available" << std::endl;
         return;
     }
+    if (!commandAvailable("hipcc")) {
+        std::cout << "SKIP: hipcc not available on PATH" << std::endl;
+        return;
+    }
 
     setenv("GPU_RUNTIME_BACKEND", "hip", 1);
     auto device = Device::create(0);
@@ -756,6 +770,10 @@ void test_saxpy_hip() {
 
     if (!isBackendAvailable("hip")) {
         std::cout << "SKIP: HIP backend not available" << std::endl;
+        return;
+    }
+    if (!commandAvailable("hipcc")) {
+        std::cout << "SKIP: hipcc not available on PATH" << std::endl;
         return;
     }
 
@@ -814,6 +832,10 @@ void test_param_buffer_overwrite_order_hip() {
 
     if (!isBackendAvailable("hip")) {
         std::cout << "SKIP: HIP backend not available" << std::endl;
+        return;
+    }
+    if (!commandAvailable("hipcc")) {
+        std::cout << "SKIP: hipcc not available on PATH" << std::endl;
         return;
     }
 

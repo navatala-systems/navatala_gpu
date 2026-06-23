@@ -233,6 +233,40 @@ kernel void navatala_graph_spmv_weighted_f32(device const uint* offsets [[buffer
 }
 
 )kernel";
+const char* k_metal_navatala_graph_spmv_weighted_subgroup_f32 = R"kernel(
+#include <metal_stdlib>
+using namespace metal;
+
+kernel void navatala_graph_spmv_weighted_subgroup_f32(device const uint* offsets [[buffer(0)]], device const uint* indices [[buffer(1)]], device const float* weights [[buffer(2)]], device const float* x [[buffer(3)]], device const uint* numVertices [[buffer(4)]], device float* y [[buffer(5)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
+  uint gid = ((uint)(int(__gid.x)));
+  uint lane = ((uint)(int(__lane)));
+  uint subgroupSize = ((uint)(int(__simd_size)));
+  uint row = (gid / subgroupSize);
+  uint numV = numVertices[0];
+  if ((row < numV)) {
+    uint base = offsets[row];
+    uint endv = offsets[(row + 1u)];
+    uint rowlen = (endv - base);
+    uint rowIters = ((rowlen + (subgroupSize - 1u)) / subgroupSize);
+    float laneAcc = as_type<float>(0x00000000u);
+    for (int k = 0; k < (int)(rowIters); ++k) {
+      uint rel = ((((uint)(k)) * subgroupSize) + lane);
+      if ((rel < rowlen)) {
+        uint eidx = (base + rel);
+        uint col = indices[eidx];
+        float w = weights[eidx];
+        float xv = x[col];
+        laneAcc = (laneAcc + (w * xv));
+      }
+    }
+    float rowSum = simd_sum(laneAcc);
+    if ((lane == 0u)) {
+      y[row] = rowSum;
+    }
+  }
+}
+
+)kernel";
 const char* k_metal_navatala_graph_spmv_unweighted_f32 = R"kernel(
 #include <metal_stdlib>
 using namespace metal;
@@ -252,6 +286,39 @@ kernel void navatala_graph_spmv_unweighted_f32(device const uint* offsets [[buff
       acc = (acc + xv);
     }
     y[gid] = acc;
+  }
+}
+
+)kernel";
+const char* k_metal_navatala_graph_spmv_unweighted_subgroup_f32 = R"kernel(
+#include <metal_stdlib>
+using namespace metal;
+
+kernel void navatala_graph_spmv_unweighted_subgroup_f32(device const uint* offsets [[buffer(0)]], device const uint* indices [[buffer(1)]], device const float* x [[buffer(2)]], device const uint* numVertices [[buffer(3)]], device float* y [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
+  uint gid = ((uint)(int(__gid.x)));
+  uint lane = ((uint)(int(__lane)));
+  uint subgroupSize = ((uint)(int(__simd_size)));
+  uint row = (gid / subgroupSize);
+  uint numV = numVertices[0];
+  if ((row < numV)) {
+    uint base = offsets[row];
+    uint endv = offsets[(row + 1u)];
+    uint rowlen = (endv - base);
+    uint rowIters = ((rowlen + (subgroupSize - 1u)) / subgroupSize);
+    float laneAcc = as_type<float>(0x00000000u);
+    for (int k = 0; k < (int)(rowIters); ++k) {
+      uint rel = ((((uint)(k)) * subgroupSize) + lane);
+      if ((rel < rowlen)) {
+        uint eidx = (base + rel);
+        uint col = indices[eidx];
+        float xv = x[col];
+        laneAcc = (laneAcc + xv);
+      }
+    }
+    float rowSum = simd_sum(laneAcc);
+    if ((lane == 0u)) {
+      y[row] = rowSum;
+    }
   }
 }
 
@@ -1759,6 +1826,26 @@ const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_spmv_weighted_f32 
   kAbiArgs_metal_navatala_graph_spmv_weighted_f32
 };
 
+const KernelArgumentInfo kAbiArgs_metal_navatala_graph_spmv_weighted_subgroup_f32[] = {
+  { "offsets", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "indices", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "weights", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "x", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "numVertices", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "y", 5, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_spmv_weighted_subgroup_f32 = {
+  1,
+  "navatala_graph_spmv_weighted_subgroup_f32",
+  "metal",
+  "navatala_graph_spmv_weighted_subgroup_f32",
+  "kernel:metal:navatala_graph_spmv_weighted_subgroup_f32",
+  "abi-r1:metal:navatala_graph_spmv_weighted_subgroup_f32",
+  "abi-r1:metal:navatala_graph_spmv_weighted_subgroup_f32",
+  6,
+  kAbiArgs_metal_navatala_graph_spmv_weighted_subgroup_f32
+};
+
 const KernelArgumentInfo kAbiArgs_metal_navatala_graph_spmv_unweighted_f32[] = {
   { "offsets", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
   { "indices", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
@@ -1776,6 +1863,25 @@ const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_spmv_unweighted_f3
   "abi-r1:metal:navatala_graph_spmv_unweighted_f32",
   5,
   kAbiArgs_metal_navatala_graph_spmv_unweighted_f32
+};
+
+const KernelArgumentInfo kAbiArgs_metal_navatala_graph_spmv_unweighted_subgroup_f32[] = {
+  { "offsets", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "indices", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "x", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "numVertices", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "y", 4, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_spmv_unweighted_subgroup_f32 = {
+  1,
+  "navatala_graph_spmv_unweighted_subgroup_f32",
+  "metal",
+  "navatala_graph_spmv_unweighted_subgroup_f32",
+  "kernel:metal:navatala_graph_spmv_unweighted_subgroup_f32",
+  "abi-r1:metal:navatala_graph_spmv_unweighted_subgroup_f32",
+  "abi-r1:metal:navatala_graph_spmv_unweighted_subgroup_f32",
+  5,
+  kAbiArgs_metal_navatala_graph_spmv_unweighted_subgroup_f32
 };
 
 const KernelArgumentInfo kAbiArgs_metal_navatala_graph_axpy2_f32[] = {
@@ -2592,8 +2698,16 @@ bool tryGetKernelAbiManifest_metal_graph(const std::string& backend, const std::
     out = &kAbiManifest_metal_navatala_graph_spmv_weighted_f32;
     return true;
   }
+  if (backend == "metal" && kernelName == "navatala_graph_spmv_weighted_subgroup_f32") {
+    out = &kAbiManifest_metal_navatala_graph_spmv_weighted_subgroup_f32;
+    return true;
+  }
   if (backend == "metal" && kernelName == "navatala_graph_spmv_unweighted_f32") {
     out = &kAbiManifest_metal_navatala_graph_spmv_unweighted_f32;
+    return true;
+  }
+  if (backend == "metal" && kernelName == "navatala_graph_spmv_unweighted_subgroup_f32") {
+    out = &kAbiManifest_metal_navatala_graph_spmv_unweighted_subgroup_f32;
     return true;
   }
   if (backend == "metal" && kernelName == "navatala_graph_axpy2_f32") {
@@ -2862,10 +2976,24 @@ bool tryGetKernelSource_metal_graph(const std::string& backend, const std::strin
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }
+  if (backend == "metal" && kernelName == "navatala_graph_spmv_weighted_subgroup_f32") {
+    out.kind = GpuRuntime::ProgramSource::Kind::Msl;
+    out.entryPoint = "navatala_graph_spmv_weighted_subgroup_f32";
+    std::string_view sv(k_metal_navatala_graph_spmv_weighted_subgroup_f32);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
   if (backend == "metal" && kernelName == "navatala_graph_spmv_unweighted_f32") {
     out.kind = GpuRuntime::ProgramSource::Kind::Msl;
     out.entryPoint = "navatala_graph_spmv_unweighted_f32";
     std::string_view sv(k_metal_navatala_graph_spmv_unweighted_f32);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "metal" && kernelName == "navatala_graph_spmv_unweighted_subgroup_f32") {
+    out.kind = GpuRuntime::ProgramSource::Kind::Msl;
+    out.entryPoint = "navatala_graph_spmv_unweighted_subgroup_f32";
+    std::string_view sv(k_metal_navatala_graph_spmv_unweighted_subgroup_f32);
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }

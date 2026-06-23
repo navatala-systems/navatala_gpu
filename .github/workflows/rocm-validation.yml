@@ -1,0 +1,67 @@
+# SPDX-License-Identifier: Apache-2.0
+name: ROCm Validation
+
+on:
+  workflow_dispatch:
+    inputs:
+      quick:
+        description: 'Run reduced benchmark sizes'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+  pull_request:
+    paths:
+      - 'benchmarks/**'
+      - 'kernels/hip/**'
+      - 'runtime/**'
+      - 'scripts/validate_rocm_benchmark_json.py'
+      - 'scripts/render_rocm_benchmark_report.py'
+      - 'scripts/run_rocm_runtime_smoke.sh'
+      - 'scripts/run_rocm_vendor_benchmarks.sh'
+      - '.github/workflows/rocm-validation.yml'
+
+jobs:
+  rocm-correctness-and-benchmarks:
+    # Requires a self-hosted AMD GPU runner with ROCm, rocBLAS, rocSPARSE,
+    # and preferably hipSPARSELt installed. The labels are explicit so a
+    # CPU-only hosted runner cannot produce a false HIP pass.
+    runs-on: [self-hosted, linux, rocm, amd-gpu]
+    timeout-minutes: 60
+    env:
+      GPU_RUNTIME_BACKEND: hip
+      NAVATALA_GPU_ROCM_BENCH_ITERATIONS: 50
+      NAVATALA_GPU_ROCM_BENCH_WARMUP: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select quick mode
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ] || [ "${{ github.event.inputs.quick }}" = "true" ]; then
+            echo "NAVATALA_GPU_ROCM_BENCH_QUICK=1" >> "$GITHUB_ENV"
+          else
+            echo "NAVATALA_GPU_ROCM_BENCH_QUICK=0" >> "$GITHUB_ENV"
+          fi
+      - name: ROCm device metadata
+        run: |
+          set -euo pipefail
+          hipcc --version
+          rocminfo | sed -n '1,140p'
+          rocm-smi || true
+          ldconfig -p | grep -E 'rocblas|rocsparse|hipsparse' || true
+      - name: Build and run ROCm runtime smoke tests
+        run: |
+          ./scripts/run_rocm_runtime_smoke.sh
+      - name: Build and run ROCm vendor benchmarks
+        run: |
+          ./scripts/run_rocm_vendor_benchmarks.sh
+      - name: Upload ROCm benchmark report
+        uses: actions/upload-artifact@v4
+        with:
+          name: rocm-vendor-benchmark
+          path: |
+            benchmarks/results/rocm_runtime_smoke.log
+            benchmarks/results/rocm_vendor_benchmark.json
+            benchmarks/results/rocm_vendor_benchmark.log
+            benchmarks/results/rocm_vendor_benchmark.md

@@ -25,9 +25,9 @@
 #include <string_view>
 #if __has_include("gpu_library_ops.h")
 #include "gpu_library_ops.h"
-#define CODEGEN_GPU_HAS_LIBRARY_OPS 1
+#define NAVATALA_GPU_HAS_LIBRARY_OPS 1
 #else
-#define CODEGEN_GPU_HAS_LIBRARY_OPS 0
+#define NAVATALA_GPU_HAS_LIBRARY_OPS 0
 namespace GpuRuntime { class LibraryOps; }
 #endif
 extern const char* k_cuda_navatala_cfd_boundary_force_partials;
@@ -549,7 +549,9 @@ extern const char* k_cuda_navatala_ml_normal_bf16;
 extern const char* k_cuda_navatala_graph_degree_out_u32;
 extern const char* k_cuda_navatala_graph_degree_in_u32;
 extern const char* k_cuda_navatala_graph_spmv_weighted_f32;
+extern const char* k_cuda_navatala_graph_spmv_weighted_subgroup_f32;
 extern const char* k_cuda_navatala_graph_spmv_unweighted_f32;
+extern const char* k_cuda_navatala_graph_spmv_unweighted_subgroup_f32;
 extern const char* k_cuda_navatala_graph_axpy2_f32;
 extern const char* k_cuda_navatala_graph_scale_f32;
 extern const char* k_cuda_navatala_graph_scale_add_bias_f32;
@@ -1713,6 +1715,7 @@ extern const char* k_cuda_navatala_transformer_kv_cache_append_f16;
 extern const char* k_cuda_navatala_transformer_kv_cache_append_f32;
 extern const char* k_cuda_navatala_transformer_kv_cache_rotate_f16;
 extern const char* k_cuda_navatala_transformer_tiled_gemm_f16;
+extern const char* k_cuda_navatala_transformer_tiled_gemm_f16_f32_out;
 extern const char* k_cuda_navatala_transformer_tiled_gemm_f32;
 extern const char* k_cuda_navatala_transformer_tiled_gemm_backward_f32;
 extern const char* k_cuda_navatala_transformer_tiled_gemm_backward_f16;
@@ -2629,7 +2632,9 @@ extern const char* k_hip_navatala_ml_normal_bf16;
 extern const char* k_hip_navatala_graph_degree_out_u32;
 extern const char* k_hip_navatala_graph_degree_in_u32;
 extern const char* k_hip_navatala_graph_spmv_weighted_f32;
+extern const char* k_hip_navatala_graph_spmv_weighted_subgroup_f32;
 extern const char* k_hip_navatala_graph_spmv_unweighted_f32;
+extern const char* k_hip_navatala_graph_spmv_unweighted_subgroup_f32;
 extern const char* k_hip_navatala_graph_axpy2_f32;
 extern const char* k_hip_navatala_graph_scale_f32;
 extern const char* k_hip_navatala_graph_scale_add_bias_f32;
@@ -3793,6 +3798,7 @@ extern const char* k_hip_navatala_transformer_kv_cache_append_f16;
 extern const char* k_hip_navatala_transformer_kv_cache_append_f32;
 extern const char* k_hip_navatala_transformer_kv_cache_rotate_f16;
 extern const char* k_hip_navatala_transformer_tiled_gemm_f16;
+extern const char* k_hip_navatala_transformer_tiled_gemm_f16_f32_out;
 extern const char* k_hip_navatala_transformer_tiled_gemm_f32;
 extern const char* k_hip_navatala_transformer_tiled_gemm_backward_f32;
 extern const char* k_hip_navatala_transformer_tiled_gemm_backward_f16;
@@ -4190,1426 +4196,16 @@ extern const char* k_hip_navatala_nccl_linear_broadcast_f32;
 extern const char* k_hip_navatala_nccl_linear_broadcast_f16;
 extern const char* k_hip_navatala_nccl_linear_broadcast_i32;
 extern const char* k_hip_navatala_samples_axpy_fallback;
-extern const char* k_metal_navatala_cfd_boundary_force_partials;
-extern const char* k_metal_navatala_cfd_pack_owner_values;
-extern const char* k_metal_navatala_cfd_scatter_values_and_mask;
-extern const char* k_metal_navatala_cfd_pack_mu_grad_owner;
-extern const char* k_metal_navatala_cfd_pack_owner_rho_vec3;
-extern const char* k_metal_navatala_cfd_pack_owner_vec3;
-extern const char* k_metal_navatala_cfd_pack_owner_vec3_mu;
-extern const char* k_metal_navatala_cfd_scatter_mu_grad_ghost;
-extern const char* k_metal_navatala_cfd_scatter_rho_vec3_and_mask;
-extern const char* k_metal_navatala_cfd_scatter_vec3_and_mask;
-extern const char* k_metal_navatala_cfd_scatter_vec3_mu_and_mask;
-extern const char* k_metal_navatala_cfd_add_vol_vector;
-extern const char* k_metal_navatala_cfd_div_rho_phi_u_explicit;
-extern const char* k_metal_navatala_cfd_hby_a_from_u_and_terms;
-extern const char* k_metal_navatala_cfd_apply_sp_to_hby_a;
-extern const char* k_metal_navatala_cfd_laplacian_scalar_explicit;
-extern const char* k_metal_navatala_cfd_laplacian_vector_explicit;
-extern const char* k_metal_navatala_cfd_predictor_hby_a_from_source;
-extern const char* k_metal_navatala_cfd_predictor_inverse_diag;
-extern const char* k_metal_navatala_cfd_predictor_phi_hby_a_fuse;
-extern const char* k_metal_navatala_cfd_axpy_cells;
-extern const char* k_metal_navatala_cfd_ddt_diagonal;
-extern const char* k_metal_navatala_cfd_div_upwind_coeffs;
-extern const char* k_metal_navatala_cfd_fvm_sp;
-extern const char* k_metal_navatala_cfd_fvm_su_sp;
-extern const char* k_metal_navatala_cfd_laplacian_coeffs;
-extern const char* k_metal_navatala_cfd_laplacian_coeffs_accum;
-extern const char* k_metal_navatala_cfd_linear_upwind_correction_source;
-extern const char* k_metal_navatala_cfd_matrix_relax;
-extern const char* k_metal_navatala_cfd_neg_sum_diag;
-extern const char* k_metal_navatala_cfd_pack_boundary_adjacent_cells;
-extern const char* k_metal_navatala_cfd_scalar_jacobi_clamp_min;
-extern const char* k_metal_navatala_cfd_scalar_jacobi_update;
-extern const char* k_metal_navatala_cfd_scalar_ldu_mat_vec;
-extern const char* k_metal_navatala_cfd_scalar_ldu_multi_color_gs_sweep;
-extern const char* k_metal_navatala_cfd_sum_mag_off_diag;
-extern const char* k_metal_navatala_cfd_gamg_axpy_in_place;
-extern const char* k_metal_navatala_cfd_gamg_compute_scale_factor;
-extern const char* k_metal_navatala_cfd_gamg_dot_finalize;
-extern const char* k_metal_navatala_cfd_gamg_negate_scalar;
-extern const char* k_metal_navatala_cfd_gamg_scale_correction;
-extern const char* k_metal_navatala_cfd_mg_coarse_jacobi;
-extern const char* k_metal_navatala_cfd_mg_coarse_matvec;
-extern const char* k_metal_navatala_cfd_mg_coarse_rhs;
-extern const char* k_metal_navatala_cfd_mg_find_best_match;
-extern const char* k_metal_navatala_cfd_mg_pair_match;
-extern const char* k_metal_navatala_cfd_mg_prolong_add;
-extern const char* k_metal_navatala_cfd_mg_renumber_aggregates;
-extern const char* k_metal_navatala_cfd_mg_renumber_propagate;
-extern const char* k_metal_navatala_cfd_mg_resolve_chains;
-extern const char* k_metal_navatala_cfd_mg_restrict_sum;
-extern const char* k_metal_navatala_cfd_mg_strength_of_connection;
-extern const char* k_metal_navatala_cfd_mg_zero_coarse;
-extern const char* k_metal_navatala_cfd_phi_correct;
-extern const char* k_metal_navatala_cfd_phi_correct_boundary;
-extern const char* k_metal_navatala_cfd_phi_correct_internal;
-extern const char* k_metal_navatala_cfd_axpy_in_place;
-extern const char* k_metal_navatala_cfd_bc_dirichlet_face_flux;
-extern const char* k_metal_navatala_cfd_bc_sn_grad_face_flux;
-extern const char* k_metal_navatala_cfd_coeff_to_cf_in_place;
-extern const char* k_metal_navatala_cfd_diag_from_cf;
-extern const char* k_metal_navatala_cfd_dic_apply;
-extern const char* k_metal_navatala_cfd_dic_build_reciprocal_d;
-extern const char* k_metal_navatala_cfd_dot_partials;
-extern const char* k_metal_navatala_cfd_face_flux;
-extern const char* k_metal_navatala_cfd_inv_diag;
-extern const char* k_metal_navatala_cfd_laplacian_from_face_flux;
-extern const char* k_metal_navatala_cfd_mul_by_vol_in_place;
-extern const char* k_metal_navatala_cfd_ref_add_ax;
-extern const char* k_metal_navatala_cfd_ref_add_b;
-extern const char* k_metal_navatala_cfd_rhs_sub;
-extern const char* k_metal_navatala_cfd_shift_in_place;
-extern const char* k_metal_navatala_cfd_sum_abs_partials;
-extern const char* k_metal_navatala_cfd_upper_from_cf;
-extern const char* k_metal_navatala_cfd_xpay_in_place;
-extern const char* k_metal_navatala_cfd_negate_scalar;
-extern const char* k_metal_navatala_cfd_exact_mat_vec;
-extern const char* k_metal_navatala_cfd_face_flux_boundary;
-extern const char* k_metal_navatala_cfd_face_flux_internal;
-extern const char* k_metal_navatala_cfd_pressure_face_flux_correction_corrected;
-extern const char* k_metal_navatala_cfd_pressure_sn_grad;
-extern const char* k_metal_navatala_cfd_u_correct;
-extern const char* k_metal_navatala_cfd_u_correct_reconstruct;
-extern const char* k_metal_navatala_cfd_primitives_average_face_scalar_to_cell;
-extern const char* k_metal_navatala_cfd_primitives_evaluate_scalar_bc;
-extern const char* k_metal_navatala_cfd_primitives_evaluate_vector_bc;
-extern const char* k_metal_navatala_cfd_primitives_div_face_flux_csr;
-extern const char* k_metal_navatala_cfd_primitives_div_face_flux_vector_csr;
-extern const char* k_metal_navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_grad_v2;
-extern const char* k_metal_navatala_cfd_primitives_face_scalar_product;
-extern const char* k_metal_navatala_cfd_primitives_grad_vol_scalar_gauss;
-extern const char* k_metal_navatala_cfd_primitives_grad_vol_vector_gauss;
-extern const char* k_metal_navatala_cfd_primitives_interp_scalar_face;
-extern const char* k_metal_navatala_cfd_primitives_interp_scalar_face_all;
-extern const char* k_metal_navatala_cfd_primitives_interp_vector_face;
-extern const char* k_metal_navatala_cfd_primitives_linear_upwind_scalar_face;
-extern const char* k_metal_navatala_cfd_primitives_phi_from_u;
-extern const char* k_metal_navatala_cfd_primitives_phi_from_u_boundary;
-extern const char* k_metal_navatala_cfd_primitives_phi_from_u_internal;
-extern const char* k_metal_navatala_cfd_primitives_phig_gravity;
-extern const char* k_metal_navatala_cfd_primitives_r_a_u_from_dt_rho;
-extern const char* k_metal_navatala_cfd_primitives_r_a_u_from_dt_rho_integrated;
-extern const char* k_metal_navatala_cfd_primitives_r_a_u_from_dt_rho_sp;
-extern const char* k_metal_navatala_cfd_primitives_r_a_u_from_dt_rho_sp_integrated;
-extern const char* k_metal_navatala_cfd_primitives_r_a_u_from_u_eqn_approx;
-extern const char* k_metal_navatala_cfd_primitives_r_a_u_from_u_eqn_approx_sp;
-extern const char* k_metal_navatala_cfd_primitives_rho_from_alpha;
-extern const char* k_metal_navatala_cfd_primitives_rho_phi_from_rho_and_phi;
-extern const char* k_metal_navatala_cfd_primitives_sn_grad_scalar;
-extern const char* k_metal_navatala_cfd_grad_alpha_cell;
-extern const char* k_metal_navatala_cfd_n_hatf_all;
-extern const char* k_metal_navatala_cfd_stf_all_faces;
-extern const char* k_metal_navatala_cfd_k_omega_s_s_t_blending;
-extern const char* k_metal_navatala_cfd_k_omega_s_s_t_nut_compute;
-extern const char* k_metal_navatala_cfd_k_omega_s_s_t_sources;
-extern const char* k_metal_navatala_cfd_mu_eff_from_rho_nu_eff;
-extern const char* k_metal_navatala_cfd_mu_eff_from_rho_nut_and_nu_mix;
-extern const char* k_metal_navatala_cfd_turbulence_add_explicit_source_device;
-extern const char* k_metal_navatala_cfd_turbulence_dirichlet_cell_source;
-extern const char* k_metal_navatala_cfd_turbulence_dirichlet_face_elimination;
-extern const char* k_metal_navatala_cfd_two_mag_sqr_symm_grad_u;
-extern const char* k_metal_navatala_cfd_vof_alpha_phi_all;
-extern const char* k_metal_navatala_cfd_vof_alpha_phi_int;
-extern const char* k_metal_navatala_cfd_vof_average_face_scalar_to_cell;
-extern const char* k_metal_navatala_cfd_vof_interp_scalar_face_all;
-extern const char* k_metal_navatala_cfd_vof_alpha_update;
-extern const char* k_metal_navatala_cfd_vof_mules_apply;
-extern const char* k_metal_navatala_cfd_vof_mules_cell_lambda;
-extern const char* k_metal_navatala_cfd_vof_mules_cell_sums;
-extern const char* k_metal_navatala_cfd_vof_mules_face_update;
-extern const char* k_metal_navatala_cfd_vof_mules_fill_lambda;
-extern const char* k_metal_navatala_cfd_vof_mules_init;
-extern const char* k_metal_navatala_cfd_vof_phi_b_d_corr;
-extern const char* k_metal_navatala_cfd_vof_phir;
-extern const char* k_metal_navatala_cfd_vof_rho_phi_accumulate;
-extern const char* k_metal_navatala_samples_float32_add;
-extern const char* k_metal_navatala_samples_triangle_normals2;
-extern const char* k_metal_navatala_cfd_attention_row_softmax;
-extern const char* k_metal_navatala_cfd_attention_value_projection;
-extern const char* k_metal_navatala_cfd_gather_mean;
-extern const char* k_metal_navatala_cfd_layer_norm_forward;
-extern const char* k_metal_navatala_cfd_radius_count;
-extern const char* k_metal_navatala_cfd_scaled_dot_product;
-extern const char* k_metal_navatala_cfd_scatter_add_atomic;
-extern const char* k_metal_navatala_cfd_spectral_complex_mul;
-extern const char* k_metal_navatala_cfd_spectral_conv1d_mode_sliced;
-extern const char* k_metal_navatala_cfd_spectral_conv2d_mode_sliced;
-extern const char* k_metal_navatala_cfd_spectral_conv3d_mode_sliced;
-extern const char* k_metal_navatala_cfd_spectral_conv4d_mode_sliced;
-extern const char* k_metal_navatala_dataframe_writeback_sum_f32;
-extern const char* k_metal_navatala_dataframe_writeback_sum_i32;
-extern const char* k_metal_navatala_dataframe_writeback_sum_u32;
-extern const char* k_metal_navatala_dataframe_writeback_min_f32;
-extern const char* k_metal_navatala_dataframe_writeback_max_f32;
-extern const char* k_metal_navatala_graph_pack_f32;
-extern const char* k_metal_navatala_graph_pack_i32;
-extern const char* k_metal_navatala_graph_pack_u32;
-extern const char* k_metal_navatala_graph_unpack_f32;
-extern const char* k_metal_navatala_graph_unpack_i32;
-extern const char* k_metal_navatala_graph_unpack_u32;
-extern const char* k_metal_navatala_graph_pack_f32x3;
-extern const char* k_metal_navatala_graph_unpack_f32x3;
-extern const char* k_metal_navatala_graph_pack_f32x6;
-extern const char* k_metal_navatala_graph_unpack_f32x6;
-extern const char* k_metal_navatala_graph_pack_f32x9;
-extern const char* k_metal_navatala_graph_unpack_f32x9;
-extern const char* k_metal_navatala_dataframe_init_welford_state_f32;
-extern const char* k_metal_navatala_dataframe_welford_update_f32;
-extern const char* k_metal_navatala_dataframe_welford_merge_f32;
-extern const char* k_metal_navatala_dataframe_extract_variance_f32;
-extern const char* k_metal_navatala_dataframe_extract_sample_variance_f32;
-extern const char* k_metal_navatala_dataframe_extract_stddev_f32;
-extern const char* k_metal_navatala_dataframe_init_covariance_state_f32;
-extern const char* k_metal_navatala_dataframe_covariance_update_f32;
-extern const char* k_metal_navatala_dataframe_extract_covariance_f32;
-extern const char* k_metal_navatala_dataframe_extract_correlation_f32;
-extern const char* k_metal_navatala_dataframe_init_weighted_welford_f32;
-extern const char* k_metal_navatala_dataframe_weighted_welford_update_f32;
-extern const char* k_metal_navatala_dataframe_weighted_welford_merge_f32;
-extern const char* k_metal_navatala_dataframe_extract_weighted_variance_f32;
-extern const char* k_metal_navatala_dataframe_extract_weighted_reliability_variance_f32;
-extern const char* k_metal_navatala_dataframe_extract_weighted_stddev_f32;
-extern const char* k_metal_navatala_dataframe_init_weighted_covariance_f32;
-extern const char* k_metal_navatala_dataframe_weighted_covariance_update_f32;
-extern const char* k_metal_navatala_dataframe_extract_weighted_covariance_f32;
-extern const char* k_metal_navatala_dataframe_extract_weighted_correlation_f32;
-extern const char* k_metal_navatala_dataframe_init_weighted_mean_f32;
-extern const char* k_metal_navatala_dataframe_weighted_mean_update_f32;
-extern const char* k_metal_navatala_dataframe_init_p2_state_f32;
-extern const char* k_metal_navatala_dataframe_p2_update_f32;
-extern const char* k_metal_navatala_dataframe_p2_extract_f32;
-extern const char* k_metal_navatala_dataframe_init_reservoir256_f32;
-extern const char* k_metal_navatala_dataframe_reservoir_update256_f32;
-extern const char* k_metal_navatala_dataframe_reservoir_min256_f32;
-extern const char* k_metal_navatala_dataframe_reservoir_max256_f32;
-extern const char* k_metal_navatala_ml_init_ema_f32;
-extern const char* k_metal_navatala_ml_init_ema_from_span_f32;
-extern const char* k_metal_navatala_ml_ema_update_f32;
-extern const char* k_metal_navatala_ml_ema_extract_f32;
-extern const char* k_metal_navatala_ml_ema_reset_f32;
-extern const char* k_metal_navatala_ml_init_dema_f32;
-extern const char* k_metal_navatala_ml_dema_update_f32;
-extern const char* k_metal_navatala_ml_dema_extract_f32;
-extern const char* k_metal_navatala_dataframe_trimmed_mean_f32;
-extern const char* k_metal_navatala_dataframe_iqm_f32;
-extern const char* k_metal_navatala_dataframe_winsorized_mean_f32;
-extern const char* k_metal_navatala_dataframe_mad_f32;
-extern const char* k_metal_navatala_dataframe_normalized_mad_f32;
-extern const char* k_metal_navatala_dataframe_robust_z_score_f32;
-extern const char* k_metal_navatala_dataframe_detect_outliers_f32;
-extern const char* k_metal_navatala_dataframe_init_t_digest_f32;
-extern const char* k_metal_navatala_dataframe_tdigest_add_f32;
-extern const char* k_metal_navatala_dataframe_tdigest_merge_f32;
-extern const char* k_metal_navatala_dataframe_tdigest_quantile_f32;
-extern const char* k_metal_navatala_dataframe_tdigest_cdf_f32;
-extern const char* k_metal_navatala_dataframe_tdigest_mean_f32;
-extern const char* k_metal_navatala_dataframe_tdigest_min_f32;
-extern const char* k_metal_navatala_dataframe_tdigest_max_f32;
-extern const char* k_metal_navatala_dataframe_tdigest_reset_f32;
-extern const char* k_metal_navatala_dataframe_inclusive_scan_sum_f32;
-extern const char* k_metal_navatala_dataframe_inclusive_scan_sum_i32;
-extern const char* k_metal_navatala_dataframe_inclusive_scan_sum_i32_to_i64_skip_nulls;
-extern const char* k_metal_navatala_dataframe_inclusive_scan_sum_i64;
-extern const char* k_metal_navatala_dataframe_reduce_sum_f32;
-extern const char* k_metal_navatala_dataframe_reduce_sum_i32;
-extern const char* k_metal_navatala_dataframe_reduce_sum_i32_to_i64;
-extern const char* k_metal_navatala_dataframe_reduce_min_i32;
-extern const char* k_metal_navatala_dataframe_reduce_max_i32;
-extern const char* k_metal_navatala_dataframe_count_valid;
-extern const char* k_metal_navatala_dataframe_gather_f32;
-extern const char* k_metal_navatala_dataframe_gather_i32;
-extern const char* k_metal_navatala_dataframe_gather_i64;
-extern const char* k_metal_navatala_dataframe_scatter_f32;
-extern const char* k_metal_navatala_dataframe_scatter_i32;
-extern const char* k_metal_navatala_dataframe_compact_by_mask_f32;
-extern const char* k_metal_navatala_dataframe_compact_by_mask_i32;
-extern const char* k_metal_navatala_dataframe_compact_valid_f32;
-extern const char* k_metal_navatala_dataframe_fill_constant_f32;
-extern const char* k_metal_navatala_dataframe_fill_constant_i32;
-extern const char* k_metal_navatala_dataframe_fill_constant_i64;
-extern const char* k_metal_navatala_dataframe_fill_range_i32;
-extern const char* k_metal_navatala_dataframe_fill_range_i64;
-extern const char* k_metal_navatala_dataframe_fill_validity_all_valid;
-extern const char* k_metal_navatala_dataframe_fill_validity_all_null;
-extern const char* k_metal_navatala_dataframe_fill_null_f32;
-extern const char* k_metal_navatala_dataframe_fill_null_i32;
-extern const char* k_metal_navatala_dataframe_is_null;
-extern const char* k_metal_navatala_dataframe_is_valid;
-extern const char* k_metal_navatala_dataframe_copy_if_valid_f32;
-extern const char* k_metal_navatala_dataframe_coalesce_f32;
-extern const char* k_metal_navatala_linalg_norm_linf_f32;
-extern const char* k_metal_navatala_ml_pointwise_neg_f32;
-extern const char* k_metal_navatala_ml_pointwise_abs_f32;
-extern const char* k_metal_navatala_ml_pointwise_sqrt_f32;
-extern const char* k_metal_navatala_ml_pointwise_rsqrt_f32;
-extern const char* k_metal_navatala_ml_pointwise_reciprocal_f32;
-extern const char* k_metal_navatala_ml_pointwise_exp_f32;
-extern const char* k_metal_navatala_ml_pointwise_log_f32;
-extern const char* k_metal_navatala_ml_pointwise_sin_f32;
-extern const char* k_metal_navatala_ml_pointwise_cos_f32;
-extern const char* k_metal_navatala_ml_pointwise_tan_f32;
-extern const char* k_metal_navatala_ml_pointwise_floor_f32;
-extern const char* k_metal_navatala_ml_pointwise_ceil_f32;
-extern const char* k_metal_navatala_ml_pointwise_round_f32;
-extern const char* k_metal_navatala_ml_pointwise_relu_f32;
-extern const char* k_metal_navatala_ml_pointwise_leaky_relu_f32;
-extern const char* k_metal_navatala_ml_pointwise_elu_f32;
-extern const char* k_metal_navatala_ml_pointwise_tanh_f32;
-extern const char* k_metal_navatala_ml_pointwise_sigmoid_f32;
-extern const char* k_metal_navatala_ml_pointwise_softplus_f32;
-extern const char* k_metal_navatala_ml_pointwise_swish_f32;
-extern const char* k_metal_navatala_ml_pointwise_gelu_tanh_f32;
-extern const char* k_metal_navatala_ml_pointwise_add_f32;
-extern const char* k_metal_navatala_ml_pointwise_sub_f32;
-extern const char* k_metal_navatala_ml_pointwise_mul_f32;
-extern const char* k_metal_navatala_ml_pointwise_div_f32;
-extern const char* k_metal_navatala_ml_pointwise_max_f32;
-extern const char* k_metal_navatala_ml_pointwise_min_f32;
-extern const char* k_metal_navatala_ml_pointwise_cmp_eq_f32;
-extern const char* k_metal_navatala_ml_pointwise_cmp_ne_f32;
-extern const char* k_metal_navatala_ml_pointwise_cmp_lt_f32;
-extern const char* k_metal_navatala_ml_pointwise_cmp_le_f32;
-extern const char* k_metal_navatala_ml_pointwise_cmp_gt_f32;
-extern const char* k_metal_navatala_ml_pointwise_cmp_ge_f32;
-extern const char* k_metal_navatala_ml_pointwise_relu_bwd_f32;
-extern const char* k_metal_navatala_ml_pointwise_sigmoid_bwd_f32;
-extern const char* k_metal_navatala_ml_pointwise_tanh_bwd_f32;
-extern const char* k_metal_navatala_ml_pointwise_neg_f16;
-extern const char* k_metal_navatala_ml_pointwise_abs_f16;
-extern const char* k_metal_navatala_ml_pointwise_sqrt_f16;
-extern const char* k_metal_navatala_ml_pointwise_rsqrt_f16;
-extern const char* k_metal_navatala_ml_pointwise_reciprocal_f16;
-extern const char* k_metal_navatala_ml_pointwise_exp_f16;
-extern const char* k_metal_navatala_ml_pointwise_log_f16;
-extern const char* k_metal_navatala_ml_pointwise_sin_f16;
-extern const char* k_metal_navatala_ml_pointwise_cos_f16;
-extern const char* k_metal_navatala_ml_pointwise_tan_f16;
-extern const char* k_metal_navatala_ml_pointwise_floor_f16;
-extern const char* k_metal_navatala_ml_pointwise_ceil_f16;
-extern const char* k_metal_navatala_ml_pointwise_round_f16;
-extern const char* k_metal_navatala_ml_pointwise_relu_f16;
-extern const char* k_metal_navatala_ml_pointwise_leaky_relu_f16;
-extern const char* k_metal_navatala_ml_pointwise_elu_f16;
-extern const char* k_metal_navatala_ml_pointwise_tanh_f16;
-extern const char* k_metal_navatala_ml_pointwise_sigmoid_f16;
-extern const char* k_metal_navatala_ml_pointwise_softplus_f16;
-extern const char* k_metal_navatala_ml_pointwise_swish_f16;
-extern const char* k_metal_navatala_ml_pointwise_gelu_tanh_f16;
-extern const char* k_metal_navatala_ml_pointwise_add_f16;
-extern const char* k_metal_navatala_ml_pointwise_sub_f16;
-extern const char* k_metal_navatala_ml_pointwise_mul_f16;
-extern const char* k_metal_navatala_ml_pointwise_div_f16;
-extern const char* k_metal_navatala_ml_pointwise_max_f16;
-extern const char* k_metal_navatala_ml_pointwise_min_f16;
-extern const char* k_metal_navatala_ml_pointwise_cmp_eq_f16;
-extern const char* k_metal_navatala_ml_pointwise_cmp_ne_f16;
-extern const char* k_metal_navatala_ml_pointwise_cmp_lt_f16;
-extern const char* k_metal_navatala_ml_pointwise_cmp_le_f16;
-extern const char* k_metal_navatala_ml_pointwise_cmp_gt_f16;
-extern const char* k_metal_navatala_ml_pointwise_cmp_ge_f16;
-extern const char* k_metal_navatala_ml_pointwise_relu_bwd_f16;
-extern const char* k_metal_navatala_ml_pointwise_sigmoid_bwd_f16;
-extern const char* k_metal_navatala_ml_pointwise_tanh_bwd_f16;
-extern const char* k_metal_navatala_ml_reduction_sum_f32;
-extern const char* k_metal_navatala_ml_reduction_prod_f32;
-extern const char* k_metal_navatala_ml_reduction_min_f32;
-extern const char* k_metal_navatala_ml_reduction_max_f32;
-extern const char* k_metal_navatala_ml_reduction_amax_f32;
-extern const char* k_metal_navatala_ml_reduction_norm1_f32;
-extern const char* k_metal_navatala_ml_reduction_avg_f32;
-extern const char* k_metal_navatala_ml_reduction_norm2_f32;
-extern const char* k_metal_navatala_ml_reduction_sum_f16;
-extern const char* k_metal_navatala_ml_reduction_prod_f16;
-extern const char* k_metal_navatala_ml_reduction_min_f16;
-extern const char* k_metal_navatala_ml_reduction_max_f16;
-extern const char* k_metal_navatala_ml_reduction_amax_f16;
-extern const char* k_metal_navatala_ml_reduction_norm1_f16;
-extern const char* k_metal_navatala_ml_reduction_avg_f16;
-extern const char* k_metal_navatala_ml_reduction_norm2_f16;
-extern const char* k_metal_navatala_ml_maxpool_f32;
-extern const char* k_metal_navatala_ml_avgpool_exclude_pad_f32;
-extern const char* k_metal_navatala_ml_avgpool_include_pad_f32;
-extern const char* k_metal_navatala_ml_resize_nearest_f32;
-extern const char* k_metal_navatala_ml_resize_bilinear_f32;
-extern const char* k_metal_navatala_ml_maxpool_f16;
-extern const char* k_metal_navatala_ml_avgpool_exclude_pad_f16;
-extern const char* k_metal_navatala_ml_avgpool_include_pad_f16;
-extern const char* k_metal_navatala_ml_resize_nearest_f16;
-extern const char* k_metal_navatala_ml_resize_bilinear_f16;
-extern const char* k_metal_navatala_ml_reshape_f32;
-extern const char* k_metal_navatala_ml_slice_f32;
-extern const char* k_metal_navatala_ml_transpose_f32;
-extern const char* k_metal_navatala_ml_concatenate2_f32;
-extern const char* k_metal_navatala_ml_reshape_f16;
-extern const char* k_metal_navatala_ml_slice_f16;
-extern const char* k_metal_navatala_ml_transpose_f16;
-extern const char* k_metal_navatala_ml_concatenate2_f16;
-extern const char* k_metal_navatala_ml_softmax_f32;
-extern const char* k_metal_navatala_ml_softmax_f16;
-extern const char* k_metal_navatala_ml_layernorm_f32;
-extern const char* k_metal_navatala_ml_spatial_batchnorm_f32;
-extern const char* k_metal_navatala_ml_instancenorm_f32;
-extern const char* k_metal_navatala_ml_batchnorm_inference_f32;
-extern const char* k_metal_navatala_ml_layernorm_backward_f32;
-extern const char* k_metal_navatala_ml_layernorm_f16;
-extern const char* k_metal_navatala_ml_spatial_batchnorm_f16;
-extern const char* k_metal_navatala_ml_instancenorm_f16;
-extern const char* k_metal_navatala_ml_batchnorm_inference_f16;
-extern const char* k_metal_navatala_ml_layernorm_backward_f16;
-extern const char* k_metal_navatala_ml_uniform_f32;
-extern const char* k_metal_navatala_ml_bernoulli_f32;
-extern const char* k_metal_navatala_ml_normal_f32;
-extern const char* k_metal_navatala_ml_uniform_f16;
-extern const char* k_metal_navatala_ml_bernoulli_f16;
-extern const char* k_metal_navatala_ml_normal_f16;
-extern const char* k_metal_navatala_graph_degree_out_u32;
-extern const char* k_metal_navatala_graph_degree_in_u32;
-extern const char* k_metal_navatala_graph_spmv_weighted_f32;
-extern const char* k_metal_navatala_graph_spmv_unweighted_f32;
-extern const char* k_metal_navatala_graph_axpy2_f32;
-extern const char* k_metal_navatala_graph_scale_f32;
-extern const char* k_metal_navatala_graph_scale_add_bias_f32;
-extern const char* k_metal_navatala_graph_l1norm_f32;
-extern const char* k_metal_navatala_graph_recip_f32;
-extern const char* k_metal_navatala_graph_l1_diff_f32;
-extern const char* k_metal_navatala_graph_count_diff_u32;
-extern const char* k_metal_navatala_graph_copy_f32;
-extern const char* k_metal_navatala_graph_copy_u32;
-extern const char* k_metal_navatala_graph_relax_vertex_pull_f32;
-extern const char* k_metal_navatala_graph_label_propagate_edges_u32;
-extern const char* k_metal_navatala_graph_symmetrize_reverse_u32;
-extern const char* k_metal_navatala_graph_apply_renumber_u32;
-extern const char* k_metal_navatala_graph_peel_below_threshold_u32;
-extern const char* k_metal_navatala_graph_pair_intersection_u32;
-extern const char* k_metal_navatala_graph_jaccard_f32;
-extern const char* k_metal_navatala_graph_overlap_f32;
-extern const char* k_metal_navatala_graph_sorensen_f32;
-extern const char* k_metal_navatala_graph_cosine_f32;
-extern const char* k_metal_navatala_graph_uniform_random_walk_u32;
-extern const char* k_metal_navatala_graph_out_degree_u32;
-extern const char* k_metal_navatala_graph_in_degree_u32;
-extern const char* k_metal_navatala_dataframe_arg_max_f32;
-extern const char* k_metal_navatala_dataframe_arg_min_f32;
-extern const char* k_metal_navatala_dataframe_scan_sum_f32;
-extern const char* k_metal_navatala_dataframe_scan_sum_u32;
-extern const char* k_metal_navatala_dataframe_scan_exclusive_write_total_u32;
-extern const char* k_metal_navatala_dataframe_scan_max_f32;
-extern const char* k_metal_navatala_dataframe_scan_min_f32;
-extern const char* k_metal_navatala_dataframe_top_k_init_indices;
-extern const char* k_metal_navatala_dataframe_top_k_take_first_k_f32;
-extern const char* k_metal_navatala_dataframe_histogram_fast_f32;
-extern const char* k_metal_navatala_dataframe_zero_bins;
-extern const char* k_metal_navatala_dataframe_compute_bin_indices_f32;
-extern const char* k_metal_navatala_dataframe_sum_reduce_f32;
-extern const char* k_metal_navatala_dataframe_mean_f32;
-extern const char* k_metal_navatala_dataframe_variance_f32;
-extern const char* k_metal_navatala_dataframe_stddev_f32;
-extern const char* k_metal_navatala_dataframe_normalize_f32;
-extern const char* k_metal_navatala_dataframe_init_rng_state;
-extern const char* k_metal_navatala_dataframe_uniform_lcg_f32;
-extern const char* k_metal_navatala_dataframe_normal_box_muller_f32;
-extern const char* k_metal_navatala_dataframe_init_indices;
-extern const char* k_metal_navatala_dataframe_covariance_f32;
-extern const char* k_metal_navatala_dataframe_center_data_f32;
-extern const char* k_metal_navatala_dataframe_center_matrix_f32;
-extern const char* k_metal_navatala_dataframe_column_means_f32;
-extern const char* k_metal_navatala_dataframe_correlation_f32;
-extern const char* k_metal_navatala_dataframe_cov_to_correlation_matrix_f32;
-extern const char* k_metal_navatala_dataframe_quantile_f32;
-extern const char* k_metal_navatala_dataframe_quantile_batch_f32;
-extern const char* k_metal_navatala_dataframe_median_f32;
-extern const char* k_metal_navatala_dataframe_iqr_f32;
-extern const char* k_metal_navatala_dataframe_init_e_w_m_c_f32;
-extern const char* k_metal_navatala_dataframe_init_e_w_m_c_from_halflife_f32;
-extern const char* k_metal_navatala_dataframe_ewmc_update_f32;
-extern const char* k_metal_navatala_dataframe_ewmc_extract_covariance_f32;
-extern const char* k_metal_navatala_dataframe_ewmc_extract_correlation_f32;
-extern const char* k_metal_navatala_dataframe_init_m_c_d_f32;
-extern const char* k_metal_navatala_dataframe_mcd_compute_center_f32;
-extern const char* k_metal_navatala_dataframe_mcd_compute_covariance_f32;
-extern const char* k_metal_navatala_dataframe_mcd_mahalanobis_distance_f32;
-extern const char* k_metal_navatala_dataframe_mcd_detect_outliers_f32;
-extern const char* k_metal_navatala_dataframe_mcd_extract_mean_f32;
-extern const char* k_metal_navatala_linalg_eig_select_top_k_f32;
-extern const char* k_metal_navatala_ml_kde_bandwidth_silverman_f32;
-extern const char* k_metal_navatala_ml_kde_bandwidth_scott_f32;
-extern const char* k_metal_navatala_ml_kde_evaluate_gaussian_f32;
-extern const char* k_metal_navatala_ml_kde_evaluate_epanechnikov_f32;
-extern const char* k_metal_navatala_ml_kde_find_mode_f32;
-extern const char* k_metal_navatala_dataframe_init_moments_state_f32;
-extern const char* k_metal_navatala_dataframe_moments_update_f32;
-extern const char* k_metal_navatala_dataframe_moments_merge_f32;
-extern const char* k_metal_navatala_dataframe_extract_skewness_f32;
-extern const char* k_metal_navatala_dataframe_extract_kurtosis_f32;
-extern const char* k_metal_navatala_dataframe_extract_excess_kurtosis_f32;
-extern const char* k_metal_navatala_ml_pairwise_euclidean_f32;
-extern const char* k_metal_navatala_ml_pairwise_squared_euclidean_f32;
-extern const char* k_metal_navatala_ml_pairwise_manhattan_f32;
-extern const char* k_metal_navatala_ml_pairwise_cosine_f32;
-extern const char* k_metal_navatala_ml_pairwise_chebyshev_f32;
-extern const char* k_metal_navatala_ml_nearest_neighbor_f32;
-extern const char* k_metal_navatala_ml_init_centroids_random_f32;
-extern const char* k_metal_navatala_ml_assign_to_centroids_f32;
-extern const char* k_metal_navatala_ml_compute_cluster_sums_f32;
-extern const char* k_metal_navatala_ml_update_centroids_f32;
-extern const char* k_metal_navatala_ml_compute_inertia_f32;
-extern const char* k_metal_navatala_ml_init_gmm_state_f32;
-extern const char* k_metal_navatala_ml_gaussian_log_pdf_f32;
-extern const char* k_metal_navatala_ml_compute_responsibilities_f32;
-extern const char* k_metal_navatala_ml_update_means_f32;
-extern const char* k_metal_navatala_ml_update_variances_f32;
-extern const char* k_metal_navatala_ml_update_weights_f32;
-extern const char* k_metal_navatala_ml_compute_log_likelihood_f32;
-extern const char* k_metal_navatala_graph_rbf_affinity_f32;
-extern const char* k_metal_navatala_graph_compute_degree_matrix_f32;
-extern const char* k_metal_navatala_graph_compute_laplacian_f32;
-extern const char* k_metal_navatala_graph_normalized_laplacian_f32;
-extern const char* k_metal_navatala_graph_normalize_eigenvector_rows_f32;
-extern const char* k_metal_navatala_graph_spectral_embedding_f32;
-extern const char* k_metal_navatala_ml_compute_gram_matrix_f32;
-extern const char* k_metal_navatala_ml_compute_xt_y_f32;
-extern const char* k_metal_navatala_ml_predict_f32;
-extern const char* k_metal_navatala_ml_compute_residuals_f32;
-extern const char* k_metal_navatala_ml_compute_r_squared_f32;
-extern const char* k_metal_navatala_ml_compute_mean_f32;
-extern const char* k_metal_navatala_ml_add_regularization_f32;
-extern const char* k_metal_navatala_ml_ridge_predict_f32;
-extern const char* k_metal_navatala_ml_compute_gcv_score_f32;
-extern const char* k_metal_navatala_ml_compute_effective_dof_f32;
-extern const char* k_metal_navatala_ml_init_lasso_state_f32;
-extern const char* k_metal_navatala_ml_compute_partial_residual_f32;
-extern const char* k_metal_navatala_ml_soft_threshold_f32;
-extern const char* k_metal_navatala_ml_coordinate_update_f32;
-extern const char* k_metal_navatala_ml_compute_objective_f32;
-extern const char* k_metal_navatala_ml_compute_active_set_f32;
-extern const char* k_metal_navatala_ml_center_data_f32;
-extern const char* k_metal_navatala_ml_compute_covariance_matrix_f32;
-extern const char* k_metal_navatala_ml_project_to_principal_f32;
-extern const char* k_metal_navatala_ml_explained_variance_ratio_f32;
-extern const char* k_metal_navatala_ml_compute_pairwise_affinity_f32;
-extern const char* k_metal_navatala_ml_symmetrize_affinity_f32;
-extern const char* k_metal_navatala_ml_init_embedding_random_f32;
-extern const char* k_metal_navatala_ml_compute_q_distribution_f32;
-extern const char* k_metal_navatala_ml_compute_gradient_f32;
-extern const char* k_metal_navatala_ml_apply_momentum_update_f32;
-extern const char* k_metal_navatala_ml_compute_k_l_divergence_f32;
-extern const char* k_metal_navatala_ml_compute_perplexity_f32;
-extern const char* k_metal_navatala_ml_normalize_embedding_f32;
-extern const char* k_metal_navatala_ml_compute_exaggerated_p_f32;
-extern const char* k_metal_navatala_ml_compute_neighbor_counts_f32;
-extern const char* k_metal_navatala_ml_identify_core_points_f32;
-extern const char* k_metal_navatala_ml_identify_core_points_f64;
-extern const char* k_metal_navatala_ml_init_cluster_labels_f32;
-extern const char* k_metal_navatala_ml_init_cluster_labels_f64;
-extern const char* k_metal_navatala_ml_expand_cluster_step_f32;
-extern const char* k_metal_navatala_ml_propagate_core_labels_f32;
-extern const char* k_metal_navatala_ml_mark_noise_points_f32;
-extern const char* k_metal_navatala_ml_mark_noise_points_f64;
-extern const char* k_metal_navatala_ml_count_clusters_f32;
-extern const char* k_metal_navatala_ml_count_clusters_f64;
-extern const char* k_metal_navatala_linalg_cast_f32_to_f16;
-extern const char* k_metal_navatala_linalg_cast_f16_to_f32;
-extern const char* k_metal_navatala_linalg_reduce_sum_f16;
-extern const char* k_metal_navatala_linalg_reduce_max_f16;
-extern const char* k_metal_navatala_runtime_deterministic_reduce_f32;
-extern const char* k_metal_navatala_runtime_deterministic_histogram_f32;
-extern const char* k_metal_navatala_sparse_sparse_add_f32;
-extern const char* k_metal_navatala_sparse_sparse_sub_f32;
-extern const char* k_metal_navatala_sparse_sparse_scale_f32;
-extern const char* k_metal_navatala_sparse_sparse_hadamard_f32;
-extern const char* k_metal_navatala_sparse_sparse_abs_f32;
-extern const char* k_metal_navatala_sparse_sparse_threshold_f32;
-extern const char* k_metal_navatala_sparse_coo_transpose_f32;
-extern const char* k_metal_navatala_sparse_sparse_inner_product_f32;
-extern const char* k_metal_navatala_sparse_sparse_l2_distance_f32;
-extern const char* k_metal_navatala_sparse_sparse_cosine_distance_f32;
-extern const char* k_metal_navatala_sparse_sparse_jaccard_distance_f32;
-extern const char* k_metal_navatala_sparse_sparse_jacobi_iter_f32;
-extern const char* k_metal_navatala_sparse_sparse_gauss_seidel_iter_f32;
-extern const char* k_metal_navatala_sparse_sparse_cg_iter_f32;
-extern const char* k_metal_navatala_sparse_sparse_bicgstab_iter_f32;
-extern const char* k_metal_navatala_sparse_compute_residual_f32;
-extern const char* k_metal_navatala_sparse_compute_residual_norm_f32;
-extern const char* k_metal_navatala_sparse_csr_spmv_row_f32;
-extern const char* k_metal_navatala_sparse_chebyshev_smooth_f32;
-extern const char* k_metal_navatala_sparse_find_min_edge_per_component_f32;
-extern const char* k_metal_navatala_sparse_merge_components_f32;
-extern const char* k_metal_navatala_sparse_merge_components_f64;
-extern const char* k_metal_navatala_sparse_mst_boruvka_step_f32;
-extern const char* k_metal_navatala_linalg_elt_add_f32;
-extern const char* k_metal_navatala_linalg_elt_sub_f32;
-extern const char* k_metal_navatala_linalg_elt_mul_f32;
-extern const char* k_metal_navatala_linalg_elt_div_f32;
-extern const char* k_metal_navatala_linalg_elt_pow_f32;
-extern const char* k_metal_navatala_linalg_elt_sqrt_f32;
-extern const char* k_metal_navatala_linalg_elt_exp_f32;
-extern const char* k_metal_navatala_linalg_elt_log_f32;
-extern const char* k_metal_navatala_linalg_elt_abs_f32;
-extern const char* k_metal_navatala_linalg_elt_sign_f32;
-extern const char* k_metal_navatala_linalg_transpose_f32;
-extern const char* k_metal_navatala_linalg_transpose_in_place_f32;
-extern const char* k_metal_navatala_linalg_transpose_batched_f32;
-extern const char* k_metal_navatala_linalg_map_f32;
-extern const char* k_metal_navatala_linalg_reduce_row_sum_f32;
-extern const char* k_metal_navatala_linalg_reduce_col_sum_f32;
-extern const char* k_metal_navatala_linalg_reduce_row_max_f32;
-extern const char* k_metal_navatala_linalg_reduce_col_max_f32;
-extern const char* k_metal_navatala_linalg_map_reduce_sum_f32;
-extern const char* k_metal_navatala_linalg_outer_product_f32;
-extern const char* k_metal_navatala_linalg_batched_dot_f32;
-extern const char* k_metal_navatala_linalg_trace_f32;
-extern const char* k_metal_navatala_linalg_frobenius_norm_f32;
-extern const char* k_metal_navatala_linalg_extract_upper_f32;
-extern const char* k_metal_navatala_linalg_extract_lower_f32;
-extern const char* k_metal_navatala_linalg_set_upper_f32;
-extern const char* k_metal_navatala_linalg_set_lower_f32;
-extern const char* k_metal_navatala_linalg_gather_rows_f32;
-extern const char* k_metal_navatala_linalg_gather_cols_f32;
-extern const char* k_metal_navatala_linalg_gather_elements_f32;
-extern const char* k_metal_navatala_linalg_gather_batched_f32;
-extern const char* k_metal_navatala_linalg_scatter_rows_f32;
-extern const char* k_metal_navatala_linalg_scatter_cols_f32;
-extern const char* k_metal_navatala_linalg_scatter_add_f32;
-extern const char* k_metal_navatala_linalg_scatter_max_f32;
-extern const char* k_metal_navatala_linalg_slice_rows_f32;
-extern const char* k_metal_navatala_linalg_slice_cols_f32;
-extern const char* k_metal_navatala_linalg_slice_block_f32;
-extern const char* k_metal_navatala_linalg_strided_slice_f32;
-extern const char* k_metal_navatala_linalg_extract_diagonal_f32;
-extern const char* k_metal_navatala_linalg_extract_diagonal_k_f32;
-extern const char* k_metal_navatala_linalg_set_diagonal_f32;
-extern const char* k_metal_navatala_linalg_diag_to_matrix_f32;
-extern const char* k_metal_navatala_linalg_shift_rows_f32;
-extern const char* k_metal_navatala_linalg_shift_cols_f32;
-extern const char* k_metal_navatala_linalg_roll_rows_f32;
-extern const char* k_metal_navatala_linalg_roll_cols_f32;
-extern const char* k_metal_navatala_linalg_sort_rows_f32;
-extern const char* k_metal_navatala_linalg_sort_cols_f32;
-extern const char* k_metal_navatala_linalg_argsort_rows_f32;
-extern const char* k_metal_navatala_linalg_argsort_cols_f32;
-extern const char* k_metal_navatala_dataframe_contingency_matrix_f32;
-extern const char* k_metal_navatala_dataframe_silhouette_score_f32;
-extern const char* k_metal_navatala_dataframe_adjusted_rand_index_f32;
-extern const char* k_metal_navatala_dataframe_normalized_mutual_info_f32;
-extern const char* k_metal_navatala_dataframe_homogeneity_score_f32;
-extern const char* k_metal_navatala_dataframe_completeness_score_f32;
-extern const char* k_metal_navatala_dataframe_v_measure_f32;
-extern const char* k_metal_navatala_dataframe_r2_score_f32;
-extern const char* k_metal_navatala_dataframe_mse_f32;
-extern const char* k_metal_navatala_dataframe_rmse_f32;
-extern const char* k_metal_navatala_dataframe_mae_f32;
-extern const char* k_metal_navatala_dataframe_mape_f32;
-extern const char* k_metal_navatala_dataframe_explained_variance_f32;
-extern const char* k_metal_navatala_dataframe_entropy_f32;
-extern const char* k_metal_navatala_dataframe_cross_entropy_f32;
-extern const char* k_metal_navatala_dataframe_kl_divergence_f32;
-extern const char* k_metal_navatala_dataframe_mutual_information_f32;
-extern const char* k_metal_navatala_dataframe_conditional_entropy_f32;
-extern const char* k_metal_navatala_ml_neighborhood_recall_f32;
-extern const char* k_metal_navatala_ml_trustworthiness_f32;
-extern const char* k_metal_navatala_ml_continuity_f32;
-extern const char* k_metal_navatala_dataframe_permute_f32;
-extern const char* k_metal_navatala_dataframe_shuffle_rows_f32;
-extern const char* k_metal_navatala_dataframe_sample_without_replacement_f32;
-extern const char* k_metal_navatala_dataframe_sample_with_replacement_f32;
-extern const char* k_metal_navatala_dataframe_bootstrap_sample_f32;
-extern const char* k_metal_navatala_ml_make_blobs_f32;
-extern const char* k_metal_navatala_ml_make_blobs_anisotropic_f32;
-extern const char* k_metal_navatala_ml_make_moons_f32;
-extern const char* k_metal_navatala_ml_make_circles_f32;
-extern const char* k_metal_navatala_ml_make_regression_f32;
-extern const char* k_metal_navatala_ml_make_classification_f32;
-extern const char* k_metal_navatala_ml_make_sparse_uncorrelated_f32;
-extern const char* k_metal_navatala_graph_rmat_generator_f32;
-extern const char* k_metal_navatala_graph_erdos_renyi_f32;
-extern const char* k_metal_navatala_graph_barabasi_albert_f32;
-extern const char* k_metal_navatala_dataframe_select_top_k_per_row_f32;
-extern const char* k_metal_navatala_dataframe_select_top_k_f32;
-extern const char* k_metal_navatala_dataframe_arg_top_k_per_row_f32;
-extern const char* k_metal_navatala_dataframe_arg_top_k_f32;
-extern const char* k_metal_navatala_dataframe_partial_sort_per_row_f32;
-extern const char* k_metal_navatala_ml_knn_brute_force_f32;
-extern const char* k_metal_navatala_ml_knn_brute_force_euclidean_f32;
-extern const char* k_metal_navatala_ml_knn_brute_force_cosine_f32;
-extern const char* k_metal_navatala_ml_knn_brute_force_manhattan_f32;
-extern const char* k_metal_navatala_ml_knn_with_radius_f32;
-extern const char* k_metal_navatala_ml_knn_classify_f32;
-extern const char* k_metal_navatala_ml_knn_classify_f64;
-extern const char* k_metal_navatala_ml_knn_classify_weighted_f32;
-extern const char* k_metal_navatala_ml_knn_classify_probs_f32;
-extern const char* k_metal_navatala_ml_vote_majority_f32;
-extern const char* k_metal_navatala_ml_vote_majority_f64;
-extern const char* k_metal_navatala_ml_knn_regress_f32;
-extern const char* k_metal_navatala_ml_knn_regress_weighted_f32;
-extern const char* k_metal_navatala_ml_knn_regress_median_f32;
-extern const char* k_metal_navatala_graph_compute_modularity_f32;
-extern const char* k_metal_navatala_graph_modularity_matrix_vec_f32;
-extern const char* k_metal_navatala_graph_construct_indicator_f32;
-extern const char* k_metal_navatala_graph_compute_edge_cut_f32;
-extern const char* k_metal_navatala_graph_compute_partition_cost_f32;
-extern const char* k_metal_navatala_graph_analyze_partition_f32;
-extern const char* k_metal_navatala_graph_transform_eigen_matrix_f32;
-extern const char* k_metal_navatala_graph_laplacian_from_adjacency_f32;
-extern const char* k_metal_navatala_ml_traverse_tree_classify_f32;
-extern const char* k_metal_navatala_ml_traverse_tree_regress_f32;
-extern const char* k_metal_navatala_ml_compute_gini_impurity_f32;
-extern const char* k_metal_navatala_ml_compute_m_s_e_f32;
-extern const char* k_metal_navatala_ml_split_samples_f32;
-extern const char* k_metal_navatala_ml_compute_leaf_class_probs_f32;
-extern const char* k_metal_navatala_ml_forest_classify_f32;
-extern const char* k_metal_navatala_ml_forest_regress_f32;
-extern const char* k_metal_navatala_ml_aggregate_importances_f32;
-extern const char* k_metal_navatala_ml_fil_infer_regression_f32;
-extern const char* k_metal_navatala_ml_fil_infer_classification_f32;
-extern const char* k_metal_navatala_ml_svm_predict_classify_f32;
-extern const char* k_metal_navatala_ml_svm_predict_regress_f32;
-extern const char* k_metal_navatala_ml_compute_decision_function_f32;
-extern const char* k_metal_navatala_ml_compute_r_b_f_kernel_matrix_f32;
-extern const char* k_metal_navatala_ml_compute_linear_kernel_matrix_f32;
-extern const char* k_metal_navatala_ml_compute_polynomial_kernel_matrix_f32;
-extern const char* k_metal_navatala_ml_compute_core_distances_f32;
-extern const char* k_metal_navatala_ml_compute_mutual_reachability_f32;
-extern const char* k_metal_navatala_ml_extract_cluster_labels_f32;
-extern const char* k_metal_navatala_ml_extract_cluster_labels_f64;
-extern const char* k_metal_navatala_ml_compute_probabilities_f32;
-extern const char* k_metal_navatala_ml_compute_cluster_stability_f32;
-extern const char* k_metal_navatala_ml_initialize_labels_f32;
-extern const char* k_metal_navatala_ml_initialize_labels_f64;
-extern const char* k_metal_navatala_ml_compute_fuzzy_simplicial_set_f32;
-extern const char* k_metal_navatala_ml_compute_attraction_f32;
-extern const char* k_metal_navatala_ml_compute_repulsion_f32;
-extern const char* k_metal_navatala_ml_optimize_layout_f32;
-extern const char* k_metal_navatala_ml_initialize_embedding_f32;
-extern const char* k_metal_navatala_ml_clear_gradients_f32;
-extern const char* k_metal_navatala_ml_differencing_f32;
-extern const char* k_metal_navatala_ml_holt_winters_forecast_f32;
-extern const char* k_metal_navatala_ml_ar_predict_f32;
-extern const char* k_metal_navatala_ml_shap_values_f32;
-extern const char* k_metal_navatala_ml_coalition_marginal_f32;
-extern const char* k_metal_navatala_ml_feature_interaction_f32;
-extern const char* k_metal_navatala_ml_compute_correlations_f32;
-extern const char* k_metal_navatala_ml_find_max_correlation_f32;
-extern const char* k_metal_navatala_ml_update_coefs_f32;
-extern const char* k_metal_navatala_ml_compute_equiangular_f32;
-extern const char* k_metal_navatala_ml_evaluate_fitness_f32;
-extern const char* k_metal_navatala_ml_mutate_population_f32;
-extern const char* k_metal_navatala_ml_crossover_population_f32;
-extern const char* k_metal_navatala_ml_select_tournament_f32;
-extern const char* k_metal_navatala_sparse_knn_sparse_k_n_n_distance_f32;
-extern const char* k_metal_navatala_sparse_knn_sparse_inner_product_f32;
-extern const char* k_metal_navatala_sparse_knn_sparse_top_k_f32;
-extern const char* k_metal_navatala_sparse_knn_csr_row_distance_f32;
-extern const char* k_metal_navatala_ml_batch_traverse_trees_f32;
-extern const char* k_metal_navatala_ml_collect_leaf_values_f32;
-extern const char* k_metal_navatala_ml_aggregate_tree_outputs_f32;
-extern const char* k_metal_navatala_ml_traverse_with_path_f32;
-extern const char* k_metal_navatala_sparse_csr_sp_m_v_f32;
-extern const char* k_metal_navatala_sparse_csr_sp_m_v_scaled_f32;
-extern const char* k_metal_navatala_sparse_csr_residual_f32;
-extern const char* k_metal_navatala_sparse_axpy_f32;
-extern const char* k_metal_navatala_sparse_xpay_f32;
-extern const char* k_metal_navatala_sparse_dot_partials_f32;
-extern const char* k_metal_navatala_sparse_scal_f32;
-extern const char* k_metal_navatala_sparse_nrm2_partials_f32;
-extern const char* k_metal_navatala_sparse_zero_fill_f32;
-extern const char* k_metal_navatala_sparse_zero_fill_u32;
-extern const char* k_metal_navatala_sparse_zero_scalar_u32;
-extern const char* k_metal_navatala_sparse_fill_neg_one_i32;
-extern const char* k_metal_navatala_sparse_copy_f32;
-extern const char* k_metal_navatala_sparse_bsr_sp_m_v_f32;
-extern const char* k_metal_navatala_sparse_csr_transpose_count_f32;
-extern const char* k_metal_navatala_sparse_csr_transpose_fill_f32;
-extern const char* k_metal_navatala_sparse_csr_row_norm_l1_f32;
-extern const char* k_metal_navatala_sparse_csr_row_norm_linf_f32;
-extern const char* k_metal_navatala_sparse_csr_frobenius_partials_f32;
-extern const char* k_metal_navatala_sparse_csr_truncate_f32;
-extern const char* k_metal_navatala_sparse_csr_compact_f32;
-extern const char* k_metal_navatala_sparse_csr_sort_columns_f32;
-extern const char* k_metal_navatala_sparse_csr_permute_rows_f32;
-extern const char* k_metal_navatala_sparse_csr_check_diag_dominance_f32;
-extern const char* k_metal_navatala_sparse_csr_row_nnz_histogram;
-extern const char* k_metal_navatala_sparse_dense_l_u_f32;
-extern const char* k_metal_navatala_sparse_dense_l_u_solve_f32;
-extern const char* k_metal_navatala_sparse_csr_replace_values_f32;
-extern const char* k_metal_navatala_sparse_csr_to_coo_f32;
-extern const char* k_metal_navatala_sparse_coo_to_csr_row_count;
-extern const char* k_metal_navatala_sparse_csr_to_ell_f32;
-extern const char* k_metal_navatala_sparse_ell_sp_m_v_f32;
-extern const char* k_metal_navatala_sparse_csr_add_symbolic_row_nnz;
-extern const char* k_metal_navatala_sparse_csr_add_numeric_f32;
-extern const char* k_metal_navatala_sparse_csr_scale_f32;
-extern const char* k_metal_navatala_sparse_csr_symmetry_check_f32;
-extern const char* k_metal_navatala_sparse_csr_nnz_per_row;
-extern const char* k_metal_navatala_sparse_csr_max_nnz_per_row_partials;
-extern const char* k_metal_navatala_sparse_csr_extract_diag_f32;
-extern const char* k_metal_navatala_sparse_csr_permute_cols_f32;
-extern const char* k_metal_navatala_sparse_csr_row_slice_f32;
-extern const char* k_metal_navatala_sparse_cg_update_x_r_f32;
-extern const char* k_metal_navatala_sparse_cg_update_p_f32;
-extern const char* k_metal_navatala_sparse_cg_compute_alpha_f32;
-extern const char* k_metal_navatala_sparse_cg_compute_beta_f32;
-extern const char* k_metal_navatala_sparse_cg_fused_update_dot_f32;
-extern const char* k_metal_navatala_sparse_cg_init_residual_f32;
-extern const char* k_metal_navatala_sparse_cg_residual_norm_partials_f32;
-extern const char* k_metal_navatala_sparse_bicgstab_update_p_f32;
-extern const char* k_metal_navatala_sparse_bicgstab_update_x_f32;
-extern const char* k_metal_navatala_sparse_bicgstab_compute_beta_f32;
-extern const char* k_metal_navatala_sparse_bicgstab_compute_omega_f32;
-extern const char* k_metal_navatala_sparse_bicgstab_update_r_f32;
-extern const char* k_metal_navatala_sparse_bicgstab_compute_s_f32;
-extern const char* k_metal_navatala_sparse_bicgstab_compute_alpha_f32;
-extern const char* k_metal_navatala_sparse_bicgstab_fused_update_all_f32;
-extern const char* k_metal_navatala_sparse_gmres_arnoldi_project_f32;
-extern const char* k_metal_navatala_sparse_gmres_normalize_f32;
-extern const char* k_metal_navatala_sparse_gmres_update_solution_f32;
-extern const char* k_metal_navatala_sparse_gmres_givens_rotation_f32;
-extern const char* k_metal_navatala_sparse_gmres_arnoldi_batch_project_f32;
-extern const char* k_metal_navatala_sparse_gmres_hessenberg_dot_partials_f32;
-extern const char* k_metal_navatala_sparse_gmres_restart_init_f32;
-extern const char* k_metal_navatala_sparse_gmres_back_solve_f32;
-extern const char* k_metal_navatala_sparse_gmres_store_basis_f32;
-extern const char* k_metal_navatala_sparse_idr_shadow_project_f32;
-extern const char* k_metal_navatala_sparse_idr_update_x_r_f32;
-extern const char* k_metal_navatala_sparse_idr_g_space_update_f32;
-extern const char* k_metal_navatala_sparse_idr_compute_omega_f32;
-extern const char* k_metal_navatala_sparse_idr_build_shadow_space_f32;
-extern const char* k_metal_navatala_sparse_idr_m_sync_fused_f32;
-extern const char* k_metal_navatala_sparse_idr_compute_v_f32;
-extern const char* k_metal_navatala_sparse_idr_store_d_r_column_f32;
-extern const char* k_metal_navatala_sparse_pcg_update_x_r_f32;
-extern const char* k_metal_navatala_sparse_pcgf_update_p_f32;
-extern const char* k_metal_navatala_sparse_pbicgstab_fused_s_f32;
-extern const char* k_metal_navatala_sparse_pbicgstab_triple_dot_partials_f32;
-extern const char* k_metal_navatala_sparse_fgmres_store_z_f32;
-extern const char* k_metal_navatala_sparse_fgmres_update_solution_f32;
-extern const char* k_metal_navatala_sparse_pipe_c_g_fused_f32;
-extern const char* k_metal_navatala_sparse_chronopoulos_c_g_scalars_f32;
-extern const char* k_metal_navatala_sparse_fgmres_m_g_s_project_f32;
-extern const char* k_metal_navatala_sparse_pbicgstab_fused_update_conv_f32;
-extern const char* k_metal_navatala_sparse_jacobi_sweep_f32;
-extern const char* k_metal_navatala_sparse_jacobi_l1_sweep_f32;
-extern const char* k_metal_navatala_sparse_extract_diagonal_f32;
-extern const char* k_metal_navatala_sparse_block_jacobi_sweep_f32;
-extern const char* k_metal_navatala_sparse_cf_jacobi_sweep_f32;
-extern const char* k_metal_navatala_sparse_multicolor_gs_forward_f32;
-extern const char* k_metal_navatala_sparse_multicolor_gs_backward_f32;
-extern const char* k_metal_navatala_sparse_fixcolor_gs_forward_f32;
-extern const char* k_metal_navatala_sparse_fixcolor_gs_backward_f32;
-extern const char* k_metal_navatala_sparse_ilu_factor_color_f32;
-extern const char* k_metal_navatala_sparse_ilu_forward_sweep_f32;
-extern const char* k_metal_navatala_sparse_ilu_backward_sweep_f32;
-extern const char* k_metal_navatala_sparse_dilu_build_reciprocal_d_f32;
-extern const char* k_metal_navatala_sparse_dilu_apply_f32;
-extern const char* k_metal_navatala_sparse_multicolor_dilu_forward_f32;
-extern const char* k_metal_navatala_sparse_multicolor_dilu_backward_f32;
-extern const char* k_metal_navatala_sparse_chebyshev_sweep_f32;
-extern const char* k_metal_navatala_sparse_chebyshev_coeff_update_f32;
-extern const char* k_metal_navatala_sparse_polynomial_sweep_f32;
-extern const char* k_metal_navatala_sparse_kpz_polynomial_sweep_f32;
-extern const char* k_metal_navatala_sparse_kaczmarz_row_norm_sq_f32;
-extern const char* k_metal_navatala_sparse_mg_restrict_f32;
-extern const char* k_metal_navatala_sparse_mg_prolongate_f32;
-extern const char* k_metal_navatala_sparse_mg_convergence_absolute_f32;
-extern const char* k_metal_navatala_sparse_mg_convergence_relative_f32;
-extern const char* k_metal_navatala_sparse_mg_compute_residual_f32;
-extern const char* k_metal_navatala_sparse_mg_weighted_restrict_f32;
-extern const char* k_metal_navatala_sparse_mg_error_norm_partials_f32;
-extern const char* k_metal_navatala_sparse_mg_zero_vector_f32;
-extern const char* k_metal_navatala_sparse_mg_prolongate_damped_f32;
-extern const char* k_metal_navatala_sparse_strength_of_connection_f32;
-extern const char* k_metal_navatala_sparse_aggregate_size2_propose_f32;
-extern const char* k_metal_navatala_sparse_aggregate_size2_confirm;
-extern const char* k_metal_navatala_sparse_promote_unmatched_singletons;
-extern const char* k_metal_navatala_sparse_aggregate_size4_f32;
-extern const char* k_metal_navatala_sparse_aggregate_size8_f32;
-extern const char* k_metal_navatala_sparse_aggregate_parallel_greedy_f32;
-extern const char* k_metal_navatala_sparse_assign_leader_compact_ids;
-extern const char* k_metal_navatala_sparse_apply_compact_ids;
-extern const char* k_metal_navatala_sparse_build_prolongation_f32;
-extern const char* k_metal_navatala_sparse_build_prolongation_terminator;
-extern const char* k_metal_navatala_sparse_spgemm_symbolic_row_nnz;
-extern const char* k_metal_navatala_sparse_spgemm_numeric_f32;
-extern const char* k_metal_navatala_sparse_csr_transpose;
-extern const char* k_metal_navatala_sparse_aggregate_adaptive_f32;
-extern const char* k_metal_navatala_sparse_aggregate_multi_pairwise_f32;
-extern const char* k_metal_navatala_sparse_aggregate_geometric_f32;
-extern const char* k_metal_navatala_sparse_aggregate_serial_f32;
-extern const char* k_metal_navatala_sparse_aggregate_low_degree_first_propose_f32;
-extern const char* k_metal_navatala_sparse_assign_orphans_f32;
-extern const char* k_metal_navatala_sparse_spgemm_numeric_hash_f32;
-extern const char* k_metal_navatala_sparse_spgemm_numeric_serial_f32;
-extern const char* k_metal_navatala_sparse_build_smoothed_prolongation_f32;
-extern const char* k_metal_navatala_sparse_compute_aggregate_sizes;
-extern const char* k_metal_navatala_sparse_compute_coarsening_ratio;
-extern const char* k_metal_navatala_sparse_cf_split_p_m_i_s;
-extern const char* k_metal_navatala_sparse_cf_split_h_m_i_s;
-extern const char* k_metal_navatala_sparse_cf_split_h_m_i_s_phase2_f32;
-extern const char* k_metal_navatala_sparse_cf_split_r_s;
-extern const char* k_metal_navatala_sparse_interpolate_distance1_count_f32;
-extern const char* k_metal_navatala_sparse_interpolate_distance1_count_f64;
-extern const char* k_metal_navatala_sparse_interpolate_distance1_f32;
-extern const char* k_metal_navatala_sparse_interpolate_distance2_count_f32;
-extern const char* k_metal_navatala_sparse_interpolate_distance2_count_f64;
-extern const char* k_metal_navatala_sparse_interpolate_distance2_f32;
-extern const char* k_metal_navatala_sparse_truncate_interpolation_count_f32;
-extern const char* k_metal_navatala_sparse_truncate_interpolation_f32;
-extern const char* k_metal_navatala_sparse_cf_split_aggressive_p_m_i_s;
-extern const char* k_metal_navatala_sparse_cf_split_aggressive_h_m_i_s;
-extern const char* k_metal_navatala_sparse_cf_split_c_r_f32;
-extern const char* k_metal_navatala_sparse_cf_split_c_l_j_p;
-extern const char* k_metal_navatala_sparse_interpolate_multipass_count_f32;
-extern const char* k_metal_navatala_sparse_interpolate_multipass_count_f64;
-extern const char* k_metal_navatala_sparse_interpolate_multipass_f32;
-extern const char* k_metal_navatala_sparse_strength_symmetric_f32;
-extern const char* k_metal_navatala_sparse_strength_algebraic_dist_f32;
-extern const char* k_metal_navatala_sparse_strength_affinity_f32;
-extern const char* k_metal_navatala_sparse_count_c_f_points;
-extern const char* k_metal_navatala_sparse_compute_grid_complexity;
-extern const char* k_metal_navatala_sparse_compute_operator_complexity;
-extern const char* k_metal_navatala_sparse_interpolate_ext_no_i_count_f32;
-extern const char* k_metal_navatala_sparse_interpolate_ext_no_i_count_f64;
-extern const char* k_metal_navatala_sparse_interpolate_ext_no_i_f32;
-extern const char* k_metal_navatala_sparse_interpolate_f_f_weights_f32;
-extern const char* k_metal_navatala_sparse_interpolate_symbolic_row_nnz_f32;
-extern const char* k_metal_navatala_sparse_interpolate_symbolic_row_nnz_f64;
-extern const char* k_metal_navatala_sparse_build_coarse_to_fine_map;
-extern const char* k_metal_navatala_sparse_build_fine_to_coarse_map_count;
-extern const char* k_metal_navatala_sparse_build_fine_to_coarse_map;
-extern const char* k_metal_navatala_sparse_em_initial_prolongation_f32;
-extern const char* k_metal_navatala_sparse_em_energy_gradient_f32;
-extern const char* k_metal_navatala_sparse_em_update_prolongation_f32;
-extern const char* k_metal_navatala_sparse_em_normalize_p_f32;
-extern const char* k_metal_navatala_sparse_em_energy_eval_partials_f32;
-extern const char* k_metal_navatala_sparse_parallel_greedy_coloring;
-extern const char* k_metal_navatala_sparse_min_max_coloring;
-extern const char* k_metal_navatala_sparse_min_max2_ring_coloring;
-extern const char* k_metal_navatala_sparse_multi_hash_coloring;
-extern const char* k_metal_navatala_sparse_build_color_offsets;
-extern const char* k_metal_navatala_sparse_reorder_c_s_r_by_color;
-extern const char* k_metal_navatala_sparse_round_robin_coloring;
-extern const char* k_metal_navatala_sparse_bfs_coloring;
-extern const char* k_metal_navatala_sparse_locally_downwind_coloring;
-extern const char* k_metal_navatala_sparse_greedy_recolor_f32;
-extern const char* k_metal_navatala_sparse_greedy_recolor_f64;
-extern const char* k_metal_navatala_sparse_validate_coloring;
-extern const char* k_metal_navatala_sparse_color_histogram;
-extern const char* k_metal_navatala_sparse_uniform_random_coloring;
-extern const char* k_metal_navatala_sparse_saturation_coloring;
-extern const char* k_metal_navatala_sparse_reorder_vector_by_color_f32;
-extern const char* k_metal_navatala_sparse_diag_inv_sqrt_f32;
-extern const char* k_metal_navatala_sparse_apply_diag_sym_scale_f32;
-extern const char* k_metal_navatala_sparse_binorm_row_scale_f32;
-extern const char* k_metal_navatala_sparse_shifted_sp_m_v_f32;
-extern const char* k_metal_navatala_sparse_deflated_project_f32;
-extern const char* k_metal_navatala_sparse_page_rank_iter_f32;
-extern const char* k_metal_navatala_sparse_w_cycle_weight_partials_f32;
-extern const char* k_metal_navatala_sparse_convergence_factor_f32;
-extern const char* k_metal_navatala_sparse_block_gram_schmidt_f32;
-extern const char* k_metal_navatala_sparse_small_dense_q_r_f32;
-extern const char* k_metal_navatala_sparse_lanczos_step_f32;
-extern const char* k_metal_navatala_sparse_arnoldi_step_f32;
-extern const char* k_metal_navatala_sparse_lobpcg_rayleigh_ritz_f32;
-extern const char* k_metal_navatala_sparse_lobpcg_residual_f32;
-extern const char* k_metal_navatala_sparse_power_iteration_normalize_f32;
-extern const char* k_metal_navatala_sparse_rayleigh_quotient_partials_f32;
-extern const char* k_metal_navatala_sparse_jacobi_davidson_correction_f32;
-extern const char* k_metal_navatala_sparse_jd_subspace_expand_f32;
-extern const char* k_metal_navatala_sparse_subspace_orthogonalize_f32;
-extern const char* k_metal_navatala_sparse_subspace_convergence_f32;
-extern const char* k_metal_navatala_sparse_block_sp_m_v_f32;
-extern const char* k_metal_navatala_sparse_multi_vec_norm_partials_f32;
-extern const char* k_metal_navatala_sparse_multi_vec_scale_f32;
-extern const char* k_metal_navatala_sparse_dense_sym_eig_f32;
-extern const char* k_metal_navatala_sparse_convergence_relative_max_f32;
-extern const char* k_metal_navatala_sparse_convergence_combined_f32;
-extern const char* k_metal_navatala_sparse_convergence_divergence_check_f32;
-extern const char* k_metal_navatala_sparse_update_max_norm_f32;
-extern const char* k_metal_navatala_sparse_amg_level_metrics_f32;
-extern const char* k_metal_navatala_sparse_amg_coarse_size_check_f32;
-extern const char* k_metal_navatala_sparse_amg_cycle_counter_f32;
-extern const char* k_metal_navatala_sparse_amg_validate_coarsening_f32;
-extern const char* k_metal_navatala_sparse_halo_pack_f32;
-extern const char* k_metal_navatala_sparse_halo_unpack_f32;
-extern const char* k_metal_navatala_sparse_halo_pack_b_s_r_f32;
-extern const char* k_metal_navatala_sparse_partition_count_per_rank;
-extern const char* k_metal_navatala_sparse_partition_reorder_f32;
-extern const char* k_metal_navatala_sparse_global_to_local_index_map;
-extern const char* k_metal_navatala_sparse_distributed_sp_m_v_halo_f32;
-extern const char* k_metal_navatala_sparse_merge_local_halo_result_f32;
-extern const char* k_metal_navatala_sparse_ldu_to_csr_init_diagonal_count_f32;
-extern const char* k_metal_navatala_sparse_ldu_to_csr_init_diagonal_count_f64;
-extern const char* k_metal_navatala_sparse_ldu_to_csr_count_nnz_f32;
-extern const char* k_metal_navatala_sparse_ldu_to_csr_count_nnz_f64;
-extern const char* k_metal_navatala_sparse_ldu_to_csr_fill_f32;
-extern const char* k_metal_navatala_sparse_ldu_diagonal_fill_f32;
-extern const char* k_metal_navatala_sparse_compute_so_c_ldu_count_f32;
-extern const char* k_metal_navatala_sparse_compute_so_c_ldu_fill_f32;
-extern const char* k_metal_navatala_sparse_compute_m_i_s_f32;
-extern const char* k_metal_navatala_sparse_compute_m_i_s_f64;
-extern const char* k_metal_navatala_sparse_csr_sort_after_ldu_fill_f32;
-extern const char* k_metal_navatala_cfd_compute_face_area_pair_weights_f32;
-extern const char* k_metal_navatala_cfd_restrict_by_agglomeration_gather_f32;
-extern const char* k_metal_navatala_cfd_prolongate_by_agglomeration_f32;
-extern const char* k_metal_navatala_cfd_diag_inv_apply_f32;
-extern const char* k_metal_navatala_cfd_gamg_proc_pack_f32;
-extern const char* k_metal_navatala_cfd_gamg_proc_add_gather_f32;
-extern const char* k_metal_navatala_transformer_gelu_f32;
-extern const char* k_metal_navatala_transformer_gelu_tanh_f32;
-extern const char* k_metal_navatala_transformer_silu_f32;
-extern const char* k_metal_navatala_transformer_relu_f32;
-extern const char* k_metal_navatala_transformer_quick_gelu_f32;
-extern const char* k_metal_navatala_transformer_squared_relu_f32;
-extern const char* k_metal_navatala_transformer_bias_gelu_f32;
-extern const char* k_metal_navatala_transformer_gelu_f16;
-extern const char* k_metal_navatala_transformer_silu_f16;
-extern const char* k_metal_navatala_transformer_relu_f16;
-extern const char* k_metal_navatala_transformer_quick_gelu_f16;
-extern const char* k_metal_navatala_transformer_squared_relu_f16;
-extern const char* k_metal_navatala_transformer_geglu_f32;
-extern const char* k_metal_navatala_transformer_swiglu_f32;
-extern const char* k_metal_navatala_transformer_reglu_f32;
-extern const char* k_metal_navatala_transformer_geglu_f16;
-extern const char* k_metal_navatala_transformer_swiglu_f16;
-extern const char* k_metal_navatala_transformer_reglu_f16;
-extern const char* k_metal_navatala_transformer_gelu_backward_f32;
-extern const char* k_metal_navatala_transformer_silu_backward_f32;
-extern const char* k_metal_navatala_transformer_relu_backward_f32;
-extern const char* k_metal_navatala_transformer_quick_gelu_backward_f32;
-extern const char* k_metal_navatala_transformer_gelu_backward_f16;
-extern const char* k_metal_navatala_transformer_silu_backward_f16;
-extern const char* k_metal_navatala_transformer_relu_backward_f16;
-extern const char* k_metal_navatala_transformer_quick_gelu_backward_f16;
-extern const char* k_metal_navatala_transformer_rms_norm_forward_f32;
-extern const char* k_metal_navatala_transformer_rms_norm_forward_f16;
-extern const char* k_metal_navatala_transformer_layer_norm_forward_f32;
-extern const char* k_metal_navatala_transformer_layer_norm_forward_f16;
-extern const char* k_metal_navatala_transformer_layer_norm_backward_f32;
-extern const char* k_metal_navatala_transformer_layer_norm_backward_f16;
-extern const char* k_metal_navatala_transformer_rms_norm_backward_f32;
-extern const char* k_metal_navatala_transformer_rms_norm_backward_f16;
-extern const char* k_metal_navatala_transformer_layer_norm_multi_pass_f32;
-extern const char* k_metal_navatala_transformer_layer_norm_multi_pass_f16;
-extern const char* k_metal_navatala_transformer_rms_norm_multi_pass_f32;
-extern const char* k_metal_navatala_transformer_rms_norm_multi_pass_f16;
-extern const char* k_metal_navatala_transformer_softmax_forward_f32;
-extern const char* k_metal_navatala_transformer_softmax_forward_f16;
-extern const char* k_metal_navatala_transformer_softmax_backward_f32;
-extern const char* k_metal_navatala_transformer_softmax_backward_f16;
-extern const char* k_metal_navatala_transformer_softmax_with_mask_f32;
-extern const char* k_metal_navatala_transformer_softmax_with_mask_f16;
-extern const char* k_metal_navatala_transformer_softmax_with_mask_backward_f32;
-extern const char* k_metal_navatala_transformer_softmax_with_mask_backward_f16;
-extern const char* k_metal_navatala_transformer_softmax_multi_pass_f32;
-extern const char* k_metal_navatala_transformer_softmax_multi_pass_f16;
-extern const char* k_metal_navatala_transformer_cast_f32_to_f16;
-extern const char* k_metal_navatala_transformer_cast_f16_to_f32;
-extern const char* k_metal_navatala_transformer_transpose_f32;
-extern const char* k_metal_navatala_transformer_transpose_f16;
-extern const char* k_metal_navatala_transformer_fused_cast_transpose_f32_to_f16;
-extern const char* k_metal_navatala_transformer_cast_f32_to_f_p8_e4_m3;
-extern const char* k_metal_navatala_transformer_cast_f_p8_e4_m3_to_f32;
-extern const char* k_metal_navatala_transformer_cast_f32_to_f_p8_e5_m2;
-extern const char* k_metal_navatala_transformer_cast_f_p8_e5_m2_to_f32;
-extern const char* k_metal_navatala_transformer_fused_cast_transpose_f_p8;
-extern const char* k_metal_navatala_transformer_transpose4_d_f32;
-extern const char* k_metal_navatala_transformer_transpose4_d_f16;
-extern const char* k_metal_navatala_transformer_dropout_forward_f32;
-extern const char* k_metal_navatala_transformer_dropout_forward_f16;
-extern const char* k_metal_navatala_transformer_dropout_backward_f32;
-extern const char* k_metal_navatala_transformer_dropout_backward_f16;
-extern const char* k_metal_navatala_transformer_rope_forward_f32;
-extern const char* k_metal_navatala_transformer_rope_forward_f16;
-extern const char* k_metal_navatala_transformer_rope_with_cache_f32;
-extern const char* k_metal_navatala_transformer_rope_backward_f32;
-extern const char* k_metal_navatala_transformer_rope_backward_f16;
-extern const char* k_metal_navatala_transformer_rope_interleaved_f32;
-extern const char* k_metal_navatala_transformer_rope_interleaved_f16;
-extern const char* k_metal_navatala_transformer_simple_attention_f16;
-extern const char* k_metal_navatala_transformer_simple_attention_f32;
-extern const char* k_metal_navatala_transformer_paged_attention_f32;
-extern const char* k_metal_navatala_transformer_simple_attention_with_mask_f32;
-extern const char* k_metal_navatala_transformer_simple_attention_with_mask_f16;
-extern const char* k_metal_navatala_transformer_simple_attention_with_padding_f32;
-extern const char* k_metal_navatala_transformer_simple_attention_with_padding_f16;
-extern const char* k_metal_navatala_transformer_simple_attention_backward_f32;
-extern const char* k_metal_navatala_transformer_simple_attention_backward_f16;
-extern const char* k_metal_navatala_transformer_kv_cache_append_f16;
-extern const char* k_metal_navatala_transformer_kv_cache_append_f32;
-extern const char* k_metal_navatala_transformer_kv_cache_rotate_f16;
-extern const char* k_metal_navatala_transformer_tiled_gemm_f16;
-extern const char* k_metal_navatala_transformer_tiled_gemm_f32;
-extern const char* k_metal_navatala_transformer_tiled_gemm_backward_f32;
-extern const char* k_metal_navatala_transformer_tiled_gemm_backward_f16;
-extern const char* k_metal_navatala_transformer_multi_tensor_scale_f32;
-extern const char* k_metal_navatala_transformer_multi_tensor_scale_f16;
-extern const char* k_metal_navatala_transformer_multi_tensor_add_f32;
-extern const char* k_metal_navatala_transformer_multi_tensor_add_f16;
-extern const char* k_metal_navatala_transformer_multi_tensor_copy_f32;
-extern const char* k_metal_navatala_transformer_multi_tensor_copy_f16;
-extern const char* k_metal_navatala_transformer_multi_tensor_l2_norm_f32;
-extern const char* k_metal_navatala_transformer_multi_tensor_l2_norm_f16;
-extern const char* k_metal_navatala_transformer_multi_tensor_clip_grad_f32;
-extern const char* k_metal_navatala_transformer_multi_tensor_clip_grad_f16;
-extern const char* k_metal_navatala_transformer_top_k_gating_f32;
-extern const char* k_metal_navatala_transformer_top_k_gating_f16;
-extern const char* k_metal_navatala_transformer_expert_capacity_mask_f32;
-extern const char* k_metal_navatala_transformer_expert_capacity_mask_f16;
-extern const char* k_metal_navatala_transformer_permute_tokens_f32;
-extern const char* k_metal_navatala_transformer_permute_tokens_f16;
-extern const char* k_metal_navatala_transformer_unpermute_tokens_f32;
-extern const char* k_metal_navatala_transformer_unpermute_tokens_f16;
-extern const char* k_metal_navatala_transformer_pad_sequence_f32;
-extern const char* k_metal_navatala_transformer_pad_sequence_f16;
-extern const char* k_metal_navatala_transformer_unpad_sequence_f32;
-extern const char* k_metal_navatala_transformer_unpad_sequence_f16;
-extern const char* k_metal_navatala_transformer_swizzle_layout_f32;
-extern const char* k_metal_navatala_transformer_swizzle_layout_f16;
-extern const char* k_metal_navatala_transformer_hadamard_transform_f32;
-extern const char* k_metal_navatala_transformer_hadamard_transform_f16;
-extern const char* k_metal_navatala_transformer_permute_axes_f32;
-extern const char* k_metal_navatala_transformer_permute_axes_f16;
-extern const char* k_metal_navatala_transformer_pack_sequences_f32;
-extern const char* k_metal_navatala_transformer_pack_sequences_f16;
-extern const char* k_metal_navatala_transformer_unpack_sequences_f32;
-extern const char* k_metal_navatala_transformer_unpack_sequences_f16;
-extern const char* k_metal_navatala_transformer_generate_position_ids_f32;
-extern const char* k_metal_navatala_transformer_generate_position_ids_u32;
-extern const char* k_metal_navatala_transformer_generate_causal_mask_f32;
-extern const char* k_metal_navatala_transformer_generate_causal_mask_f16;
-extern const char* k_metal_navatala_transformer_precompute_rotary_emb_f32;
-extern const char* k_metal_navatala_transformer_precompute_rotary_emb_f16;
-extern const char* k_metal_navatala_vector_search_init_seeds_f32;
-extern const char* k_metal_navatala_vector_search_expand_neighbors_f32;
-extern const char* k_metal_navatala_vector_search_check_visited;
-extern const char* k_metal_navatala_vector_search_clear_visited;
-extern const char* k_metal_navatala_vector_search_extract_results_f32;
-extern const char* k_metal_navatala_vector_search_compute_distances_batch_f32;
-extern const char* k_metal_navatala_vector_search_search_layer_greedy_f32;
-extern const char* k_metal_navatala_vector_search_select_neighbors_simple_f32;
-extern const char* k_metal_navatala_vector_search_select_neighbors_heuristic_f32;
-extern const char* k_metal_navatala_vector_search_update_candidate_list_f32;
-extern const char* k_metal_navatala_vector_search_extract_layer_results_f32;
-extern const char* k_metal_navatala_vector_search_init_search_state_f32;
-extern const char* k_metal_navatala_vector_search_mark_visited_batch;
-extern const char* k_metal_navatala_vector_search_check_visited_batch;
-extern const char* k_metal_navatala_vector_search_merge_multi_query_results_f32;
-extern const char* k_metal_navatala_vector_search_compute_neighbor_distances_f32;
-extern const char* k_metal_navatala_vector_search_greedy_search_f32;
-extern const char* k_metal_navatala_vector_search_robust_prune_f32;
-extern const char* k_metal_navatala_vector_search_insert_vertex_f32;
-extern const char* k_metal_navatala_vector_search_random_init_neighbors_f32;
-extern const char* k_metal_navatala_vector_search_extract_search_results_f32;
-extern const char* k_metal_navatala_vector_search_batched_greedy_search_f32;
-extern const char* k_metal_navatala_vector_search_compute_centroid_distances_f32;
-extern const char* k_metal_navatala_vector_search_scan_inverted_list_f32;
-extern const char* k_metal_navatala_vector_search_assign_to_cluster_f32;
-extern const char* k_metal_navatala_vector_search_count_cluster_sizes;
-extern const char* k_metal_navatala_vector_search_populate_inverted_lists_f32;
-extern const char* k_metal_navatala_vector_search_ivfpq_compute_centroid_distances_f32;
-extern const char* k_metal_navatala_vector_search_ivfpq_compute_p_q_lookup_table_f32;
-extern const char* k_metal_navatala_vector_search_ivfpq_compute_p_q_distances_f32;
-extern const char* k_metal_navatala_vector_search_ivfpq_encode_p_q_codes;
-extern const char* k_metal_navatala_vector_search_ivfpq_compute_residuals_f32;
-extern const char* k_metal_navatala_vector_search_initialize_random_graph;
-extern const char* k_metal_navatala_vector_search_compute_graph_distances_f32;
-extern const char* k_metal_navatala_vector_search_nn_descent_join_f32;
-extern const char* k_metal_navatala_vector_search_build_reverse_graph;
-extern const char* k_metal_navatala_vector_search_prune_graph_r_n_g_f32;
-extern const char* k_metal_navatala_vector_search_compact_pruned_graph;
-extern const char* k_metal_navatala_vector_search_compute_vertex_degrees;
-extern const char* k_metal_navatala_vector_search_prune_excess_degree;
-extern const char* k_metal_navatala_vector_search_reorder_vertices_by_degree;
-extern const char* k_metal_navatala_vector_search_compact_graph_edges;
-extern const char* k_metal_navatala_vector_search_validate_graph_integrity;
-extern const char* k_metal_navatala_vector_search_prune_excess_degree_sorted;
-extern const char* k_metal_navatala_vector_search_accumulate_p_q_codebook_i32;
-extern const char* k_metal_navatala_vector_search_normalize_p_q_codebook_f32;
-extern const char* k_metal_navatala_vector_search_train_p_q_codebook_f32;
-extern const char* k_metal_navatala_dataframe_group_by_sum_i32;
-extern const char* k_metal_navatala_dataframe_group_by_sum_i64;
-extern const char* k_metal_navatala_dataframe_group_by_count;
-extern const char* k_metal_navatala_dataframe_group_by_min_i32;
-extern const char* k_metal_navatala_dataframe_group_by_max_i32;
-extern const char* k_metal_navatala_dataframe_group_by_sum_for_mean_f32;
-extern const char* k_metal_navatala_dataframe_group_by_nunique_helper_i32;
-extern const char* k_metal_navatala_dataframe_group_by_nunique_helper_i64;
-extern const char* k_metal_navatala_dataframe_group_by_sorted_sum;
-extern const char* k_metal_navatala_dataframe_group_by_sorted_count;
-extern const char* k_metal_navatala_dataframe_column_sum_i32;
-extern const char* k_metal_navatala_dataframe_column_sum_i64;
-extern const char* k_metal_navatala_dataframe_column_sum_f32;
-extern const char* k_metal_navatala_dataframe_column_min_i32;
-extern const char* k_metal_navatala_dataframe_column_max_i32;
-extern const char* k_metal_navatala_dataframe_column_count;
-extern const char* k_metal_navatala_dataframe_column_mean_helper_f32;
-extern const char* k_metal_navatala_dataframe_column_variance_helper_f32;
-extern const char* k_metal_navatala_dataframe_column_arg_min_i32;
-extern const char* k_metal_navatala_dataframe_column_arg_max_i32;
-extern const char* k_metal_navatala_dataframe_column_arg_min_f32;
-extern const char* k_metal_navatala_dataframe_column_arg_max_f32;
-extern const char* k_metal_navatala_dataframe_column_std_helper;
-extern const char* k_metal_navatala_dataframe_column_product_i32;
-extern const char* k_metal_navatala_dataframe_column_product_f32;
-extern const char* k_metal_navatala_dataframe_rolling_sum_f32;
-extern const char* k_metal_navatala_dataframe_rolling_count;
-extern const char* k_metal_navatala_dataframe_rolling_min_i32;
-extern const char* k_metal_navatala_dataframe_rolling_max_i32;
-extern const char* k_metal_navatala_dataframe_rolling_mean_helper_f32;
-extern const char* k_metal_navatala_dataframe_rolling_variance_helper_f32;
-extern const char* k_metal_navatala_dataframe_expanding_sum_f32;
-extern const char* k_metal_navatala_dataframe_expanding_count_valid;
-extern const char* k_metal_navatala_dataframe_compute_quantile_indices;
-extern const char* k_metal_navatala_dataframe_select_quantile_f32;
-extern const char* k_metal_navatala_dataframe_select_quantile_i32;
-extern const char* k_metal_navatala_dataframe_batch_quantile_f32;
-extern const char* k_metal_navatala_dataframe_compute_median_indices;
-extern const char* k_metal_navatala_dataframe_select_median_f32;
-extern const char* k_metal_navatala_dataframe_add_f32;
-extern const char* k_metal_navatala_dataframe_add_i32;
-extern const char* k_metal_navatala_dataframe_sub_f32;
-extern const char* k_metal_navatala_dataframe_mul_f32;
-extern const char* k_metal_navatala_dataframe_div_f32;
-extern const char* k_metal_navatala_dataframe_mod_i32;
-extern const char* k_metal_navatala_dataframe_sub_i32;
-extern const char* k_metal_navatala_dataframe_mul_i32;
-extern const char* k_metal_navatala_dataframe_div_i32;
-extern const char* k_metal_navatala_dataframe_add_i64;
-extern const char* k_metal_navatala_dataframe_sub_i64;
-extern const char* k_metal_navatala_dataframe_mul_i64;
-extern const char* k_metal_navatala_dataframe_div_i64;
-extern const char* k_metal_navatala_dataframe_mod_i64;
-extern const char* k_metal_navatala_dataframe_eq_f32;
-extern const char* k_metal_navatala_dataframe_eq_i32;
-extern const char* k_metal_navatala_dataframe_lt_f32;
-extern const char* k_metal_navatala_dataframe_gt_f32;
-extern const char* k_metal_navatala_dataframe_le_f32;
-extern const char* k_metal_navatala_dataframe_ge_f32;
-extern const char* k_metal_navatala_dataframe_ne_f32;
-extern const char* k_metal_navatala_dataframe_ne_i32;
-extern const char* k_metal_navatala_dataframe_lt_i32;
-extern const char* k_metal_navatala_dataframe_gt_i32;
-extern const char* k_metal_navatala_dataframe_le_i32;
-extern const char* k_metal_navatala_dataframe_ge_i32;
-extern const char* k_metal_navatala_dataframe_bitwise_and_i32;
-extern const char* k_metal_navatala_dataframe_bitwise_and_i64;
-extern const char* k_metal_navatala_dataframe_bitwise_or_i32;
-extern const char* k_metal_navatala_dataframe_bitwise_or_i64;
-extern const char* k_metal_navatala_dataframe_bitwise_xor_i32;
-extern const char* k_metal_navatala_dataframe_bitwise_xor_i64;
-extern const char* k_metal_navatala_dataframe_bitwise_not_i32;
-extern const char* k_metal_navatala_dataframe_bitwise_not_i64;
-extern const char* k_metal_navatala_dataframe_extract_hour_from_seconds;
-extern const char* k_metal_navatala_dataframe_extract_minute_from_seconds;
-extern const char* k_metal_navatala_dataframe_extract_second_from_seconds;
-extern const char* k_metal_navatala_dataframe_extract_day_of_week_from_seconds;
-extern const char* k_metal_navatala_dataframe_extract_year_from_seconds;
-extern const char* k_metal_navatala_dataframe_extract_month_from_seconds;
-extern const char* k_metal_navatala_dataframe_extract_day_from_seconds;
-extern const char* k_metal_navatala_dataframe_extract_day_of_year_from_seconds;
-extern const char* k_metal_navatala_dataframe_add_days_to_timestamp;
-extern const char* k_metal_navatala_dataframe_add_months_to_timestamp;
-extern const char* k_metal_navatala_dataframe_subtract_timestamps;
-extern const char* k_metal_navatala_dataframe_timestamp_to_date_parts;
-extern const char* k_metal_navatala_dataframe_date_parts_to_timestamp;
-extern const char* k_metal_navatala_dataframe_convert_timestamp_precision;
-extern const char* k_metal_navatala_dataframe_combine_hash_values;
-extern const char* k_metal_navatala_dataframe_hash_column_row;
-extern const char* k_metal_navatala_dataframe_md5_hash;
-extern const char* k_metal_navatala_dataframe_sha256_hash;
-extern const char* k_metal_navatala_dataframe_identity_hash_i32;
-extern const char* k_metal_navatala_dataframe_identity_hash_i64;
-extern const char* k_metal_navatala_dataframe_murmur3_hash32_i32;
-extern const char* k_metal_navatala_dataframe_murmur3_hash32_i64;
-extern const char* k_metal_navatala_dataframe_cross_join_compute_output_size;
-extern const char* k_metal_navatala_dataframe_cross_join_gather_i32;
-extern const char* k_metal_navatala_dataframe_hash_keys_i32;
-extern const char* k_metal_navatala_dataframe_build_hash_table_i32;
-extern const char* k_metal_navatala_dataframe_probe_hash_table_i32;
-extern const char* k_metal_navatala_dataframe_gather_join_results_i32;
-extern const char* k_metal_navatala_dataframe_gather_join_results_f32;
-extern const char* k_metal_navatala_dataframe_mark_left_matched;
-extern const char* k_metal_navatala_dataframe_filter_semi_join;
-extern const char* k_metal_navatala_dataframe_filter_anti_join;
-extern const char* k_metal_navatala_dataframe_count_unmatched_left;
-extern const char* k_metal_navatala_dataframe_gather_unmatched_left_indices;
-extern const char* k_metal_navatala_dataframe_gather_left_join_i32;
-extern const char* k_metal_navatala_dataframe_gather_left_join_f32;
-extern const char* k_metal_navatala_dataframe_gather_right_join_i32;
-extern const char* k_metal_navatala_dataframe_gather_right_join_f32;
-extern const char* k_metal_navatala_dataframe_count_unmatched_right;
-extern const char* k_metal_navatala_dataframe_gather_unmatched_right_indices;
-extern const char* k_metal_navatala_dataframe_nested_loop_join_probe;
-extern const char* k_metal_navatala_dataframe_nested_loop_join_gather_i32;
-extern const char* k_metal_navatala_dataframe_sort_merge_join_probe;
-extern const char* k_metal_navatala_dataframe_sort_merge_join_gather_i32;
-extern const char* k_metal_navatala_dataframe_argsort_init_indices;
-extern const char* k_metal_navatala_dataframe_argsort_bitonic_step_argsort_i32;
-extern const char* k_metal_navatala_dataframe_argsort_bitonic_step_argsort_f32;
-extern const char* k_metal_navatala_dataframe_argsort_bitonic_step_argsort_i64;
-extern const char* k_metal_navatala_dataframe_argsort_bitonic_step_sort_by_key_i32;
-extern const char* k_metal_navatala_dataframe_merge_step_i32;
-extern const char* k_metal_navatala_dataframe_merge_step_f32;
-extern const char* k_metal_navatala_dataframe_merge_step_i64;
-extern const char* k_metal_navatala_dataframe_radix_scatter_i32;
-extern const char* k_metal_navatala_dataframe_radix_scatter_i64;
-extern const char* k_metal_navatala_dataframe_radix_scatter_f32;
-extern const char* k_metal_navatala_dataframe_str_len;
-extern const char* k_metal_navatala_dataframe_str_upper_chars;
-extern const char* k_metal_navatala_dataframe_str_lower_chars;
-extern const char* k_metal_navatala_dataframe_str_starts_with_char;
-extern const char* k_metal_navatala_dataframe_str_capitalize_first_char;
-extern const char* k_metal_navatala_dataframe_str_title_case_char;
-extern const char* k_metal_navatala_dataframe_str_swap_case_char;
-extern const char* k_metal_navatala_dataframe_str_normalize_whitespace_char;
-extern const char* k_metal_navatala_dataframe_str_is_digit;
-extern const char* k_metal_navatala_dataframe_str_is_alpha;
-extern const char* k_metal_navatala_dataframe_str_is_alnum;
-extern const char* k_metal_navatala_dataframe_str_is_space;
-extern const char* k_metal_navatala_dataframe_str_is_upper;
-extern const char* k_metal_navatala_dataframe_str_is_lower;
-extern const char* k_metal_navatala_dataframe_str_concat_pair_offsets;
-extern const char* k_metal_navatala_dataframe_str_concat_copy_chars;
-extern const char* k_metal_navatala_dataframe_str_join_with_sep_offsets;
-extern const char* k_metal_navatala_dataframe_str_join_copy_with_sep;
-extern const char* k_metal_navatala_dataframe_str_compare;
-extern const char* k_metal_navatala_dataframe_str_equals;
-extern const char* k_metal_navatala_dataframe_str_less_than;
-extern const char* k_metal_navatala_dataframe_str_strip_leading_count;
-extern const char* k_metal_navatala_dataframe_str_strip_trailing_count;
-extern const char* k_metal_navatala_dataframe_str_strip_both_count;
-extern const char* k_metal_navatala_dataframe_str_slice_bounds;
-extern const char* k_metal_navatala_dataframe_str_contains_char;
-extern const char* k_metal_navatala_dataframe_str_ends_with_char;
-extern const char* k_metal_navatala_dataframe_str_pad_left_calc;
-extern const char* k_metal_navatala_dataframe_str_pad_center;
-extern const char* k_metal_navatala_dataframe_str_zfill;
-extern const char* k_metal_navatala_dataframe_str_wrap_bounds;
-extern const char* k_metal_navatala_dataframe_str_substring_bounds;
-extern const char* k_metal_navatala_dataframe_str_left_bounds;
-extern const char* k_metal_navatala_dataframe_str_right_bounds;
-extern const char* k_metal_navatala_dataframe_str_regex_match;
-extern const char* k_metal_navatala_dataframe_str_regex_extract;
-extern const char* k_metal_navatala_dataframe_str_regex_replace;
-extern const char* k_metal_navatala_dataframe_str_find_char;
-extern const char* k_metal_navatala_dataframe_str_count_char;
-extern const char* k_metal_navatala_dataframe_str_replace_char;
-extern const char* k_metal_navatala_dataframe_str_contains_pattern2;
-extern const char* k_metal_navatala_dataframe_str_split_count_by_char;
-extern const char* k_metal_navatala_dataframe_str_split_by_char;
-extern const char* k_metal_navatala_dataframe_str_split_get_element;
-extern const char* k_metal_navatala_dataframe_str_split_by_whitespace;
-extern const char* k_metal_navatala_dataframe_str_reverse_chars;
-extern const char* k_metal_navatala_dataframe_str_truncate_bounds;
-extern const char* k_metal_navatala_dataframe_str_pad_right_calc;
-extern const char* k_metal_navatala_dataframe_str_repeat_bounds;
-extern const char* k_metal_navatala_dataframe_str_translate_char;
-extern const char* k_metal_navatala_dataframe_str_translate_table;
-extern const char* k_metal_navatala_dataframe_str_normalize;
-extern const char* k_metal_navatala_dataframe_negate_f32;
-extern const char* k_metal_navatala_dataframe_negate_i32;
-extern const char* k_metal_navatala_dataframe_abs_f32;
-extern const char* k_metal_navatala_dataframe_abs_i32;
-extern const char* k_metal_navatala_dataframe_ceil_f32;
-extern const char* k_metal_navatala_dataframe_floor_f32;
-extern const char* k_metal_navatala_dataframe_round_f32;
-extern const char* k_metal_navatala_dataframe_trunc_f32;
-extern const char* k_metal_navatala_dataframe_negate_i64;
-extern const char* k_metal_navatala_dataframe_abs_i64;
-extern const char* k_metal_navatala_dataframe_sqrt_f32;
-extern const char* k_metal_navatala_dataframe_exp_f32;
-extern const char* k_metal_navatala_dataframe_log_f32;
-extern const char* k_metal_navatala_dataframe_sin_f32;
-extern const char* k_metal_navatala_dataframe_cos_f32;
-extern const char* k_metal_navatala_dataframe_tan_f32;
-extern const char* k_metal_navatala_dataframe_log10_f32;
-extern const char* k_metal_navatala_dataframe_compute_concat_offsets;
-extern const char* k_metal_navatala_dataframe_gather_concat_i32;
-extern const char* k_metal_navatala_dataframe_gather_concat_f32;
-extern const char* k_metal_navatala_dataframe_gather_concat_i64;
-extern const char* k_metal_navatala_dataframe_hash_partition_i32;
-extern const char* k_metal_navatala_dataframe_hash_partition_f32;
-extern const char* k_metal_navatala_dataframe_round_robin_partition;
-extern const char* k_metal_navatala_dataframe_range_partition_bounds;
-extern const char* k_metal_navatala_dataframe_range_partition_assign;
-extern const char* k_metal_navatala_dataframe_gather_partition_i32;
-extern const char* k_metal_navatala_dataframe_gather_partition_f32;
-extern const char* k_metal_navatala_dataframe_compute_partition_offsets;
-extern const char* k_metal_navatala_dataframe_transpose_i32;
-extern const char* k_metal_navatala_dataframe_transpose_f32;
-extern const char* k_metal_navatala_dataframe_flatten_offsets;
-extern const char* k_metal_navatala_dataframe_unflatten_copy;
-extern const char* k_metal_navatala_dataframe_compute_split_bounds;
-extern const char* k_metal_navatala_dataframe_split_copy_i32;
-extern const char* k_metal_navatala_dataframe_split_copy_f32;
-extern const char* k_metal_navatala_dataframe_split_copy_validity;
-extern const char* k_metal_navatala_vector_search_l2_squared_f32;
-extern const char* k_metal_navatala_vector_search_inner_product_f32;
-extern const char* k_metal_navatala_vector_search_l1_distance_f32;
-extern const char* k_metal_navatala_vector_search_batch_l2_to_neighbors_f32;
-extern const char* k_metal_navatala_vector_search_l2_squared_f16;
-extern const char* k_metal_navatala_vector_search_cosine_similarity_f32;
-extern const char* k_metal_navatala_vector_search_linf_distance_f32;
-extern const char* k_metal_navatala_vector_search_hamming_distance_u32;
-extern const char* k_metal_navatala_vector_search_correlation_distance_f32;
-extern const char* k_metal_navatala_vector_search_jaccard_distance_u32;
-extern const char* k_metal_navatala_vector_search_assign_labels_f32;
-extern const char* k_metal_navatala_vector_search_accumulate_cluster_sums_f32;
-extern const char* k_metal_navatala_vector_search_update_centroids_f32;
-extern const char* k_metal_navatala_vector_search_clear_cluster_sums_f32;
-extern const char* k_metal_navatala_vector_search_clear_cluster_counts;
-extern const char* k_metal_navatala_vector_search_reduce_inertia_f32;
-extern const char* k_metal_navatala_vector_search_bitonic_sort_step_f32;
-extern const char* k_metal_navatala_vector_search_per_row_top_k_f32;
-extern const char* k_metal_navatala_vector_search_merge_sorted_f32;
-extern const char* k_metal_navatala_vector_search_rerank_with_exact_distances_f32;
-extern const char* k_metal_navatala_vector_search_filter_by_threshold_f32;
-extern const char* k_metal_navatala_vector_search_merge_search_results_f32;
-extern const char* k_metal_navatala_vector_search_compute_recall_f32;
-extern const char* k_metal_navatala_vector_search_scalar_quantize_f32_to_i8;
-extern const char* k_metal_navatala_vector_search_scalar_dequantize_i8_to_f32;
-extern const char* k_metal_navatala_vector_search_compute_quantized_distances_i8;
-extern const char* k_metal_navatala_vector_search_encode_p_q_vectors_f32;
-extern const char* k_metal_navatala_vector_search_decode_p_q_vectors_f32;
-extern const char* k_metal_navatala_nccl_direct_send_f32;
-extern const char* k_metal_navatala_nccl_direct_send_f16;
-extern const char* k_metal_navatala_nccl_direct_send_i32;
-extern const char* k_metal_navatala_nccl_direct_recv_f32;
-extern const char* k_metal_navatala_nccl_direct_recv_f16;
-extern const char* k_metal_navatala_nccl_direct_recv_i32;
-extern const char* k_metal_navatala_nccl_reduce_local_sum_f32;
-extern const char* k_metal_navatala_nccl_reduce_local_sum_f16;
-extern const char* k_metal_navatala_nccl_reduce_local_sum_i32;
-extern const char* k_metal_navatala_nccl_reduce_local_min_f32;
-extern const char* k_metal_navatala_nccl_reduce_local_min_f16;
-extern const char* k_metal_navatala_nccl_reduce_local_min_i32;
-extern const char* k_metal_navatala_nccl_reduce_local_max_f32;
-extern const char* k_metal_navatala_nccl_reduce_local_max_f16;
-extern const char* k_metal_navatala_nccl_reduce_local_max_i32;
-extern const char* k_metal_navatala_nccl_ring_reduce_scatter_step_sum_f32;
-extern const char* k_metal_navatala_nccl_ring_reduce_scatter_step_sum_f16;
-extern const char* k_metal_navatala_nccl_ring_reduce_scatter_step_sum_i32;
-extern const char* k_metal_navatala_nccl_ring_reduce_scatter_step_min_f32;
-extern const char* k_metal_navatala_nccl_ring_reduce_scatter_step_min_f16;
-extern const char* k_metal_navatala_nccl_ring_reduce_scatter_step_min_i32;
-extern const char* k_metal_navatala_nccl_ring_reduce_scatter_step_max_f32;
-extern const char* k_metal_navatala_nccl_ring_reduce_scatter_step_max_f16;
-extern const char* k_metal_navatala_nccl_ring_reduce_scatter_step_max_i32;
-extern const char* k_metal_navatala_nccl_ring_all_gather_step_f32;
-extern const char* k_metal_navatala_nccl_ring_all_gather_step_f16;
-extern const char* k_metal_navatala_nccl_ring_all_gather_step_i32;
-extern const char* k_metal_navatala_nccl_ring_all_reduce_sum_f32;
-extern const char* k_metal_navatala_nccl_ring_all_reduce_sum_f16;
-extern const char* k_metal_navatala_nccl_ring_all_reduce_sum_i32;
-extern const char* k_metal_navatala_nccl_ring_all_gather_f32;
-extern const char* k_metal_navatala_nccl_ring_all_gather_f16;
-extern const char* k_metal_navatala_nccl_ring_all_gather_i32;
-extern const char* k_metal_navatala_nccl_linear_broadcast_f32;
-extern const char* k_metal_navatala_nccl_linear_broadcast_f16;
-extern const char* k_metal_navatala_nccl_linear_broadcast_i32;
-extern const char* k_metal_navatala_samples_axpy_fallback;
+extern const char* k_hip_navatala_transformer_tiled_gemm_f16_mfma;
+extern const char* k_hip_navatala_transformer_tiled_gemm_f16_mfma_k_loop;
+extern const char* k_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_direct;
+extern const char* k_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared;
+extern const char* k_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_edge;
+extern const char* k_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_early_barrier;
+extern const char* k_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_padded;
+extern const char* k_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined;
+extern const char* k_hip_navatala_transformer_tiled_gemm_f16_mfma_cta128;
+extern const char* k_hip_navatala_transformer_tiled_gemm_f16_mfma_cta128_edge;
 extern const std::uint8_t k_vulkan_navatala_cfd_boundary_force_partials[];
 extern const std::size_t k_vulkan_navatala_cfd_boundary_force_partials_size;
 extern const std::uint8_t k_vulkan_navatala_cfd_pack_owner_values[];
@@ -6510,8 +5106,12 @@ extern const std::uint8_t k_vulkan_navatala_graph_degree_in_u32[];
 extern const std::size_t k_vulkan_navatala_graph_degree_in_u32_size;
 extern const std::uint8_t k_vulkan_navatala_graph_spmv_weighted_f32[];
 extern const std::size_t k_vulkan_navatala_graph_spmv_weighted_f32_size;
+extern const std::uint8_t k_vulkan_navatala_graph_spmv_weighted_subgroup_f32[];
+extern const std::size_t k_vulkan_navatala_graph_spmv_weighted_subgroup_f32_size;
 extern const std::uint8_t k_vulkan_navatala_graph_spmv_unweighted_f32[];
 extern const std::size_t k_vulkan_navatala_graph_spmv_unweighted_f32_size;
+extern const std::uint8_t k_vulkan_navatala_graph_spmv_unweighted_subgroup_f32[];
+extern const std::size_t k_vulkan_navatala_graph_spmv_unweighted_subgroup_f32_size;
 extern const std::uint8_t k_vulkan_navatala_graph_axpy2_f32[];
 extern const std::size_t k_vulkan_navatala_graph_axpy2_f32_size;
 extern const std::uint8_t k_vulkan_navatala_graph_scale_f32[];
@@ -8776,6 +7376,8 @@ extern const std::uint8_t k_vulkan_navatala_transformer_kv_cache_rotate_f16[];
 extern const std::size_t k_vulkan_navatala_transformer_kv_cache_rotate_f16_size;
 extern const std::uint8_t k_vulkan_navatala_transformer_tiled_gemm_f16[];
 extern const std::size_t k_vulkan_navatala_transformer_tiled_gemm_f16_size;
+extern const std::uint8_t k_vulkan_navatala_transformer_tiled_gemm_f16_f32_out[];
+extern const std::size_t k_vulkan_navatala_transformer_tiled_gemm_f16_f32_out_size;
 extern const std::uint8_t k_vulkan_navatala_transformer_tiled_gemm_f32[];
 extern const std::size_t k_vulkan_navatala_transformer_tiled_gemm_f32_size;
 extern const std::uint8_t k_vulkan_navatala_transformer_tiled_gemm_backward_f32[];
@@ -9466,6 +8068,1429 @@ extern const std::uint8_t k_vulkan_navatala_nccl_linear_broadcast_i32[];
 extern const std::size_t k_vulkan_navatala_nccl_linear_broadcast_i32_size;
 extern const std::uint8_t k_vulkan_navatala_samples_axpy_fallback[];
 extern const std::size_t k_vulkan_navatala_samples_axpy_fallback_size;
+extern const char* k_metal_navatala_cfd_boundary_force_partials;
+extern const char* k_metal_navatala_cfd_pack_owner_values;
+extern const char* k_metal_navatala_cfd_scatter_values_and_mask;
+extern const char* k_metal_navatala_cfd_pack_mu_grad_owner;
+extern const char* k_metal_navatala_cfd_pack_owner_rho_vec3;
+extern const char* k_metal_navatala_cfd_pack_owner_vec3;
+extern const char* k_metal_navatala_cfd_pack_owner_vec3_mu;
+extern const char* k_metal_navatala_cfd_scatter_mu_grad_ghost;
+extern const char* k_metal_navatala_cfd_scatter_rho_vec3_and_mask;
+extern const char* k_metal_navatala_cfd_scatter_vec3_and_mask;
+extern const char* k_metal_navatala_cfd_scatter_vec3_mu_and_mask;
+extern const char* k_metal_navatala_cfd_add_vol_vector;
+extern const char* k_metal_navatala_cfd_div_rho_phi_u_explicit;
+extern const char* k_metal_navatala_cfd_hby_a_from_u_and_terms;
+extern const char* k_metal_navatala_cfd_apply_sp_to_hby_a;
+extern const char* k_metal_navatala_cfd_laplacian_scalar_explicit;
+extern const char* k_metal_navatala_cfd_laplacian_vector_explicit;
+extern const char* k_metal_navatala_cfd_predictor_hby_a_from_source;
+extern const char* k_metal_navatala_cfd_predictor_inverse_diag;
+extern const char* k_metal_navatala_cfd_predictor_phi_hby_a_fuse;
+extern const char* k_metal_navatala_cfd_axpy_cells;
+extern const char* k_metal_navatala_cfd_ddt_diagonal;
+extern const char* k_metal_navatala_cfd_div_upwind_coeffs;
+extern const char* k_metal_navatala_cfd_fvm_sp;
+extern const char* k_metal_navatala_cfd_fvm_su_sp;
+extern const char* k_metal_navatala_cfd_laplacian_coeffs;
+extern const char* k_metal_navatala_cfd_laplacian_coeffs_accum;
+extern const char* k_metal_navatala_cfd_linear_upwind_correction_source;
+extern const char* k_metal_navatala_cfd_matrix_relax;
+extern const char* k_metal_navatala_cfd_neg_sum_diag;
+extern const char* k_metal_navatala_cfd_pack_boundary_adjacent_cells;
+extern const char* k_metal_navatala_cfd_scalar_jacobi_clamp_min;
+extern const char* k_metal_navatala_cfd_scalar_jacobi_update;
+extern const char* k_metal_navatala_cfd_scalar_ldu_mat_vec;
+extern const char* k_metal_navatala_cfd_scalar_ldu_multi_color_gs_sweep;
+extern const char* k_metal_navatala_cfd_sum_mag_off_diag;
+extern const char* k_metal_navatala_cfd_gamg_axpy_in_place;
+extern const char* k_metal_navatala_cfd_gamg_compute_scale_factor;
+extern const char* k_metal_navatala_cfd_gamg_dot_finalize;
+extern const char* k_metal_navatala_cfd_gamg_negate_scalar;
+extern const char* k_metal_navatala_cfd_gamg_scale_correction;
+extern const char* k_metal_navatala_cfd_mg_coarse_jacobi;
+extern const char* k_metal_navatala_cfd_mg_coarse_matvec;
+extern const char* k_metal_navatala_cfd_mg_coarse_rhs;
+extern const char* k_metal_navatala_cfd_mg_find_best_match;
+extern const char* k_metal_navatala_cfd_mg_pair_match;
+extern const char* k_metal_navatala_cfd_mg_prolong_add;
+extern const char* k_metal_navatala_cfd_mg_renumber_aggregates;
+extern const char* k_metal_navatala_cfd_mg_renumber_propagate;
+extern const char* k_metal_navatala_cfd_mg_resolve_chains;
+extern const char* k_metal_navatala_cfd_mg_restrict_sum;
+extern const char* k_metal_navatala_cfd_mg_strength_of_connection;
+extern const char* k_metal_navatala_cfd_mg_zero_coarse;
+extern const char* k_metal_navatala_cfd_phi_correct;
+extern const char* k_metal_navatala_cfd_phi_correct_boundary;
+extern const char* k_metal_navatala_cfd_phi_correct_internal;
+extern const char* k_metal_navatala_cfd_axpy_in_place;
+extern const char* k_metal_navatala_cfd_bc_dirichlet_face_flux;
+extern const char* k_metal_navatala_cfd_bc_sn_grad_face_flux;
+extern const char* k_metal_navatala_cfd_coeff_to_cf_in_place;
+extern const char* k_metal_navatala_cfd_diag_from_cf;
+extern const char* k_metal_navatala_cfd_dic_apply;
+extern const char* k_metal_navatala_cfd_dic_build_reciprocal_d;
+extern const char* k_metal_navatala_cfd_dot_partials;
+extern const char* k_metal_navatala_cfd_face_flux;
+extern const char* k_metal_navatala_cfd_inv_diag;
+extern const char* k_metal_navatala_cfd_laplacian_from_face_flux;
+extern const char* k_metal_navatala_cfd_mul_by_vol_in_place;
+extern const char* k_metal_navatala_cfd_ref_add_ax;
+extern const char* k_metal_navatala_cfd_ref_add_b;
+extern const char* k_metal_navatala_cfd_rhs_sub;
+extern const char* k_metal_navatala_cfd_shift_in_place;
+extern const char* k_metal_navatala_cfd_sum_abs_partials;
+extern const char* k_metal_navatala_cfd_upper_from_cf;
+extern const char* k_metal_navatala_cfd_xpay_in_place;
+extern const char* k_metal_navatala_cfd_negate_scalar;
+extern const char* k_metal_navatala_cfd_exact_mat_vec;
+extern const char* k_metal_navatala_cfd_face_flux_boundary;
+extern const char* k_metal_navatala_cfd_face_flux_internal;
+extern const char* k_metal_navatala_cfd_pressure_face_flux_correction_corrected;
+extern const char* k_metal_navatala_cfd_pressure_sn_grad;
+extern const char* k_metal_navatala_cfd_u_correct;
+extern const char* k_metal_navatala_cfd_u_correct_reconstruct;
+extern const char* k_metal_navatala_cfd_primitives_average_face_scalar_to_cell;
+extern const char* k_metal_navatala_cfd_primitives_evaluate_scalar_bc;
+extern const char* k_metal_navatala_cfd_primitives_evaluate_vector_bc;
+extern const char* k_metal_navatala_cfd_primitives_div_face_flux_csr;
+extern const char* k_metal_navatala_cfd_primitives_div_face_flux_vector_csr;
+extern const char* k_metal_navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_grad_v2;
+extern const char* k_metal_navatala_cfd_primitives_face_scalar_product;
+extern const char* k_metal_navatala_cfd_primitives_grad_vol_scalar_gauss;
+extern const char* k_metal_navatala_cfd_primitives_grad_vol_vector_gauss;
+extern const char* k_metal_navatala_cfd_primitives_interp_scalar_face;
+extern const char* k_metal_navatala_cfd_primitives_interp_scalar_face_all;
+extern const char* k_metal_navatala_cfd_primitives_interp_vector_face;
+extern const char* k_metal_navatala_cfd_primitives_linear_upwind_scalar_face;
+extern const char* k_metal_navatala_cfd_primitives_phi_from_u;
+extern const char* k_metal_navatala_cfd_primitives_phi_from_u_boundary;
+extern const char* k_metal_navatala_cfd_primitives_phi_from_u_internal;
+extern const char* k_metal_navatala_cfd_primitives_phig_gravity;
+extern const char* k_metal_navatala_cfd_primitives_r_a_u_from_dt_rho;
+extern const char* k_metal_navatala_cfd_primitives_r_a_u_from_dt_rho_integrated;
+extern const char* k_metal_navatala_cfd_primitives_r_a_u_from_dt_rho_sp;
+extern const char* k_metal_navatala_cfd_primitives_r_a_u_from_dt_rho_sp_integrated;
+extern const char* k_metal_navatala_cfd_primitives_r_a_u_from_u_eqn_approx;
+extern const char* k_metal_navatala_cfd_primitives_r_a_u_from_u_eqn_approx_sp;
+extern const char* k_metal_navatala_cfd_primitives_rho_from_alpha;
+extern const char* k_metal_navatala_cfd_primitives_rho_phi_from_rho_and_phi;
+extern const char* k_metal_navatala_cfd_primitives_sn_grad_scalar;
+extern const char* k_metal_navatala_cfd_grad_alpha_cell;
+extern const char* k_metal_navatala_cfd_n_hatf_all;
+extern const char* k_metal_navatala_cfd_stf_all_faces;
+extern const char* k_metal_navatala_cfd_k_omega_s_s_t_blending;
+extern const char* k_metal_navatala_cfd_k_omega_s_s_t_nut_compute;
+extern const char* k_metal_navatala_cfd_k_omega_s_s_t_sources;
+extern const char* k_metal_navatala_cfd_mu_eff_from_rho_nu_eff;
+extern const char* k_metal_navatala_cfd_mu_eff_from_rho_nut_and_nu_mix;
+extern const char* k_metal_navatala_cfd_turbulence_add_explicit_source_device;
+extern const char* k_metal_navatala_cfd_turbulence_dirichlet_cell_source;
+extern const char* k_metal_navatala_cfd_turbulence_dirichlet_face_elimination;
+extern const char* k_metal_navatala_cfd_two_mag_sqr_symm_grad_u;
+extern const char* k_metal_navatala_cfd_vof_alpha_phi_all;
+extern const char* k_metal_navatala_cfd_vof_alpha_phi_int;
+extern const char* k_metal_navatala_cfd_vof_average_face_scalar_to_cell;
+extern const char* k_metal_navatala_cfd_vof_interp_scalar_face_all;
+extern const char* k_metal_navatala_cfd_vof_alpha_update;
+extern const char* k_metal_navatala_cfd_vof_mules_apply;
+extern const char* k_metal_navatala_cfd_vof_mules_cell_lambda;
+extern const char* k_metal_navatala_cfd_vof_mules_cell_sums;
+extern const char* k_metal_navatala_cfd_vof_mules_face_update;
+extern const char* k_metal_navatala_cfd_vof_mules_fill_lambda;
+extern const char* k_metal_navatala_cfd_vof_mules_init;
+extern const char* k_metal_navatala_cfd_vof_phi_b_d_corr;
+extern const char* k_metal_navatala_cfd_vof_phir;
+extern const char* k_metal_navatala_cfd_vof_rho_phi_accumulate;
+extern const char* k_metal_navatala_samples_float32_add;
+extern const char* k_metal_navatala_samples_triangle_normals2;
+extern const char* k_metal_navatala_cfd_attention_row_softmax;
+extern const char* k_metal_navatala_cfd_attention_value_projection;
+extern const char* k_metal_navatala_cfd_gather_mean;
+extern const char* k_metal_navatala_cfd_layer_norm_forward;
+extern const char* k_metal_navatala_cfd_radius_count;
+extern const char* k_metal_navatala_cfd_scaled_dot_product;
+extern const char* k_metal_navatala_cfd_scatter_add_atomic;
+extern const char* k_metal_navatala_cfd_spectral_complex_mul;
+extern const char* k_metal_navatala_cfd_spectral_conv1d_mode_sliced;
+extern const char* k_metal_navatala_cfd_spectral_conv2d_mode_sliced;
+extern const char* k_metal_navatala_cfd_spectral_conv3d_mode_sliced;
+extern const char* k_metal_navatala_cfd_spectral_conv4d_mode_sliced;
+extern const char* k_metal_navatala_dataframe_writeback_sum_f32;
+extern const char* k_metal_navatala_dataframe_writeback_sum_i32;
+extern const char* k_metal_navatala_dataframe_writeback_sum_u32;
+extern const char* k_metal_navatala_dataframe_writeback_min_f32;
+extern const char* k_metal_navatala_dataframe_writeback_max_f32;
+extern const char* k_metal_navatala_graph_pack_f32;
+extern const char* k_metal_navatala_graph_pack_i32;
+extern const char* k_metal_navatala_graph_pack_u32;
+extern const char* k_metal_navatala_graph_unpack_f32;
+extern const char* k_metal_navatala_graph_unpack_i32;
+extern const char* k_metal_navatala_graph_unpack_u32;
+extern const char* k_metal_navatala_graph_pack_f32x3;
+extern const char* k_metal_navatala_graph_unpack_f32x3;
+extern const char* k_metal_navatala_graph_pack_f32x6;
+extern const char* k_metal_navatala_graph_unpack_f32x6;
+extern const char* k_metal_navatala_graph_pack_f32x9;
+extern const char* k_metal_navatala_graph_unpack_f32x9;
+extern const char* k_metal_navatala_dataframe_init_welford_state_f32;
+extern const char* k_metal_navatala_dataframe_welford_update_f32;
+extern const char* k_metal_navatala_dataframe_welford_merge_f32;
+extern const char* k_metal_navatala_dataframe_extract_variance_f32;
+extern const char* k_metal_navatala_dataframe_extract_sample_variance_f32;
+extern const char* k_metal_navatala_dataframe_extract_stddev_f32;
+extern const char* k_metal_navatala_dataframe_init_covariance_state_f32;
+extern const char* k_metal_navatala_dataframe_covariance_update_f32;
+extern const char* k_metal_navatala_dataframe_extract_covariance_f32;
+extern const char* k_metal_navatala_dataframe_extract_correlation_f32;
+extern const char* k_metal_navatala_dataframe_init_weighted_welford_f32;
+extern const char* k_metal_navatala_dataframe_weighted_welford_update_f32;
+extern const char* k_metal_navatala_dataframe_weighted_welford_merge_f32;
+extern const char* k_metal_navatala_dataframe_extract_weighted_variance_f32;
+extern const char* k_metal_navatala_dataframe_extract_weighted_reliability_variance_f32;
+extern const char* k_metal_navatala_dataframe_extract_weighted_stddev_f32;
+extern const char* k_metal_navatala_dataframe_init_weighted_covariance_f32;
+extern const char* k_metal_navatala_dataframe_weighted_covariance_update_f32;
+extern const char* k_metal_navatala_dataframe_extract_weighted_covariance_f32;
+extern const char* k_metal_navatala_dataframe_extract_weighted_correlation_f32;
+extern const char* k_metal_navatala_dataframe_init_weighted_mean_f32;
+extern const char* k_metal_navatala_dataframe_weighted_mean_update_f32;
+extern const char* k_metal_navatala_dataframe_init_p2_state_f32;
+extern const char* k_metal_navatala_dataframe_p2_update_f32;
+extern const char* k_metal_navatala_dataframe_p2_extract_f32;
+extern const char* k_metal_navatala_dataframe_init_reservoir256_f32;
+extern const char* k_metal_navatala_dataframe_reservoir_update256_f32;
+extern const char* k_metal_navatala_dataframe_reservoir_min256_f32;
+extern const char* k_metal_navatala_dataframe_reservoir_max256_f32;
+extern const char* k_metal_navatala_ml_init_ema_f32;
+extern const char* k_metal_navatala_ml_init_ema_from_span_f32;
+extern const char* k_metal_navatala_ml_ema_update_f32;
+extern const char* k_metal_navatala_ml_ema_extract_f32;
+extern const char* k_metal_navatala_ml_ema_reset_f32;
+extern const char* k_metal_navatala_ml_init_dema_f32;
+extern const char* k_metal_navatala_ml_dema_update_f32;
+extern const char* k_metal_navatala_ml_dema_extract_f32;
+extern const char* k_metal_navatala_dataframe_trimmed_mean_f32;
+extern const char* k_metal_navatala_dataframe_iqm_f32;
+extern const char* k_metal_navatala_dataframe_winsorized_mean_f32;
+extern const char* k_metal_navatala_dataframe_mad_f32;
+extern const char* k_metal_navatala_dataframe_normalized_mad_f32;
+extern const char* k_metal_navatala_dataframe_robust_z_score_f32;
+extern const char* k_metal_navatala_dataframe_detect_outliers_f32;
+extern const char* k_metal_navatala_dataframe_init_t_digest_f32;
+extern const char* k_metal_navatala_dataframe_tdigest_add_f32;
+extern const char* k_metal_navatala_dataframe_tdigest_merge_f32;
+extern const char* k_metal_navatala_dataframe_tdigest_quantile_f32;
+extern const char* k_metal_navatala_dataframe_tdigest_cdf_f32;
+extern const char* k_metal_navatala_dataframe_tdigest_mean_f32;
+extern const char* k_metal_navatala_dataframe_tdigest_min_f32;
+extern const char* k_metal_navatala_dataframe_tdigest_max_f32;
+extern const char* k_metal_navatala_dataframe_tdigest_reset_f32;
+extern const char* k_metal_navatala_dataframe_inclusive_scan_sum_f32;
+extern const char* k_metal_navatala_dataframe_inclusive_scan_sum_i32;
+extern const char* k_metal_navatala_dataframe_inclusive_scan_sum_i32_to_i64_skip_nulls;
+extern const char* k_metal_navatala_dataframe_inclusive_scan_sum_i64;
+extern const char* k_metal_navatala_dataframe_reduce_sum_f32;
+extern const char* k_metal_navatala_dataframe_reduce_sum_i32;
+extern const char* k_metal_navatala_dataframe_reduce_sum_i32_to_i64;
+extern const char* k_metal_navatala_dataframe_reduce_min_i32;
+extern const char* k_metal_navatala_dataframe_reduce_max_i32;
+extern const char* k_metal_navatala_dataframe_count_valid;
+extern const char* k_metal_navatala_dataframe_gather_f32;
+extern const char* k_metal_navatala_dataframe_gather_i32;
+extern const char* k_metal_navatala_dataframe_gather_i64;
+extern const char* k_metal_navatala_dataframe_scatter_f32;
+extern const char* k_metal_navatala_dataframe_scatter_i32;
+extern const char* k_metal_navatala_dataframe_compact_by_mask_f32;
+extern const char* k_metal_navatala_dataframe_compact_by_mask_i32;
+extern const char* k_metal_navatala_dataframe_compact_valid_f32;
+extern const char* k_metal_navatala_dataframe_fill_constant_f32;
+extern const char* k_metal_navatala_dataframe_fill_constant_i32;
+extern const char* k_metal_navatala_dataframe_fill_constant_i64;
+extern const char* k_metal_navatala_dataframe_fill_range_i32;
+extern const char* k_metal_navatala_dataframe_fill_range_i64;
+extern const char* k_metal_navatala_dataframe_fill_validity_all_valid;
+extern const char* k_metal_navatala_dataframe_fill_validity_all_null;
+extern const char* k_metal_navatala_dataframe_fill_null_f32;
+extern const char* k_metal_navatala_dataframe_fill_null_i32;
+extern const char* k_metal_navatala_dataframe_is_null;
+extern const char* k_metal_navatala_dataframe_is_valid;
+extern const char* k_metal_navatala_dataframe_copy_if_valid_f32;
+extern const char* k_metal_navatala_dataframe_coalesce_f32;
+extern const char* k_metal_navatala_linalg_norm_linf_f32;
+extern const char* k_metal_navatala_ml_pointwise_neg_f32;
+extern const char* k_metal_navatala_ml_pointwise_abs_f32;
+extern const char* k_metal_navatala_ml_pointwise_sqrt_f32;
+extern const char* k_metal_navatala_ml_pointwise_rsqrt_f32;
+extern const char* k_metal_navatala_ml_pointwise_reciprocal_f32;
+extern const char* k_metal_navatala_ml_pointwise_exp_f32;
+extern const char* k_metal_navatala_ml_pointwise_log_f32;
+extern const char* k_metal_navatala_ml_pointwise_sin_f32;
+extern const char* k_metal_navatala_ml_pointwise_cos_f32;
+extern const char* k_metal_navatala_ml_pointwise_tan_f32;
+extern const char* k_metal_navatala_ml_pointwise_floor_f32;
+extern const char* k_metal_navatala_ml_pointwise_ceil_f32;
+extern const char* k_metal_navatala_ml_pointwise_round_f32;
+extern const char* k_metal_navatala_ml_pointwise_relu_f32;
+extern const char* k_metal_navatala_ml_pointwise_leaky_relu_f32;
+extern const char* k_metal_navatala_ml_pointwise_elu_f32;
+extern const char* k_metal_navatala_ml_pointwise_tanh_f32;
+extern const char* k_metal_navatala_ml_pointwise_sigmoid_f32;
+extern const char* k_metal_navatala_ml_pointwise_softplus_f32;
+extern const char* k_metal_navatala_ml_pointwise_swish_f32;
+extern const char* k_metal_navatala_ml_pointwise_gelu_tanh_f32;
+extern const char* k_metal_navatala_ml_pointwise_add_f32;
+extern const char* k_metal_navatala_ml_pointwise_sub_f32;
+extern const char* k_metal_navatala_ml_pointwise_mul_f32;
+extern const char* k_metal_navatala_ml_pointwise_div_f32;
+extern const char* k_metal_navatala_ml_pointwise_max_f32;
+extern const char* k_metal_navatala_ml_pointwise_min_f32;
+extern const char* k_metal_navatala_ml_pointwise_cmp_eq_f32;
+extern const char* k_metal_navatala_ml_pointwise_cmp_ne_f32;
+extern const char* k_metal_navatala_ml_pointwise_cmp_lt_f32;
+extern const char* k_metal_navatala_ml_pointwise_cmp_le_f32;
+extern const char* k_metal_navatala_ml_pointwise_cmp_gt_f32;
+extern const char* k_metal_navatala_ml_pointwise_cmp_ge_f32;
+extern const char* k_metal_navatala_ml_pointwise_relu_bwd_f32;
+extern const char* k_metal_navatala_ml_pointwise_sigmoid_bwd_f32;
+extern const char* k_metal_navatala_ml_pointwise_tanh_bwd_f32;
+extern const char* k_metal_navatala_ml_pointwise_neg_f16;
+extern const char* k_metal_navatala_ml_pointwise_abs_f16;
+extern const char* k_metal_navatala_ml_pointwise_sqrt_f16;
+extern const char* k_metal_navatala_ml_pointwise_rsqrt_f16;
+extern const char* k_metal_navatala_ml_pointwise_reciprocal_f16;
+extern const char* k_metal_navatala_ml_pointwise_exp_f16;
+extern const char* k_metal_navatala_ml_pointwise_log_f16;
+extern const char* k_metal_navatala_ml_pointwise_sin_f16;
+extern const char* k_metal_navatala_ml_pointwise_cos_f16;
+extern const char* k_metal_navatala_ml_pointwise_tan_f16;
+extern const char* k_metal_navatala_ml_pointwise_floor_f16;
+extern const char* k_metal_navatala_ml_pointwise_ceil_f16;
+extern const char* k_metal_navatala_ml_pointwise_round_f16;
+extern const char* k_metal_navatala_ml_pointwise_relu_f16;
+extern const char* k_metal_navatala_ml_pointwise_leaky_relu_f16;
+extern const char* k_metal_navatala_ml_pointwise_elu_f16;
+extern const char* k_metal_navatala_ml_pointwise_tanh_f16;
+extern const char* k_metal_navatala_ml_pointwise_sigmoid_f16;
+extern const char* k_metal_navatala_ml_pointwise_softplus_f16;
+extern const char* k_metal_navatala_ml_pointwise_swish_f16;
+extern const char* k_metal_navatala_ml_pointwise_gelu_tanh_f16;
+extern const char* k_metal_navatala_ml_pointwise_add_f16;
+extern const char* k_metal_navatala_ml_pointwise_sub_f16;
+extern const char* k_metal_navatala_ml_pointwise_mul_f16;
+extern const char* k_metal_navatala_ml_pointwise_div_f16;
+extern const char* k_metal_navatala_ml_pointwise_max_f16;
+extern const char* k_metal_navatala_ml_pointwise_min_f16;
+extern const char* k_metal_navatala_ml_pointwise_cmp_eq_f16;
+extern const char* k_metal_navatala_ml_pointwise_cmp_ne_f16;
+extern const char* k_metal_navatala_ml_pointwise_cmp_lt_f16;
+extern const char* k_metal_navatala_ml_pointwise_cmp_le_f16;
+extern const char* k_metal_navatala_ml_pointwise_cmp_gt_f16;
+extern const char* k_metal_navatala_ml_pointwise_cmp_ge_f16;
+extern const char* k_metal_navatala_ml_pointwise_relu_bwd_f16;
+extern const char* k_metal_navatala_ml_pointwise_sigmoid_bwd_f16;
+extern const char* k_metal_navatala_ml_pointwise_tanh_bwd_f16;
+extern const char* k_metal_navatala_ml_reduction_sum_f32;
+extern const char* k_metal_navatala_ml_reduction_prod_f32;
+extern const char* k_metal_navatala_ml_reduction_min_f32;
+extern const char* k_metal_navatala_ml_reduction_max_f32;
+extern const char* k_metal_navatala_ml_reduction_amax_f32;
+extern const char* k_metal_navatala_ml_reduction_norm1_f32;
+extern const char* k_metal_navatala_ml_reduction_avg_f32;
+extern const char* k_metal_navatala_ml_reduction_norm2_f32;
+extern const char* k_metal_navatala_ml_reduction_sum_f16;
+extern const char* k_metal_navatala_ml_reduction_prod_f16;
+extern const char* k_metal_navatala_ml_reduction_min_f16;
+extern const char* k_metal_navatala_ml_reduction_max_f16;
+extern const char* k_metal_navatala_ml_reduction_amax_f16;
+extern const char* k_metal_navatala_ml_reduction_norm1_f16;
+extern const char* k_metal_navatala_ml_reduction_avg_f16;
+extern const char* k_metal_navatala_ml_reduction_norm2_f16;
+extern const char* k_metal_navatala_ml_maxpool_f32;
+extern const char* k_metal_navatala_ml_avgpool_exclude_pad_f32;
+extern const char* k_metal_navatala_ml_avgpool_include_pad_f32;
+extern const char* k_metal_navatala_ml_resize_nearest_f32;
+extern const char* k_metal_navatala_ml_resize_bilinear_f32;
+extern const char* k_metal_navatala_ml_maxpool_f16;
+extern const char* k_metal_navatala_ml_avgpool_exclude_pad_f16;
+extern const char* k_metal_navatala_ml_avgpool_include_pad_f16;
+extern const char* k_metal_navatala_ml_resize_nearest_f16;
+extern const char* k_metal_navatala_ml_resize_bilinear_f16;
+extern const char* k_metal_navatala_ml_reshape_f32;
+extern const char* k_metal_navatala_ml_slice_f32;
+extern const char* k_metal_navatala_ml_transpose_f32;
+extern const char* k_metal_navatala_ml_concatenate2_f32;
+extern const char* k_metal_navatala_ml_reshape_f16;
+extern const char* k_metal_navatala_ml_slice_f16;
+extern const char* k_metal_navatala_ml_transpose_f16;
+extern const char* k_metal_navatala_ml_concatenate2_f16;
+extern const char* k_metal_navatala_ml_softmax_f32;
+extern const char* k_metal_navatala_ml_softmax_f16;
+extern const char* k_metal_navatala_ml_layernorm_f32;
+extern const char* k_metal_navatala_ml_spatial_batchnorm_f32;
+extern const char* k_metal_navatala_ml_instancenorm_f32;
+extern const char* k_metal_navatala_ml_batchnorm_inference_f32;
+extern const char* k_metal_navatala_ml_layernorm_backward_f32;
+extern const char* k_metal_navatala_ml_layernorm_f16;
+extern const char* k_metal_navatala_ml_spatial_batchnorm_f16;
+extern const char* k_metal_navatala_ml_instancenorm_f16;
+extern const char* k_metal_navatala_ml_batchnorm_inference_f16;
+extern const char* k_metal_navatala_ml_layernorm_backward_f16;
+extern const char* k_metal_navatala_ml_uniform_f32;
+extern const char* k_metal_navatala_ml_bernoulli_f32;
+extern const char* k_metal_navatala_ml_normal_f32;
+extern const char* k_metal_navatala_ml_uniform_f16;
+extern const char* k_metal_navatala_ml_bernoulli_f16;
+extern const char* k_metal_navatala_ml_normal_f16;
+extern const char* k_metal_navatala_graph_degree_out_u32;
+extern const char* k_metal_navatala_graph_degree_in_u32;
+extern const char* k_metal_navatala_graph_spmv_weighted_f32;
+extern const char* k_metal_navatala_graph_spmv_weighted_subgroup_f32;
+extern const char* k_metal_navatala_graph_spmv_unweighted_f32;
+extern const char* k_metal_navatala_graph_spmv_unweighted_subgroup_f32;
+extern const char* k_metal_navatala_graph_axpy2_f32;
+extern const char* k_metal_navatala_graph_scale_f32;
+extern const char* k_metal_navatala_graph_scale_add_bias_f32;
+extern const char* k_metal_navatala_graph_l1norm_f32;
+extern const char* k_metal_navatala_graph_recip_f32;
+extern const char* k_metal_navatala_graph_l1_diff_f32;
+extern const char* k_metal_navatala_graph_count_diff_u32;
+extern const char* k_metal_navatala_graph_copy_f32;
+extern const char* k_metal_navatala_graph_copy_u32;
+extern const char* k_metal_navatala_graph_relax_vertex_pull_f32;
+extern const char* k_metal_navatala_graph_label_propagate_edges_u32;
+extern const char* k_metal_navatala_graph_symmetrize_reverse_u32;
+extern const char* k_metal_navatala_graph_apply_renumber_u32;
+extern const char* k_metal_navatala_graph_peel_below_threshold_u32;
+extern const char* k_metal_navatala_graph_pair_intersection_u32;
+extern const char* k_metal_navatala_graph_jaccard_f32;
+extern const char* k_metal_navatala_graph_overlap_f32;
+extern const char* k_metal_navatala_graph_sorensen_f32;
+extern const char* k_metal_navatala_graph_cosine_f32;
+extern const char* k_metal_navatala_graph_uniform_random_walk_u32;
+extern const char* k_metal_navatala_graph_out_degree_u32;
+extern const char* k_metal_navatala_graph_in_degree_u32;
+extern const char* k_metal_navatala_dataframe_arg_max_f32;
+extern const char* k_metal_navatala_dataframe_arg_min_f32;
+extern const char* k_metal_navatala_dataframe_scan_sum_f32;
+extern const char* k_metal_navatala_dataframe_scan_sum_u32;
+extern const char* k_metal_navatala_dataframe_scan_exclusive_write_total_u32;
+extern const char* k_metal_navatala_dataframe_scan_max_f32;
+extern const char* k_metal_navatala_dataframe_scan_min_f32;
+extern const char* k_metal_navatala_dataframe_top_k_init_indices;
+extern const char* k_metal_navatala_dataframe_top_k_take_first_k_f32;
+extern const char* k_metal_navatala_dataframe_histogram_fast_f32;
+extern const char* k_metal_navatala_dataframe_zero_bins;
+extern const char* k_metal_navatala_dataframe_compute_bin_indices_f32;
+extern const char* k_metal_navatala_dataframe_sum_reduce_f32;
+extern const char* k_metal_navatala_dataframe_mean_f32;
+extern const char* k_metal_navatala_dataframe_variance_f32;
+extern const char* k_metal_navatala_dataframe_stddev_f32;
+extern const char* k_metal_navatala_dataframe_normalize_f32;
+extern const char* k_metal_navatala_dataframe_init_rng_state;
+extern const char* k_metal_navatala_dataframe_uniform_lcg_f32;
+extern const char* k_metal_navatala_dataframe_normal_box_muller_f32;
+extern const char* k_metal_navatala_dataframe_init_indices;
+extern const char* k_metal_navatala_dataframe_covariance_f32;
+extern const char* k_metal_navatala_dataframe_center_data_f32;
+extern const char* k_metal_navatala_dataframe_center_matrix_f32;
+extern const char* k_metal_navatala_dataframe_column_means_f32;
+extern const char* k_metal_navatala_dataframe_correlation_f32;
+extern const char* k_metal_navatala_dataframe_cov_to_correlation_matrix_f32;
+extern const char* k_metal_navatala_dataframe_quantile_f32;
+extern const char* k_metal_navatala_dataframe_quantile_batch_f32;
+extern const char* k_metal_navatala_dataframe_median_f32;
+extern const char* k_metal_navatala_dataframe_iqr_f32;
+extern const char* k_metal_navatala_dataframe_init_e_w_m_c_f32;
+extern const char* k_metal_navatala_dataframe_init_e_w_m_c_from_halflife_f32;
+extern const char* k_metal_navatala_dataframe_ewmc_update_f32;
+extern const char* k_metal_navatala_dataframe_ewmc_extract_covariance_f32;
+extern const char* k_metal_navatala_dataframe_ewmc_extract_correlation_f32;
+extern const char* k_metal_navatala_dataframe_init_m_c_d_f32;
+extern const char* k_metal_navatala_dataframe_mcd_compute_center_f32;
+extern const char* k_metal_navatala_dataframe_mcd_compute_covariance_f32;
+extern const char* k_metal_navatala_dataframe_mcd_mahalanobis_distance_f32;
+extern const char* k_metal_navatala_dataframe_mcd_detect_outliers_f32;
+extern const char* k_metal_navatala_dataframe_mcd_extract_mean_f32;
+extern const char* k_metal_navatala_linalg_eig_select_top_k_f32;
+extern const char* k_metal_navatala_ml_kde_bandwidth_silverman_f32;
+extern const char* k_metal_navatala_ml_kde_bandwidth_scott_f32;
+extern const char* k_metal_navatala_ml_kde_evaluate_gaussian_f32;
+extern const char* k_metal_navatala_ml_kde_evaluate_epanechnikov_f32;
+extern const char* k_metal_navatala_ml_kde_find_mode_f32;
+extern const char* k_metal_navatala_dataframe_init_moments_state_f32;
+extern const char* k_metal_navatala_dataframe_moments_update_f32;
+extern const char* k_metal_navatala_dataframe_moments_merge_f32;
+extern const char* k_metal_navatala_dataframe_extract_skewness_f32;
+extern const char* k_metal_navatala_dataframe_extract_kurtosis_f32;
+extern const char* k_metal_navatala_dataframe_extract_excess_kurtosis_f32;
+extern const char* k_metal_navatala_ml_pairwise_euclidean_f32;
+extern const char* k_metal_navatala_ml_pairwise_squared_euclidean_f32;
+extern const char* k_metal_navatala_ml_pairwise_manhattan_f32;
+extern const char* k_metal_navatala_ml_pairwise_cosine_f32;
+extern const char* k_metal_navatala_ml_pairwise_chebyshev_f32;
+extern const char* k_metal_navatala_ml_nearest_neighbor_f32;
+extern const char* k_metal_navatala_ml_init_centroids_random_f32;
+extern const char* k_metal_navatala_ml_assign_to_centroids_f32;
+extern const char* k_metal_navatala_ml_compute_cluster_sums_f32;
+extern const char* k_metal_navatala_ml_update_centroids_f32;
+extern const char* k_metal_navatala_ml_compute_inertia_f32;
+extern const char* k_metal_navatala_ml_init_gmm_state_f32;
+extern const char* k_metal_navatala_ml_gaussian_log_pdf_f32;
+extern const char* k_metal_navatala_ml_compute_responsibilities_f32;
+extern const char* k_metal_navatala_ml_update_means_f32;
+extern const char* k_metal_navatala_ml_update_variances_f32;
+extern const char* k_metal_navatala_ml_update_weights_f32;
+extern const char* k_metal_navatala_ml_compute_log_likelihood_f32;
+extern const char* k_metal_navatala_graph_rbf_affinity_f32;
+extern const char* k_metal_navatala_graph_compute_degree_matrix_f32;
+extern const char* k_metal_navatala_graph_compute_laplacian_f32;
+extern const char* k_metal_navatala_graph_normalized_laplacian_f32;
+extern const char* k_metal_navatala_graph_normalize_eigenvector_rows_f32;
+extern const char* k_metal_navatala_graph_spectral_embedding_f32;
+extern const char* k_metal_navatala_ml_compute_gram_matrix_f32;
+extern const char* k_metal_navatala_ml_compute_xt_y_f32;
+extern const char* k_metal_navatala_ml_predict_f32;
+extern const char* k_metal_navatala_ml_compute_residuals_f32;
+extern const char* k_metal_navatala_ml_compute_r_squared_f32;
+extern const char* k_metal_navatala_ml_compute_mean_f32;
+extern const char* k_metal_navatala_ml_add_regularization_f32;
+extern const char* k_metal_navatala_ml_ridge_predict_f32;
+extern const char* k_metal_navatala_ml_compute_gcv_score_f32;
+extern const char* k_metal_navatala_ml_compute_effective_dof_f32;
+extern const char* k_metal_navatala_ml_init_lasso_state_f32;
+extern const char* k_metal_navatala_ml_compute_partial_residual_f32;
+extern const char* k_metal_navatala_ml_soft_threshold_f32;
+extern const char* k_metal_navatala_ml_coordinate_update_f32;
+extern const char* k_metal_navatala_ml_compute_objective_f32;
+extern const char* k_metal_navatala_ml_compute_active_set_f32;
+extern const char* k_metal_navatala_ml_center_data_f32;
+extern const char* k_metal_navatala_ml_compute_covariance_matrix_f32;
+extern const char* k_metal_navatala_ml_project_to_principal_f32;
+extern const char* k_metal_navatala_ml_explained_variance_ratio_f32;
+extern const char* k_metal_navatala_ml_compute_pairwise_affinity_f32;
+extern const char* k_metal_navatala_ml_symmetrize_affinity_f32;
+extern const char* k_metal_navatala_ml_init_embedding_random_f32;
+extern const char* k_metal_navatala_ml_compute_q_distribution_f32;
+extern const char* k_metal_navatala_ml_compute_gradient_f32;
+extern const char* k_metal_navatala_ml_apply_momentum_update_f32;
+extern const char* k_metal_navatala_ml_compute_k_l_divergence_f32;
+extern const char* k_metal_navatala_ml_compute_perplexity_f32;
+extern const char* k_metal_navatala_ml_normalize_embedding_f32;
+extern const char* k_metal_navatala_ml_compute_exaggerated_p_f32;
+extern const char* k_metal_navatala_ml_compute_neighbor_counts_f32;
+extern const char* k_metal_navatala_ml_identify_core_points_f32;
+extern const char* k_metal_navatala_ml_identify_core_points_f64;
+extern const char* k_metal_navatala_ml_init_cluster_labels_f32;
+extern const char* k_metal_navatala_ml_init_cluster_labels_f64;
+extern const char* k_metal_navatala_ml_expand_cluster_step_f32;
+extern const char* k_metal_navatala_ml_propagate_core_labels_f32;
+extern const char* k_metal_navatala_ml_mark_noise_points_f32;
+extern const char* k_metal_navatala_ml_mark_noise_points_f64;
+extern const char* k_metal_navatala_ml_count_clusters_f32;
+extern const char* k_metal_navatala_ml_count_clusters_f64;
+extern const char* k_metal_navatala_linalg_cast_f32_to_f16;
+extern const char* k_metal_navatala_linalg_cast_f16_to_f32;
+extern const char* k_metal_navatala_linalg_reduce_sum_f16;
+extern const char* k_metal_navatala_linalg_reduce_max_f16;
+extern const char* k_metal_navatala_runtime_deterministic_reduce_f32;
+extern const char* k_metal_navatala_runtime_deterministic_histogram_f32;
+extern const char* k_metal_navatala_sparse_sparse_add_f32;
+extern const char* k_metal_navatala_sparse_sparse_sub_f32;
+extern const char* k_metal_navatala_sparse_sparse_scale_f32;
+extern const char* k_metal_navatala_sparse_sparse_hadamard_f32;
+extern const char* k_metal_navatala_sparse_sparse_abs_f32;
+extern const char* k_metal_navatala_sparse_sparse_threshold_f32;
+extern const char* k_metal_navatala_sparse_coo_transpose_f32;
+extern const char* k_metal_navatala_sparse_sparse_inner_product_f32;
+extern const char* k_metal_navatala_sparse_sparse_l2_distance_f32;
+extern const char* k_metal_navatala_sparse_sparse_cosine_distance_f32;
+extern const char* k_metal_navatala_sparse_sparse_jaccard_distance_f32;
+extern const char* k_metal_navatala_sparse_sparse_jacobi_iter_f32;
+extern const char* k_metal_navatala_sparse_sparse_gauss_seidel_iter_f32;
+extern const char* k_metal_navatala_sparse_sparse_cg_iter_f32;
+extern const char* k_metal_navatala_sparse_sparse_bicgstab_iter_f32;
+extern const char* k_metal_navatala_sparse_compute_residual_f32;
+extern const char* k_metal_navatala_sparse_compute_residual_norm_f32;
+extern const char* k_metal_navatala_sparse_csr_spmv_row_f32;
+extern const char* k_metal_navatala_sparse_chebyshev_smooth_f32;
+extern const char* k_metal_navatala_sparse_find_min_edge_per_component_f32;
+extern const char* k_metal_navatala_sparse_merge_components_f32;
+extern const char* k_metal_navatala_sparse_merge_components_f64;
+extern const char* k_metal_navatala_sparse_mst_boruvka_step_f32;
+extern const char* k_metal_navatala_linalg_elt_add_f32;
+extern const char* k_metal_navatala_linalg_elt_sub_f32;
+extern const char* k_metal_navatala_linalg_elt_mul_f32;
+extern const char* k_metal_navatala_linalg_elt_div_f32;
+extern const char* k_metal_navatala_linalg_elt_pow_f32;
+extern const char* k_metal_navatala_linalg_elt_sqrt_f32;
+extern const char* k_metal_navatala_linalg_elt_exp_f32;
+extern const char* k_metal_navatala_linalg_elt_log_f32;
+extern const char* k_metal_navatala_linalg_elt_abs_f32;
+extern const char* k_metal_navatala_linalg_elt_sign_f32;
+extern const char* k_metal_navatala_linalg_transpose_f32;
+extern const char* k_metal_navatala_linalg_transpose_in_place_f32;
+extern const char* k_metal_navatala_linalg_transpose_batched_f32;
+extern const char* k_metal_navatala_linalg_map_f32;
+extern const char* k_metal_navatala_linalg_reduce_row_sum_f32;
+extern const char* k_metal_navatala_linalg_reduce_col_sum_f32;
+extern const char* k_metal_navatala_linalg_reduce_row_max_f32;
+extern const char* k_metal_navatala_linalg_reduce_col_max_f32;
+extern const char* k_metal_navatala_linalg_map_reduce_sum_f32;
+extern const char* k_metal_navatala_linalg_outer_product_f32;
+extern const char* k_metal_navatala_linalg_batched_dot_f32;
+extern const char* k_metal_navatala_linalg_trace_f32;
+extern const char* k_metal_navatala_linalg_frobenius_norm_f32;
+extern const char* k_metal_navatala_linalg_extract_upper_f32;
+extern const char* k_metal_navatala_linalg_extract_lower_f32;
+extern const char* k_metal_navatala_linalg_set_upper_f32;
+extern const char* k_metal_navatala_linalg_set_lower_f32;
+extern const char* k_metal_navatala_linalg_gather_rows_f32;
+extern const char* k_metal_navatala_linalg_gather_cols_f32;
+extern const char* k_metal_navatala_linalg_gather_elements_f32;
+extern const char* k_metal_navatala_linalg_gather_batched_f32;
+extern const char* k_metal_navatala_linalg_scatter_rows_f32;
+extern const char* k_metal_navatala_linalg_scatter_cols_f32;
+extern const char* k_metal_navatala_linalg_scatter_add_f32;
+extern const char* k_metal_navatala_linalg_scatter_max_f32;
+extern const char* k_metal_navatala_linalg_slice_rows_f32;
+extern const char* k_metal_navatala_linalg_slice_cols_f32;
+extern const char* k_metal_navatala_linalg_slice_block_f32;
+extern const char* k_metal_navatala_linalg_strided_slice_f32;
+extern const char* k_metal_navatala_linalg_extract_diagonal_f32;
+extern const char* k_metal_navatala_linalg_extract_diagonal_k_f32;
+extern const char* k_metal_navatala_linalg_set_diagonal_f32;
+extern const char* k_metal_navatala_linalg_diag_to_matrix_f32;
+extern const char* k_metal_navatala_linalg_shift_rows_f32;
+extern const char* k_metal_navatala_linalg_shift_cols_f32;
+extern const char* k_metal_navatala_linalg_roll_rows_f32;
+extern const char* k_metal_navatala_linalg_roll_cols_f32;
+extern const char* k_metal_navatala_linalg_sort_rows_f32;
+extern const char* k_metal_navatala_linalg_sort_cols_f32;
+extern const char* k_metal_navatala_linalg_argsort_rows_f32;
+extern const char* k_metal_navatala_linalg_argsort_cols_f32;
+extern const char* k_metal_navatala_dataframe_contingency_matrix_f32;
+extern const char* k_metal_navatala_dataframe_silhouette_score_f32;
+extern const char* k_metal_navatala_dataframe_adjusted_rand_index_f32;
+extern const char* k_metal_navatala_dataframe_normalized_mutual_info_f32;
+extern const char* k_metal_navatala_dataframe_homogeneity_score_f32;
+extern const char* k_metal_navatala_dataframe_completeness_score_f32;
+extern const char* k_metal_navatala_dataframe_v_measure_f32;
+extern const char* k_metal_navatala_dataframe_r2_score_f32;
+extern const char* k_metal_navatala_dataframe_mse_f32;
+extern const char* k_metal_navatala_dataframe_rmse_f32;
+extern const char* k_metal_navatala_dataframe_mae_f32;
+extern const char* k_metal_navatala_dataframe_mape_f32;
+extern const char* k_metal_navatala_dataframe_explained_variance_f32;
+extern const char* k_metal_navatala_dataframe_entropy_f32;
+extern const char* k_metal_navatala_dataframe_cross_entropy_f32;
+extern const char* k_metal_navatala_dataframe_kl_divergence_f32;
+extern const char* k_metal_navatala_dataframe_mutual_information_f32;
+extern const char* k_metal_navatala_dataframe_conditional_entropy_f32;
+extern const char* k_metal_navatala_ml_neighborhood_recall_f32;
+extern const char* k_metal_navatala_ml_trustworthiness_f32;
+extern const char* k_metal_navatala_ml_continuity_f32;
+extern const char* k_metal_navatala_dataframe_permute_f32;
+extern const char* k_metal_navatala_dataframe_shuffle_rows_f32;
+extern const char* k_metal_navatala_dataframe_sample_without_replacement_f32;
+extern const char* k_metal_navatala_dataframe_sample_with_replacement_f32;
+extern const char* k_metal_navatala_dataframe_bootstrap_sample_f32;
+extern const char* k_metal_navatala_ml_make_blobs_f32;
+extern const char* k_metal_navatala_ml_make_blobs_anisotropic_f32;
+extern const char* k_metal_navatala_ml_make_moons_f32;
+extern const char* k_metal_navatala_ml_make_circles_f32;
+extern const char* k_metal_navatala_ml_make_regression_f32;
+extern const char* k_metal_navatala_ml_make_classification_f32;
+extern const char* k_metal_navatala_ml_make_sparse_uncorrelated_f32;
+extern const char* k_metal_navatala_graph_rmat_generator_f32;
+extern const char* k_metal_navatala_graph_erdos_renyi_f32;
+extern const char* k_metal_navatala_graph_barabasi_albert_f32;
+extern const char* k_metal_navatala_dataframe_select_top_k_per_row_f32;
+extern const char* k_metal_navatala_dataframe_select_top_k_f32;
+extern const char* k_metal_navatala_dataframe_arg_top_k_per_row_f32;
+extern const char* k_metal_navatala_dataframe_arg_top_k_f32;
+extern const char* k_metal_navatala_dataframe_partial_sort_per_row_f32;
+extern const char* k_metal_navatala_ml_knn_brute_force_f32;
+extern const char* k_metal_navatala_ml_knn_brute_force_euclidean_f32;
+extern const char* k_metal_navatala_ml_knn_brute_force_cosine_f32;
+extern const char* k_metal_navatala_ml_knn_brute_force_manhattan_f32;
+extern const char* k_metal_navatala_ml_knn_with_radius_f32;
+extern const char* k_metal_navatala_ml_knn_classify_f32;
+extern const char* k_metal_navatala_ml_knn_classify_f64;
+extern const char* k_metal_navatala_ml_knn_classify_weighted_f32;
+extern const char* k_metal_navatala_ml_knn_classify_probs_f32;
+extern const char* k_metal_navatala_ml_vote_majority_f32;
+extern const char* k_metal_navatala_ml_vote_majority_f64;
+extern const char* k_metal_navatala_ml_knn_regress_f32;
+extern const char* k_metal_navatala_ml_knn_regress_weighted_f32;
+extern const char* k_metal_navatala_ml_knn_regress_median_f32;
+extern const char* k_metal_navatala_graph_compute_modularity_f32;
+extern const char* k_metal_navatala_graph_modularity_matrix_vec_f32;
+extern const char* k_metal_navatala_graph_construct_indicator_f32;
+extern const char* k_metal_navatala_graph_compute_edge_cut_f32;
+extern const char* k_metal_navatala_graph_compute_partition_cost_f32;
+extern const char* k_metal_navatala_graph_analyze_partition_f32;
+extern const char* k_metal_navatala_graph_transform_eigen_matrix_f32;
+extern const char* k_metal_navatala_graph_laplacian_from_adjacency_f32;
+extern const char* k_metal_navatala_ml_traverse_tree_classify_f32;
+extern const char* k_metal_navatala_ml_traverse_tree_regress_f32;
+extern const char* k_metal_navatala_ml_compute_gini_impurity_f32;
+extern const char* k_metal_navatala_ml_compute_m_s_e_f32;
+extern const char* k_metal_navatala_ml_split_samples_f32;
+extern const char* k_metal_navatala_ml_compute_leaf_class_probs_f32;
+extern const char* k_metal_navatala_ml_forest_classify_f32;
+extern const char* k_metal_navatala_ml_forest_regress_f32;
+extern const char* k_metal_navatala_ml_aggregate_importances_f32;
+extern const char* k_metal_navatala_ml_fil_infer_regression_f32;
+extern const char* k_metal_navatala_ml_fil_infer_classification_f32;
+extern const char* k_metal_navatala_ml_svm_predict_classify_f32;
+extern const char* k_metal_navatala_ml_svm_predict_regress_f32;
+extern const char* k_metal_navatala_ml_compute_decision_function_f32;
+extern const char* k_metal_navatala_ml_compute_r_b_f_kernel_matrix_f32;
+extern const char* k_metal_navatala_ml_compute_linear_kernel_matrix_f32;
+extern const char* k_metal_navatala_ml_compute_polynomial_kernel_matrix_f32;
+extern const char* k_metal_navatala_ml_compute_core_distances_f32;
+extern const char* k_metal_navatala_ml_compute_mutual_reachability_f32;
+extern const char* k_metal_navatala_ml_extract_cluster_labels_f32;
+extern const char* k_metal_navatala_ml_extract_cluster_labels_f64;
+extern const char* k_metal_navatala_ml_compute_probabilities_f32;
+extern const char* k_metal_navatala_ml_compute_cluster_stability_f32;
+extern const char* k_metal_navatala_ml_initialize_labels_f32;
+extern const char* k_metal_navatala_ml_initialize_labels_f64;
+extern const char* k_metal_navatala_ml_compute_fuzzy_simplicial_set_f32;
+extern const char* k_metal_navatala_ml_compute_attraction_f32;
+extern const char* k_metal_navatala_ml_compute_repulsion_f32;
+extern const char* k_metal_navatala_ml_optimize_layout_f32;
+extern const char* k_metal_navatala_ml_initialize_embedding_f32;
+extern const char* k_metal_navatala_ml_clear_gradients_f32;
+extern const char* k_metal_navatala_ml_differencing_f32;
+extern const char* k_metal_navatala_ml_holt_winters_forecast_f32;
+extern const char* k_metal_navatala_ml_ar_predict_f32;
+extern const char* k_metal_navatala_ml_shap_values_f32;
+extern const char* k_metal_navatala_ml_coalition_marginal_f32;
+extern const char* k_metal_navatala_ml_feature_interaction_f32;
+extern const char* k_metal_navatala_ml_compute_correlations_f32;
+extern const char* k_metal_navatala_ml_find_max_correlation_f32;
+extern const char* k_metal_navatala_ml_update_coefs_f32;
+extern const char* k_metal_navatala_ml_compute_equiangular_f32;
+extern const char* k_metal_navatala_ml_evaluate_fitness_f32;
+extern const char* k_metal_navatala_ml_mutate_population_f32;
+extern const char* k_metal_navatala_ml_crossover_population_f32;
+extern const char* k_metal_navatala_ml_select_tournament_f32;
+extern const char* k_metal_navatala_sparse_knn_sparse_k_n_n_distance_f32;
+extern const char* k_metal_navatala_sparse_knn_sparse_inner_product_f32;
+extern const char* k_metal_navatala_sparse_knn_sparse_top_k_f32;
+extern const char* k_metal_navatala_sparse_knn_csr_row_distance_f32;
+extern const char* k_metal_navatala_ml_batch_traverse_trees_f32;
+extern const char* k_metal_navatala_ml_collect_leaf_values_f32;
+extern const char* k_metal_navatala_ml_aggregate_tree_outputs_f32;
+extern const char* k_metal_navatala_ml_traverse_with_path_f32;
+extern const char* k_metal_navatala_sparse_csr_sp_m_v_f32;
+extern const char* k_metal_navatala_sparse_csr_sp_m_v_scaled_f32;
+extern const char* k_metal_navatala_sparse_csr_residual_f32;
+extern const char* k_metal_navatala_sparse_axpy_f32;
+extern const char* k_metal_navatala_sparse_xpay_f32;
+extern const char* k_metal_navatala_sparse_dot_partials_f32;
+extern const char* k_metal_navatala_sparse_scal_f32;
+extern const char* k_metal_navatala_sparse_nrm2_partials_f32;
+extern const char* k_metal_navatala_sparse_zero_fill_f32;
+extern const char* k_metal_navatala_sparse_zero_fill_u32;
+extern const char* k_metal_navatala_sparse_zero_scalar_u32;
+extern const char* k_metal_navatala_sparse_fill_neg_one_i32;
+extern const char* k_metal_navatala_sparse_copy_f32;
+extern const char* k_metal_navatala_sparse_bsr_sp_m_v_f32;
+extern const char* k_metal_navatala_sparse_csr_transpose_count_f32;
+extern const char* k_metal_navatala_sparse_csr_transpose_fill_f32;
+extern const char* k_metal_navatala_sparse_csr_row_norm_l1_f32;
+extern const char* k_metal_navatala_sparse_csr_row_norm_linf_f32;
+extern const char* k_metal_navatala_sparse_csr_frobenius_partials_f32;
+extern const char* k_metal_navatala_sparse_csr_truncate_f32;
+extern const char* k_metal_navatala_sparse_csr_compact_f32;
+extern const char* k_metal_navatala_sparse_csr_sort_columns_f32;
+extern const char* k_metal_navatala_sparse_csr_permute_rows_f32;
+extern const char* k_metal_navatala_sparse_csr_check_diag_dominance_f32;
+extern const char* k_metal_navatala_sparse_csr_row_nnz_histogram;
+extern const char* k_metal_navatala_sparse_dense_l_u_f32;
+extern const char* k_metal_navatala_sparse_dense_l_u_solve_f32;
+extern const char* k_metal_navatala_sparse_csr_replace_values_f32;
+extern const char* k_metal_navatala_sparse_csr_to_coo_f32;
+extern const char* k_metal_navatala_sparse_coo_to_csr_row_count;
+extern const char* k_metal_navatala_sparse_csr_to_ell_f32;
+extern const char* k_metal_navatala_sparse_ell_sp_m_v_f32;
+extern const char* k_metal_navatala_sparse_csr_add_symbolic_row_nnz;
+extern const char* k_metal_navatala_sparse_csr_add_numeric_f32;
+extern const char* k_metal_navatala_sparse_csr_scale_f32;
+extern const char* k_metal_navatala_sparse_csr_symmetry_check_f32;
+extern const char* k_metal_navatala_sparse_csr_nnz_per_row;
+extern const char* k_metal_navatala_sparse_csr_max_nnz_per_row_partials;
+extern const char* k_metal_navatala_sparse_csr_extract_diag_f32;
+extern const char* k_metal_navatala_sparse_csr_permute_cols_f32;
+extern const char* k_metal_navatala_sparse_csr_row_slice_f32;
+extern const char* k_metal_navatala_sparse_cg_update_x_r_f32;
+extern const char* k_metal_navatala_sparse_cg_update_p_f32;
+extern const char* k_metal_navatala_sparse_cg_compute_alpha_f32;
+extern const char* k_metal_navatala_sparse_cg_compute_beta_f32;
+extern const char* k_metal_navatala_sparse_cg_fused_update_dot_f32;
+extern const char* k_metal_navatala_sparse_cg_init_residual_f32;
+extern const char* k_metal_navatala_sparse_cg_residual_norm_partials_f32;
+extern const char* k_metal_navatala_sparse_bicgstab_update_p_f32;
+extern const char* k_metal_navatala_sparse_bicgstab_update_x_f32;
+extern const char* k_metal_navatala_sparse_bicgstab_compute_beta_f32;
+extern const char* k_metal_navatala_sparse_bicgstab_compute_omega_f32;
+extern const char* k_metal_navatala_sparse_bicgstab_update_r_f32;
+extern const char* k_metal_navatala_sparse_bicgstab_compute_s_f32;
+extern const char* k_metal_navatala_sparse_bicgstab_compute_alpha_f32;
+extern const char* k_metal_navatala_sparse_bicgstab_fused_update_all_f32;
+extern const char* k_metal_navatala_sparse_gmres_arnoldi_project_f32;
+extern const char* k_metal_navatala_sparse_gmres_normalize_f32;
+extern const char* k_metal_navatala_sparse_gmres_update_solution_f32;
+extern const char* k_metal_navatala_sparse_gmres_givens_rotation_f32;
+extern const char* k_metal_navatala_sparse_gmres_arnoldi_batch_project_f32;
+extern const char* k_metal_navatala_sparse_gmres_hessenberg_dot_partials_f32;
+extern const char* k_metal_navatala_sparse_gmres_restart_init_f32;
+extern const char* k_metal_navatala_sparse_gmres_back_solve_f32;
+extern const char* k_metal_navatala_sparse_gmres_store_basis_f32;
+extern const char* k_metal_navatala_sparse_idr_shadow_project_f32;
+extern const char* k_metal_navatala_sparse_idr_update_x_r_f32;
+extern const char* k_metal_navatala_sparse_idr_g_space_update_f32;
+extern const char* k_metal_navatala_sparse_idr_compute_omega_f32;
+extern const char* k_metal_navatala_sparse_idr_build_shadow_space_f32;
+extern const char* k_metal_navatala_sparse_idr_m_sync_fused_f32;
+extern const char* k_metal_navatala_sparse_idr_compute_v_f32;
+extern const char* k_metal_navatala_sparse_idr_store_d_r_column_f32;
+extern const char* k_metal_navatala_sparse_pcg_update_x_r_f32;
+extern const char* k_metal_navatala_sparse_pcgf_update_p_f32;
+extern const char* k_metal_navatala_sparse_pbicgstab_fused_s_f32;
+extern const char* k_metal_navatala_sparse_pbicgstab_triple_dot_partials_f32;
+extern const char* k_metal_navatala_sparse_fgmres_store_z_f32;
+extern const char* k_metal_navatala_sparse_fgmres_update_solution_f32;
+extern const char* k_metal_navatala_sparse_pipe_c_g_fused_f32;
+extern const char* k_metal_navatala_sparse_chronopoulos_c_g_scalars_f32;
+extern const char* k_metal_navatala_sparse_fgmres_m_g_s_project_f32;
+extern const char* k_metal_navatala_sparse_pbicgstab_fused_update_conv_f32;
+extern const char* k_metal_navatala_sparse_jacobi_sweep_f32;
+extern const char* k_metal_navatala_sparse_jacobi_l1_sweep_f32;
+extern const char* k_metal_navatala_sparse_extract_diagonal_f32;
+extern const char* k_metal_navatala_sparse_block_jacobi_sweep_f32;
+extern const char* k_metal_navatala_sparse_cf_jacobi_sweep_f32;
+extern const char* k_metal_navatala_sparse_multicolor_gs_forward_f32;
+extern const char* k_metal_navatala_sparse_multicolor_gs_backward_f32;
+extern const char* k_metal_navatala_sparse_fixcolor_gs_forward_f32;
+extern const char* k_metal_navatala_sparse_fixcolor_gs_backward_f32;
+extern const char* k_metal_navatala_sparse_ilu_factor_color_f32;
+extern const char* k_metal_navatala_sparse_ilu_forward_sweep_f32;
+extern const char* k_metal_navatala_sparse_ilu_backward_sweep_f32;
+extern const char* k_metal_navatala_sparse_dilu_build_reciprocal_d_f32;
+extern const char* k_metal_navatala_sparse_dilu_apply_f32;
+extern const char* k_metal_navatala_sparse_multicolor_dilu_forward_f32;
+extern const char* k_metal_navatala_sparse_multicolor_dilu_backward_f32;
+extern const char* k_metal_navatala_sparse_chebyshev_sweep_f32;
+extern const char* k_metal_navatala_sparse_chebyshev_coeff_update_f32;
+extern const char* k_metal_navatala_sparse_polynomial_sweep_f32;
+extern const char* k_metal_navatala_sparse_kpz_polynomial_sweep_f32;
+extern const char* k_metal_navatala_sparse_kaczmarz_row_norm_sq_f32;
+extern const char* k_metal_navatala_sparse_mg_restrict_f32;
+extern const char* k_metal_navatala_sparse_mg_prolongate_f32;
+extern const char* k_metal_navatala_sparse_mg_convergence_absolute_f32;
+extern const char* k_metal_navatala_sparse_mg_convergence_relative_f32;
+extern const char* k_metal_navatala_sparse_mg_compute_residual_f32;
+extern const char* k_metal_navatala_sparse_mg_weighted_restrict_f32;
+extern const char* k_metal_navatala_sparse_mg_error_norm_partials_f32;
+extern const char* k_metal_navatala_sparse_mg_zero_vector_f32;
+extern const char* k_metal_navatala_sparse_mg_prolongate_damped_f32;
+extern const char* k_metal_navatala_sparse_strength_of_connection_f32;
+extern const char* k_metal_navatala_sparse_aggregate_size2_propose_f32;
+extern const char* k_metal_navatala_sparse_aggregate_size2_confirm;
+extern const char* k_metal_navatala_sparse_promote_unmatched_singletons;
+extern const char* k_metal_navatala_sparse_aggregate_size4_f32;
+extern const char* k_metal_navatala_sparse_aggregate_size8_f32;
+extern const char* k_metal_navatala_sparse_aggregate_parallel_greedy_f32;
+extern const char* k_metal_navatala_sparse_assign_leader_compact_ids;
+extern const char* k_metal_navatala_sparse_apply_compact_ids;
+extern const char* k_metal_navatala_sparse_build_prolongation_f32;
+extern const char* k_metal_navatala_sparse_build_prolongation_terminator;
+extern const char* k_metal_navatala_sparse_spgemm_symbolic_row_nnz;
+extern const char* k_metal_navatala_sparse_spgemm_numeric_f32;
+extern const char* k_metal_navatala_sparse_csr_transpose;
+extern const char* k_metal_navatala_sparse_aggregate_adaptive_f32;
+extern const char* k_metal_navatala_sparse_aggregate_multi_pairwise_f32;
+extern const char* k_metal_navatala_sparse_aggregate_geometric_f32;
+extern const char* k_metal_navatala_sparse_aggregate_serial_f32;
+extern const char* k_metal_navatala_sparse_aggregate_low_degree_first_propose_f32;
+extern const char* k_metal_navatala_sparse_assign_orphans_f32;
+extern const char* k_metal_navatala_sparse_spgemm_numeric_hash_f32;
+extern const char* k_metal_navatala_sparse_spgemm_numeric_serial_f32;
+extern const char* k_metal_navatala_sparse_build_smoothed_prolongation_f32;
+extern const char* k_metal_navatala_sparse_compute_aggregate_sizes;
+extern const char* k_metal_navatala_sparse_compute_coarsening_ratio;
+extern const char* k_metal_navatala_sparse_cf_split_p_m_i_s;
+extern const char* k_metal_navatala_sparse_cf_split_h_m_i_s;
+extern const char* k_metal_navatala_sparse_cf_split_h_m_i_s_phase2_f32;
+extern const char* k_metal_navatala_sparse_cf_split_r_s;
+extern const char* k_metal_navatala_sparse_interpolate_distance1_count_f32;
+extern const char* k_metal_navatala_sparse_interpolate_distance1_count_f64;
+extern const char* k_metal_navatala_sparse_interpolate_distance1_f32;
+extern const char* k_metal_navatala_sparse_interpolate_distance2_count_f32;
+extern const char* k_metal_navatala_sparse_interpolate_distance2_count_f64;
+extern const char* k_metal_navatala_sparse_interpolate_distance2_f32;
+extern const char* k_metal_navatala_sparse_truncate_interpolation_count_f32;
+extern const char* k_metal_navatala_sparse_truncate_interpolation_f32;
+extern const char* k_metal_navatala_sparse_cf_split_aggressive_p_m_i_s;
+extern const char* k_metal_navatala_sparse_cf_split_aggressive_h_m_i_s;
+extern const char* k_metal_navatala_sparse_cf_split_c_r_f32;
+extern const char* k_metal_navatala_sparse_cf_split_c_l_j_p;
+extern const char* k_metal_navatala_sparse_interpolate_multipass_count_f32;
+extern const char* k_metal_navatala_sparse_interpolate_multipass_count_f64;
+extern const char* k_metal_navatala_sparse_interpolate_multipass_f32;
+extern const char* k_metal_navatala_sparse_strength_symmetric_f32;
+extern const char* k_metal_navatala_sparse_strength_algebraic_dist_f32;
+extern const char* k_metal_navatala_sparse_strength_affinity_f32;
+extern const char* k_metal_navatala_sparse_count_c_f_points;
+extern const char* k_metal_navatala_sparse_compute_grid_complexity;
+extern const char* k_metal_navatala_sparse_compute_operator_complexity;
+extern const char* k_metal_navatala_sparse_interpolate_ext_no_i_count_f32;
+extern const char* k_metal_navatala_sparse_interpolate_ext_no_i_count_f64;
+extern const char* k_metal_navatala_sparse_interpolate_ext_no_i_f32;
+extern const char* k_metal_navatala_sparse_interpolate_f_f_weights_f32;
+extern const char* k_metal_navatala_sparse_interpolate_symbolic_row_nnz_f32;
+extern const char* k_metal_navatala_sparse_interpolate_symbolic_row_nnz_f64;
+extern const char* k_metal_navatala_sparse_build_coarse_to_fine_map;
+extern const char* k_metal_navatala_sparse_build_fine_to_coarse_map_count;
+extern const char* k_metal_navatala_sparse_build_fine_to_coarse_map;
+extern const char* k_metal_navatala_sparse_em_initial_prolongation_f32;
+extern const char* k_metal_navatala_sparse_em_energy_gradient_f32;
+extern const char* k_metal_navatala_sparse_em_update_prolongation_f32;
+extern const char* k_metal_navatala_sparse_em_normalize_p_f32;
+extern const char* k_metal_navatala_sparse_em_energy_eval_partials_f32;
+extern const char* k_metal_navatala_sparse_parallel_greedy_coloring;
+extern const char* k_metal_navatala_sparse_min_max_coloring;
+extern const char* k_metal_navatala_sparse_min_max2_ring_coloring;
+extern const char* k_metal_navatala_sparse_multi_hash_coloring;
+extern const char* k_metal_navatala_sparse_build_color_offsets;
+extern const char* k_metal_navatala_sparse_reorder_c_s_r_by_color;
+extern const char* k_metal_navatala_sparse_round_robin_coloring;
+extern const char* k_metal_navatala_sparse_bfs_coloring;
+extern const char* k_metal_navatala_sparse_locally_downwind_coloring;
+extern const char* k_metal_navatala_sparse_greedy_recolor_f32;
+extern const char* k_metal_navatala_sparse_greedy_recolor_f64;
+extern const char* k_metal_navatala_sparse_validate_coloring;
+extern const char* k_metal_navatala_sparse_color_histogram;
+extern const char* k_metal_navatala_sparse_uniform_random_coloring;
+extern const char* k_metal_navatala_sparse_saturation_coloring;
+extern const char* k_metal_navatala_sparse_reorder_vector_by_color_f32;
+extern const char* k_metal_navatala_sparse_diag_inv_sqrt_f32;
+extern const char* k_metal_navatala_sparse_apply_diag_sym_scale_f32;
+extern const char* k_metal_navatala_sparse_binorm_row_scale_f32;
+extern const char* k_metal_navatala_sparse_shifted_sp_m_v_f32;
+extern const char* k_metal_navatala_sparse_deflated_project_f32;
+extern const char* k_metal_navatala_sparse_page_rank_iter_f32;
+extern const char* k_metal_navatala_sparse_w_cycle_weight_partials_f32;
+extern const char* k_metal_navatala_sparse_convergence_factor_f32;
+extern const char* k_metal_navatala_sparse_block_gram_schmidt_f32;
+extern const char* k_metal_navatala_sparse_small_dense_q_r_f32;
+extern const char* k_metal_navatala_sparse_lanczos_step_f32;
+extern const char* k_metal_navatala_sparse_arnoldi_step_f32;
+extern const char* k_metal_navatala_sparse_lobpcg_rayleigh_ritz_f32;
+extern const char* k_metal_navatala_sparse_lobpcg_residual_f32;
+extern const char* k_metal_navatala_sparse_power_iteration_normalize_f32;
+extern const char* k_metal_navatala_sparse_rayleigh_quotient_partials_f32;
+extern const char* k_metal_navatala_sparse_jacobi_davidson_correction_f32;
+extern const char* k_metal_navatala_sparse_jd_subspace_expand_f32;
+extern const char* k_metal_navatala_sparse_subspace_orthogonalize_f32;
+extern const char* k_metal_navatala_sparse_subspace_convergence_f32;
+extern const char* k_metal_navatala_sparse_block_sp_m_v_f32;
+extern const char* k_metal_navatala_sparse_multi_vec_norm_partials_f32;
+extern const char* k_metal_navatala_sparse_multi_vec_scale_f32;
+extern const char* k_metal_navatala_sparse_dense_sym_eig_f32;
+extern const char* k_metal_navatala_sparse_convergence_relative_max_f32;
+extern const char* k_metal_navatala_sparse_convergence_combined_f32;
+extern const char* k_metal_navatala_sparse_convergence_divergence_check_f32;
+extern const char* k_metal_navatala_sparse_update_max_norm_f32;
+extern const char* k_metal_navatala_sparse_amg_level_metrics_f32;
+extern const char* k_metal_navatala_sparse_amg_coarse_size_check_f32;
+extern const char* k_metal_navatala_sparse_amg_cycle_counter_f32;
+extern const char* k_metal_navatala_sparse_amg_validate_coarsening_f32;
+extern const char* k_metal_navatala_sparse_halo_pack_f32;
+extern const char* k_metal_navatala_sparse_halo_unpack_f32;
+extern const char* k_metal_navatala_sparse_halo_pack_b_s_r_f32;
+extern const char* k_metal_navatala_sparse_partition_count_per_rank;
+extern const char* k_metal_navatala_sparse_partition_reorder_f32;
+extern const char* k_metal_navatala_sparse_global_to_local_index_map;
+extern const char* k_metal_navatala_sparse_distributed_sp_m_v_halo_f32;
+extern const char* k_metal_navatala_sparse_merge_local_halo_result_f32;
+extern const char* k_metal_navatala_sparse_ldu_to_csr_init_diagonal_count_f32;
+extern const char* k_metal_navatala_sparse_ldu_to_csr_init_diagonal_count_f64;
+extern const char* k_metal_navatala_sparse_ldu_to_csr_count_nnz_f32;
+extern const char* k_metal_navatala_sparse_ldu_to_csr_count_nnz_f64;
+extern const char* k_metal_navatala_sparse_ldu_to_csr_fill_f32;
+extern const char* k_metal_navatala_sparse_ldu_diagonal_fill_f32;
+extern const char* k_metal_navatala_sparse_compute_so_c_ldu_count_f32;
+extern const char* k_metal_navatala_sparse_compute_so_c_ldu_fill_f32;
+extern const char* k_metal_navatala_sparse_compute_m_i_s_f32;
+extern const char* k_metal_navatala_sparse_compute_m_i_s_f64;
+extern const char* k_metal_navatala_sparse_csr_sort_after_ldu_fill_f32;
+extern const char* k_metal_navatala_cfd_compute_face_area_pair_weights_f32;
+extern const char* k_metal_navatala_cfd_restrict_by_agglomeration_gather_f32;
+extern const char* k_metal_navatala_cfd_prolongate_by_agglomeration_f32;
+extern const char* k_metal_navatala_cfd_diag_inv_apply_f32;
+extern const char* k_metal_navatala_cfd_gamg_proc_pack_f32;
+extern const char* k_metal_navatala_cfd_gamg_proc_add_gather_f32;
+extern const char* k_metal_navatala_transformer_gelu_f32;
+extern const char* k_metal_navatala_transformer_gelu_tanh_f32;
+extern const char* k_metal_navatala_transformer_silu_f32;
+extern const char* k_metal_navatala_transformer_relu_f32;
+extern const char* k_metal_navatala_transformer_quick_gelu_f32;
+extern const char* k_metal_navatala_transformer_squared_relu_f32;
+extern const char* k_metal_navatala_transformer_bias_gelu_f32;
+extern const char* k_metal_navatala_transformer_gelu_f16;
+extern const char* k_metal_navatala_transformer_silu_f16;
+extern const char* k_metal_navatala_transformer_relu_f16;
+extern const char* k_metal_navatala_transformer_quick_gelu_f16;
+extern const char* k_metal_navatala_transformer_squared_relu_f16;
+extern const char* k_metal_navatala_transformer_geglu_f32;
+extern const char* k_metal_navatala_transformer_swiglu_f32;
+extern const char* k_metal_navatala_transformer_reglu_f32;
+extern const char* k_metal_navatala_transformer_geglu_f16;
+extern const char* k_metal_navatala_transformer_swiglu_f16;
+extern const char* k_metal_navatala_transformer_reglu_f16;
+extern const char* k_metal_navatala_transformer_gelu_backward_f32;
+extern const char* k_metal_navatala_transformer_silu_backward_f32;
+extern const char* k_metal_navatala_transformer_relu_backward_f32;
+extern const char* k_metal_navatala_transformer_quick_gelu_backward_f32;
+extern const char* k_metal_navatala_transformer_gelu_backward_f16;
+extern const char* k_metal_navatala_transformer_silu_backward_f16;
+extern const char* k_metal_navatala_transformer_relu_backward_f16;
+extern const char* k_metal_navatala_transformer_quick_gelu_backward_f16;
+extern const char* k_metal_navatala_transformer_rms_norm_forward_f32;
+extern const char* k_metal_navatala_transformer_rms_norm_forward_f16;
+extern const char* k_metal_navatala_transformer_layer_norm_forward_f32;
+extern const char* k_metal_navatala_transformer_layer_norm_forward_f16;
+extern const char* k_metal_navatala_transformer_layer_norm_backward_f32;
+extern const char* k_metal_navatala_transformer_layer_norm_backward_f16;
+extern const char* k_metal_navatala_transformer_rms_norm_backward_f32;
+extern const char* k_metal_navatala_transformer_rms_norm_backward_f16;
+extern const char* k_metal_navatala_transformer_layer_norm_multi_pass_f32;
+extern const char* k_metal_navatala_transformer_layer_norm_multi_pass_f16;
+extern const char* k_metal_navatala_transformer_rms_norm_multi_pass_f32;
+extern const char* k_metal_navatala_transformer_rms_norm_multi_pass_f16;
+extern const char* k_metal_navatala_transformer_softmax_forward_f32;
+extern const char* k_metal_navatala_transformer_softmax_forward_f16;
+extern const char* k_metal_navatala_transformer_softmax_backward_f32;
+extern const char* k_metal_navatala_transformer_softmax_backward_f16;
+extern const char* k_metal_navatala_transformer_softmax_with_mask_f32;
+extern const char* k_metal_navatala_transformer_softmax_with_mask_f16;
+extern const char* k_metal_navatala_transformer_softmax_with_mask_backward_f32;
+extern const char* k_metal_navatala_transformer_softmax_with_mask_backward_f16;
+extern const char* k_metal_navatala_transformer_softmax_multi_pass_f32;
+extern const char* k_metal_navatala_transformer_softmax_multi_pass_f16;
+extern const char* k_metal_navatala_transformer_cast_f32_to_f16;
+extern const char* k_metal_navatala_transformer_cast_f16_to_f32;
+extern const char* k_metal_navatala_transformer_transpose_f32;
+extern const char* k_metal_navatala_transformer_transpose_f16;
+extern const char* k_metal_navatala_transformer_fused_cast_transpose_f32_to_f16;
+extern const char* k_metal_navatala_transformer_cast_f32_to_f_p8_e4_m3;
+extern const char* k_metal_navatala_transformer_cast_f_p8_e4_m3_to_f32;
+extern const char* k_metal_navatala_transformer_cast_f32_to_f_p8_e5_m2;
+extern const char* k_metal_navatala_transformer_cast_f_p8_e5_m2_to_f32;
+extern const char* k_metal_navatala_transformer_fused_cast_transpose_f_p8;
+extern const char* k_metal_navatala_transformer_transpose4_d_f32;
+extern const char* k_metal_navatala_transformer_transpose4_d_f16;
+extern const char* k_metal_navatala_transformer_dropout_forward_f32;
+extern const char* k_metal_navatala_transformer_dropout_forward_f16;
+extern const char* k_metal_navatala_transformer_dropout_backward_f32;
+extern const char* k_metal_navatala_transformer_dropout_backward_f16;
+extern const char* k_metal_navatala_transformer_rope_forward_f32;
+extern const char* k_metal_navatala_transformer_rope_forward_f16;
+extern const char* k_metal_navatala_transformer_rope_with_cache_f32;
+extern const char* k_metal_navatala_transformer_rope_backward_f32;
+extern const char* k_metal_navatala_transformer_rope_backward_f16;
+extern const char* k_metal_navatala_transformer_rope_interleaved_f32;
+extern const char* k_metal_navatala_transformer_rope_interleaved_f16;
+extern const char* k_metal_navatala_transformer_simple_attention_f16;
+extern const char* k_metal_navatala_transformer_simple_attention_f32;
+extern const char* k_metal_navatala_transformer_paged_attention_f32;
+extern const char* k_metal_navatala_transformer_simple_attention_with_mask_f32;
+extern const char* k_metal_navatala_transformer_simple_attention_with_mask_f16;
+extern const char* k_metal_navatala_transformer_simple_attention_with_padding_f32;
+extern const char* k_metal_navatala_transformer_simple_attention_with_padding_f16;
+extern const char* k_metal_navatala_transformer_simple_attention_backward_f32;
+extern const char* k_metal_navatala_transformer_simple_attention_backward_f16;
+extern const char* k_metal_navatala_transformer_kv_cache_append_f16;
+extern const char* k_metal_navatala_transformer_kv_cache_append_f32;
+extern const char* k_metal_navatala_transformer_kv_cache_rotate_f16;
+extern const char* k_metal_navatala_transformer_tiled_gemm_f16;
+extern const char* k_metal_navatala_transformer_tiled_gemm_f16_f32_out;
+extern const char* k_metal_navatala_transformer_tiled_gemm_f32;
+extern const char* k_metal_navatala_transformer_tiled_gemm_backward_f32;
+extern const char* k_metal_navatala_transformer_tiled_gemm_backward_f16;
+extern const char* k_metal_navatala_transformer_multi_tensor_scale_f32;
+extern const char* k_metal_navatala_transformer_multi_tensor_scale_f16;
+extern const char* k_metal_navatala_transformer_multi_tensor_add_f32;
+extern const char* k_metal_navatala_transformer_multi_tensor_add_f16;
+extern const char* k_metal_navatala_transformer_multi_tensor_copy_f32;
+extern const char* k_metal_navatala_transformer_multi_tensor_copy_f16;
+extern const char* k_metal_navatala_transformer_multi_tensor_l2_norm_f32;
+extern const char* k_metal_navatala_transformer_multi_tensor_l2_norm_f16;
+extern const char* k_metal_navatala_transformer_multi_tensor_clip_grad_f32;
+extern const char* k_metal_navatala_transformer_multi_tensor_clip_grad_f16;
+extern const char* k_metal_navatala_transformer_top_k_gating_f32;
+extern const char* k_metal_navatala_transformer_top_k_gating_f16;
+extern const char* k_metal_navatala_transformer_expert_capacity_mask_f32;
+extern const char* k_metal_navatala_transformer_expert_capacity_mask_f16;
+extern const char* k_metal_navatala_transformer_permute_tokens_f32;
+extern const char* k_metal_navatala_transformer_permute_tokens_f16;
+extern const char* k_metal_navatala_transformer_unpermute_tokens_f32;
+extern const char* k_metal_navatala_transformer_unpermute_tokens_f16;
+extern const char* k_metal_navatala_transformer_pad_sequence_f32;
+extern const char* k_metal_navatala_transformer_pad_sequence_f16;
+extern const char* k_metal_navatala_transformer_unpad_sequence_f32;
+extern const char* k_metal_navatala_transformer_unpad_sequence_f16;
+extern const char* k_metal_navatala_transformer_swizzle_layout_f32;
+extern const char* k_metal_navatala_transformer_swizzle_layout_f16;
+extern const char* k_metal_navatala_transformer_hadamard_transform_f32;
+extern const char* k_metal_navatala_transformer_hadamard_transform_f16;
+extern const char* k_metal_navatala_transformer_permute_axes_f32;
+extern const char* k_metal_navatala_transformer_permute_axes_f16;
+extern const char* k_metal_navatala_transformer_pack_sequences_f32;
+extern const char* k_metal_navatala_transformer_pack_sequences_f16;
+extern const char* k_metal_navatala_transformer_unpack_sequences_f32;
+extern const char* k_metal_navatala_transformer_unpack_sequences_f16;
+extern const char* k_metal_navatala_transformer_generate_position_ids_f32;
+extern const char* k_metal_navatala_transformer_generate_position_ids_u32;
+extern const char* k_metal_navatala_transformer_generate_causal_mask_f32;
+extern const char* k_metal_navatala_transformer_generate_causal_mask_f16;
+extern const char* k_metal_navatala_transformer_precompute_rotary_emb_f32;
+extern const char* k_metal_navatala_transformer_precompute_rotary_emb_f16;
+extern const char* k_metal_navatala_vector_search_init_seeds_f32;
+extern const char* k_metal_navatala_vector_search_expand_neighbors_f32;
+extern const char* k_metal_navatala_vector_search_check_visited;
+extern const char* k_metal_navatala_vector_search_clear_visited;
+extern const char* k_metal_navatala_vector_search_extract_results_f32;
+extern const char* k_metal_navatala_vector_search_compute_distances_batch_f32;
+extern const char* k_metal_navatala_vector_search_search_layer_greedy_f32;
+extern const char* k_metal_navatala_vector_search_select_neighbors_simple_f32;
+extern const char* k_metal_navatala_vector_search_select_neighbors_heuristic_f32;
+extern const char* k_metal_navatala_vector_search_update_candidate_list_f32;
+extern const char* k_metal_navatala_vector_search_extract_layer_results_f32;
+extern const char* k_metal_navatala_vector_search_init_search_state_f32;
+extern const char* k_metal_navatala_vector_search_mark_visited_batch;
+extern const char* k_metal_navatala_vector_search_check_visited_batch;
+extern const char* k_metal_navatala_vector_search_merge_multi_query_results_f32;
+extern const char* k_metal_navatala_vector_search_compute_neighbor_distances_f32;
+extern const char* k_metal_navatala_vector_search_greedy_search_f32;
+extern const char* k_metal_navatala_vector_search_robust_prune_f32;
+extern const char* k_metal_navatala_vector_search_insert_vertex_f32;
+extern const char* k_metal_navatala_vector_search_random_init_neighbors_f32;
+extern const char* k_metal_navatala_vector_search_extract_search_results_f32;
+extern const char* k_metal_navatala_vector_search_batched_greedy_search_f32;
+extern const char* k_metal_navatala_vector_search_compute_centroid_distances_f32;
+extern const char* k_metal_navatala_vector_search_scan_inverted_list_f32;
+extern const char* k_metal_navatala_vector_search_assign_to_cluster_f32;
+extern const char* k_metal_navatala_vector_search_count_cluster_sizes;
+extern const char* k_metal_navatala_vector_search_populate_inverted_lists_f32;
+extern const char* k_metal_navatala_vector_search_ivfpq_compute_centroid_distances_f32;
+extern const char* k_metal_navatala_vector_search_ivfpq_compute_p_q_lookup_table_f32;
+extern const char* k_metal_navatala_vector_search_ivfpq_compute_p_q_distances_f32;
+extern const char* k_metal_navatala_vector_search_ivfpq_encode_p_q_codes;
+extern const char* k_metal_navatala_vector_search_ivfpq_compute_residuals_f32;
+extern const char* k_metal_navatala_vector_search_initialize_random_graph;
+extern const char* k_metal_navatala_vector_search_compute_graph_distances_f32;
+extern const char* k_metal_navatala_vector_search_nn_descent_join_f32;
+extern const char* k_metal_navatala_vector_search_build_reverse_graph;
+extern const char* k_metal_navatala_vector_search_prune_graph_r_n_g_f32;
+extern const char* k_metal_navatala_vector_search_compact_pruned_graph;
+extern const char* k_metal_navatala_vector_search_compute_vertex_degrees;
+extern const char* k_metal_navatala_vector_search_prune_excess_degree;
+extern const char* k_metal_navatala_vector_search_reorder_vertices_by_degree;
+extern const char* k_metal_navatala_vector_search_compact_graph_edges;
+extern const char* k_metal_navatala_vector_search_validate_graph_integrity;
+extern const char* k_metal_navatala_vector_search_prune_excess_degree_sorted;
+extern const char* k_metal_navatala_vector_search_accumulate_p_q_codebook_i32;
+extern const char* k_metal_navatala_vector_search_normalize_p_q_codebook_f32;
+extern const char* k_metal_navatala_vector_search_train_p_q_codebook_f32;
+extern const char* k_metal_navatala_dataframe_group_by_sum_i32;
+extern const char* k_metal_navatala_dataframe_group_by_sum_i64;
+extern const char* k_metal_navatala_dataframe_group_by_count;
+extern const char* k_metal_navatala_dataframe_group_by_min_i32;
+extern const char* k_metal_navatala_dataframe_group_by_max_i32;
+extern const char* k_metal_navatala_dataframe_group_by_sum_for_mean_f32;
+extern const char* k_metal_navatala_dataframe_group_by_nunique_helper_i32;
+extern const char* k_metal_navatala_dataframe_group_by_nunique_helper_i64;
+extern const char* k_metal_navatala_dataframe_group_by_sorted_sum;
+extern const char* k_metal_navatala_dataframe_group_by_sorted_count;
+extern const char* k_metal_navatala_dataframe_column_sum_i32;
+extern const char* k_metal_navatala_dataframe_column_sum_i64;
+extern const char* k_metal_navatala_dataframe_column_sum_f32;
+extern const char* k_metal_navatala_dataframe_column_min_i32;
+extern const char* k_metal_navatala_dataframe_column_max_i32;
+extern const char* k_metal_navatala_dataframe_column_count;
+extern const char* k_metal_navatala_dataframe_column_mean_helper_f32;
+extern const char* k_metal_navatala_dataframe_column_variance_helper_f32;
+extern const char* k_metal_navatala_dataframe_column_arg_min_i32;
+extern const char* k_metal_navatala_dataframe_column_arg_max_i32;
+extern const char* k_metal_navatala_dataframe_column_arg_min_f32;
+extern const char* k_metal_navatala_dataframe_column_arg_max_f32;
+extern const char* k_metal_navatala_dataframe_column_std_helper;
+extern const char* k_metal_navatala_dataframe_column_product_i32;
+extern const char* k_metal_navatala_dataframe_column_product_f32;
+extern const char* k_metal_navatala_dataframe_rolling_sum_f32;
+extern const char* k_metal_navatala_dataframe_rolling_count;
+extern const char* k_metal_navatala_dataframe_rolling_min_i32;
+extern const char* k_metal_navatala_dataframe_rolling_max_i32;
+extern const char* k_metal_navatala_dataframe_rolling_mean_helper_f32;
+extern const char* k_metal_navatala_dataframe_rolling_variance_helper_f32;
+extern const char* k_metal_navatala_dataframe_expanding_sum_f32;
+extern const char* k_metal_navatala_dataframe_expanding_count_valid;
+extern const char* k_metal_navatala_dataframe_compute_quantile_indices;
+extern const char* k_metal_navatala_dataframe_select_quantile_f32;
+extern const char* k_metal_navatala_dataframe_select_quantile_i32;
+extern const char* k_metal_navatala_dataframe_batch_quantile_f32;
+extern const char* k_metal_navatala_dataframe_compute_median_indices;
+extern const char* k_metal_navatala_dataframe_select_median_f32;
+extern const char* k_metal_navatala_dataframe_add_f32;
+extern const char* k_metal_navatala_dataframe_add_i32;
+extern const char* k_metal_navatala_dataframe_sub_f32;
+extern const char* k_metal_navatala_dataframe_mul_f32;
+extern const char* k_metal_navatala_dataframe_div_f32;
+extern const char* k_metal_navatala_dataframe_mod_i32;
+extern const char* k_metal_navatala_dataframe_sub_i32;
+extern const char* k_metal_navatala_dataframe_mul_i32;
+extern const char* k_metal_navatala_dataframe_div_i32;
+extern const char* k_metal_navatala_dataframe_add_i64;
+extern const char* k_metal_navatala_dataframe_sub_i64;
+extern const char* k_metal_navatala_dataframe_mul_i64;
+extern const char* k_metal_navatala_dataframe_div_i64;
+extern const char* k_metal_navatala_dataframe_mod_i64;
+extern const char* k_metal_navatala_dataframe_eq_f32;
+extern const char* k_metal_navatala_dataframe_eq_i32;
+extern const char* k_metal_navatala_dataframe_lt_f32;
+extern const char* k_metal_navatala_dataframe_gt_f32;
+extern const char* k_metal_navatala_dataframe_le_f32;
+extern const char* k_metal_navatala_dataframe_ge_f32;
+extern const char* k_metal_navatala_dataframe_ne_f32;
+extern const char* k_metal_navatala_dataframe_ne_i32;
+extern const char* k_metal_navatala_dataframe_lt_i32;
+extern const char* k_metal_navatala_dataframe_gt_i32;
+extern const char* k_metal_navatala_dataframe_le_i32;
+extern const char* k_metal_navatala_dataframe_ge_i32;
+extern const char* k_metal_navatala_dataframe_bitwise_and_i32;
+extern const char* k_metal_navatala_dataframe_bitwise_and_i64;
+extern const char* k_metal_navatala_dataframe_bitwise_or_i32;
+extern const char* k_metal_navatala_dataframe_bitwise_or_i64;
+extern const char* k_metal_navatala_dataframe_bitwise_xor_i32;
+extern const char* k_metal_navatala_dataframe_bitwise_xor_i64;
+extern const char* k_metal_navatala_dataframe_bitwise_not_i32;
+extern const char* k_metal_navatala_dataframe_bitwise_not_i64;
+extern const char* k_metal_navatala_dataframe_extract_hour_from_seconds;
+extern const char* k_metal_navatala_dataframe_extract_minute_from_seconds;
+extern const char* k_metal_navatala_dataframe_extract_second_from_seconds;
+extern const char* k_metal_navatala_dataframe_extract_day_of_week_from_seconds;
+extern const char* k_metal_navatala_dataframe_extract_year_from_seconds;
+extern const char* k_metal_navatala_dataframe_extract_month_from_seconds;
+extern const char* k_metal_navatala_dataframe_extract_day_from_seconds;
+extern const char* k_metal_navatala_dataframe_extract_day_of_year_from_seconds;
+extern const char* k_metal_navatala_dataframe_add_days_to_timestamp;
+extern const char* k_metal_navatala_dataframe_add_months_to_timestamp;
+extern const char* k_metal_navatala_dataframe_subtract_timestamps;
+extern const char* k_metal_navatala_dataframe_timestamp_to_date_parts;
+extern const char* k_metal_navatala_dataframe_date_parts_to_timestamp;
+extern const char* k_metal_navatala_dataframe_convert_timestamp_precision;
+extern const char* k_metal_navatala_dataframe_combine_hash_values;
+extern const char* k_metal_navatala_dataframe_hash_column_row;
+extern const char* k_metal_navatala_dataframe_md5_hash;
+extern const char* k_metal_navatala_dataframe_sha256_hash;
+extern const char* k_metal_navatala_dataframe_identity_hash_i32;
+extern const char* k_metal_navatala_dataframe_identity_hash_i64;
+extern const char* k_metal_navatala_dataframe_murmur3_hash32_i32;
+extern const char* k_metal_navatala_dataframe_murmur3_hash32_i64;
+extern const char* k_metal_navatala_dataframe_cross_join_compute_output_size;
+extern const char* k_metal_navatala_dataframe_cross_join_gather_i32;
+extern const char* k_metal_navatala_dataframe_hash_keys_i32;
+extern const char* k_metal_navatala_dataframe_build_hash_table_i32;
+extern const char* k_metal_navatala_dataframe_probe_hash_table_i32;
+extern const char* k_metal_navatala_dataframe_gather_join_results_i32;
+extern const char* k_metal_navatala_dataframe_gather_join_results_f32;
+extern const char* k_metal_navatala_dataframe_mark_left_matched;
+extern const char* k_metal_navatala_dataframe_filter_semi_join;
+extern const char* k_metal_navatala_dataframe_filter_anti_join;
+extern const char* k_metal_navatala_dataframe_count_unmatched_left;
+extern const char* k_metal_navatala_dataframe_gather_unmatched_left_indices;
+extern const char* k_metal_navatala_dataframe_gather_left_join_i32;
+extern const char* k_metal_navatala_dataframe_gather_left_join_f32;
+extern const char* k_metal_navatala_dataframe_gather_right_join_i32;
+extern const char* k_metal_navatala_dataframe_gather_right_join_f32;
+extern const char* k_metal_navatala_dataframe_count_unmatched_right;
+extern const char* k_metal_navatala_dataframe_gather_unmatched_right_indices;
+extern const char* k_metal_navatala_dataframe_nested_loop_join_probe;
+extern const char* k_metal_navatala_dataframe_nested_loop_join_gather_i32;
+extern const char* k_metal_navatala_dataframe_sort_merge_join_probe;
+extern const char* k_metal_navatala_dataframe_sort_merge_join_gather_i32;
+extern const char* k_metal_navatala_dataframe_argsort_init_indices;
+extern const char* k_metal_navatala_dataframe_argsort_bitonic_step_argsort_i32;
+extern const char* k_metal_navatala_dataframe_argsort_bitonic_step_argsort_f32;
+extern const char* k_metal_navatala_dataframe_argsort_bitonic_step_argsort_i64;
+extern const char* k_metal_navatala_dataframe_argsort_bitonic_step_sort_by_key_i32;
+extern const char* k_metal_navatala_dataframe_merge_step_i32;
+extern const char* k_metal_navatala_dataframe_merge_step_f32;
+extern const char* k_metal_navatala_dataframe_merge_step_i64;
+extern const char* k_metal_navatala_dataframe_radix_scatter_i32;
+extern const char* k_metal_navatala_dataframe_radix_scatter_i64;
+extern const char* k_metal_navatala_dataframe_radix_scatter_f32;
+extern const char* k_metal_navatala_dataframe_str_len;
+extern const char* k_metal_navatala_dataframe_str_upper_chars;
+extern const char* k_metal_navatala_dataframe_str_lower_chars;
+extern const char* k_metal_navatala_dataframe_str_starts_with_char;
+extern const char* k_metal_navatala_dataframe_str_capitalize_first_char;
+extern const char* k_metal_navatala_dataframe_str_title_case_char;
+extern const char* k_metal_navatala_dataframe_str_swap_case_char;
+extern const char* k_metal_navatala_dataframe_str_normalize_whitespace_char;
+extern const char* k_metal_navatala_dataframe_str_is_digit;
+extern const char* k_metal_navatala_dataframe_str_is_alpha;
+extern const char* k_metal_navatala_dataframe_str_is_alnum;
+extern const char* k_metal_navatala_dataframe_str_is_space;
+extern const char* k_metal_navatala_dataframe_str_is_upper;
+extern const char* k_metal_navatala_dataframe_str_is_lower;
+extern const char* k_metal_navatala_dataframe_str_concat_pair_offsets;
+extern const char* k_metal_navatala_dataframe_str_concat_copy_chars;
+extern const char* k_metal_navatala_dataframe_str_join_with_sep_offsets;
+extern const char* k_metal_navatala_dataframe_str_join_copy_with_sep;
+extern const char* k_metal_navatala_dataframe_str_compare;
+extern const char* k_metal_navatala_dataframe_str_equals;
+extern const char* k_metal_navatala_dataframe_str_less_than;
+extern const char* k_metal_navatala_dataframe_str_strip_leading_count;
+extern const char* k_metal_navatala_dataframe_str_strip_trailing_count;
+extern const char* k_metal_navatala_dataframe_str_strip_both_count;
+extern const char* k_metal_navatala_dataframe_str_slice_bounds;
+extern const char* k_metal_navatala_dataframe_str_contains_char;
+extern const char* k_metal_navatala_dataframe_str_ends_with_char;
+extern const char* k_metal_navatala_dataframe_str_pad_left_calc;
+extern const char* k_metal_navatala_dataframe_str_pad_center;
+extern const char* k_metal_navatala_dataframe_str_zfill;
+extern const char* k_metal_navatala_dataframe_str_wrap_bounds;
+extern const char* k_metal_navatala_dataframe_str_substring_bounds;
+extern const char* k_metal_navatala_dataframe_str_left_bounds;
+extern const char* k_metal_navatala_dataframe_str_right_bounds;
+extern const char* k_metal_navatala_dataframe_str_regex_match;
+extern const char* k_metal_navatala_dataframe_str_regex_extract;
+extern const char* k_metal_navatala_dataframe_str_regex_replace;
+extern const char* k_metal_navatala_dataframe_str_find_char;
+extern const char* k_metal_navatala_dataframe_str_count_char;
+extern const char* k_metal_navatala_dataframe_str_replace_char;
+extern const char* k_metal_navatala_dataframe_str_contains_pattern2;
+extern const char* k_metal_navatala_dataframe_str_split_count_by_char;
+extern const char* k_metal_navatala_dataframe_str_split_by_char;
+extern const char* k_metal_navatala_dataframe_str_split_get_element;
+extern const char* k_metal_navatala_dataframe_str_split_by_whitespace;
+extern const char* k_metal_navatala_dataframe_str_reverse_chars;
+extern const char* k_metal_navatala_dataframe_str_truncate_bounds;
+extern const char* k_metal_navatala_dataframe_str_pad_right_calc;
+extern const char* k_metal_navatala_dataframe_str_repeat_bounds;
+extern const char* k_metal_navatala_dataframe_str_translate_char;
+extern const char* k_metal_navatala_dataframe_str_translate_table;
+extern const char* k_metal_navatala_dataframe_str_normalize;
+extern const char* k_metal_navatala_dataframe_negate_f32;
+extern const char* k_metal_navatala_dataframe_negate_i32;
+extern const char* k_metal_navatala_dataframe_abs_f32;
+extern const char* k_metal_navatala_dataframe_abs_i32;
+extern const char* k_metal_navatala_dataframe_ceil_f32;
+extern const char* k_metal_navatala_dataframe_floor_f32;
+extern const char* k_metal_navatala_dataframe_round_f32;
+extern const char* k_metal_navatala_dataframe_trunc_f32;
+extern const char* k_metal_navatala_dataframe_negate_i64;
+extern const char* k_metal_navatala_dataframe_abs_i64;
+extern const char* k_metal_navatala_dataframe_sqrt_f32;
+extern const char* k_metal_navatala_dataframe_exp_f32;
+extern const char* k_metal_navatala_dataframe_log_f32;
+extern const char* k_metal_navatala_dataframe_sin_f32;
+extern const char* k_metal_navatala_dataframe_cos_f32;
+extern const char* k_metal_navatala_dataframe_tan_f32;
+extern const char* k_metal_navatala_dataframe_log10_f32;
+extern const char* k_metal_navatala_dataframe_compute_concat_offsets;
+extern const char* k_metal_navatala_dataframe_gather_concat_i32;
+extern const char* k_metal_navatala_dataframe_gather_concat_f32;
+extern const char* k_metal_navatala_dataframe_gather_concat_i64;
+extern const char* k_metal_navatala_dataframe_hash_partition_i32;
+extern const char* k_metal_navatala_dataframe_hash_partition_f32;
+extern const char* k_metal_navatala_dataframe_round_robin_partition;
+extern const char* k_metal_navatala_dataframe_range_partition_bounds;
+extern const char* k_metal_navatala_dataframe_range_partition_assign;
+extern const char* k_metal_navatala_dataframe_gather_partition_i32;
+extern const char* k_metal_navatala_dataframe_gather_partition_f32;
+extern const char* k_metal_navatala_dataframe_compute_partition_offsets;
+extern const char* k_metal_navatala_dataframe_transpose_i32;
+extern const char* k_metal_navatala_dataframe_transpose_f32;
+extern const char* k_metal_navatala_dataframe_flatten_offsets;
+extern const char* k_metal_navatala_dataframe_unflatten_copy;
+extern const char* k_metal_navatala_dataframe_compute_split_bounds;
+extern const char* k_metal_navatala_dataframe_split_copy_i32;
+extern const char* k_metal_navatala_dataframe_split_copy_f32;
+extern const char* k_metal_navatala_dataframe_split_copy_validity;
+extern const char* k_metal_navatala_vector_search_l2_squared_f32;
+extern const char* k_metal_navatala_vector_search_inner_product_f32;
+extern const char* k_metal_navatala_vector_search_l1_distance_f32;
+extern const char* k_metal_navatala_vector_search_batch_l2_to_neighbors_f32;
+extern const char* k_metal_navatala_vector_search_l2_squared_f16;
+extern const char* k_metal_navatala_vector_search_cosine_similarity_f32;
+extern const char* k_metal_navatala_vector_search_linf_distance_f32;
+extern const char* k_metal_navatala_vector_search_hamming_distance_u32;
+extern const char* k_metal_navatala_vector_search_correlation_distance_f32;
+extern const char* k_metal_navatala_vector_search_jaccard_distance_u32;
+extern const char* k_metal_navatala_vector_search_assign_labels_f32;
+extern const char* k_metal_navatala_vector_search_accumulate_cluster_sums_f32;
+extern const char* k_metal_navatala_vector_search_update_centroids_f32;
+extern const char* k_metal_navatala_vector_search_clear_cluster_sums_f32;
+extern const char* k_metal_navatala_vector_search_clear_cluster_counts;
+extern const char* k_metal_navatala_vector_search_reduce_inertia_f32;
+extern const char* k_metal_navatala_vector_search_bitonic_sort_step_f32;
+extern const char* k_metal_navatala_vector_search_per_row_top_k_f32;
+extern const char* k_metal_navatala_vector_search_merge_sorted_f32;
+extern const char* k_metal_navatala_vector_search_rerank_with_exact_distances_f32;
+extern const char* k_metal_navatala_vector_search_filter_by_threshold_f32;
+extern const char* k_metal_navatala_vector_search_merge_search_results_f32;
+extern const char* k_metal_navatala_vector_search_compute_recall_f32;
+extern const char* k_metal_navatala_vector_search_scalar_quantize_f32_to_i8;
+extern const char* k_metal_navatala_vector_search_scalar_dequantize_i8_to_f32;
+extern const char* k_metal_navatala_vector_search_compute_quantized_distances_i8;
+extern const char* k_metal_navatala_vector_search_encode_p_q_vectors_f32;
+extern const char* k_metal_navatala_vector_search_decode_p_q_vectors_f32;
+extern const char* k_metal_navatala_nccl_direct_send_f32;
+extern const char* k_metal_navatala_nccl_direct_send_f16;
+extern const char* k_metal_navatala_nccl_direct_send_i32;
+extern const char* k_metal_navatala_nccl_direct_recv_f32;
+extern const char* k_metal_navatala_nccl_direct_recv_f16;
+extern const char* k_metal_navatala_nccl_direct_recv_i32;
+extern const char* k_metal_navatala_nccl_reduce_local_sum_f32;
+extern const char* k_metal_navatala_nccl_reduce_local_sum_f16;
+extern const char* k_metal_navatala_nccl_reduce_local_sum_i32;
+extern const char* k_metal_navatala_nccl_reduce_local_min_f32;
+extern const char* k_metal_navatala_nccl_reduce_local_min_f16;
+extern const char* k_metal_navatala_nccl_reduce_local_min_i32;
+extern const char* k_metal_navatala_nccl_reduce_local_max_f32;
+extern const char* k_metal_navatala_nccl_reduce_local_max_f16;
+extern const char* k_metal_navatala_nccl_reduce_local_max_i32;
+extern const char* k_metal_navatala_nccl_ring_reduce_scatter_step_sum_f32;
+extern const char* k_metal_navatala_nccl_ring_reduce_scatter_step_sum_f16;
+extern const char* k_metal_navatala_nccl_ring_reduce_scatter_step_sum_i32;
+extern const char* k_metal_navatala_nccl_ring_reduce_scatter_step_min_f32;
+extern const char* k_metal_navatala_nccl_ring_reduce_scatter_step_min_f16;
+extern const char* k_metal_navatala_nccl_ring_reduce_scatter_step_min_i32;
+extern const char* k_metal_navatala_nccl_ring_reduce_scatter_step_max_f32;
+extern const char* k_metal_navatala_nccl_ring_reduce_scatter_step_max_f16;
+extern const char* k_metal_navatala_nccl_ring_reduce_scatter_step_max_i32;
+extern const char* k_metal_navatala_nccl_ring_all_gather_step_f32;
+extern const char* k_metal_navatala_nccl_ring_all_gather_step_f16;
+extern const char* k_metal_navatala_nccl_ring_all_gather_step_i32;
+extern const char* k_metal_navatala_nccl_ring_all_reduce_sum_f32;
+extern const char* k_metal_navatala_nccl_ring_all_reduce_sum_f16;
+extern const char* k_metal_navatala_nccl_ring_all_reduce_sum_i32;
+extern const char* k_metal_navatala_nccl_ring_all_gather_f32;
+extern const char* k_metal_navatala_nccl_ring_all_gather_f16;
+extern const char* k_metal_navatala_nccl_ring_all_gather_i32;
+extern const char* k_metal_navatala_nccl_linear_broadcast_f32;
+extern const char* k_metal_navatala_nccl_linear_broadcast_f16;
+extern const char* k_metal_navatala_nccl_linear_broadcast_i32;
+extern const char* k_metal_navatala_samples_axpy_fallback;
 extern const char* k_opencl_navatala_cfd_boundary_force_partials;
 extern const char* k_opencl_navatala_cfd_pack_owner_values;
 extern const char* k_opencl_navatala_cfd_scatter_values_and_mask;
@@ -9922,7 +9947,9 @@ extern const char* k_opencl_navatala_ml_normal_f16;
 extern const char* k_opencl_navatala_graph_degree_out_u32;
 extern const char* k_opencl_navatala_graph_degree_in_u32;
 extern const char* k_opencl_navatala_graph_spmv_weighted_f32;
+extern const char* k_opencl_navatala_graph_spmv_weighted_subgroup_f32;
 extern const char* k_opencl_navatala_graph_spmv_unweighted_f32;
+extern const char* k_opencl_navatala_graph_spmv_unweighted_subgroup_f32;
 extern const char* k_opencl_navatala_graph_axpy2_f32;
 extern const char* k_opencl_navatala_graph_scale_f32;
 extern const char* k_opencl_navatala_graph_scale_add_bias_f32;
@@ -11030,6 +11057,7 @@ extern const char* k_opencl_navatala_transformer_kv_cache_append_f16;
 extern const char* k_opencl_navatala_transformer_kv_cache_append_f32;
 extern const char* k_opencl_navatala_transformer_kv_cache_rotate_f16;
 extern const char* k_opencl_navatala_transformer_tiled_gemm_f16;
+extern const char* k_opencl_navatala_transformer_tiled_gemm_f16_f32_out;
 extern const char* k_opencl_navatala_transformer_tiled_gemm_f32;
 extern const char* k_opencl_navatala_transformer_tiled_gemm_backward_f32;
 extern const char* k_opencl_navatala_transformer_tiled_gemm_backward_f16;
@@ -11421,7 +11449,7 @@ GpuRuntime::Event* getOrCreateEvent(const std::string& eventName, GpuRuntime::De
     // Create event via device
     auto newEvent = device.createEvent();
     if (!newEvent) return nullptr;
-    
+
     auto eventPtr = newEvent.get();
     eventCache[eventName] = std::move(newEvent);
     return eventPtr;
@@ -11451,14 +11479,14 @@ GpuRuntime::ProgramSource::Kind getCompiledFormatKind(const std::string& backend
 GpuRuntime::Program* getOrCreateProgram(GpuRuntime::Device& device, const std::string& backend, const std::string& kernelName) {
   // In-memory cache (per-process)
   static std::unordered_map<std::string, ProgramCacheEntry> cache;
-  
+
   // +: Load source first to compute hash for cache key validation
   // This prevents stale programs when kernel source changes within a process
   GpuRuntime::ProgramSource src;
   if (!NavatalaRegistry::tryGetKernelSource(backend, kernelName, src)) {
     return nullptr;
   }
-  
+
   // Compute source hash for cache validation (include device identity to avoid
   // cross-device binary cache collisions, especially for OpenCL program binaries).
   std::string sourceStr(src.bytes.begin(), src.bytes.end());
@@ -11466,10 +11494,10 @@ GpuRuntime::Program* getOrCreateProgram(GpuRuntime::Device& device, const std::s
   cacheKeySource += "\nDEVICE_NAME:" + device.getName();
   cacheKeySource += "\nDEVICE_CAP:" + device.getComputeCapability();
   std::string sourceHash = GpuRuntime::computeSourceHash(cacheKeySource);
-  
+
   // Include sourceHash in cache key to detect source changes
   const std::string key = backend + ":" + kernelName + ":" + sourceHash;
-  
+
   // Check in-memory cache with hash validation
   auto it = cache.find(key);
   if (it != cache.end()) {
@@ -11481,20 +11509,20 @@ GpuRuntime::Program* getOrCreateProgram(GpuRuntime::Device& device, const std::s
       cache.erase(it);
     }
   }
-  
+
   // Check persistent disk cache before compiling
   std::vector<std::uint8_t> cachedBytes;
-  
+
   if (GpuRuntime::tryLoadFromDiskCache(backend, kernelName, cacheKeySource, cachedBytes)) {
     // Determine the appropriate kind for cached bytes using backend-specific format
     GpuRuntime::ProgramSource::Kind cachedKind = getCompiledFormatKind(backend);
-    
+
     if (cachedKind != GpuRuntime::ProgramSource::Kind::CudaCpp) {  // Valid format found
       GpuRuntime::ProgramSource cachedSrc;
       cachedSrc.kind = cachedKind;
       cachedSrc.entryPoint = src.entryPoint;
       cachedSrc.bytes = cachedBytes;
-      
+
       // Try to load from cached bytes
       auto cachedProg = device.createProgram(cachedSrc);
       if (cachedProg) {
@@ -11507,11 +11535,11 @@ GpuRuntime::Program* getOrCreateProgram(GpuRuntime::Device& device, const std::s
       // If loading from cache failed, fall through to compile
     }
   }
-  
+
   // Compile from source
   auto prog = device.createProgram(src);
   if (!prog) return nullptr;
-  
+
   // Save compiled program to disk cache
   // Extract compiled bytes from the program and save to persistent cache
   std::vector<std::uint8_t> compiledBytes = prog->getCompiledBytes();
@@ -11520,11 +11548,11 @@ GpuRuntime::Program* getOrCreateProgram(GpuRuntime::Device& device, const std::s
   if (!compiledBytes.empty()) {
     GpuRuntime::saveToDiskCache(backend, kernelName, cacheKeySource, compiledBytes);
   }
-  
+
   ProgramCacheEntry entry;
   entry.program = std::move(prog);
   entry.sourceHash = sourceHash;
-  
+
   auto [it2, _] = cache.emplace(key, std::move(entry));
   return it2->second.program.get();
 }
@@ -12650,8 +12678,12 @@ extern const KernelArgumentInfo kAbiArgs_cuda_navatala_graph_degree_in_u32[];
 extern const KernelAbiManifestInfo kAbiManifest_cuda_navatala_graph_degree_in_u32;
 extern const KernelArgumentInfo kAbiArgs_cuda_navatala_graph_spmv_weighted_f32[];
 extern const KernelAbiManifestInfo kAbiManifest_cuda_navatala_graph_spmv_weighted_f32;
+extern const KernelArgumentInfo kAbiArgs_cuda_navatala_graph_spmv_weighted_subgroup_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_cuda_navatala_graph_spmv_weighted_subgroup_f32;
 extern const KernelArgumentInfo kAbiArgs_cuda_navatala_graph_spmv_unweighted_f32[];
 extern const KernelAbiManifestInfo kAbiManifest_cuda_navatala_graph_spmv_unweighted_f32;
+extern const KernelArgumentInfo kAbiArgs_cuda_navatala_graph_spmv_unweighted_subgroup_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_cuda_navatala_graph_spmv_unweighted_subgroup_f32;
 extern const KernelArgumentInfo kAbiArgs_cuda_navatala_graph_axpy2_f32[];
 extern const KernelAbiManifestInfo kAbiManifest_cuda_navatala_graph_axpy2_f32;
 extern const KernelArgumentInfo kAbiArgs_cuda_navatala_graph_scale_f32[];
@@ -14978,6 +15010,8 @@ extern const KernelArgumentInfo kAbiArgs_cuda_navatala_transformer_kv_cache_rota
 extern const KernelAbiManifestInfo kAbiManifest_cuda_navatala_transformer_kv_cache_rotate_f16;
 extern const KernelArgumentInfo kAbiArgs_cuda_navatala_transformer_tiled_gemm_f16[];
 extern const KernelAbiManifestInfo kAbiManifest_cuda_navatala_transformer_tiled_gemm_f16;
+extern const KernelArgumentInfo kAbiArgs_cuda_navatala_transformer_tiled_gemm_f16_f32_out[];
+extern const KernelAbiManifestInfo kAbiManifest_cuda_navatala_transformer_tiled_gemm_f16_f32_out;
 extern const KernelArgumentInfo kAbiArgs_cuda_navatala_transformer_tiled_gemm_f32[];
 extern const KernelAbiManifestInfo kAbiManifest_cuda_navatala_transformer_tiled_gemm_f32;
 extern const KernelArgumentInfo kAbiArgs_cuda_navatala_transformer_tiled_gemm_backward_f32[];
@@ -16810,8 +16844,12 @@ extern const KernelArgumentInfo kAbiArgs_hip_navatala_graph_degree_in_u32[];
 extern const KernelAbiManifestInfo kAbiManifest_hip_navatala_graph_degree_in_u32;
 extern const KernelArgumentInfo kAbiArgs_hip_navatala_graph_spmv_weighted_f32[];
 extern const KernelAbiManifestInfo kAbiManifest_hip_navatala_graph_spmv_weighted_f32;
+extern const KernelArgumentInfo kAbiArgs_hip_navatala_graph_spmv_weighted_subgroup_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_hip_navatala_graph_spmv_weighted_subgroup_f32;
 extern const KernelArgumentInfo kAbiArgs_hip_navatala_graph_spmv_unweighted_f32[];
 extern const KernelAbiManifestInfo kAbiManifest_hip_navatala_graph_spmv_unweighted_f32;
+extern const KernelArgumentInfo kAbiArgs_hip_navatala_graph_spmv_unweighted_subgroup_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_hip_navatala_graph_spmv_unweighted_subgroup_f32;
 extern const KernelArgumentInfo kAbiArgs_hip_navatala_graph_axpy2_f32[];
 extern const KernelAbiManifestInfo kAbiManifest_hip_navatala_graph_axpy2_f32;
 extern const KernelArgumentInfo kAbiArgs_hip_navatala_graph_scale_f32[];
@@ -19138,6 +19176,8 @@ extern const KernelArgumentInfo kAbiArgs_hip_navatala_transformer_kv_cache_rotat
 extern const KernelAbiManifestInfo kAbiManifest_hip_navatala_transformer_kv_cache_rotate_f16;
 extern const KernelArgumentInfo kAbiArgs_hip_navatala_transformer_tiled_gemm_f16[];
 extern const KernelAbiManifestInfo kAbiManifest_hip_navatala_transformer_tiled_gemm_f16;
+extern const KernelArgumentInfo kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_f32_out[];
+extern const KernelAbiManifestInfo kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_f32_out;
 extern const KernelArgumentInfo kAbiArgs_hip_navatala_transformer_tiled_gemm_f32[];
 extern const KernelAbiManifestInfo kAbiManifest_hip_navatala_transformer_tiled_gemm_f32;
 extern const KernelArgumentInfo kAbiArgs_hip_navatala_transformer_tiled_gemm_backward_f32[];
@@ -19932,2846 +19972,26 @@ extern const KernelArgumentInfo kAbiArgs_hip_navatala_nccl_linear_broadcast_i32[
 extern const KernelAbiManifestInfo kAbiManifest_hip_navatala_nccl_linear_broadcast_i32;
 extern const KernelArgumentInfo kAbiArgs_hip_navatala_samples_axpy_fallback[];
 extern const KernelAbiManifestInfo kAbiManifest_hip_navatala_samples_axpy_fallback;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_boundary_force_partials[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_boundary_force_partials;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_pack_owner_values[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_pack_owner_values;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_scatter_values_and_mask[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_scatter_values_and_mask;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_pack_mu_grad_owner[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_pack_mu_grad_owner;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_pack_owner_rho_vec3[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_pack_owner_rho_vec3;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_pack_owner_vec3[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_pack_owner_vec3;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_pack_owner_vec3_mu[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_pack_owner_vec3_mu;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_scatter_mu_grad_ghost[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_scatter_mu_grad_ghost;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_scatter_rho_vec3_and_mask[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_scatter_rho_vec3_and_mask;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_scatter_vec3_and_mask[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_scatter_vec3_and_mask;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_scatter_vec3_mu_and_mask[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_scatter_vec3_mu_and_mask;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_add_vol_vector[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_add_vol_vector;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_div_rho_phi_u_explicit[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_div_rho_phi_u_explicit;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_hby_a_from_u_and_terms[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_hby_a_from_u_and_terms;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_apply_sp_to_hby_a[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_apply_sp_to_hby_a;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_laplacian_scalar_explicit[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_laplacian_scalar_explicit;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_laplacian_vector_explicit[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_laplacian_vector_explicit;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_predictor_hby_a_from_source[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_predictor_hby_a_from_source;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_predictor_inverse_diag[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_predictor_inverse_diag;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_predictor_phi_hby_a_fuse[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_predictor_phi_hby_a_fuse;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_axpy_cells[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_axpy_cells;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_ddt_diagonal[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_ddt_diagonal;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_div_upwind_coeffs[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_div_upwind_coeffs;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_fvm_sp[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_fvm_sp;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_fvm_su_sp[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_fvm_su_sp;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_laplacian_coeffs[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_laplacian_coeffs;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_laplacian_coeffs_accum[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_laplacian_coeffs_accum;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_linear_upwind_correction_source[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_linear_upwind_correction_source;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_matrix_relax[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_matrix_relax;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_neg_sum_diag[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_neg_sum_diag;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_pack_boundary_adjacent_cells[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_pack_boundary_adjacent_cells;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_scalar_jacobi_clamp_min[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_scalar_jacobi_clamp_min;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_scalar_jacobi_update[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_scalar_jacobi_update;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_scalar_ldu_mat_vec[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_scalar_ldu_mat_vec;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_scalar_ldu_multi_color_gs_sweep[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_scalar_ldu_multi_color_gs_sweep;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_sum_mag_off_diag[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_sum_mag_off_diag;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_gamg_axpy_in_place[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_gamg_axpy_in_place;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_gamg_compute_scale_factor[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_gamg_compute_scale_factor;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_gamg_dot_finalize[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_gamg_dot_finalize;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_gamg_negate_scalar[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_gamg_negate_scalar;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_gamg_scale_correction[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_gamg_scale_correction;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mg_coarse_jacobi[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mg_coarse_jacobi;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mg_coarse_matvec[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mg_coarse_matvec;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mg_coarse_rhs[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mg_coarse_rhs;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mg_find_best_match[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mg_find_best_match;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mg_pair_match[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mg_pair_match;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mg_prolong_add[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mg_prolong_add;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mg_renumber_aggregates[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mg_renumber_aggregates;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mg_renumber_propagate[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mg_renumber_propagate;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mg_resolve_chains[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mg_resolve_chains;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mg_restrict_sum[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mg_restrict_sum;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mg_strength_of_connection[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mg_strength_of_connection;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mg_zero_coarse[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mg_zero_coarse;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_phi_correct[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_phi_correct;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_phi_correct_boundary[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_phi_correct_boundary;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_phi_correct_internal[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_phi_correct_internal;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_axpy_in_place[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_axpy_in_place;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_bc_dirichlet_face_flux[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_bc_dirichlet_face_flux;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_bc_sn_grad_face_flux[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_bc_sn_grad_face_flux;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_coeff_to_cf_in_place[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_coeff_to_cf_in_place;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_diag_from_cf[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_diag_from_cf;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_dic_apply[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_dic_apply;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_dic_build_reciprocal_d[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_dic_build_reciprocal_d;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_dot_partials[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_dot_partials;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_face_flux[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_face_flux;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_inv_diag[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_inv_diag;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_laplacian_from_face_flux[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_laplacian_from_face_flux;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mul_by_vol_in_place[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mul_by_vol_in_place;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_ref_add_ax[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_ref_add_ax;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_ref_add_b[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_ref_add_b;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_rhs_sub[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_rhs_sub;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_shift_in_place[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_shift_in_place;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_sum_abs_partials[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_sum_abs_partials;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_upper_from_cf[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_upper_from_cf;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_xpay_in_place[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_xpay_in_place;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_negate_scalar[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_negate_scalar;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_exact_mat_vec[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_exact_mat_vec;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_face_flux_boundary[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_face_flux_boundary;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_face_flux_internal[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_face_flux_internal;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_pressure_face_flux_correction_corrected[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_pressure_face_flux_correction_corrected;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_pressure_sn_grad[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_pressure_sn_grad;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_u_correct[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_u_correct;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_u_correct_reconstruct[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_u_correct_reconstruct;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_average_face_scalar_to_cell[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_average_face_scalar_to_cell;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_evaluate_scalar_bc[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_evaluate_scalar_bc;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_evaluate_vector_bc[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_evaluate_vector_bc;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_div_face_flux_csr[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_div_face_flux_csr;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_div_face_flux_vector_csr[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_div_face_flux_vector_csr;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_grad_v2[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_grad_v2;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_face_scalar_product[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_face_scalar_product;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_grad_vol_scalar_gauss[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_grad_vol_scalar_gauss;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_grad_vol_vector_gauss[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_grad_vol_vector_gauss;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_interp_scalar_face[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_interp_scalar_face;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_interp_scalar_face_all[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_interp_scalar_face_all;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_interp_vector_face[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_interp_vector_face;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_linear_upwind_scalar_face[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_linear_upwind_scalar_face;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_phi_from_u[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_phi_from_u;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_phi_from_u_boundary[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_phi_from_u_boundary;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_phi_from_u_internal[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_phi_from_u_internal;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_phig_gravity[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_phig_gravity;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_r_a_u_from_dt_rho[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_r_a_u_from_dt_rho;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_r_a_u_from_dt_rho_integrated[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_r_a_u_from_dt_rho_integrated;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_r_a_u_from_dt_rho_sp[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_r_a_u_from_dt_rho_sp;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_r_a_u_from_dt_rho_sp_integrated[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_r_a_u_from_dt_rho_sp_integrated;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_r_a_u_from_u_eqn_approx[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_r_a_u_from_u_eqn_approx;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_r_a_u_from_u_eqn_approx_sp[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_r_a_u_from_u_eqn_approx_sp;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_rho_from_alpha[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_rho_from_alpha;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_rho_phi_from_rho_and_phi[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_rho_phi_from_rho_and_phi;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_sn_grad_scalar[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_sn_grad_scalar;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_grad_alpha_cell[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_grad_alpha_cell;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_n_hatf_all[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_n_hatf_all;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_stf_all_faces[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_stf_all_faces;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_k_omega_s_s_t_blending[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_k_omega_s_s_t_blending;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_k_omega_s_s_t_nut_compute[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_k_omega_s_s_t_nut_compute;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_k_omega_s_s_t_sources[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_k_omega_s_s_t_sources;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mu_eff_from_rho_nu_eff[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mu_eff_from_rho_nu_eff;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mu_eff_from_rho_nut_and_nu_mix[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mu_eff_from_rho_nut_and_nu_mix;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_turbulence_add_explicit_source_device[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_turbulence_add_explicit_source_device;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_turbulence_dirichlet_cell_source[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_turbulence_dirichlet_cell_source;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_turbulence_dirichlet_face_elimination[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_turbulence_dirichlet_face_elimination;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_two_mag_sqr_symm_grad_u[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_two_mag_sqr_symm_grad_u;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_vof_alpha_phi_all[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_vof_alpha_phi_all;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_vof_alpha_phi_int[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_vof_alpha_phi_int;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_vof_average_face_scalar_to_cell[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_vof_average_face_scalar_to_cell;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_vof_interp_scalar_face_all[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_vof_interp_scalar_face_all;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_vof_alpha_update[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_vof_alpha_update;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_vof_mules_apply[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_vof_mules_apply;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_vof_mules_cell_lambda[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_vof_mules_cell_lambda;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_vof_mules_cell_sums[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_vof_mules_cell_sums;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_vof_mules_face_update[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_vof_mules_face_update;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_vof_mules_fill_lambda[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_vof_mules_fill_lambda;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_vof_mules_init[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_vof_mules_init;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_vof_phi_b_d_corr[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_vof_phi_b_d_corr;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_vof_phir[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_vof_phir;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_vof_rho_phi_accumulate[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_vof_rho_phi_accumulate;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_samples_float32_add[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_samples_float32_add;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_samples_triangle_normals2[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_samples_triangle_normals2;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_attention_row_softmax[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_attention_row_softmax;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_attention_value_projection[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_attention_value_projection;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_gather_mean[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_gather_mean;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_layer_norm_forward[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_layer_norm_forward;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_radius_count[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_radius_count;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_scaled_dot_product[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_scaled_dot_product;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_scatter_add_atomic[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_scatter_add_atomic;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_spectral_complex_mul[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_spectral_complex_mul;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_spectral_conv1d_mode_sliced[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_spectral_conv1d_mode_sliced;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_spectral_conv2d_mode_sliced[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_spectral_conv2d_mode_sliced;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_spectral_conv3d_mode_sliced[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_spectral_conv3d_mode_sliced;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_spectral_conv4d_mode_sliced[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_spectral_conv4d_mode_sliced;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_writeback_sum_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_writeback_sum_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_writeback_sum_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_writeback_sum_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_writeback_sum_u32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_writeback_sum_u32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_writeback_min_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_writeback_min_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_writeback_max_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_writeback_max_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_pack_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_pack_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_pack_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_pack_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_pack_u32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_pack_u32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_unpack_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_unpack_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_unpack_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_unpack_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_unpack_u32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_unpack_u32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_pack_f32x3[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_pack_f32x3;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_unpack_f32x3[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_unpack_f32x3;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_pack_f32x6[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_pack_f32x6;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_unpack_f32x6[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_unpack_f32x6;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_pack_f32x9[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_pack_f32x9;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_unpack_f32x9[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_unpack_f32x9;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_init_welford_state_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_init_welford_state_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_welford_update_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_welford_update_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_welford_merge_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_welford_merge_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_variance_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_variance_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_sample_variance_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_sample_variance_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_stddev_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_stddev_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_init_covariance_state_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_init_covariance_state_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_covariance_update_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_covariance_update_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_covariance_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_covariance_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_correlation_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_correlation_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_init_weighted_welford_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_init_weighted_welford_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_weighted_welford_update_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_weighted_welford_update_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_weighted_welford_merge_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_weighted_welford_merge_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_weighted_variance_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_weighted_variance_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_weighted_reliability_variance_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_weighted_reliability_variance_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_weighted_stddev_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_weighted_stddev_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_init_weighted_covariance_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_init_weighted_covariance_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_weighted_covariance_update_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_weighted_covariance_update_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_weighted_covariance_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_weighted_covariance_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_weighted_correlation_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_weighted_correlation_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_init_weighted_mean_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_init_weighted_mean_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_weighted_mean_update_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_weighted_mean_update_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_init_p2_state_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_init_p2_state_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_p2_update_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_p2_update_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_p2_extract_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_p2_extract_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_init_reservoir256_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_init_reservoir256_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_reservoir_update256_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_reservoir_update256_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_reservoir_min256_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_reservoir_min256_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_reservoir_max256_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_reservoir_max256_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_init_ema_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_init_ema_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_init_ema_from_span_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_init_ema_from_span_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_ema_update_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_ema_update_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_ema_extract_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_ema_extract_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_ema_reset_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_ema_reset_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_init_dema_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_init_dema_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_dema_update_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_dema_update_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_dema_extract_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_dema_extract_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_trimmed_mean_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_trimmed_mean_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_iqm_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_iqm_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_winsorized_mean_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_winsorized_mean_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mad_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mad_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_normalized_mad_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_normalized_mad_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_robust_z_score_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_robust_z_score_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_detect_outliers_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_detect_outliers_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_init_t_digest_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_init_t_digest_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_tdigest_add_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_tdigest_add_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_tdigest_merge_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_tdigest_merge_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_tdigest_quantile_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_tdigest_quantile_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_tdigest_cdf_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_tdigest_cdf_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_tdigest_mean_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_tdigest_mean_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_tdigest_min_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_tdigest_min_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_tdigest_max_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_tdigest_max_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_tdigest_reset_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_tdigest_reset_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_inclusive_scan_sum_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_inclusive_scan_sum_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_inclusive_scan_sum_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_inclusive_scan_sum_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_inclusive_scan_sum_i32_to_i64_skip_nulls[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_inclusive_scan_sum_i32_to_i64_skip_nulls;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_inclusive_scan_sum_i64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_inclusive_scan_sum_i64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_reduce_sum_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_reduce_sum_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_reduce_sum_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_reduce_sum_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_reduce_sum_i32_to_i64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_reduce_sum_i32_to_i64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_reduce_min_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_reduce_min_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_reduce_max_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_reduce_max_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_count_valid[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_count_valid;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_i64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_i64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_scatter_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_scatter_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_scatter_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_scatter_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_compact_by_mask_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_compact_by_mask_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_compact_by_mask_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_compact_by_mask_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_compact_valid_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_compact_valid_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_fill_constant_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_fill_constant_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_fill_constant_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_fill_constant_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_fill_constant_i64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_fill_constant_i64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_fill_range_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_fill_range_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_fill_range_i64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_fill_range_i64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_fill_validity_all_valid[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_fill_validity_all_valid;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_fill_validity_all_null[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_fill_validity_all_null;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_fill_null_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_fill_null_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_fill_null_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_fill_null_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_is_null[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_is_null;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_is_valid[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_is_valid;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_copy_if_valid_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_copy_if_valid_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_coalesce_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_coalesce_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_norm_linf_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_norm_linf_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_neg_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_neg_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_abs_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_abs_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_sqrt_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_sqrt_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_rsqrt_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_rsqrt_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_reciprocal_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_reciprocal_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_exp_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_exp_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_log_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_log_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_sin_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_sin_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_cos_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_cos_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_tan_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_tan_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_floor_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_floor_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_ceil_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_ceil_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_round_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_round_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_relu_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_relu_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_leaky_relu_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_leaky_relu_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_elu_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_elu_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_tanh_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_tanh_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_sigmoid_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_sigmoid_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_softplus_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_softplus_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_swish_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_swish_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_gelu_tanh_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_gelu_tanh_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_add_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_add_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_sub_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_sub_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_mul_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_mul_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_div_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_div_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_max_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_max_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_min_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_min_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_cmp_eq_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_cmp_eq_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_cmp_ne_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_cmp_ne_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_cmp_lt_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_cmp_lt_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_cmp_le_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_cmp_le_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_cmp_gt_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_cmp_gt_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_cmp_ge_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_cmp_ge_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_relu_bwd_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_relu_bwd_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_sigmoid_bwd_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_sigmoid_bwd_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_tanh_bwd_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_tanh_bwd_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_neg_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_neg_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_abs_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_abs_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_sqrt_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_sqrt_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_rsqrt_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_rsqrt_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_reciprocal_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_reciprocal_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_exp_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_exp_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_log_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_log_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_sin_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_sin_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_cos_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_cos_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_tan_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_tan_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_floor_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_floor_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_ceil_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_ceil_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_round_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_round_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_relu_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_relu_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_leaky_relu_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_leaky_relu_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_elu_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_elu_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_tanh_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_tanh_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_sigmoid_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_sigmoid_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_softplus_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_softplus_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_swish_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_swish_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_gelu_tanh_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_gelu_tanh_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_add_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_add_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_sub_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_sub_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_mul_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_mul_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_div_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_div_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_max_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_max_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_min_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_min_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_cmp_eq_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_cmp_eq_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_cmp_ne_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_cmp_ne_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_cmp_lt_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_cmp_lt_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_cmp_le_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_cmp_le_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_cmp_gt_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_cmp_gt_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_cmp_ge_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_cmp_ge_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_relu_bwd_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_relu_bwd_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_sigmoid_bwd_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_sigmoid_bwd_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_tanh_bwd_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_tanh_bwd_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_sum_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_sum_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_prod_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_prod_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_min_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_min_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_max_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_max_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_amax_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_amax_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_norm1_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_norm1_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_avg_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_avg_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_norm2_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_norm2_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_sum_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_sum_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_prod_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_prod_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_min_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_min_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_max_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_max_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_amax_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_amax_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_norm1_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_norm1_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_avg_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_avg_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_norm2_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_norm2_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_maxpool_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_maxpool_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_avgpool_exclude_pad_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_avgpool_exclude_pad_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_avgpool_include_pad_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_avgpool_include_pad_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_resize_nearest_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_resize_nearest_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_resize_bilinear_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_resize_bilinear_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_maxpool_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_maxpool_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_avgpool_exclude_pad_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_avgpool_exclude_pad_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_avgpool_include_pad_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_avgpool_include_pad_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_resize_nearest_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_resize_nearest_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_resize_bilinear_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_resize_bilinear_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reshape_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reshape_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_slice_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_slice_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_transpose_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_transpose_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_concatenate2_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_concatenate2_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reshape_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reshape_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_slice_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_slice_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_transpose_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_transpose_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_concatenate2_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_concatenate2_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_softmax_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_softmax_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_softmax_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_softmax_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_layernorm_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_layernorm_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_spatial_batchnorm_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_spatial_batchnorm_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_instancenorm_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_instancenorm_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_batchnorm_inference_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_batchnorm_inference_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_layernorm_backward_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_layernorm_backward_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_layernorm_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_layernorm_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_spatial_batchnorm_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_spatial_batchnorm_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_instancenorm_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_instancenorm_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_batchnorm_inference_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_batchnorm_inference_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_layernorm_backward_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_layernorm_backward_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_uniform_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_uniform_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_bernoulli_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_bernoulli_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_normal_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_normal_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_uniform_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_uniform_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_bernoulli_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_bernoulli_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_normal_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_normal_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_degree_out_u32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_degree_out_u32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_degree_in_u32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_degree_in_u32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_spmv_weighted_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_spmv_weighted_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_spmv_unweighted_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_spmv_unweighted_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_axpy2_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_axpy2_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_scale_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_scale_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_scale_add_bias_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_scale_add_bias_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_l1norm_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_l1norm_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_recip_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_recip_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_l1_diff_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_l1_diff_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_count_diff_u32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_count_diff_u32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_copy_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_copy_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_copy_u32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_copy_u32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_relax_vertex_pull_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_relax_vertex_pull_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_label_propagate_edges_u32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_label_propagate_edges_u32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_symmetrize_reverse_u32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_symmetrize_reverse_u32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_apply_renumber_u32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_apply_renumber_u32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_peel_below_threshold_u32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_peel_below_threshold_u32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_pair_intersection_u32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_pair_intersection_u32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_jaccard_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_jaccard_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_overlap_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_overlap_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_sorensen_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_sorensen_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_cosine_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_cosine_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_uniform_random_walk_u32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_uniform_random_walk_u32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_out_degree_u32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_out_degree_u32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_in_degree_u32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_in_degree_u32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_arg_max_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_arg_max_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_arg_min_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_arg_min_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_scan_sum_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_scan_sum_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_scan_sum_u32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_scan_sum_u32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_scan_exclusive_write_total_u32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_scan_exclusive_write_total_u32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_scan_max_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_scan_max_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_scan_min_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_scan_min_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_top_k_init_indices[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_top_k_init_indices;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_top_k_take_first_k_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_top_k_take_first_k_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_histogram_fast_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_histogram_fast_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_zero_bins[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_zero_bins;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_compute_bin_indices_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_compute_bin_indices_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_sum_reduce_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_sum_reduce_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mean_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mean_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_variance_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_variance_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_stddev_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_stddev_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_normalize_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_normalize_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_init_rng_state[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_init_rng_state;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_uniform_lcg_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_uniform_lcg_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_normal_box_muller_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_normal_box_muller_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_init_indices[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_init_indices;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_covariance_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_covariance_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_center_data_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_center_data_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_center_matrix_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_center_matrix_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_means_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_means_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_correlation_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_correlation_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_cov_to_correlation_matrix_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_cov_to_correlation_matrix_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_quantile_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_quantile_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_quantile_batch_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_quantile_batch_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_median_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_median_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_iqr_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_iqr_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_init_e_w_m_c_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_init_e_w_m_c_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_init_e_w_m_c_from_halflife_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_init_e_w_m_c_from_halflife_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_ewmc_update_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_ewmc_update_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_ewmc_extract_covariance_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_ewmc_extract_covariance_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_ewmc_extract_correlation_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_ewmc_extract_correlation_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_init_m_c_d_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_init_m_c_d_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mcd_compute_center_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mcd_compute_center_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mcd_compute_covariance_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mcd_compute_covariance_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mcd_mahalanobis_distance_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mcd_mahalanobis_distance_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mcd_detect_outliers_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mcd_detect_outliers_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mcd_extract_mean_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mcd_extract_mean_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_eig_select_top_k_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_eig_select_top_k_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_kde_bandwidth_silverman_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_kde_bandwidth_silverman_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_kde_bandwidth_scott_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_kde_bandwidth_scott_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_kde_evaluate_gaussian_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_kde_evaluate_gaussian_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_kde_evaluate_epanechnikov_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_kde_evaluate_epanechnikov_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_kde_find_mode_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_kde_find_mode_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_init_moments_state_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_init_moments_state_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_moments_update_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_moments_update_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_moments_merge_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_moments_merge_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_skewness_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_skewness_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_kurtosis_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_kurtosis_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_excess_kurtosis_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_excess_kurtosis_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pairwise_euclidean_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pairwise_euclidean_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pairwise_squared_euclidean_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pairwise_squared_euclidean_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pairwise_manhattan_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pairwise_manhattan_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pairwise_cosine_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pairwise_cosine_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pairwise_chebyshev_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pairwise_chebyshev_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_nearest_neighbor_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_nearest_neighbor_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_init_centroids_random_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_init_centroids_random_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_assign_to_centroids_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_assign_to_centroids_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_cluster_sums_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_cluster_sums_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_update_centroids_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_update_centroids_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_inertia_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_inertia_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_init_gmm_state_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_init_gmm_state_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_gaussian_log_pdf_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_gaussian_log_pdf_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_responsibilities_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_responsibilities_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_update_means_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_update_means_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_update_variances_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_update_variances_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_update_weights_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_update_weights_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_log_likelihood_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_log_likelihood_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_rbf_affinity_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_rbf_affinity_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_compute_degree_matrix_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_compute_degree_matrix_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_compute_laplacian_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_compute_laplacian_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_normalized_laplacian_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_normalized_laplacian_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_normalize_eigenvector_rows_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_normalize_eigenvector_rows_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_spectral_embedding_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_spectral_embedding_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_gram_matrix_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_gram_matrix_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_xt_y_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_xt_y_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_predict_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_predict_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_residuals_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_residuals_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_r_squared_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_r_squared_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_mean_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_mean_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_add_regularization_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_add_regularization_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_ridge_predict_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_ridge_predict_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_gcv_score_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_gcv_score_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_effective_dof_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_effective_dof_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_init_lasso_state_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_init_lasso_state_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_partial_residual_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_partial_residual_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_soft_threshold_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_soft_threshold_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_coordinate_update_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_coordinate_update_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_objective_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_objective_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_active_set_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_active_set_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_center_data_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_center_data_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_covariance_matrix_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_covariance_matrix_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_project_to_principal_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_project_to_principal_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_explained_variance_ratio_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_explained_variance_ratio_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_pairwise_affinity_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_pairwise_affinity_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_symmetrize_affinity_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_symmetrize_affinity_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_init_embedding_random_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_init_embedding_random_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_q_distribution_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_q_distribution_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_gradient_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_gradient_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_apply_momentum_update_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_apply_momentum_update_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_k_l_divergence_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_k_l_divergence_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_perplexity_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_perplexity_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_normalize_embedding_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_normalize_embedding_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_exaggerated_p_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_exaggerated_p_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_neighbor_counts_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_neighbor_counts_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_identify_core_points_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_identify_core_points_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_identify_core_points_f64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_identify_core_points_f64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_init_cluster_labels_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_init_cluster_labels_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_init_cluster_labels_f64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_init_cluster_labels_f64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_expand_cluster_step_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_expand_cluster_step_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_propagate_core_labels_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_propagate_core_labels_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_mark_noise_points_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_mark_noise_points_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_mark_noise_points_f64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_mark_noise_points_f64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_count_clusters_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_count_clusters_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_count_clusters_f64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_count_clusters_f64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_cast_f32_to_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_cast_f32_to_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_cast_f16_to_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_cast_f16_to_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_reduce_sum_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_reduce_sum_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_reduce_max_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_reduce_max_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_runtime_deterministic_reduce_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_runtime_deterministic_reduce_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_runtime_deterministic_histogram_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_runtime_deterministic_histogram_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_sparse_add_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_sparse_add_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_sparse_sub_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_sparse_sub_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_sparse_scale_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_sparse_scale_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_sparse_hadamard_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_sparse_hadamard_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_sparse_abs_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_sparse_abs_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_sparse_threshold_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_sparse_threshold_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_coo_transpose_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_coo_transpose_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_sparse_inner_product_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_sparse_inner_product_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_sparse_l2_distance_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_sparse_l2_distance_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_sparse_cosine_distance_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_sparse_cosine_distance_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_sparse_jaccard_distance_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_sparse_jaccard_distance_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_sparse_jacobi_iter_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_sparse_jacobi_iter_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_sparse_gauss_seidel_iter_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_sparse_gauss_seidel_iter_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_sparse_cg_iter_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_sparse_cg_iter_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_sparse_bicgstab_iter_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_sparse_bicgstab_iter_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_compute_residual_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_compute_residual_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_compute_residual_norm_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_compute_residual_norm_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_spmv_row_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_spmv_row_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_chebyshev_smooth_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_chebyshev_smooth_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_find_min_edge_per_component_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_find_min_edge_per_component_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_merge_components_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_merge_components_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_merge_components_f64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_merge_components_f64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_mst_boruvka_step_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_mst_boruvka_step_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_elt_add_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_elt_add_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_elt_sub_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_elt_sub_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_elt_mul_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_elt_mul_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_elt_div_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_elt_div_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_elt_pow_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_elt_pow_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_elt_sqrt_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_elt_sqrt_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_elt_exp_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_elt_exp_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_elt_log_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_elt_log_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_elt_abs_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_elt_abs_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_elt_sign_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_elt_sign_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_transpose_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_transpose_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_transpose_in_place_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_transpose_in_place_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_transpose_batched_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_transpose_batched_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_map_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_map_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_reduce_row_sum_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_reduce_row_sum_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_reduce_col_sum_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_reduce_col_sum_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_reduce_row_max_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_reduce_row_max_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_reduce_col_max_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_reduce_col_max_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_map_reduce_sum_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_map_reduce_sum_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_outer_product_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_outer_product_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_batched_dot_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_batched_dot_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_trace_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_trace_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_frobenius_norm_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_frobenius_norm_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_extract_upper_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_extract_upper_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_extract_lower_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_extract_lower_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_set_upper_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_set_upper_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_set_lower_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_set_lower_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_gather_rows_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_gather_rows_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_gather_cols_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_gather_cols_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_gather_elements_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_gather_elements_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_gather_batched_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_gather_batched_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_scatter_rows_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_scatter_rows_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_scatter_cols_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_scatter_cols_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_scatter_add_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_scatter_add_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_scatter_max_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_scatter_max_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_slice_rows_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_slice_rows_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_slice_cols_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_slice_cols_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_slice_block_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_slice_block_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_strided_slice_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_strided_slice_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_extract_diagonal_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_extract_diagonal_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_extract_diagonal_k_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_extract_diagonal_k_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_set_diagonal_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_set_diagonal_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_diag_to_matrix_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_diag_to_matrix_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_shift_rows_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_shift_rows_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_shift_cols_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_shift_cols_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_roll_rows_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_roll_rows_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_roll_cols_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_roll_cols_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_sort_rows_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_sort_rows_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_sort_cols_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_sort_cols_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_argsort_rows_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_argsort_rows_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_argsort_cols_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_argsort_cols_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_contingency_matrix_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_contingency_matrix_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_silhouette_score_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_silhouette_score_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_adjusted_rand_index_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_adjusted_rand_index_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_normalized_mutual_info_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_normalized_mutual_info_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_homogeneity_score_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_homogeneity_score_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_completeness_score_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_completeness_score_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_v_measure_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_v_measure_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_r2_score_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_r2_score_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mse_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mse_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_rmse_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_rmse_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mae_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mae_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mape_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mape_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_explained_variance_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_explained_variance_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_entropy_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_entropy_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_cross_entropy_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_cross_entropy_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_kl_divergence_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_kl_divergence_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mutual_information_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mutual_information_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_conditional_entropy_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_conditional_entropy_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_neighborhood_recall_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_neighborhood_recall_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_trustworthiness_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_trustworthiness_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_continuity_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_continuity_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_permute_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_permute_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_shuffle_rows_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_shuffle_rows_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_sample_without_replacement_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_sample_without_replacement_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_sample_with_replacement_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_sample_with_replacement_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_bootstrap_sample_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_bootstrap_sample_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_make_blobs_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_make_blobs_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_make_blobs_anisotropic_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_make_blobs_anisotropic_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_make_moons_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_make_moons_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_make_circles_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_make_circles_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_make_regression_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_make_regression_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_make_classification_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_make_classification_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_make_sparse_uncorrelated_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_make_sparse_uncorrelated_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_rmat_generator_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_rmat_generator_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_erdos_renyi_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_erdos_renyi_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_barabasi_albert_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_barabasi_albert_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_select_top_k_per_row_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_select_top_k_per_row_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_select_top_k_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_select_top_k_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_arg_top_k_per_row_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_arg_top_k_per_row_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_arg_top_k_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_arg_top_k_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_partial_sort_per_row_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_partial_sort_per_row_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_knn_brute_force_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_knn_brute_force_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_knn_brute_force_euclidean_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_knn_brute_force_euclidean_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_knn_brute_force_cosine_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_knn_brute_force_cosine_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_knn_brute_force_manhattan_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_knn_brute_force_manhattan_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_knn_with_radius_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_knn_with_radius_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_knn_classify_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_knn_classify_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_knn_classify_f64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_knn_classify_f64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_knn_classify_weighted_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_knn_classify_weighted_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_knn_classify_probs_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_knn_classify_probs_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_vote_majority_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_vote_majority_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_vote_majority_f64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_vote_majority_f64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_knn_regress_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_knn_regress_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_knn_regress_weighted_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_knn_regress_weighted_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_knn_regress_median_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_knn_regress_median_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_compute_modularity_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_compute_modularity_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_modularity_matrix_vec_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_modularity_matrix_vec_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_construct_indicator_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_construct_indicator_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_compute_edge_cut_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_compute_edge_cut_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_compute_partition_cost_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_compute_partition_cost_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_analyze_partition_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_analyze_partition_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_transform_eigen_matrix_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_transform_eigen_matrix_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_laplacian_from_adjacency_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_laplacian_from_adjacency_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_traverse_tree_classify_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_traverse_tree_classify_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_traverse_tree_regress_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_traverse_tree_regress_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_gini_impurity_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_gini_impurity_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_m_s_e_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_m_s_e_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_split_samples_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_split_samples_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_leaf_class_probs_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_leaf_class_probs_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_forest_classify_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_forest_classify_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_forest_regress_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_forest_regress_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_aggregate_importances_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_aggregate_importances_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_fil_infer_regression_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_fil_infer_regression_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_fil_infer_classification_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_fil_infer_classification_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_svm_predict_classify_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_svm_predict_classify_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_svm_predict_regress_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_svm_predict_regress_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_decision_function_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_decision_function_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_r_b_f_kernel_matrix_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_r_b_f_kernel_matrix_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_linear_kernel_matrix_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_linear_kernel_matrix_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_polynomial_kernel_matrix_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_polynomial_kernel_matrix_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_core_distances_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_core_distances_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_mutual_reachability_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_mutual_reachability_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_extract_cluster_labels_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_extract_cluster_labels_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_extract_cluster_labels_f64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_extract_cluster_labels_f64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_probabilities_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_probabilities_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_cluster_stability_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_cluster_stability_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_initialize_labels_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_initialize_labels_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_initialize_labels_f64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_initialize_labels_f64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_fuzzy_simplicial_set_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_fuzzy_simplicial_set_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_attraction_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_attraction_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_repulsion_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_repulsion_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_optimize_layout_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_optimize_layout_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_initialize_embedding_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_initialize_embedding_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_clear_gradients_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_clear_gradients_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_differencing_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_differencing_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_holt_winters_forecast_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_holt_winters_forecast_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_ar_predict_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_ar_predict_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_shap_values_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_shap_values_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_coalition_marginal_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_coalition_marginal_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_feature_interaction_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_feature_interaction_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_correlations_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_correlations_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_find_max_correlation_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_find_max_correlation_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_update_coefs_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_update_coefs_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_equiangular_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_equiangular_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_evaluate_fitness_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_evaluate_fitness_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_mutate_population_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_mutate_population_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_crossover_population_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_crossover_population_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_select_tournament_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_select_tournament_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_knn_sparse_k_n_n_distance_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_knn_sparse_k_n_n_distance_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_knn_sparse_inner_product_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_knn_sparse_inner_product_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_knn_sparse_top_k_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_knn_sparse_top_k_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_knn_csr_row_distance_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_knn_csr_row_distance_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_batch_traverse_trees_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_batch_traverse_trees_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_collect_leaf_values_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_collect_leaf_values_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_aggregate_tree_outputs_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_aggregate_tree_outputs_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_traverse_with_path_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_traverse_with_path_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_sp_m_v_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_sp_m_v_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_sp_m_v_scaled_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_sp_m_v_scaled_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_residual_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_residual_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_axpy_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_axpy_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_xpay_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_xpay_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_dot_partials_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_dot_partials_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_scal_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_scal_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_nrm2_partials_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_nrm2_partials_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_zero_fill_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_zero_fill_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_zero_fill_u32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_zero_fill_u32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_zero_scalar_u32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_zero_scalar_u32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_fill_neg_one_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_fill_neg_one_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_copy_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_copy_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_bsr_sp_m_v_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_bsr_sp_m_v_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_transpose_count_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_transpose_count_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_transpose_fill_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_transpose_fill_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_row_norm_l1_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_row_norm_l1_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_row_norm_linf_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_row_norm_linf_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_frobenius_partials_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_frobenius_partials_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_truncate_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_truncate_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_compact_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_compact_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_sort_columns_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_sort_columns_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_permute_rows_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_permute_rows_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_check_diag_dominance_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_check_diag_dominance_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_row_nnz_histogram[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_row_nnz_histogram;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_dense_l_u_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_dense_l_u_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_dense_l_u_solve_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_dense_l_u_solve_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_replace_values_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_replace_values_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_to_coo_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_to_coo_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_coo_to_csr_row_count[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_coo_to_csr_row_count;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_to_ell_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_to_ell_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_ell_sp_m_v_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_ell_sp_m_v_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_add_symbolic_row_nnz[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_add_symbolic_row_nnz;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_add_numeric_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_add_numeric_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_scale_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_scale_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_symmetry_check_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_symmetry_check_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_nnz_per_row[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_nnz_per_row;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_max_nnz_per_row_partials[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_max_nnz_per_row_partials;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_extract_diag_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_extract_diag_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_permute_cols_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_permute_cols_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_row_slice_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_row_slice_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cg_update_x_r_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cg_update_x_r_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cg_update_p_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cg_update_p_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cg_compute_alpha_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cg_compute_alpha_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cg_compute_beta_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cg_compute_beta_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cg_fused_update_dot_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cg_fused_update_dot_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cg_init_residual_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cg_init_residual_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cg_residual_norm_partials_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cg_residual_norm_partials_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_bicgstab_update_p_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_bicgstab_update_p_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_bicgstab_update_x_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_bicgstab_update_x_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_bicgstab_compute_beta_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_bicgstab_compute_beta_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_bicgstab_compute_omega_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_bicgstab_compute_omega_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_bicgstab_update_r_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_bicgstab_update_r_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_bicgstab_compute_s_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_bicgstab_compute_s_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_bicgstab_compute_alpha_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_bicgstab_compute_alpha_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_bicgstab_fused_update_all_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_bicgstab_fused_update_all_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_gmres_arnoldi_project_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_gmres_arnoldi_project_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_gmres_normalize_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_gmres_normalize_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_gmres_update_solution_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_gmres_update_solution_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_gmres_givens_rotation_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_gmres_givens_rotation_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_gmres_arnoldi_batch_project_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_gmres_arnoldi_batch_project_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_gmres_hessenberg_dot_partials_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_gmres_hessenberg_dot_partials_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_gmres_restart_init_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_gmres_restart_init_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_gmres_back_solve_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_gmres_back_solve_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_gmres_store_basis_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_gmres_store_basis_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_idr_shadow_project_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_idr_shadow_project_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_idr_update_x_r_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_idr_update_x_r_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_idr_g_space_update_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_idr_g_space_update_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_idr_compute_omega_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_idr_compute_omega_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_idr_build_shadow_space_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_idr_build_shadow_space_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_idr_m_sync_fused_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_idr_m_sync_fused_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_idr_compute_v_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_idr_compute_v_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_idr_store_d_r_column_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_idr_store_d_r_column_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_pcg_update_x_r_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_pcg_update_x_r_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_pcgf_update_p_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_pcgf_update_p_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_pbicgstab_fused_s_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_pbicgstab_fused_s_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_pbicgstab_triple_dot_partials_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_pbicgstab_triple_dot_partials_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_fgmres_store_z_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_fgmres_store_z_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_fgmres_update_solution_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_fgmres_update_solution_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_pipe_c_g_fused_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_pipe_c_g_fused_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_chronopoulos_c_g_scalars_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_chronopoulos_c_g_scalars_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_fgmres_m_g_s_project_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_fgmres_m_g_s_project_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_pbicgstab_fused_update_conv_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_pbicgstab_fused_update_conv_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_jacobi_sweep_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_jacobi_sweep_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_jacobi_l1_sweep_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_jacobi_l1_sweep_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_extract_diagonal_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_extract_diagonal_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_block_jacobi_sweep_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_block_jacobi_sweep_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cf_jacobi_sweep_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cf_jacobi_sweep_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_multicolor_gs_forward_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_multicolor_gs_forward_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_multicolor_gs_backward_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_multicolor_gs_backward_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_fixcolor_gs_forward_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_fixcolor_gs_forward_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_fixcolor_gs_backward_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_fixcolor_gs_backward_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_ilu_factor_color_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_ilu_factor_color_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_ilu_forward_sweep_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_ilu_forward_sweep_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_ilu_backward_sweep_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_ilu_backward_sweep_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_dilu_build_reciprocal_d_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_dilu_build_reciprocal_d_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_dilu_apply_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_dilu_apply_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_multicolor_dilu_forward_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_multicolor_dilu_forward_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_multicolor_dilu_backward_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_multicolor_dilu_backward_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_chebyshev_sweep_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_chebyshev_sweep_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_chebyshev_coeff_update_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_chebyshev_coeff_update_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_polynomial_sweep_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_polynomial_sweep_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_kpz_polynomial_sweep_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_kpz_polynomial_sweep_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_kaczmarz_row_norm_sq_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_kaczmarz_row_norm_sq_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_mg_restrict_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_mg_restrict_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_mg_prolongate_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_mg_prolongate_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_mg_convergence_absolute_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_mg_convergence_absolute_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_mg_convergence_relative_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_mg_convergence_relative_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_mg_compute_residual_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_mg_compute_residual_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_mg_weighted_restrict_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_mg_weighted_restrict_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_mg_error_norm_partials_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_mg_error_norm_partials_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_mg_zero_vector_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_mg_zero_vector_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_mg_prolongate_damped_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_mg_prolongate_damped_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_strength_of_connection_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_strength_of_connection_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_aggregate_size2_propose_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_aggregate_size2_propose_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_aggregate_size2_confirm[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_aggregate_size2_confirm;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_promote_unmatched_singletons[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_promote_unmatched_singletons;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_aggregate_size4_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_aggregate_size4_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_aggregate_size8_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_aggregate_size8_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_aggregate_parallel_greedy_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_aggregate_parallel_greedy_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_assign_leader_compact_ids[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_assign_leader_compact_ids;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_apply_compact_ids[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_apply_compact_ids;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_build_prolongation_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_build_prolongation_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_build_prolongation_terminator[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_build_prolongation_terminator;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_spgemm_symbolic_row_nnz[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_spgemm_symbolic_row_nnz;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_spgemm_numeric_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_spgemm_numeric_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_transpose[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_transpose;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_aggregate_adaptive_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_aggregate_adaptive_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_aggregate_multi_pairwise_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_aggregate_multi_pairwise_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_aggregate_geometric_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_aggregate_geometric_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_aggregate_serial_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_aggregate_serial_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_aggregate_low_degree_first_propose_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_aggregate_low_degree_first_propose_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_assign_orphans_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_assign_orphans_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_spgemm_numeric_hash_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_spgemm_numeric_hash_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_spgemm_numeric_serial_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_spgemm_numeric_serial_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_build_smoothed_prolongation_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_build_smoothed_prolongation_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_compute_aggregate_sizes[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_compute_aggregate_sizes;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_compute_coarsening_ratio[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_compute_coarsening_ratio;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cf_split_p_m_i_s[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cf_split_p_m_i_s;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cf_split_h_m_i_s[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cf_split_h_m_i_s;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cf_split_h_m_i_s_phase2_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cf_split_h_m_i_s_phase2_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cf_split_r_s[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cf_split_r_s;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_distance1_count_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_distance1_count_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_distance1_count_f64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_distance1_count_f64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_distance1_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_distance1_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_distance2_count_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_distance2_count_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_distance2_count_f64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_distance2_count_f64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_distance2_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_distance2_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_truncate_interpolation_count_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_truncate_interpolation_count_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_truncate_interpolation_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_truncate_interpolation_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cf_split_aggressive_p_m_i_s[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cf_split_aggressive_p_m_i_s;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cf_split_aggressive_h_m_i_s[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cf_split_aggressive_h_m_i_s;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cf_split_c_r_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cf_split_c_r_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cf_split_c_l_j_p[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cf_split_c_l_j_p;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_multipass_count_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_multipass_count_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_multipass_count_f64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_multipass_count_f64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_multipass_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_multipass_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_strength_symmetric_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_strength_symmetric_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_strength_algebraic_dist_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_strength_algebraic_dist_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_strength_affinity_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_strength_affinity_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_count_c_f_points[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_count_c_f_points;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_compute_grid_complexity[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_compute_grid_complexity;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_compute_operator_complexity[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_compute_operator_complexity;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_ext_no_i_count_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_ext_no_i_count_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_ext_no_i_count_f64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_ext_no_i_count_f64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_ext_no_i_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_ext_no_i_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_f_f_weights_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_f_f_weights_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_symbolic_row_nnz_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_symbolic_row_nnz_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_symbolic_row_nnz_f64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_symbolic_row_nnz_f64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_build_coarse_to_fine_map[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_build_coarse_to_fine_map;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_build_fine_to_coarse_map_count[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_build_fine_to_coarse_map_count;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_build_fine_to_coarse_map[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_build_fine_to_coarse_map;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_em_initial_prolongation_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_em_initial_prolongation_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_em_energy_gradient_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_em_energy_gradient_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_em_update_prolongation_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_em_update_prolongation_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_em_normalize_p_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_em_normalize_p_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_em_energy_eval_partials_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_em_energy_eval_partials_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_parallel_greedy_coloring[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_parallel_greedy_coloring;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_min_max_coloring[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_min_max_coloring;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_min_max2_ring_coloring[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_min_max2_ring_coloring;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_multi_hash_coloring[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_multi_hash_coloring;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_build_color_offsets[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_build_color_offsets;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_reorder_c_s_r_by_color[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_reorder_c_s_r_by_color;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_round_robin_coloring[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_round_robin_coloring;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_bfs_coloring[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_bfs_coloring;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_locally_downwind_coloring[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_locally_downwind_coloring;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_greedy_recolor_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_greedy_recolor_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_greedy_recolor_f64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_greedy_recolor_f64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_validate_coloring[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_validate_coloring;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_color_histogram[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_color_histogram;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_uniform_random_coloring[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_uniform_random_coloring;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_saturation_coloring[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_saturation_coloring;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_reorder_vector_by_color_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_reorder_vector_by_color_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_diag_inv_sqrt_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_diag_inv_sqrt_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_apply_diag_sym_scale_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_apply_diag_sym_scale_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_binorm_row_scale_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_binorm_row_scale_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_shifted_sp_m_v_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_shifted_sp_m_v_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_deflated_project_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_deflated_project_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_page_rank_iter_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_page_rank_iter_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_w_cycle_weight_partials_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_w_cycle_weight_partials_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_convergence_factor_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_convergence_factor_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_block_gram_schmidt_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_block_gram_schmidt_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_small_dense_q_r_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_small_dense_q_r_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_lanczos_step_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_lanczos_step_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_arnoldi_step_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_arnoldi_step_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_lobpcg_rayleigh_ritz_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_lobpcg_rayleigh_ritz_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_lobpcg_residual_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_lobpcg_residual_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_power_iteration_normalize_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_power_iteration_normalize_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_rayleigh_quotient_partials_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_rayleigh_quotient_partials_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_jacobi_davidson_correction_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_jacobi_davidson_correction_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_jd_subspace_expand_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_jd_subspace_expand_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_subspace_orthogonalize_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_subspace_orthogonalize_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_subspace_convergence_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_subspace_convergence_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_block_sp_m_v_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_block_sp_m_v_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_multi_vec_norm_partials_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_multi_vec_norm_partials_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_multi_vec_scale_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_multi_vec_scale_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_dense_sym_eig_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_dense_sym_eig_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_convergence_relative_max_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_convergence_relative_max_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_convergence_combined_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_convergence_combined_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_convergence_divergence_check_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_convergence_divergence_check_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_update_max_norm_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_update_max_norm_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_amg_level_metrics_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_amg_level_metrics_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_amg_coarse_size_check_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_amg_coarse_size_check_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_amg_cycle_counter_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_amg_cycle_counter_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_amg_validate_coarsening_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_amg_validate_coarsening_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_halo_pack_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_halo_pack_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_halo_unpack_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_halo_unpack_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_halo_pack_b_s_r_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_halo_pack_b_s_r_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_partition_count_per_rank[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_partition_count_per_rank;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_partition_reorder_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_partition_reorder_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_global_to_local_index_map[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_global_to_local_index_map;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_distributed_sp_m_v_halo_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_distributed_sp_m_v_halo_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_merge_local_halo_result_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_merge_local_halo_result_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_ldu_to_csr_init_diagonal_count_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_ldu_to_csr_init_diagonal_count_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_ldu_to_csr_init_diagonal_count_f64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_ldu_to_csr_init_diagonal_count_f64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_ldu_to_csr_count_nnz_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_ldu_to_csr_count_nnz_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_ldu_to_csr_count_nnz_f64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_ldu_to_csr_count_nnz_f64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_ldu_to_csr_fill_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_ldu_to_csr_fill_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_ldu_diagonal_fill_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_ldu_diagonal_fill_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_compute_so_c_ldu_count_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_compute_so_c_ldu_count_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_compute_so_c_ldu_fill_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_compute_so_c_ldu_fill_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_compute_m_i_s_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_compute_m_i_s_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_compute_m_i_s_f64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_compute_m_i_s_f64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_sort_after_ldu_fill_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_sort_after_ldu_fill_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_compute_face_area_pair_weights_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_compute_face_area_pair_weights_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_restrict_by_agglomeration_gather_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_restrict_by_agglomeration_gather_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_prolongate_by_agglomeration_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_prolongate_by_agglomeration_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_diag_inv_apply_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_diag_inv_apply_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_gamg_proc_pack_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_gamg_proc_pack_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_gamg_proc_add_gather_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_gamg_proc_add_gather_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_gelu_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_gelu_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_gelu_tanh_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_gelu_tanh_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_silu_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_silu_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_relu_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_relu_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_quick_gelu_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_quick_gelu_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_squared_relu_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_squared_relu_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_bias_gelu_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_bias_gelu_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_gelu_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_gelu_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_silu_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_silu_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_relu_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_relu_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_quick_gelu_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_quick_gelu_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_squared_relu_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_squared_relu_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_geglu_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_geglu_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_swiglu_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_swiglu_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_reglu_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_reglu_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_geglu_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_geglu_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_swiglu_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_swiglu_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_reglu_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_reglu_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_gelu_backward_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_gelu_backward_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_silu_backward_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_silu_backward_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_relu_backward_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_relu_backward_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_quick_gelu_backward_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_quick_gelu_backward_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_gelu_backward_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_gelu_backward_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_silu_backward_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_silu_backward_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_relu_backward_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_relu_backward_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_quick_gelu_backward_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_quick_gelu_backward_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_rms_norm_forward_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_rms_norm_forward_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_rms_norm_forward_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_rms_norm_forward_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_layer_norm_forward_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_layer_norm_forward_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_layer_norm_forward_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_layer_norm_forward_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_layer_norm_backward_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_layer_norm_backward_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_layer_norm_backward_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_layer_norm_backward_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_rms_norm_backward_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_rms_norm_backward_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_rms_norm_backward_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_rms_norm_backward_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_layer_norm_multi_pass_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_layer_norm_multi_pass_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_layer_norm_multi_pass_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_layer_norm_multi_pass_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_rms_norm_multi_pass_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_rms_norm_multi_pass_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_rms_norm_multi_pass_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_rms_norm_multi_pass_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_softmax_forward_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_softmax_forward_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_softmax_forward_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_softmax_forward_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_softmax_backward_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_softmax_backward_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_softmax_backward_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_softmax_backward_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_softmax_with_mask_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_softmax_with_mask_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_softmax_with_mask_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_softmax_with_mask_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_softmax_with_mask_backward_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_softmax_with_mask_backward_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_softmax_with_mask_backward_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_softmax_with_mask_backward_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_softmax_multi_pass_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_softmax_multi_pass_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_softmax_multi_pass_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_softmax_multi_pass_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_cast_f32_to_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_cast_f32_to_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_cast_f16_to_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_cast_f16_to_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_transpose_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_transpose_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_transpose_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_transpose_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_fused_cast_transpose_f32_to_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_fused_cast_transpose_f32_to_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_cast_f32_to_f_p8_e4_m3[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_cast_f32_to_f_p8_e4_m3;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_cast_f_p8_e4_m3_to_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_cast_f_p8_e4_m3_to_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_cast_f32_to_f_p8_e5_m2[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_cast_f32_to_f_p8_e5_m2;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_cast_f_p8_e5_m2_to_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_cast_f_p8_e5_m2_to_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_fused_cast_transpose_f_p8[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_fused_cast_transpose_f_p8;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_transpose4_d_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_transpose4_d_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_transpose4_d_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_transpose4_d_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_dropout_forward_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_dropout_forward_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_dropout_forward_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_dropout_forward_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_dropout_backward_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_dropout_backward_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_dropout_backward_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_dropout_backward_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_rope_forward_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_rope_forward_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_rope_forward_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_rope_forward_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_rope_with_cache_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_rope_with_cache_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_rope_backward_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_rope_backward_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_rope_backward_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_rope_backward_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_rope_interleaved_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_rope_interleaved_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_rope_interleaved_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_rope_interleaved_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_simple_attention_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_simple_attention_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_simple_attention_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_simple_attention_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_paged_attention_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_paged_attention_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_simple_attention_with_mask_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_simple_attention_with_mask_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_simple_attention_with_mask_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_simple_attention_with_mask_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_simple_attention_with_padding_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_simple_attention_with_padding_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_simple_attention_with_padding_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_simple_attention_with_padding_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_simple_attention_backward_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_simple_attention_backward_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_simple_attention_backward_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_simple_attention_backward_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_kv_cache_append_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_kv_cache_append_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_kv_cache_append_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_kv_cache_append_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_kv_cache_rotate_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_kv_cache_rotate_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_tiled_gemm_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_tiled_gemm_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_tiled_gemm_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_tiled_gemm_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_tiled_gemm_backward_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_tiled_gemm_backward_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_tiled_gemm_backward_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_tiled_gemm_backward_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_multi_tensor_scale_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_multi_tensor_scale_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_multi_tensor_scale_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_multi_tensor_scale_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_multi_tensor_add_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_multi_tensor_add_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_multi_tensor_add_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_multi_tensor_add_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_multi_tensor_copy_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_multi_tensor_copy_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_multi_tensor_copy_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_multi_tensor_copy_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_multi_tensor_l2_norm_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_multi_tensor_l2_norm_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_multi_tensor_l2_norm_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_multi_tensor_l2_norm_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_multi_tensor_clip_grad_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_multi_tensor_clip_grad_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_multi_tensor_clip_grad_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_multi_tensor_clip_grad_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_top_k_gating_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_top_k_gating_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_top_k_gating_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_top_k_gating_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_expert_capacity_mask_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_expert_capacity_mask_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_expert_capacity_mask_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_expert_capacity_mask_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_permute_tokens_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_permute_tokens_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_permute_tokens_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_permute_tokens_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_unpermute_tokens_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_unpermute_tokens_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_unpermute_tokens_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_unpermute_tokens_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_pad_sequence_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_pad_sequence_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_pad_sequence_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_pad_sequence_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_unpad_sequence_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_unpad_sequence_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_unpad_sequence_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_unpad_sequence_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_swizzle_layout_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_swizzle_layout_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_swizzle_layout_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_swizzle_layout_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_hadamard_transform_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_hadamard_transform_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_hadamard_transform_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_hadamard_transform_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_permute_axes_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_permute_axes_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_permute_axes_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_permute_axes_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_pack_sequences_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_pack_sequences_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_pack_sequences_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_pack_sequences_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_unpack_sequences_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_unpack_sequences_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_unpack_sequences_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_unpack_sequences_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_generate_position_ids_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_generate_position_ids_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_generate_position_ids_u32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_generate_position_ids_u32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_generate_causal_mask_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_generate_causal_mask_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_generate_causal_mask_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_generate_causal_mask_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_precompute_rotary_emb_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_precompute_rotary_emb_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_precompute_rotary_emb_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_precompute_rotary_emb_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_init_seeds_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_init_seeds_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_expand_neighbors_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_expand_neighbors_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_check_visited[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_check_visited;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_clear_visited[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_clear_visited;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_extract_results_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_extract_results_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_compute_distances_batch_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_compute_distances_batch_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_search_layer_greedy_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_search_layer_greedy_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_select_neighbors_simple_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_select_neighbors_simple_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_select_neighbors_heuristic_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_select_neighbors_heuristic_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_update_candidate_list_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_update_candidate_list_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_extract_layer_results_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_extract_layer_results_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_init_search_state_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_init_search_state_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_mark_visited_batch[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_mark_visited_batch;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_check_visited_batch[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_check_visited_batch;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_merge_multi_query_results_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_merge_multi_query_results_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_compute_neighbor_distances_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_compute_neighbor_distances_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_greedy_search_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_greedy_search_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_robust_prune_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_robust_prune_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_insert_vertex_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_insert_vertex_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_random_init_neighbors_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_random_init_neighbors_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_extract_search_results_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_extract_search_results_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_batched_greedy_search_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_batched_greedy_search_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_compute_centroid_distances_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_compute_centroid_distances_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_scan_inverted_list_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_scan_inverted_list_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_assign_to_cluster_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_assign_to_cluster_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_count_cluster_sizes[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_count_cluster_sizes;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_populate_inverted_lists_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_populate_inverted_lists_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_ivfpq_compute_centroid_distances_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_ivfpq_compute_centroid_distances_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_ivfpq_compute_p_q_lookup_table_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_ivfpq_compute_p_q_lookup_table_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_ivfpq_compute_p_q_distances_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_ivfpq_compute_p_q_distances_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_ivfpq_encode_p_q_codes[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_ivfpq_encode_p_q_codes;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_ivfpq_compute_residuals_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_ivfpq_compute_residuals_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_initialize_random_graph[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_initialize_random_graph;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_compute_graph_distances_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_compute_graph_distances_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_nn_descent_join_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_nn_descent_join_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_build_reverse_graph[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_build_reverse_graph;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_prune_graph_r_n_g_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_prune_graph_r_n_g_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_compact_pruned_graph[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_compact_pruned_graph;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_compute_vertex_degrees[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_compute_vertex_degrees;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_prune_excess_degree[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_prune_excess_degree;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_reorder_vertices_by_degree[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_reorder_vertices_by_degree;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_compact_graph_edges[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_compact_graph_edges;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_validate_graph_integrity[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_validate_graph_integrity;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_prune_excess_degree_sorted[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_prune_excess_degree_sorted;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_accumulate_p_q_codebook_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_accumulate_p_q_codebook_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_normalize_p_q_codebook_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_normalize_p_q_codebook_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_train_p_q_codebook_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_train_p_q_codebook_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_group_by_sum_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_group_by_sum_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_group_by_sum_i64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_group_by_sum_i64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_group_by_count[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_group_by_count;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_group_by_min_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_group_by_min_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_group_by_max_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_group_by_max_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_group_by_sum_for_mean_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_group_by_sum_for_mean_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_group_by_nunique_helper_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_group_by_nunique_helper_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_group_by_nunique_helper_i64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_group_by_nunique_helper_i64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_group_by_sorted_sum[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_group_by_sorted_sum;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_group_by_sorted_count[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_group_by_sorted_count;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_sum_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_sum_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_sum_i64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_sum_i64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_sum_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_sum_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_min_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_min_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_max_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_max_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_count[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_count;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_mean_helper_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_mean_helper_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_variance_helper_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_variance_helper_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_arg_min_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_arg_min_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_arg_max_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_arg_max_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_arg_min_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_arg_min_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_arg_max_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_arg_max_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_std_helper[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_std_helper;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_product_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_product_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_product_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_product_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_rolling_sum_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_rolling_sum_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_rolling_count[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_rolling_count;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_rolling_min_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_rolling_min_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_rolling_max_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_rolling_max_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_rolling_mean_helper_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_rolling_mean_helper_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_rolling_variance_helper_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_rolling_variance_helper_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_expanding_sum_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_expanding_sum_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_expanding_count_valid[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_expanding_count_valid;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_compute_quantile_indices[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_compute_quantile_indices;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_select_quantile_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_select_quantile_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_select_quantile_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_select_quantile_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_batch_quantile_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_batch_quantile_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_compute_median_indices[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_compute_median_indices;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_select_median_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_select_median_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_add_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_add_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_add_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_add_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_sub_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_sub_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mul_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mul_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_div_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_div_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mod_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mod_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_sub_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_sub_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mul_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mul_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_div_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_div_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_add_i64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_add_i64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_sub_i64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_sub_i64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mul_i64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mul_i64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_div_i64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_div_i64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mod_i64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mod_i64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_eq_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_eq_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_eq_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_eq_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_lt_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_lt_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gt_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gt_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_le_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_le_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_ge_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_ge_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_ne_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_ne_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_ne_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_ne_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_lt_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_lt_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gt_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gt_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_le_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_le_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_ge_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_ge_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_bitwise_and_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_bitwise_and_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_bitwise_and_i64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_bitwise_and_i64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_bitwise_or_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_bitwise_or_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_bitwise_or_i64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_bitwise_or_i64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_bitwise_xor_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_bitwise_xor_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_bitwise_xor_i64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_bitwise_xor_i64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_bitwise_not_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_bitwise_not_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_bitwise_not_i64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_bitwise_not_i64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_hour_from_seconds[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_hour_from_seconds;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_minute_from_seconds[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_minute_from_seconds;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_second_from_seconds[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_second_from_seconds;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_day_of_week_from_seconds[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_day_of_week_from_seconds;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_year_from_seconds[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_year_from_seconds;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_month_from_seconds[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_month_from_seconds;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_day_from_seconds[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_day_from_seconds;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_day_of_year_from_seconds[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_day_of_year_from_seconds;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_add_days_to_timestamp[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_add_days_to_timestamp;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_add_months_to_timestamp[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_add_months_to_timestamp;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_subtract_timestamps[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_subtract_timestamps;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_timestamp_to_date_parts[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_timestamp_to_date_parts;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_date_parts_to_timestamp[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_date_parts_to_timestamp;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_convert_timestamp_precision[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_convert_timestamp_precision;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_combine_hash_values[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_combine_hash_values;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_hash_column_row[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_hash_column_row;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_md5_hash[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_md5_hash;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_sha256_hash[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_sha256_hash;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_identity_hash_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_identity_hash_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_identity_hash_i64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_identity_hash_i64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_murmur3_hash32_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_murmur3_hash32_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_murmur3_hash32_i64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_murmur3_hash32_i64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_cross_join_compute_output_size[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_cross_join_compute_output_size;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_cross_join_gather_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_cross_join_gather_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_hash_keys_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_hash_keys_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_build_hash_table_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_build_hash_table_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_probe_hash_table_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_probe_hash_table_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_join_results_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_join_results_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_join_results_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_join_results_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mark_left_matched[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mark_left_matched;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_filter_semi_join[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_filter_semi_join;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_filter_anti_join[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_filter_anti_join;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_count_unmatched_left[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_count_unmatched_left;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_unmatched_left_indices[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_unmatched_left_indices;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_left_join_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_left_join_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_left_join_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_left_join_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_right_join_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_right_join_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_right_join_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_right_join_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_count_unmatched_right[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_count_unmatched_right;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_unmatched_right_indices[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_unmatched_right_indices;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_nested_loop_join_probe[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_nested_loop_join_probe;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_nested_loop_join_gather_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_nested_loop_join_gather_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_sort_merge_join_probe[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_sort_merge_join_probe;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_sort_merge_join_gather_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_sort_merge_join_gather_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_argsort_init_indices[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_argsort_init_indices;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_argsort_bitonic_step_argsort_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_argsort_bitonic_step_argsort_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_argsort_bitonic_step_argsort_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_argsort_bitonic_step_argsort_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_argsort_bitonic_step_argsort_i64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_argsort_bitonic_step_argsort_i64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_argsort_bitonic_step_sort_by_key_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_argsort_bitonic_step_sort_by_key_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_merge_step_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_merge_step_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_merge_step_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_merge_step_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_merge_step_i64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_merge_step_i64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_radix_scatter_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_radix_scatter_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_radix_scatter_i64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_radix_scatter_i64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_radix_scatter_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_radix_scatter_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_len[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_len;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_upper_chars[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_upper_chars;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_lower_chars[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_lower_chars;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_starts_with_char[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_starts_with_char;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_capitalize_first_char[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_capitalize_first_char;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_title_case_char[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_title_case_char;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_swap_case_char[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_swap_case_char;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_normalize_whitespace_char[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_normalize_whitespace_char;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_is_digit[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_is_digit;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_is_alpha[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_is_alpha;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_is_alnum[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_is_alnum;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_is_space[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_is_space;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_is_upper[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_is_upper;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_is_lower[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_is_lower;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_concat_pair_offsets[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_concat_pair_offsets;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_concat_copy_chars[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_concat_copy_chars;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_join_with_sep_offsets[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_join_with_sep_offsets;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_join_copy_with_sep[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_join_copy_with_sep;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_compare[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_compare;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_equals[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_equals;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_less_than[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_less_than;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_strip_leading_count[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_strip_leading_count;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_strip_trailing_count[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_strip_trailing_count;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_strip_both_count[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_strip_both_count;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_slice_bounds[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_slice_bounds;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_contains_char[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_contains_char;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_ends_with_char[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_ends_with_char;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_pad_left_calc[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_pad_left_calc;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_pad_center[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_pad_center;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_zfill[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_zfill;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_wrap_bounds[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_wrap_bounds;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_substring_bounds[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_substring_bounds;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_left_bounds[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_left_bounds;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_right_bounds[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_right_bounds;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_regex_match[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_regex_match;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_regex_extract[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_regex_extract;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_regex_replace[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_regex_replace;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_find_char[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_find_char;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_count_char[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_count_char;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_replace_char[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_replace_char;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_contains_pattern2[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_contains_pattern2;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_split_count_by_char[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_split_count_by_char;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_split_by_char[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_split_by_char;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_split_get_element[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_split_get_element;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_split_by_whitespace[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_split_by_whitespace;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_reverse_chars[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_reverse_chars;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_truncate_bounds[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_truncate_bounds;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_pad_right_calc[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_pad_right_calc;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_repeat_bounds[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_repeat_bounds;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_translate_char[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_translate_char;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_translate_table[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_translate_table;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_normalize[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_normalize;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_negate_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_negate_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_negate_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_negate_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_abs_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_abs_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_abs_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_abs_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_ceil_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_ceil_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_floor_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_floor_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_round_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_round_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_trunc_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_trunc_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_negate_i64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_negate_i64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_abs_i64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_abs_i64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_sqrt_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_sqrt_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_exp_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_exp_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_log_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_log_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_sin_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_sin_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_cos_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_cos_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_tan_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_tan_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_log10_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_log10_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_compute_concat_offsets[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_compute_concat_offsets;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_concat_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_concat_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_concat_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_concat_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_concat_i64[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_concat_i64;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_hash_partition_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_hash_partition_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_hash_partition_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_hash_partition_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_round_robin_partition[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_round_robin_partition;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_range_partition_bounds[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_range_partition_bounds;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_range_partition_assign[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_range_partition_assign;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_partition_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_partition_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_partition_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_partition_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_compute_partition_offsets[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_compute_partition_offsets;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_transpose_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_transpose_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_transpose_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_transpose_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_flatten_offsets[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_flatten_offsets;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_unflatten_copy[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_unflatten_copy;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_compute_split_bounds[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_compute_split_bounds;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_split_copy_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_split_copy_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_split_copy_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_split_copy_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_split_copy_validity[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_split_copy_validity;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_l2_squared_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_l2_squared_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_inner_product_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_inner_product_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_l1_distance_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_l1_distance_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_batch_l2_to_neighbors_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_batch_l2_to_neighbors_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_l2_squared_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_l2_squared_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_cosine_similarity_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_cosine_similarity_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_linf_distance_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_linf_distance_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_hamming_distance_u32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_hamming_distance_u32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_correlation_distance_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_correlation_distance_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_jaccard_distance_u32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_jaccard_distance_u32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_assign_labels_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_assign_labels_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_accumulate_cluster_sums_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_accumulate_cluster_sums_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_update_centroids_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_update_centroids_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_clear_cluster_sums_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_clear_cluster_sums_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_clear_cluster_counts[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_clear_cluster_counts;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_reduce_inertia_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_reduce_inertia_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_bitonic_sort_step_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_bitonic_sort_step_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_per_row_top_k_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_per_row_top_k_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_merge_sorted_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_merge_sorted_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_rerank_with_exact_distances_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_rerank_with_exact_distances_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_filter_by_threshold_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_filter_by_threshold_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_merge_search_results_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_merge_search_results_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_compute_recall_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_compute_recall_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_scalar_quantize_f32_to_i8[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_scalar_quantize_f32_to_i8;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_scalar_dequantize_i8_to_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_scalar_dequantize_i8_to_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_compute_quantized_distances_i8[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_compute_quantized_distances_i8;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_encode_p_q_vectors_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_encode_p_q_vectors_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_decode_p_q_vectors_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_decode_p_q_vectors_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_direct_send_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_direct_send_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_direct_send_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_direct_send_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_direct_send_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_direct_send_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_direct_recv_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_direct_recv_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_direct_recv_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_direct_recv_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_direct_recv_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_direct_recv_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_reduce_local_sum_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_reduce_local_sum_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_reduce_local_sum_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_reduce_local_sum_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_reduce_local_sum_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_reduce_local_sum_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_reduce_local_min_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_reduce_local_min_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_reduce_local_min_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_reduce_local_min_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_reduce_local_min_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_reduce_local_min_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_reduce_local_max_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_reduce_local_max_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_reduce_local_max_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_reduce_local_max_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_reduce_local_max_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_reduce_local_max_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_reduce_scatter_step_sum_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_reduce_scatter_step_sum_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_reduce_scatter_step_sum_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_reduce_scatter_step_sum_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_reduce_scatter_step_sum_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_reduce_scatter_step_sum_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_reduce_scatter_step_min_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_reduce_scatter_step_min_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_reduce_scatter_step_min_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_reduce_scatter_step_min_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_reduce_scatter_step_min_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_reduce_scatter_step_min_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_reduce_scatter_step_max_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_reduce_scatter_step_max_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_reduce_scatter_step_max_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_reduce_scatter_step_max_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_reduce_scatter_step_max_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_reduce_scatter_step_max_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_all_gather_step_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_all_gather_step_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_all_gather_step_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_all_gather_step_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_all_gather_step_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_all_gather_step_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_all_reduce_sum_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_all_reduce_sum_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_all_reduce_sum_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_all_reduce_sum_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_all_reduce_sum_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_all_reduce_sum_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_all_gather_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_all_gather_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_all_gather_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_all_gather_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_all_gather_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_all_gather_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_linear_broadcast_f32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_linear_broadcast_f32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_linear_broadcast_f16[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_linear_broadcast_f16;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_linear_broadcast_i32[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_linear_broadcast_i32;
-extern const KernelArgumentInfo kAbiArgs_metal_navatala_samples_axpy_fallback[];
-extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_samples_axpy_fallback;
+extern const KernelArgumentInfo kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma[];
+extern const KernelAbiManifestInfo kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma;
+extern const KernelArgumentInfo kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma_k_loop[];
+extern const KernelAbiManifestInfo kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma_k_loop;
+extern const KernelArgumentInfo kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_direct[];
+extern const KernelAbiManifestInfo kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_direct;
+extern const KernelArgumentInfo kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared[];
+extern const KernelAbiManifestInfo kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared;
+extern const KernelArgumentInfo kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_edge[];
+extern const KernelAbiManifestInfo kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_edge;
+extern const KernelArgumentInfo kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_early_barrier[];
+extern const KernelAbiManifestInfo kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_early_barrier;
+extern const KernelArgumentInfo kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_padded[];
+extern const KernelAbiManifestInfo kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_padded;
+extern const KernelArgumentInfo kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined[];
+extern const KernelAbiManifestInfo kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined;
+extern const KernelArgumentInfo kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma_cta128[];
+extern const KernelAbiManifestInfo kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma_cta128;
+extern const KernelArgumentInfo kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma_cta128_edge[];
+extern const KernelAbiManifestInfo kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma_cta128_edge;
 extern const KernelArgumentInfo kAbiArgs_vulkan_navatala_cfd_boundary_force_partials[];
 extern const KernelAbiManifestInfo kAbiManifest_vulkan_navatala_cfd_boundary_force_partials;
 extern const KernelArgumentInfo kAbiArgs_vulkan_navatala_cfd_pack_owner_values[];
@@ -23672,8 +20892,12 @@ extern const KernelArgumentInfo kAbiArgs_vulkan_navatala_graph_degree_in_u32[];
 extern const KernelAbiManifestInfo kAbiManifest_vulkan_navatala_graph_degree_in_u32;
 extern const KernelArgumentInfo kAbiArgs_vulkan_navatala_graph_spmv_weighted_f32[];
 extern const KernelAbiManifestInfo kAbiManifest_vulkan_navatala_graph_spmv_weighted_f32;
+extern const KernelArgumentInfo kAbiArgs_vulkan_navatala_graph_spmv_weighted_subgroup_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_vulkan_navatala_graph_spmv_weighted_subgroup_f32;
 extern const KernelArgumentInfo kAbiArgs_vulkan_navatala_graph_spmv_unweighted_f32[];
 extern const KernelAbiManifestInfo kAbiManifest_vulkan_navatala_graph_spmv_unweighted_f32;
+extern const KernelArgumentInfo kAbiArgs_vulkan_navatala_graph_spmv_unweighted_subgroup_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_vulkan_navatala_graph_spmv_unweighted_subgroup_f32;
 extern const KernelArgumentInfo kAbiArgs_vulkan_navatala_graph_axpy2_f32[];
 extern const KernelAbiManifestInfo kAbiManifest_vulkan_navatala_graph_axpy2_f32;
 extern const KernelArgumentInfo kAbiArgs_vulkan_navatala_graph_scale_f32[];
@@ -25938,6 +23162,8 @@ extern const KernelArgumentInfo kAbiArgs_vulkan_navatala_transformer_kv_cache_ro
 extern const KernelAbiManifestInfo kAbiManifest_vulkan_navatala_transformer_kv_cache_rotate_f16;
 extern const KernelArgumentInfo kAbiArgs_vulkan_navatala_transformer_tiled_gemm_f16[];
 extern const KernelAbiManifestInfo kAbiManifest_vulkan_navatala_transformer_tiled_gemm_f16;
+extern const KernelArgumentInfo kAbiArgs_vulkan_navatala_transformer_tiled_gemm_f16_f32_out[];
+extern const KernelAbiManifestInfo kAbiManifest_vulkan_navatala_transformer_tiled_gemm_f16_f32_out;
 extern const KernelArgumentInfo kAbiArgs_vulkan_navatala_transformer_tiled_gemm_f32[];
 extern const KernelAbiManifestInfo kAbiManifest_vulkan_navatala_transformer_tiled_gemm_f32;
 extern const KernelArgumentInfo kAbiArgs_vulkan_navatala_transformer_tiled_gemm_backward_f32[];
@@ -26628,6 +23854,2852 @@ extern const KernelArgumentInfo kAbiArgs_vulkan_navatala_nccl_linear_broadcast_i
 extern const KernelAbiManifestInfo kAbiManifest_vulkan_navatala_nccl_linear_broadcast_i32;
 extern const KernelArgumentInfo kAbiArgs_vulkan_navatala_samples_axpy_fallback[];
 extern const KernelAbiManifestInfo kAbiManifest_vulkan_navatala_samples_axpy_fallback;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_boundary_force_partials[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_boundary_force_partials;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_pack_owner_values[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_pack_owner_values;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_scatter_values_and_mask[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_scatter_values_and_mask;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_pack_mu_grad_owner[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_pack_mu_grad_owner;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_pack_owner_rho_vec3[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_pack_owner_rho_vec3;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_pack_owner_vec3[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_pack_owner_vec3;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_pack_owner_vec3_mu[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_pack_owner_vec3_mu;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_scatter_mu_grad_ghost[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_scatter_mu_grad_ghost;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_scatter_rho_vec3_and_mask[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_scatter_rho_vec3_and_mask;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_scatter_vec3_and_mask[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_scatter_vec3_and_mask;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_scatter_vec3_mu_and_mask[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_scatter_vec3_mu_and_mask;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_add_vol_vector[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_add_vol_vector;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_div_rho_phi_u_explicit[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_div_rho_phi_u_explicit;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_hby_a_from_u_and_terms[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_hby_a_from_u_and_terms;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_apply_sp_to_hby_a[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_apply_sp_to_hby_a;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_laplacian_scalar_explicit[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_laplacian_scalar_explicit;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_laplacian_vector_explicit[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_laplacian_vector_explicit;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_predictor_hby_a_from_source[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_predictor_hby_a_from_source;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_predictor_inverse_diag[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_predictor_inverse_diag;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_predictor_phi_hby_a_fuse[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_predictor_phi_hby_a_fuse;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_axpy_cells[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_axpy_cells;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_ddt_diagonal[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_ddt_diagonal;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_div_upwind_coeffs[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_div_upwind_coeffs;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_fvm_sp[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_fvm_sp;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_fvm_su_sp[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_fvm_su_sp;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_laplacian_coeffs[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_laplacian_coeffs;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_laplacian_coeffs_accum[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_laplacian_coeffs_accum;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_linear_upwind_correction_source[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_linear_upwind_correction_source;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_matrix_relax[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_matrix_relax;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_neg_sum_diag[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_neg_sum_diag;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_pack_boundary_adjacent_cells[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_pack_boundary_adjacent_cells;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_scalar_jacobi_clamp_min[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_scalar_jacobi_clamp_min;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_scalar_jacobi_update[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_scalar_jacobi_update;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_scalar_ldu_mat_vec[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_scalar_ldu_mat_vec;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_scalar_ldu_multi_color_gs_sweep[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_scalar_ldu_multi_color_gs_sweep;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_sum_mag_off_diag[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_sum_mag_off_diag;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_gamg_axpy_in_place[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_gamg_axpy_in_place;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_gamg_compute_scale_factor[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_gamg_compute_scale_factor;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_gamg_dot_finalize[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_gamg_dot_finalize;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_gamg_negate_scalar[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_gamg_negate_scalar;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_gamg_scale_correction[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_gamg_scale_correction;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mg_coarse_jacobi[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mg_coarse_jacobi;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mg_coarse_matvec[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mg_coarse_matvec;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mg_coarse_rhs[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mg_coarse_rhs;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mg_find_best_match[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mg_find_best_match;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mg_pair_match[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mg_pair_match;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mg_prolong_add[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mg_prolong_add;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mg_renumber_aggregates[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mg_renumber_aggregates;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mg_renumber_propagate[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mg_renumber_propagate;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mg_resolve_chains[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mg_resolve_chains;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mg_restrict_sum[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mg_restrict_sum;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mg_strength_of_connection[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mg_strength_of_connection;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mg_zero_coarse[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mg_zero_coarse;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_phi_correct[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_phi_correct;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_phi_correct_boundary[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_phi_correct_boundary;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_phi_correct_internal[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_phi_correct_internal;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_axpy_in_place[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_axpy_in_place;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_bc_dirichlet_face_flux[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_bc_dirichlet_face_flux;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_bc_sn_grad_face_flux[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_bc_sn_grad_face_flux;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_coeff_to_cf_in_place[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_coeff_to_cf_in_place;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_diag_from_cf[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_diag_from_cf;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_dic_apply[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_dic_apply;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_dic_build_reciprocal_d[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_dic_build_reciprocal_d;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_dot_partials[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_dot_partials;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_face_flux[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_face_flux;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_inv_diag[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_inv_diag;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_laplacian_from_face_flux[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_laplacian_from_face_flux;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mul_by_vol_in_place[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mul_by_vol_in_place;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_ref_add_ax[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_ref_add_ax;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_ref_add_b[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_ref_add_b;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_rhs_sub[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_rhs_sub;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_shift_in_place[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_shift_in_place;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_sum_abs_partials[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_sum_abs_partials;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_upper_from_cf[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_upper_from_cf;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_xpay_in_place[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_xpay_in_place;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_negate_scalar[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_negate_scalar;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_exact_mat_vec[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_exact_mat_vec;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_face_flux_boundary[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_face_flux_boundary;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_face_flux_internal[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_face_flux_internal;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_pressure_face_flux_correction_corrected[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_pressure_face_flux_correction_corrected;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_pressure_sn_grad[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_pressure_sn_grad;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_u_correct[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_u_correct;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_u_correct_reconstruct[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_u_correct_reconstruct;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_average_face_scalar_to_cell[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_average_face_scalar_to_cell;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_evaluate_scalar_bc[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_evaluate_scalar_bc;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_evaluate_vector_bc[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_evaluate_vector_bc;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_div_face_flux_csr[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_div_face_flux_csr;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_div_face_flux_vector_csr[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_div_face_flux_vector_csr;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_grad_v2[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_div_mu_dev2_t_grad_u_from_grad_v2;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_face_scalar_product[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_face_scalar_product;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_grad_vol_scalar_gauss[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_grad_vol_scalar_gauss;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_grad_vol_vector_gauss[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_grad_vol_vector_gauss;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_interp_scalar_face[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_interp_scalar_face;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_interp_scalar_face_all[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_interp_scalar_face_all;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_interp_vector_face[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_interp_vector_face;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_linear_upwind_scalar_face[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_linear_upwind_scalar_face;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_phi_from_u[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_phi_from_u;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_phi_from_u_boundary[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_phi_from_u_boundary;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_phi_from_u_internal[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_phi_from_u_internal;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_phig_gravity[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_phig_gravity;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_r_a_u_from_dt_rho[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_r_a_u_from_dt_rho;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_r_a_u_from_dt_rho_integrated[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_r_a_u_from_dt_rho_integrated;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_r_a_u_from_dt_rho_sp[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_r_a_u_from_dt_rho_sp;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_r_a_u_from_dt_rho_sp_integrated[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_r_a_u_from_dt_rho_sp_integrated;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_r_a_u_from_u_eqn_approx[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_r_a_u_from_u_eqn_approx;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_r_a_u_from_u_eqn_approx_sp[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_r_a_u_from_u_eqn_approx_sp;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_rho_from_alpha[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_rho_from_alpha;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_rho_phi_from_rho_and_phi[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_rho_phi_from_rho_and_phi;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_primitives_sn_grad_scalar[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_primitives_sn_grad_scalar;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_grad_alpha_cell[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_grad_alpha_cell;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_n_hatf_all[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_n_hatf_all;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_stf_all_faces[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_stf_all_faces;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_k_omega_s_s_t_blending[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_k_omega_s_s_t_blending;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_k_omega_s_s_t_nut_compute[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_k_omega_s_s_t_nut_compute;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_k_omega_s_s_t_sources[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_k_omega_s_s_t_sources;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mu_eff_from_rho_nu_eff[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mu_eff_from_rho_nu_eff;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_mu_eff_from_rho_nut_and_nu_mix[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_mu_eff_from_rho_nut_and_nu_mix;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_turbulence_add_explicit_source_device[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_turbulence_add_explicit_source_device;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_turbulence_dirichlet_cell_source[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_turbulence_dirichlet_cell_source;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_turbulence_dirichlet_face_elimination[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_turbulence_dirichlet_face_elimination;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_two_mag_sqr_symm_grad_u[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_two_mag_sqr_symm_grad_u;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_vof_alpha_phi_all[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_vof_alpha_phi_all;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_vof_alpha_phi_int[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_vof_alpha_phi_int;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_vof_average_face_scalar_to_cell[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_vof_average_face_scalar_to_cell;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_vof_interp_scalar_face_all[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_vof_interp_scalar_face_all;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_vof_alpha_update[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_vof_alpha_update;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_vof_mules_apply[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_vof_mules_apply;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_vof_mules_cell_lambda[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_vof_mules_cell_lambda;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_vof_mules_cell_sums[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_vof_mules_cell_sums;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_vof_mules_face_update[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_vof_mules_face_update;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_vof_mules_fill_lambda[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_vof_mules_fill_lambda;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_vof_mules_init[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_vof_mules_init;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_vof_phi_b_d_corr[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_vof_phi_b_d_corr;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_vof_phir[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_vof_phir;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_vof_rho_phi_accumulate[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_vof_rho_phi_accumulate;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_samples_float32_add[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_samples_float32_add;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_samples_triangle_normals2[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_samples_triangle_normals2;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_attention_row_softmax[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_attention_row_softmax;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_attention_value_projection[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_attention_value_projection;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_gather_mean[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_gather_mean;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_layer_norm_forward[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_layer_norm_forward;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_radius_count[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_radius_count;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_scaled_dot_product[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_scaled_dot_product;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_scatter_add_atomic[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_scatter_add_atomic;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_spectral_complex_mul[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_spectral_complex_mul;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_spectral_conv1d_mode_sliced[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_spectral_conv1d_mode_sliced;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_spectral_conv2d_mode_sliced[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_spectral_conv2d_mode_sliced;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_spectral_conv3d_mode_sliced[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_spectral_conv3d_mode_sliced;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_spectral_conv4d_mode_sliced[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_spectral_conv4d_mode_sliced;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_writeback_sum_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_writeback_sum_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_writeback_sum_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_writeback_sum_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_writeback_sum_u32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_writeback_sum_u32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_writeback_min_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_writeback_min_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_writeback_max_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_writeback_max_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_pack_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_pack_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_pack_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_pack_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_pack_u32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_pack_u32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_unpack_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_unpack_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_unpack_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_unpack_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_unpack_u32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_unpack_u32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_pack_f32x3[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_pack_f32x3;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_unpack_f32x3[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_unpack_f32x3;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_pack_f32x6[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_pack_f32x6;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_unpack_f32x6[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_unpack_f32x6;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_pack_f32x9[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_pack_f32x9;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_unpack_f32x9[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_unpack_f32x9;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_init_welford_state_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_init_welford_state_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_welford_update_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_welford_update_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_welford_merge_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_welford_merge_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_variance_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_variance_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_sample_variance_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_sample_variance_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_stddev_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_stddev_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_init_covariance_state_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_init_covariance_state_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_covariance_update_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_covariance_update_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_covariance_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_covariance_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_correlation_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_correlation_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_init_weighted_welford_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_init_weighted_welford_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_weighted_welford_update_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_weighted_welford_update_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_weighted_welford_merge_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_weighted_welford_merge_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_weighted_variance_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_weighted_variance_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_weighted_reliability_variance_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_weighted_reliability_variance_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_weighted_stddev_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_weighted_stddev_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_init_weighted_covariance_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_init_weighted_covariance_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_weighted_covariance_update_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_weighted_covariance_update_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_weighted_covariance_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_weighted_covariance_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_weighted_correlation_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_weighted_correlation_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_init_weighted_mean_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_init_weighted_mean_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_weighted_mean_update_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_weighted_mean_update_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_init_p2_state_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_init_p2_state_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_p2_update_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_p2_update_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_p2_extract_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_p2_extract_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_init_reservoir256_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_init_reservoir256_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_reservoir_update256_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_reservoir_update256_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_reservoir_min256_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_reservoir_min256_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_reservoir_max256_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_reservoir_max256_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_init_ema_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_init_ema_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_init_ema_from_span_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_init_ema_from_span_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_ema_update_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_ema_update_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_ema_extract_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_ema_extract_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_ema_reset_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_ema_reset_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_init_dema_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_init_dema_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_dema_update_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_dema_update_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_dema_extract_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_dema_extract_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_trimmed_mean_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_trimmed_mean_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_iqm_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_iqm_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_winsorized_mean_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_winsorized_mean_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mad_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mad_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_normalized_mad_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_normalized_mad_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_robust_z_score_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_robust_z_score_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_detect_outliers_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_detect_outliers_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_init_t_digest_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_init_t_digest_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_tdigest_add_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_tdigest_add_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_tdigest_merge_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_tdigest_merge_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_tdigest_quantile_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_tdigest_quantile_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_tdigest_cdf_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_tdigest_cdf_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_tdigest_mean_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_tdigest_mean_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_tdigest_min_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_tdigest_min_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_tdigest_max_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_tdigest_max_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_tdigest_reset_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_tdigest_reset_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_inclusive_scan_sum_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_inclusive_scan_sum_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_inclusive_scan_sum_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_inclusive_scan_sum_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_inclusive_scan_sum_i32_to_i64_skip_nulls[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_inclusive_scan_sum_i32_to_i64_skip_nulls;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_inclusive_scan_sum_i64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_inclusive_scan_sum_i64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_reduce_sum_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_reduce_sum_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_reduce_sum_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_reduce_sum_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_reduce_sum_i32_to_i64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_reduce_sum_i32_to_i64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_reduce_min_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_reduce_min_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_reduce_max_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_reduce_max_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_count_valid[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_count_valid;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_i64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_i64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_scatter_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_scatter_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_scatter_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_scatter_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_compact_by_mask_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_compact_by_mask_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_compact_by_mask_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_compact_by_mask_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_compact_valid_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_compact_valid_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_fill_constant_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_fill_constant_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_fill_constant_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_fill_constant_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_fill_constant_i64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_fill_constant_i64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_fill_range_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_fill_range_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_fill_range_i64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_fill_range_i64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_fill_validity_all_valid[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_fill_validity_all_valid;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_fill_validity_all_null[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_fill_validity_all_null;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_fill_null_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_fill_null_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_fill_null_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_fill_null_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_is_null[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_is_null;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_is_valid[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_is_valid;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_copy_if_valid_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_copy_if_valid_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_coalesce_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_coalesce_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_norm_linf_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_norm_linf_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_neg_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_neg_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_abs_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_abs_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_sqrt_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_sqrt_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_rsqrt_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_rsqrt_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_reciprocal_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_reciprocal_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_exp_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_exp_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_log_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_log_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_sin_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_sin_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_cos_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_cos_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_tan_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_tan_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_floor_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_floor_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_ceil_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_ceil_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_round_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_round_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_relu_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_relu_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_leaky_relu_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_leaky_relu_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_elu_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_elu_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_tanh_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_tanh_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_sigmoid_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_sigmoid_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_softplus_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_softplus_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_swish_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_swish_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_gelu_tanh_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_gelu_tanh_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_add_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_add_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_sub_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_sub_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_mul_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_mul_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_div_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_div_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_max_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_max_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_min_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_min_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_cmp_eq_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_cmp_eq_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_cmp_ne_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_cmp_ne_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_cmp_lt_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_cmp_lt_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_cmp_le_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_cmp_le_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_cmp_gt_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_cmp_gt_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_cmp_ge_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_cmp_ge_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_relu_bwd_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_relu_bwd_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_sigmoid_bwd_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_sigmoid_bwd_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_tanh_bwd_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_tanh_bwd_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_neg_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_neg_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_abs_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_abs_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_sqrt_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_sqrt_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_rsqrt_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_rsqrt_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_reciprocal_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_reciprocal_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_exp_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_exp_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_log_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_log_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_sin_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_sin_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_cos_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_cos_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_tan_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_tan_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_floor_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_floor_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_ceil_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_ceil_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_round_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_round_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_relu_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_relu_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_leaky_relu_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_leaky_relu_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_elu_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_elu_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_tanh_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_tanh_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_sigmoid_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_sigmoid_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_softplus_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_softplus_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_swish_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_swish_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_gelu_tanh_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_gelu_tanh_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_add_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_add_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_sub_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_sub_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_mul_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_mul_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_div_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_div_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_max_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_max_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_min_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_min_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_cmp_eq_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_cmp_eq_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_cmp_ne_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_cmp_ne_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_cmp_lt_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_cmp_lt_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_cmp_le_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_cmp_le_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_cmp_gt_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_cmp_gt_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_cmp_ge_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_cmp_ge_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_relu_bwd_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_relu_bwd_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_sigmoid_bwd_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_sigmoid_bwd_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pointwise_tanh_bwd_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pointwise_tanh_bwd_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_sum_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_sum_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_prod_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_prod_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_min_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_min_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_max_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_max_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_amax_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_amax_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_norm1_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_norm1_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_avg_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_avg_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_norm2_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_norm2_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_sum_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_sum_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_prod_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_prod_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_min_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_min_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_max_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_max_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_amax_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_amax_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_norm1_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_norm1_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_avg_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_avg_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reduction_norm2_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reduction_norm2_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_maxpool_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_maxpool_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_avgpool_exclude_pad_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_avgpool_exclude_pad_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_avgpool_include_pad_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_avgpool_include_pad_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_resize_nearest_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_resize_nearest_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_resize_bilinear_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_resize_bilinear_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_maxpool_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_maxpool_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_avgpool_exclude_pad_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_avgpool_exclude_pad_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_avgpool_include_pad_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_avgpool_include_pad_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_resize_nearest_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_resize_nearest_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_resize_bilinear_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_resize_bilinear_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reshape_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reshape_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_slice_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_slice_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_transpose_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_transpose_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_concatenate2_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_concatenate2_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_reshape_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_reshape_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_slice_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_slice_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_transpose_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_transpose_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_concatenate2_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_concatenate2_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_softmax_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_softmax_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_softmax_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_softmax_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_layernorm_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_layernorm_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_spatial_batchnorm_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_spatial_batchnorm_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_instancenorm_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_instancenorm_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_batchnorm_inference_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_batchnorm_inference_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_layernorm_backward_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_layernorm_backward_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_layernorm_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_layernorm_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_spatial_batchnorm_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_spatial_batchnorm_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_instancenorm_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_instancenorm_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_batchnorm_inference_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_batchnorm_inference_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_layernorm_backward_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_layernorm_backward_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_uniform_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_uniform_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_bernoulli_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_bernoulli_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_normal_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_normal_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_uniform_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_uniform_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_bernoulli_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_bernoulli_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_normal_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_normal_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_degree_out_u32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_degree_out_u32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_degree_in_u32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_degree_in_u32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_spmv_weighted_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_spmv_weighted_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_spmv_weighted_subgroup_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_spmv_weighted_subgroup_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_spmv_unweighted_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_spmv_unweighted_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_spmv_unweighted_subgroup_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_spmv_unweighted_subgroup_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_axpy2_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_axpy2_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_scale_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_scale_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_scale_add_bias_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_scale_add_bias_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_l1norm_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_l1norm_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_recip_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_recip_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_l1_diff_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_l1_diff_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_count_diff_u32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_count_diff_u32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_copy_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_copy_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_copy_u32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_copy_u32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_relax_vertex_pull_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_relax_vertex_pull_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_label_propagate_edges_u32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_label_propagate_edges_u32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_symmetrize_reverse_u32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_symmetrize_reverse_u32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_apply_renumber_u32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_apply_renumber_u32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_peel_below_threshold_u32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_peel_below_threshold_u32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_pair_intersection_u32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_pair_intersection_u32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_jaccard_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_jaccard_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_overlap_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_overlap_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_sorensen_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_sorensen_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_cosine_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_cosine_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_uniform_random_walk_u32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_uniform_random_walk_u32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_out_degree_u32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_out_degree_u32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_in_degree_u32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_in_degree_u32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_arg_max_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_arg_max_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_arg_min_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_arg_min_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_scan_sum_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_scan_sum_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_scan_sum_u32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_scan_sum_u32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_scan_exclusive_write_total_u32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_scan_exclusive_write_total_u32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_scan_max_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_scan_max_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_scan_min_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_scan_min_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_top_k_init_indices[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_top_k_init_indices;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_top_k_take_first_k_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_top_k_take_first_k_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_histogram_fast_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_histogram_fast_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_zero_bins[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_zero_bins;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_compute_bin_indices_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_compute_bin_indices_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_sum_reduce_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_sum_reduce_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mean_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mean_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_variance_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_variance_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_stddev_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_stddev_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_normalize_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_normalize_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_init_rng_state[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_init_rng_state;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_uniform_lcg_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_uniform_lcg_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_normal_box_muller_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_normal_box_muller_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_init_indices[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_init_indices;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_covariance_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_covariance_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_center_data_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_center_data_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_center_matrix_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_center_matrix_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_means_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_means_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_correlation_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_correlation_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_cov_to_correlation_matrix_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_cov_to_correlation_matrix_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_quantile_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_quantile_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_quantile_batch_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_quantile_batch_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_median_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_median_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_iqr_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_iqr_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_init_e_w_m_c_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_init_e_w_m_c_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_init_e_w_m_c_from_halflife_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_init_e_w_m_c_from_halflife_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_ewmc_update_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_ewmc_update_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_ewmc_extract_covariance_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_ewmc_extract_covariance_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_ewmc_extract_correlation_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_ewmc_extract_correlation_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_init_m_c_d_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_init_m_c_d_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mcd_compute_center_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mcd_compute_center_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mcd_compute_covariance_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mcd_compute_covariance_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mcd_mahalanobis_distance_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mcd_mahalanobis_distance_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mcd_detect_outliers_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mcd_detect_outliers_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mcd_extract_mean_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mcd_extract_mean_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_eig_select_top_k_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_eig_select_top_k_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_kde_bandwidth_silverman_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_kde_bandwidth_silverman_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_kde_bandwidth_scott_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_kde_bandwidth_scott_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_kde_evaluate_gaussian_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_kde_evaluate_gaussian_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_kde_evaluate_epanechnikov_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_kde_evaluate_epanechnikov_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_kde_find_mode_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_kde_find_mode_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_init_moments_state_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_init_moments_state_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_moments_update_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_moments_update_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_moments_merge_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_moments_merge_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_skewness_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_skewness_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_kurtosis_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_kurtosis_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_excess_kurtosis_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_excess_kurtosis_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pairwise_euclidean_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pairwise_euclidean_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pairwise_squared_euclidean_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pairwise_squared_euclidean_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pairwise_manhattan_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pairwise_manhattan_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pairwise_cosine_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pairwise_cosine_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_pairwise_chebyshev_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_pairwise_chebyshev_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_nearest_neighbor_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_nearest_neighbor_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_init_centroids_random_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_init_centroids_random_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_assign_to_centroids_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_assign_to_centroids_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_cluster_sums_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_cluster_sums_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_update_centroids_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_update_centroids_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_inertia_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_inertia_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_init_gmm_state_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_init_gmm_state_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_gaussian_log_pdf_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_gaussian_log_pdf_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_responsibilities_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_responsibilities_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_update_means_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_update_means_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_update_variances_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_update_variances_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_update_weights_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_update_weights_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_log_likelihood_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_log_likelihood_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_rbf_affinity_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_rbf_affinity_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_compute_degree_matrix_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_compute_degree_matrix_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_compute_laplacian_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_compute_laplacian_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_normalized_laplacian_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_normalized_laplacian_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_normalize_eigenvector_rows_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_normalize_eigenvector_rows_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_spectral_embedding_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_spectral_embedding_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_gram_matrix_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_gram_matrix_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_xt_y_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_xt_y_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_predict_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_predict_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_residuals_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_residuals_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_r_squared_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_r_squared_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_mean_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_mean_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_add_regularization_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_add_regularization_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_ridge_predict_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_ridge_predict_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_gcv_score_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_gcv_score_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_effective_dof_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_effective_dof_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_init_lasso_state_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_init_lasso_state_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_partial_residual_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_partial_residual_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_soft_threshold_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_soft_threshold_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_coordinate_update_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_coordinate_update_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_objective_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_objective_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_active_set_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_active_set_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_center_data_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_center_data_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_covariance_matrix_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_covariance_matrix_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_project_to_principal_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_project_to_principal_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_explained_variance_ratio_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_explained_variance_ratio_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_pairwise_affinity_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_pairwise_affinity_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_symmetrize_affinity_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_symmetrize_affinity_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_init_embedding_random_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_init_embedding_random_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_q_distribution_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_q_distribution_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_gradient_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_gradient_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_apply_momentum_update_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_apply_momentum_update_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_k_l_divergence_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_k_l_divergence_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_perplexity_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_perplexity_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_normalize_embedding_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_normalize_embedding_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_exaggerated_p_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_exaggerated_p_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_neighbor_counts_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_neighbor_counts_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_identify_core_points_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_identify_core_points_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_identify_core_points_f64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_identify_core_points_f64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_init_cluster_labels_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_init_cluster_labels_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_init_cluster_labels_f64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_init_cluster_labels_f64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_expand_cluster_step_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_expand_cluster_step_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_propagate_core_labels_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_propagate_core_labels_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_mark_noise_points_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_mark_noise_points_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_mark_noise_points_f64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_mark_noise_points_f64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_count_clusters_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_count_clusters_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_count_clusters_f64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_count_clusters_f64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_cast_f32_to_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_cast_f32_to_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_cast_f16_to_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_cast_f16_to_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_reduce_sum_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_reduce_sum_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_reduce_max_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_reduce_max_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_runtime_deterministic_reduce_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_runtime_deterministic_reduce_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_runtime_deterministic_histogram_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_runtime_deterministic_histogram_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_sparse_add_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_sparse_add_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_sparse_sub_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_sparse_sub_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_sparse_scale_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_sparse_scale_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_sparse_hadamard_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_sparse_hadamard_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_sparse_abs_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_sparse_abs_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_sparse_threshold_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_sparse_threshold_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_coo_transpose_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_coo_transpose_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_sparse_inner_product_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_sparse_inner_product_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_sparse_l2_distance_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_sparse_l2_distance_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_sparse_cosine_distance_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_sparse_cosine_distance_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_sparse_jaccard_distance_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_sparse_jaccard_distance_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_sparse_jacobi_iter_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_sparse_jacobi_iter_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_sparse_gauss_seidel_iter_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_sparse_gauss_seidel_iter_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_sparse_cg_iter_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_sparse_cg_iter_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_sparse_bicgstab_iter_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_sparse_bicgstab_iter_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_compute_residual_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_compute_residual_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_compute_residual_norm_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_compute_residual_norm_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_spmv_row_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_spmv_row_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_chebyshev_smooth_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_chebyshev_smooth_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_find_min_edge_per_component_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_find_min_edge_per_component_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_merge_components_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_merge_components_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_merge_components_f64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_merge_components_f64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_mst_boruvka_step_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_mst_boruvka_step_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_elt_add_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_elt_add_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_elt_sub_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_elt_sub_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_elt_mul_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_elt_mul_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_elt_div_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_elt_div_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_elt_pow_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_elt_pow_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_elt_sqrt_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_elt_sqrt_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_elt_exp_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_elt_exp_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_elt_log_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_elt_log_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_elt_abs_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_elt_abs_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_elt_sign_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_elt_sign_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_transpose_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_transpose_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_transpose_in_place_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_transpose_in_place_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_transpose_batched_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_transpose_batched_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_map_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_map_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_reduce_row_sum_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_reduce_row_sum_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_reduce_col_sum_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_reduce_col_sum_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_reduce_row_max_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_reduce_row_max_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_reduce_col_max_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_reduce_col_max_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_map_reduce_sum_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_map_reduce_sum_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_outer_product_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_outer_product_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_batched_dot_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_batched_dot_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_trace_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_trace_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_frobenius_norm_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_frobenius_norm_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_extract_upper_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_extract_upper_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_extract_lower_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_extract_lower_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_set_upper_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_set_upper_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_set_lower_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_set_lower_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_gather_rows_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_gather_rows_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_gather_cols_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_gather_cols_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_gather_elements_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_gather_elements_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_gather_batched_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_gather_batched_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_scatter_rows_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_scatter_rows_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_scatter_cols_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_scatter_cols_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_scatter_add_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_scatter_add_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_scatter_max_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_scatter_max_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_slice_rows_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_slice_rows_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_slice_cols_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_slice_cols_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_slice_block_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_slice_block_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_strided_slice_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_strided_slice_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_extract_diagonal_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_extract_diagonal_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_extract_diagonal_k_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_extract_diagonal_k_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_set_diagonal_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_set_diagonal_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_diag_to_matrix_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_diag_to_matrix_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_shift_rows_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_shift_rows_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_shift_cols_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_shift_cols_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_roll_rows_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_roll_rows_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_roll_cols_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_roll_cols_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_sort_rows_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_sort_rows_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_sort_cols_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_sort_cols_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_argsort_rows_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_argsort_rows_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_linalg_argsort_cols_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_linalg_argsort_cols_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_contingency_matrix_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_contingency_matrix_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_silhouette_score_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_silhouette_score_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_adjusted_rand_index_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_adjusted_rand_index_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_normalized_mutual_info_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_normalized_mutual_info_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_homogeneity_score_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_homogeneity_score_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_completeness_score_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_completeness_score_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_v_measure_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_v_measure_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_r2_score_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_r2_score_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mse_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mse_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_rmse_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_rmse_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mae_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mae_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mape_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mape_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_explained_variance_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_explained_variance_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_entropy_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_entropy_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_cross_entropy_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_cross_entropy_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_kl_divergence_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_kl_divergence_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mutual_information_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mutual_information_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_conditional_entropy_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_conditional_entropy_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_neighborhood_recall_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_neighborhood_recall_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_trustworthiness_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_trustworthiness_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_continuity_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_continuity_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_permute_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_permute_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_shuffle_rows_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_shuffle_rows_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_sample_without_replacement_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_sample_without_replacement_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_sample_with_replacement_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_sample_with_replacement_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_bootstrap_sample_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_bootstrap_sample_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_make_blobs_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_make_blobs_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_make_blobs_anisotropic_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_make_blobs_anisotropic_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_make_moons_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_make_moons_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_make_circles_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_make_circles_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_make_regression_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_make_regression_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_make_classification_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_make_classification_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_make_sparse_uncorrelated_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_make_sparse_uncorrelated_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_rmat_generator_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_rmat_generator_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_erdos_renyi_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_erdos_renyi_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_barabasi_albert_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_barabasi_albert_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_select_top_k_per_row_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_select_top_k_per_row_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_select_top_k_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_select_top_k_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_arg_top_k_per_row_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_arg_top_k_per_row_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_arg_top_k_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_arg_top_k_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_partial_sort_per_row_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_partial_sort_per_row_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_knn_brute_force_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_knn_brute_force_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_knn_brute_force_euclidean_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_knn_brute_force_euclidean_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_knn_brute_force_cosine_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_knn_brute_force_cosine_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_knn_brute_force_manhattan_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_knn_brute_force_manhattan_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_knn_with_radius_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_knn_with_radius_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_knn_classify_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_knn_classify_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_knn_classify_f64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_knn_classify_f64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_knn_classify_weighted_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_knn_classify_weighted_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_knn_classify_probs_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_knn_classify_probs_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_vote_majority_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_vote_majority_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_vote_majority_f64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_vote_majority_f64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_knn_regress_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_knn_regress_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_knn_regress_weighted_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_knn_regress_weighted_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_knn_regress_median_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_knn_regress_median_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_compute_modularity_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_compute_modularity_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_modularity_matrix_vec_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_modularity_matrix_vec_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_construct_indicator_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_construct_indicator_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_compute_edge_cut_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_compute_edge_cut_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_compute_partition_cost_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_compute_partition_cost_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_analyze_partition_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_analyze_partition_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_transform_eigen_matrix_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_transform_eigen_matrix_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_graph_laplacian_from_adjacency_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_graph_laplacian_from_adjacency_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_traverse_tree_classify_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_traverse_tree_classify_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_traverse_tree_regress_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_traverse_tree_regress_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_gini_impurity_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_gini_impurity_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_m_s_e_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_m_s_e_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_split_samples_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_split_samples_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_leaf_class_probs_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_leaf_class_probs_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_forest_classify_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_forest_classify_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_forest_regress_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_forest_regress_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_aggregate_importances_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_aggregate_importances_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_fil_infer_regression_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_fil_infer_regression_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_fil_infer_classification_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_fil_infer_classification_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_svm_predict_classify_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_svm_predict_classify_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_svm_predict_regress_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_svm_predict_regress_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_decision_function_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_decision_function_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_r_b_f_kernel_matrix_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_r_b_f_kernel_matrix_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_linear_kernel_matrix_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_linear_kernel_matrix_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_polynomial_kernel_matrix_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_polynomial_kernel_matrix_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_core_distances_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_core_distances_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_mutual_reachability_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_mutual_reachability_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_extract_cluster_labels_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_extract_cluster_labels_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_extract_cluster_labels_f64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_extract_cluster_labels_f64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_probabilities_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_probabilities_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_cluster_stability_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_cluster_stability_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_initialize_labels_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_initialize_labels_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_initialize_labels_f64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_initialize_labels_f64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_fuzzy_simplicial_set_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_fuzzy_simplicial_set_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_attraction_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_attraction_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_repulsion_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_repulsion_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_optimize_layout_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_optimize_layout_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_initialize_embedding_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_initialize_embedding_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_clear_gradients_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_clear_gradients_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_differencing_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_differencing_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_holt_winters_forecast_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_holt_winters_forecast_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_ar_predict_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_ar_predict_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_shap_values_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_shap_values_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_coalition_marginal_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_coalition_marginal_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_feature_interaction_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_feature_interaction_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_correlations_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_correlations_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_find_max_correlation_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_find_max_correlation_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_update_coefs_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_update_coefs_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_compute_equiangular_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_compute_equiangular_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_evaluate_fitness_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_evaluate_fitness_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_mutate_population_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_mutate_population_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_crossover_population_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_crossover_population_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_select_tournament_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_select_tournament_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_knn_sparse_k_n_n_distance_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_knn_sparse_k_n_n_distance_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_knn_sparse_inner_product_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_knn_sparse_inner_product_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_knn_sparse_top_k_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_knn_sparse_top_k_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_knn_csr_row_distance_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_knn_csr_row_distance_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_batch_traverse_trees_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_batch_traverse_trees_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_collect_leaf_values_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_collect_leaf_values_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_aggregate_tree_outputs_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_aggregate_tree_outputs_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_ml_traverse_with_path_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_ml_traverse_with_path_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_sp_m_v_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_sp_m_v_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_sp_m_v_scaled_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_sp_m_v_scaled_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_residual_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_residual_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_axpy_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_axpy_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_xpay_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_xpay_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_dot_partials_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_dot_partials_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_scal_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_scal_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_nrm2_partials_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_nrm2_partials_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_zero_fill_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_zero_fill_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_zero_fill_u32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_zero_fill_u32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_zero_scalar_u32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_zero_scalar_u32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_fill_neg_one_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_fill_neg_one_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_copy_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_copy_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_bsr_sp_m_v_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_bsr_sp_m_v_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_transpose_count_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_transpose_count_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_transpose_fill_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_transpose_fill_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_row_norm_l1_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_row_norm_l1_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_row_norm_linf_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_row_norm_linf_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_frobenius_partials_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_frobenius_partials_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_truncate_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_truncate_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_compact_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_compact_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_sort_columns_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_sort_columns_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_permute_rows_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_permute_rows_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_check_diag_dominance_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_check_diag_dominance_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_row_nnz_histogram[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_row_nnz_histogram;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_dense_l_u_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_dense_l_u_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_dense_l_u_solve_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_dense_l_u_solve_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_replace_values_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_replace_values_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_to_coo_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_to_coo_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_coo_to_csr_row_count[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_coo_to_csr_row_count;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_to_ell_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_to_ell_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_ell_sp_m_v_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_ell_sp_m_v_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_add_symbolic_row_nnz[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_add_symbolic_row_nnz;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_add_numeric_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_add_numeric_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_scale_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_scale_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_symmetry_check_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_symmetry_check_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_nnz_per_row[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_nnz_per_row;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_max_nnz_per_row_partials[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_max_nnz_per_row_partials;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_extract_diag_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_extract_diag_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_permute_cols_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_permute_cols_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_row_slice_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_row_slice_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cg_update_x_r_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cg_update_x_r_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cg_update_p_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cg_update_p_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cg_compute_alpha_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cg_compute_alpha_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cg_compute_beta_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cg_compute_beta_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cg_fused_update_dot_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cg_fused_update_dot_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cg_init_residual_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cg_init_residual_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cg_residual_norm_partials_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cg_residual_norm_partials_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_bicgstab_update_p_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_bicgstab_update_p_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_bicgstab_update_x_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_bicgstab_update_x_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_bicgstab_compute_beta_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_bicgstab_compute_beta_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_bicgstab_compute_omega_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_bicgstab_compute_omega_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_bicgstab_update_r_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_bicgstab_update_r_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_bicgstab_compute_s_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_bicgstab_compute_s_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_bicgstab_compute_alpha_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_bicgstab_compute_alpha_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_bicgstab_fused_update_all_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_bicgstab_fused_update_all_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_gmres_arnoldi_project_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_gmres_arnoldi_project_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_gmres_normalize_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_gmres_normalize_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_gmres_update_solution_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_gmres_update_solution_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_gmres_givens_rotation_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_gmres_givens_rotation_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_gmres_arnoldi_batch_project_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_gmres_arnoldi_batch_project_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_gmres_hessenberg_dot_partials_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_gmres_hessenberg_dot_partials_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_gmres_restart_init_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_gmres_restart_init_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_gmres_back_solve_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_gmres_back_solve_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_gmres_store_basis_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_gmres_store_basis_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_idr_shadow_project_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_idr_shadow_project_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_idr_update_x_r_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_idr_update_x_r_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_idr_g_space_update_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_idr_g_space_update_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_idr_compute_omega_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_idr_compute_omega_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_idr_build_shadow_space_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_idr_build_shadow_space_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_idr_m_sync_fused_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_idr_m_sync_fused_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_idr_compute_v_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_idr_compute_v_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_idr_store_d_r_column_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_idr_store_d_r_column_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_pcg_update_x_r_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_pcg_update_x_r_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_pcgf_update_p_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_pcgf_update_p_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_pbicgstab_fused_s_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_pbicgstab_fused_s_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_pbicgstab_triple_dot_partials_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_pbicgstab_triple_dot_partials_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_fgmres_store_z_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_fgmres_store_z_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_fgmres_update_solution_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_fgmres_update_solution_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_pipe_c_g_fused_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_pipe_c_g_fused_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_chronopoulos_c_g_scalars_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_chronopoulos_c_g_scalars_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_fgmres_m_g_s_project_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_fgmres_m_g_s_project_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_pbicgstab_fused_update_conv_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_pbicgstab_fused_update_conv_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_jacobi_sweep_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_jacobi_sweep_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_jacobi_l1_sweep_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_jacobi_l1_sweep_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_extract_diagonal_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_extract_diagonal_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_block_jacobi_sweep_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_block_jacobi_sweep_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cf_jacobi_sweep_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cf_jacobi_sweep_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_multicolor_gs_forward_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_multicolor_gs_forward_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_multicolor_gs_backward_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_multicolor_gs_backward_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_fixcolor_gs_forward_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_fixcolor_gs_forward_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_fixcolor_gs_backward_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_fixcolor_gs_backward_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_ilu_factor_color_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_ilu_factor_color_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_ilu_forward_sweep_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_ilu_forward_sweep_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_ilu_backward_sweep_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_ilu_backward_sweep_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_dilu_build_reciprocal_d_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_dilu_build_reciprocal_d_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_dilu_apply_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_dilu_apply_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_multicolor_dilu_forward_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_multicolor_dilu_forward_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_multicolor_dilu_backward_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_multicolor_dilu_backward_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_chebyshev_sweep_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_chebyshev_sweep_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_chebyshev_coeff_update_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_chebyshev_coeff_update_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_polynomial_sweep_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_polynomial_sweep_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_kpz_polynomial_sweep_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_kpz_polynomial_sweep_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_kaczmarz_row_norm_sq_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_kaczmarz_row_norm_sq_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_mg_restrict_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_mg_restrict_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_mg_prolongate_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_mg_prolongate_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_mg_convergence_absolute_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_mg_convergence_absolute_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_mg_convergence_relative_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_mg_convergence_relative_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_mg_compute_residual_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_mg_compute_residual_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_mg_weighted_restrict_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_mg_weighted_restrict_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_mg_error_norm_partials_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_mg_error_norm_partials_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_mg_zero_vector_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_mg_zero_vector_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_mg_prolongate_damped_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_mg_prolongate_damped_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_strength_of_connection_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_strength_of_connection_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_aggregate_size2_propose_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_aggregate_size2_propose_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_aggregate_size2_confirm[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_aggregate_size2_confirm;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_promote_unmatched_singletons[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_promote_unmatched_singletons;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_aggregate_size4_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_aggregate_size4_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_aggregate_size8_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_aggregate_size8_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_aggregate_parallel_greedy_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_aggregate_parallel_greedy_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_assign_leader_compact_ids[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_assign_leader_compact_ids;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_apply_compact_ids[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_apply_compact_ids;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_build_prolongation_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_build_prolongation_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_build_prolongation_terminator[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_build_prolongation_terminator;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_spgemm_symbolic_row_nnz[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_spgemm_symbolic_row_nnz;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_spgemm_numeric_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_spgemm_numeric_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_transpose[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_transpose;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_aggregate_adaptive_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_aggregate_adaptive_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_aggregate_multi_pairwise_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_aggregate_multi_pairwise_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_aggregate_geometric_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_aggregate_geometric_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_aggregate_serial_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_aggregate_serial_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_aggregate_low_degree_first_propose_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_aggregate_low_degree_first_propose_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_assign_orphans_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_assign_orphans_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_spgemm_numeric_hash_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_spgemm_numeric_hash_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_spgemm_numeric_serial_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_spgemm_numeric_serial_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_build_smoothed_prolongation_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_build_smoothed_prolongation_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_compute_aggregate_sizes[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_compute_aggregate_sizes;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_compute_coarsening_ratio[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_compute_coarsening_ratio;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cf_split_p_m_i_s[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cf_split_p_m_i_s;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cf_split_h_m_i_s[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cf_split_h_m_i_s;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cf_split_h_m_i_s_phase2_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cf_split_h_m_i_s_phase2_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cf_split_r_s[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cf_split_r_s;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_distance1_count_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_distance1_count_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_distance1_count_f64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_distance1_count_f64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_distance1_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_distance1_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_distance2_count_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_distance2_count_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_distance2_count_f64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_distance2_count_f64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_distance2_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_distance2_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_truncate_interpolation_count_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_truncate_interpolation_count_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_truncate_interpolation_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_truncate_interpolation_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cf_split_aggressive_p_m_i_s[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cf_split_aggressive_p_m_i_s;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cf_split_aggressive_h_m_i_s[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cf_split_aggressive_h_m_i_s;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cf_split_c_r_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cf_split_c_r_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_cf_split_c_l_j_p[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_cf_split_c_l_j_p;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_multipass_count_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_multipass_count_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_multipass_count_f64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_multipass_count_f64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_multipass_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_multipass_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_strength_symmetric_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_strength_symmetric_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_strength_algebraic_dist_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_strength_algebraic_dist_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_strength_affinity_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_strength_affinity_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_count_c_f_points[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_count_c_f_points;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_compute_grid_complexity[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_compute_grid_complexity;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_compute_operator_complexity[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_compute_operator_complexity;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_ext_no_i_count_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_ext_no_i_count_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_ext_no_i_count_f64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_ext_no_i_count_f64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_ext_no_i_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_ext_no_i_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_f_f_weights_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_f_f_weights_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_symbolic_row_nnz_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_symbolic_row_nnz_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_interpolate_symbolic_row_nnz_f64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_interpolate_symbolic_row_nnz_f64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_build_coarse_to_fine_map[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_build_coarse_to_fine_map;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_build_fine_to_coarse_map_count[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_build_fine_to_coarse_map_count;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_build_fine_to_coarse_map[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_build_fine_to_coarse_map;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_em_initial_prolongation_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_em_initial_prolongation_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_em_energy_gradient_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_em_energy_gradient_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_em_update_prolongation_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_em_update_prolongation_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_em_normalize_p_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_em_normalize_p_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_em_energy_eval_partials_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_em_energy_eval_partials_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_parallel_greedy_coloring[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_parallel_greedy_coloring;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_min_max_coloring[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_min_max_coloring;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_min_max2_ring_coloring[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_min_max2_ring_coloring;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_multi_hash_coloring[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_multi_hash_coloring;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_build_color_offsets[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_build_color_offsets;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_reorder_c_s_r_by_color[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_reorder_c_s_r_by_color;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_round_robin_coloring[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_round_robin_coloring;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_bfs_coloring[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_bfs_coloring;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_locally_downwind_coloring[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_locally_downwind_coloring;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_greedy_recolor_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_greedy_recolor_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_greedy_recolor_f64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_greedy_recolor_f64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_validate_coloring[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_validate_coloring;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_color_histogram[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_color_histogram;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_uniform_random_coloring[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_uniform_random_coloring;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_saturation_coloring[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_saturation_coloring;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_reorder_vector_by_color_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_reorder_vector_by_color_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_diag_inv_sqrt_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_diag_inv_sqrt_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_apply_diag_sym_scale_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_apply_diag_sym_scale_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_binorm_row_scale_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_binorm_row_scale_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_shifted_sp_m_v_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_shifted_sp_m_v_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_deflated_project_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_deflated_project_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_page_rank_iter_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_page_rank_iter_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_w_cycle_weight_partials_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_w_cycle_weight_partials_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_convergence_factor_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_convergence_factor_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_block_gram_schmidt_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_block_gram_schmidt_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_small_dense_q_r_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_small_dense_q_r_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_lanczos_step_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_lanczos_step_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_arnoldi_step_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_arnoldi_step_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_lobpcg_rayleigh_ritz_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_lobpcg_rayleigh_ritz_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_lobpcg_residual_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_lobpcg_residual_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_power_iteration_normalize_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_power_iteration_normalize_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_rayleigh_quotient_partials_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_rayleigh_quotient_partials_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_jacobi_davidson_correction_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_jacobi_davidson_correction_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_jd_subspace_expand_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_jd_subspace_expand_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_subspace_orthogonalize_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_subspace_orthogonalize_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_subspace_convergence_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_subspace_convergence_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_block_sp_m_v_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_block_sp_m_v_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_multi_vec_norm_partials_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_multi_vec_norm_partials_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_multi_vec_scale_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_multi_vec_scale_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_dense_sym_eig_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_dense_sym_eig_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_convergence_relative_max_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_convergence_relative_max_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_convergence_combined_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_convergence_combined_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_convergence_divergence_check_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_convergence_divergence_check_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_update_max_norm_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_update_max_norm_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_amg_level_metrics_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_amg_level_metrics_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_amg_coarse_size_check_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_amg_coarse_size_check_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_amg_cycle_counter_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_amg_cycle_counter_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_amg_validate_coarsening_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_amg_validate_coarsening_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_halo_pack_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_halo_pack_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_halo_unpack_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_halo_unpack_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_halo_pack_b_s_r_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_halo_pack_b_s_r_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_partition_count_per_rank[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_partition_count_per_rank;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_partition_reorder_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_partition_reorder_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_global_to_local_index_map[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_global_to_local_index_map;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_distributed_sp_m_v_halo_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_distributed_sp_m_v_halo_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_merge_local_halo_result_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_merge_local_halo_result_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_ldu_to_csr_init_diagonal_count_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_ldu_to_csr_init_diagonal_count_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_ldu_to_csr_init_diagonal_count_f64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_ldu_to_csr_init_diagonal_count_f64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_ldu_to_csr_count_nnz_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_ldu_to_csr_count_nnz_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_ldu_to_csr_count_nnz_f64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_ldu_to_csr_count_nnz_f64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_ldu_to_csr_fill_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_ldu_to_csr_fill_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_ldu_diagonal_fill_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_ldu_diagonal_fill_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_compute_so_c_ldu_count_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_compute_so_c_ldu_count_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_compute_so_c_ldu_fill_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_compute_so_c_ldu_fill_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_compute_m_i_s_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_compute_m_i_s_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_compute_m_i_s_f64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_compute_m_i_s_f64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_sparse_csr_sort_after_ldu_fill_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_sparse_csr_sort_after_ldu_fill_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_compute_face_area_pair_weights_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_compute_face_area_pair_weights_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_restrict_by_agglomeration_gather_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_restrict_by_agglomeration_gather_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_prolongate_by_agglomeration_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_prolongate_by_agglomeration_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_diag_inv_apply_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_diag_inv_apply_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_gamg_proc_pack_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_gamg_proc_pack_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_gamg_proc_add_gather_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_gamg_proc_add_gather_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_gelu_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_gelu_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_gelu_tanh_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_gelu_tanh_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_silu_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_silu_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_relu_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_relu_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_quick_gelu_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_quick_gelu_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_squared_relu_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_squared_relu_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_bias_gelu_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_bias_gelu_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_gelu_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_gelu_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_silu_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_silu_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_relu_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_relu_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_quick_gelu_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_quick_gelu_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_squared_relu_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_squared_relu_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_geglu_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_geglu_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_swiglu_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_swiglu_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_reglu_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_reglu_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_geglu_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_geglu_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_swiglu_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_swiglu_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_reglu_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_reglu_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_gelu_backward_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_gelu_backward_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_silu_backward_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_silu_backward_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_relu_backward_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_relu_backward_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_quick_gelu_backward_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_quick_gelu_backward_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_gelu_backward_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_gelu_backward_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_silu_backward_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_silu_backward_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_relu_backward_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_relu_backward_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_quick_gelu_backward_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_quick_gelu_backward_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_rms_norm_forward_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_rms_norm_forward_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_rms_norm_forward_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_rms_norm_forward_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_layer_norm_forward_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_layer_norm_forward_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_layer_norm_forward_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_layer_norm_forward_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_layer_norm_backward_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_layer_norm_backward_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_layer_norm_backward_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_layer_norm_backward_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_rms_norm_backward_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_rms_norm_backward_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_rms_norm_backward_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_rms_norm_backward_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_layer_norm_multi_pass_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_layer_norm_multi_pass_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_layer_norm_multi_pass_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_layer_norm_multi_pass_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_rms_norm_multi_pass_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_rms_norm_multi_pass_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_rms_norm_multi_pass_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_rms_norm_multi_pass_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_softmax_forward_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_softmax_forward_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_softmax_forward_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_softmax_forward_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_softmax_backward_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_softmax_backward_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_softmax_backward_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_softmax_backward_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_softmax_with_mask_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_softmax_with_mask_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_softmax_with_mask_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_softmax_with_mask_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_softmax_with_mask_backward_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_softmax_with_mask_backward_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_softmax_with_mask_backward_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_softmax_with_mask_backward_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_softmax_multi_pass_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_softmax_multi_pass_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_softmax_multi_pass_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_softmax_multi_pass_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_cast_f32_to_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_cast_f32_to_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_cast_f16_to_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_cast_f16_to_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_transpose_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_transpose_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_transpose_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_transpose_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_fused_cast_transpose_f32_to_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_fused_cast_transpose_f32_to_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_cast_f32_to_f_p8_e4_m3[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_cast_f32_to_f_p8_e4_m3;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_cast_f_p8_e4_m3_to_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_cast_f_p8_e4_m3_to_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_cast_f32_to_f_p8_e5_m2[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_cast_f32_to_f_p8_e5_m2;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_cast_f_p8_e5_m2_to_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_cast_f_p8_e5_m2_to_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_fused_cast_transpose_f_p8[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_fused_cast_transpose_f_p8;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_transpose4_d_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_transpose4_d_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_transpose4_d_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_transpose4_d_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_dropout_forward_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_dropout_forward_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_dropout_forward_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_dropout_forward_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_dropout_backward_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_dropout_backward_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_dropout_backward_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_dropout_backward_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_rope_forward_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_rope_forward_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_rope_forward_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_rope_forward_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_rope_with_cache_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_rope_with_cache_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_rope_backward_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_rope_backward_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_rope_backward_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_rope_backward_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_rope_interleaved_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_rope_interleaved_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_rope_interleaved_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_rope_interleaved_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_simple_attention_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_simple_attention_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_simple_attention_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_simple_attention_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_paged_attention_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_paged_attention_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_simple_attention_with_mask_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_simple_attention_with_mask_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_simple_attention_with_mask_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_simple_attention_with_mask_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_simple_attention_with_padding_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_simple_attention_with_padding_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_simple_attention_with_padding_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_simple_attention_with_padding_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_simple_attention_backward_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_simple_attention_backward_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_simple_attention_backward_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_simple_attention_backward_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_kv_cache_append_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_kv_cache_append_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_kv_cache_append_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_kv_cache_append_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_kv_cache_rotate_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_kv_cache_rotate_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_tiled_gemm_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_tiled_gemm_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_tiled_gemm_f16_f32_out[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_tiled_gemm_f16_f32_out;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_tiled_gemm_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_tiled_gemm_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_tiled_gemm_backward_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_tiled_gemm_backward_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_tiled_gemm_backward_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_tiled_gemm_backward_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_multi_tensor_scale_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_multi_tensor_scale_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_multi_tensor_scale_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_multi_tensor_scale_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_multi_tensor_add_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_multi_tensor_add_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_multi_tensor_add_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_multi_tensor_add_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_multi_tensor_copy_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_multi_tensor_copy_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_multi_tensor_copy_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_multi_tensor_copy_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_multi_tensor_l2_norm_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_multi_tensor_l2_norm_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_multi_tensor_l2_norm_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_multi_tensor_l2_norm_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_multi_tensor_clip_grad_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_multi_tensor_clip_grad_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_multi_tensor_clip_grad_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_multi_tensor_clip_grad_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_top_k_gating_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_top_k_gating_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_top_k_gating_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_top_k_gating_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_expert_capacity_mask_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_expert_capacity_mask_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_expert_capacity_mask_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_expert_capacity_mask_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_permute_tokens_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_permute_tokens_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_permute_tokens_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_permute_tokens_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_unpermute_tokens_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_unpermute_tokens_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_unpermute_tokens_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_unpermute_tokens_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_pad_sequence_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_pad_sequence_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_pad_sequence_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_pad_sequence_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_unpad_sequence_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_unpad_sequence_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_unpad_sequence_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_unpad_sequence_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_swizzle_layout_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_swizzle_layout_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_swizzle_layout_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_swizzle_layout_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_hadamard_transform_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_hadamard_transform_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_hadamard_transform_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_hadamard_transform_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_permute_axes_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_permute_axes_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_permute_axes_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_permute_axes_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_pack_sequences_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_pack_sequences_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_pack_sequences_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_pack_sequences_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_unpack_sequences_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_unpack_sequences_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_unpack_sequences_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_unpack_sequences_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_generate_position_ids_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_generate_position_ids_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_generate_position_ids_u32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_generate_position_ids_u32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_generate_causal_mask_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_generate_causal_mask_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_generate_causal_mask_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_generate_causal_mask_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_precompute_rotary_emb_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_precompute_rotary_emb_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_transformer_precompute_rotary_emb_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_transformer_precompute_rotary_emb_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_init_seeds_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_init_seeds_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_expand_neighbors_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_expand_neighbors_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_check_visited[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_check_visited;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_clear_visited[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_clear_visited;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_extract_results_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_extract_results_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_compute_distances_batch_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_compute_distances_batch_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_search_layer_greedy_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_search_layer_greedy_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_select_neighbors_simple_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_select_neighbors_simple_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_select_neighbors_heuristic_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_select_neighbors_heuristic_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_update_candidate_list_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_update_candidate_list_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_extract_layer_results_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_extract_layer_results_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_init_search_state_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_init_search_state_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_mark_visited_batch[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_mark_visited_batch;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_check_visited_batch[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_check_visited_batch;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_merge_multi_query_results_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_merge_multi_query_results_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_compute_neighbor_distances_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_compute_neighbor_distances_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_greedy_search_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_greedy_search_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_robust_prune_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_robust_prune_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_insert_vertex_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_insert_vertex_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_random_init_neighbors_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_random_init_neighbors_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_extract_search_results_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_extract_search_results_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_batched_greedy_search_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_batched_greedy_search_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_compute_centroid_distances_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_compute_centroid_distances_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_scan_inverted_list_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_scan_inverted_list_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_assign_to_cluster_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_assign_to_cluster_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_count_cluster_sizes[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_count_cluster_sizes;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_populate_inverted_lists_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_populate_inverted_lists_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_ivfpq_compute_centroid_distances_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_ivfpq_compute_centroid_distances_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_ivfpq_compute_p_q_lookup_table_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_ivfpq_compute_p_q_lookup_table_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_ivfpq_compute_p_q_distances_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_ivfpq_compute_p_q_distances_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_ivfpq_encode_p_q_codes[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_ivfpq_encode_p_q_codes;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_ivfpq_compute_residuals_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_ivfpq_compute_residuals_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_initialize_random_graph[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_initialize_random_graph;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_compute_graph_distances_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_compute_graph_distances_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_nn_descent_join_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_nn_descent_join_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_build_reverse_graph[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_build_reverse_graph;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_prune_graph_r_n_g_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_prune_graph_r_n_g_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_compact_pruned_graph[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_compact_pruned_graph;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_compute_vertex_degrees[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_compute_vertex_degrees;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_prune_excess_degree[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_prune_excess_degree;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_reorder_vertices_by_degree[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_reorder_vertices_by_degree;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_compact_graph_edges[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_compact_graph_edges;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_validate_graph_integrity[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_validate_graph_integrity;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_prune_excess_degree_sorted[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_prune_excess_degree_sorted;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_accumulate_p_q_codebook_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_accumulate_p_q_codebook_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_normalize_p_q_codebook_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_normalize_p_q_codebook_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_train_p_q_codebook_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_train_p_q_codebook_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_group_by_sum_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_group_by_sum_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_group_by_sum_i64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_group_by_sum_i64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_group_by_count[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_group_by_count;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_group_by_min_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_group_by_min_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_group_by_max_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_group_by_max_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_group_by_sum_for_mean_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_group_by_sum_for_mean_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_group_by_nunique_helper_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_group_by_nunique_helper_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_group_by_nunique_helper_i64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_group_by_nunique_helper_i64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_group_by_sorted_sum[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_group_by_sorted_sum;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_group_by_sorted_count[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_group_by_sorted_count;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_sum_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_sum_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_sum_i64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_sum_i64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_sum_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_sum_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_min_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_min_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_max_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_max_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_count[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_count;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_mean_helper_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_mean_helper_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_variance_helper_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_variance_helper_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_arg_min_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_arg_min_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_arg_max_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_arg_max_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_arg_min_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_arg_min_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_arg_max_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_arg_max_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_std_helper[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_std_helper;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_product_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_product_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_column_product_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_column_product_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_rolling_sum_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_rolling_sum_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_rolling_count[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_rolling_count;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_rolling_min_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_rolling_min_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_rolling_max_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_rolling_max_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_rolling_mean_helper_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_rolling_mean_helper_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_rolling_variance_helper_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_rolling_variance_helper_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_expanding_sum_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_expanding_sum_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_expanding_count_valid[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_expanding_count_valid;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_compute_quantile_indices[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_compute_quantile_indices;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_select_quantile_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_select_quantile_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_select_quantile_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_select_quantile_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_batch_quantile_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_batch_quantile_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_compute_median_indices[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_compute_median_indices;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_select_median_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_select_median_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_add_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_add_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_add_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_add_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_sub_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_sub_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mul_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mul_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_div_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_div_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mod_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mod_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_sub_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_sub_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mul_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mul_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_div_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_div_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_add_i64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_add_i64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_sub_i64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_sub_i64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mul_i64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mul_i64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_div_i64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_div_i64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mod_i64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mod_i64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_eq_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_eq_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_eq_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_eq_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_lt_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_lt_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gt_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gt_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_le_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_le_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_ge_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_ge_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_ne_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_ne_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_ne_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_ne_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_lt_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_lt_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gt_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gt_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_le_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_le_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_ge_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_ge_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_bitwise_and_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_bitwise_and_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_bitwise_and_i64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_bitwise_and_i64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_bitwise_or_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_bitwise_or_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_bitwise_or_i64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_bitwise_or_i64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_bitwise_xor_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_bitwise_xor_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_bitwise_xor_i64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_bitwise_xor_i64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_bitwise_not_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_bitwise_not_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_bitwise_not_i64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_bitwise_not_i64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_hour_from_seconds[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_hour_from_seconds;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_minute_from_seconds[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_minute_from_seconds;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_second_from_seconds[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_second_from_seconds;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_day_of_week_from_seconds[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_day_of_week_from_seconds;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_year_from_seconds[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_year_from_seconds;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_month_from_seconds[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_month_from_seconds;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_day_from_seconds[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_day_from_seconds;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_extract_day_of_year_from_seconds[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_extract_day_of_year_from_seconds;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_add_days_to_timestamp[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_add_days_to_timestamp;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_add_months_to_timestamp[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_add_months_to_timestamp;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_subtract_timestamps[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_subtract_timestamps;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_timestamp_to_date_parts[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_timestamp_to_date_parts;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_date_parts_to_timestamp[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_date_parts_to_timestamp;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_convert_timestamp_precision[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_convert_timestamp_precision;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_combine_hash_values[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_combine_hash_values;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_hash_column_row[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_hash_column_row;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_md5_hash[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_md5_hash;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_sha256_hash[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_sha256_hash;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_identity_hash_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_identity_hash_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_identity_hash_i64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_identity_hash_i64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_murmur3_hash32_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_murmur3_hash32_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_murmur3_hash32_i64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_murmur3_hash32_i64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_cross_join_compute_output_size[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_cross_join_compute_output_size;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_cross_join_gather_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_cross_join_gather_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_hash_keys_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_hash_keys_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_build_hash_table_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_build_hash_table_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_probe_hash_table_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_probe_hash_table_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_join_results_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_join_results_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_join_results_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_join_results_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_mark_left_matched[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_mark_left_matched;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_filter_semi_join[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_filter_semi_join;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_filter_anti_join[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_filter_anti_join;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_count_unmatched_left[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_count_unmatched_left;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_unmatched_left_indices[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_unmatched_left_indices;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_left_join_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_left_join_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_left_join_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_left_join_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_right_join_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_right_join_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_right_join_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_right_join_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_count_unmatched_right[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_count_unmatched_right;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_unmatched_right_indices[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_unmatched_right_indices;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_nested_loop_join_probe[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_nested_loop_join_probe;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_nested_loop_join_gather_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_nested_loop_join_gather_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_sort_merge_join_probe[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_sort_merge_join_probe;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_sort_merge_join_gather_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_sort_merge_join_gather_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_argsort_init_indices[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_argsort_init_indices;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_argsort_bitonic_step_argsort_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_argsort_bitonic_step_argsort_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_argsort_bitonic_step_argsort_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_argsort_bitonic_step_argsort_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_argsort_bitonic_step_argsort_i64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_argsort_bitonic_step_argsort_i64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_argsort_bitonic_step_sort_by_key_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_argsort_bitonic_step_sort_by_key_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_merge_step_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_merge_step_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_merge_step_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_merge_step_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_merge_step_i64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_merge_step_i64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_radix_scatter_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_radix_scatter_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_radix_scatter_i64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_radix_scatter_i64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_radix_scatter_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_radix_scatter_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_len[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_len;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_upper_chars[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_upper_chars;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_lower_chars[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_lower_chars;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_starts_with_char[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_starts_with_char;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_capitalize_first_char[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_capitalize_first_char;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_title_case_char[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_title_case_char;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_swap_case_char[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_swap_case_char;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_normalize_whitespace_char[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_normalize_whitespace_char;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_is_digit[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_is_digit;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_is_alpha[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_is_alpha;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_is_alnum[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_is_alnum;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_is_space[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_is_space;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_is_upper[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_is_upper;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_is_lower[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_is_lower;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_concat_pair_offsets[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_concat_pair_offsets;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_concat_copy_chars[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_concat_copy_chars;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_join_with_sep_offsets[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_join_with_sep_offsets;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_join_copy_with_sep[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_join_copy_with_sep;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_compare[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_compare;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_equals[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_equals;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_less_than[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_less_than;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_strip_leading_count[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_strip_leading_count;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_strip_trailing_count[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_strip_trailing_count;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_strip_both_count[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_strip_both_count;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_slice_bounds[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_slice_bounds;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_contains_char[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_contains_char;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_ends_with_char[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_ends_with_char;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_pad_left_calc[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_pad_left_calc;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_pad_center[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_pad_center;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_zfill[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_zfill;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_wrap_bounds[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_wrap_bounds;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_substring_bounds[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_substring_bounds;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_left_bounds[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_left_bounds;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_right_bounds[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_right_bounds;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_regex_match[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_regex_match;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_regex_extract[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_regex_extract;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_regex_replace[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_regex_replace;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_find_char[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_find_char;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_count_char[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_count_char;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_replace_char[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_replace_char;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_contains_pattern2[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_contains_pattern2;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_split_count_by_char[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_split_count_by_char;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_split_by_char[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_split_by_char;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_split_get_element[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_split_get_element;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_split_by_whitespace[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_split_by_whitespace;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_reverse_chars[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_reverse_chars;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_truncate_bounds[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_truncate_bounds;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_pad_right_calc[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_pad_right_calc;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_repeat_bounds[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_repeat_bounds;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_translate_char[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_translate_char;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_translate_table[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_translate_table;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_str_normalize[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_str_normalize;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_negate_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_negate_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_negate_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_negate_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_abs_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_abs_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_abs_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_abs_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_ceil_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_ceil_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_floor_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_floor_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_round_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_round_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_trunc_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_trunc_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_negate_i64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_negate_i64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_abs_i64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_abs_i64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_sqrt_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_sqrt_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_exp_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_exp_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_log_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_log_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_sin_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_sin_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_cos_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_cos_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_tan_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_tan_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_log10_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_log10_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_compute_concat_offsets[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_compute_concat_offsets;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_concat_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_concat_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_concat_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_concat_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_concat_i64[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_concat_i64;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_hash_partition_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_hash_partition_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_hash_partition_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_hash_partition_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_round_robin_partition[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_round_robin_partition;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_range_partition_bounds[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_range_partition_bounds;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_range_partition_assign[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_range_partition_assign;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_partition_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_partition_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_gather_partition_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_gather_partition_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_compute_partition_offsets[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_compute_partition_offsets;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_transpose_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_transpose_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_transpose_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_transpose_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_flatten_offsets[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_flatten_offsets;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_unflatten_copy[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_unflatten_copy;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_compute_split_bounds[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_compute_split_bounds;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_split_copy_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_split_copy_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_split_copy_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_split_copy_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_dataframe_split_copy_validity[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_dataframe_split_copy_validity;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_l2_squared_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_l2_squared_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_inner_product_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_inner_product_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_l1_distance_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_l1_distance_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_batch_l2_to_neighbors_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_batch_l2_to_neighbors_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_l2_squared_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_l2_squared_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_cosine_similarity_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_cosine_similarity_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_linf_distance_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_linf_distance_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_hamming_distance_u32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_hamming_distance_u32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_correlation_distance_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_correlation_distance_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_jaccard_distance_u32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_jaccard_distance_u32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_assign_labels_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_assign_labels_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_accumulate_cluster_sums_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_accumulate_cluster_sums_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_update_centroids_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_update_centroids_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_clear_cluster_sums_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_clear_cluster_sums_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_clear_cluster_counts[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_clear_cluster_counts;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_reduce_inertia_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_reduce_inertia_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_bitonic_sort_step_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_bitonic_sort_step_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_per_row_top_k_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_per_row_top_k_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_merge_sorted_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_merge_sorted_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_rerank_with_exact_distances_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_rerank_with_exact_distances_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_filter_by_threshold_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_filter_by_threshold_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_merge_search_results_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_merge_search_results_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_compute_recall_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_compute_recall_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_scalar_quantize_f32_to_i8[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_scalar_quantize_f32_to_i8;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_scalar_dequantize_i8_to_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_scalar_dequantize_i8_to_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_compute_quantized_distances_i8[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_compute_quantized_distances_i8;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_encode_p_q_vectors_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_encode_p_q_vectors_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_vector_search_decode_p_q_vectors_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_vector_search_decode_p_q_vectors_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_direct_send_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_direct_send_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_direct_send_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_direct_send_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_direct_send_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_direct_send_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_direct_recv_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_direct_recv_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_direct_recv_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_direct_recv_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_direct_recv_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_direct_recv_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_reduce_local_sum_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_reduce_local_sum_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_reduce_local_sum_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_reduce_local_sum_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_reduce_local_sum_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_reduce_local_sum_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_reduce_local_min_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_reduce_local_min_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_reduce_local_min_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_reduce_local_min_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_reduce_local_min_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_reduce_local_min_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_reduce_local_max_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_reduce_local_max_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_reduce_local_max_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_reduce_local_max_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_reduce_local_max_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_reduce_local_max_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_reduce_scatter_step_sum_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_reduce_scatter_step_sum_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_reduce_scatter_step_sum_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_reduce_scatter_step_sum_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_reduce_scatter_step_sum_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_reduce_scatter_step_sum_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_reduce_scatter_step_min_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_reduce_scatter_step_min_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_reduce_scatter_step_min_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_reduce_scatter_step_min_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_reduce_scatter_step_min_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_reduce_scatter_step_min_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_reduce_scatter_step_max_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_reduce_scatter_step_max_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_reduce_scatter_step_max_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_reduce_scatter_step_max_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_reduce_scatter_step_max_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_reduce_scatter_step_max_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_all_gather_step_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_all_gather_step_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_all_gather_step_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_all_gather_step_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_all_gather_step_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_all_gather_step_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_all_reduce_sum_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_all_reduce_sum_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_all_reduce_sum_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_all_reduce_sum_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_all_reduce_sum_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_all_reduce_sum_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_all_gather_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_all_gather_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_all_gather_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_all_gather_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_ring_all_gather_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_ring_all_gather_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_linear_broadcast_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_linear_broadcast_f32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_linear_broadcast_f16[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_linear_broadcast_f16;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_nccl_linear_broadcast_i32[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_nccl_linear_broadcast_i32;
+extern const KernelArgumentInfo kAbiArgs_metal_navatala_samples_axpy_fallback[];
+extern const KernelAbiManifestInfo kAbiManifest_metal_navatala_samples_axpy_fallback;
 extern const KernelArgumentInfo kAbiArgs_opencl_navatala_cfd_boundary_force_partials[];
 extern const KernelAbiManifestInfo kAbiManifest_opencl_navatala_cfd_boundary_force_partials;
 extern const KernelArgumentInfo kAbiArgs_opencl_navatala_cfd_pack_owner_values[];
@@ -27540,8 +27612,12 @@ extern const KernelArgumentInfo kAbiArgs_opencl_navatala_graph_degree_in_u32[];
 extern const KernelAbiManifestInfo kAbiManifest_opencl_navatala_graph_degree_in_u32;
 extern const KernelArgumentInfo kAbiArgs_opencl_navatala_graph_spmv_weighted_f32[];
 extern const KernelAbiManifestInfo kAbiManifest_opencl_navatala_graph_spmv_weighted_f32;
+extern const KernelArgumentInfo kAbiArgs_opencl_navatala_graph_spmv_weighted_subgroup_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_opencl_navatala_graph_spmv_weighted_subgroup_f32;
 extern const KernelArgumentInfo kAbiArgs_opencl_navatala_graph_spmv_unweighted_f32[];
 extern const KernelAbiManifestInfo kAbiManifest_opencl_navatala_graph_spmv_unweighted_f32;
+extern const KernelArgumentInfo kAbiArgs_opencl_navatala_graph_spmv_unweighted_subgroup_f32[];
+extern const KernelAbiManifestInfo kAbiManifest_opencl_navatala_graph_spmv_unweighted_subgroup_f32;
 extern const KernelArgumentInfo kAbiArgs_opencl_navatala_graph_axpy2_f32[];
 extern const KernelAbiManifestInfo kAbiManifest_opencl_navatala_graph_axpy2_f32;
 extern const KernelArgumentInfo kAbiArgs_opencl_navatala_graph_scale_f32[];
@@ -29756,6 +29832,8 @@ extern const KernelArgumentInfo kAbiArgs_opencl_navatala_transformer_kv_cache_ro
 extern const KernelAbiManifestInfo kAbiManifest_opencl_navatala_transformer_kv_cache_rotate_f16;
 extern const KernelArgumentInfo kAbiArgs_opencl_navatala_transformer_tiled_gemm_f16[];
 extern const KernelAbiManifestInfo kAbiManifest_opencl_navatala_transformer_tiled_gemm_f16;
+extern const KernelArgumentInfo kAbiArgs_opencl_navatala_transformer_tiled_gemm_f16_f32_out[];
+extern const KernelAbiManifestInfo kAbiManifest_opencl_navatala_transformer_tiled_gemm_f16_f32_out;
 extern const KernelArgumentInfo kAbiArgs_opencl_navatala_transformer_tiled_gemm_f32[];
 extern const KernelAbiManifestInfo kAbiManifest_opencl_navatala_transformer_tiled_gemm_f32;
 extern const KernelArgumentInfo kAbiArgs_opencl_navatala_transformer_tiled_gemm_backward_f32[];
@@ -30593,8 +30671,8 @@ bool tryGetKernelAbiManifest_metal_dataframe_argsort(const std::string& backend,
 bool tryGetKernelAbiManifest_metal_nccl(const std::string& backend, const std::string& kernelName, const KernelAbiManifestInfo*& out);
 bool tryGetKernelAbiManifest_hip_ml_reduction(const std::string& backend, const std::string& kernelName, const KernelAbiManifestInfo*& out);
 bool tryGetKernelAbiManifest_metal_samples(const std::string& backend, const std::string& kernelName, const KernelAbiManifestInfo*& out);
-bool tryGetKernelAbiManifest_metal_sparse_knn(const std::string& backend, const std::string& kernelName, const KernelAbiManifestInfo*& out);
 bool tryGetKernelAbiManifest_vulkan_graph(const std::string& backend, const std::string& kernelName, const KernelAbiManifestInfo*& out);
+bool tryGetKernelAbiManifest_metal_sparse_knn(const std::string& backend, const std::string& kernelName, const KernelAbiManifestInfo*& out);
 bool tryGetKernelAbiManifest_hip_sparse_mg(const std::string& backend, const std::string& kernelName, const KernelAbiManifestInfo*& out);
 bool tryGetKernelAbiManifest_vulkan_transformer(const std::string& backend, const std::string& kernelName, const KernelAbiManifestInfo*& out);
 bool tryGetKernelAbiManifest_opencl_cfd_primitives(const std::string& backend, const std::string& kernelName, const KernelAbiManifestInfo*& out);
@@ -30605,8 +30683,8 @@ bool tryGetKernelAbiManifest_metal_runtime(const std::string& backend, const std
 bool tryGetKernelAbiManifest_metal_ml_pointwise(const std::string& backend, const std::string& kernelName, const KernelAbiManifestInfo*& out);
 bool tryGetKernelAbiManifest_metal_dataframe_top_k(const std::string& backend, const std::string& kernelName, const KernelAbiManifestInfo*& out);
 bool tryGetKernelAbiManifest_vulkan_cfd(const std::string& backend, const std::string& kernelName, const KernelAbiManifestInfo*& out);
-bool tryGetKernelAbiManifest_metal_graph(const std::string& backend, const std::string& kernelName, const KernelAbiManifestInfo*& out);
 bool tryGetKernelAbiManifest_cuda_vector_search_ivfpq(const std::string& backend, const std::string& kernelName, const KernelAbiManifestInfo*& out);
+bool tryGetKernelAbiManifest_metal_graph(const std::string& backend, const std::string& kernelName, const KernelAbiManifestInfo*& out);
 bool tryGetKernelAbiManifest_opencl_linalg(const std::string& backend, const std::string& kernelName, const KernelAbiManifestInfo*& out);
 bool tryGetKernelAbiManifest_hip_linalg(const std::string& backend, const std::string& kernelName, const KernelAbiManifestInfo*& out);
 bool tryGetKernelAbiManifest_opencl_cfd(const std::string& backend, const std::string& kernelName, const KernelAbiManifestInfo*& out);
@@ -30695,8 +30773,8 @@ bool tryGetKernelAbiManifest(const std::string& backend, const std::string& kern
   if (tryGetKernelAbiManifest_metal_nccl(backend, kernelName, out)) return true;
   if (tryGetKernelAbiManifest_hip_ml_reduction(backend, kernelName, out)) return true;
   if (tryGetKernelAbiManifest_metal_samples(backend, kernelName, out)) return true;
-  if (tryGetKernelAbiManifest_metal_sparse_knn(backend, kernelName, out)) return true;
   if (tryGetKernelAbiManifest_vulkan_graph(backend, kernelName, out)) return true;
+  if (tryGetKernelAbiManifest_metal_sparse_knn(backend, kernelName, out)) return true;
   if (tryGetKernelAbiManifest_hip_sparse_mg(backend, kernelName, out)) return true;
   if (tryGetKernelAbiManifest_vulkan_transformer(backend, kernelName, out)) return true;
   if (tryGetKernelAbiManifest_opencl_cfd_primitives(backend, kernelName, out)) return true;
@@ -30707,8 +30785,8 @@ bool tryGetKernelAbiManifest(const std::string& backend, const std::string& kern
   if (tryGetKernelAbiManifest_metal_ml_pointwise(backend, kernelName, out)) return true;
   if (tryGetKernelAbiManifest_metal_dataframe_top_k(backend, kernelName, out)) return true;
   if (tryGetKernelAbiManifest_vulkan_cfd(backend, kernelName, out)) return true;
-  if (tryGetKernelAbiManifest_metal_graph(backend, kernelName, out)) return true;
   if (tryGetKernelAbiManifest_cuda_vector_search_ivfpq(backend, kernelName, out)) return true;
+  if (tryGetKernelAbiManifest_metal_graph(backend, kernelName, out)) return true;
   if (tryGetKernelAbiManifest_opencl_linalg(backend, kernelName, out)) return true;
   if (tryGetKernelAbiManifest_hip_linalg(backend, kernelName, out)) return true;
   if (tryGetKernelAbiManifest_opencl_cfd(backend, kernelName, out)) return true;
@@ -30893,11 +30971,11 @@ static T readScalar(GpuRuntime::Buffer& buf) {
   return v;
 }
 
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
 // Tier‑C pre-start: runtime-controlled reduction numerics mode for Float32 reductions.
 // If unset, default to FP64 accumulation for stability/reproducibility in long reductions.
 static GpuRuntime::ReduceNumericMode getFloat32ReduceModeFromEnv() {
-  const char* v = std::getenv("CODEGEN_GPU_FLOAT32_REDUCE_MODE");
+  const char* v = std::getenv("NAVATALA_GPU_FLOAT32_REDUCE_MODE");
   if (!v) return GpuRuntime::ReduceNumericMode::FP64Accumulate;
   const std::string s(v);
   if (s == "default" || s == "DEFAULT") return GpuRuntime::ReduceNumericMode::Default;
@@ -30910,7 +30988,7 @@ static GpuRuntime::ReduceNumericMode getFloat32ReduceModeFromEnv() {
 #endif
 
 static bool dispatch_navatala_Samples_AxpyProgram_axpy(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& x, GpuRuntime::Buffer& y, GpuRuntime::Buffer& alpha, GpuRuntime::Buffer& out) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasBlasSupport()) {
     // Out-of-place AXPY: out = alpha * x + y (implemented via memcpy(out,y) + in-place axpy).
     if (out.sizeBytes() != y.sizeBytes()) return false;
@@ -30938,7 +31016,7 @@ static bool dispatch_navatala_Samples_AxpyProgram_axpy(GpuRuntime::LibraryOps* l
 }
 
 static bool dispatch_navatala_Samples_BLAS_dotFloat32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& x, GpuRuntime::Buffer& y, GpuRuntime::Buffer& result) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasBlasSupport()) {
     GpuRuntime::DotParams params;
     params.n = static_cast<std::int64_t>(x.sizeBytes() / sizeof(float));
@@ -31005,7 +31083,7 @@ static bool dispatch_navatala_Samples_BLAS_dotFloat32(GpuRuntime::LibraryOps* li
 }
 
 static bool dispatch_navatala_Samples_BLAS_gemmBatchedFloat32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& A0, GpuRuntime::Buffer& A1, GpuRuntime::Buffer& B0, GpuRuntime::Buffer& B1, GpuRuntime::Buffer& alpha, GpuRuntime::Buffer& beta, GpuRuntime::Buffer& m, GpuRuntime::Buffer& n, GpuRuntime::Buffer& k, GpuRuntime::Buffer& batchCount, GpuRuntime::Buffer& C0, GpuRuntime::Buffer& C1) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasBlasSupport()) {
     GpuRuntime::GemmParams params;
     params.transA = GpuRuntime::TransposeOp::NoTrans;
@@ -31093,7 +31171,7 @@ static bool dispatch_navatala_Samples_BLAS_gemmBatchedFloat32(GpuRuntime::Librar
 }
 
 static bool dispatch_navatala_Samples_BLAS_gemmFloat32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& A, GpuRuntime::Buffer& B, GpuRuntime::Buffer& alpha, GpuRuntime::Buffer& beta, GpuRuntime::Buffer& m, GpuRuntime::Buffer& n, GpuRuntime::Buffer& k, GpuRuntime::Buffer& C) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasBlasSupport()) {
     GpuRuntime::GemmParams params;
     params.transA = GpuRuntime::TransposeOp::NoTrans;
@@ -31151,7 +31229,7 @@ static bool dispatch_navatala_Samples_BLAS_gemmFloat32(GpuRuntime::LibraryOps* l
 }
 
 static bool dispatch_navatala_Samples_BLAS_gemmFloat32TransA(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& A, GpuRuntime::Buffer& B, GpuRuntime::Buffer& alpha, GpuRuntime::Buffer& beta, GpuRuntime::Buffer& m, GpuRuntime::Buffer& n, GpuRuntime::Buffer& k, GpuRuntime::Buffer& C) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasBlasSupport()) {
     GpuRuntime::GemmParams params;
     params.transA = GpuRuntime::TransposeOp::Trans;
@@ -31209,7 +31287,7 @@ static bool dispatch_navatala_Samples_BLAS_gemmFloat32TransA(GpuRuntime::Library
 }
 
 static bool dispatch_navatala_Samples_BLAS_gemmFloat64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& A, GpuRuntime::Buffer& B, GpuRuntime::Buffer& alpha, GpuRuntime::Buffer& beta, GpuRuntime::Buffer& m, GpuRuntime::Buffer& n, GpuRuntime::Buffer& k, GpuRuntime::Buffer& C) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasBlasSupport()) {
     GpuRuntime::GemmParams params;
     params.transA = GpuRuntime::TransposeOp::NoTrans;
@@ -31267,7 +31345,7 @@ static bool dispatch_navatala_Samples_BLAS_gemmFloat64(GpuRuntime::LibraryOps* l
 }
 
 static bool dispatch_navatala_Samples_BLAS_gemmStridedFloat32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& A, GpuRuntime::Buffer& B, GpuRuntime::Buffer& alpha, GpuRuntime::Buffer& beta, GpuRuntime::Buffer& m, GpuRuntime::Buffer& n, GpuRuntime::Buffer& k, GpuRuntime::Buffer& strideA, GpuRuntime::Buffer& strideB, GpuRuntime::Buffer& strideC, GpuRuntime::Buffer& batchCount, GpuRuntime::Buffer& C) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasBlasSupport()) {
     GpuRuntime::GemmStridedParams params;
     params.transA = GpuRuntime::TransposeOp::NoTrans;
@@ -31333,7 +31411,7 @@ static bool dispatch_navatala_Samples_BLAS_gemmStridedFloat32(GpuRuntime::Librar
 }
 
 static bool dispatch_navatala_Samples_BLAS_gemvFloat32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& A, GpuRuntime::Buffer& x, GpuRuntime::Buffer& alpha, GpuRuntime::Buffer& beta, GpuRuntime::Buffer& m, GpuRuntime::Buffer& n, GpuRuntime::Buffer& y) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasBlasSupport()) {
     GpuRuntime::GemvParams params;
     params.trans = GpuRuntime::TransposeOp::NoTrans;
@@ -31354,7 +31432,7 @@ static bool dispatch_navatala_Samples_BLAS_gemvFloat32(GpuRuntime::LibraryOps* l
 }
 
 static bool dispatch_navatala_Samples_BLAS_nrm2Float32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& x, GpuRuntime::Buffer& result) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasBlasSupport()) {
     GpuRuntime::Nrm2Params params;
     params.n = static_cast<std::int64_t>(x.sizeBytes() / sizeof(float));
@@ -31420,7 +31498,7 @@ static bool dispatch_navatala_Samples_BLAS_nrm2Float32(GpuRuntime::LibraryOps* l
 }
 
 static bool dispatch_navatala_Samples_BLAS_syrkFloat32UpperNoTrans(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& A, GpuRuntime::Buffer& alpha, GpuRuntime::Buffer& beta, GpuRuntime::Buffer& n, GpuRuntime::Buffer& k, GpuRuntime::Buffer& C) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasBlasSupport()) {
     GpuRuntime::SyrkParams params;
     params.uplo = GpuRuntime::FillMode::Upper;
@@ -31442,7 +31520,7 @@ static bool dispatch_navatala_Samples_BLAS_syrkFloat32UpperNoTrans(GpuRuntime::L
 }
 
 static bool dispatch_navatala_Samples_BLAS_trsmFloat32LeftLowerTrans(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& A, GpuRuntime::Buffer& alpha, GpuRuntime::Buffer& m, GpuRuntime::Buffer& n, GpuRuntime::Buffer& B) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasBlasSupport()) {
     GpuRuntime::TrsmParams params;
     params.side = GpuRuntime::SideMode::Left;
@@ -31518,7 +31596,7 @@ static bool dispatch_navatala_Samples_BLAS_trsmFloat32LeftLowerTrans(GpuRuntime:
 }
 
 static bool dispatch_navatala_Samples_BLAS_trsmFloat32LeftUpperNoTransNonUnit(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& A, GpuRuntime::Buffer& alpha, GpuRuntime::Buffer& m, GpuRuntime::Buffer& n, GpuRuntime::Buffer& B) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasBlasSupport()) {
     GpuRuntime::TrsmParams params;
     params.side = GpuRuntime::SideMode::Left;
@@ -31594,7 +31672,7 @@ static bool dispatch_navatala_Samples_BLAS_trsmFloat32LeftUpperNoTransNonUnit(Gp
 }
 
 static bool dispatch_navatala_Samples_FFT_fft2DC2CFloat32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& input, GpuRuntime::Buffer& dims, GpuRuntime::Buffer& direction, GpuRuntime::Buffer& batchCount, GpuRuntime::Buffer& output) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasFftSupport()) {
     GpuRuntime::FFTParams params;
     params.type = GpuRuntime::FFTType::C2C;
@@ -31624,7 +31702,7 @@ static bool dispatch_navatala_Samples_FFT_fft2DR2CFloat32(GpuRuntime::LibraryOps
 }
 
 static bool dispatch_navatala_Samples_FFT_fft3DC2CFloat32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& input, GpuRuntime::Buffer& dims, GpuRuntime::Buffer& direction, GpuRuntime::Buffer& batchCount, GpuRuntime::Buffer& output) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasFftSupport()) {
     GpuRuntime::FFTParams params;
     params.type = GpuRuntime::FFTType::C2C;
@@ -31646,7 +31724,7 @@ static bool dispatch_navatala_Samples_FFT_fft3DC2CFloat32(GpuRuntime::LibraryOps
 }
 
 static bool dispatch_navatala_Samples_FFT_fftC2CFloat32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& input, GpuRuntime::Buffer& dims, GpuRuntime::Buffer& direction, GpuRuntime::Buffer& batchCount, GpuRuntime::Buffer& output) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasFftSupport()) {
     GpuRuntime::FFTParams params;
     params.type = GpuRuntime::FFTType::C2C;
@@ -31668,7 +31746,7 @@ static bool dispatch_navatala_Samples_FFT_fftC2CFloat32(GpuRuntime::LibraryOps* 
 }
 
 static bool dispatch_navatala_Samples_FFT_fftC2CFloat64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& input, GpuRuntime::Buffer& dims, GpuRuntime::Buffer& direction, GpuRuntime::Buffer& batchCount, GpuRuntime::Buffer& output) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasFftSupport()) {
     GpuRuntime::FFTParams params;
     params.type = GpuRuntime::FFTType::C2C;
@@ -31702,7 +31780,7 @@ static bool dispatch_navatala_Samples_SparseSolver_choleskyUpperFloat32(GpuRunti
 }
 
 static bool dispatch_navatala_Samples_SparseSolver_spmvCsrFloat32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& rowPtr, GpuRuntime::Buffer& colInd, GpuRuntime::Buffer& values, GpuRuntime::Buffer& x, GpuRuntime::Buffer& y) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSparseSupport()) {
     const std::int64_t mVal = static_cast<std::int64_t>(y.sizeBytes() / sizeof(float));
     const std::int64_t nVal = static_cast<std::int64_t>(x.sizeBytes() / sizeof(float));
@@ -31762,7 +31840,7 @@ static bool dispatch_navatala_PhysicsNeMo_Discovery_rfftn(GpuRuntime::LibraryOps
 }
 
 static bool dispatch_navatala_StdLib_Sort_radixSortPairsU32F32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& keysIn, GpuRuntime::Buffer& valsIn, GpuRuntime::Buffer& count, GpuRuntime::Buffer& keysOut, GpuRuntime::Buffer& valsOut) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSortReduceSupport()) {
     const std::uint32_t n = static_cast<std::uint32_t>(std::max<std::int32_t>(0, readScalar<std::int32_t>(count)));
     GpuRuntime::SortPairsParams params;
@@ -31799,7 +31877,7 @@ static bool dispatch_navatala_StdLib_Sort_radixSortPairsU32F32(GpuRuntime::Libra
 }
 
 static bool dispatch_navatala_StdLib_Sort_radixSortPairsU32F64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& keysIn, GpuRuntime::Buffer& valsIn, GpuRuntime::Buffer& count, GpuRuntime::Buffer& keysOut, GpuRuntime::Buffer& valsOut) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSortReduceSupport()) {
     const std::uint32_t n = static_cast<std::uint32_t>(std::max<std::int32_t>(0, readScalar<std::int32_t>(count)));
     GpuRuntime::SortPairsParams params;
@@ -31844,7 +31922,7 @@ static bool dispatch_navatala_StdLib_Sort_radixSortPairsU32U32(GpuRuntime::Libra
 }
 
 static bool dispatch_navatala_StdLib_Sort_radixSortPairsDescU32F32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& keysIn, GpuRuntime::Buffer& valsIn, GpuRuntime::Buffer& count, GpuRuntime::Buffer& keysOut, GpuRuntime::Buffer& valsOut) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSortReduceSupport()) {
     const std::uint32_t n = static_cast<std::uint32_t>(std::max<std::int32_t>(0, readScalar<std::int32_t>(count)));
     GpuRuntime::SortPairsParams params;
@@ -31882,7 +31960,7 @@ static bool dispatch_navatala_StdLib_Sort_radixSortPairsDescU32F32(GpuRuntime::L
 }
 
 static bool dispatch_navatala_StdLib_Sort_radixSortPairsDescU32F64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& keysIn, GpuRuntime::Buffer& valsIn, GpuRuntime::Buffer& count, GpuRuntime::Buffer& keysOut, GpuRuntime::Buffer& valsOut) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSortReduceSupport()) {
     const std::uint32_t n = static_cast<std::uint32_t>(std::max<std::int32_t>(0, readScalar<std::int32_t>(count)));
     GpuRuntime::SortPairsParams params;
@@ -31932,7 +32010,7 @@ static bool dispatch_navatala_StdLib_Sort_radixSortKeysDescF32(GpuRuntime::Libra
 }
 
 static bool dispatch_navatala_StdLib_Sort_radixSortKeysU32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& keysIn, GpuRuntime::Buffer& count, GpuRuntime::Buffer& keysOut) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSortReduceSupport()) {
     const std::uint32_t n = static_cast<std::uint32_t>(std::max<std::int32_t>(0, readScalar<std::int32_t>(count)));
     GpuRuntime::SortKeysParams params;
@@ -31960,7 +32038,7 @@ static bool dispatch_navatala_StdLib_Sort_radixSortKeysU32(GpuRuntime::LibraryOp
 }
 
 static bool dispatch_navatala_StdLib_Sort_radixSortKeysDescU32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& keysIn, GpuRuntime::Buffer& count, GpuRuntime::Buffer& keysOut) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSortReduceSupport()) {
     const std::uint32_t n = static_cast<std::uint32_t>(std::max<std::int32_t>(0, readScalar<std::int32_t>(count)));
     GpuRuntime::SortKeysParams params;
@@ -31989,7 +32067,7 @@ static bool dispatch_navatala_StdLib_Sort_radixSortKeysDescU32(GpuRuntime::Libra
 }
 
 static bool dispatch_navatala_StdLib_Reduce_reduceByKeySumF32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& keysIn, GpuRuntime::Buffer& valsIn, GpuRuntime::Buffer& count, GpuRuntime::Buffer& keysOut, GpuRuntime::Buffer& valsOut, GpuRuntime::Buffer& outCount) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSortReduceSupport()) {
     const std::uint32_t n = static_cast<std::uint32_t>(std::max<std::int32_t>(0, readScalar<std::int32_t>(count)));
     GpuRuntime::ReduceByKeyParams params;
@@ -32095,7 +32173,7 @@ static bool dispatch_navatala_StdLib_Reduce_reduceByKeySumF32(GpuRuntime::Librar
 }
 
 static bool dispatch_navatala_StdLib_Reduce_reduceByKeySumF64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& keysIn, GpuRuntime::Buffer& valsIn, GpuRuntime::Buffer& count, GpuRuntime::Buffer& keysOut, GpuRuntime::Buffer& valsOut, GpuRuntime::Buffer& outCount) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSortReduceSupport()) {
     const std::uint32_t n = static_cast<std::uint32_t>(std::max<std::int32_t>(0, readScalar<std::int32_t>(count)));
     GpuRuntime::ReduceByKeyParams params;
@@ -32167,7 +32245,7 @@ static bool dispatch_navatala_StdLib_Reduce_reduceByKeySumU32(GpuRuntime::Librar
 }
 
 static bool dispatch_navatala_StdLib_Reduce_reduceByKeyMinF32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& keysIn, GpuRuntime::Buffer& valsIn, GpuRuntime::Buffer& count, GpuRuntime::Buffer& keysOut, GpuRuntime::Buffer& valsOut, GpuRuntime::Buffer& outCount) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSortReduceSupport()) {
     const std::uint32_t n = static_cast<std::uint32_t>(std::max<std::int32_t>(0, readScalar<std::int32_t>(count)));
     GpuRuntime::ReduceByKeyParams params;
@@ -32231,7 +32309,7 @@ static bool dispatch_navatala_StdLib_Reduce_reduceByKeyMinF32(GpuRuntime::Librar
 }
 
 static bool dispatch_navatala_StdLib_Reduce_reduceByKeyMinF64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& keysIn, GpuRuntime::Buffer& valsIn, GpuRuntime::Buffer& count, GpuRuntime::Buffer& keysOut, GpuRuntime::Buffer& valsOut, GpuRuntime::Buffer& outCount) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSortReduceSupport()) {
     const std::uint32_t n = static_cast<std::uint32_t>(std::max<std::int32_t>(0, readScalar<std::int32_t>(count)));
     GpuRuntime::ReduceByKeyParams params;
@@ -32295,7 +32373,7 @@ static bool dispatch_navatala_StdLib_Reduce_reduceByKeyMinF64(GpuRuntime::Librar
 }
 
 static bool dispatch_navatala_StdLib_Reduce_reduceByKeyMaxF32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& keysIn, GpuRuntime::Buffer& valsIn, GpuRuntime::Buffer& count, GpuRuntime::Buffer& keysOut, GpuRuntime::Buffer& valsOut, GpuRuntime::Buffer& outCount) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSortReduceSupport()) {
     const std::uint32_t n = static_cast<std::uint32_t>(std::max<std::int32_t>(0, readScalar<std::int32_t>(count)));
     GpuRuntime::ReduceByKeyParams params;
@@ -32359,7 +32437,7 @@ static bool dispatch_navatala_StdLib_Reduce_reduceByKeyMaxF32(GpuRuntime::Librar
 }
 
 static bool dispatch_navatala_StdLib_Reduce_reduceByKeyMaxF64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& keysIn, GpuRuntime::Buffer& valsIn, GpuRuntime::Buffer& count, GpuRuntime::Buffer& keysOut, GpuRuntime::Buffer& valsOut, GpuRuntime::Buffer& outCount) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSortReduceSupport()) {
     const std::uint32_t n = static_cast<std::uint32_t>(std::max<std::int32_t>(0, readScalar<std::int32_t>(count)));
     GpuRuntime::ReduceByKeyParams params;
@@ -32423,7 +32501,7 @@ static bool dispatch_navatala_StdLib_Reduce_reduceByKeyMaxF64(GpuRuntime::Librar
 }
 
 static bool dispatch_navatala_StdLib_Blas_axpyFloat32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& x, GpuRuntime::Buffer& y, GpuRuntime::Buffer& alpha, GpuRuntime::Buffer& out) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasBlasSupport()) {
     // Out-of-place AXPY: out = alpha * x + y (implemented via memcpy(out,y) + in-place axpy).
     if (out.sizeBytes() != y.sizeBytes()) return false;
@@ -32458,7 +32536,7 @@ static bool dispatch_navatala_StdLib_Blas_axpyFloat32(GpuRuntime::LibraryOps* li
 }
 
 static bool dispatch_navatala_StdLib_Blas_axpyFloat64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& x, GpuRuntime::Buffer& y, GpuRuntime::Buffer& alpha, GpuRuntime::Buffer& out) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasBlasSupport()) {
     // Out-of-place AXPY: out = alpha * x + y (implemented via memcpy(out,y) + in-place axpy).
     if (out.sizeBytes() != y.sizeBytes()) return false;
@@ -32493,7 +32571,7 @@ static bool dispatch_navatala_StdLib_Blas_axpyFloat64(GpuRuntime::LibraryOps* li
 }
 
 static bool dispatch_navatala_StdLib_Blas_nrm2Float32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& x, GpuRuntime::Buffer& result) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasBlasSupport()) {
     GpuRuntime::Nrm2Params params;
     params.n = static_cast<std::int64_t>(x.sizeBytes() / sizeof(float));
@@ -32559,7 +32637,7 @@ static bool dispatch_navatala_StdLib_Blas_nrm2Float32(GpuRuntime::LibraryOps* li
 }
 
 static bool dispatch_navatala_StdLib_Blas_nrm2Float64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& x, GpuRuntime::Buffer& result) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasBlasSupport()) {
     GpuRuntime::Nrm2Params params;
     params.n = static_cast<std::int64_t>(x.sizeBytes() / sizeof(double));
@@ -32625,7 +32703,7 @@ static bool dispatch_navatala_StdLib_Blas_nrm2Float64(GpuRuntime::LibraryOps* li
 }
 
 static bool dispatch_navatala_StdLib_Sparse_spMvCsrF32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& rowPtr, GpuRuntime::Buffer& colInd, GpuRuntime::Buffer& values, GpuRuntime::Buffer& x, GpuRuntime::Buffer& m, GpuRuntime::Buffer& n, GpuRuntime::Buffer& alpha, GpuRuntime::Buffer& beta, GpuRuntime::Buffer& y) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSparseSupport()) {
     const std::int64_t mVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(m));
     const std::int64_t nVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(n));
@@ -32661,7 +32739,7 @@ static bool dispatch_navatala_StdLib_Sparse_spMvCsrF32(GpuRuntime::LibraryOps* l
 }
 
 static bool dispatch_navatala_StdLib_Sparse_spMvCsrF64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& rowPtr, GpuRuntime::Buffer& colInd, GpuRuntime::Buffer& values, GpuRuntime::Buffer& x, GpuRuntime::Buffer& m, GpuRuntime::Buffer& n, GpuRuntime::Buffer& alpha, GpuRuntime::Buffer& beta, GpuRuntime::Buffer& y) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSparseSupport()) {
     const std::int64_t mVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(m));
     const std::int64_t nVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(n));
@@ -32697,7 +32775,7 @@ static bool dispatch_navatala_StdLib_Sparse_spMvCsrF64(GpuRuntime::LibraryOps* l
 }
 
 static bool dispatch_navatala_StdLib_Sparse_spMvCooF32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& rowInd, GpuRuntime::Buffer& colInd, GpuRuntime::Buffer& values, GpuRuntime::Buffer& x, GpuRuntime::Buffer& m, GpuRuntime::Buffer& n, GpuRuntime::Buffer& nnz, GpuRuntime::Buffer& alpha, GpuRuntime::Buffer& beta, GpuRuntime::Buffer& y) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSparseSupport()) {
     const std::int64_t mVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(m));
     const std::int64_t nVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(n));
@@ -32733,7 +32811,7 @@ static bool dispatch_navatala_StdLib_Sparse_spMvCooF32(GpuRuntime::LibraryOps* l
 }
 
 static bool dispatch_navatala_StdLib_Sparse_spMvCscF32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& colPtr, GpuRuntime::Buffer& rowInd, GpuRuntime::Buffer& values, GpuRuntime::Buffer& x, GpuRuntime::Buffer& m, GpuRuntime::Buffer& n, GpuRuntime::Buffer& alpha, GpuRuntime::Buffer& beta, GpuRuntime::Buffer& y) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSparseSupport()) {
     const std::int64_t mVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(m));
     const std::int64_t nVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(n));
@@ -32769,7 +32847,7 @@ static bool dispatch_navatala_StdLib_Sparse_spMvCscF32(GpuRuntime::LibraryOps* l
 }
 
 static bool dispatch_navatala_StdLib_Sparse_spMvEllF32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& colInd, GpuRuntime::Buffer& values, GpuRuntime::Buffer& x, GpuRuntime::Buffer& m, GpuRuntime::Buffer& n, GpuRuntime::Buffer& ellWidth, GpuRuntime::Buffer& alpha, GpuRuntime::Buffer& beta, GpuRuntime::Buffer& y) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSparseSupport()) {
     const std::int64_t mVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(m));
     const std::int64_t nVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(n));
@@ -32805,7 +32883,7 @@ static bool dispatch_navatala_StdLib_Sparse_spMvEllF32(GpuRuntime::LibraryOps* l
 }
 
 static bool dispatch_navatala_StdLib_Sparse_spMmCsrF32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& rowPtr, GpuRuntime::Buffer& colInd, GpuRuntime::Buffer& values, GpuRuntime::Buffer& B, GpuRuntime::Buffer& m, GpuRuntime::Buffer& n, GpuRuntime::Buffer& k, GpuRuntime::Buffer& alpha, GpuRuntime::Buffer& beta, GpuRuntime::Buffer& C) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSparseSupport()) {
     const std::int64_t mVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(m));
     const std::int64_t nAVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(n));
@@ -32849,7 +32927,7 @@ static bool dispatch_navatala_StdLib_Sparse_spMmCsrF32(GpuRuntime::LibraryOps* l
 }
 
 static bool dispatch_navatala_StdLib_Sparse_spMmCsrF64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& rowPtr, GpuRuntime::Buffer& colInd, GpuRuntime::Buffer& values, GpuRuntime::Buffer& B, GpuRuntime::Buffer& m, GpuRuntime::Buffer& n, GpuRuntime::Buffer& k, GpuRuntime::Buffer& alpha, GpuRuntime::Buffer& beta, GpuRuntime::Buffer& C) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSparseSupport()) {
     const std::int64_t mVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(m));
     const std::int64_t nAVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(n));
@@ -32893,7 +32971,7 @@ static bool dispatch_navatala_StdLib_Sparse_spMmCsrF64(GpuRuntime::LibraryOps* l
 }
 
 static bool dispatch_navatala_StdLib_Sparse_spGemmCsrF32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& A_rowPtr, GpuRuntime::Buffer& A_colInd, GpuRuntime::Buffer& A_values, GpuRuntime::Buffer& B_rowPtr, GpuRuntime::Buffer& B_colInd, GpuRuntime::Buffer& B_values, GpuRuntime::Buffer& m, GpuRuntime::Buffer& n, GpuRuntime::Buffer& k, GpuRuntime::Buffer& C_rowPtr, GpuRuntime::Buffer& C_colInd, GpuRuntime::Buffer& C_values, GpuRuntime::Buffer& nnzC) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSparseSupport()) {
     const std::int64_t mVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(m));
     const std::int64_t nVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(n));
@@ -32947,7 +33025,7 @@ static bool dispatch_navatala_StdLib_Sparse_spGemmCsrF32(GpuRuntime::LibraryOps*
 }
 
 static bool dispatch_navatala_StdLib_Sparse_spGemmCsrF64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& A_rowPtr, GpuRuntime::Buffer& A_colInd, GpuRuntime::Buffer& A_values, GpuRuntime::Buffer& B_rowPtr, GpuRuntime::Buffer& B_colInd, GpuRuntime::Buffer& B_values, GpuRuntime::Buffer& m, GpuRuntime::Buffer& n, GpuRuntime::Buffer& k, GpuRuntime::Buffer& C_rowPtr, GpuRuntime::Buffer& C_colInd, GpuRuntime::Buffer& C_values, GpuRuntime::Buffer& nnzC) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSparseSupport()) {
     const std::int64_t mVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(m));
     const std::int64_t nVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(n));
@@ -33001,7 +33079,7 @@ static bool dispatch_navatala_StdLib_Sparse_spGemmCsrF64(GpuRuntime::LibraryOps*
 }
 
 static bool dispatch_navatala_StdLib_LinearSolve_spMvCsrF32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& rowPtr, GpuRuntime::Buffer& colInd, GpuRuntime::Buffer& values, GpuRuntime::Buffer& x, GpuRuntime::Buffer& m, GpuRuntime::Buffer& n, GpuRuntime::Buffer& alpha, GpuRuntime::Buffer& beta, GpuRuntime::Buffer& y) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSparseSupport()) {
     const std::int64_t mVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(m));
     const std::int64_t nVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(n));
@@ -33037,7 +33115,7 @@ static bool dispatch_navatala_StdLib_LinearSolve_spMvCsrF32(GpuRuntime::LibraryO
 }
 
 static bool dispatch_navatala_StdLib_LinearSolve_spMvCsrF64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& rowPtr, GpuRuntime::Buffer& colInd, GpuRuntime::Buffer& values, GpuRuntime::Buffer& x, GpuRuntime::Buffer& m, GpuRuntime::Buffer& n, GpuRuntime::Buffer& alpha, GpuRuntime::Buffer& beta, GpuRuntime::Buffer& y) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSparseSupport()) {
     const std::int64_t mVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(m));
     const std::int64_t nVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(n));
@@ -33077,7 +33155,7 @@ static bool dispatch_navatala_StdLib_LinearSolve_rapNumericRefreshCsrF32(GpuRunt
 }
 
 static bool dispatch_navatala_StdLib_Solver_choleskyUpperF32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& A, GpuRuntime::Buffer& n, GpuRuntime::Buffer& lda, GpuRuntime::Buffer& info) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSolverSupport()) {
     const std::int64_t nVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(n));
     const std::int64_t ldaVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(lda));
@@ -33092,7 +33170,7 @@ static bool dispatch_navatala_StdLib_Solver_choleskyUpperF32(GpuRuntime::Library
 }
 
 static bool dispatch_navatala_StdLib_Solver_choleskyLowerF32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& A, GpuRuntime::Buffer& n, GpuRuntime::Buffer& lda, GpuRuntime::Buffer& info) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSolverSupport()) {
     const std::int64_t nVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(n));
     const std::int64_t ldaVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(lda));
@@ -33107,7 +33185,7 @@ static bool dispatch_navatala_StdLib_Solver_choleskyLowerF32(GpuRuntime::Library
 }
 
 static bool dispatch_navatala_StdLib_Solver_choleskyUpperF64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& A, GpuRuntime::Buffer& n, GpuRuntime::Buffer& lda, GpuRuntime::Buffer& info) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSolverSupport()) {
     const std::int64_t nVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(n));
     const std::int64_t ldaVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(lda));
@@ -33122,7 +33200,7 @@ static bool dispatch_navatala_StdLib_Solver_choleskyUpperF64(GpuRuntime::Library
 }
 
 static bool dispatch_navatala_StdLib_Solver_choleskyLowerF64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& A, GpuRuntime::Buffer& n, GpuRuntime::Buffer& lda, GpuRuntime::Buffer& info) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSolverSupport()) {
     const std::int64_t nVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(n));
     const std::int64_t ldaVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(lda));
@@ -33145,7 +33223,7 @@ static bool dispatch_navatala_StdLib_Solver_luF64(GpuRuntime::LibraryOps* lib, c
 }
 
 static bool dispatch_navatala_StdLib_Solver_qrF32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& A, GpuRuntime::Buffer& m, GpuRuntime::Buffer& n, GpuRuntime::Buffer& lda, GpuRuntime::Buffer& tau, GpuRuntime::Buffer& info) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSolverSupport()) {
     const std::int64_t mVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(m));
     const std::int64_t nVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(n));
@@ -33161,7 +33239,7 @@ static bool dispatch_navatala_StdLib_Solver_qrF32(GpuRuntime::LibraryOps* lib, c
 }
 
 static bool dispatch_navatala_StdLib_Solver_qrF64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& A, GpuRuntime::Buffer& m, GpuRuntime::Buffer& n, GpuRuntime::Buffer& lda, GpuRuntime::Buffer& tau, GpuRuntime::Buffer& info) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSolverSupport()) {
     const std::int64_t mVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(m));
     const std::int64_t nVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(n));
@@ -33177,7 +33255,7 @@ static bool dispatch_navatala_StdLib_Solver_qrF64(GpuRuntime::LibraryOps* lib, c
 }
 
 static bool dispatch_navatala_StdLib_Solver_svdF32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& A, GpuRuntime::Buffer& m, GpuRuntime::Buffer& n, GpuRuntime::Buffer& lda, GpuRuntime::Buffer& ldu, GpuRuntime::Buffer& ldvt, GpuRuntime::Buffer& fullMatrices, GpuRuntime::Buffer& U, GpuRuntime::Buffer& S, GpuRuntime::Buffer& Vt, GpuRuntime::Buffer& info) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSolverSupport()) {
     const std::int64_t mVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(m));
     const std::int64_t nVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(n));
@@ -33196,7 +33274,7 @@ static bool dispatch_navatala_StdLib_Solver_svdF32(GpuRuntime::LibraryOps* lib, 
 }
 
 static bool dispatch_navatala_StdLib_Solver_svdF64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& A, GpuRuntime::Buffer& m, GpuRuntime::Buffer& n, GpuRuntime::Buffer& lda, GpuRuntime::Buffer& ldu, GpuRuntime::Buffer& ldvt, GpuRuntime::Buffer& fullMatrices, GpuRuntime::Buffer& U, GpuRuntime::Buffer& S, GpuRuntime::Buffer& Vt, GpuRuntime::Buffer& info) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSolverSupport()) {
     const std::int64_t mVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(m));
     const std::int64_t nVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(n));
@@ -33327,7 +33405,7 @@ static bool dispatch_navatala_StdLib_Covariance_covMatrixSyrkF64(GpuRuntime::Lib
 }
 
 static bool dispatch_navatala_StdLib_Eigenvalues_syevF32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& A, GpuRuntime::Buffer& n, GpuRuntime::Buffer& lda, GpuRuntime::Buffer& W, GpuRuntime::Buffer& info) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSolverSupport()) {
     const std::int64_t nVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(n));
     const std::int64_t ldaVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(lda));
@@ -33343,7 +33421,7 @@ static bool dispatch_navatala_StdLib_Eigenvalues_syevF32(GpuRuntime::LibraryOps*
 }
 
 static bool dispatch_navatala_StdLib_Eigenvalues_syevF64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& A, GpuRuntime::Buffer& n, GpuRuntime::Buffer& lda, GpuRuntime::Buffer& W, GpuRuntime::Buffer& info) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSolverSupport()) {
     const std::int64_t nVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(n));
     const std::int64_t ldaVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(lda));
@@ -33359,7 +33437,7 @@ static bool dispatch_navatala_StdLib_Eigenvalues_syevF64(GpuRuntime::LibraryOps*
 }
 
 static bool dispatch_navatala_StdLib_Eigenvalues_syevdF32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& A, GpuRuntime::Buffer& n, GpuRuntime::Buffer& lda, GpuRuntime::Buffer& W, GpuRuntime::Buffer& info) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSolverSupport()) {
     const std::int64_t nVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(n));
     const std::int64_t ldaVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(lda));
@@ -33375,7 +33453,7 @@ static bool dispatch_navatala_StdLib_Eigenvalues_syevdF32(GpuRuntime::LibraryOps
 }
 
 static bool dispatch_navatala_StdLib_Eigenvalues_syevdF64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& A, GpuRuntime::Buffer& n, GpuRuntime::Buffer& lda, GpuRuntime::Buffer& W, GpuRuntime::Buffer& info) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSolverSupport()) {
     const std::int64_t nVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(n));
     const std::int64_t ldaVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(lda));
@@ -33391,7 +33469,7 @@ static bool dispatch_navatala_StdLib_Eigenvalues_syevdF64(GpuRuntime::LibraryOps
 }
 
 static bool dispatch_navatala_StdLib_Eigenvalues_geevF32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& A, GpuRuntime::Buffer& n, GpuRuntime::Buffer& lda, GpuRuntime::Buffer& ldvl, GpuRuntime::Buffer& ldvr, GpuRuntime::Buffer& WR, GpuRuntime::Buffer& WI, GpuRuntime::Buffer& VL, GpuRuntime::Buffer& VR, GpuRuntime::Buffer& info) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSolverSupport()) {
     const std::int64_t nVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(n));
     const std::int64_t ldaVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(lda));
@@ -33409,7 +33487,7 @@ static bool dispatch_navatala_StdLib_Eigenvalues_geevF32(GpuRuntime::LibraryOps*
 }
 
 static bool dispatch_navatala_StdLib_Eigenvalues_geevF64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& A, GpuRuntime::Buffer& n, GpuRuntime::Buffer& lda, GpuRuntime::Buffer& ldvl, GpuRuntime::Buffer& ldvr, GpuRuntime::Buffer& WR, GpuRuntime::Buffer& WI, GpuRuntime::Buffer& VL, GpuRuntime::Buffer& VR, GpuRuntime::Buffer& info) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSolverSupport()) {
     const std::int64_t nVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(n));
     const std::int64_t ldaVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(lda));
@@ -33515,7 +33593,7 @@ static bool dispatch_navatala_StdLib_SparseConvert_cscToCsrF64(GpuRuntime::Libra
 }
 
 static bool dispatch_navatala_StdLib_SparseConvert_cooSortByRowF32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& rowInd, GpuRuntime::Buffer& colInd, GpuRuntime::Buffer& values, GpuRuntime::Buffer& m, GpuRuntime::Buffer& n, GpuRuntime::Buffer& nnz, GpuRuntime::Buffer& rowInd_out, GpuRuntime::Buffer& colInd_out, GpuRuntime::Buffer& values_out) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSparseSupport()) {
     const std::int64_t nnzVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(nnz));
     auto status = lib->cooSortByRow(queue, rowInd, colInd, values, nnzVal, GpuRuntime::DataType::Float32);
@@ -33526,7 +33604,7 @@ static bool dispatch_navatala_StdLib_SparseConvert_cooSortByRowF32(GpuRuntime::L
 }
 
 static bool dispatch_navatala_StdLib_SparseConvert_cooSortByRowF64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& rowInd, GpuRuntime::Buffer& colInd, GpuRuntime::Buffer& values, GpuRuntime::Buffer& m, GpuRuntime::Buffer& n, GpuRuntime::Buffer& nnz, GpuRuntime::Buffer& rowInd_out, GpuRuntime::Buffer& colInd_out, GpuRuntime::Buffer& values_out) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSparseSupport()) {
     const std::int64_t nnzVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(nnz));
     auto status = lib->cooSortByRow(queue, rowInd, colInd, values, nnzVal, GpuRuntime::DataType::Float64);
@@ -33537,7 +33615,7 @@ static bool dispatch_navatala_StdLib_SparseConvert_cooSortByRowF64(GpuRuntime::L
 }
 
 static bool dispatch_navatala_StdLib_SparseConvert_cooSortByColF32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& rowInd, GpuRuntime::Buffer& colInd, GpuRuntime::Buffer& values, GpuRuntime::Buffer& m, GpuRuntime::Buffer& n, GpuRuntime::Buffer& nnz, GpuRuntime::Buffer& rowInd_out, GpuRuntime::Buffer& colInd_out, GpuRuntime::Buffer& values_out) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSparseSupport()) {
     const std::int64_t nnzVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(nnz));
     auto status = lib->cooSortByCol(queue, rowInd, colInd, values, nnzVal, GpuRuntime::DataType::Float32);
@@ -33548,7 +33626,7 @@ static bool dispatch_navatala_StdLib_SparseConvert_cooSortByColF32(GpuRuntime::L
 }
 
 static bool dispatch_navatala_StdLib_SparseConvert_cooSortByColF64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& rowInd, GpuRuntime::Buffer& colInd, GpuRuntime::Buffer& values, GpuRuntime::Buffer& m, GpuRuntime::Buffer& n, GpuRuntime::Buffer& nnz, GpuRuntime::Buffer& rowInd_out, GpuRuntime::Buffer& colInd_out, GpuRuntime::Buffer& values_out) {
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   if (lib && lib->hasSparseSupport()) {
     const std::int64_t nnzVal = static_cast<std::int64_t>(readScalar<std::uint32_t>(nnz));
     auto status = lib->cooSortByCol(queue, rowInd, colInd, values, nnzVal, GpuRuntime::DataType::Float64);
@@ -33591,7 +33669,7 @@ static bool dispatch_navatala_StdLib_LinalgTriangular_triangularSolveUpperF64(Gp
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF32Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33601,7 +33679,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF32Sum(GpuRunt
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF32Prod(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33611,7 +33689,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF32Prod(GpuRun
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF32Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33621,7 +33699,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF32Min(GpuRunt
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF32Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33631,7 +33709,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF32Max(GpuRunt
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF32Avg(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33641,7 +33719,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF32Avg(GpuRunt
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF16Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33651,7 +33729,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF16Sum(GpuRunt
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF16Prod(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33661,7 +33739,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF16Prod(GpuRun
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF16Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33671,7 +33749,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF16Min(GpuRunt
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF16Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33681,7 +33759,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF16Max(GpuRunt
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF16Avg(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33691,7 +33769,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF16Avg(GpuRunt
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceBF16Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33701,7 +33779,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceBF16Sum(GpuRun
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceBF16Prod(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33711,7 +33789,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceBF16Prod(GpuRu
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceBF16Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33721,7 +33799,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceBF16Min(GpuRun
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceBF16Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33731,7 +33809,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceBF16Max(GpuRun
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceBF16Avg(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33741,7 +33819,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceBF16Avg(GpuRun
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF64Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33751,7 +33829,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF64Sum(GpuRunt
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF64Prod(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33761,7 +33839,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF64Prod(GpuRun
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF64Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33771,7 +33849,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF64Min(GpuRunt
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF64Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33781,7 +33859,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF64Max(GpuRunt
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF64Avg(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33791,7 +33869,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceF64Avg(GpuRunt
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceI32Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33801,7 +33879,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceI32Sum(GpuRunt
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceI32Prod(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33811,7 +33889,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceI32Prod(GpuRun
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceI32Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33821,7 +33899,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceI32Min(GpuRunt
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceI32Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33831,7 +33909,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceI32Max(GpuRunt
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceI8Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33841,7 +33919,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceI8Sum(GpuRunti
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceI8Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33851,7 +33929,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceI8Min(GpuRunti
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceI8Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33861,7 +33939,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceI8Max(GpuRunti
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceU8Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33871,7 +33949,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceU8Sum(GpuRunti
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceU8Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33881,7 +33959,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceU8Min(GpuRunti
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceU8Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33891,7 +33969,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceU8Max(GpuRunti
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceU32Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33901,7 +33979,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceU32Sum(GpuRunt
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceU32Prod(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33911,7 +33989,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceU32Prod(GpuRun
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceU32Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33921,7 +33999,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceU32Min(GpuRunt
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceU32Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33931,7 +34009,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceU32Max(GpuRunt
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceI64Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33941,7 +34019,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceI64Sum(GpuRunt
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceI64Prod(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33951,7 +34029,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceI64Prod(GpuRun
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceI64Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33961,7 +34039,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceI64Min(GpuRunt
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceI64Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33971,7 +34049,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceI64Max(GpuRunt
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceU64Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33981,7 +34059,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceU64Sum(GpuRunt
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceU64Prod(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -33991,7 +34069,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceU64Prod(GpuRun
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceU64Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34001,7 +34079,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceU64Min(GpuRunt
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceU64Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34011,7 +34089,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allReduceU64Max(GpuRunt
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF32Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34021,7 +34099,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF32Sum(Gpu
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF32Prod(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34031,7 +34109,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF32Prod(Gp
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF32Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34041,7 +34119,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF32Min(Gpu
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF32Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34051,7 +34129,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF32Max(Gpu
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF32Avg(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34061,7 +34139,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF32Avg(Gpu
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF16Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34071,7 +34149,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF16Sum(Gpu
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF16Prod(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34081,7 +34159,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF16Prod(Gp
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF16Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34091,7 +34169,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF16Min(Gpu
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF16Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34101,7 +34179,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF16Max(Gpu
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF16Avg(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34111,7 +34189,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF16Avg(Gpu
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterBF16Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34121,7 +34199,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterBF16Sum(Gp
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterBF16Prod(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34131,7 +34209,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterBF16Prod(G
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterBF16Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34141,7 +34219,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterBF16Min(Gp
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterBF16Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34151,7 +34229,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterBF16Max(Gp
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterBF16Avg(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34161,7 +34239,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterBF16Avg(Gp
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF64Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34171,7 +34249,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF64Sum(Gpu
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF64Prod(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34181,7 +34259,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF64Prod(Gp
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF64Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34191,7 +34269,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF64Min(Gpu
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF64Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34201,7 +34279,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF64Max(Gpu
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF64Avg(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34211,7 +34289,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterF64Avg(Gpu
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterI32Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34221,7 +34299,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterI32Sum(Gpu
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterI32Prod(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34231,7 +34309,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterI32Prod(Gp
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterI32Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34241,7 +34319,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterI32Min(Gpu
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterI32Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34251,7 +34329,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterI32Max(Gpu
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterI8Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34261,7 +34339,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterI8Sum(GpuR
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterI8Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34271,7 +34349,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterI8Min(GpuR
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterI8Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34281,7 +34359,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterI8Max(GpuR
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterU8Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34291,7 +34369,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterU8Sum(GpuR
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterU8Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34301,7 +34379,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterU8Min(GpuR
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterU8Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34311,7 +34389,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterU8Max(GpuR
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterU32Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34321,7 +34399,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterU32Sum(Gpu
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterU32Prod(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34331,7 +34409,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterU32Prod(Gp
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterU32Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34341,7 +34419,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterU32Min(Gpu
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterU32Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34351,7 +34429,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterU32Max(Gpu
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterI64Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34361,7 +34439,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterI64Sum(Gpu
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterI64Prod(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34371,7 +34449,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterI64Prod(Gp
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterI64Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34381,7 +34459,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterI64Min(Gpu
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterI64Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34391,7 +34469,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterI64Max(Gpu
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterU64Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34401,7 +34479,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterU64Sum(Gpu
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterU64Prod(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34411,7 +34489,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterU64Prod(Gp
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterU64Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34421,7 +34499,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterU64Min(Gpu
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterU64Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& recvcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34431,7 +34509,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceScatterU64Max(Gpu
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF32Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34441,7 +34519,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF32Sum(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF32Prod(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34451,7 +34529,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF32Prod(GpuRuntim
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF32Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34461,7 +34539,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF32Min(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF32Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34471,7 +34549,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF32Max(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF32Avg(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34481,7 +34559,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF32Avg(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF16Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34491,7 +34569,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF16Sum(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF16Prod(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34501,7 +34579,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF16Prod(GpuRuntim
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF16Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34511,7 +34589,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF16Min(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF16Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34521,7 +34599,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF16Max(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF16Avg(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34531,7 +34609,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF16Avg(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceBF16Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34541,7 +34619,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceBF16Sum(GpuRuntim
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceBF16Prod(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34551,7 +34629,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceBF16Prod(GpuRunti
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceBF16Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34561,7 +34639,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceBF16Min(GpuRuntim
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceBF16Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34571,7 +34649,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceBF16Max(GpuRuntim
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceBF16Avg(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34581,7 +34659,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceBF16Avg(GpuRuntim
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF64Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34591,7 +34669,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF64Sum(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF64Prod(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34601,7 +34679,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF64Prod(GpuRuntim
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF64Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34611,7 +34689,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF64Min(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF64Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34621,7 +34699,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF64Max(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF64Avg(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34631,7 +34709,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceF64Avg(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceI32Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34641,7 +34719,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceI32Sum(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceI32Prod(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34651,7 +34729,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceI32Prod(GpuRuntim
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceI32Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34661,7 +34739,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceI32Min(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceI32Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34671,7 +34749,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceI32Max(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceI8Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34681,7 +34759,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceI8Sum(GpuRuntime:
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceI8Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34691,7 +34769,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceI8Min(GpuRuntime:
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceI8Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34701,7 +34779,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceI8Max(GpuRuntime:
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceU8Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34711,7 +34789,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceU8Sum(GpuRuntime:
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceU8Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34721,7 +34799,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceU8Min(GpuRuntime:
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceU8Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34731,7 +34809,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceU8Max(GpuRuntime:
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceU32Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34741,7 +34819,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceU32Sum(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceU32Prod(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34751,7 +34829,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceU32Prod(GpuRuntim
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceU32Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34761,7 +34839,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceU32Min(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceU32Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34771,7 +34849,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceU32Max(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceI64Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34781,7 +34859,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceI64Sum(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceI64Prod(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34791,7 +34869,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceI64Prod(GpuRuntim
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceI64Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34801,7 +34879,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceI64Min(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceI64Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34811,7 +34889,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceI64Max(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceU64Sum(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34821,7 +34899,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceU64Sum(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceU64Prod(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34831,7 +34909,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceU64Prod(GpuRuntim
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceU64Min(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34841,7 +34919,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceU64Min(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceU64Max(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34851,7 +34929,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_reduceU64Max(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allGatherF32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& sendcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34861,7 +34939,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allGatherF32(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allGatherF16(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& sendcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34871,7 +34949,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allGatherF16(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allGatherBF16(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& sendcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34881,7 +34959,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allGatherBF16(GpuRuntim
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allGatherF64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& sendcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34891,7 +34969,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allGatherF64(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allGatherI32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& sendcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34901,7 +34979,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allGatherI32(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allGatherI8(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& sendcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34911,7 +34989,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allGatherI8(GpuRuntime:
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allGatherU8(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& sendcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34921,7 +34999,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allGatherU8(GpuRuntime:
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allGatherU32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& sendcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34931,7 +35009,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allGatherU32(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allGatherI64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& sendcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34941,7 +35019,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allGatherI64(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_allGatherU64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& sendcount, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34951,7 +35029,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_allGatherU64(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_broadcastF32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34961,7 +35039,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_broadcastF32(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_broadcastF16(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34971,7 +35049,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_broadcastF16(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_broadcastBF16(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34981,7 +35059,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_broadcastBF16(GpuRuntim
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_broadcastF64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -34991,7 +35069,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_broadcastF64(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_broadcastI32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35001,7 +35079,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_broadcastI32(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_broadcastI8(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35011,7 +35089,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_broadcastI8(GpuRuntime:
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_broadcastU8(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35021,7 +35099,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_broadcastU8(GpuRuntime:
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_broadcastU32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35031,7 +35109,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_broadcastU32(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_broadcastI64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35041,7 +35119,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_broadcastI64(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_broadcastU64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35051,7 +35129,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_broadcastU64(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_sendF32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& peer, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35061,7 +35139,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_sendF32(GpuRuntime::Lib
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_sendF16(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& peer, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35071,7 +35149,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_sendF16(GpuRuntime::Lib
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_sendBF16(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& peer, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35081,7 +35159,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_sendBF16(GpuRuntime::Li
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_sendF64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& peer, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35091,7 +35169,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_sendF64(GpuRuntime::Lib
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_sendI32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& peer, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35101,7 +35179,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_sendI32(GpuRuntime::Lib
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_sendI8(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& peer, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35111,7 +35189,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_sendI8(GpuRuntime::Libr
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_sendU8(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& peer, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35121,7 +35199,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_sendU8(GpuRuntime::Libr
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_sendU32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& peer, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35131,7 +35209,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_sendU32(GpuRuntime::Lib
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_sendI64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& peer, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35141,7 +35219,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_sendI64(GpuRuntime::Lib
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_sendU64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& peer, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35151,7 +35229,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_sendU64(GpuRuntime::Lib
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_recvF32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& count, GpuRuntime::Buffer& peer, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35161,7 +35239,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_recvF32(GpuRuntime::Lib
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_recvF16(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& count, GpuRuntime::Buffer& peer, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35171,7 +35249,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_recvF16(GpuRuntime::Lib
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_recvBF16(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& count, GpuRuntime::Buffer& peer, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35181,7 +35259,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_recvBF16(GpuRuntime::Li
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_recvF64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& count, GpuRuntime::Buffer& peer, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35191,7 +35269,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_recvF64(GpuRuntime::Lib
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_recvI32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& count, GpuRuntime::Buffer& peer, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35201,7 +35279,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_recvI32(GpuRuntime::Lib
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_recvI8(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& count, GpuRuntime::Buffer& peer, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35211,7 +35289,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_recvI8(GpuRuntime::Libr
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_recvU8(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& count, GpuRuntime::Buffer& peer, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35221,7 +35299,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_recvU8(GpuRuntime::Libr
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_recvU32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& count, GpuRuntime::Buffer& peer, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35231,7 +35309,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_recvU32(GpuRuntime::Lib
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_recvI64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& count, GpuRuntime::Buffer& peer, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35241,7 +35319,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_recvI64(GpuRuntime::Lib
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_recvU64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& count, GpuRuntime::Buffer& peer, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35251,7 +35329,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_recvU64(GpuRuntime::Lib
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_alltoAllF32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35261,7 +35339,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_alltoAllF32(GpuRuntime:
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_alltoAllF16(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35271,7 +35349,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_alltoAllF16(GpuRuntime:
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_alltoAllBF16(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35281,7 +35359,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_alltoAllBF16(GpuRuntime
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_alltoAllF64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35291,7 +35369,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_alltoAllF64(GpuRuntime:
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_alltoAllI32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35301,7 +35379,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_alltoAllI32(GpuRuntime:
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_alltoAllI8(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35311,7 +35389,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_alltoAllI8(GpuRuntime::
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_alltoAllU8(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35321,7 +35399,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_alltoAllU8(GpuRuntime::
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_alltoAllU32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35331,7 +35409,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_alltoAllU32(GpuRuntime:
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_alltoAllI64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35341,7 +35419,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_alltoAllI64(GpuRuntime:
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_alltoAllU64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35351,7 +35429,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_alltoAllU64(GpuRuntime:
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_scatterF32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35361,7 +35439,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_scatterF32(GpuRuntime::
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_scatterF16(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35371,7 +35449,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_scatterF16(GpuRuntime::
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_scatterBF16(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35381,7 +35459,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_scatterBF16(GpuRuntime:
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_scatterF64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35391,7 +35469,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_scatterF64(GpuRuntime::
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_scatterI32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35401,7 +35479,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_scatterI32(GpuRuntime::
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_scatterI8(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35411,7 +35489,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_scatterI8(GpuRuntime::L
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_scatterU8(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35421,7 +35499,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_scatterU8(GpuRuntime::L
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_scatterU32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35431,7 +35509,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_scatterU32(GpuRuntime::
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_scatterI64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35441,7 +35519,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_scatterI64(GpuRuntime::
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_scatterU64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35451,7 +35529,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_scatterU64(GpuRuntime::
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_gatherF32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35461,7 +35539,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_gatherF32(GpuRuntime::L
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_gatherF16(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35471,7 +35549,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_gatherF16(GpuRuntime::L
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_gatherBF16(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35481,7 +35559,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_gatherBF16(GpuRuntime::
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_gatherF64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35491,7 +35569,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_gatherF64(GpuRuntime::L
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_gatherI32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35501,7 +35579,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_gatherI32(GpuRuntime::L
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_gatherI8(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35511,7 +35589,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_gatherI8(GpuRuntime::Li
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_gatherU8(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35521,7 +35599,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_gatherU8(GpuRuntime::Li
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_gatherU32(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35531,7 +35609,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_gatherU32(GpuRuntime::L
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_gatherI64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35541,7 +35619,7 @@ static bool dispatch_navatala_Libraries_NCCL_Collectives_gatherI64(GpuRuntime::L
 }
 
 static bool dispatch_navatala_Libraries_NCCL_Collectives_gatherU64(GpuRuntime::LibraryOps* lib, const std::string& backend, GpuRuntime::Device& device, GpuRuntime::Queue& queue, GpuRuntime::Buffer& sendbuf, GpuRuntime::Buffer& count, GpuRuntime::Buffer& root, GpuRuntime::Buffer& comm, GpuRuntime::Buffer& stream, GpuRuntime::Buffer& recvbuf) {
-#if CODEGEN_GPU_HAS_NCCL
+#if NAVATALA_GPU_HAS_NCCL
   if (lib && lib->hasNcclSupport()) {
     // NCCL dispatch handled by EmitLibrary.libraryMethodCall
     // This path is for the GpuGenImpl secondary dispatch layer
@@ -35630,8 +35708,8 @@ bool tryGetKernelSource_metal_dataframe_argsort(const std::string& backend, cons
 bool tryGetKernelSource_metal_nccl(const std::string& backend, const std::string& kernelName, GpuRuntime::ProgramSource& out);
 bool tryGetKernelSource_hip_ml_reduction(const std::string& backend, const std::string& kernelName, GpuRuntime::ProgramSource& out);
 bool tryGetKernelSource_metal_samples(const std::string& backend, const std::string& kernelName, GpuRuntime::ProgramSource& out);
-bool tryGetKernelSource_metal_sparse_knn(const std::string& backend, const std::string& kernelName, GpuRuntime::ProgramSource& out);
 bool tryGetKernelSource_vulkan_graph(const std::string& backend, const std::string& kernelName, GpuRuntime::ProgramSource& out);
+bool tryGetKernelSource_metal_sparse_knn(const std::string& backend, const std::string& kernelName, GpuRuntime::ProgramSource& out);
 bool tryGetKernelSource_hip_sparse_mg(const std::string& backend, const std::string& kernelName, GpuRuntime::ProgramSource& out);
 bool tryGetKernelSource_vulkan_transformer(const std::string& backend, const std::string& kernelName, GpuRuntime::ProgramSource& out);
 bool tryGetKernelSource_opencl_cfd_primitives(const std::string& backend, const std::string& kernelName, GpuRuntime::ProgramSource& out);
@@ -35642,8 +35720,8 @@ bool tryGetKernelSource_metal_runtime(const std::string& backend, const std::str
 bool tryGetKernelSource_metal_ml_pointwise(const std::string& backend, const std::string& kernelName, GpuRuntime::ProgramSource& out);
 bool tryGetKernelSource_metal_dataframe_top_k(const std::string& backend, const std::string& kernelName, GpuRuntime::ProgramSource& out);
 bool tryGetKernelSource_vulkan_cfd(const std::string& backend, const std::string& kernelName, GpuRuntime::ProgramSource& out);
-bool tryGetKernelSource_metal_graph(const std::string& backend, const std::string& kernelName, GpuRuntime::ProgramSource& out);
 bool tryGetKernelSource_cuda_vector_search_ivfpq(const std::string& backend, const std::string& kernelName, GpuRuntime::ProgramSource& out);
+bool tryGetKernelSource_metal_graph(const std::string& backend, const std::string& kernelName, GpuRuntime::ProgramSource& out);
 bool tryGetKernelSource_opencl_linalg(const std::string& backend, const std::string& kernelName, GpuRuntime::ProgramSource& out);
 bool tryGetKernelSource_hip_linalg(const std::string& backend, const std::string& kernelName, GpuRuntime::ProgramSource& out);
 bool tryGetKernelSource_opencl_cfd(const std::string& backend, const std::string& kernelName, GpuRuntime::ProgramSource& out);
@@ -35732,8 +35810,8 @@ bool tryGetKernelSource(const std::string& backend, const std::string& kernelNam
   if (tryGetKernelSource_metal_nccl(backend, kernelName, out)) return true;
   if (tryGetKernelSource_hip_ml_reduction(backend, kernelName, out)) return true;
   if (tryGetKernelSource_metal_samples(backend, kernelName, out)) return true;
-  if (tryGetKernelSource_metal_sparse_knn(backend, kernelName, out)) return true;
   if (tryGetKernelSource_vulkan_graph(backend, kernelName, out)) return true;
+  if (tryGetKernelSource_metal_sparse_knn(backend, kernelName, out)) return true;
   if (tryGetKernelSource_hip_sparse_mg(backend, kernelName, out)) return true;
   if (tryGetKernelSource_vulkan_transformer(backend, kernelName, out)) return true;
   if (tryGetKernelSource_opencl_cfd_primitives(backend, kernelName, out)) return true;
@@ -35744,8 +35822,8 @@ bool tryGetKernelSource(const std::string& backend, const std::string& kernelNam
   if (tryGetKernelSource_metal_ml_pointwise(backend, kernelName, out)) return true;
   if (tryGetKernelSource_metal_dataframe_top_k(backend, kernelName, out)) return true;
   if (tryGetKernelSource_vulkan_cfd(backend, kernelName, out)) return true;
-  if (tryGetKernelSource_metal_graph(backend, kernelName, out)) return true;
   if (tryGetKernelSource_cuda_vector_search_ivfpq(backend, kernelName, out)) return true;
+  if (tryGetKernelSource_metal_graph(backend, kernelName, out)) return true;
   if (tryGetKernelSource_opencl_linalg(backend, kernelName, out)) return true;
   if (tryGetKernelSource_hip_linalg(backend, kernelName, out)) return true;
   if (tryGetKernelSource_opencl_cfd(backend, kernelName, out)) return true;
@@ -35767,7 +35845,7 @@ bool tryRunProgram(const std::string& backend, const std::string& programName, G
   auto& workspaceClassPools = poolState.classPools;
   (void)workspacePool; (void)workspaceClassPools;
   GpuRuntime::LibraryOps* lib = nullptr;
-#if CODEGEN_GPU_HAS_LIBRARY_OPS
+#if NAVATALA_GPU_HAS_LIBRARY_OPS
   std::unique_ptr<GpuRuntime::LibraryOps> libHolder;
   // Prefer a backend-matching LibraryOps instance (avoid cross-backend handle misuse).
   libHolder = GpuRuntime::createLibraryOpsForBackend(backend);

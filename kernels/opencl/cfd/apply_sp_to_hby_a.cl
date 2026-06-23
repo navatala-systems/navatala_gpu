@@ -15,9 +15,9 @@
 
 __kernel void navatala_cfd_apply_sp_to_hby_a(__global float* hx, __global float* hy, __global float* hz, __global const float* ux, __global const float* uy, __global const float* uz, __global const float* rAU, __global const float* sp, __global const int* counts) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
     return;
   } else {

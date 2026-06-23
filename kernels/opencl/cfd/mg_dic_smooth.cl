@@ -16,9 +16,9 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_cfd_mg_dic_smooth(__global const float* b, __global const float* ax, __global const double* rD, __global const int* edgeU, __global const int* edgeV, __global const float* edgeCf, __global const int* counts, __global float* x, __global float* z) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if (((int)(get_global_id(0)) >= 1)) {
     return;
   } else {

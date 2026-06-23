@@ -25,7 +25,9 @@ better together.
 
 `runtime/` is a self-contained C++20 library. It compiles against any subset
 of the supported backends and falls back gracefully when a backend's toolkit
-isn't on the build host. Public API lives in `runtime/include/gpu_runtime.h`.
+isn't on the build host. The low-level backend API lives in
+`runtime/include/gpu_runtime.h`; the public application-facing wrapper API
+lives under `runtime/include/navatala/`.
 
 Core abstractions:
 
@@ -45,6 +47,14 @@ Core abstractions:
 
 Each backend lives in its own `runtime/src/backend_*.cpp` file and exposes
 factory functions that the top-level `device_factory.cpp` dispatches to.
+
+The C++ wrapper layer is intentionally narrower than the full generated kernel
+corpus. It currently exposes resource, queue, event, memory, buffer, profiling,
+and selected linear-algebra facades such as `navatala::linalg::axpy`,
+`navatala::linalg::gemm`, `navatala::linalg::nrm2`, and
+`navatala::sparse::csr_spmv`. Raw generated entry points remain available
+through the manifest and C ABI, but application code should prefer wrappers
+where they exist.
 
 ## Layer 2: the kernel corpus
 
@@ -101,8 +111,9 @@ drivers translate their native error codes via lookup tables (see
 ## What's intentionally out of scope
 
 - This release does not bundle a high-level vendor math/DNN library. The
-  kernel corpus covers BLAS-level building blocks; large numerical libraries
-  belong in downstream consumers.
+  kernel corpus covers broad portable building blocks; vendor-library dispatch
+  paths are documented explicitly when present and should not be inferred from
+  source coverage alone.
 - The internal authoring pipeline that produces `kernels/` is private. The
   shipped artifacts are self-contained and usable on their own; provenance
   is summarised in the README's `## Provenance` section.

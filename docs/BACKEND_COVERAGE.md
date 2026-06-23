@@ -6,11 +6,11 @@ validation, which is tracked separately per backend.
 
 | Backend | Kernels | Source files | Binary artifacts | Coverage vs CUDA | Missing vs CUDA |
 |---------|--------:|-------------:|-----------------:|-----------------:|----------------:|
-| CUDA | 2,080 | 2,080 | 0 | 100.0% | 0 |
-| HIP | 2,080 | 2,080 | 0 | 100.0% | 0 |
-| OPENCL | 1,942 | 1,942 | 0 | 93.4% | 138 |
-| VULKAN | 1,928 | 1,928 | 1,928 | 92.7% | 152 |
-| METAL | 1,420 | 1,420 | 0 | 68.3% | 660 |
+| CUDA | 2,083 | 2,083 | 0 | 100.0% | 0 |
+| HIP | 2,093 | 2,093 | 0 | 100.5% | 0 |
+| OPENCL | 1,945 | 1,945 | 0 | 93.4% | 138 |
+| VULKAN | 1,931 | 1,931 | 1,931 | 92.7% | 152 |
+| METAL | 1,423 | 1,423 | 0 | 68.3% | 660 |
 
 Notes:
 
@@ -22,3 +22,6 @@ Notes:
   random-state, or F64 requirements do not currently map cleanly.
 - Backend presence is not the same as benchmarked performance or full
   application-level validation.
+- Current alpha entries are portable Navatala kernel paths unless
+  `kernels/manifest.json` explicitly marks a backend path as
+  vendor-backed.

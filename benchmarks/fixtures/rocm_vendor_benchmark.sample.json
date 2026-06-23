@@ -1,0 +1,74 @@
+{
+  "schema": "navatala_gpu.rocm_vendor_benchmark.v1",
+  "timingMode": "back_to_back_throughput_mean_per_launch",
+  "iterations": 10,
+  "warmup": 3,
+  "quickMode": true,
+  "matrix": "quick",
+  "device": {
+    "name": "AMD Instinct MI300X VF",
+    "gcnArch": "gfx942:sramecc+:xnack-",
+    "globalMemoryMiB": 196288
+  },
+  "rocminfo": {
+    "gcnArch": "gfx942:sramecc+:xnack-",
+    "hipRuntimeVersion": 70000000,
+    "hipDriverVersion": 70000000,
+    "summary": "sample fixture; replace with captured rocminfo summary from run_rocm_vendor_benchmarks.sh"
+  },
+  "hipSPARSELtAvailable": false,
+  "hipSPARSELtMode": "capability_reporting_only",
+  "results": [
+    {
+      "operation": "AXPY_F32",
+      "shape": "n=65536",
+      "navatalaPath": "generated HIP kernel navatala_sparse_axpy_f32",
+      "vendorPath": "rocBLAS rocblas_saxpy",
+      "correctness": true,
+      "generatedMeanMs": 0.028,
+      "vendorMeanMs": 0.012,
+      "generatedOverVendorRatio": 2.3333333,
+      "maxAbsError": 0.0,
+      "notes": "",
+      "kernelClass": "scalar",
+      "implementationKind": "portable_kernel",
+      "tuningPath": "",
+      "spmvRowNnzThreshold": 0,
+      "vendorDispatchSelected": false
+    },
+    {
+      "operation": "GEMM_F32",
+      "shape": "m=128,n=128,k=128",
+      "navatalaPath": "generated HIP kernel navatala_transformer_tiled_gemm_f32",
+      "vendorPath": "rocBLAS rocblas_sgemm",
+      "correctness": true,
+      "generatedMeanMs": 0.095,
+      "vendorMeanMs": 0.045,
+      "generatedOverVendorRatio": 2.1111111,
+      "maxAbsError": 0.001,
+      "notes": "",
+      "kernelClass": "scalar",
+      "implementationKind": "portable_kernel",
+      "tuningPath": "",
+      "spmvRowNnzThreshold": 0,
+      "vendorDispatchSelected": false
+    },
+    {
+      "operation": "CSR_SPMV_F32",
+      "shape": "rows=16384,nnz=114688",
+      "navatalaPath": "generated HIP kernel navatala_graph_spmv_weighted_f32",
+      "vendorPath": "rocSPARSE rocsparse_spmv",
+      "correctness": true,
+      "generatedMeanMs": 0.052,
+      "vendorMeanMs": 0.037,
+      "generatedOverVendorRatio": 1.4054054,
+      "maxAbsError": 0.0,
+      "notes": "",
+      "kernelClass": "scalar",
+      "implementationKind": "portable_kernel",
+      "tuningPath": "thread_per_row",
+      "spmvRowNnzThreshold": 16,
+      "vendorDispatchSelected": false
+    }
+  ]
+}

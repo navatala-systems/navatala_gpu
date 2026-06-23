@@ -16,9 +16,9 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_neg_sum_diag(const float* upper, const float* lower, const int* offsets, const int* faceIdx, const int* sign, const int* counts, float* outDiag) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
     return;
   } else {

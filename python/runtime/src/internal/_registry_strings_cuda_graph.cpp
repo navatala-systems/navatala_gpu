@@ -330,6 +330,47 @@ extern "C" __global__ void navatala_graph_spmv_weighted_f32(const unsigned int* 
 }
 
 )kernel";
+const char* k_cuda_navatala_graph_spmv_weighted_subgroup_f32 = R"kernel(
+#include <cuda_runtime.h>
+template <typename T>
+__device__ inline T gpu_warp_reduce_sum(T v) {
+  unsigned mask = 0xffffffffu;
+  for (int offset = warpSize / 2; offset > 0; offset >>= 1) {
+    v += __shfl_down_sync(mask, v, offset);
+  }
+  return v;
+}
+extern "C" __global__ void navatala_graph_spmv_weighted_subgroup_f32(const unsigned int* offsets, const unsigned int* indices, const float* weights, const float* x, const unsigned int* numVertices, float* y) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
+  unsigned int lane = ((unsigned int)((int)(threadIdx.x % warpSize)));
+  unsigned int subgroupSize = ((unsigned int)((int)(warpSize)));
+  unsigned int row = (gid / subgroupSize);
+  unsigned int numV = numVertices[0];
+  if ((row < numV)) {
+    unsigned int base = offsets[row];
+    unsigned int endv = offsets[(row + 1u)];
+    unsigned int rowlen = (endv - base);
+    unsigned int rowIters = ((rowlen + (subgroupSize - 1u)) / subgroupSize);
+    float laneAcc = __uint_as_float(0x00000000u);
+    for (int k = 0; k < (int)(rowIters); ++k) {
+      unsigned int rel = ((((unsigned int)(k)) * subgroupSize) + lane);
+      if ((rel < rowlen)) {
+        unsigned int eidx = (base + rel);
+        unsigned int col = indices[eidx];
+        float w = weights[eidx];
+        float xv = x[col];
+        laneAcc = (laneAcc + (w * xv));
+      }
+    }
+    float rowSum = gpu_warp_reduce_sum(laneAcc);
+    if ((lane == 0u)) {
+      y[row] = rowSum;
+    }
+  }
+}
+
+)kernel";
 const char* k_cuda_navatala_graph_spmv_unweighted_f32 = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_graph_spmv_unweighted_f32(const unsigned int* offsets, const unsigned int* indices, const float* x, const unsigned int* numVertices, float* y) {
@@ -348,6 +389,46 @@ extern "C" __global__ void navatala_graph_spmv_unweighted_f32(const unsigned int
       acc = (acc + xv);
     }
     y[gid] = acc;
+  }
+}
+
+)kernel";
+const char* k_cuda_navatala_graph_spmv_unweighted_subgroup_f32 = R"kernel(
+#include <cuda_runtime.h>
+template <typename T>
+__device__ inline T gpu_warp_reduce_sum(T v) {
+  unsigned mask = 0xffffffffu;
+  for (int offset = warpSize / 2; offset > 0; offset >>= 1) {
+    v += __shfl_down_sync(mask, v, offset);
+  }
+  return v;
+}
+extern "C" __global__ void navatala_graph_spmv_unweighted_subgroup_f32(const unsigned int* offsets, const unsigned int* indices, const float* x, const unsigned int* numVertices, float* y) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  unsigned int gid = ((unsigned int)((int)(blockIdx.x * blockDim.x + threadIdx.x)));
+  unsigned int lane = ((unsigned int)((int)(threadIdx.x % warpSize)));
+  unsigned int subgroupSize = ((unsigned int)((int)(warpSize)));
+  unsigned int row = (gid / subgroupSize);
+  unsigned int numV = numVertices[0];
+  if ((row < numV)) {
+    unsigned int base = offsets[row];
+    unsigned int endv = offsets[(row + 1u)];
+    unsigned int rowlen = (endv - base);
+    unsigned int rowIters = ((rowlen + (subgroupSize - 1u)) / subgroupSize);
+    float laneAcc = __uint_as_float(0x00000000u);
+    for (int k = 0; k < (int)(rowIters); ++k) {
+      unsigned int rel = ((((unsigned int)(k)) * subgroupSize) + lane);
+      if ((rel < rowlen)) {
+        unsigned int eidx = (base + rel);
+        unsigned int col = indices[eidx];
+        float xv = x[col];
+        laneAcc = (laneAcc + xv);
+      }
+    }
+    float rowSum = gpu_warp_reduce_sum(laneAcc);
+    if ((lane == 0u)) {
+      y[row] = rowSum;
+    }
   }
 }
 
@@ -2475,6 +2556,26 @@ const KernelAbiManifestInfo kAbiManifest_cuda_navatala_graph_spmv_weighted_f32 =
   kAbiArgs_cuda_navatala_graph_spmv_weighted_f32
 };
 
+const KernelArgumentInfo kAbiArgs_cuda_navatala_graph_spmv_weighted_subgroup_f32[] = {
+  { "offsets", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "indices", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "weights", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "x", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "numVertices", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "y", 5, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_cuda_navatala_graph_spmv_weighted_subgroup_f32 = {
+  1,
+  "navatala_graph_spmv_weighted_subgroup_f32",
+  "cuda",
+  "navatala_graph_spmv_weighted_subgroup_f32",
+  "kernel:cuda:navatala_graph_spmv_weighted_subgroup_f32",
+  "abi-r1:cuda:navatala_graph_spmv_weighted_subgroup_f32",
+  "abi-r1:cuda:navatala_graph_spmv_weighted_subgroup_f32",
+  6,
+  kAbiArgs_cuda_navatala_graph_spmv_weighted_subgroup_f32
+};
+
 const KernelArgumentInfo kAbiArgs_cuda_navatala_graph_spmv_unweighted_f32[] = {
   { "offsets", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
   { "indices", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
@@ -2492,6 +2593,25 @@ const KernelAbiManifestInfo kAbiManifest_cuda_navatala_graph_spmv_unweighted_f32
   "abi-r1:cuda:navatala_graph_spmv_unweighted_f32",
   5,
   kAbiArgs_cuda_navatala_graph_spmv_unweighted_f32
+};
+
+const KernelArgumentInfo kAbiArgs_cuda_navatala_graph_spmv_unweighted_subgroup_f32[] = {
+  { "offsets", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "indices", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "x", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "numVertices", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "y", 4, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_cuda_navatala_graph_spmv_unweighted_subgroup_f32 = {
+  1,
+  "navatala_graph_spmv_unweighted_subgroup_f32",
+  "cuda",
+  "navatala_graph_spmv_unweighted_subgroup_f32",
+  "kernel:cuda:navatala_graph_spmv_unweighted_subgroup_f32",
+  "abi-r1:cuda:navatala_graph_spmv_unweighted_subgroup_f32",
+  "abi-r1:cuda:navatala_graph_spmv_unweighted_subgroup_f32",
+  5,
+  kAbiArgs_cuda_navatala_graph_spmv_unweighted_subgroup_f32
 };
 
 const KernelArgumentInfo kAbiArgs_cuda_navatala_graph_axpy2_f32[] = {
@@ -3719,8 +3839,16 @@ bool tryGetKernelAbiManifest_cuda_graph(const std::string& backend, const std::s
     out = &kAbiManifest_cuda_navatala_graph_spmv_weighted_f32;
     return true;
   }
+  if (backend == "cuda" && kernelName == "navatala_graph_spmv_weighted_subgroup_f32") {
+    out = &kAbiManifest_cuda_navatala_graph_spmv_weighted_subgroup_f32;
+    return true;
+  }
   if (backend == "cuda" && kernelName == "navatala_graph_spmv_unweighted_f32") {
     out = &kAbiManifest_cuda_navatala_graph_spmv_unweighted_f32;
+    return true;
+  }
+  if (backend == "cuda" && kernelName == "navatala_graph_spmv_unweighted_subgroup_f32") {
+    out = &kAbiManifest_cuda_navatala_graph_spmv_unweighted_subgroup_f32;
     return true;
   }
   if (backend == "cuda" && kernelName == "navatala_graph_axpy2_f32") {
@@ -4121,10 +4249,24 @@ bool tryGetKernelSource_cuda_graph(const std::string& backend, const std::string
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }
+  if (backend == "cuda" && kernelName == "navatala_graph_spmv_weighted_subgroup_f32") {
+    out.kind = GpuRuntime::ProgramSource::Kind::CudaCpp;
+    out.entryPoint = "navatala_graph_spmv_weighted_subgroup_f32";
+    std::string_view sv(k_cuda_navatala_graph_spmv_weighted_subgroup_f32);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
   if (backend == "cuda" && kernelName == "navatala_graph_spmv_unweighted_f32") {
     out.kind = GpuRuntime::ProgramSource::Kind::CudaCpp;
     out.entryPoint = "navatala_graph_spmv_unweighted_f32";
     std::string_view sv(k_cuda_navatala_graph_spmv_unweighted_f32);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "cuda" && kernelName == "navatala_graph_spmv_unweighted_subgroup_f32") {
+    out.kind = GpuRuntime::ProgramSource::Kind::CudaCpp;
+    out.entryPoint = "navatala_graph_spmv_unweighted_subgroup_f32";
+    std::string_view sv(k_cuda_navatala_graph_spmv_unweighted_subgroup_f32);
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }

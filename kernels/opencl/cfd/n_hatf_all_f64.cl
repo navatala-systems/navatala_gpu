@@ -16,9 +16,9 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_cfd_n_hatf_all_f64(__global const double* gx, __global const double* gy, __global const double* gz, __global const double* sfX, __global const double* sfY, __global const double* sfZ, __global const int* owner, __global const int* nei, __global const double* weights, __global const float* theta, __global const uint* thetaMask, __global const double* paramsF, __global const int* counts, __global double* contactGrad, __global double* nHatf) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(get_global_id(0)))) >= counts[1])) {
     return;
   } else {

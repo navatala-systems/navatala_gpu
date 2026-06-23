@@ -4,8 +4,8 @@ Navatala GPU Python SDK
 This distribution contains the Python bindings, tests, and a nanobind
 extension scaffold for the public Navatala GPU C ABI.
 
-Build provenance: codegen_gpu
-Manifest id: pyabi6-3906333046
+Build provenance: gpu_runtime
+Manifest id: pyabi6-2675513039
 
 Third-party components used in this package:
 - nanobind: BSD-3-Clause license; copyright Wenzel Jakob and contributors.

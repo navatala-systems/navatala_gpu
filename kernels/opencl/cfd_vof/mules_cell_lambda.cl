@@ -15,9 +15,9 @@
 
 __kernel void navatala_cfd_vof_mules_cell_lambda(__global const float* psiMaxCap, __global const float* psiMinCap, __global const float* sumPhip, __global const float* mSumPhim, __global const float* sumlPhip, __global const float* mSumlPhim, __global const int* counts, __global const float* paramsF, __global float* lambdam, __global float* lambdap) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
     return;
   } else {

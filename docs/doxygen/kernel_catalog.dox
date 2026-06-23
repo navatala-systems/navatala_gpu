@@ -12,10 +12,10 @@ requirements.
 - BLAS / dense linear algebra: 2 kernels
 - Distributed communication: 20 kernels
 - Linear solvers: 409 kernels
-- Miscellaneous: 1398 kernels
+- Miscellaneous: 1409 kernels
 - Neural / spectral operators: 12 kernels
 - Parallel primitives: 14 kernels
-- Sparse linear algebra: 52 kernels
+- Sparse linear algebra: 54 kernels
 - Volume-of-Fluid CFD: 157 kernels
 
 \section kernel_catalog_usage Usage

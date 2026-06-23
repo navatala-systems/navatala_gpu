@@ -1,0 +1,26 @@
+# Build outputs
+build/
+cmake-build-*/
+
+# Python package artifacts
+python/build/
+python/dist/
+python/*.egg-info/
+python/wheelhouse/
+
+# CMake/Ninja byproducts
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+compile_commands.json
+*.ninja
+
+# Python caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Local editor/system files
+.DS_Store
+*.swp
+*.swo

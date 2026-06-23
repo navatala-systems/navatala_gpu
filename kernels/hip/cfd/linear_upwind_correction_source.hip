@@ -16,9 +16,9 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_cfd_linear_upwind_correction_source(const float* luFaceVals, const float* flux, const int* owner, const int* neighbour, const float* psi, const int* offsets, const int* faceIdx, const float* signF, const int* counts, float* outSource) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
     return;
   } else {

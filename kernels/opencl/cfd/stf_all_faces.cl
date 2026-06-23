@@ -15,9 +15,9 @@
 
 __kernel void navatala_cfd_stf_all_faces(__global const float* divN, __global const float* alpha, __global const float* alphaF, __global const float* delta, __global const int* owner, __global const int* nei, __global const float* weights, __global const float* contactGrad, __global const uint* thetaMask, __global const float* paramsF, __global const int* counts, __global float* stf) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(get_global_id(0)))) >= counts[1])) {
     return;
   } else {

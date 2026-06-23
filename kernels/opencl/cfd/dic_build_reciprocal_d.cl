@@ -15,9 +15,9 @@
 
 __kernel void navatala_cfd_dic_build_reciprocal_d(__global const float* diag, __global const float* upper, __global const int* owner, __global const int* neighbour, __global const int* counts, __global float* rD) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   for (int c = 0; c < (int)(counts[0]); ++c) {
     rD[c] = diag[c];
   }

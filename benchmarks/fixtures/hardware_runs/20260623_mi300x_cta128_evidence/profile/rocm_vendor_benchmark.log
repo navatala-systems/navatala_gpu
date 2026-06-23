@@ -1,0 +1,28 @@
+ROCm benchmark device: AMD Instinct MI300X VF, gcnArch=gfx942:sramecc+:xnack-, memory=196288 MiB
+hipSPARSELt detected at build time: yes
+MFMA benchmark built: yes
+operation      shape                    generated_mean_ms vendor_mean_ms ratio        correct    vendor
+GEMM_F16_PORTABLE_F32OUT m=128,n=128,k=128,output=F32,compute=F32 0.008226     0.031406     0.262        pass       rocBLAS rocblas_gemm_ex F16 input/F32 output/F32 accumulation
+GEMM_F16_MFMA_CTA64_SHARED m=128,n=128,k=128,compute=F32,cta=64x64x8,lds_staged=true 0.008034     0.026627     0.302        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F16_MFMA_CTA64_PIPELINED m=128,n=128,k=128,compute=F32,cta=64x64x8,lds_staged=true,two_slot=true,r6_panel_copy=true 0.008747     0.026467     0.331        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F16_MFMA_CTA128 m=128,n=128,k=128,compute=F32,cta=128x128x32 0.010142     0.026322     0.385        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F16_PORTABLE_F32OUT m=512,n=512,k=512,output=F32,compute=F32 0.028583     0.028070     1.018        pass       rocBLAS rocblas_gemm_ex F16 input/F32 output/F32 accumulation
+GEMM_F16_MFMA_CTA64_SHARED m=512,n=512,k=512,compute=F32,cta=64x64x8,lds_staged=true 0.022089     0.027830     0.794        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F16_MFMA_CTA64_PIPELINED m=512,n=512,k=512,compute=F32,cta=64x64x8,lds_staged=true,two_slot=true,r6_panel_copy=true 0.024118     0.027629     0.873        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F16_MFMA_CTA128 m=512,n=512,k=512,compute=F32,cta=128x128x32 0.027637     0.027630     1.000        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F16_PORTABLE_F32OUT m=1024,n=1024,k=1024,output=F32,compute=F32 0.172787     0.044949     3.844        pass       rocBLAS rocblas_gemm_ex F16 input/F32 output/F32 accumulation
+GEMM_F16_MFMA_CTA64_SHARED m=1024,n=1024,k=1024,compute=F32,cta=64x64x8,lds_staged=true 0.061891     0.045181     1.370        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F16_MFMA_CTA64_PIPELINED m=1024,n=1024,k=1024,compute=F32,cta=64x64x8,lds_staged=true,two_slot=true,r6_panel_copy=true 0.063935     0.044996     1.421        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F16_MFMA_CTA128 m=1024,n=1024,k=1024,compute=F32,cta=128x128x32 0.055059     0.045061     1.222        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F16_PORTABLE_F32OUT m=1024,n=512,k=1024,output=F32,compute=F32 0.092342     0.045093     2.048        pass       rocBLAS rocblas_gemm_ex F16 input/F32 output/F32 accumulation
+GEMM_F16_MFMA_CTA64_SHARED m=1024,n=512,k=1024,compute=F32,cta=64x64x8,lds_staged=true 0.054667     0.044612     1.225        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F16_MFMA_CTA64_PIPELINED m=1024,n=512,k=1024,compute=F32,cta=64x64x8,lds_staged=true,two_slot=true,r6_panel_copy=true 0.056799     0.044668     1.272        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F16_MFMA_CTA128 m=1024,n=512,k=1024,compute=F32,cta=128x128x32 0.052646     0.045069     1.168        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F16_PORTABLE_F32OUT m=512,n=1024,k=1024,output=F32,compute=F32 0.092271     0.044588     2.069        pass       rocBLAS rocblas_gemm_ex F16 input/F32 output/F32 accumulation
+GEMM_F16_MFMA_CTA64_SHARED m=512,n=1024,k=1024,compute=F32,cta=64x64x8,lds_staged=true 0.042062     0.044500     0.945        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F16_MFMA_CTA64_PIPELINED m=512,n=1024,k=1024,compute=F32,cta=64x64x8,lds_staged=true,two_slot=true,r6_panel_copy=true 0.045382     0.044468     1.021        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F16_MFMA_CTA128 m=512,n=1024,k=1024,compute=F32,cta=128x128x32 0.051363     0.044684     1.149        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F16_PORTABLE_F32OUT m=2048,n=512,k=1024,output=F32,compute=F32 0.175779     0.045093     3.898        pass       rocBLAS rocblas_gemm_ex F16 input/F32 output/F32 accumulation
+GEMM_F16_MFMA_CTA64_SHARED m=2048,n=512,k=1024,compute=F32,cta=64x64x8,lds_staged=true 0.060247     0.044893     1.342        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F16_MFMA_CTA64_PIPELINED m=2048,n=512,k=1024,compute=F32,cta=64x64x8,lds_staged=true,two_slot=true,r6_panel_copy=true 0.061450     0.045222     1.359        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F16_MFMA_CTA128 m=2048,n=512,k=1024,compute=F32,cta=128x128x32 0.054948     0.045102     1.218        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation

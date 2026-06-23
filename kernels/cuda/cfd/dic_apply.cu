@@ -16,9 +16,9 @@
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_dic_apply(const float* r, const float* rD, const float* upper, const int* owner, const int* neighbour, const int* counts, float* z) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   for (int c = 0; c < (int)(counts[0]); ++c) {
     z[c] = (rD[c] * r[c]);
   }

@@ -15,9 +15,9 @@
 
 __kernel void navatala_cfd_turbulence_add_explicit_source_device(__global const float* explicitSrc, __global const float* vol, __global const uint* counts, __global float* outVals) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
     return;
   } else {

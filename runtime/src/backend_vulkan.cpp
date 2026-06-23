@@ -790,7 +790,7 @@ private:
     VkQueue queue_;
     uint32_t queueFamilyIndex_;
     VkCommandPool commandPool_;
-    std::unique_ptr<VulkanDescriptorPool> descriptorPool_;  // 
+    std::unique_ptr<VulkanDescriptorPool> descriptorPool_;  //
 
     std::vector<VkCommandBuffer> inflightCmdBuffers_;
     std::vector<VkPipeline> inflightPipelines_;

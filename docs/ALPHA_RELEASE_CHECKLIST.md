@@ -34,7 +34,7 @@ validation, and performance claims are tracked separately.
       validation.
 - [ ] Release-tag manylinux/macOS wheel matrix has run and archived artifacts.
 - [x] At least one GPU backend smoke test is recorded.
-- [ ] Numerical conformance status is documented separately from source coverage.
+- [x] Numerical conformance status is documented separately from source coverage.
 - [x] Known limitations are listed before tag.
 
 ## Release Hygiene
@@ -44,4 +44,47 @@ validation, and performance claims are tracked separately.
 - [x] No private specification sources or generator implementation are copied.
 - [x] No absolute local paths, credentials, or internal hostnames are present.
 - [x] Public/private boundary is reviewed before publication.
+
+## Tracker Boundary
+
+- [x] #1362 remains the parent developer-preview release-readiness tracker.
+- [x] #1368 stable C++ wrapper API baseline is resolved for the initial
+      AXPY/GEMM/NRM2/CSR-SpMV facade scope; broader AMG/CFD/ML facades are
+      future API expansion.
+- [x] #1373 examples/quickstart scope is closed: C ABI AXPY, C++ AXPY,
+      C++ CSR SpMV, and host-registry partition lookup examples build from
+      the public tree.
+- [x] #1506 NumPy/DLPack Python binding baseline is resolved for the local
+      no-backend build/package/import path.
+- [x] #1515 subset DNN graph executor baseline is resolved, but cuDNN parity
+      claims remain intentionally constrained by `docs/KERNELS.md` and
+      `docs/NUMERICAL_CONFORMANCE.md`.
+- [ ] #1516-#1521 ROCm/HIP CI, vendor-dispatch integration, and published
+      HIP benchmark reports require AMD-capable runners or rental hardware and
+      are post-alpha blockers unless a ROCm-backed release is claimed.
+- [ ] #1363/#1379 `openfoam_gpu` co-release is explicitly outside this
+      `navatala_gpu` alpha unless those separate CFD release-readiness tasks
+      are completed. The public `orchestrator/` code is a non-turnkey example
+      boundary, not an OpenFOAM solver maturity claim.
+
+## Candidate Marker
+
+- [ ] Record the final public repository commit SHA and tag here before
+      cutting a release candidate.
+- [ ] Archive the exact `tools/check_generated_content_tells.sh` and
+      `tools/check_release_hygiene.py` outputs for the candidate commit.
+- [ ] Archive the wheel/sdist artifact list and platform tags for the candidate
+      commit.
+
+## Deferred Post-Alpha Items
+
+- [ ] manylinux_2_28 x86_64/aarch64 and macOS arm64 release wheels must be
+      built in the release workflow and archived before a production release.
+- [ ] CUDA/HIP/Metal hardware correctness and performance reports must be
+      attached before claiming backend maturity beyond developer preview.
+- [ ] Full host-registry aggregator should get a dedicated public CMake target
+      before advertising it as a stable linkable runtime component. The current
+      example intentionally verifies a generated registry partition only.
+- [ ] `openfoam_gpu` release readiness remains tracked separately under
+      #1363/#1379 and related CFD tasks.
 

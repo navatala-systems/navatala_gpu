@@ -69,9 +69,9 @@ __kernel void navatala_cfd_vof_alpha_phi_int(__global const float* alpha, __glob
 const char* k_opencl_navatala_cfd_vof_average_face_scalar_to_cell = R"kernel(
 __kernel void navatala_cfd_vof_average_face_scalar_to_cell(__global const float* alphaF, __global const float* magSf, __global const uint* offsets, __global const uint* faceIdx, __global const float* sumMag, __global const uint* counts, __global float* outAlpha) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
     return;
   } else {
@@ -129,9 +129,9 @@ __kernel void navatala_cfd_vof_interp_scalar_face_all(__global const float* alph
 const char* k_opencl_navatala_cfd_vof_alpha_update = R"kernel(
 __kernel void navatala_cfd_vof_alpha_update(__global const float* alpha, __global const float* divA, __global const float* paramsF, __global const int* counts, __global const float* rSubDeltaT, __global float* alphaNew) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
     return;
   } else {
@@ -150,9 +150,9 @@ __kernel void navatala_cfd_vof_alpha_update(__global const float* alpha, __globa
 const char* k_opencl_navatala_cfd_vof_mules_apply = R"kernel(
 __kernel void navatala_cfd_vof_mules_apply(__global const float* phiBD, __global const float* phiCorr, __global const float* lambda, __global const int* counts, __global const float* paramsF, __global float* alphaPhi) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(get_global_id(0)))) >= counts[1])) {
     return;
   } else {
@@ -164,9 +164,9 @@ __kernel void navatala_cfd_vof_mules_apply(__global const float* phiBD, __global
 const char* k_opencl_navatala_cfd_vof_mules_cell_lambda = R"kernel(
 __kernel void navatala_cfd_vof_mules_cell_lambda(__global const float* psiMaxCap, __global const float* psiMinCap, __global const float* sumPhip, __global const float* mSumPhim, __global const float* sumlPhip, __global const float* mSumlPhim, __global const int* counts, __global const float* paramsF, __global float* lambdam, __global float* lambdap) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
     return;
   } else {
@@ -193,9 +193,9 @@ __kernel void navatala_cfd_vof_mules_cell_lambda(__global const float* psiMaxCap
 const char* k_opencl_navatala_cfd_vof_mules_cell_sums = R"kernel(
 __kernel void navatala_cfd_vof_mules_cell_sums(__global const float* phiCorr, __global const float* lambda, __global const int* offsets, __global const int* faceIdx, __global const float* sign, __global const int* counts, __global const float* paramsF, __global float* sumlPhip, __global float* mSumlPhim) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
     return;
   } else {
@@ -241,9 +241,9 @@ __kernel void navatala_cfd_vof_mules_cell_sums(__global const float* phiCorr, __
 const char* k_opencl_navatala_cfd_vof_mules_face_update = R"kernel(
 __kernel void navatala_cfd_vof_mules_face_update(__global const float* phiCorr, __global float* lambda, __global const int* owner, __global const int* nei, __global const float* lambdam, __global const float* lambdap, __global const int* counts, __global const float* paramsF) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(get_global_id(0)))) >= counts[2])) {
     return;
   } else {
@@ -278,9 +278,9 @@ __kernel void navatala_cfd_vof_mules_face_update(__global const float* phiCorr, 
 const char* k_opencl_navatala_cfd_vof_mules_fill_lambda = R"kernel(
 __kernel void navatala_cfd_vof_mules_fill_lambda(__global const int* counts, __global const float* paramsF, __global float* lambda) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(get_global_id(0)))) >= counts[1])) {
     return;
   } else {
@@ -292,9 +292,9 @@ __kernel void navatala_cfd_vof_mules_fill_lambda(__global const int* counts, __g
 const char* k_opencl_navatala_cfd_vof_mules_init = R"kernel(
 __kernel void navatala_cfd_vof_mules_init(__global const float* alpha, __global const float* alphaF, __global const float* phiBD, __global const float* phiCorr, __global const int* offsets, __global const int* faceIdx, __global const float* sign, __global const int* owner, __global const int* nei, __global const float* vol, __global const int* counts, __global const float* paramsF, __global const float* rSubDeltaT, __global float* psiMaxCap, __global float* psiMinCap, __global float* sumPhip, __global float* mSumPhim) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
     return;
   } else {
@@ -459,9 +459,9 @@ __kernel void navatala_cfd_vof_phir(__global const float* gx, __global const flo
 const char* k_opencl_navatala_cfd_vof_rho_phi_accumulate = R"kernel(
 __kernel void navatala_cfd_vof_rho_phi_accumulate(__global const float* alphaPhi, __global const float* phi, __global float* rhoPhi, __global const int* counts, __global const float* paramsF) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(get_global_id(0)))) >= counts[1])) {
     return;
   } else {

@@ -16,9 +16,9 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_cfd_k_omega_s_s_t_blending(const float* k, const float* omega, const float* nut, const float* nu, const float* y, const float* gradKx, const float* gradKy, const float* gradKz, const float* gradOmegax, const float* gradOmegay, const float* gradOmegaz, const int* counts, float* outF1, float* outF23, float* outCDkOmega) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
     return;
   } else {

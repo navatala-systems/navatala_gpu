@@ -1,0 +1,2 @@
+"Name","Calls","TotalDurationNs","AverageNs","Percentage","MinNs","MaxNs","StdDev"
+"SCRATCH_MEMORY_ALLOC",1,44113,44113.000000,100.00,44113,44113,0.00000000e+00

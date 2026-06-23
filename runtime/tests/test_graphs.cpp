@@ -65,7 +65,7 @@ void test_graph_launch() {
     // For this test, we just validate the graph infrastructure exists
 
     // Graph launching requires captured operations
-    
+
     std::cout << "PASS: Graph launch infrastructure" << std::endl;
 }
 

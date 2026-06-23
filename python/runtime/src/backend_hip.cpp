@@ -161,7 +161,7 @@ public:
     }
 
     ~HipEvent() override {
-        hipEventDestroy(event_);
+        (void)hipEventDestroy(event_);
     }
 
     bool isComplete() const override {
@@ -212,7 +212,7 @@ public:
     }
 
     ~HipQueue() override {
-        hipStreamDestroy(stream_);
+        (void)hipStreamDestroy(stream_);
     }
 
     void submit(Program& program, const std::vector<Buffer*>& args,
@@ -347,7 +347,7 @@ public:
             const char* kindStr = (kind == MemoryKind::Device) ? "Device"
                 : (kind == MemoryKind::HostPinned) ? "HostPinned" : "Managed";
             size_t freeMem = 0, totalMem = 0;
-            hipMemGetInfo(&freeMem, &totalMem);
+            (void)hipMemGetInfo(&freeMem, &totalMem);
             throw std::runtime_error(
                 std::string("Failed to allocate HIP buffer: ")
                 + hipGetErrorString(result)
@@ -359,7 +359,7 @@ public:
 
         if (kind == MemoryKind::HostPinned) {
             if (hipHostGetDevicePointer(&devPtr, ptr, 0) != hipSuccess) {
-                hipHostFree(ptr);
+                (void)hipHostFree(ptr);
                 throw std::runtime_error("Failed to get device pointer for mapped pinned buffer");
             }
             hostPtr_ = ptr;
@@ -375,9 +375,9 @@ public:
 
     ~HipBuffer() override {
         if (kind_ == MemoryKind::HostPinned) {
-            hipHostFree(hostPtr_);
+            (void)hipHostFree(hostPtr_);
         } else {
-            hipFree(devicePtr_);
+            (void)hipFree(devicePtr_);
         }
     }
 
@@ -469,7 +469,7 @@ public:
 
         // Get kernel function
         if (hipModuleGetFunction(&kernel_, module, source.entryPoint.c_str()) != hipSuccess) {
-            hipModuleUnload(module);
+            (void)hipModuleUnload(module);
             throw std::runtime_error("Failed to get HIP kernel function");
         }
 
@@ -478,7 +478,7 @@ public:
 
     ~HipProgram() override {
         if (module_) {
-            hipModuleUnload(module_);
+            (void)hipModuleUnload(module_);
         }
     }
 
@@ -512,10 +512,10 @@ public:
 
     ~HipGraph() override {
         if (exec_) {
-            hipGraphExecDestroy(exec_);
+            (void)hipGraphExecDestroy(exec_);
         }
         if (graph_) {
-            hipGraphDestroy(graph_);
+            (void)hipGraphDestroy(graph_);
         }
     }
 
@@ -534,7 +534,7 @@ public:
         // Update graph topology after parameter mutations
         // For now, just re-instantiate
         if (graph_ && exec_) {
-            hipGraphExecDestroy(exec_);
+            (void)hipGraphExecDestroy(exec_);
             exec_ = nullptr;
 
             if (hipGraphInstantiate(&exec_, graph_, nullptr, nullptr, 0) != hipSuccess) {
@@ -550,7 +550,7 @@ public:
         }
 
         if (hipStreamBeginCapture(stream, hipStreamCaptureModeGlobal) != hipSuccess) {
-            hipGraphDestroy(graph_);
+            (void)hipGraphDestroy(graph_);
             graph_ = nullptr;
             throw std::runtime_error("Failed to begin HIP graph capture");
         }

@@ -15,9 +15,9 @@
 
 __kernel void navatala_cfd_vof_mules_face_update(__global const float* phiCorr, __global float* lambda, __global const int* owner, __global const int* nei, __global const float* lambdam, __global const float* lambdap, __global const int* counts, __global const float* paramsF) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(get_global_id(0)))) >= counts[2])) {
     return;
   } else {

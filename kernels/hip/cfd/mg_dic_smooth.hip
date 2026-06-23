@@ -16,9 +16,9 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_cfd_mg_dic_smooth(const float* b, const float* ax, const double* rD, const int* edgeU, const int* edgeV, const float* edgeCf, const int* counts, float* x, float* z) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= 1)) {
     return;
   } else {

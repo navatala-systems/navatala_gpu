@@ -15,9 +15,9 @@
 
 __kernel void navatala_cfd_k_omega_s_s_t_sources(__global const float* k, __global const float* omega, __global const float* nut, __global const float* nu, __global const float* alpha, __global const float* rho, __global const float* F1, __global const float* F23, __global const float* CDkOmega, __global const float* S2, __global const float* divU, __global const int* counts, __global float* outOmegaSp, __global float* outOmegaSuSp1, __global float* outOmegaSuSp2, __global float* outOmegaExpl, __global float* outKSp, __global float* outKSuSp, __global float* outKExpl, __global float* outDomegaEff, __global float* outDkEff) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
     return;
   } else {

@@ -1,0 +1,8 @@
+kernel,private_bytes,lds_bytes,sgpr,sgpr_spill,vgpr,vgpr_spill,agpr,max_wg,wave
+navatala_transformer_tiled_gemm_f16_mfma_k_loop,0,0,23,0,37,0,0,1024,64
+navatala_transformer_tiled_gemm_f16_mfma_cta64_direct,0,0,23,0,38,0,0,1024,64
+navatala_transformer_tiled_gemm_f16_mfma_cta64_shared,0,2048,23,0,40,0,0,1024,64
+navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_early_barrier,0,2048,23,0,40,0,0,1024,64
+navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_padded,0,2192,23,0,42,0,0,1024,64
+navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined,0,4096,94,0,73,0,0,1024,64
+navatala_transformer_tiled_gemm_f16_mfma_cta128,12,16384,23,0,128,2,0,1024,64

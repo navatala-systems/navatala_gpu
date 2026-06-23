@@ -72,9 +72,9 @@ const char* k_cuda_navatala_cfd_vof_average_face_scalar_to_cell = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_vof_average_face_scalar_to_cell(const float* alphaF, const float* magSf, const unsigned int* offsets, const unsigned int* faceIdx, const float* sumMag, const unsigned int* counts, float* outAlpha) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0])))) {
     return;
   } else {
@@ -134,9 +134,9 @@ const char* k_cuda_navatala_cfd_vof_alpha_update = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_vof_alpha_update(const float* alpha, const float* divA, const float* paramsF, const int* counts, const float* rSubDeltaT, float* alphaNew) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
     return;
   } else {
@@ -156,9 +156,9 @@ const char* k_cuda_navatala_cfd_vof_mules_apply = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_vof_mules_apply(const float* phiBD, const float* phiCorr, const float* lambda, const int* counts, const float* paramsF, float* alphaPhi) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1])) {
     return;
   } else {
@@ -171,9 +171,9 @@ const char* k_cuda_navatala_cfd_vof_mules_cell_lambda = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_vof_mules_cell_lambda(const float* psiMaxCap, const float* psiMinCap, const float* sumPhip, const float* mSumPhim, const float* sumlPhip, const float* mSumlPhim, const int* counts, const float* paramsF, float* lambdam, float* lambdap) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
     return;
   } else {
@@ -201,9 +201,9 @@ const char* k_cuda_navatala_cfd_vof_mules_cell_sums = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_vof_mules_cell_sums(const float* phiCorr, const float* lambda, const int* offsets, const int* faceIdx, const float* sign, const int* counts, const float* paramsF, float* sumlPhip, float* mSumlPhim) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
     return;
   } else {
@@ -250,9 +250,9 @@ const char* k_cuda_navatala_cfd_vof_mules_face_update = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_vof_mules_face_update(const float* phiCorr, float* lambda, const int* owner, const int* nei, const float* lambdam, const float* lambdap, const int* counts, const float* paramsF) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[2])) {
     return;
   } else {
@@ -288,9 +288,9 @@ const char* k_cuda_navatala_cfd_vof_mules_fill_lambda = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_vof_mules_fill_lambda(const int* counts, const float* paramsF, float* lambda) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1])) {
     return;
   } else {
@@ -303,9 +303,9 @@ const char* k_cuda_navatala_cfd_vof_mules_init = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_vof_mules_init(const float* alpha, const float* alphaF, const float* phiBD, const float* phiCorr, const int* offsets, const int* faceIdx, const float* sign, const int* owner, const int* nei, const float* vol, const int* counts, const float* paramsF, const float* rSubDeltaT, float* psiMaxCap, float* psiMinCap, float* sumPhip, float* mSumPhim) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
     return;
   } else {
@@ -473,9 +473,9 @@ const char* k_cuda_navatala_cfd_vof_rho_phi_accumulate = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_vof_rho_phi_accumulate(const float* alphaPhi, const float* phi, float* rhoPhi, const int* counts, const float* paramsF) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1])) {
     return;
   } else {

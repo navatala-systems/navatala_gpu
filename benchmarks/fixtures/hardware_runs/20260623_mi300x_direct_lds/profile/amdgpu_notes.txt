@@ -1,0 +1,720 @@
+
+File: build-rocm-bench/benchmarks/rocm_vendor_benchmark.0.hipv4-amdgcn-amd-amdhsa--gfx942
+Format: elf64-amdgpu
+Arch: amdgcn
+AddressSize: 64bit
+LoadName: <Not found>
+NoteSections [
+  NoteSection {
+    Name: .note
+    Offset: 0x238
+    Size: 0x31C4
+    Notes [
+      {
+        Owner: AMDGPU
+        Data size: 0x31AE
+        Type: NT_AMDGPU_METADATA (AMDGPU Metadata)
+        AMDGPU Metadata: ---
+amdhsa.kernels:
+  - .agpr_count:     0
+    .args:
+      - .address_space:  global
+        .offset:         0
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         8
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         16
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         24
+        .size:           8
+        .value_kind:     global_buffer
+      - .offset:         32
+        .size:           4
+        .value_kind:     hidden_block_count_x
+      - .offset:         36
+        .size:           4
+        .value_kind:     hidden_block_count_y
+      - .offset:         40
+        .size:           4
+        .value_kind:     hidden_block_count_z
+      - .offset:         44
+        .size:           2
+        .value_kind:     hidden_group_size_x
+      - .offset:         46
+        .size:           2
+        .value_kind:     hidden_group_size_y
+      - .offset:         48
+        .size:           2
+        .value_kind:     hidden_group_size_z
+      - .offset:         50
+        .size:           2
+        .value_kind:     hidden_remainder_x
+      - .offset:         52
+        .size:           2
+        .value_kind:     hidden_remainder_y
+      - .offset:         54
+        .size:           2
+        .value_kind:     hidden_remainder_z
+      - .offset:         72
+        .size:           8
+        .value_kind:     hidden_global_offset_x
+      - .offset:         80
+        .size:           8
+        .value_kind:     hidden_global_offset_y
+      - .offset:         88
+        .size:           8
+        .value_kind:     hidden_global_offset_z
+      - .offset:         96
+        .size:           2
+        .value_kind:     hidden_grid_dims
+    .group_segment_fixed_size: 0
+    .kernarg_segment_align: 8
+    .kernarg_segment_size: 288
+    .language:       OpenCL C
+    .language_version:
+      - 2
+      - 0
+    .max_flat_workgroup_size: 1024
+    .name:           navatala_sparse_axpy_f32
+    .private_segment_fixed_size: 0
+    .sgpr_count:     18
+    .sgpr_spill_count: 0
+    .symbol:         navatala_sparse_axpy_f32.kd
+    .uniform_work_group_size: 1
+    .uses_dynamic_stack: false
+    .vgpr_count:     4
+    .vgpr_spill_count: 0
+    .wavefront_size: 64
+  - .agpr_count:     0
+    .args:
+      - .address_space:  global
+        .offset:         0
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         8
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         16
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         24
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         32
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         40
+        .size:           8
+        .value_kind:     global_buffer
+      - .offset:         48
+        .size:           4
+        .value_kind:     hidden_block_count_x
+      - .offset:         52
+        .size:           4
+        .value_kind:     hidden_block_count_y
+      - .offset:         56
+        .size:           4
+        .value_kind:     hidden_block_count_z
+      - .offset:         60
+        .size:           2
+        .value_kind:     hidden_group_size_x
+      - .offset:         62
+        .size:           2
+        .value_kind:     hidden_group_size_y
+      - .offset:         64
+        .size:           2
+        .value_kind:     hidden_group_size_z
+      - .offset:         66
+        .size:           2
+        .value_kind:     hidden_remainder_x
+      - .offset:         68
+        .size:           2
+        .value_kind:     hidden_remainder_y
+      - .offset:         70
+        .size:           2
+        .value_kind:     hidden_remainder_z
+      - .offset:         88
+        .size:           8
+        .value_kind:     hidden_global_offset_x
+      - .offset:         96
+        .size:           8
+        .value_kind:     hidden_global_offset_y
+      - .offset:         104
+        .size:           8
+        .value_kind:     hidden_global_offset_z
+      - .offset:         112
+        .size:           2
+        .value_kind:     hidden_grid_dims
+    .group_segment_fixed_size: 0
+    .kernarg_segment_align: 8
+    .kernarg_segment_size: 304
+    .language:       OpenCL C
+    .language_version:
+      - 2
+      - 0
+    .max_flat_workgroup_size: 1024
+    .name:           navatala_graph_spmv_weighted_f32
+    .private_segment_fixed_size: 0
+    .sgpr_count:     22
+    .sgpr_spill_count: 0
+    .symbol:         navatala_graph_spmv_weighted_f32.kd
+    .uniform_work_group_size: 1
+    .uses_dynamic_stack: false
+    .vgpr_count:     12
+    .vgpr_spill_count: 0
+    .wavefront_size: 64
+  - .agpr_count:     0
+    .args:
+      - .address_space:  global
+        .offset:         0
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         8
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         16
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         24
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         32
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         40
+        .size:           8
+        .value_kind:     global_buffer
+      - .offset:         48
+        .size:           4
+        .value_kind:     hidden_block_count_x
+      - .offset:         52
+        .size:           4
+        .value_kind:     hidden_block_count_y
+      - .offset:         56
+        .size:           4
+        .value_kind:     hidden_block_count_z
+      - .offset:         60
+        .size:           2
+        .value_kind:     hidden_group_size_x
+      - .offset:         62
+        .size:           2
+        .value_kind:     hidden_group_size_y
+      - .offset:         64
+        .size:           2
+        .value_kind:     hidden_group_size_z
+      - .offset:         66
+        .size:           2
+        .value_kind:     hidden_remainder_x
+      - .offset:         68
+        .size:           2
+        .value_kind:     hidden_remainder_y
+      - .offset:         70
+        .size:           2
+        .value_kind:     hidden_remainder_z
+      - .offset:         88
+        .size:           8
+        .value_kind:     hidden_global_offset_x
+      - .offset:         96
+        .size:           8
+        .value_kind:     hidden_global_offset_y
+      - .offset:         104
+        .size:           8
+        .value_kind:     hidden_global_offset_z
+      - .offset:         112
+        .size:           2
+        .value_kind:     hidden_grid_dims
+    .group_segment_fixed_size: 0
+    .kernarg_segment_align: 8
+    .kernarg_segment_size: 304
+    .language:       OpenCL C
+    .language_version:
+      - 2
+      - 0
+    .max_flat_workgroup_size: 1024
+    .name:           navatala_graph_spmv_weighted_subgroup_f32
+    .private_segment_fixed_size: 0
+    .sgpr_count:     22
+    .sgpr_spill_count: 0
+    .symbol:         navatala_graph_spmv_weighted_subgroup_f32.kd
+    .uniform_work_group_size: 1
+    .uses_dynamic_stack: false
+    .vgpr_count:     14
+    .vgpr_spill_count: 0
+    .wavefront_size: 64
+  - .agpr_count:     0
+    .args:
+      - .address_space:  global
+        .offset:         0
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         8
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         16
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         24
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         32
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         40
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         48
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         56
+        .size:           8
+        .value_kind:     global_buffer
+    .group_segment_fixed_size: 2048
+    .kernarg_segment_align: 8
+    .kernarg_segment_size: 64
+    .language:       OpenCL C
+    .language_version:
+      - 2
+      - 0
+    .max_flat_workgroup_size: 1024
+    .name:           navatala_transformer_tiled_gemm_f32
+    .private_segment_fixed_size: 0
+    .sgpr_count:     30
+    .sgpr_spill_count: 0
+    .symbol:         navatala_transformer_tiled_gemm_f32.kd
+    .uniform_work_group_size: 1
+    .uses_dynamic_stack: false
+    .vgpr_count:     36
+    .vgpr_spill_count: 0
+    .wavefront_size: 64
+  - .agpr_count:     0
+    .args:
+      - .address_space:  global
+        .offset:         0
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         8
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         16
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         24
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         32
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         40
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         48
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         56
+        .size:           8
+        .value_kind:     global_buffer
+    .group_segment_fixed_size: 2048
+    .kernarg_segment_align: 8
+    .kernarg_segment_size: 64
+    .language:       OpenCL C
+    .language_version:
+      - 2
+      - 0
+    .max_flat_workgroup_size: 1024
+    .name:           navatala_transformer_tiled_gemm_f16_f32_out
+    .private_segment_fixed_size: 0
+    .sgpr_count:     30
+    .sgpr_spill_count: 0
+    .symbol:         navatala_transformer_tiled_gemm_f16_f32_out.kd
+    .uniform_work_group_size: 1
+    .uses_dynamic_stack: false
+    .vgpr_count:     36
+    .vgpr_spill_count: 0
+    .wavefront_size: 64
+  - .agpr_count:     0
+    .args:
+      - .address_space:  global
+        .offset:         0
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         8
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         16
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         24
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         32
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         40
+        .size:           8
+        .value_kind:     global_buffer
+    .group_segment_fixed_size: 0
+    .kernarg_segment_align: 8
+    .kernarg_segment_size: 48
+    .language:       OpenCL C
+    .language_version:
+      - 2
+      - 0
+    .max_flat_workgroup_size: 1024
+    .name:           navatala_transformer_tiled_gemm_f16_mfma_k_loop
+    .private_segment_fixed_size: 0
+    .sgpr_count:     23
+    .sgpr_spill_count: 0
+    .symbol:         navatala_transformer_tiled_gemm_f16_mfma_k_loop.kd
+    .uniform_work_group_size: 1
+    .uses_dynamic_stack: false
+    .vgpr_count:     37
+    .vgpr_spill_count: 0
+    .wavefront_size: 64
+  - .agpr_count:     0
+    .args:
+      - .address_space:  global
+        .offset:         0
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         8
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         16
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         24
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         32
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         40
+        .size:           8
+        .value_kind:     global_buffer
+    .group_segment_fixed_size: 0
+    .kernarg_segment_align: 8
+    .kernarg_segment_size: 48
+    .language:       OpenCL C
+    .language_version:
+      - 2
+      - 0
+    .max_flat_workgroup_size: 1024
+    .name:           navatala_transformer_tiled_gemm_f16_mfma_cta64_direct
+    .private_segment_fixed_size: 0
+    .sgpr_count:     23
+    .sgpr_spill_count: 0
+    .symbol:         navatala_transformer_tiled_gemm_f16_mfma_cta64_direct.kd
+    .uniform_work_group_size: 1
+    .uses_dynamic_stack: false
+    .vgpr_count:     38
+    .vgpr_spill_count: 0
+    .wavefront_size: 64
+  - .agpr_count:     0
+    .args:
+      - .address_space:  global
+        .offset:         0
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         8
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         16
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         24
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         32
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         40
+        .size:           8
+        .value_kind:     global_buffer
+    .group_segment_fixed_size: 2048
+    .kernarg_segment_align: 8
+    .kernarg_segment_size: 48
+    .language:       OpenCL C
+    .language_version:
+      - 2
+      - 0
+    .max_flat_workgroup_size: 1024
+    .name:           navatala_transformer_tiled_gemm_f16_mfma_cta64_shared
+    .private_segment_fixed_size: 0
+    .sgpr_count:     23
+    .sgpr_spill_count: 0
+    .symbol:         navatala_transformer_tiled_gemm_f16_mfma_cta64_shared.kd
+    .uniform_work_group_size: 1
+    .uses_dynamic_stack: false
+    .vgpr_count:     40
+    .vgpr_spill_count: 0
+    .wavefront_size: 64
+  - .agpr_count:     0
+    .args:
+      - .address_space:  global
+        .offset:         0
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         8
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         16
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         24
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         32
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         40
+        .size:           8
+        .value_kind:     global_buffer
+    .group_segment_fixed_size: 2048
+    .kernarg_segment_align: 8
+    .kernarg_segment_size: 48
+    .language:       OpenCL C
+    .language_version:
+      - 2
+      - 0
+    .max_flat_workgroup_size: 1024
+    .name:           navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_early_barrier
+    .private_segment_fixed_size: 0
+    .sgpr_count:     23
+    .sgpr_spill_count: 0
+    .symbol:         navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_early_barrier.kd
+    .uniform_work_group_size: 1
+    .uses_dynamic_stack: false
+    .vgpr_count:     40
+    .vgpr_spill_count: 0
+    .wavefront_size: 64
+  - .agpr_count:     0
+    .args:
+      - .address_space:  global
+        .offset:         0
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         8
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         16
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         24
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         32
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         40
+        .size:           8
+        .value_kind:     global_buffer
+    .group_segment_fixed_size: 2192
+    .kernarg_segment_align: 8
+    .kernarg_segment_size: 48
+    .language:       OpenCL C
+    .language_version:
+      - 2
+      - 0
+    .max_flat_workgroup_size: 1024
+    .name:           navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_padded
+    .private_segment_fixed_size: 0
+    .sgpr_count:     23
+    .sgpr_spill_count: 0
+    .symbol:         navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_padded.kd
+    .uniform_work_group_size: 1
+    .uses_dynamic_stack: false
+    .vgpr_count:     42
+    .vgpr_spill_count: 0
+    .wavefront_size: 64
+  - .agpr_count:     0
+    .args:
+      - .address_space:  global
+        .offset:         0
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         8
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         16
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         24
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         32
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         40
+        .size:           8
+        .value_kind:     global_buffer
+      - .offset:         48
+        .size:           4
+        .value_kind:     hidden_block_count_x
+      - .offset:         52
+        .size:           4
+        .value_kind:     hidden_block_count_y
+      - .offset:         56
+        .size:           4
+        .value_kind:     hidden_block_count_z
+      - .offset:         60
+        .size:           2
+        .value_kind:     hidden_group_size_x
+      - .offset:         62
+        .size:           2
+        .value_kind:     hidden_group_size_y
+      - .offset:         64
+        .size:           2
+        .value_kind:     hidden_group_size_z
+      - .offset:         66
+        .size:           2
+        .value_kind:     hidden_remainder_x
+      - .offset:         68
+        .size:           2
+        .value_kind:     hidden_remainder_y
+      - .offset:         70
+        .size:           2
+        .value_kind:     hidden_remainder_z
+      - .offset:         88
+        .size:           8
+        .value_kind:     hidden_global_offset_x
+      - .offset:         96
+        .size:           8
+        .value_kind:     hidden_global_offset_y
+      - .offset:         104
+        .size:           8
+        .value_kind:     hidden_global_offset_z
+      - .offset:         112
+        .size:           2
+        .value_kind:     hidden_grid_dims
+    .group_segment_fixed_size: 4096
+    .kernarg_segment_align: 8
+    .kernarg_segment_size: 304
+    .language:       OpenCL C
+    .language_version:
+      - 2
+      - 0
+    .max_flat_workgroup_size: 1024
+    .name:           navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined
+    .private_segment_fixed_size: 0
+    .sgpr_count:     94
+    .sgpr_spill_count: 0
+    .symbol:         navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined.kd
+    .uniform_work_group_size: 1
+    .uses_dynamic_stack: false
+    .vgpr_count:     73
+    .vgpr_spill_count: 0
+    .wavefront_size: 64
+  - .agpr_count:     0
+    .args:
+      - .address_space:  global
+        .offset:         0
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         8
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         16
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         24
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         32
+        .size:           8
+        .value_kind:     global_buffer
+      - .address_space:  global
+        .offset:         40
+        .size:           8
+        .value_kind:     global_buffer
+    .group_segment_fixed_size: 16384
+    .kernarg_segment_align: 8
+    .kernarg_segment_size: 48
+    .language:       OpenCL C
+    .language_version:
+      - 2
+      - 0
+    .max_flat_workgroup_size: 1024
+    .name:           navatala_transformer_tiled_gemm_f16_mfma_cta128
+    .private_segment_fixed_size: 12
+    .sgpr_count:     23
+    .sgpr_spill_count: 0
+    .symbol:         navatala_transformer_tiled_gemm_f16_mfma_cta128.kd
+    .uniform_work_group_size: 1
+    .uses_dynamic_stack: false
+    .vgpr_count:     128
+    .vgpr_spill_count: 2
+    .wavefront_size: 64
+amdhsa.target:   amdgcn-amd-amdhsa--gfx942
+amdhsa.version:
+  - 1
+  - 2
+...
+
+      }
+    ]
+  }
+]

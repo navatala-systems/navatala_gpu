@@ -15,12 +15,15 @@ TEXT_SUFFIXES = {
     ".py", ".pyi", ".sh", ".toml", ".rst", ".H", ".C",
 }
 
+PRIVATE_REPO_NAME = "codegen" + "_gpu"
+
 PATTERNS = [
     ("absolute project path", re.compile(r"/opt/data/projects/")),
     ("home directory path", re.compile(r"/home/[A-Za-z0-9_.-]+/")),
     ("private specs path", re.compile(r"\bnavatala_specs/")),
     ("lean source path", re.compile(r"\.lean\b")),
     ("internal pipeline script", re.compile(r"run_navatala_pipeline\.sh")),
+    ("private generator repo name", re.compile(r"\b" + re.escape(PRIVATE_REPO_NAME) + r"\b", re.IGNORECASE)),
     ("private generator namespace", re.compile(r"CodeGenGPU\.")),
     ("private GPU IR type namespace", re.compile(r"GPU\.GPUType")),
     ("legacy generated kernel path fragment", re.compile(r"Calculations_GPU")),
@@ -53,6 +56,7 @@ def main() -> int:
             "tools/check_generated_content_tells.sh",
             ".github/workflows/wheel-hygiene.yml",
             ".github/workflows/publish-pypi.yml",
+            ".github/workflows/rocm-validation.yml",
         }:
             continue
         try:

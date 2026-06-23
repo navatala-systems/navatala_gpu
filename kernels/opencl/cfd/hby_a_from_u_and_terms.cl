@@ -15,9 +15,9 @@
 
 __kernel void navatala_cfd_hby_a_from_u_and_terms(__global const float* ux, __global const float* uy, __global const float* uz, __global const float* lapx, __global const float* lapy, __global const float* lapz, __global const float* divx, __global const float* divy, __global const float* divz, __global const float* extrax, __global const float* extray, __global const float* extraz, __global const float* rau, __global const int* counts, __global const int* modeBuf, __global float* outx, __global float* outy, __global float* outz) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
     return;
   } else {

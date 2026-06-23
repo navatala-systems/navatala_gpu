@@ -15,9 +15,9 @@
 
 __kernel void navatala_cfd_boundary_force_partials(__global const float* pAllFaces, __global const float* sfComponent, __global const int* counts, __global float* outPartials) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   __local float tmp[256];
   float v = as_float(0x00000000u);
   if ((((int)((int)(get_global_id(0)))) < counts[0])) {

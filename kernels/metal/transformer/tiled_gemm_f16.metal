@@ -34,20 +34,41 @@ kernel void navatala_transformer_tiled_gemm_f16(device const half* a [[buffer(0)
   bool valid = (rowValid && colValid);
   threadgroup float tileA[256];
   threadgroup float tileB[256];
-  if (valid) {
-    float acc = as_type<float>(0x00000000u);
-    for (int kIter = 0; kIter < (int)(kDim); ++kIter) {
-      uint aIdx = ((row * kDim) + kIter);
-      uint bIdx = ((kIter * nDim) + col);
-      half aValF16 = a[aIdx];
-      half bValF16 = b[bIdx];
-      float aVal = ((float)(aValF16));
-      float bVal = ((float)(bValF16));
-      float prod = (aVal * bVal);
+  float acc = as_type<float>(0x00000000u);
+  uint tileCount = ((kDim + (tileSize - 1u)) / tileSize);
+  for (int tileIter = 0; tileIter < (int)(tileCount); ++tileIter) {
+    uint tileIterU32 = ((uint)(tileIter));
+    uint tileBase = (tileIterU32 * tileSize);
+    uint aK = (tileBase + tidX);
+    uint bK = (tileBase + tidY);
+    uint tileOffset = ((tidY * tileSize) + tidX);
+    bool aKValid = (aK < kDim);
+    bool bKValid = (bK < kDim);
+    bool aLoadValid = (rowValid && aKValid);
+    bool bLoadValid = (colValid && bKValid);
+    uint aIdx = ((row * kDim) + aK);
+    uint bIdx = ((bK * nDim) + col);
+    half aValF16 = ((aLoadValid) ? (a[aIdx]) : (half(0.000000)));
+    half bValF16 = ((bLoadValid) ? (b[bIdx]) : (half(0.000000)));
+    float aTileVal = ((float)(aValF16));
+    float bTileVal = ((float)(bValF16));
+    tileA[tileOffset] = aTileVal;
+    tileB[tileOffset] = bTileVal;
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+    for (int kk = 0; kk < (int)(tileSize); ++kk) {
+      uint kkU32 = ((uint)(kk));
+      uint tileAIdx = ((tidY * tileSize) + kkU32);
+      uint tileBIdx = ((kkU32 * tileSize) + tidX);
+      float aTile = tileA[tileAIdx];
+      float bTile = tileB[tileBIdx];
+      float prod = (aTile * bTile);
       float oldAcc = acc;
       acc = (oldAcc + prod);
     }
-    float finalAcc = acc;
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+  }
+  float finalAcc = acc;
+  if (valid) {
     uint cIdx = ((row * nDim) + col);
     half cOldF16 = c[cIdx];
     float cOld = ((float)(cOldF16));

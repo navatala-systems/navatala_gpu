@@ -50,7 +50,7 @@ bool VofPressureOrchestrator::execute(Foam::Time& runTime, const Foam::fvMesh& m
       adapter_.fieldSync("U", true);
       {
         /* std::string selectedVariant = selectOptimalVariant("Calculations.GPU.NavatalaCFD.Primitives.PhiFromU.phiFromU", device); */
-  
+
         auto* prog = getOrCreateProgram(device, backend, "Calculations.GPU.NavatalaCFD.Primitives.PhiFromU.phiFromU");
         if (!prog) return false;
         KernelBindingBuilder binding;
@@ -129,7 +129,7 @@ bool VofPressureOrchestrator::execute(Foam::Time& runTime, const Foam::fvMesh& m
       bool ok = mixture.correct();
       {
         /* std::string selectedVariant = selectOptimalVariant("Calculations.GPU.NavatalaCFD.Primitives.RhoFromAlpha.rhoFromAlpha", device); */
-  
+
         auto* prog = getOrCreateProgram(device, backend, "Calculations.GPU.NavatalaCFD.Primitives.RhoFromAlpha.rhoFromAlpha");
         if (!prog) return false;
         KernelBindingBuilder binding;
@@ -160,7 +160,7 @@ bool VofPressureOrchestrator::execute(Foam::Time& runTime, const Foam::fvMesh& m
       }
       {
         /* std::string selectedVariant = selectOptimalVariant("Calculations.GPU.NavatalaCFD.Primitives.RhoPhiFromRhoAndPhi.rhoPhiFromRhoAndPhi", device); */
-  
+
         auto* prog = getOrCreateProgram(device, backend, "Calculations.GPU.NavatalaCFD.Primitives.RhoPhiFromRhoAndPhi.rhoPhiFromRhoAndPhi");
         if (!prog) return false;
         KernelBindingBuilder binding;
@@ -223,7 +223,7 @@ bool VofPressureOrchestrator::execute(Foam::Time& runTime, const Foam::fvMesh& m
           {
             {
               /* std::string selectedVariant = selectOptimalVariant("Calculations.GPU.NavatalaCFD.Pressure.PoissonPcg.laplacianFromFaceFlux", device); */
-        
+
               auto* prog = getOrCreateProgram(device, backend, "Calculations.GPU.NavatalaCFD.Pressure.PoissonPcg.laplacianFromFaceFlux");
               if (!prog) return false;
               KernelBindingBuilder binding;
@@ -256,7 +256,7 @@ bool VofPressureOrchestrator::execute(Foam::Time& runTime, const Foam::fvMesh& m
             }
             {
               /* std::string selectedVariant = selectOptimalVariant("Calculations.GPU.NavatalaCFD.Pressure.PoissonPcg.bcSnGradFaceFlux", device); */
-        
+
               auto* prog = getOrCreateProgram(device, backend, "Calculations.GPU.NavatalaCFD.Pressure.PoissonPcg.bcSnGradFaceFlux");
               if (!prog) return false;
               KernelBindingBuilder binding;
@@ -286,7 +286,7 @@ bool VofPressureOrchestrator::execute(Foam::Time& runTime, const Foam::fvMesh& m
             }
             {
               /* std::string selectedVariant = selectOptimalVariant("Calculations.GPU.NavatalaCFD.Pressure.PoissonPcg.rhsSub", device); */
-        
+
               auto* prog = getOrCreateProgram(device, backend, "Calculations.GPU.NavatalaCFD.Pressure.PoissonPcg.rhsSub");
               if (!prog) return false;
               KernelBindingBuilder binding;
@@ -331,7 +331,7 @@ bool VofPressureOrchestrator::execute(Foam::Time& runTime, const Foam::fvMesh& m
               }
               {
                 /* std::string selectedVariant = selectOptimalVariant("Calculations.GPU.NavatalaCFD.Pressure.PoissonPcg.invDiag", device); */
-          
+
                 auto* prog = getOrCreateProgram(device, backend, "Calculations.GPU.NavatalaCFD.Pressure.PoissonPcg.invDiag");
                 if (!prog) return false;
                 KernelBindingBuilder binding;
@@ -355,7 +355,7 @@ bool VofPressureOrchestrator::execute(Foam::Time& runTime, const Foam::fvMesh& m
               }
               {
                 /* std::string selectedVariant = selectOptimalVariant("Calculations.GPU.NavatalaCFD.Pressure.PoissonPcg.axpyInPlace", device); */
-          
+
                 auto* prog = getOrCreateProgram(device, backend, "Calculations.GPU.NavatalaCFD.Pressure.PoissonPcg.axpyInPlace");
                 if (!prog) return false;
                 KernelBindingBuilder binding;
@@ -379,7 +379,7 @@ bool VofPressureOrchestrator::execute(Foam::Time& runTime, const Foam::fvMesh& m
               }
               {
                 /* std::string selectedVariant = selectOptimalVariant("Calculations.GPU.NavatalaCFD.Pressure.PoissonPcg.dotPartials", device); */
-          
+
                 auto* prog = getOrCreateProgram(device, backend, "Calculations.GPU.NavatalaCFD.Pressure.PoissonPcg.dotPartials");
                 if (!prog) return false;
                 KernelBindingBuilder binding;
@@ -444,7 +444,7 @@ bool VofPressureOrchestrator::execute(Foam::Time& runTime, const Foam::fvMesh& m
         }
         {
           /* std::string selectedVariant = selectOptimalVariant("Calculations.GPU.NavatalaCFD.Pressure.UCorrectReconstruct.uCorrectReconstruct", device); */
-    
+
           auto* prog = getOrCreateProgram(device, backend, "Calculations.GPU.NavatalaCFD.Pressure.UCorrectReconstruct.uCorrectReconstruct");
           if (!prog) return false;
           KernelBindingBuilder binding;
@@ -542,7 +542,7 @@ bool VofPressureOrchestrator::execute(Foam::Time& runTime, const Foam::fvMesh& m
         adapter_.haloExchange("U");
         {
           /* std::string selectedVariant = selectOptimalVariant("Calculations.GPU.NavatalaCFD.Pressure.PhiCorrect.phiCorrect", device); */
-    
+
           auto* prog = getOrCreateProgram(device, backend, "Calculations.GPU.NavatalaCFD.Pressure.PhiCorrect.phiCorrect");
           if (!prog) return false;
           KernelBindingBuilder binding;

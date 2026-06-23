@@ -43,4 +43,4 @@ assert isinstance(navatala_gpu.supports("axpy", backend="opencl", dtype="float32
 - NumPy interop uses explicit host/device copies through `Tensor.from_numpy(...)` and `Tensor.to_numpy(...)`.
 - DLPack interop is zero-copy only where the runtime can prove backend compatibility.
 
-Manifest id: `pyabi6-3906333046`
+Manifest id: `pyabi6-2675513039`

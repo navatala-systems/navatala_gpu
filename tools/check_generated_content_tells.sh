@@ -11,6 +11,8 @@ if [[ ! -d "$ROOT" ]]; then
 fi
 cd "$ROOT"
 
+PRIVATE_REPO_RE='codegen[_-]gpu'
+
 # ----------------------------------------------------------------------------
 # Allowlist: files that may carry checker implementation text. Public
 # manifests/docs must not carry private namespace or IR type strings.
@@ -23,6 +25,7 @@ ALLOWLIST=(
     ".github/workflows/regen-trailer.yml"
     ".github/workflows/wheel-hygiene.yml"
     ".github/workflows/publish-pypi.yml"
+    ".github/workflows/rocm-validation.yml"
 )
 
 is_allowlisted() {
@@ -113,6 +116,16 @@ else
     pass "No '# Manifest-ID:' comments outside _meta.py"
 fi
 
+# Public content must not mention private repository names.
+PRIVATE_REPO_HITS=$(grep -RInEi "$PRIVATE_REPO_RE" . 2>/dev/null \
+    | sed 's|^\./||' | grep -v 'tools/check_generated_content_tells.sh' || true)
+if [[ -n "$PRIVATE_REPO_HITS" ]]; then
+    fail "Found private repository token content outside allowlist:"
+    printf '  %s\n' "$PRIVATE_REPO_HITS" >&2
+else
+    pass "No private repository token content found"
+fi
+
 # Private namespace/type leak checks. The public package may expose stable
 # public contract ids, but not the private Lean namespace or GPU IR type system.
 PRIVATE_HITS=$(grep -RInE 'CodeGenGPU\.|GPU\.GPUType|Calculations_GPU|Contract: CodeGenGPU' . 2>/dev/null \
@@ -135,14 +148,15 @@ else
     pass "No private namespace/type content found"
 fi
 
-# Phase 3.7: no __CODEGEN_GPU__ raw-string delimiter
-DELIM_HITS=$(grep -rln "__CODEGEN_GPU__" . 2>/dev/null \
+# Phase 3.7: no private raw-string delimiter
+RAW_DELIM='__CODEGEN''_GPU__'
+DELIM_HITS=$(grep -rln "$RAW_DELIM" . 2>/dev/null \
     | sed 's|^\./||' | grep -v 'tools/check_generated_content_tells.sh' || true)
 if [[ -n "$DELIM_HITS" ]]; then
-    fail "Found '__CODEGEN_GPU__' raw-string delimiter:"
+    fail "Found private raw-string delimiter:"
     printf '  %s\n' $DELIM_HITS >&2
 else
-    pass "No '__CODEGEN_GPU__' raw-string delimiter"
+    pass "No private raw-string delimiter"
 fi
 
 # Phase 4.9: README/CONTRIBUTING/KERNELS don't lead with generator framing

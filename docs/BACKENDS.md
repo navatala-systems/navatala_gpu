@@ -106,3 +106,22 @@ Cross-backend numerical drift, when it occurs, is almost always traceable to:
 If you find a real semantic divergence between backends for the same
 available kernel, please file a bug — that's a spec defect, not an expected
 difference.
+
+## Portable Kernels And Vendor Libraries
+
+The source corpus is primarily portable Navatala kernel code. A kernel being
+present for CUDA or HIP means the operation has source available for that
+backend; it does not mean the operation dispatches through cuBLAS, cuSPARSE,
+cuDNN, rocBLAS, rocSPARSE, hipSPARSELt, or another vendor library.
+
+Vendor-library integrations are useful for peak performance and should be
+benchmarked separately when they are added. Until a path is explicitly
+documented as vendor-backed, assume it is a portable implementation. Numerical
+validation and performance evidence are tracked separately in
+[`NUMERICAL_CONFORMANCE.md`](NUMERICAL_CONFORMANCE.md).
+
+For HIP/ROCm, the public tree includes an opt-in benchmark harness that
+compares selected generated kernels against rocBLAS and rocSPARSE. It can also
+include a real hipSPARSELt structured sparse GEMM row for supported FP16/F32
+compute shapes. See
+[`benchmarks/ROCM_VENDOR_BENCHMARKS.md`](benchmarks/ROCM_VENDOR_BENCHMARKS.md).

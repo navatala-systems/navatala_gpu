@@ -33,20 +33,41 @@ __kernel void navatala_transformer_tiled_gemm_f16(__global const half* a, __glob
   bool valid = (rowValid && colValid);
   __local float tileA[256];
   __local float tileB[256];
-  if (valid) {
-    float acc = as_float(0x00000000u);
-    for (int kIter = 0; kIter < (int)(kDim); ++kIter) {
-      uint aIdx = ((row * kDim) + kIter);
-      uint bIdx = ((kIter * nDim) + col);
-      half aValF16 = a[aIdx];
-      half bValF16 = b[bIdx];
-      float aVal = ((float)(aValF16));
-      float bVal = ((float)(bValF16));
-      float prod = (aVal * bVal);
+  float acc = as_float(0x00000000u);
+  uint tileCount = ((kDim + (tileSize - (uint)(1u))) / tileSize);
+  for (int tileIter = 0; tileIter < (int)(tileCount); ++tileIter) {
+    uint tileIterU32 = ((uint)(tileIter));
+    uint tileBase = (tileIterU32 * tileSize);
+    uint aK = (tileBase + tidX);
+    uint bK = (tileBase + tidY);
+    uint tileOffset = ((tidY * tileSize) + tidX);
+    bool aKValid = (aK < kDim);
+    bool bKValid = (bK < kDim);
+    bool aLoadValid = (rowValid && aKValid);
+    bool bLoadValid = (colValid && bKValid);
+    uint aIdx = ((row * kDim) + aK);
+    uint bIdx = ((bK * nDim) + col);
+    half aValF16 = ((aLoadValid) ? (a[aIdx]) : ((half)(0.000000f)));
+    half bValF16 = ((bLoadValid) ? (b[bIdx]) : ((half)(0.000000f)));
+    float aTileVal = ((float)(aValF16));
+    float bTileVal = ((float)(bValF16));
+    tileA[tileOffset] = aTileVal;
+    tileB[tileOffset] = bTileVal;
+    barrier(CLK_LOCAL_MEM_FENCE);
+    for (int kk = 0; kk < (int)(tileSize); ++kk) {
+      uint kkU32 = ((uint)(kk));
+      uint tileAIdx = ((tidY * tileSize) + kkU32);
+      uint tileBIdx = ((kkU32 * tileSize) + tidX);
+      float aTile = tileA[tileAIdx];
+      float bTile = tileB[tileBIdx];
+      float prod = (aTile * bTile);
       float oldAcc = acc;
       acc = (oldAcc + prod);
     }
-    float finalAcc = acc;
+    barrier(CLK_LOCAL_MEM_FENCE);
+  }
+  float finalAcc = acc;
+  if (valid) {
     uint cIdx = ((row * nDim) + col);
     half cOldF16 = c[cIdx];
     float cOld = ((float)(cOldF16));

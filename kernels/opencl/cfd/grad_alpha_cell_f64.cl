@@ -16,9 +16,9 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 __kernel void navatala_cfd_grad_alpha_cell_f64(__global const double* alphaF, __global const double* sfX, __global const double* sfY, __global const double* sfZ, __global const int* offsets, __global const int* faceIdx, __global const float* sign, __global const double* vol, __global const int* counts, __global double* gx, __global double* gy, __global double* gz) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(get_global_id(0)))) >= counts[0])) {
     return;
   } else {

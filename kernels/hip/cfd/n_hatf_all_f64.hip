@@ -16,9 +16,9 @@
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_cfd_n_hatf_all_f64(const double* gx, const double* gy, const double* gz, const double* sfX, const double* sfY, const double* sfZ, const int* owner, const int* nei, const double* weights, const float* theta, const unsigned int* thetaMask, const double* paramsF, const int* counts, double* contactGrad, double* nHatf) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1])) {
     return;
   } else {

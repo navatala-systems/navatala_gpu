@@ -22,6 +22,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdlib>
 #include <cstring>
 #include <limits>
 #include <mutex>
@@ -111,6 +112,108 @@ bool checked_float_byte_count(size_t element_count, size_t* bytes) {
     return true;
 }
 
+bool checked_half_byte_count(size_t element_count, size_t* bytes) {
+    if (!bytes) {
+        return false;
+    }
+    if (element_count > std::numeric_limits<size_t>::max() / sizeof(uint16_t)) {
+        return false;
+    }
+    *bytes = element_count * sizeof(uint16_t);
+    return true;
+}
+
+bool checked_size_mul(size_t a, size_t b, size_t* out) {
+    if (!out) {
+        return false;
+    }
+    if (b != 0 && a > std::numeric_limits<size_t>::max() / b) {
+        return false;
+    }
+    *out = a * b;
+    return true;
+}
+
+bool checked_size_add(size_t a, size_t b, size_t* out) {
+    if (!out) {
+        return false;
+    }
+    if (a > std::numeric_limits<size_t>::max() - b) {
+        return false;
+    }
+    *out = a + b;
+    return true;
+}
+
+bool checked_strided_extent(
+    size_t matrix_elements,
+    size_t stride,
+    size_t batch_count,
+    bool allow_broadcast,
+    size_t* extent)
+{
+    if (!extent) {
+        return false;
+    }
+    if (batch_count == 0) {
+        *extent = 0;
+        return true;
+    }
+    if (batch_count == 1) {
+        *extent = matrix_elements;
+        return true;
+    }
+    if (matrix_elements == 0) {
+        *extent = 0;
+        return true;
+    }
+    if (stride == 0) {
+        if (!allow_broadcast) {
+            return false;
+        }
+        *extent = matrix_elements;
+        return true;
+    }
+    if (stride < matrix_elements) {
+        return false;
+    }
+    size_t base = 0;
+    if (!checked_size_mul(batch_count - 1, stride, &base)) {
+        return false;
+    }
+    return checked_size_add(base, matrix_elements, extent);
+}
+
+bool valid_matrix_transpose(NavatalaMatrixTranspose op) {
+    return op == NAVATALA_MATRIX_OP_NONE ||
+           op == NAVATALA_MATRIX_OP_TRANSPOSE;
+}
+
+size_t gemm_a_offset(
+    size_t row,
+    size_t inner,
+    size_t m,
+    size_t k,
+    NavatalaMatrixTranspose trans_a)
+{
+    (void)k;
+    return trans_a == NAVATALA_MATRIX_OP_TRANSPOSE
+        ? inner * m + row
+        : row * k + inner;
+}
+
+size_t gemm_b_offset(
+    size_t inner,
+    size_t col,
+    size_t n,
+    size_t k,
+    NavatalaMatrixTranspose trans_b)
+{
+    return trans_b == NAVATALA_MATRIX_OP_TRANSPOSE
+        ? col * k + inner
+        : inner * n + col;
+}
+
 bool checked_uint32_byte_count(size_t element_count, size_t* bytes) {
     if (!bytes) {
         return false;
@@ -142,6 +245,11 @@ bool checked_int64_byte_count(size_t element_count, size_t* bytes) {
     }
     *bytes = element_count * sizeof(int64_t);
     return true;
+}
+
+bool gemm_impl_forces_mfma() {
+    const char* value = std::getenv("NAVATALA_GPU_GEMM_IMPL");
+    return value && std::strcmp(value, "mfma") == 0;
 }
 
 NavatalaErrorCode dataframe_reduce_extreme_i32(
@@ -1439,6 +1547,164 @@ NavatalaErrorCode navatala_gpu_gemm_f32(
                 }
                 const size_t idx = row * n + col;
                 host_c[idx] = alpha * acc + beta * host_c[idx];
+            }
+        }
+
+        return navatala_gpu_copy_h2d(c, host_c.data(), c_bytes, queue);
+    } catch (const std::bad_alloc&) {
+        return NAVATALA_OUT_OF_MEMORY;
+    } catch (...) {
+        return NAVATALA_GPU_ERROR;
+    }
+}
+
+NavatalaErrorCode navatala_gpu_gemm_f16_f32(
+    const NavatalaGpuBuffer* a,
+    const NavatalaGpuBuffer* b,
+    NavatalaGpuBuffer* c,
+    size_t m,
+    size_t n,
+    size_t k,
+    float alpha,
+    float beta,
+    NavatalaGpuQueue* queue)
+{
+    return navatala_gpu_gemm_f16_f32_ex(
+        a, b, c, m, n, k, alpha, beta,
+        NAVATALA_MATRIX_OP_NONE, NAVATALA_MATRIX_OP_NONE, queue);
+}
+
+NavatalaErrorCode navatala_gpu_gemm_f16_f32_ex(
+    const NavatalaGpuBuffer* a,
+    const NavatalaGpuBuffer* b,
+    NavatalaGpuBuffer* c,
+    size_t m,
+    size_t n,
+    size_t k,
+    float alpha,
+    float beta,
+    NavatalaMatrixTranspose trans_a,
+    NavatalaMatrixTranspose trans_b,
+    NavatalaGpuQueue* queue)
+{
+    size_t stride_a = 0;
+    size_t stride_b = 0;
+    size_t stride_c = 0;
+    if (!checked_size_mul(m, k, &stride_a) ||
+        !checked_size_mul(k, n, &stride_b) ||
+        !checked_size_mul(m, n, &stride_c)) {
+        return NAVATALA_OVERFLOW_ERROR;
+    }
+    return navatala_gpu_gemm_f16_f32_strided_batched(
+        a, b, c, m, n, k, alpha, beta, trans_a, trans_b,
+        stride_a, stride_b, stride_c, 1, queue);
+}
+
+NavatalaErrorCode navatala_gpu_gemm_f16_f32_strided_batched(
+    const NavatalaGpuBuffer* a,
+    const NavatalaGpuBuffer* b,
+    NavatalaGpuBuffer* c,
+    size_t m,
+    size_t n,
+    size_t k,
+    float alpha,
+    float beta,
+    NavatalaMatrixTranspose trans_a,
+    NavatalaMatrixTranspose trans_b,
+    size_t stride_a,
+    size_t stride_b,
+    size_t stride_c,
+    size_t batch_count,
+    NavatalaGpuQueue* queue)
+{
+    if (!a || !b || !c) {
+        return NAVATALA_INVALID_PARAM;
+    }
+    if (!valid_matrix_transpose(trans_a) || !valid_matrix_transpose(trans_b)) {
+        return NAVATALA_INVALID_PARAM;
+    }
+    if (gemm_impl_forces_mfma()) {
+        return NAVATALA_NOT_IMPLEMENTED;
+    }
+
+    size_t a_matrix_elements = 0;
+    size_t b_matrix_elements = 0;
+    size_t c_matrix_elements = 0;
+    if (!checked_size_mul(m, k, &a_matrix_elements) ||
+        !checked_size_mul(k, n, &b_matrix_elements) ||
+        !checked_size_mul(m, n, &c_matrix_elements)) {
+        return NAVATALA_OVERFLOW_ERROR;
+    }
+
+    size_t a_elements = 0;
+    size_t b_elements = 0;
+    size_t c_elements = 0;
+    if (!checked_strided_extent(a_matrix_elements, stride_a, batch_count, true, &a_elements) ||
+        !checked_strided_extent(b_matrix_elements, stride_b, batch_count, true, &b_elements) ||
+        !checked_strided_extent(c_matrix_elements, stride_c, batch_count, false, &c_elements)) {
+        return NAVATALA_OVERFLOW_ERROR;
+    }
+
+    size_t a_bytes = 0;
+    size_t b_bytes = 0;
+    size_t c_bytes = 0;
+    if (!checked_half_byte_count(a_elements, &a_bytes) ||
+        !checked_half_byte_count(b_elements, &b_bytes) ||
+        !checked_float_byte_count(c_elements, &c_bytes)) {
+        return NAVATALA_OVERFLOW_ERROR;
+    }
+
+    if (a_bytes > navatala_gpu_buffer_size(const_cast<NavatalaGpuBuffer*>(a)) ||
+        b_bytes > navatala_gpu_buffer_size(const_cast<NavatalaGpuBuffer*>(b)) ||
+        c_bytes > navatala_gpu_buffer_size(c)) {
+        return NAVATALA_INVALID_PARAM;
+    }
+
+    if (m == 0 || n == 0 || batch_count == 0) {
+        return NAVATALA_SUCCESS;
+    }
+
+    try {
+        std::vector<uint16_t> host_a(a_elements);
+        std::vector<uint16_t> host_b(b_elements);
+        std::vector<float> host_c(c_elements);
+
+        NavatalaErrorCode status = NAVATALA_SUCCESS;
+        if (a_bytes != 0) {
+            status = navatala_gpu_copy_d2h(a, host_a.data(), a_bytes, queue);
+            if (status != NAVATALA_SUCCESS) {
+                return status;
+            }
+        }
+        if (b_bytes != 0) {
+            status = navatala_gpu_copy_d2h(b, host_b.data(), b_bytes, queue);
+            if (status != NAVATALA_SUCCESS) {
+                return status;
+            }
+        }
+        if (c_bytes != 0) {
+            status = navatala_gpu_copy_d2h(c, host_c.data(), c_bytes, queue);
+            if (status != NAVATALA_SUCCESS) {
+                return status;
+            }
+        }
+
+        for (size_t batch = 0; batch < batch_count; ++batch) {
+            const size_t a_base = batch * stride_a;
+            const size_t b_base = batch * stride_b;
+            const size_t c_base = batch * stride_c;
+            for (size_t row = 0; row < m; ++row) {
+                for (size_t col = 0; col < n; ++col) {
+                    float acc = 0.0f;
+                    for (size_t inner = 0; inner < k; ++inner) {
+                        const size_t a_idx = a_base + gemm_a_offset(row, inner, m, k, trans_a);
+                        const size_t b_idx = b_base + gemm_b_offset(inner, col, n, k, trans_b);
+                        acc += navatala_half_to_float(host_a[a_idx]) *
+                               navatala_half_to_float(host_b[b_idx]);
+                    }
+                    const size_t idx = c_base + row * n + col;
+                    host_c[idx] = alpha * acc + beta * host_c[idx];
+                }
             }
         }
 

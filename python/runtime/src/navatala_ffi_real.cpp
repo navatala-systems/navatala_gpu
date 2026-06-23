@@ -22,12 +22,22 @@
 // and provides actual GPU backend delegation.
 
 #include "../include/navatala/navatala_ffi.h"
+#include "gpu_library_ops.h"
 #include "gpu_runtime.h"
 #include "pool_memory_resource.h"
 #include "stream_pool.h"
 
+#if GPU_RUNTIME_HAVE_CUDA
+#include <cuda_runtime_api.h>
+#endif
+
+#if GPU_RUNTIME_HAVE_HIP
+#include <hip/hip_runtime.h>
+#endif
+
 #include <algorithm>
 #include <cmath>
+#include <cstdint>
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
@@ -35,8 +45,23 @@
 #include <memory>
 #include <mutex>
 #include <new>
+#include <string>
 #include <unordered_map>
 #include <vector>
+
+#ifndef NAVATALA_GPU_HAVE_HIP_TRANSFORMER_REGISTRY
+#define NAVATALA_GPU_HAVE_HIP_TRANSFORMER_REGISTRY 0
+#endif
+
+#if NAVATALA_GPU_HAVE_HIP_TRANSFORMER_REGISTRY
+#include "navatala/_registry.hpp"
+namespace NavatalaRegistry {
+bool tryGetKernelSource_hip_transformer(
+    const std::string& backend,
+    const std::string& kernelName,
+    GpuRuntime::ProgramSource& out);
+}
+#endif
 
 // ============================================================================
 // Internal Implementation Structures
@@ -60,6 +85,7 @@ const char* backend_to_env_value(NavatalaBackend backend) {
 // Context implementation - wraps GpuRuntime::Device
 struct NavatalaGpuContextImpl {
     std::unique_ptr<GpuRuntime::Device> device;
+    std::unique_ptr<GpuRuntime::LibraryOps> library_ops;
     NavatalaBackend backend;
     int device_id;
     bool valid = true;
@@ -110,6 +136,263 @@ struct NavatalaGpuMemoryResourceImpl {
     bool valid = true;
 };
 
+void* buffer_device_pointer(NavatalaGpuBufferImpl* impl)
+{
+    if (!impl) {
+        return nullptr;
+    }
+    if (impl->buffer) {
+        return impl->buffer->getDevicePointer();
+    }
+    return impl->device_ptr;
+}
+
+const void* buffer_device_pointer(const NavatalaGpuBufferImpl* impl)
+{
+    return buffer_device_pointer(const_cast<NavatalaGpuBufferImpl*>(impl));
+}
+
+NavatalaErrorCode queue_native_handle_for_context(
+    NavatalaGpuQueue* queue,
+    NavatalaGpuContextImpl* context,
+    void** native)
+{
+    if (native) {
+        *native = nullptr;
+    }
+    if (!queue) {
+        return NAVATALA_SUCCESS;
+    }
+
+    auto* q_impl = reinterpret_cast<NavatalaGpuQueueImpl*>(queue);
+    if (!q_impl->valid || !q_impl->queue) {
+        return NAVATALA_INVALID_HANDLE;
+    }
+    if (context && q_impl->context != context) {
+        return NAVATALA_INVALID_PARAM;
+    }
+    if (native) {
+        *native = q_impl->queue->nativeHandle();
+    }
+    return NAVATALA_SUCCESS;
+}
+
+NavatalaErrorCode copy_host_to_device_backend(
+    NavatalaGpuBufferImpl* dst,
+    size_t dst_offset_bytes,
+    const void* src,
+    size_t bytes,
+    NavatalaGpuQueue* queue)
+{
+    if (bytes == 0) {
+        return NAVATALA_SUCCESS;
+    }
+    char* dst_ptr = static_cast<char*>(buffer_device_pointer(dst));
+    if (!dst_ptr) {
+        return NAVATALA_INVALID_HANDLE;
+    }
+
+    void* native = nullptr;
+    NavatalaErrorCode q_status = queue_native_handle_for_context(queue, dst->context, &native);
+    if (q_status != NAVATALA_SUCCESS) {
+        return q_status;
+    }
+
+    switch (dst->context ? dst->context->backend : NAVATALA_BACKEND_AUTO_FFI) {
+#if GPU_RUNTIME_HAVE_HIP
+        case NAVATALA_BACKEND_HIP_FFI: {
+            auto* stream = static_cast<hipStream_t>(native);
+            hipError_t status = stream
+                ? hipMemcpyAsync(dst_ptr + dst_offset_bytes, src, bytes, hipMemcpyHostToDevice, stream)
+                : hipMemcpy(dst_ptr + dst_offset_bytes, src, bytes, hipMemcpyHostToDevice);
+            if (status != hipSuccess) {
+                return NAVATALA_GPU_ERROR;
+            }
+            if (stream && hipStreamSynchronize(stream) != hipSuccess) {
+                return NAVATALA_GPU_ERROR;
+            }
+            return NAVATALA_SUCCESS;
+        }
+#endif
+#if GPU_RUNTIME_HAVE_CUDA
+        case NAVATALA_BACKEND_CUDA_FFI: {
+            auto* stream = static_cast<cudaStream_t>(native);
+            cudaError_t status = stream
+                ? cudaMemcpyAsync(dst_ptr + dst_offset_bytes, src, bytes, cudaMemcpyHostToDevice, stream)
+                : cudaMemcpy(dst_ptr + dst_offset_bytes, src, bytes, cudaMemcpyHostToDevice);
+            if (status != cudaSuccess) {
+                return NAVATALA_GPU_ERROR;
+            }
+            if (stream && cudaStreamSynchronize(stream) != cudaSuccess) {
+                return NAVATALA_GPU_ERROR;
+            }
+            return NAVATALA_SUCCESS;
+        }
+#endif
+        default:
+            return NAVATALA_NOT_IMPLEMENTED;
+    }
+}
+
+NavatalaErrorCode copy_device_to_host_backend(
+    const NavatalaGpuBufferImpl* src,
+    size_t src_offset_bytes,
+    void* dst,
+    size_t bytes,
+    NavatalaGpuQueue* queue)
+{
+    if (bytes == 0) {
+        return NAVATALA_SUCCESS;
+    }
+    const char* src_ptr = static_cast<const char*>(buffer_device_pointer(src));
+    if (!src_ptr) {
+        return NAVATALA_INVALID_HANDLE;
+    }
+
+    void* native = nullptr;
+    NavatalaErrorCode q_status = queue_native_handle_for_context(queue, src->context, &native);
+    if (q_status != NAVATALA_SUCCESS) {
+        return q_status;
+    }
+
+    switch (src->context ? src->context->backend : NAVATALA_BACKEND_AUTO_FFI) {
+#if GPU_RUNTIME_HAVE_HIP
+        case NAVATALA_BACKEND_HIP_FFI: {
+            auto* stream = static_cast<hipStream_t>(native);
+            hipError_t status = stream
+                ? hipMemcpyAsync(dst, src_ptr + src_offset_bytes, bytes, hipMemcpyDeviceToHost, stream)
+                : hipMemcpy(dst, src_ptr + src_offset_bytes, bytes, hipMemcpyDeviceToHost);
+            if (status != hipSuccess) {
+                return NAVATALA_GPU_ERROR;
+            }
+            if (stream && hipStreamSynchronize(stream) != hipSuccess) {
+                return NAVATALA_GPU_ERROR;
+            }
+            return NAVATALA_SUCCESS;
+        }
+#endif
+#if GPU_RUNTIME_HAVE_CUDA
+        case NAVATALA_BACKEND_CUDA_FFI: {
+            auto* stream = static_cast<cudaStream_t>(native);
+            cudaError_t status = stream
+                ? cudaMemcpyAsync(dst, src_ptr + src_offset_bytes, bytes, cudaMemcpyDeviceToHost, stream)
+                : cudaMemcpy(dst, src_ptr + src_offset_bytes, bytes, cudaMemcpyDeviceToHost);
+            if (status != cudaSuccess) {
+                return NAVATALA_GPU_ERROR;
+            }
+            if (stream && cudaStreamSynchronize(stream) != cudaSuccess) {
+                return NAVATALA_GPU_ERROR;
+            }
+            return NAVATALA_SUCCESS;
+        }
+#endif
+        default:
+            return NAVATALA_NOT_IMPLEMENTED;
+    }
+}
+
+NavatalaErrorCode copy_device_to_device_backend(
+    NavatalaGpuBufferImpl* dst,
+    size_t dst_offset_bytes,
+    const NavatalaGpuBufferImpl* src,
+    size_t src_offset_bytes,
+    size_t bytes,
+    NavatalaGpuQueue* queue)
+{
+    if (bytes == 0) {
+        return NAVATALA_SUCCESS;
+    }
+    char* dst_ptr = static_cast<char*>(buffer_device_pointer(dst));
+    const char* src_ptr = static_cast<const char*>(buffer_device_pointer(src));
+    if (!dst_ptr || !src_ptr) {
+        return NAVATALA_INVALID_HANDLE;
+    }
+    if (dst->context != src->context) {
+        return NAVATALA_INVALID_PARAM;
+    }
+
+    void* native = nullptr;
+    NavatalaErrorCode q_status = queue_native_handle_for_context(queue, dst->context, &native);
+    if (q_status != NAVATALA_SUCCESS) {
+        return q_status;
+    }
+
+    switch (dst->context ? dst->context->backend : NAVATALA_BACKEND_AUTO_FFI) {
+#if GPU_RUNTIME_HAVE_HIP
+        case NAVATALA_BACKEND_HIP_FFI: {
+            auto* stream = static_cast<hipStream_t>(native);
+            hipError_t status = stream
+                ? hipMemcpyAsync(dst_ptr + dst_offset_bytes, src_ptr + src_offset_bytes, bytes, hipMemcpyDeviceToDevice, stream)
+                : hipMemcpy(dst_ptr + dst_offset_bytes, src_ptr + src_offset_bytes, bytes, hipMemcpyDeviceToDevice);
+            return status == hipSuccess ? NAVATALA_SUCCESS : NAVATALA_GPU_ERROR;
+        }
+#endif
+#if GPU_RUNTIME_HAVE_CUDA
+        case NAVATALA_BACKEND_CUDA_FFI: {
+            auto* stream = static_cast<cudaStream_t>(native);
+            cudaError_t status = stream
+                ? cudaMemcpyAsync(dst_ptr + dst_offset_bytes, src_ptr + src_offset_bytes, bytes, cudaMemcpyDeviceToDevice, stream)
+                : cudaMemcpy(dst_ptr + dst_offset_bytes, src_ptr + src_offset_bytes, bytes, cudaMemcpyDeviceToDevice);
+            return status == cudaSuccess ? NAVATALA_SUCCESS : NAVATALA_GPU_ERROR;
+        }
+#endif
+        default:
+            return NAVATALA_NOT_IMPLEMENTED;
+    }
+}
+
+NavatalaErrorCode fill_device_backend(
+    NavatalaGpuBufferImpl* dst,
+    uint8_t pattern,
+    NavatalaGpuQueue* queue)
+{
+    char* dst_ptr = static_cast<char*>(buffer_device_pointer(dst));
+    if (!dst_ptr) {
+        return NAVATALA_INVALID_HANDLE;
+    }
+
+    void* native = nullptr;
+    NavatalaErrorCode q_status = queue_native_handle_for_context(queue, dst->context, &native);
+    if (q_status != NAVATALA_SUCCESS) {
+        return q_status;
+    }
+
+    switch (dst->context ? dst->context->backend : NAVATALA_BACKEND_AUTO_FFI) {
+#if GPU_RUNTIME_HAVE_HIP
+        case NAVATALA_BACKEND_HIP_FFI: {
+            auto* stream = static_cast<hipStream_t>(native);
+            hipError_t status = stream
+                ? hipMemsetAsync(dst_ptr, static_cast<int>(pattern), dst->size, stream)
+                : hipMemset(dst_ptr, static_cast<int>(pattern), dst->size);
+            if (status != hipSuccess) {
+                return NAVATALA_GPU_ERROR;
+            }
+            if (stream && hipStreamSynchronize(stream) != hipSuccess) {
+                return NAVATALA_GPU_ERROR;
+            }
+            return NAVATALA_SUCCESS;
+        }
+#endif
+#if GPU_RUNTIME_HAVE_CUDA
+        case NAVATALA_BACKEND_CUDA_FFI: {
+            auto* stream = static_cast<cudaStream_t>(native);
+            cudaError_t status = stream
+                ? cudaMemsetAsync(dst_ptr, static_cast<int>(pattern), dst->size, stream)
+                : cudaMemset(dst_ptr, static_cast<int>(pattern), dst->size);
+            if (status != cudaSuccess) {
+                return NAVATALA_GPU_ERROR;
+            }
+            if (stream && cudaStreamSynchronize(stream) != cudaSuccess) {
+                return NAVATALA_GPU_ERROR;
+            }
+            return NAVATALA_SUCCESS;
+        }
+#endif
+        default:
+            return NAVATALA_NOT_IMPLEMENTED;
+    }
+}
+
 // Backend availability detection based on compile-time macros
 bool is_backend_compiled(NavatalaBackend backend) {
     switch (backend) {
@@ -144,6 +427,108 @@ bool checked_float_byte_count(size_t element_count, size_t* bytes) {
     return true;
 }
 
+bool checked_half_byte_count(size_t element_count, size_t* bytes) {
+    if (!bytes) {
+        return false;
+    }
+    if (element_count > std::numeric_limits<size_t>::max() / sizeof(uint16_t)) {
+        return false;
+    }
+    *bytes = element_count * sizeof(uint16_t);
+    return true;
+}
+
+bool checked_size_mul(size_t a, size_t b, size_t* out) {
+    if (!out) {
+        return false;
+    }
+    if (b != 0 && a > std::numeric_limits<size_t>::max() / b) {
+        return false;
+    }
+    *out = a * b;
+    return true;
+}
+
+bool checked_size_add(size_t a, size_t b, size_t* out) {
+    if (!out) {
+        return false;
+    }
+    if (a > std::numeric_limits<size_t>::max() - b) {
+        return false;
+    }
+    *out = a + b;
+    return true;
+}
+
+bool checked_strided_extent(
+    size_t matrix_elements,
+    size_t stride,
+    size_t batch_count,
+    bool allow_broadcast,
+    size_t* extent)
+{
+    if (!extent) {
+        return false;
+    }
+    if (batch_count == 0) {
+        *extent = 0;
+        return true;
+    }
+    if (batch_count == 1) {
+        *extent = matrix_elements;
+        return true;
+    }
+    if (matrix_elements == 0) {
+        *extent = 0;
+        return true;
+    }
+    if (stride == 0) {
+        if (!allow_broadcast) {
+            return false;
+        }
+        *extent = matrix_elements;
+        return true;
+    }
+    if (stride < matrix_elements) {
+        return false;
+    }
+    size_t base = 0;
+    if (!checked_size_mul(batch_count - 1, stride, &base)) {
+        return false;
+    }
+    return checked_size_add(base, matrix_elements, extent);
+}
+
+bool valid_matrix_transpose(NavatalaMatrixTranspose op) {
+    return op == NAVATALA_MATRIX_OP_NONE ||
+           op == NAVATALA_MATRIX_OP_TRANSPOSE;
+}
+
+size_t gemm_a_offset(
+    size_t row,
+    size_t inner,
+    size_t m,
+    size_t k,
+    NavatalaMatrixTranspose trans_a)
+{
+    (void)k;
+    return trans_a == NAVATALA_MATRIX_OP_TRANSPOSE
+        ? inner * m + row
+        : row * k + inner;
+}
+
+size_t gemm_b_offset(
+    size_t inner,
+    size_t col,
+    size_t n,
+    size_t k,
+    NavatalaMatrixTranspose trans_b)
+{
+    return trans_b == NAVATALA_MATRIX_OP_TRANSPOSE
+        ? col * k + inner
+        : inner * n + col;
+}
+
 bool checked_uint32_byte_count(size_t element_count, size_t* bytes) {
     if (!bytes) {
         return false;
@@ -153,6 +538,495 @@ bool checked_uint32_byte_count(size_t element_count, size_t* bytes) {
     }
     *bytes = element_count * sizeof(uint32_t);
     return true;
+}
+
+const char* library_backend_name(NavatalaBackend backend) {
+    switch (backend) {
+        case NAVATALA_BACKEND_CUDA_FFI: return "cuda";
+        case NAVATALA_BACKEND_HIP_FFI: return "hip";
+        case NAVATALA_BACKEND_METAL_FFI: return "metal";
+        default: return nullptr;
+    }
+}
+
+enum class GemmVendorDispatchMode {
+    Auto,
+    Always,
+    Never
+};
+
+enum class GemmImplementationSelector {
+    Auto,
+    Vendor,
+    Mfma,
+    Portable,
+    Invalid
+};
+
+enum class GemmMfmaMode {
+    Auto,
+    Cta64,
+    Cta128,
+    Invalid
+};
+
+GemmVendorDispatchMode gemm_vendor_dispatch_mode() {
+    const char* value = std::getenv("NAVATALA_GPU_GEMM_VENDOR_MODE");
+    if (!value || value[0] == '\0' ||
+        std::strcmp(value, "auto") == 0 ||
+        std::strcmp(value, "1") == 0 ||
+        std::strcmp(value, "true") == 0) {
+        return GemmVendorDispatchMode::Auto;
+    }
+    if (std::strcmp(value, "always") == 0 ||
+        std::strcmp(value, "vendor") == 0 ||
+        std::strcmp(value, "force") == 0) {
+        return GemmVendorDispatchMode::Always;
+    }
+    if (std::strcmp(value, "never") == 0 ||
+        std::strcmp(value, "portable") == 0 ||
+        std::strcmp(value, "reference") == 0 ||
+        std::strcmp(value, "fallback") == 0 ||
+        std::strcmp(value, "0") == 0 ||
+        std::strcmp(value, "false") == 0) {
+        return GemmVendorDispatchMode::Never;
+    }
+    return GemmVendorDispatchMode::Auto;
+}
+
+GemmImplementationSelector gemm_implementation_selector() {
+    const char* value = std::getenv("NAVATALA_GPU_GEMM_IMPL");
+    if (!value || value[0] == '\0' || std::strcmp(value, "auto") == 0) {
+        return GemmImplementationSelector::Auto;
+    }
+    if (std::strcmp(value, "vendor") == 0) {
+        return GemmImplementationSelector::Vendor;
+    }
+    if (std::strcmp(value, "mfma") == 0) {
+        return GemmImplementationSelector::Mfma;
+    }
+    if (std::strcmp(value, "portable") == 0 || std::strcmp(value, "reference") == 0) {
+        return GemmImplementationSelector::Portable;
+    }
+    return GemmImplementationSelector::Invalid;
+}
+
+GemmMfmaMode gemm_mfma_mode_selector() {
+    const char* value = std::getenv("NAVATALA_GPU_GEMM_MFMA_MODE");
+    if (!value || value[0] == '\0' || std::strcmp(value, "auto") == 0) {
+        return GemmMfmaMode::Auto;
+    }
+    if (std::strcmp(value, "cta64") == 0 ||
+        std::strcmp(value, "cta64_shared") == 0 ||
+        std::strcmp(value, "shared") == 0) {
+        return GemmMfmaMode::Cta64;
+    }
+    if (std::strcmp(value, "cta128") == 0) {
+        return GemmMfmaMode::Cta128;
+    }
+    return GemmMfmaMode::Invalid;
+}
+
+bool gemm_selectors_contradict(
+    GemmImplementationSelector implementation,
+    GemmVendorDispatchMode vendor_mode)
+{
+    switch (implementation) {
+        case GemmImplementationSelector::Vendor:
+            return vendor_mode == GemmVendorDispatchMode::Never;
+        case GemmImplementationSelector::Portable:
+            return vendor_mode == GemmVendorDispatchMode::Always;
+        case GemmImplementationSelector::Mfma:
+            return vendor_mode == GemmVendorDispatchMode::Always;
+        default:
+            return false;
+    }
+}
+
+struct MfmaKernelSpec {
+    const char* kernelName;
+    const char* kCountSemanticName;
+    size_t tileM;
+    size_t tileN;
+    size_t kStep;
+};
+
+const MfmaKernelSpec* mfma_cta64_spec() {
+    static const MfmaKernelSpec spec{
+        "navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_edge",
+        "kTiles",
+        64,
+        64,
+        8
+    };
+    return &spec;
+}
+
+const MfmaKernelSpec* mfma_cta128_spec() {
+    static const MfmaKernelSpec spec{
+        "navatala_transformer_tiled_gemm_f16_mfma_cta128_edge",
+        "kBlocks",
+        128,
+        128,
+        32
+    };
+    return &spec;
+}
+
+bool mfma_shape_supported(size_t m, size_t n, size_t k, const MfmaKernelSpec& spec) {
+    (void)spec;
+    return m != 0 && n != 0 && k != 0;
+}
+
+const MfmaKernelSpec* select_mfma_kernel(size_t m, size_t n, size_t k, GemmMfmaMode mode) {
+    const MfmaKernelSpec* cta64 = mfma_cta64_spec();
+    const MfmaKernelSpec* cta128 = mfma_cta128_spec();
+    switch (mode) {
+        case GemmMfmaMode::Cta64:
+            return mfma_shape_supported(m, n, k, *cta64) ? cta64 : nullptr;
+        case GemmMfmaMode::Cta128:
+            return mfma_shape_supported(m, n, k, *cta128) ? cta128 : nullptr;
+        case GemmMfmaMode::Auto:
+            if (m >= 1024 && mfma_shape_supported(m, n, k, *cta128)) {
+                return cta128;
+            }
+            if (mfma_shape_supported(m, n, k, *cta64)) {
+                return cta64;
+            }
+            if (mfma_shape_supported(m, n, k, *cta128)) {
+                return cta128;
+            }
+            return nullptr;
+        default:
+            return nullptr;
+    }
+}
+
+bool size_to_u32(size_t value, uint32_t* out) {
+    if (!out || value > std::numeric_limits<uint32_t>::max()) {
+        return false;
+    }
+    *out = static_cast<uint32_t>(value);
+    return true;
+}
+
+size_t ceil_div_size(size_t value, size_t divisor) {
+    if (divisor == 0) {
+        return 0;
+    }
+    return value / divisor + ((value % divisor) != 0 ? 1 : 0);
+}
+
+#if NAVATALA_GPU_HAVE_HIP_TRANSFORMER_REGISTRY
+GpuRuntime::Program* get_or_create_hip_transformer_program(
+    NavatalaGpuContextImpl* ctx,
+    const char* kernelName)
+{
+    if (!ctx || !ctx->device || !kernelName) {
+        return nullptr;
+    }
+
+    static std::mutex cache_mutex;
+    static std::unordered_map<std::string, std::unique_ptr<GpuRuntime::Program>> cache;
+
+    const std::string key = std::string("hip:") + kernelName + ":" +
+        std::to_string(reinterpret_cast<std::uintptr_t>(ctx)) + ":" +
+        ctx->device->getName() + ":" + ctx->device->getComputeCapability();
+    std::lock_guard<std::mutex> lock(cache_mutex);
+    auto it = cache.find(key);
+    if (it != cache.end()) {
+        return it->second.get();
+    }
+
+    GpuRuntime::ProgramSource source;
+    if (!NavatalaRegistry::tryGetKernelSource_hip_transformer("hip", kernelName, source)) {
+        return nullptr;
+    }
+    auto program = ctx->device->createProgram(source);
+    if (!program) {
+        return nullptr;
+    }
+
+    auto* raw = program.get();
+    cache.emplace(key, std::move(program));
+    return raw;
+}
+
+NavatalaErrorCode make_u32_device_param(
+    NavatalaGpuContextImpl* ctx,
+    uint32_t value,
+    NavatalaGpuQueue* queue,
+    std::vector<std::unique_ptr<NavatalaGpuBufferImpl>>& owned,
+    GpuRuntime::Buffer** out)
+{
+    if (!ctx || !ctx->device || !out) {
+        return NAVATALA_INVALID_PARAM;
+    }
+    auto temp = std::make_unique<NavatalaGpuBufferImpl>();
+    temp->buffer = ctx->device->createBuffer(sizeof(uint32_t), GpuRuntime::MemoryKind::Device);
+    if (!temp->buffer) {
+        return NAVATALA_OUT_OF_MEMORY;
+    }
+    temp->context = ctx;
+    temp->device_ptr = temp->buffer->getDevicePointer();
+    temp->size = sizeof(uint32_t);
+    temp->owning = true;
+    temp->valid = true;
+
+    const NavatalaErrorCode status =
+        copy_host_to_device_backend(temp.get(), 0, &value, sizeof(uint32_t), queue);
+    if (status != NAVATALA_SUCCESS) {
+        return status;
+    }
+
+    *out = temp->buffer.get();
+    owned.push_back(std::move(temp));
+    return NAVATALA_SUCCESS;
+}
+
+NavatalaErrorCode make_f32_device_param(
+    NavatalaGpuContextImpl* ctx,
+    float value,
+    NavatalaGpuQueue* queue,
+    std::vector<std::unique_ptr<NavatalaGpuBufferImpl>>& owned,
+    GpuRuntime::Buffer** out)
+{
+    if (!ctx || !ctx->device || !out) {
+        return NAVATALA_INVALID_PARAM;
+    }
+    auto temp = std::make_unique<NavatalaGpuBufferImpl>();
+    temp->buffer = ctx->device->createBuffer(sizeof(float), GpuRuntime::MemoryKind::Device);
+    if (!temp->buffer) {
+        return NAVATALA_OUT_OF_MEMORY;
+    }
+    temp->context = ctx;
+    temp->device_ptr = temp->buffer->getDevicePointer();
+    temp->size = sizeof(float);
+    temp->owning = true;
+    temp->valid = true;
+
+    const NavatalaErrorCode status =
+        copy_host_to_device_backend(temp.get(), 0, &value, sizeof(float), queue);
+    if (status != NAVATALA_SUCCESS) {
+        return status;
+    }
+
+    *out = temp->buffer.get();
+    owned.push_back(std::move(temp));
+    return NAVATALA_SUCCESS;
+}
+
+NavatalaErrorCode launch_hip_mfma_gemm_f16_f32(
+    NavatalaGpuBufferImpl* a,
+    NavatalaGpuBufferImpl* b,
+    NavatalaGpuBufferImpl* c,
+    size_t m,
+    size_t n,
+    size_t k,
+    float alpha,
+    float beta,
+    NavatalaMatrixTranspose trans_a,
+    NavatalaMatrixTranspose trans_b,
+    size_t stride_a,
+    size_t stride_b,
+    size_t stride_c,
+    size_t batch_count,
+    GemmMfmaMode mfma_mode,
+    NavatalaGpuQueue* queue,
+    GpuRuntime::Queue* caller_queue)
+{
+    if (!a || !b || !c || !c->context) {
+        return NAVATALA_INVALID_HANDLE;
+    }
+    const MfmaKernelSpec* spec = select_mfma_kernel(m, n, k, mfma_mode);
+    if (!spec) {
+        return NAVATALA_NOT_IMPLEMENTED;
+    }
+
+    uint32_t k_count = 0;
+    uint32_t m_dim = 0;
+    uint32_t n_dim = 0;
+    uint32_t k_dim = 0;
+    uint32_t a_stride = 0;
+    uint32_t b_stride = 0;
+    uint32_t c_stride = 0;
+    uint32_t a_batch_stride = 0;
+    uint32_t b_batch_stride = 0;
+    uint32_t c_batch_stride = 0;
+    uint32_t trans_a_flag = trans_a == NAVATALA_MATRIX_OP_TRANSPOSE ? 1u : 0u;
+    uint32_t trans_b_flag = trans_b == NAVATALA_MATRIX_OP_TRANSPOSE ? 1u : 0u;
+    uint32_t grid_x = 0;
+    uint32_t grid_y = 0;
+    uint32_t grid_z = 0;
+    if (!size_to_u32(m, &m_dim) ||
+        !size_to_u32(n, &n_dim) ||
+        !size_to_u32(k, &k_dim) ||
+        !size_to_u32(ceil_div_size(k, spec->kStep), &k_count) ||
+        !size_to_u32(trans_a == NAVATALA_MATRIX_OP_TRANSPOSE ? m : k, &a_stride) ||
+        !size_to_u32(trans_b == NAVATALA_MATRIX_OP_TRANSPOSE ? k : n, &b_stride) ||
+        !size_to_u32(n, &c_stride) ||
+        !size_to_u32(stride_a, &a_batch_stride) ||
+        !size_to_u32(stride_b, &b_batch_stride) ||
+        !size_to_u32(stride_c, &c_batch_stride) ||
+        !size_to_u32(ceil_div_size(n, spec->tileN), &grid_x) ||
+        !size_to_u32(ceil_div_size(m, spec->tileM), &grid_y) ||
+        !size_to_u32(batch_count, &grid_z)) {
+        return NAVATALA_OVERFLOW_ERROR;
+    }
+
+    auto* ctx = c->context;
+    GpuRuntime::Program* program = get_or_create_hip_transformer_program(ctx, spec->kernelName);
+    if (!program) {
+        return NAVATALA_NOT_IMPLEMENTED;
+    }
+
+    std::vector<std::unique_ptr<NavatalaGpuBufferImpl>> temp_params;
+    GpuRuntime::Buffer* m_dim_buffer = nullptr;
+    GpuRuntime::Buffer* n_dim_buffer = nullptr;
+    GpuRuntime::Buffer* k_dim_buffer = nullptr;
+    GpuRuntime::Buffer* k_count_buffer = nullptr;
+    GpuRuntime::Buffer* a_stride_buffer = nullptr;
+    GpuRuntime::Buffer* b_stride_buffer = nullptr;
+    GpuRuntime::Buffer* c_stride_buffer = nullptr;
+    GpuRuntime::Buffer* a_batch_stride_buffer = nullptr;
+    GpuRuntime::Buffer* b_batch_stride_buffer = nullptr;
+    GpuRuntime::Buffer* c_batch_stride_buffer = nullptr;
+    GpuRuntime::Buffer* trans_a_buffer = nullptr;
+    GpuRuntime::Buffer* trans_b_buffer = nullptr;
+    GpuRuntime::Buffer* alpha_buffer = nullptr;
+    GpuRuntime::Buffer* beta_buffer = nullptr;
+    NavatalaErrorCode status =
+        make_u32_device_param(ctx, m_dim, queue, temp_params, &m_dim_buffer);
+    if (status != NAVATALA_SUCCESS) {
+        return status;
+    }
+    status = make_u32_device_param(ctx, n_dim, queue, temp_params, &n_dim_buffer);
+    if (status != NAVATALA_SUCCESS) {
+        return status;
+    }
+    status = make_u32_device_param(ctx, k_dim, queue, temp_params, &k_dim_buffer);
+    if (status != NAVATALA_SUCCESS) {
+        return status;
+    }
+    status = make_u32_device_param(ctx, k_count, queue, temp_params, &k_count_buffer);
+    if (status != NAVATALA_SUCCESS) {
+        return status;
+    }
+    status = make_u32_device_param(ctx, a_stride, queue, temp_params, &a_stride_buffer);
+    if (status != NAVATALA_SUCCESS) {
+        return status;
+    }
+    status = make_u32_device_param(ctx, b_stride, queue, temp_params, &b_stride_buffer);
+    if (status != NAVATALA_SUCCESS) {
+        return status;
+    }
+    status = make_u32_device_param(ctx, c_stride, queue, temp_params, &c_stride_buffer);
+    if (status != NAVATALA_SUCCESS) {
+        return status;
+    }
+    status = make_u32_device_param(ctx, a_batch_stride, queue, temp_params, &a_batch_stride_buffer);
+    if (status != NAVATALA_SUCCESS) {
+        return status;
+    }
+    status = make_u32_device_param(ctx, b_batch_stride, queue, temp_params, &b_batch_stride_buffer);
+    if (status != NAVATALA_SUCCESS) {
+        return status;
+    }
+    status = make_u32_device_param(ctx, c_batch_stride, queue, temp_params, &c_batch_stride_buffer);
+    if (status != NAVATALA_SUCCESS) {
+        return status;
+    }
+    status = make_u32_device_param(ctx, trans_a_flag, queue, temp_params, &trans_a_buffer);
+    if (status != NAVATALA_SUCCESS) {
+        return status;
+    }
+    status = make_u32_device_param(ctx, trans_b_flag, queue, temp_params, &trans_b_buffer);
+    if (status != NAVATALA_SUCCESS) {
+        return status;
+    }
+    status = make_f32_device_param(ctx, alpha, queue, temp_params, &alpha_buffer);
+    if (status != NAVATALA_SUCCESS) {
+        return status;
+    }
+    status = make_f32_device_param(ctx, beta, queue, temp_params, &beta_buffer);
+    if (status != NAVATALA_SUCCESS) {
+        return status;
+    }
+
+    std::unique_ptr<GpuRuntime::Queue> temp_queue;
+    GpuRuntime::Queue* launch_queue = caller_queue;
+    if (!launch_queue) {
+        temp_queue = ctx->device->createQueue();
+        launch_queue = temp_queue.get();
+    }
+    if (!launch_queue) {
+        return NAVATALA_GPU_ERROR;
+    }
+
+    std::vector<GpuRuntime::Buffer*> args = {
+        a->buffer.get(),
+        b->buffer.get(),
+        m_dim_buffer,
+        n_dim_buffer,
+        k_dim_buffer,
+        k_count_buffer,
+        a_stride_buffer,
+        b_stride_buffer,
+        c_stride_buffer,
+        a_batch_stride_buffer,
+        b_batch_stride_buffer,
+        c_batch_stride_buffer,
+        trans_a_buffer,
+        trans_b_buffer,
+        alpha_buffer,
+        beta_buffer,
+        c->buffer.get()
+    };
+    launch_queue->submit(*program, args, grid_x, grid_y, grid_z, 256, 1, 1);
+    // The current generated ABI represents scalar launch parameters as device
+    // buffers. Keep this wrapper synchronous so the transient parameter buffers
+    // remain alive until the kernel has consumed them.
+    launch_queue->synchronize();
+    return NAVATALA_SUCCESS;
+}
+#endif
+
+size_t parse_size_env(const char* name, size_t default_value) {
+    const char* value = std::getenv(name);
+    if (!value || value[0] == '\0') {
+        return default_value;
+    }
+
+    size_t result = 0;
+    for (const char* cursor = value; *cursor != '\0'; ++cursor) {
+        if (*cursor < '0' || *cursor > '9') {
+            return default_value;
+        }
+        const size_t digit = static_cast<size_t>(*cursor - '0');
+        if (result > (std::numeric_limits<size_t>::max() - digit) / 10) {
+            return std::numeric_limits<size_t>::max();
+        }
+        result = result * 10 + digit;
+    }
+    return result;
+}
+
+size_t gemm_vendor_dispatch_threshold_flops() {
+    return parse_size_env("NAVATALA_GPU_GEMM_VENDOR_THRESHOLD_FLOPS", size_t{1000000});
+}
+
+bool product_at_least(size_t a, size_t b, size_t c, size_t threshold) {
+    if (threshold == 0) {
+        return true;
+    }
+    if (a == 0 || b == 0 || c == 0) {
+        return false;
+    }
+    if (a > threshold / b) {
+        return true;
+    }
+    const size_t ab = a * b;
+    return ab > threshold / c || ab * c >= threshold;
 }
 
 bool checked_int32_byte_count(size_t element_count, size_t* bytes) {
@@ -1069,6 +1943,9 @@ NavatalaErrorCode navatala_gpu_create_context(
         impl->backend = actual_backend;
         impl->device_id = device_id;
         impl->valid = true;
+        if (const char* library_backend = library_backend_name(actual_backend)) {
+            impl->library_ops = GpuRuntime::createLibraryOpsForBackend(library_backend);
+        }
 
         *ctx = reinterpret_cast<NavatalaGpuContext*>(impl);
         return NAVATALA_SUCCESS;
@@ -1477,23 +2354,25 @@ NavatalaErrorCode navatala_gpu_copy_h2d(
     }
 
     try {
-        // Map buffer, copy data, unmap
-        buf_impl->buffer->map(GpuRuntime::MapMode::Write);
-        void* mapped = buf_impl->buffer->getHostPointer();
-        if (mapped) {
-            std::memcpy(mapped, host_ptr, bytes);
-        }
-        buf_impl->buffer->unmap();
-
-        // If queue provided, synchronize
-        if (queue) {
-            auto* q_impl = reinterpret_cast<NavatalaGpuQueueImpl*>(queue);
-            if (q_impl->valid) {
-                q_impl->queue->synchronize();
+        if (buf_impl->buffer) {
+            // Prefer direct mapped access for host-visible buffers.
+            buf_impl->buffer->map(GpuRuntime::MapMode::Write);
+            void* mapped = buf_impl->buffer->getHostPointer();
+            if (mapped) {
+                std::memcpy(mapped, host_ptr, bytes);
+                buf_impl->buffer->unmap();
+                if (queue) {
+                    auto* q_impl = reinterpret_cast<NavatalaGpuQueueImpl*>(queue);
+                    if (!q_impl->valid || q_impl->context != buf_impl->context) {
+                        return NAVATALA_INVALID_HANDLE;
+                    }
+                    q_impl->queue->synchronize();
+                }
+                return NAVATALA_SUCCESS;
             }
+            buf_impl->buffer->unmap();
         }
-
-        return NAVATALA_SUCCESS;
+        return copy_host_to_device_backend(buf_impl, 0, host_ptr, bytes, queue);
     } catch (...) {
         return NAVATALA_GPU_ERROR;
     }
@@ -1515,24 +2394,26 @@ NavatalaErrorCode navatala_gpu_copy_d2h(
     }
 
     try {
-        // Map buffer, copy data, unmap
         auto* mutable_buf = const_cast<NavatalaGpuBufferImpl*>(buf_impl);
-        mutable_buf->buffer->map(GpuRuntime::MapMode::Read);
-        void* mapped = mutable_buf->buffer->getHostPointer();
-        if (mapped) {
-            std::memcpy(host_ptr, mapped, bytes);
-        }
-        mutable_buf->buffer->unmap();
-
-        // If queue provided, synchronize
-        if (queue) {
-            auto* q_impl = reinterpret_cast<NavatalaGpuQueueImpl*>(queue);
-            if (q_impl->valid) {
-                q_impl->queue->synchronize();
+        if (mutable_buf->buffer) {
+            // Prefer direct mapped access for host-visible buffers.
+            mutable_buf->buffer->map(GpuRuntime::MapMode::Read);
+            void* mapped = mutable_buf->buffer->getHostPointer();
+            if (mapped) {
+                std::memcpy(host_ptr, mapped, bytes);
+                mutable_buf->buffer->unmap();
+                if (queue) {
+                    auto* q_impl = reinterpret_cast<NavatalaGpuQueueImpl*>(queue);
+                    if (!q_impl->valid || q_impl->context != mutable_buf->context) {
+                        return NAVATALA_INVALID_HANDLE;
+                    }
+                    q_impl->queue->synchronize();
+                }
+                return NAVATALA_SUCCESS;
             }
+            mutable_buf->buffer->unmap();
         }
-
-        return NAVATALA_SUCCESS;
+        return copy_device_to_host_backend(buf_impl, 0, host_ptr, bytes, queue);
     } catch (...) {
         return NAVATALA_GPU_ERROR;
     }
@@ -1560,24 +2441,26 @@ NavatalaErrorCode navatala_gpu_copy_d2d(
     }
 
     try {
-        if (queue) {
+        if (queue && dst_impl->buffer && src_impl->buffer) {
             auto* q_impl = reinterpret_cast<NavatalaGpuQueueImpl*>(queue);
-            if (q_impl->valid) {
+            if (q_impl->valid && q_impl->context == dst_impl->context && dst_impl->context == src_impl->context) {
                 q_impl->queue->memcpy(*dst_impl->buffer, *src_impl->buffer, bytes);
                 return NAVATALA_SUCCESS;
             }
         }
 
         // Fallback: create temporary queue for copy
-        if (dst_impl->context && dst_impl->context->device) {
+        if (dst_impl->buffer && src_impl->buffer && dst_impl->context == src_impl->context &&
+            dst_impl->context && dst_impl->context->device) {
             auto temp_queue = dst_impl->context->device->createQueue();
             if (temp_queue) {
                 temp_queue->memcpy(*dst_impl->buffer, *src_impl->buffer, bytes);
                 temp_queue->synchronize();
+                return NAVATALA_SUCCESS;
             }
         }
 
-        return NAVATALA_SUCCESS;
+        return copy_device_to_device_backend(dst_impl, 0, src_impl, 0, bytes, queue);
     } catch (...) {
         return NAVATALA_GPU_ERROR;
     }
@@ -1681,6 +2564,103 @@ NavatalaErrorCode navatala_gpu_gemm_f32(
     }
 
     try {
+        auto* a_impl = reinterpret_cast<NavatalaGpuBufferImpl*>(const_cast<NavatalaGpuBuffer*>(a));
+        auto* b_impl = reinterpret_cast<NavatalaGpuBufferImpl*>(const_cast<NavatalaGpuBuffer*>(b));
+        auto* c_impl = reinterpret_cast<NavatalaGpuBufferImpl*>(c);
+        if (!a_impl->valid || !b_impl->valid || !c_impl->valid ||
+            !a_impl->buffer || !b_impl->buffer || !c_impl->buffer) {
+            return NAVATALA_INVALID_HANDLE;
+        }
+        if (a_impl->context != b_impl->context || a_impl->context != c_impl->context ||
+            !c_impl->context || !c_impl->context->valid) {
+            return NAVATALA_INVALID_PARAM;
+        }
+
+        auto* ctx_impl = c_impl->context;
+        GpuRuntime::Queue* caller_queue = nullptr;
+        if (queue) {
+            auto* q_impl = reinterpret_cast<NavatalaGpuQueueImpl*>(queue);
+            if (!q_impl->valid || q_impl->context != ctx_impl || !q_impl->queue) {
+                return NAVATALA_INVALID_HANDLE;
+            }
+            caller_queue = q_impl->queue.get();
+        }
+
+        const GemmVendorDispatchMode vendor_mode = gemm_vendor_dispatch_mode();
+        const GemmImplementationSelector gemm_impl = gemm_implementation_selector();
+        if (gemm_impl == GemmImplementationSelector::Invalid) {
+            return NAVATALA_INVALID_PARAM;
+        }
+        if (gemm_selectors_contradict(gemm_impl, vendor_mode)) {
+            return NAVATALA_INVALID_PARAM;
+        }
+        if (gemm_impl == GemmImplementationSelector::Mfma) {
+            // The public F32 GEMM ABI cannot safely route to the current HIP MFMA
+            // prototype, which expects F16 inputs and writes F32 output. A future
+            // F16/F32 wrapper will own the production MFMA dispatch path.
+            return NAVATALA_NOT_IMPLEMENTED;
+        }
+        const bool vendor_allowed =
+            gemm_impl != GemmImplementationSelector::Portable &&
+            vendor_mode != GemmVendorDispatchMode::Never &&
+            (gemm_impl == GemmImplementationSelector::Vendor ||
+             (k != 0 && vendor_mode == GemmVendorDispatchMode::Always) ||
+             product_at_least(m, n, k, gemm_vendor_dispatch_threshold_flops()));
+        const bool vendor_required =
+            gemm_impl == GemmImplementationSelector::Vendor ||
+            vendor_mode == GemmVendorDispatchMode::Always;
+
+        if (vendor_allowed && ctx_impl->library_ops && ctx_impl->library_ops->hasBlasSupport()) {
+            std::unique_ptr<GpuRuntime::Queue> temp_queue;
+            GpuRuntime::Queue* gemm_queue = nullptr;
+            if (caller_queue) {
+                gemm_queue = caller_queue;
+            } else {
+                temp_queue = ctx_impl->device->createQueue();
+                gemm_queue = temp_queue.get();
+            }
+
+            if (gemm_queue) {
+                GpuRuntime::GemmParams params;
+                params.transA = GpuRuntime::TransposeOp::NoTrans;
+                params.transB = GpuRuntime::TransposeOp::NoTrans;
+                params.m = static_cast<std::int64_t>(n);
+                params.n = static_cast<std::int64_t>(m);
+                params.k = static_cast<std::int64_t>(k);
+                params.alpha = static_cast<double>(alpha);
+                params.beta = static_cast<double>(beta);
+                params.lda = static_cast<std::int64_t>(n);
+                params.ldb = static_cast<std::int64_t>(k);
+                params.ldc = static_cast<std::int64_t>(n);
+
+                // Public ABI tensors are row-major. BLAS backends are column-major,
+                // so compute C^T = B^T * A^T over the same memory by swapping operands.
+                const auto status = ctx_impl->library_ops->gemm(
+                    *gemm_queue,
+                    params,
+                    *b_impl->buffer,
+                    *a_impl->buffer,
+                    *c_impl->buffer,
+                    GpuRuntime::DataType::Float32);
+                if (status == GpuRuntime::LibraryStatus::Success) {
+                    if (temp_queue) {
+                        gemm_queue->synchronize();
+                    }
+                    return NAVATALA_SUCCESS;
+                }
+                if (vendor_required && status == GpuRuntime::LibraryStatus::NotSupported) {
+                    return NAVATALA_NOT_IMPLEMENTED;
+                }
+                if (status != GpuRuntime::LibraryStatus::NotSupported) {
+                    return NAVATALA_GPU_ERROR;
+                }
+            } else if (vendor_required) {
+                return NAVATALA_GPU_ERROR;
+            }
+        } else if (vendor_allowed && vendor_required) {
+            return NAVATALA_NOT_IMPLEMENTED;
+        }
+
         std::vector<float> host_a(a_elements);
         std::vector<float> host_b(b_elements);
         std::vector<float> host_c(c_elements);
@@ -1711,6 +2691,237 @@ NavatalaErrorCode navatala_gpu_gemm_f32(
                 }
                 const size_t idx = row * n + col;
                 host_c[idx] = alpha * acc + beta * host_c[idx];
+            }
+        }
+
+        return navatala_gpu_copy_h2d(c, host_c.data(), c_bytes, queue);
+    } catch (const std::bad_alloc&) {
+        return NAVATALA_OUT_OF_MEMORY;
+    } catch (...) {
+        return NAVATALA_GPU_ERROR;
+    }
+}
+
+NavatalaErrorCode navatala_gpu_gemm_f16_f32(
+    const NavatalaGpuBuffer* a,
+    const NavatalaGpuBuffer* b,
+    NavatalaGpuBuffer* c,
+    size_t m,
+    size_t n,
+    size_t k,
+    float alpha,
+    float beta,
+    NavatalaGpuQueue* queue)
+{
+    return navatala_gpu_gemm_f16_f32_ex(
+        a, b, c, m, n, k, alpha, beta,
+        NAVATALA_MATRIX_OP_NONE, NAVATALA_MATRIX_OP_NONE, queue);
+}
+
+NavatalaErrorCode navatala_gpu_gemm_f16_f32_ex(
+    const NavatalaGpuBuffer* a,
+    const NavatalaGpuBuffer* b,
+    NavatalaGpuBuffer* c,
+    size_t m,
+    size_t n,
+    size_t k,
+    float alpha,
+    float beta,
+    NavatalaMatrixTranspose trans_a,
+    NavatalaMatrixTranspose trans_b,
+    NavatalaGpuQueue* queue)
+{
+    size_t stride_a = 0;
+    size_t stride_b = 0;
+    size_t stride_c = 0;
+    if (!checked_size_mul(m, k, &stride_a) ||
+        !checked_size_mul(k, n, &stride_b) ||
+        !checked_size_mul(m, n, &stride_c)) {
+        return NAVATALA_OVERFLOW_ERROR;
+    }
+    return navatala_gpu_gemm_f16_f32_strided_batched(
+        a, b, c, m, n, k, alpha, beta, trans_a, trans_b,
+        stride_a, stride_b, stride_c, 1, queue);
+}
+
+NavatalaErrorCode navatala_gpu_gemm_f16_f32_strided_batched(
+    const NavatalaGpuBuffer* a,
+    const NavatalaGpuBuffer* b,
+    NavatalaGpuBuffer* c,
+    size_t m,
+    size_t n,
+    size_t k,
+    float alpha,
+    float beta,
+    NavatalaMatrixTranspose trans_a,
+    NavatalaMatrixTranspose trans_b,
+    size_t stride_a,
+    size_t stride_b,
+    size_t stride_c,
+    size_t batch_count,
+    NavatalaGpuQueue* queue)
+{
+    if (!a || !b || !c) {
+        return NAVATALA_INVALID_PARAM;
+    }
+    if (!valid_matrix_transpose(trans_a) || !valid_matrix_transpose(trans_b)) {
+        return NAVATALA_INVALID_PARAM;
+    }
+
+    size_t a_matrix_elements = 0;
+    size_t b_matrix_elements = 0;
+    size_t c_matrix_elements = 0;
+    if (!checked_size_mul(m, k, &a_matrix_elements) ||
+        !checked_size_mul(k, n, &b_matrix_elements) ||
+        !checked_size_mul(m, n, &c_matrix_elements)) {
+        return NAVATALA_OVERFLOW_ERROR;
+    }
+
+    size_t a_elements = 0;
+    size_t b_elements = 0;
+    size_t c_elements = 0;
+    if (!checked_strided_extent(a_matrix_elements, stride_a, batch_count, true, &a_elements) ||
+        !checked_strided_extent(b_matrix_elements, stride_b, batch_count, true, &b_elements) ||
+        !checked_strided_extent(c_matrix_elements, stride_c, batch_count, false, &c_elements)) {
+        return NAVATALA_OVERFLOW_ERROR;
+    }
+
+    size_t a_bytes = 0;
+    size_t b_bytes = 0;
+    size_t c_bytes = 0;
+    if (!checked_half_byte_count(a_elements, &a_bytes) ||
+        !checked_half_byte_count(b_elements, &b_bytes) ||
+        !checked_float_byte_count(c_elements, &c_bytes)) {
+        return NAVATALA_OVERFLOW_ERROR;
+    }
+
+    if (a_bytes > navatala_gpu_buffer_size(const_cast<NavatalaGpuBuffer*>(a)) ||
+        b_bytes > navatala_gpu_buffer_size(const_cast<NavatalaGpuBuffer*>(b)) ||
+        c_bytes > navatala_gpu_buffer_size(c)) {
+        return NAVATALA_INVALID_PARAM;
+    }
+
+    if (m == 0 || n == 0 || batch_count == 0) {
+        return NAVATALA_SUCCESS;
+    }
+
+    try {
+        auto* a_impl = reinterpret_cast<NavatalaGpuBufferImpl*>(const_cast<NavatalaGpuBuffer*>(a));
+        auto* b_impl = reinterpret_cast<NavatalaGpuBufferImpl*>(const_cast<NavatalaGpuBuffer*>(b));
+        auto* c_impl = reinterpret_cast<NavatalaGpuBufferImpl*>(c);
+        if (!a_impl->valid || !b_impl->valid || !c_impl->valid ||
+            !a_impl->buffer || !b_impl->buffer || !c_impl->buffer) {
+            return NAVATALA_INVALID_HANDLE;
+        }
+        if (a_impl->context != b_impl->context || a_impl->context != c_impl->context ||
+            !c_impl->context || !c_impl->context->valid) {
+            return NAVATALA_INVALID_PARAM;
+        }
+
+        auto* ctx_impl = c_impl->context;
+        GpuRuntime::Queue* caller_queue = nullptr;
+        if (queue) {
+            auto* q_impl = reinterpret_cast<NavatalaGpuQueueImpl*>(queue);
+            if (!q_impl->valid || q_impl->context != ctx_impl || !q_impl->queue) {
+                return NAVATALA_INVALID_HANDLE;
+            }
+            caller_queue = q_impl->queue.get();
+        }
+
+        const GemmVendorDispatchMode vendor_mode = gemm_vendor_dispatch_mode();
+        const GemmImplementationSelector gemm_impl = gemm_implementation_selector();
+        const GemmMfmaMode mfma_mode = gemm_mfma_mode_selector();
+        if (gemm_impl == GemmImplementationSelector::Invalid ||
+            mfma_mode == GemmMfmaMode::Invalid) {
+            return NAVATALA_INVALID_PARAM;
+        }
+        if (gemm_selectors_contradict(gemm_impl, vendor_mode)) {
+            return NAVATALA_INVALID_PARAM;
+        }
+
+        const bool vendor_required =
+            gemm_impl == GemmImplementationSelector::Vendor ||
+            vendor_mode == GemmVendorDispatchMode::Always;
+        if (vendor_required) {
+            // The mixed F16-input/F32-output ABI is not yet wired through
+            // LibraryOps; force callers through the future vendor-specific path
+            // instead of falling back unexpectedly.
+            return NAVATALA_NOT_IMPLEMENTED;
+        }
+
+        const bool forced_mfma = gemm_impl == GemmImplementationSelector::Mfma;
+        const bool mfma_allowed =
+            gemm_impl != GemmImplementationSelector::Portable &&
+            ctx_impl->backend == NAVATALA_BACKEND_HIP_FFI;
+        if (mfma_allowed || forced_mfma) {
+            if (ctx_impl->backend != NAVATALA_BACKEND_HIP_FFI) {
+                if (forced_mfma) {
+                    return NAVATALA_NOT_IMPLEMENTED;
+                }
+            } else {
+#if NAVATALA_GPU_HAVE_HIP_TRANSFORMER_REGISTRY
+                const NavatalaErrorCode status = launch_hip_mfma_gemm_f16_f32(
+                    a_impl, b_impl, c_impl, m, n, k, alpha, beta,
+                    trans_a, trans_b, stride_a, stride_b, stride_c, batch_count,
+                    mfma_mode, queue, caller_queue);
+                if (status == NAVATALA_SUCCESS) {
+                    return NAVATALA_SUCCESS;
+                }
+                if (forced_mfma) {
+                    return status;
+                }
+#else
+                if (forced_mfma) {
+                    return NAVATALA_NOT_IMPLEMENTED;
+                }
+#endif
+            }
+        }
+
+        if (forced_mfma) {
+            return NAVATALA_NOT_IMPLEMENTED;
+        }
+
+        std::vector<uint16_t> host_a(a_elements);
+        std::vector<uint16_t> host_b(b_elements);
+        std::vector<float> host_c(c_elements);
+
+        NavatalaErrorCode status = NAVATALA_SUCCESS;
+        if (a_bytes != 0) {
+            status = navatala_gpu_copy_d2h(a, host_a.data(), a_bytes, queue);
+            if (status != NAVATALA_SUCCESS) {
+                return status;
+            }
+        }
+        if (b_bytes != 0) {
+            status = navatala_gpu_copy_d2h(b, host_b.data(), b_bytes, queue);
+            if (status != NAVATALA_SUCCESS) {
+                return status;
+            }
+        }
+        if (c_bytes != 0) {
+            status = navatala_gpu_copy_d2h(c, host_c.data(), c_bytes, queue);
+            if (status != NAVATALA_SUCCESS) {
+                return status;
+            }
+        }
+
+        for (size_t batch = 0; batch < batch_count; ++batch) {
+            const size_t a_base = batch * stride_a;
+            const size_t b_base = batch * stride_b;
+            const size_t c_base = batch * stride_c;
+            for (size_t row = 0; row < m; ++row) {
+                for (size_t col = 0; col < n; ++col) {
+                    float acc = 0.0f;
+                    for (size_t inner = 0; inner < k; ++inner) {
+                        const size_t a_idx = a_base + gemm_a_offset(row, inner, m, k, trans_a);
+                        const size_t b_idx = b_base + gemm_b_offset(inner, col, n, k, trans_b);
+                        acc += navatala_half_to_float(host_a[a_idx]) *
+                               navatala_half_to_float(host_b[b_idx]);
+                    }
+                    const size_t idx = c_base + row * n + col;
+                    host_c[idx] = alpha * acc + beta * host_c[idx];
+                }
             }
         }
 
@@ -3708,21 +4919,24 @@ NavatalaErrorCode navatala_gpu_copy_h2d_offset(
     }
 
     try {
-        buf_impl->buffer->map(GpuRuntime::MapMode::Write);
-        char* mapped = static_cast<char*>(buf_impl->buffer->getHostPointer());
-        if (mapped) {
-            std::memcpy(mapped + buffer_offset_bytes, host_ptr, bytes);
-        }
-        buf_impl->buffer->unmap();
-
-        if (queue) {
-            auto* q_impl = reinterpret_cast<NavatalaGpuQueueImpl*>(queue);
-            if (q_impl->valid) {
-                q_impl->queue->synchronize();
+        if (buf_impl->buffer) {
+            buf_impl->buffer->map(GpuRuntime::MapMode::Write);
+            char* mapped = static_cast<char*>(buf_impl->buffer->getHostPointer());
+            if (mapped) {
+                std::memcpy(mapped + buffer_offset_bytes, host_ptr, bytes);
+                buf_impl->buffer->unmap();
+                if (queue) {
+                    auto* q_impl = reinterpret_cast<NavatalaGpuQueueImpl*>(queue);
+                    if (!q_impl->valid || q_impl->context != buf_impl->context) {
+                        return NAVATALA_INVALID_HANDLE;
+                    }
+                    q_impl->queue->synchronize();
+                }
+                return NAVATALA_SUCCESS;
             }
+            buf_impl->buffer->unmap();
         }
-
-        return NAVATALA_SUCCESS;
+        return copy_host_to_device_backend(buf_impl, buffer_offset_bytes, host_ptr, bytes, queue);
     } catch (...) {
         return NAVATALA_GPU_ERROR;
     }
@@ -3750,21 +4964,24 @@ NavatalaErrorCode navatala_gpu_copy_d2h_offset(
 
     try {
         auto* mutable_buf = const_cast<NavatalaGpuBufferImpl*>(buf_impl);
-        mutable_buf->buffer->map(GpuRuntime::MapMode::Read);
-        const char* mapped = static_cast<const char*>(mutable_buf->buffer->getHostPointer());
-        if (mapped) {
-            std::memcpy(host_ptr, mapped + buffer_offset_bytes, bytes);
-        }
-        mutable_buf->buffer->unmap();
-
-        if (queue) {
-            auto* q_impl = reinterpret_cast<NavatalaGpuQueueImpl*>(queue);
-            if (q_impl->valid) {
-                q_impl->queue->synchronize();
+        if (mutable_buf->buffer) {
+            mutable_buf->buffer->map(GpuRuntime::MapMode::Read);
+            const char* mapped = static_cast<const char*>(mutable_buf->buffer->getHostPointer());
+            if (mapped) {
+                std::memcpy(host_ptr, mapped + buffer_offset_bytes, bytes);
+                mutable_buf->buffer->unmap();
+                if (queue) {
+                    auto* q_impl = reinterpret_cast<NavatalaGpuQueueImpl*>(queue);
+                    if (!q_impl->valid || q_impl->context != mutable_buf->context) {
+                        return NAVATALA_INVALID_HANDLE;
+                    }
+                    q_impl->queue->synchronize();
+                }
+                return NAVATALA_SUCCESS;
             }
+            mutable_buf->buffer->unmap();
         }
-
-        return NAVATALA_SUCCESS;
+        return copy_device_to_host_backend(buf_impl, buffer_offset_bytes, host_ptr, bytes, queue);
     } catch (...) {
         return NAVATALA_GPU_ERROR;
     }
@@ -3776,7 +4993,7 @@ NavatalaErrorCode navatala_gpu_copy_d2d_offset(
     const NavatalaGpuBuffer* src,
     size_t src_offset_bytes,
     size_t bytes,
-    NavatalaGpuQueue* /*queue*/)
+    NavatalaGpuQueue* queue)
 {
     if (!dst || !src) {
         return NAVATALA_INVALID_PARAM;
@@ -3795,23 +5012,32 @@ NavatalaErrorCode navatala_gpu_copy_d2d_offset(
     }
 
     try {
-        // Map both buffers, copy data between them
         auto* mutable_src = const_cast<NavatalaGpuBufferImpl*>(src_impl);
+        if (dst_impl->buffer && mutable_src->buffer) {
+            dst_impl->buffer->map(GpuRuntime::MapMode::Write);
+            mutable_src->buffer->map(GpuRuntime::MapMode::Read);
 
-        dst_impl->buffer->map(GpuRuntime::MapMode::Write);
-        mutable_src->buffer->map(GpuRuntime::MapMode::Read);
+            char* dst_mapped = static_cast<char*>(dst_impl->buffer->getHostPointer());
+            const char* src_mapped = static_cast<const char*>(mutable_src->buffer->getHostPointer());
 
-        char* dst_ptr = static_cast<char*>(dst_impl->buffer->getHostPointer()) + dst_offset_bytes;
-        const char* src_ptr = static_cast<const char*>(mutable_src->buffer->getHostPointer()) + src_offset_bytes;
+            if (dst_mapped && src_mapped) {
+                std::memcpy(dst_mapped + dst_offset_bytes, src_mapped + src_offset_bytes, bytes);
+                mutable_src->buffer->unmap();
+                dst_impl->buffer->unmap();
+                if (queue) {
+                    auto* q_impl = reinterpret_cast<NavatalaGpuQueueImpl*>(queue);
+                    if (!q_impl->valid || q_impl->context != dst_impl->context) {
+                        return NAVATALA_INVALID_HANDLE;
+                    }
+                    q_impl->queue->synchronize();
+                }
+                return NAVATALA_SUCCESS;
+            }
 
-        if (dst_ptr && src_ptr) {
-            std::memcpy(dst_ptr, src_ptr, bytes);
+            mutable_src->buffer->unmap();
+            dst_impl->buffer->unmap();
         }
-
-        mutable_src->buffer->unmap();
-        dst_impl->buffer->unmap();
-
-        return NAVATALA_SUCCESS;
+        return copy_device_to_device_backend(dst_impl, dst_offset_bytes, src_impl, src_offset_bytes, bytes, queue);
     } catch (...) {
         return NAVATALA_GPU_ERROR;
     }
@@ -3855,25 +5081,36 @@ NavatalaErrorCode navatala_gpu_wrap_device_ptr(
 NavatalaErrorCode navatala_gpu_buffer_fill(
     NavatalaGpuBuffer* buffer,
     uint8_t pattern,
-    NavatalaGpuQueue* /*queue*/)
+    NavatalaGpuQueue* queue)
 {
     if (!buffer) {
         return NAVATALA_INVALID_HANDLE;
     }
 
     auto* impl = reinterpret_cast<NavatalaGpuBufferImpl*>(buffer);
-    if (!impl->valid || !impl->buffer) {
+    if (!impl->valid) {
         return NAVATALA_INVALID_HANDLE;
     }
 
     try {
-        impl->buffer->map(GpuRuntime::MapMode::Write);
-        void* mapped = impl->buffer->getHostPointer();
-        if (mapped) {
-            std::memset(mapped, pattern, impl->size);
+        if (impl->buffer) {
+            impl->buffer->map(GpuRuntime::MapMode::Write);
+            void* mapped = impl->buffer->getHostPointer();
+            if (mapped) {
+                std::memset(mapped, pattern, impl->size);
+                impl->buffer->unmap();
+                if (queue) {
+                    auto* q_impl = reinterpret_cast<NavatalaGpuQueueImpl*>(queue);
+                    if (!q_impl->valid || q_impl->context != impl->context) {
+                        return NAVATALA_INVALID_HANDLE;
+                    }
+                    q_impl->queue->synchronize();
+                }
+                return NAVATALA_SUCCESS;
+            }
+            impl->buffer->unmap();
         }
-        impl->buffer->unmap();
-        return NAVATALA_SUCCESS;
+        return fill_device_backend(impl, pattern, queue);
     } catch (...) {
         return NAVATALA_GPU_ERROR;
     }

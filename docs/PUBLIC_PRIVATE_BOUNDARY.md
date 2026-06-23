@@ -6,6 +6,9 @@ exactly what ships in the published distribution.
 ## Included In This Public Package
 
 - `runtime/`: the cross-platform C++ GPU runtime (CUDA / HIP / OpenCL / Vulkan / Metal).
+- `runtime/include/navatala/`: the public C++ wrapper API over runtime
+  resources, buffers, events, profiling, and selected portable operation
+  facades.
 - `kernels/{cuda,hip,opencl,vulkan,metal}/`: backend kernel sources, organized by domain.
 - `kernels/manifest.json`: machine-readable kernel index — backend availability, dtypes, dispatch metadata.
 - `runtime/include/navatala/_registry.hpp` + `runtime/src/internal/`: host-registry sources for runtime lookup and advanced integration.

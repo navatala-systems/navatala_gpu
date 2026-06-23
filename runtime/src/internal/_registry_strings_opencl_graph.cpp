@@ -315,6 +315,39 @@ __kernel void navatala_graph_spmv_weighted_f32(__global const uint* offsets, __g
 }
 
 )kernel";
+const char* k_opencl_navatala_graph_spmv_weighted_subgroup_f32 = R"kernel(
+#pragma OPENCL EXTENSION cl_khr_subgroups : enable
+__kernel void navatala_graph_spmv_weighted_subgroup_f32(__global const uint* offsets, __global const uint* indices, __global const float* weights, __global const float* x, __global const uint* numVertices, __global float* y) {
+  int gid0 = (int)get_global_id(0);
+  uint gid = ((uint)((int)(get_global_id(0))));
+  uint lane = ((uint)((int)(get_sub_group_local_id())));
+  uint subgroupSize = ((uint)((int)(get_sub_group_size())));
+  uint row = (gid / subgroupSize);
+  uint numV = numVertices[0];
+  if ((row < numV)) {
+    uint base = offsets[row];
+    uint endv = offsets[(row + (uint)(1u))];
+    uint rowlen = (endv - base);
+    uint rowIters = ((rowlen + (subgroupSize - (uint)(1u))) / subgroupSize);
+    float laneAcc = as_float(0x00000000u);
+    for (int k = 0; k < (int)(rowIters); ++k) {
+      uint rel = ((((uint)(k)) * subgroupSize) + lane);
+      if ((rel < rowlen)) {
+        uint eidx = (base + rel);
+        uint col = indices[eidx];
+        float w = weights[eidx];
+        float xv = x[col];
+        laneAcc = (laneAcc + (w * xv));
+      }
+    }
+    float rowSum = sub_group_reduce_add(laneAcc);
+    if ((lane == (uint)(0u))) {
+      y[row] = rowSum;
+    }
+  }
+}
+
+)kernel";
 const char* k_opencl_navatala_graph_spmv_unweighted_f32 = R"kernel(
 __kernel void navatala_graph_spmv_unweighted_f32(__global const uint* offsets, __global const uint* indices, __global const float* x, __global const uint* numVertices, __global float* y) {
   int gid0 = (int)get_global_id(0);
@@ -332,6 +365,38 @@ __kernel void navatala_graph_spmv_unweighted_f32(__global const uint* offsets, _
       acc = (acc + xv);
     }
     y[gid] = acc;
+  }
+}
+
+)kernel";
+const char* k_opencl_navatala_graph_spmv_unweighted_subgroup_f32 = R"kernel(
+#pragma OPENCL EXTENSION cl_khr_subgroups : enable
+__kernel void navatala_graph_spmv_unweighted_subgroup_f32(__global const uint* offsets, __global const uint* indices, __global const float* x, __global const uint* numVertices, __global float* y) {
+  int gid0 = (int)get_global_id(0);
+  uint gid = ((uint)((int)(get_global_id(0))));
+  uint lane = ((uint)((int)(get_sub_group_local_id())));
+  uint subgroupSize = ((uint)((int)(get_sub_group_size())));
+  uint row = (gid / subgroupSize);
+  uint numV = numVertices[0];
+  if ((row < numV)) {
+    uint base = offsets[row];
+    uint endv = offsets[(row + (uint)(1u))];
+    uint rowlen = (endv - base);
+    uint rowIters = ((rowlen + (subgroupSize - (uint)(1u))) / subgroupSize);
+    float laneAcc = as_float(0x00000000u);
+    for (int k = 0; k < (int)(rowIters); ++k) {
+      uint rel = ((((uint)(k)) * subgroupSize) + lane);
+      if ((rel < rowlen)) {
+        uint eidx = (base + rel);
+        uint col = indices[eidx];
+        float xv = x[col];
+        laneAcc = (laneAcc + xv);
+      }
+    }
+    float rowSum = sub_group_reduce_add(laneAcc);
+    if ((lane == (uint)(0u))) {
+      y[row] = rowSum;
+    }
   }
 }
 
@@ -2137,6 +2202,26 @@ const KernelAbiManifestInfo kAbiManifest_opencl_navatala_graph_spmv_weighted_f32
   kAbiArgs_opencl_navatala_graph_spmv_weighted_f32
 };
 
+const KernelArgumentInfo kAbiArgs_opencl_navatala_graph_spmv_weighted_subgroup_f32[] = {
+  { "offsets", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "indices", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "weights", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "x", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "numVertices", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "y", 5, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_opencl_navatala_graph_spmv_weighted_subgroup_f32 = {
+  1,
+  "navatala_graph_spmv_weighted_subgroup_f32",
+  "opencl",
+  "navatala_graph_spmv_weighted_subgroup_f32",
+  "kernel:opencl:navatala_graph_spmv_weighted_subgroup_f32",
+  "abi-r1:opencl:navatala_graph_spmv_weighted_subgroup_f32",
+  "abi-r1:opencl:navatala_graph_spmv_weighted_subgroup_f32",
+  6,
+  kAbiArgs_opencl_navatala_graph_spmv_weighted_subgroup_f32
+};
+
 const KernelArgumentInfo kAbiArgs_opencl_navatala_graph_spmv_unweighted_f32[] = {
   { "offsets", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
   { "indices", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
@@ -2154,6 +2239,25 @@ const KernelAbiManifestInfo kAbiManifest_opencl_navatala_graph_spmv_unweighted_f
   "abi-r1:opencl:navatala_graph_spmv_unweighted_f32",
   5,
   kAbiArgs_opencl_navatala_graph_spmv_unweighted_f32
+};
+
+const KernelArgumentInfo kAbiArgs_opencl_navatala_graph_spmv_unweighted_subgroup_f32[] = {
+  { "offsets", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "indices", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "x", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "numVertices", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "y", 4, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_opencl_navatala_graph_spmv_unweighted_subgroup_f32 = {
+  1,
+  "navatala_graph_spmv_unweighted_subgroup_f32",
+  "opencl",
+  "navatala_graph_spmv_unweighted_subgroup_f32",
+  "kernel:opencl:navatala_graph_spmv_unweighted_subgroup_f32",
+  "abi-r1:opencl:navatala_graph_spmv_unweighted_subgroup_f32",
+  "abi-r1:opencl:navatala_graph_spmv_unweighted_subgroup_f32",
+  5,
+  kAbiArgs_opencl_navatala_graph_spmv_unweighted_subgroup_f32
 };
 
 const KernelArgumentInfo kAbiArgs_opencl_navatala_graph_axpy2_f32[] = {
@@ -3178,8 +3282,16 @@ bool tryGetKernelAbiManifest_opencl_graph(const std::string& backend, const std:
     out = &kAbiManifest_opencl_navatala_graph_spmv_weighted_f32;
     return true;
   }
+  if (backend == "opencl" && kernelName == "navatala_graph_spmv_weighted_subgroup_f32") {
+    out = &kAbiManifest_opencl_navatala_graph_spmv_weighted_subgroup_f32;
+    return true;
+  }
   if (backend == "opencl" && kernelName == "navatala_graph_spmv_unweighted_f32") {
     out = &kAbiManifest_opencl_navatala_graph_spmv_unweighted_f32;
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_graph_spmv_unweighted_subgroup_f32") {
+    out = &kAbiManifest_opencl_navatala_graph_spmv_unweighted_subgroup_f32;
     return true;
   }
   if (backend == "opencl" && kernelName == "navatala_graph_axpy2_f32") {
@@ -3544,10 +3656,24 @@ bool tryGetKernelSource_opencl_graph(const std::string& backend, const std::stri
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }
+  if (backend == "opencl" && kernelName == "navatala_graph_spmv_weighted_subgroup_f32") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_graph_spmv_weighted_subgroup_f32";
+    std::string_view sv(k_opencl_navatala_graph_spmv_weighted_subgroup_f32);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
   if (backend == "opencl" && kernelName == "navatala_graph_spmv_unweighted_f32") {
     out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
     out.entryPoint = "navatala_graph_spmv_unweighted_f32";
     std::string_view sv(k_opencl_navatala_graph_spmv_unweighted_f32);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_graph_spmv_unweighted_subgroup_f32") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_graph_spmv_unweighted_subgroup_f32";
+    std::string_view sv(k_opencl_navatala_graph_spmv_unweighted_subgroup_f32);
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }

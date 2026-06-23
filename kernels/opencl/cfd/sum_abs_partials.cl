@@ -15,7 +15,7 @@
 
 __kernel void navatala_cfd_sum_abs_partials(__global const float* a, __global const int* counts, __global float* outPartials) {
   int gid0 = (int)get_global_id(0);
-  __local double tmp[256];
+  __local float tmp[256];
   float v = as_float(0x00000000u);
   if ((((int)((int)(get_global_id(0)))) < counts[0])) {
     float ai = a[((int)((int)(get_global_id(0))))];

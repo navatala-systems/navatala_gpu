@@ -15,9 +15,9 @@
 
 __kernel void navatala_cfd_phi_correct_boundary(__global const float* phiIn, __global const float* pCell, __global const int* owner, __global const float* magSf, __global const float* deltaCoeffs, __global const float* coeff, __global const float* bcVal, __global const int* bcMask, __global const float* bcSnGrad, __global const int* bcSnGradMask, __global const float* faceFluxCorrection, __global const int* counts, __global const float* paramsF, __global float* phiOut) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   int f = (counts[1] + ((int)((int)(get_global_id(0)))));
   if ((f >= counts[0])) {
     return;

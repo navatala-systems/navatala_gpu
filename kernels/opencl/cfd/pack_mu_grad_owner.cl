@@ -15,9 +15,9 @@
 
 __kernel void navatala_cfd_pack_mu_grad_owner(__global const float* muCell, __global const float* gXX, __global const float* gXY, __global const float* gXZ, __global const float* gYX, __global const float* gYY, __global const float* gYZ, __global const float* gZX, __global const float* gZY, __global const float* gZZ, __global const int* owner, __global const int* procFaces, __global const int* counts, __global float* outSend) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if (((int)(get_global_id(0)) >= ((int)(counts[0])))) {
     return;
   } else {

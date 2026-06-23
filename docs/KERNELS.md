@@ -92,6 +92,22 @@ SpMV in several sparse formats, sparse-dense conversions, reductions
 (sum, max, dot product, axpy), matrix transpositions, and a handful of
 dense linear-algebra routines.
 
+The public C++ facade currently provides stable wrappers for:
+
+| Family | Wrapper | C ABI helper | Notes |
+| ------ | ------- | ------------ | ----- |
+| BLAS-like dense vectors | `navatala::linalg::axpy` | `navatala_gpu_axpy_f32` | Float32 vector `y = alpha*x + y`. |
+| Dense matrix multiply | `navatala::linalg::gemm` | `navatala_gpu_gemm_f32` | Row-major Float32 `C = alpha*A*B + beta*C`. |
+| Vector norm | `navatala::linalg::nrm2` | `navatala_gpu_nrm2_f32` | Float32 Euclidean norm into a scalar buffer. |
+| Sparse matrix-vector | `navatala::sparse::csr_spmv` | `navatala_gpu_csr_spmv_f32` | UInt32 CSR indices and Float32 values. |
+
+These are portable Navatala operations, not drop-in `cublas*`, `cusparse*`,
+`rocblas*`, or `rocsparse*` ABI wrappers. Broader generated equivalents for
+solver, FFT/spectral, dataframe, graph, and ML operations are discoverable in
+`kernels/manifest.json` and `docs/KERNEL_INDEX.md`; stable hand-written
+wrappers will be added incrementally around the operations that need a durable
+source-level API.
+
 ### Neural and spectral operators
 
 A small but useful set of operators for physics-informed neural networks
@@ -176,7 +192,7 @@ intrinsic substitutions (`get_global_id(0)`, `gl_GlobalInvocationID.x`,
 shipped in this package. It intentionally omits kernel bodies and program
 graphs, but retains the public information a runtime user needs:
 
-- formal/source contract name and stable entry point;
+- public kernel name and stable entry point;
 - domain/category;
 - argument names, compact types, access modes, and memory spaces;
 - workgroup size and default dispatch;
@@ -186,6 +202,13 @@ graphs, but retains the public information a runtime user needs:
 The manifest drives generated docs such as [`BACKEND_COVERAGE.md`](BACKEND_COVERAGE.md)
 and [`KERNEL_INDEX.md`](KERNEL_INDEX.md), and is the intended input for
 future wrapper/API generation.
+
+The manifest also includes `libraryOperations` for public wrapper/orchestrator
+dispatch paths. Use that section, not a similarly named standalone kernel
+file, to determine whether a public API may call a vendor library such as
+rocBLAS/cuBLAS. For example, portable tiled GEMM kernels remain kernel-source
+fallbacks, while `navatala_gpu_gemm_f32` vendor dispatch is reported as a
+library operation.
 
 ## Current limitations
 

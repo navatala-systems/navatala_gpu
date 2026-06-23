@@ -43,9 +43,9 @@ const char* k_cuda_navatala_cfd_primitives_evaluate_scalar_bc = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_evaluate_scalar_bc(const float* internalField, const int* faceCells, const unsigned int* bcTypeMask, const float* fixedValues, const unsigned int* counts, float* boundaryOut) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0])))) {
     return;
   } else {
@@ -64,9 +64,9 @@ const char* k_cuda_navatala_cfd_primitives_evaluate_vector_bc = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_evaluate_vector_bc(const float* inX, const float* inY, const float* inZ, const int* faceCells, const unsigned int* bcTypeMask, const float* fvX, const float* fvY, const float* fvZ, const unsigned int* counts, float* outX, float* outY, float* outZ) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if (((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0])))) {
     return;
   } else {
@@ -727,9 +727,9 @@ const char* k_cuda_navatala_cfd_primitives_r_a_u_from_dt_rho = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_r_a_u_from_dt_rho(const float* rho, const float* paramsF, const int* counts, float* outRAU) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
     return;
   } else {
@@ -743,9 +743,9 @@ const char* k_cuda_navatala_cfd_primitives_r_a_u_from_dt_rho_integrated = R"kern
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_r_a_u_from_dt_rho_integrated(const float* rho, const float* vol, const float* paramsF, const int* counts, float* outRAU) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
     return;
   } else {
@@ -765,9 +765,9 @@ const char* k_cuda_navatala_cfd_primitives_r_a_u_from_dt_rho_sp = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_r_a_u_from_dt_rho_sp(const float* rho, const float* sp, const float* paramsF, const int* counts, float* outRAU) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
     return;
   } else {
@@ -783,9 +783,9 @@ const char* k_cuda_navatala_cfd_primitives_r_a_u_from_dt_rho_sp_integrated = R"k
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_r_a_u_from_dt_rho_sp_integrated(const float* rho, const float* sp, const float* vol, const float* paramsF, const int* counts, float* outRAU) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
     return;
   } else {
@@ -945,9 +945,9 @@ const char* k_cuda_navatala_cfd_primitives_rho_from_alpha = R"kernel(
 #include <cuda_runtime.h>
 extern "C" __global__ void navatala_cfd_primitives_rho_from_alpha(const float* alpha, const float* paramsF, const int* counts, float* outRho) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  const int nSafeMax = max(counts[0] - 1, 0);
-  const int safeIdx = min(gid0, nSafeMax);
-  if (gid0 >= counts[0]) return;
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
   if ((((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0])) {
     return;
   } else {

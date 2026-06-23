@@ -1,0 +1,109 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+#extension GL_EXT_shader_explicit_arithmetic_types_float16 : enable
+#extension GL_EXT_shader_16bit_storage : enable
+layout(local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_a {
+  float16_t a[];
+};
+layout(std430, binding = 1) readonly buffer buf_b {
+  float16_t b[];
+};
+layout(std430, binding = 2) readonly buffer buf_m {
+  uint m[];
+};
+layout(std430, binding = 3) readonly buffer buf_n {
+  uint n[];
+};
+layout(std430, binding = 4) readonly buffer buf_k {
+  uint k[];
+};
+layout(std430, binding = 5) readonly buffer buf_alpha {
+  float alpha[];
+};
+layout(std430, binding = 6) readonly buffer buf_beta {
+  float beta[];
+};
+layout(std430, binding = 7) buffer buf_c {
+  float c[];
+};
+
+shared float tileA[256];
+shared float tileB[256];
+
+// kernel: navatala_transformer_tiled_gemm_f16_f32_out
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint tidX = uint(int(gl_LocalInvocationID.x));
+  uint tidY = uint(int(gl_LocalInvocationID.y));
+  uint gidX = uint(int(gl_WorkGroupID.x));
+  uint gidY = uint(int(gl_WorkGroupID.y));
+  uint mDim = m[0u];
+  uint nDim = n[0u];
+  uint kDim = k[0u];
+  float alphaVal = alpha[0u];
+  float betaVal = beta[0u];
+  uint tileSize = 16u;
+  uint row = ((gidY * tileSize) + tidY);
+  uint col = ((gidX * tileSize) + tidX);
+  bool rowValid = (row < mDim);
+  bool colValid = (col < nDim);
+  bool valid = (rowValid && colValid);
+  float acc = uintBitsToFloat(0x00000000u);
+  uint tileCount = ((kDim + (tileSize - 1u)) / tileSize);
+  for (int tileIter = 0; tileIter < int(tileCount); ++tileIter) {
+    uint tileIterU32 = uint(tileIter);
+    uint tileBase = (tileIterU32 * tileSize);
+    uint aK = (tileBase + tidX);
+    uint bK = (tileBase + tidY);
+    uint tileOffset = ((tidY * tileSize) + tidX);
+    bool aKValid = (aK < kDim);
+    bool bKValid = (bK < kDim);
+    bool aLoadValid = (rowValid && aKValid);
+    bool bLoadValid = (colValid && bKValid);
+    uint aIdx = ((row * kDim) + aK);
+    uint bIdx = ((bK * nDim) + col);
+    float16_t aValF16 = ((aLoadValid) ? (a[aIdx]) : (float16_t(0.000000)));
+    float16_t bValF16 = ((bLoadValid) ? (b[bIdx]) : (float16_t(0.000000)));
+    float aTileVal = float(aValF16);
+    float bTileVal = float(bValF16);
+    tileA[tileOffset] = aTileVal;
+    tileB[tileOffset] = bTileVal;
+    barrier();
+    for (int kk = 0; kk < int(tileSize); ++kk) {
+      uint kkU32 = uint(kk);
+      uint tileAIdx = ((tidY * tileSize) + kkU32);
+      uint tileBIdx = ((kkU32 * tileSize) + tidX);
+      float aTile = tileA[tileAIdx];
+      float bTile = tileB[tileBIdx];
+      float prod = (aTile * bTile);
+      float oldAcc = acc;
+      acc = (oldAcc + prod);
+    }
+    barrier();
+  }
+  float finalAcc = acc;
+  if (valid) {
+    uint cIdx = ((row * nDim) + col);
+    float cOld = c[cIdx];
+    float scaledProd = (alphaVal * finalAcc);
+    float scaledOld = (betaVal * cOld);
+    float result = (scaledProd + scaledOld);
+    c[cIdx] = result;
+  }
+}

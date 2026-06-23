@@ -34,20 +34,41 @@ extern "C" __global__ void navatala_transformer_tiled_gemm_f16(const __half* a, 
   bool valid = (rowValid && colValid);
   __shared__ float tileA[256];
   __shared__ float tileB[256];
-  if (valid) {
-    float acc = __uint_as_float(0x00000000u);
-    for (int kIter = 0; kIter < (int)(kDim); ++kIter) {
-      unsigned int aIdx = ((row * kDim) + kIter);
-      unsigned int bIdx = ((kIter * nDim) + col);
-      __half aValF16 = a[aIdx];
-      __half bValF16 = b[bIdx];
-      float aVal = ((float)(aValF16));
-      float bVal = ((float)(bValF16));
-      float prod = (aVal * bVal);
+  float acc = __uint_as_float(0x00000000u);
+  unsigned int tileCount = ((kDim + (tileSize - 1u)) / tileSize);
+  for (int tileIter = 0; tileIter < (int)(tileCount); ++tileIter) {
+    unsigned int tileIterU32 = ((unsigned int)(tileIter));
+    unsigned int tileBase = (tileIterU32 * tileSize);
+    unsigned int aK = (tileBase + tidX);
+    unsigned int bK = (tileBase + tidY);
+    unsigned int tileOffset = ((tidY * tileSize) + tidX);
+    bool aKValid = (aK < kDim);
+    bool bKValid = (bK < kDim);
+    bool aLoadValid = (rowValid && aKValid);
+    bool bLoadValid = (colValid && bKValid);
+    unsigned int aIdx = ((row * kDim) + aK);
+    unsigned int bIdx = ((bK * nDim) + col);
+    __half aValF16 = ((aLoadValid) ? (a[aIdx]) : (__float2half(0.000000f)));
+    __half bValF16 = ((bLoadValid) ? (b[bIdx]) : (__float2half(0.000000f)));
+    float aTileVal = ((float)(aValF16));
+    float bTileVal = ((float)(bValF16));
+    tileA[tileOffset] = aTileVal;
+    tileB[tileOffset] = bTileVal;
+    __syncthreads();
+    for (int kk = 0; kk < (int)(tileSize); ++kk) {
+      unsigned int kkU32 = ((unsigned int)(kk));
+      unsigned int tileAIdx = ((tidY * tileSize) + kkU32);
+      unsigned int tileBIdx = ((kkU32 * tileSize) + tidX);
+      float aTile = tileA[tileAIdx];
+      float bTile = tileB[tileBIdx];
+      float prod = (aTile * bTile);
       float oldAcc = acc;
       acc = (oldAcc + prod);
     }
-    float finalAcc = acc;
+    __syncthreads();
+  }
+  float finalAcc = acc;
+  if (valid) {
     unsigned int cIdx = ((row * nDim) + col);
     __half cOldF16 = c[cIdx];
     float cOld = ((float)(cOldF16));

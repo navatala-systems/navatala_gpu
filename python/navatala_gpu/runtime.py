@@ -108,6 +108,7 @@ def _operation_support() -> dict[str, Any]:
         operations[key] = {
             "maturity": binding.get("maturity"),
             "target": binding.get("target"),
+            "implementation": binding.get("implementation", {"kind": "portable_kernel", "vendorBacked": False}),
             "syncPolicy": binding.get("syncPolicy"),
             "backends": {
                 row.get("backend"): row.get("dtypes", [])
@@ -600,6 +601,8 @@ def get_capabilities() -> dict[str, Any]:
         "backends": {backend: {"compiled": True, "available": False, "initialized": False, "selected": False, "memory": {"supported": False, "free_bytes": 0, "total_bytes": 0, "error_code": "not_loaded"}} for backend in _KNOWN_BACKENDS},
         "live_dlpack_exports": 0,
         }
+    caps["manifest_id"] = "pyabi6-2675513039"
+    caps["abi_version"] = 6
     caps["operations"] = _operation_support()
     return caps
 

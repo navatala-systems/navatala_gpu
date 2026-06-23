@@ -33,18 +33,39 @@ extern "C" __global__ void navatala_transformer_tiled_gemm_f32(const float* a, c
   bool valid = (rowValid && colValid);
   __shared__ float tileA[256];
   __shared__ float tileB[256];
-  if (valid) {
-    float acc = __uint_as_float(0x00000000u);
-    for (int kIter = 0; kIter < (int)(kDim); ++kIter) {
-      unsigned int aIdx = ((row * kDim) + kIter);
-      unsigned int bIdx = ((kIter * nDim) + col);
-      float aVal = a[aIdx];
-      float bVal = b[bIdx];
-      float prod = (aVal * bVal);
+  float acc = __uint_as_float(0x00000000u);
+  unsigned int tileCount = ((kDim + (tileSize - 1u)) / tileSize);
+  for (int tileIter = 0; tileIter < (int)(tileCount); ++tileIter) {
+    unsigned int tileIterU32 = ((unsigned int)(tileIter));
+    unsigned int tileBase = (tileIterU32 * tileSize);
+    unsigned int aK = (tileBase + tidX);
+    unsigned int bK = (tileBase + tidY);
+    unsigned int tileOffset = ((tidY * tileSize) + tidX);
+    bool aKValid = (aK < kDim);
+    bool bKValid = (bK < kDim);
+    bool aLoadValid = (rowValid && aKValid);
+    bool bLoadValid = (colValid && bKValid);
+    unsigned int aIdx = ((row * kDim) + aK);
+    unsigned int bIdx = ((bK * nDim) + col);
+    float aTileVal = ((aLoadValid) ? (a[aIdx]) : (__uint_as_float(0x00000000u)));
+    float bTileVal = ((bLoadValid) ? (b[bIdx]) : (__uint_as_float(0x00000000u)));
+    tileA[tileOffset] = aTileVal;
+    tileB[tileOffset] = bTileVal;
+    __syncthreads();
+    for (int kk = 0; kk < (int)(tileSize); ++kk) {
+      unsigned int kkU32 = ((unsigned int)(kk));
+      unsigned int tileAIdx = ((tidY * tileSize) + kkU32);
+      unsigned int tileBIdx = ((kkU32 * tileSize) + tidX);
+      float aTile = tileA[tileAIdx];
+      float bTile = tileB[tileBIdx];
+      float prod = (aTile * bTile);
       float oldAcc = acc;
       acc = (oldAcc + prod);
     }
-    float finalAcc = acc;
+    __syncthreads();
+  }
+  float finalAcc = acc;
+  if (valid) {
     unsigned int cIdx = ((row * nDim) + col);
     float cOld = c[cIdx];
     float scaledProd = (alphaVal * finalAcc);

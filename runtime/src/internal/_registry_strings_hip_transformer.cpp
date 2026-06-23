@@ -8316,20 +8316,41 @@ extern "C" __global__ void navatala_transformer_tiled_gemm_f16(const __half* a, 
   bool valid = (rowValid && colValid);
   __shared__ float tileA[256];
   __shared__ float tileB[256];
-  if (valid) {
-    float acc = __uint_as_float(0x00000000u);
-    for (int kIter = 0; kIter < (int)(kDim); ++kIter) {
-      unsigned int aIdx = ((row * kDim) + kIter);
-      unsigned int bIdx = ((kIter * nDim) + col);
-      __half aValF16 = a[aIdx];
-      __half bValF16 = b[bIdx];
-      float aVal = ((float)(aValF16));
-      float bVal = ((float)(bValF16));
-      float prod = (aVal * bVal);
+  float acc = __uint_as_float(0x00000000u);
+  unsigned int tileCount = ((kDim + (tileSize - 1u)) / tileSize);
+  for (int tileIter = 0; tileIter < (int)(tileCount); ++tileIter) {
+    unsigned int tileIterU32 = ((unsigned int)(tileIter));
+    unsigned int tileBase = (tileIterU32 * tileSize);
+    unsigned int aK = (tileBase + tidX);
+    unsigned int bK = (tileBase + tidY);
+    unsigned int tileOffset = ((tidY * tileSize) + tidX);
+    bool aKValid = (aK < kDim);
+    bool bKValid = (bK < kDim);
+    bool aLoadValid = (rowValid && aKValid);
+    bool bLoadValid = (colValid && bKValid);
+    unsigned int aIdx = ((row * kDim) + aK);
+    unsigned int bIdx = ((bK * nDim) + col);
+    __half aValF16 = ((aLoadValid) ? (a[aIdx]) : (__float2half(0.000000f)));
+    __half bValF16 = ((bLoadValid) ? (b[bIdx]) : (__float2half(0.000000f)));
+    float aTileVal = ((float)(aValF16));
+    float bTileVal = ((float)(bValF16));
+    tileA[tileOffset] = aTileVal;
+    tileB[tileOffset] = bTileVal;
+    __syncthreads();
+    for (int kk = 0; kk < (int)(tileSize); ++kk) {
+      unsigned int kkU32 = ((unsigned int)(kk));
+      unsigned int tileAIdx = ((tidY * tileSize) + kkU32);
+      unsigned int tileBIdx = ((kkU32 * tileSize) + tidX);
+      float aTile = tileA[tileAIdx];
+      float bTile = tileB[tileBIdx];
+      float prod = (aTile * bTile);
       float oldAcc = acc;
       acc = (oldAcc + prod);
     }
-    float finalAcc = acc;
+    __syncthreads();
+  }
+  float finalAcc = acc;
+  if (valid) {
     unsigned int cIdx = ((row * nDim) + col);
     __half cOldF16 = c[cIdx];
     float cOld = ((float)(cOldF16));
@@ -8338,6 +8359,73 @@ extern "C" __global__ void navatala_transformer_tiled_gemm_f16(const __half* a, 
     float result = (scaledProd + scaledOld);
     __half resultF16 = ((__half)(result));
     c[cIdx] = resultF16;
+  }
+}
+
+)kernel";
+const char* k_hip_navatala_transformer_tiled_gemm_f16_f32_out = R"kernel(
+#include <hip/hip_runtime.h>
+#include <hip/hip_fp16.h>
+extern "C" __global__ void navatala_transformer_tiled_gemm_f16_f32_out(const __half* a, const __half* b, const unsigned int* m, const unsigned int* n, const unsigned int* k, const float* alpha, const float* beta, float* c) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  unsigned int tidX = ((unsigned int)((int)(threadIdx.x)));
+  unsigned int tidY = ((unsigned int)((int)(threadIdx.y)));
+  unsigned int gidX = ((unsigned int)((int)(blockIdx.x)));
+  unsigned int gidY = ((unsigned int)((int)(blockIdx.y)));
+  unsigned int mDim = m[0u];
+  unsigned int nDim = n[0u];
+  unsigned int kDim = k[0u];
+  float alphaVal = alpha[0u];
+  float betaVal = beta[0u];
+  unsigned int tileSize = 16u;
+  unsigned int row = ((gidY * tileSize) + tidY);
+  unsigned int col = ((gidX * tileSize) + tidX);
+  bool rowValid = (row < mDim);
+  bool colValid = (col < nDim);
+  bool valid = (rowValid && colValid);
+  __shared__ float tileA[256];
+  __shared__ float tileB[256];
+  float acc = __uint_as_float(0x00000000u);
+  unsigned int tileCount = ((kDim + (tileSize - 1u)) / tileSize);
+  for (int tileIter = 0; tileIter < (int)(tileCount); ++tileIter) {
+    unsigned int tileIterU32 = ((unsigned int)(tileIter));
+    unsigned int tileBase = (tileIterU32 * tileSize);
+    unsigned int aK = (tileBase + tidX);
+    unsigned int bK = (tileBase + tidY);
+    unsigned int tileOffset = ((tidY * tileSize) + tidX);
+    bool aKValid = (aK < kDim);
+    bool bKValid = (bK < kDim);
+    bool aLoadValid = (rowValid && aKValid);
+    bool bLoadValid = (colValid && bKValid);
+    unsigned int aIdx = ((row * kDim) + aK);
+    unsigned int bIdx = ((bK * nDim) + col);
+    __half aValF16 = ((aLoadValid) ? (a[aIdx]) : (__float2half(0.000000f)));
+    __half bValF16 = ((bLoadValid) ? (b[bIdx]) : (__float2half(0.000000f)));
+    float aTileVal = ((float)(aValF16));
+    float bTileVal = ((float)(bValF16));
+    tileA[tileOffset] = aTileVal;
+    tileB[tileOffset] = bTileVal;
+    __syncthreads();
+    for (int kk = 0; kk < (int)(tileSize); ++kk) {
+      unsigned int kkU32 = ((unsigned int)(kk));
+      unsigned int tileAIdx = ((tidY * tileSize) + kkU32);
+      unsigned int tileBIdx = ((kkU32 * tileSize) + tidX);
+      float aTile = tileA[tileAIdx];
+      float bTile = tileB[tileBIdx];
+      float prod = (aTile * bTile);
+      float oldAcc = acc;
+      acc = (oldAcc + prod);
+    }
+    __syncthreads();
+  }
+  float finalAcc = acc;
+  if (valid) {
+    unsigned int cIdx = ((row * nDim) + col);
+    float cOld = c[cIdx];
+    float scaledProd = (alphaVal * finalAcc);
+    float scaledOld = (betaVal * cOld);
+    float result = (scaledProd + scaledOld);
+    c[cIdx] = result;
   }
 }
 
@@ -8363,18 +8451,39 @@ extern "C" __global__ void navatala_transformer_tiled_gemm_f32(const float* a, c
   bool valid = (rowValid && colValid);
   __shared__ float tileA[256];
   __shared__ float tileB[256];
-  if (valid) {
-    float acc = __uint_as_float(0x00000000u);
-    for (int kIter = 0; kIter < (int)(kDim); ++kIter) {
-      unsigned int aIdx = ((row * kDim) + kIter);
-      unsigned int bIdx = ((kIter * nDim) + col);
-      float aVal = a[aIdx];
-      float bVal = b[bIdx];
-      float prod = (aVal * bVal);
+  float acc = __uint_as_float(0x00000000u);
+  unsigned int tileCount = ((kDim + (tileSize - 1u)) / tileSize);
+  for (int tileIter = 0; tileIter < (int)(tileCount); ++tileIter) {
+    unsigned int tileIterU32 = ((unsigned int)(tileIter));
+    unsigned int tileBase = (tileIterU32 * tileSize);
+    unsigned int aK = (tileBase + tidX);
+    unsigned int bK = (tileBase + tidY);
+    unsigned int tileOffset = ((tidY * tileSize) + tidX);
+    bool aKValid = (aK < kDim);
+    bool bKValid = (bK < kDim);
+    bool aLoadValid = (rowValid && aKValid);
+    bool bLoadValid = (colValid && bKValid);
+    unsigned int aIdx = ((row * kDim) + aK);
+    unsigned int bIdx = ((bK * nDim) + col);
+    float aTileVal = ((aLoadValid) ? (a[aIdx]) : (__uint_as_float(0x00000000u)));
+    float bTileVal = ((bLoadValid) ? (b[bIdx]) : (__uint_as_float(0x00000000u)));
+    tileA[tileOffset] = aTileVal;
+    tileB[tileOffset] = bTileVal;
+    __syncthreads();
+    for (int kk = 0; kk < (int)(tileSize); ++kk) {
+      unsigned int kkU32 = ((unsigned int)(kk));
+      unsigned int tileAIdx = ((tidY * tileSize) + kkU32);
+      unsigned int tileBIdx = ((kkU32 * tileSize) + tidX);
+      float aTile = tileA[tileAIdx];
+      float bTile = tileB[tileBIdx];
+      float prod = (aTile * bTile);
       float oldAcc = acc;
       acc = (oldAcc + prod);
     }
-    float finalAcc = acc;
+    __syncthreads();
+  }
+  float finalAcc = acc;
+  if (valid) {
     unsigned int cIdx = ((row * nDim) + col);
     float cOld = c[cIdx];
     float scaledProd = (alphaVal * finalAcc);
@@ -10139,6 +10248,1837 @@ extern "C" __global__ void navatala_transformer_precompute_rotary_emb_f16(const 
     cosOutput[gid] = cosVal;
     sinOutput[gid] = sinVal;
   }
+}
+
+)kernel";
+const char* k_hip_navatala_transformer_tiled_gemm_f16_mfma = R"kernel(
+#include <hip/hip_runtime.h>
+#include <hip/hip_fp16.h>
+#ifndef NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#define NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#if defined(NAVATALA_GPU_ROCM_VERSION) && NAVATALA_GPU_ROCM_VERSION < 60200
+#error "matrix-intrinsic kernels require ROCm 6.2+"
+#endif
+typedef _Float16 navatala_mfma_f16x4 __attribute__((ext_vector_type(4)));
+typedef float navatala_mfma_acc_f32_32x32x8 __attribute__((ext_vector_type(16)));
+__device__ inline navatala_mfma_acc_f32_32x32x8 navatala_mfma_zero_acc_f32_32x32x8() {
+  return {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+}
+__device__ inline navatala_mfma_f16x4 navatala_mfma_load_a_f16_32x32x8(const __half* base, unsigned int row, unsigned int col, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localRow = lane & 31u;
+  const unsigned int kBase = (lane >> 5u) * 4u;
+  return {(_Float16)base[(row + localRow) * stride + (col + kBase + 0u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 1u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 2u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 3u)]};
+}
+__device__ inline navatala_mfma_f16x4 navatala_mfma_load_b_f16_32x32x8(const __half* base, unsigned int row, unsigned int col, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int kBase = (lane >> 5u) * 4u;
+  return {(_Float16)base[(row + kBase + 0u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 1u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 2u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 3u) * stride + (col + localCol)]};
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    dst[((unsigned int)(blockIdx.y * 32u) + localRow) * stride + ((unsigned int)(blockIdx.x * 32u) + localCol)] = acc[i];
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    dst[(rowOffset + localRow) * stride + (colOffset + localCol)] = acc[i];
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at_bounded(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, unsigned int rowLimit, unsigned int colLimit, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    const unsigned int row = rowOffset + localRow;
+    const unsigned int col = colOffset + localCol;
+    if (row < rowLimit && col < colLimit) {
+      dst[row * stride + col] = acc[i];
+    }
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at_scaled_bounded(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, unsigned int rowLimit, unsigned int colLimit, float alpha, float beta, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    const unsigned int row = rowOffset + localRow;
+    const unsigned int col = colOffset + localCol;
+    if (row < rowLimit && col < colLimit) {
+      const unsigned int idx = row * stride + col;
+      const float scaled = alpha * acc[i];
+      dst[idx] = (beta == 0.0f) ? scaled : (scaled + beta * dst[idx]);
+    }
+  }
+}
+#endif  // NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#ifndef NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+#define NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+__device__ inline __amdgpu_buffer_rsrc_t navatala_gpu_make_buffer_resource(const void* base) {
+  return __builtin_amdgcn_make_buffer_rsrc(const_cast<void*>(base), 0, 0xffffffffu, 0x00020000u);
+}
+template <typename T>
+__device__ inline void navatala_gpu_direct_load_dword_to_lds_prepared(__amdgpu_buffer_rsrc_t srcResource, unsigned int srcElemOffset, T* dstBase, unsigned int dstElemOffset) {
+#if defined(__gfx942__)
+  const unsigned int ldsAddr = (unsigned int)reinterpret_cast<unsigned long>(&dstBase[dstElemOffset]);
+  const unsigned int ldsBase = __builtin_amdgcn_readfirstlane(ldsAddr);
+  const unsigned int srcByteOffset = srcElemOffset * (unsigned int)sizeof(T);
+  asm volatile("s_mov_b32 m0, %0;\n\tbuffer_load_dword %1, %2, 0 offen lds;\n\t" :: "s"(ldsBase), "v"(srcByteOffset), "s"(srcResource) : "memory");
+#else
+  (void)srcResource;
+  (void)srcElemOffset;
+  (void)dstBase;
+  (void)dstElemOffset;
+#endif
+}
+template <typename T>
+__device__ inline void navatala_gpu_direct_load_dword_to_lds(const T* srcBase, unsigned int srcElemOffset, T* dstBase, unsigned int dstElemOffset) {
+#if defined(__gfx942__)
+  const __amdgpu_buffer_rsrc_t srcResource = navatala_gpu_make_buffer_resource(srcBase);
+  navatala_gpu_direct_load_dword_to_lds_prepared(srcResource, srcElemOffset, dstBase, dstElemOffset);
+#else
+  *reinterpret_cast<unsigned int*>(&dstBase[dstElemOffset]) = *reinterpret_cast<const unsigned int*>(&srcBase[srcElemOffset]);
+#endif
+}
+template <typename T>
+__device__ __attribute__((noinline)) void navatala_gpu_scalar_copy_global_to_shared(const T* srcBase, T* dstBase, unsigned int slot, unsigned int dstRow, unsigned int dstCol, unsigned int srcRow, unsigned int srcCol, unsigned int srcStride, unsigned int rows, unsigned int cols, unsigned int panelStride, unsigned int elemsPerSlot) {
+  for (unsigned int navatala_copy_i = (unsigned int)threadIdx.x; navatala_copy_i < rows * cols; navatala_copy_i += (unsigned int)blockDim.x) {
+    const unsigned int navatala_copy_r = navatala_copy_i / cols;
+    const unsigned int navatala_copy_c = navatala_copy_i - (navatala_copy_r * cols);
+    dstBase[(slot * elemsPerSlot) + ((dstRow + navatala_copy_r) * panelStride) + (dstCol + navatala_copy_c)] = srcBase[(srcRow + navatala_copy_r) * srcStride + (srcCol + navatala_copy_c)];
+  }
+}
+__device__ inline void navatala_gpu_wait_direct_lds_copy() {
+#if defined(__gfx942__)
+  asm volatile("s_waitcnt vmcnt(0)" ::: "memory");
+#endif
+}
+#endif  // NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+extern "C" __global__ __launch_bounds__(64) void navatala_transformer_tiled_gemm_f16_mfma(const __half* a, const __half* b, const unsigned int* kStride, const unsigned int* nStride, float* c) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  unsigned int kStrideVal = kStride[0u];
+  unsigned int nStrideVal = nStride[0u];
+  unsigned int tileRow = (((unsigned int)((int)(blockIdx.y))) * 32u);
+  unsigned int tileCol = (((unsigned int)((int)(blockIdx.x))) * 32u);
+  navatala_mfma_f16x4 aFrag = navatala_mfma_load_a_f16_32x32x8(a, tileRow, 0u, kStrideVal);
+  navatala_mfma_f16x4 bFrag = navatala_mfma_load_b_f16_32x32x8(b, 0u, tileCol, nStrideVal);
+  navatala_mfma_acc_f32_32x32x8 acc0 = navatala_mfma_zero_acc_f32_32x32x8();
+  navatala_mfma_acc_f32_32x32x8 acc1 = __builtin_amdgcn_mfma_f32_32x32x8f16(aFrag, bFrag, acc0, 0, 0, 0);
+  navatala_mfma_store_acc_f32_32x32x8_at(c, acc1, tileRow, tileCol, nStrideVal, true);
+}
+
+)kernel";
+const char* k_hip_navatala_transformer_tiled_gemm_f16_mfma_k_loop = R"kernel(
+#include <hip/hip_runtime.h>
+#include <hip/hip_fp16.h>
+#ifndef NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#define NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#if defined(NAVATALA_GPU_ROCM_VERSION) && NAVATALA_GPU_ROCM_VERSION < 60200
+#error "matrix-intrinsic kernels require ROCm 6.2+"
+#endif
+typedef _Float16 navatala_mfma_f16x4 __attribute__((ext_vector_type(4)));
+typedef float navatala_mfma_acc_f32_32x32x8 __attribute__((ext_vector_type(16)));
+__device__ inline navatala_mfma_acc_f32_32x32x8 navatala_mfma_zero_acc_f32_32x32x8() {
+  return {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+}
+__device__ inline navatala_mfma_f16x4 navatala_mfma_load_a_f16_32x32x8(const __half* base, unsigned int row, unsigned int col, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localRow = lane & 31u;
+  const unsigned int kBase = (lane >> 5u) * 4u;
+  return {(_Float16)base[(row + localRow) * stride + (col + kBase + 0u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 1u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 2u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 3u)]};
+}
+__device__ inline navatala_mfma_f16x4 navatala_mfma_load_b_f16_32x32x8(const __half* base, unsigned int row, unsigned int col, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int kBase = (lane >> 5u) * 4u;
+  return {(_Float16)base[(row + kBase + 0u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 1u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 2u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 3u) * stride + (col + localCol)]};
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    dst[((unsigned int)(blockIdx.y * 32u) + localRow) * stride + ((unsigned int)(blockIdx.x * 32u) + localCol)] = acc[i];
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    dst[(rowOffset + localRow) * stride + (colOffset + localCol)] = acc[i];
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at_bounded(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, unsigned int rowLimit, unsigned int colLimit, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    const unsigned int row = rowOffset + localRow;
+    const unsigned int col = colOffset + localCol;
+    if (row < rowLimit && col < colLimit) {
+      dst[row * stride + col] = acc[i];
+    }
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at_scaled_bounded(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, unsigned int rowLimit, unsigned int colLimit, float alpha, float beta, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    const unsigned int row = rowOffset + localRow;
+    const unsigned int col = colOffset + localCol;
+    if (row < rowLimit && col < colLimit) {
+      const unsigned int idx = row * stride + col;
+      const float scaled = alpha * acc[i];
+      dst[idx] = (beta == 0.0f) ? scaled : (scaled + beta * dst[idx]);
+    }
+  }
+}
+#endif  // NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#ifndef NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+#define NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+__device__ inline __amdgpu_buffer_rsrc_t navatala_gpu_make_buffer_resource(const void* base) {
+  return __builtin_amdgcn_make_buffer_rsrc(const_cast<void*>(base), 0, 0xffffffffu, 0x00020000u);
+}
+template <typename T>
+__device__ inline void navatala_gpu_direct_load_dword_to_lds_prepared(__amdgpu_buffer_rsrc_t srcResource, unsigned int srcElemOffset, T* dstBase, unsigned int dstElemOffset) {
+#if defined(__gfx942__)
+  const unsigned int ldsAddr = (unsigned int)reinterpret_cast<unsigned long>(&dstBase[dstElemOffset]);
+  const unsigned int ldsBase = __builtin_amdgcn_readfirstlane(ldsAddr);
+  const unsigned int srcByteOffset = srcElemOffset * (unsigned int)sizeof(T);
+  asm volatile("s_mov_b32 m0, %0;\n\tbuffer_load_dword %1, %2, 0 offen lds;\n\t" :: "s"(ldsBase), "v"(srcByteOffset), "s"(srcResource) : "memory");
+#else
+  (void)srcResource;
+  (void)srcElemOffset;
+  (void)dstBase;
+  (void)dstElemOffset;
+#endif
+}
+template <typename T>
+__device__ inline void navatala_gpu_direct_load_dword_to_lds(const T* srcBase, unsigned int srcElemOffset, T* dstBase, unsigned int dstElemOffset) {
+#if defined(__gfx942__)
+  const __amdgpu_buffer_rsrc_t srcResource = navatala_gpu_make_buffer_resource(srcBase);
+  navatala_gpu_direct_load_dword_to_lds_prepared(srcResource, srcElemOffset, dstBase, dstElemOffset);
+#else
+  *reinterpret_cast<unsigned int*>(&dstBase[dstElemOffset]) = *reinterpret_cast<const unsigned int*>(&srcBase[srcElemOffset]);
+#endif
+}
+template <typename T>
+__device__ __attribute__((noinline)) void navatala_gpu_scalar_copy_global_to_shared(const T* srcBase, T* dstBase, unsigned int slot, unsigned int dstRow, unsigned int dstCol, unsigned int srcRow, unsigned int srcCol, unsigned int srcStride, unsigned int rows, unsigned int cols, unsigned int panelStride, unsigned int elemsPerSlot) {
+  for (unsigned int navatala_copy_i = (unsigned int)threadIdx.x; navatala_copy_i < rows * cols; navatala_copy_i += (unsigned int)blockDim.x) {
+    const unsigned int navatala_copy_r = navatala_copy_i / cols;
+    const unsigned int navatala_copy_c = navatala_copy_i - (navatala_copy_r * cols);
+    dstBase[(slot * elemsPerSlot) + ((dstRow + navatala_copy_r) * panelStride) + (dstCol + navatala_copy_c)] = srcBase[(srcRow + navatala_copy_r) * srcStride + (srcCol + navatala_copy_c)];
+  }
+}
+__device__ inline void navatala_gpu_wait_direct_lds_copy() {
+#if defined(__gfx942__)
+  asm volatile("s_waitcnt vmcnt(0)" ::: "memory");
+#endif
+}
+#endif  // NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+extern "C" __global__ __launch_bounds__(64) void navatala_transformer_tiled_gemm_f16_mfma_k_loop(const __half* a, const __half* b, const unsigned int* kTiles, const unsigned int* kStride, const unsigned int* nStride, float* c) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  unsigned int kTilesVal = kTiles[0u];
+  unsigned int kStrideVal = kStride[0u];
+  unsigned int nStrideVal = nStride[0u];
+  unsigned int tileRow = (((unsigned int)((int)(blockIdx.y))) * 32u);
+  unsigned int tileCol = (((unsigned int)((int)(blockIdx.x))) * 32u);
+  navatala_mfma_acc_f32_32x32x8 acc = navatala_mfma_zero_acc_f32_32x32x8();
+  for (int kTile = 0; kTile < (int)(kTilesVal); ++kTile) {
+    unsigned int kTileU32 = ((unsigned int)(kTile));
+    unsigned int kBase = (kTileU32 * 8u);
+    navatala_mfma_f16x4 aFrag = navatala_mfma_load_a_f16_32x32x8(a, tileRow, kBase, kStrideVal);
+    navatala_mfma_f16x4 bFrag = navatala_mfma_load_b_f16_32x32x8(b, kBase, tileCol, nStrideVal);
+    acc = __builtin_amdgcn_mfma_f32_32x32x8f16(aFrag, bFrag, acc, 0, 0, 0);
+  }
+  navatala_mfma_store_acc_f32_32x32x8_at(c, acc, tileRow, tileCol, nStrideVal, true);
+}
+
+)kernel";
+const char* k_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_direct = R"kernel(
+#include <hip/hip_runtime.h>
+#include <hip/hip_fp16.h>
+#ifndef NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#define NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#if defined(NAVATALA_GPU_ROCM_VERSION) && NAVATALA_GPU_ROCM_VERSION < 60200
+#error "matrix-intrinsic kernels require ROCm 6.2+"
+#endif
+typedef _Float16 navatala_mfma_f16x4 __attribute__((ext_vector_type(4)));
+typedef float navatala_mfma_acc_f32_32x32x8 __attribute__((ext_vector_type(16)));
+__device__ inline navatala_mfma_acc_f32_32x32x8 navatala_mfma_zero_acc_f32_32x32x8() {
+  return {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+}
+__device__ inline navatala_mfma_f16x4 navatala_mfma_load_a_f16_32x32x8(const __half* base, unsigned int row, unsigned int col, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localRow = lane & 31u;
+  const unsigned int kBase = (lane >> 5u) * 4u;
+  return {(_Float16)base[(row + localRow) * stride + (col + kBase + 0u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 1u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 2u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 3u)]};
+}
+__device__ inline navatala_mfma_f16x4 navatala_mfma_load_b_f16_32x32x8(const __half* base, unsigned int row, unsigned int col, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int kBase = (lane >> 5u) * 4u;
+  return {(_Float16)base[(row + kBase + 0u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 1u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 2u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 3u) * stride + (col + localCol)]};
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    dst[((unsigned int)(blockIdx.y * 32u) + localRow) * stride + ((unsigned int)(blockIdx.x * 32u) + localCol)] = acc[i];
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    dst[(rowOffset + localRow) * stride + (colOffset + localCol)] = acc[i];
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at_bounded(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, unsigned int rowLimit, unsigned int colLimit, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    const unsigned int row = rowOffset + localRow;
+    const unsigned int col = colOffset + localCol;
+    if (row < rowLimit && col < colLimit) {
+      dst[row * stride + col] = acc[i];
+    }
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at_scaled_bounded(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, unsigned int rowLimit, unsigned int colLimit, float alpha, float beta, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    const unsigned int row = rowOffset + localRow;
+    const unsigned int col = colOffset + localCol;
+    if (row < rowLimit && col < colLimit) {
+      const unsigned int idx = row * stride + col;
+      const float scaled = alpha * acc[i];
+      dst[idx] = (beta == 0.0f) ? scaled : (scaled + beta * dst[idx]);
+    }
+  }
+}
+#endif  // NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#ifndef NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+#define NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+__device__ inline __amdgpu_buffer_rsrc_t navatala_gpu_make_buffer_resource(const void* base) {
+  return __builtin_amdgcn_make_buffer_rsrc(const_cast<void*>(base), 0, 0xffffffffu, 0x00020000u);
+}
+template <typename T>
+__device__ inline void navatala_gpu_direct_load_dword_to_lds_prepared(__amdgpu_buffer_rsrc_t srcResource, unsigned int srcElemOffset, T* dstBase, unsigned int dstElemOffset) {
+#if defined(__gfx942__)
+  const unsigned int ldsAddr = (unsigned int)reinterpret_cast<unsigned long>(&dstBase[dstElemOffset]);
+  const unsigned int ldsBase = __builtin_amdgcn_readfirstlane(ldsAddr);
+  const unsigned int srcByteOffset = srcElemOffset * (unsigned int)sizeof(T);
+  asm volatile("s_mov_b32 m0, %0;\n\tbuffer_load_dword %1, %2, 0 offen lds;\n\t" :: "s"(ldsBase), "v"(srcByteOffset), "s"(srcResource) : "memory");
+#else
+  (void)srcResource;
+  (void)srcElemOffset;
+  (void)dstBase;
+  (void)dstElemOffset;
+#endif
+}
+template <typename T>
+__device__ inline void navatala_gpu_direct_load_dword_to_lds(const T* srcBase, unsigned int srcElemOffset, T* dstBase, unsigned int dstElemOffset) {
+#if defined(__gfx942__)
+  const __amdgpu_buffer_rsrc_t srcResource = navatala_gpu_make_buffer_resource(srcBase);
+  navatala_gpu_direct_load_dword_to_lds_prepared(srcResource, srcElemOffset, dstBase, dstElemOffset);
+#else
+  *reinterpret_cast<unsigned int*>(&dstBase[dstElemOffset]) = *reinterpret_cast<const unsigned int*>(&srcBase[srcElemOffset]);
+#endif
+}
+template <typename T>
+__device__ __attribute__((noinline)) void navatala_gpu_scalar_copy_global_to_shared(const T* srcBase, T* dstBase, unsigned int slot, unsigned int dstRow, unsigned int dstCol, unsigned int srcRow, unsigned int srcCol, unsigned int srcStride, unsigned int rows, unsigned int cols, unsigned int panelStride, unsigned int elemsPerSlot) {
+  for (unsigned int navatala_copy_i = (unsigned int)threadIdx.x; navatala_copy_i < rows * cols; navatala_copy_i += (unsigned int)blockDim.x) {
+    const unsigned int navatala_copy_r = navatala_copy_i / cols;
+    const unsigned int navatala_copy_c = navatala_copy_i - (navatala_copy_r * cols);
+    dstBase[(slot * elemsPerSlot) + ((dstRow + navatala_copy_r) * panelStride) + (dstCol + navatala_copy_c)] = srcBase[(srcRow + navatala_copy_r) * srcStride + (srcCol + navatala_copy_c)];
+  }
+}
+__device__ inline void navatala_gpu_wait_direct_lds_copy() {
+#if defined(__gfx942__)
+  asm volatile("s_waitcnt vmcnt(0)" ::: "memory");
+#endif
+}
+#endif  // NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+extern "C" __global__ __launch_bounds__(256) void navatala_transformer_tiled_gemm_f16_mfma_cta64_direct(const __half* a, const __half* b, const unsigned int* kTiles, const unsigned int* kStride, const unsigned int* nStride, float* c) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  unsigned int tid = ((unsigned int)((int)(threadIdx.x)));
+  unsigned int waveId = (tid / 64u);
+  unsigned int waveRowGroup = (waveId / 2u);
+  unsigned int waveColGroup = (waveId % 2u);
+  unsigned int blockRow = (((unsigned int)((int)(blockIdx.y))) * 64u);
+  unsigned int blockCol = (((unsigned int)((int)(blockIdx.x))) * 64u);
+  unsigned int tileRow = (blockRow + (waveRowGroup * 32u));
+  unsigned int tileCol = (blockCol + (waveColGroup * 32u));
+  unsigned int kTilesVal = kTiles[0u];
+  unsigned int kStrideVal = kStride[0u];
+  unsigned int nStrideVal = nStride[0u];
+  navatala_mfma_acc_f32_32x32x8 acc = navatala_mfma_zero_acc_f32_32x32x8();
+  for (int kTile = 0; kTile < (int)(kTilesVal); ++kTile) {
+    unsigned int kTileU32 = ((unsigned int)(kTile));
+    unsigned int kBase = (kTileU32 * 8u);
+    navatala_mfma_f16x4 aFrag = navatala_mfma_load_a_f16_32x32x8(a, tileRow, kBase, kStrideVal);
+    navatala_mfma_f16x4 bFrag = navatala_mfma_load_b_f16_32x32x8(b, kBase, tileCol, nStrideVal);
+    acc = __builtin_amdgcn_mfma_f32_32x32x8f16(aFrag, bFrag, acc, 0, 0, 0);
+  }
+  navatala_mfma_store_acc_f32_32x32x8_at(c, acc, tileRow, tileCol, nStrideVal, true);
+}
+
+)kernel";
+const char* k_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared = R"kernel(
+#include <hip/hip_runtime.h>
+#include <hip/hip_fp16.h>
+#ifndef NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#define NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#if defined(NAVATALA_GPU_ROCM_VERSION) && NAVATALA_GPU_ROCM_VERSION < 60200
+#error "matrix-intrinsic kernels require ROCm 6.2+"
+#endif
+typedef _Float16 navatala_mfma_f16x4 __attribute__((ext_vector_type(4)));
+typedef float navatala_mfma_acc_f32_32x32x8 __attribute__((ext_vector_type(16)));
+__device__ inline navatala_mfma_acc_f32_32x32x8 navatala_mfma_zero_acc_f32_32x32x8() {
+  return {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+}
+__device__ inline navatala_mfma_f16x4 navatala_mfma_load_a_f16_32x32x8(const __half* base, unsigned int row, unsigned int col, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localRow = lane & 31u;
+  const unsigned int kBase = (lane >> 5u) * 4u;
+  return {(_Float16)base[(row + localRow) * stride + (col + kBase + 0u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 1u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 2u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 3u)]};
+}
+__device__ inline navatala_mfma_f16x4 navatala_mfma_load_b_f16_32x32x8(const __half* base, unsigned int row, unsigned int col, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int kBase = (lane >> 5u) * 4u;
+  return {(_Float16)base[(row + kBase + 0u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 1u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 2u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 3u) * stride + (col + localCol)]};
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    dst[((unsigned int)(blockIdx.y * 32u) + localRow) * stride + ((unsigned int)(blockIdx.x * 32u) + localCol)] = acc[i];
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    dst[(rowOffset + localRow) * stride + (colOffset + localCol)] = acc[i];
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at_bounded(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, unsigned int rowLimit, unsigned int colLimit, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    const unsigned int row = rowOffset + localRow;
+    const unsigned int col = colOffset + localCol;
+    if (row < rowLimit && col < colLimit) {
+      dst[row * stride + col] = acc[i];
+    }
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at_scaled_bounded(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, unsigned int rowLimit, unsigned int colLimit, float alpha, float beta, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    const unsigned int row = rowOffset + localRow;
+    const unsigned int col = colOffset + localCol;
+    if (row < rowLimit && col < colLimit) {
+      const unsigned int idx = row * stride + col;
+      const float scaled = alpha * acc[i];
+      dst[idx] = (beta == 0.0f) ? scaled : (scaled + beta * dst[idx]);
+    }
+  }
+}
+#endif  // NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#ifndef NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+#define NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+__device__ inline __amdgpu_buffer_rsrc_t navatala_gpu_make_buffer_resource(const void* base) {
+  return __builtin_amdgcn_make_buffer_rsrc(const_cast<void*>(base), 0, 0xffffffffu, 0x00020000u);
+}
+template <typename T>
+__device__ inline void navatala_gpu_direct_load_dword_to_lds_prepared(__amdgpu_buffer_rsrc_t srcResource, unsigned int srcElemOffset, T* dstBase, unsigned int dstElemOffset) {
+#if defined(__gfx942__)
+  const unsigned int ldsAddr = (unsigned int)reinterpret_cast<unsigned long>(&dstBase[dstElemOffset]);
+  const unsigned int ldsBase = __builtin_amdgcn_readfirstlane(ldsAddr);
+  const unsigned int srcByteOffset = srcElemOffset * (unsigned int)sizeof(T);
+  asm volatile("s_mov_b32 m0, %0;\n\tbuffer_load_dword %1, %2, 0 offen lds;\n\t" :: "s"(ldsBase), "v"(srcByteOffset), "s"(srcResource) : "memory");
+#else
+  (void)srcResource;
+  (void)srcElemOffset;
+  (void)dstBase;
+  (void)dstElemOffset;
+#endif
+}
+template <typename T>
+__device__ inline void navatala_gpu_direct_load_dword_to_lds(const T* srcBase, unsigned int srcElemOffset, T* dstBase, unsigned int dstElemOffset) {
+#if defined(__gfx942__)
+  const __amdgpu_buffer_rsrc_t srcResource = navatala_gpu_make_buffer_resource(srcBase);
+  navatala_gpu_direct_load_dword_to_lds_prepared(srcResource, srcElemOffset, dstBase, dstElemOffset);
+#else
+  *reinterpret_cast<unsigned int*>(&dstBase[dstElemOffset]) = *reinterpret_cast<const unsigned int*>(&srcBase[srcElemOffset]);
+#endif
+}
+template <typename T>
+__device__ __attribute__((noinline)) void navatala_gpu_scalar_copy_global_to_shared(const T* srcBase, T* dstBase, unsigned int slot, unsigned int dstRow, unsigned int dstCol, unsigned int srcRow, unsigned int srcCol, unsigned int srcStride, unsigned int rows, unsigned int cols, unsigned int panelStride, unsigned int elemsPerSlot) {
+  for (unsigned int navatala_copy_i = (unsigned int)threadIdx.x; navatala_copy_i < rows * cols; navatala_copy_i += (unsigned int)blockDim.x) {
+    const unsigned int navatala_copy_r = navatala_copy_i / cols;
+    const unsigned int navatala_copy_c = navatala_copy_i - (navatala_copy_r * cols);
+    dstBase[(slot * elemsPerSlot) + ((dstRow + navatala_copy_r) * panelStride) + (dstCol + navatala_copy_c)] = srcBase[(srcRow + navatala_copy_r) * srcStride + (srcCol + navatala_copy_c)];
+  }
+}
+__device__ inline void navatala_gpu_wait_direct_lds_copy() {
+#if defined(__gfx942__)
+  asm volatile("s_waitcnt vmcnt(0)" ::: "memory");
+#endif
+}
+#endif  // NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+extern "C" __global__ __launch_bounds__(256) void navatala_transformer_tiled_gemm_f16_mfma_cta64_shared(const __half* a, const __half* b, const unsigned int* kTiles, const unsigned int* kStride, const unsigned int* nStride, float* c) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  unsigned int tid = ((unsigned int)((int)(threadIdx.x)));
+  unsigned int waveId = (tid / 64u);
+  unsigned int waveRowGroup = (waveId / 2u);
+  unsigned int waveColGroup = (waveId % 2u);
+  unsigned int blockRow = (((unsigned int)((int)(blockIdx.y))) * 64u);
+  unsigned int blockCol = (((unsigned int)((int)(blockIdx.x))) * 64u);
+  unsigned int tileRow = (blockRow + (waveRowGroup * 32u));
+  unsigned int tileCol = (blockCol + (waveColGroup * 32u));
+  unsigned int waveRowLocal = (waveRowGroup * 32u);
+  unsigned int waveColLocal = (waveColGroup * 32u);
+  unsigned int kTilesVal = kTiles[0u];
+  unsigned int kStrideVal = kStride[0u];
+  unsigned int nStrideVal = nStride[0u];
+  __shared__ __half tileA[512];
+  __shared__ __half tileB[512];
+  navatala_mfma_acc_f32_32x32x8 acc = navatala_mfma_zero_acc_f32_32x32x8();
+  for (int kTile = 0; kTile < (int)(kTilesVal); ++kTile) {
+    unsigned int kTileU32 = ((unsigned int)(kTile));
+    unsigned int kBase = (kTileU32 * 8u);
+    for (int loadIter = 0; loadIter < (int)(2u); ++loadIter) {
+      unsigned int loadIterU32 = ((unsigned int)(loadIter));
+      unsigned int _flat = ((loadIterU32 * 256u) + tid);
+      unsigned int aRowLocal = (_flat / 8u);
+      unsigned int aColLocal = (_flat % 8u);
+      unsigned int aGlobalRow = (blockRow + aRowLocal);
+      unsigned int aGlobalCol = (kBase + aColLocal);
+      unsigned int aIdx = ((aGlobalRow * kStrideVal) + aGlobalCol);
+      __half aVal = a[aIdx];
+      unsigned int bRowLocal = (_flat / 64u);
+      unsigned int bColLocal = (_flat % 64u);
+      unsigned int bGlobalRow = (kBase + bRowLocal);
+      unsigned int bGlobalCol = (blockCol + bColLocal);
+      unsigned int bIdx = ((bGlobalRow * nStrideVal) + bGlobalCol);
+      __half bVal = b[bIdx];
+      tileA[_flat] = aVal;
+      tileB[_flat] = bVal;
+    }
+    __syncthreads();
+    navatala_mfma_f16x4 aFrag = navatala_mfma_load_a_f16_32x32x8(tileA, waveRowLocal, 0u, 8u);
+    navatala_mfma_f16x4 bFrag = navatala_mfma_load_b_f16_32x32x8(tileB, 0u, waveColLocal, 64u);
+    acc = __builtin_amdgcn_mfma_f32_32x32x8f16(aFrag, bFrag, acc, 0, 0, 0);
+    __syncthreads();
+  }
+  navatala_mfma_store_acc_f32_32x32x8_at(c, acc, tileRow, tileCol, nStrideVal, true);
+}
+
+)kernel";
+const char* k_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_edge = R"kernel(
+#include <hip/hip_runtime.h>
+#include <hip/hip_fp16.h>
+#ifndef NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#define NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#if defined(NAVATALA_GPU_ROCM_VERSION) && NAVATALA_GPU_ROCM_VERSION < 60200
+#error "matrix-intrinsic kernels require ROCm 6.2+"
+#endif
+typedef _Float16 navatala_mfma_f16x4 __attribute__((ext_vector_type(4)));
+typedef float navatala_mfma_acc_f32_32x32x8 __attribute__((ext_vector_type(16)));
+__device__ inline navatala_mfma_acc_f32_32x32x8 navatala_mfma_zero_acc_f32_32x32x8() {
+  return {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+}
+__device__ inline navatala_mfma_f16x4 navatala_mfma_load_a_f16_32x32x8(const __half* base, unsigned int row, unsigned int col, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localRow = lane & 31u;
+  const unsigned int kBase = (lane >> 5u) * 4u;
+  return {(_Float16)base[(row + localRow) * stride + (col + kBase + 0u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 1u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 2u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 3u)]};
+}
+__device__ inline navatala_mfma_f16x4 navatala_mfma_load_b_f16_32x32x8(const __half* base, unsigned int row, unsigned int col, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int kBase = (lane >> 5u) * 4u;
+  return {(_Float16)base[(row + kBase + 0u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 1u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 2u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 3u) * stride + (col + localCol)]};
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    dst[((unsigned int)(blockIdx.y * 32u) + localRow) * stride + ((unsigned int)(blockIdx.x * 32u) + localCol)] = acc[i];
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    dst[(rowOffset + localRow) * stride + (colOffset + localCol)] = acc[i];
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at_bounded(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, unsigned int rowLimit, unsigned int colLimit, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    const unsigned int row = rowOffset + localRow;
+    const unsigned int col = colOffset + localCol;
+    if (row < rowLimit && col < colLimit) {
+      dst[row * stride + col] = acc[i];
+    }
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at_scaled_bounded(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, unsigned int rowLimit, unsigned int colLimit, float alpha, float beta, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    const unsigned int row = rowOffset + localRow;
+    const unsigned int col = colOffset + localCol;
+    if (row < rowLimit && col < colLimit) {
+      const unsigned int idx = row * stride + col;
+      const float scaled = alpha * acc[i];
+      dst[idx] = (beta == 0.0f) ? scaled : (scaled + beta * dst[idx]);
+    }
+  }
+}
+#endif  // NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#ifndef NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+#define NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+__device__ inline __amdgpu_buffer_rsrc_t navatala_gpu_make_buffer_resource(const void* base) {
+  return __builtin_amdgcn_make_buffer_rsrc(const_cast<void*>(base), 0, 0xffffffffu, 0x00020000u);
+}
+template <typename T>
+__device__ inline void navatala_gpu_direct_load_dword_to_lds_prepared(__amdgpu_buffer_rsrc_t srcResource, unsigned int srcElemOffset, T* dstBase, unsigned int dstElemOffset) {
+#if defined(__gfx942__)
+  const unsigned int ldsAddr = (unsigned int)reinterpret_cast<unsigned long>(&dstBase[dstElemOffset]);
+  const unsigned int ldsBase = __builtin_amdgcn_readfirstlane(ldsAddr);
+  const unsigned int srcByteOffset = srcElemOffset * (unsigned int)sizeof(T);
+  asm volatile("s_mov_b32 m0, %0;\n\tbuffer_load_dword %1, %2, 0 offen lds;\n\t" :: "s"(ldsBase), "v"(srcByteOffset), "s"(srcResource) : "memory");
+#else
+  (void)srcResource;
+  (void)srcElemOffset;
+  (void)dstBase;
+  (void)dstElemOffset;
+#endif
+}
+template <typename T>
+__device__ inline void navatala_gpu_direct_load_dword_to_lds(const T* srcBase, unsigned int srcElemOffset, T* dstBase, unsigned int dstElemOffset) {
+#if defined(__gfx942__)
+  const __amdgpu_buffer_rsrc_t srcResource = navatala_gpu_make_buffer_resource(srcBase);
+  navatala_gpu_direct_load_dword_to_lds_prepared(srcResource, srcElemOffset, dstBase, dstElemOffset);
+#else
+  *reinterpret_cast<unsigned int*>(&dstBase[dstElemOffset]) = *reinterpret_cast<const unsigned int*>(&srcBase[srcElemOffset]);
+#endif
+}
+template <typename T>
+__device__ __attribute__((noinline)) void navatala_gpu_scalar_copy_global_to_shared(const T* srcBase, T* dstBase, unsigned int slot, unsigned int dstRow, unsigned int dstCol, unsigned int srcRow, unsigned int srcCol, unsigned int srcStride, unsigned int rows, unsigned int cols, unsigned int panelStride, unsigned int elemsPerSlot) {
+  for (unsigned int navatala_copy_i = (unsigned int)threadIdx.x; navatala_copy_i < rows * cols; navatala_copy_i += (unsigned int)blockDim.x) {
+    const unsigned int navatala_copy_r = navatala_copy_i / cols;
+    const unsigned int navatala_copy_c = navatala_copy_i - (navatala_copy_r * cols);
+    dstBase[(slot * elemsPerSlot) + ((dstRow + navatala_copy_r) * panelStride) + (dstCol + navatala_copy_c)] = srcBase[(srcRow + navatala_copy_r) * srcStride + (srcCol + navatala_copy_c)];
+  }
+}
+__device__ inline void navatala_gpu_wait_direct_lds_copy() {
+#if defined(__gfx942__)
+  asm volatile("s_waitcnt vmcnt(0)" ::: "memory");
+#endif
+}
+#endif  // NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+extern "C" __global__ __launch_bounds__(256) void navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_edge(const __half* a, const __half* b, const unsigned int* mDim, const unsigned int* nDim, const unsigned int* kDim, const unsigned int* kTiles, const unsigned int* aStride, const unsigned int* bStride, const unsigned int* cStride, const unsigned int* aBatchStride, const unsigned int* bBatchStride, const unsigned int* cBatchStride, const unsigned int* transA, const unsigned int* transB, const float* alpha, const float* beta, float* c) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  unsigned int tid = ((unsigned int)((int)(threadIdx.x)));
+  unsigned int batchIdx = ((unsigned int)((int)(blockIdx.z)));
+  unsigned int waveId = (tid / 64u);
+  unsigned int waveRowGroup = (waveId / 2u);
+  unsigned int waveColGroup = (waveId % 2u);
+  unsigned int blockRow = (((unsigned int)((int)(blockIdx.y))) * 64u);
+  unsigned int blockCol = (((unsigned int)((int)(blockIdx.x))) * 64u);
+  unsigned int tileRow = (blockRow + (waveRowGroup * 32u));
+  unsigned int tileCol = (blockCol + (waveColGroup * 32u));
+  unsigned int waveRowLocal = (waveRowGroup * 32u);
+  unsigned int waveColLocal = (waveColGroup * 32u);
+  unsigned int mDimVal = mDim[0u];
+  unsigned int nDimVal = nDim[0u];
+  unsigned int kDimVal = kDim[0u];
+  unsigned int kTilesVal = kTiles[0u];
+  unsigned int aStrideVal = aStride[0u];
+  unsigned int bStrideVal = bStride[0u];
+  unsigned int cStrideVal = cStride[0u];
+  unsigned int aBatchStrideVal = aBatchStride[0u];
+  unsigned int bBatchStrideVal = bBatchStride[0u];
+  unsigned int cBatchStrideVal = cBatchStride[0u];
+  unsigned int transAVal = transA[0u];
+  unsigned int transBVal = transB[0u];
+  bool useTransA = (transAVal != 0u);
+  bool useTransB = (transBVal != 0u);
+  float alphaVal = alpha[0u];
+  float betaVal = beta[0u];
+  unsigned int aBatchBase = (batchIdx * aBatchStrideVal);
+  unsigned int bBatchBase = (batchIdx * bBatchStrideVal);
+  unsigned int cBatchBase = (batchIdx * cBatchStrideVal);
+  unsigned int cTileColBase = (cBatchBase + tileCol);
+  unsigned int cColLimit = (cBatchBase + nDimVal);
+  __shared__ __half tileA[512];
+  __shared__ __half tileB[512];
+  navatala_mfma_acc_f32_32x32x8 acc = navatala_mfma_zero_acc_f32_32x32x8();
+  for (int kTile = 0; kTile < (int)(kTilesVal); ++kTile) {
+    unsigned int kTileU32 = ((unsigned int)(kTile));
+    unsigned int kBase = (kTileU32 * 8u);
+    for (int loadIter = 0; loadIter < (int)(2u); ++loadIter) {
+      unsigned int loadIterU32 = ((unsigned int)(loadIter));
+      unsigned int _flat = ((loadIterU32 * 256u) + tid);
+      unsigned int aRowLocal = (_flat / 8u);
+      unsigned int aColLocal = (_flat % 8u);
+      unsigned int aGlobalRow = (blockRow + aRowLocal);
+      unsigned int aGlobalCol = (kBase + aColLocal);
+      unsigned int aIdxNN = ((aGlobalRow * aStrideVal) + aGlobalCol);
+      unsigned int aIdxT = ((aGlobalCol * aStrideVal) + aGlobalRow);
+      unsigned int aIdx = ((useTransA) ? (aIdxT) : (aIdxNN));
+      unsigned int aIdxBatch = (aBatchBase + aIdx);
+      bool aRowValid = (aGlobalRow < mDimVal);
+      bool aColValid = (aGlobalCol < kDimVal);
+      bool aLoadValid = (aRowValid && aColValid);
+      __half aVal = ((aLoadValid) ? (a[aIdxBatch]) : (__float2half(0.000000f)));
+      unsigned int bRowLocal = (_flat / 64u);
+      unsigned int bColLocal = (_flat % 64u);
+      unsigned int bGlobalRow = (kBase + bRowLocal);
+      unsigned int bGlobalCol = (blockCol + bColLocal);
+      unsigned int bIdxNN = ((bGlobalRow * bStrideVal) + bGlobalCol);
+      unsigned int bIdxT = ((bGlobalCol * bStrideVal) + bGlobalRow);
+      unsigned int bIdx = ((useTransB) ? (bIdxT) : (bIdxNN));
+      unsigned int bIdxBatch = (bBatchBase + bIdx);
+      bool bRowValid = (bGlobalRow < kDimVal);
+      bool bColValid = (bGlobalCol < nDimVal);
+      bool bLoadValid = (bRowValid && bColValid);
+      __half bVal = ((bLoadValid) ? (b[bIdxBatch]) : (__float2half(0.000000f)));
+      tileA[_flat] = aVal;
+      tileB[_flat] = bVal;
+    }
+    __syncthreads();
+    navatala_mfma_f16x4 aFrag = navatala_mfma_load_a_f16_32x32x8(tileA, waveRowLocal, 0u, 8u);
+    navatala_mfma_f16x4 bFrag = navatala_mfma_load_b_f16_32x32x8(tileB, 0u, waveColLocal, 64u);
+    acc = __builtin_amdgcn_mfma_f32_32x32x8f16(aFrag, bFrag, acc, 0, 0, 0);
+    __syncthreads();
+  }
+  navatala_mfma_store_acc_f32_32x32x8_at_scaled_bounded(c, acc, tileRow, cTileColBase, cStrideVal, mDimVal, cColLimit, alphaVal, betaVal, true);
+}
+
+)kernel";
+const char* k_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_early_barrier = R"kernel(
+#include <hip/hip_runtime.h>
+#include <hip/hip_fp16.h>
+#ifndef NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#define NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#if defined(NAVATALA_GPU_ROCM_VERSION) && NAVATALA_GPU_ROCM_VERSION < 60200
+#error "matrix-intrinsic kernels require ROCm 6.2+"
+#endif
+typedef _Float16 navatala_mfma_f16x4 __attribute__((ext_vector_type(4)));
+typedef float navatala_mfma_acc_f32_32x32x8 __attribute__((ext_vector_type(16)));
+__device__ inline navatala_mfma_acc_f32_32x32x8 navatala_mfma_zero_acc_f32_32x32x8() {
+  return {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+}
+__device__ inline navatala_mfma_f16x4 navatala_mfma_load_a_f16_32x32x8(const __half* base, unsigned int row, unsigned int col, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localRow = lane & 31u;
+  const unsigned int kBase = (lane >> 5u) * 4u;
+  return {(_Float16)base[(row + localRow) * stride + (col + kBase + 0u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 1u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 2u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 3u)]};
+}
+__device__ inline navatala_mfma_f16x4 navatala_mfma_load_b_f16_32x32x8(const __half* base, unsigned int row, unsigned int col, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int kBase = (lane >> 5u) * 4u;
+  return {(_Float16)base[(row + kBase + 0u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 1u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 2u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 3u) * stride + (col + localCol)]};
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    dst[((unsigned int)(blockIdx.y * 32u) + localRow) * stride + ((unsigned int)(blockIdx.x * 32u) + localCol)] = acc[i];
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    dst[(rowOffset + localRow) * stride + (colOffset + localCol)] = acc[i];
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at_bounded(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, unsigned int rowLimit, unsigned int colLimit, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    const unsigned int row = rowOffset + localRow;
+    const unsigned int col = colOffset + localCol;
+    if (row < rowLimit && col < colLimit) {
+      dst[row * stride + col] = acc[i];
+    }
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at_scaled_bounded(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, unsigned int rowLimit, unsigned int colLimit, float alpha, float beta, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    const unsigned int row = rowOffset + localRow;
+    const unsigned int col = colOffset + localCol;
+    if (row < rowLimit && col < colLimit) {
+      const unsigned int idx = row * stride + col;
+      const float scaled = alpha * acc[i];
+      dst[idx] = (beta == 0.0f) ? scaled : (scaled + beta * dst[idx]);
+    }
+  }
+}
+#endif  // NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#ifndef NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+#define NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+__device__ inline __amdgpu_buffer_rsrc_t navatala_gpu_make_buffer_resource(const void* base) {
+  return __builtin_amdgcn_make_buffer_rsrc(const_cast<void*>(base), 0, 0xffffffffu, 0x00020000u);
+}
+template <typename T>
+__device__ inline void navatala_gpu_direct_load_dword_to_lds_prepared(__amdgpu_buffer_rsrc_t srcResource, unsigned int srcElemOffset, T* dstBase, unsigned int dstElemOffset) {
+#if defined(__gfx942__)
+  const unsigned int ldsAddr = (unsigned int)reinterpret_cast<unsigned long>(&dstBase[dstElemOffset]);
+  const unsigned int ldsBase = __builtin_amdgcn_readfirstlane(ldsAddr);
+  const unsigned int srcByteOffset = srcElemOffset * (unsigned int)sizeof(T);
+  asm volatile("s_mov_b32 m0, %0;\n\tbuffer_load_dword %1, %2, 0 offen lds;\n\t" :: "s"(ldsBase), "v"(srcByteOffset), "s"(srcResource) : "memory");
+#else
+  (void)srcResource;
+  (void)srcElemOffset;
+  (void)dstBase;
+  (void)dstElemOffset;
+#endif
+}
+template <typename T>
+__device__ inline void navatala_gpu_direct_load_dword_to_lds(const T* srcBase, unsigned int srcElemOffset, T* dstBase, unsigned int dstElemOffset) {
+#if defined(__gfx942__)
+  const __amdgpu_buffer_rsrc_t srcResource = navatala_gpu_make_buffer_resource(srcBase);
+  navatala_gpu_direct_load_dword_to_lds_prepared(srcResource, srcElemOffset, dstBase, dstElemOffset);
+#else
+  *reinterpret_cast<unsigned int*>(&dstBase[dstElemOffset]) = *reinterpret_cast<const unsigned int*>(&srcBase[srcElemOffset]);
+#endif
+}
+template <typename T>
+__device__ __attribute__((noinline)) void navatala_gpu_scalar_copy_global_to_shared(const T* srcBase, T* dstBase, unsigned int slot, unsigned int dstRow, unsigned int dstCol, unsigned int srcRow, unsigned int srcCol, unsigned int srcStride, unsigned int rows, unsigned int cols, unsigned int panelStride, unsigned int elemsPerSlot) {
+  for (unsigned int navatala_copy_i = (unsigned int)threadIdx.x; navatala_copy_i < rows * cols; navatala_copy_i += (unsigned int)blockDim.x) {
+    const unsigned int navatala_copy_r = navatala_copy_i / cols;
+    const unsigned int navatala_copy_c = navatala_copy_i - (navatala_copy_r * cols);
+    dstBase[(slot * elemsPerSlot) + ((dstRow + navatala_copy_r) * panelStride) + (dstCol + navatala_copy_c)] = srcBase[(srcRow + navatala_copy_r) * srcStride + (srcCol + navatala_copy_c)];
+  }
+}
+__device__ inline void navatala_gpu_wait_direct_lds_copy() {
+#if defined(__gfx942__)
+  asm volatile("s_waitcnt vmcnt(0)" ::: "memory");
+#endif
+}
+#endif  // NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+extern "C" __global__ __launch_bounds__(256) void navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_early_barrier(const __half* a, const __half* b, const unsigned int* kTiles, const unsigned int* kStride, const unsigned int* nStride, float* c) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  unsigned int tid = ((unsigned int)((int)(threadIdx.x)));
+  unsigned int waveId = (tid / 64u);
+  unsigned int waveRowGroup = (waveId / 2u);
+  unsigned int waveColGroup = (waveId % 2u);
+  unsigned int blockRow = (((unsigned int)((int)(blockIdx.y))) * 64u);
+  unsigned int blockCol = (((unsigned int)((int)(blockIdx.x))) * 64u);
+  unsigned int tileRow = (blockRow + (waveRowGroup * 32u));
+  unsigned int tileCol = (blockCol + (waveColGroup * 32u));
+  unsigned int waveRowLocal = (waveRowGroup * 32u);
+  unsigned int waveColLocal = (waveColGroup * 32u);
+  unsigned int kTilesVal = kTiles[0u];
+  unsigned int kStrideVal = kStride[0u];
+  unsigned int nStrideVal = nStride[0u];
+  __shared__ __half tileA[512];
+  __shared__ __half tileB[512];
+  navatala_mfma_acc_f32_32x32x8 acc = navatala_mfma_zero_acc_f32_32x32x8();
+  for (int kTile = 0; kTile < (int)(kTilesVal); ++kTile) {
+    unsigned int kTileU32 = ((unsigned int)(kTile));
+    unsigned int kBase = (kTileU32 * 8u);
+    for (int loadIter = 0; loadIter < (int)(2u); ++loadIter) {
+      unsigned int loadIterU32 = ((unsigned int)(loadIter));
+      unsigned int _flat = ((loadIterU32 * 256u) + tid);
+      unsigned int aRowLocal = (_flat / 8u);
+      unsigned int aColLocal = (_flat % 8u);
+      unsigned int aGlobalRow = (blockRow + aRowLocal);
+      unsigned int aGlobalCol = (kBase + aColLocal);
+      unsigned int aIdx = ((aGlobalRow * kStrideVal) + aGlobalCol);
+      __half aVal = a[aIdx];
+      unsigned int bRowLocal = (_flat / 64u);
+      unsigned int bColLocal = (_flat % 64u);
+      unsigned int bGlobalRow = (kBase + bRowLocal);
+      unsigned int bGlobalCol = (blockCol + bColLocal);
+      unsigned int bIdx = ((bGlobalRow * nStrideVal) + bGlobalCol);
+      __half bVal = b[bIdx];
+      tileA[_flat] = aVal;
+      tileB[_flat] = bVal;
+    }
+    __syncthreads();
+    navatala_mfma_f16x4 aFrag = navatala_mfma_load_a_f16_32x32x8(tileA, waveRowLocal, 0u, 8u);
+    navatala_mfma_f16x4 bFrag = navatala_mfma_load_b_f16_32x32x8(tileB, 0u, waveColLocal, 64u);
+    __syncthreads();
+    acc = __builtin_amdgcn_mfma_f32_32x32x8f16(aFrag, bFrag, acc, 0, 0, 0);
+  }
+  navatala_mfma_store_acc_f32_32x32x8_at(c, acc, tileRow, tileCol, nStrideVal, true);
+}
+
+)kernel";
+const char* k_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_padded = R"kernel(
+#include <hip/hip_runtime.h>
+#include <hip/hip_fp16.h>
+#ifndef NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#define NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#if defined(NAVATALA_GPU_ROCM_VERSION) && NAVATALA_GPU_ROCM_VERSION < 60200
+#error "matrix-intrinsic kernels require ROCm 6.2+"
+#endif
+typedef _Float16 navatala_mfma_f16x4 __attribute__((ext_vector_type(4)));
+typedef float navatala_mfma_acc_f32_32x32x8 __attribute__((ext_vector_type(16)));
+__device__ inline navatala_mfma_acc_f32_32x32x8 navatala_mfma_zero_acc_f32_32x32x8() {
+  return {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+}
+__device__ inline navatala_mfma_f16x4 navatala_mfma_load_a_f16_32x32x8(const __half* base, unsigned int row, unsigned int col, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localRow = lane & 31u;
+  const unsigned int kBase = (lane >> 5u) * 4u;
+  return {(_Float16)base[(row + localRow) * stride + (col + kBase + 0u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 1u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 2u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 3u)]};
+}
+__device__ inline navatala_mfma_f16x4 navatala_mfma_load_b_f16_32x32x8(const __half* base, unsigned int row, unsigned int col, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int kBase = (lane >> 5u) * 4u;
+  return {(_Float16)base[(row + kBase + 0u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 1u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 2u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 3u) * stride + (col + localCol)]};
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    dst[((unsigned int)(blockIdx.y * 32u) + localRow) * stride + ((unsigned int)(blockIdx.x * 32u) + localCol)] = acc[i];
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    dst[(rowOffset + localRow) * stride + (colOffset + localCol)] = acc[i];
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at_bounded(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, unsigned int rowLimit, unsigned int colLimit, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    const unsigned int row = rowOffset + localRow;
+    const unsigned int col = colOffset + localCol;
+    if (row < rowLimit && col < colLimit) {
+      dst[row * stride + col] = acc[i];
+    }
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at_scaled_bounded(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, unsigned int rowLimit, unsigned int colLimit, float alpha, float beta, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    const unsigned int row = rowOffset + localRow;
+    const unsigned int col = colOffset + localCol;
+    if (row < rowLimit && col < colLimit) {
+      const unsigned int idx = row * stride + col;
+      const float scaled = alpha * acc[i];
+      dst[idx] = (beta == 0.0f) ? scaled : (scaled + beta * dst[idx]);
+    }
+  }
+}
+#endif  // NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#ifndef NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+#define NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+__device__ inline __amdgpu_buffer_rsrc_t navatala_gpu_make_buffer_resource(const void* base) {
+  return __builtin_amdgcn_make_buffer_rsrc(const_cast<void*>(base), 0, 0xffffffffu, 0x00020000u);
+}
+template <typename T>
+__device__ inline void navatala_gpu_direct_load_dword_to_lds_prepared(__amdgpu_buffer_rsrc_t srcResource, unsigned int srcElemOffset, T* dstBase, unsigned int dstElemOffset) {
+#if defined(__gfx942__)
+  const unsigned int ldsAddr = (unsigned int)reinterpret_cast<unsigned long>(&dstBase[dstElemOffset]);
+  const unsigned int ldsBase = __builtin_amdgcn_readfirstlane(ldsAddr);
+  const unsigned int srcByteOffset = srcElemOffset * (unsigned int)sizeof(T);
+  asm volatile("s_mov_b32 m0, %0;\n\tbuffer_load_dword %1, %2, 0 offen lds;\n\t" :: "s"(ldsBase), "v"(srcByteOffset), "s"(srcResource) : "memory");
+#else
+  (void)srcResource;
+  (void)srcElemOffset;
+  (void)dstBase;
+  (void)dstElemOffset;
+#endif
+}
+template <typename T>
+__device__ inline void navatala_gpu_direct_load_dword_to_lds(const T* srcBase, unsigned int srcElemOffset, T* dstBase, unsigned int dstElemOffset) {
+#if defined(__gfx942__)
+  const __amdgpu_buffer_rsrc_t srcResource = navatala_gpu_make_buffer_resource(srcBase);
+  navatala_gpu_direct_load_dword_to_lds_prepared(srcResource, srcElemOffset, dstBase, dstElemOffset);
+#else
+  *reinterpret_cast<unsigned int*>(&dstBase[dstElemOffset]) = *reinterpret_cast<const unsigned int*>(&srcBase[srcElemOffset]);
+#endif
+}
+template <typename T>
+__device__ __attribute__((noinline)) void navatala_gpu_scalar_copy_global_to_shared(const T* srcBase, T* dstBase, unsigned int slot, unsigned int dstRow, unsigned int dstCol, unsigned int srcRow, unsigned int srcCol, unsigned int srcStride, unsigned int rows, unsigned int cols, unsigned int panelStride, unsigned int elemsPerSlot) {
+  for (unsigned int navatala_copy_i = (unsigned int)threadIdx.x; navatala_copy_i < rows * cols; navatala_copy_i += (unsigned int)blockDim.x) {
+    const unsigned int navatala_copy_r = navatala_copy_i / cols;
+    const unsigned int navatala_copy_c = navatala_copy_i - (navatala_copy_r * cols);
+    dstBase[(slot * elemsPerSlot) + ((dstRow + navatala_copy_r) * panelStride) + (dstCol + navatala_copy_c)] = srcBase[(srcRow + navatala_copy_r) * srcStride + (srcCol + navatala_copy_c)];
+  }
+}
+__device__ inline void navatala_gpu_wait_direct_lds_copy() {
+#if defined(__gfx942__)
+  asm volatile("s_waitcnt vmcnt(0)" ::: "memory");
+#endif
+}
+#endif  // NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+extern "C" __global__ __launch_bounds__(256) void navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_padded(const __half* a, const __half* b, const unsigned int* kTiles, const unsigned int* kStride, const unsigned int* nStride, float* c) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  unsigned int tid = ((unsigned int)((int)(threadIdx.x)));
+  unsigned int waveId = (tid / 64u);
+  unsigned int waveRowGroup = (waveId / 2u);
+  unsigned int waveColGroup = (waveId % 2u);
+  unsigned int blockRow = (((unsigned int)((int)(blockIdx.y))) * 64u);
+  unsigned int blockCol = (((unsigned int)((int)(blockIdx.x))) * 64u);
+  unsigned int tileRow = (blockRow + (waveRowGroup * 32u));
+  unsigned int tileCol = (blockCol + (waveColGroup * 32u));
+  unsigned int waveRowLocal = (waveRowGroup * 32u);
+  unsigned int waveColLocal = (waveColGroup * 32u);
+  unsigned int kTilesVal = kTiles[0u];
+  unsigned int kStrideVal = kStride[0u];
+  unsigned int nStrideVal = nStride[0u];
+  __shared__ __half tileA[576];
+  __shared__ __half tileB[520];
+  navatala_mfma_acc_f32_32x32x8 acc = navatala_mfma_zero_acc_f32_32x32x8();
+  for (int kTile = 0; kTile < (int)(kTilesVal); ++kTile) {
+    unsigned int kTileU32 = ((unsigned int)(kTile));
+    unsigned int kBase = (kTileU32 * 8u);
+    for (int loadIter = 0; loadIter < (int)(2u); ++loadIter) {
+      unsigned int loadIterU32 = ((unsigned int)(loadIter));
+      unsigned int _flat = ((loadIterU32 * 256u) + tid);
+      unsigned int aRowLocal = (_flat / 8u);
+      unsigned int aColLocal = (_flat % 8u);
+      unsigned int aGlobalRow = (blockRow + aRowLocal);
+      unsigned int aGlobalCol = (kBase + aColLocal);
+      unsigned int aIdx = ((aGlobalRow * kStrideVal) + aGlobalCol);
+      unsigned int aSharedIdx = ((aRowLocal * 9u) + aColLocal);
+      __half aVal = a[aIdx];
+      unsigned int bRowLocal = (_flat / 64u);
+      unsigned int bColLocal = (_flat % 64u);
+      unsigned int bGlobalRow = (kBase + bRowLocal);
+      unsigned int bGlobalCol = (blockCol + bColLocal);
+      unsigned int bIdx = ((bGlobalRow * nStrideVal) + bGlobalCol);
+      unsigned int bSharedIdx = ((bRowLocal * 65u) + bColLocal);
+      __half bVal = b[bIdx];
+      tileA[aSharedIdx] = aVal;
+      tileB[bSharedIdx] = bVal;
+    }
+    __syncthreads();
+    navatala_mfma_f16x4 aFrag = navatala_mfma_load_a_f16_32x32x8(tileA, waveRowLocal, 0u, 9u);
+    navatala_mfma_f16x4 bFrag = navatala_mfma_load_b_f16_32x32x8(tileB, 0u, waveColLocal, 65u);
+    acc = __builtin_amdgcn_mfma_f32_32x32x8f16(aFrag, bFrag, acc, 0, 0, 0);
+    __syncthreads();
+  }
+  navatala_mfma_store_acc_f32_32x32x8_at(c, acc, tileRow, tileCol, nStrideVal, true);
+}
+
+)kernel";
+const char* k_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined = R"kernel(
+#include <hip/hip_runtime.h>
+#include <hip/hip_fp16.h>
+#ifndef NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#define NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#if defined(NAVATALA_GPU_ROCM_VERSION) && NAVATALA_GPU_ROCM_VERSION < 60200
+#error "matrix-intrinsic kernels require ROCm 6.2+"
+#endif
+typedef _Float16 navatala_mfma_f16x4 __attribute__((ext_vector_type(4)));
+typedef float navatala_mfma_acc_f32_32x32x8 __attribute__((ext_vector_type(16)));
+__device__ inline navatala_mfma_acc_f32_32x32x8 navatala_mfma_zero_acc_f32_32x32x8() {
+  return {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+}
+__device__ inline navatala_mfma_f16x4 navatala_mfma_load_a_f16_32x32x8(const __half* base, unsigned int row, unsigned int col, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localRow = lane & 31u;
+  const unsigned int kBase = (lane >> 5u) * 4u;
+  return {(_Float16)base[(row + localRow) * stride + (col + kBase + 0u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 1u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 2u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 3u)]};
+}
+__device__ inline navatala_mfma_f16x4 navatala_mfma_load_b_f16_32x32x8(const __half* base, unsigned int row, unsigned int col, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int kBase = (lane >> 5u) * 4u;
+  return {(_Float16)base[(row + kBase + 0u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 1u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 2u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 3u) * stride + (col + localCol)]};
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    dst[((unsigned int)(blockIdx.y * 32u) + localRow) * stride + ((unsigned int)(blockIdx.x * 32u) + localCol)] = acc[i];
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    dst[(rowOffset + localRow) * stride + (colOffset + localCol)] = acc[i];
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at_bounded(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, unsigned int rowLimit, unsigned int colLimit, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    const unsigned int row = rowOffset + localRow;
+    const unsigned int col = colOffset + localCol;
+    if (row < rowLimit && col < colLimit) {
+      dst[row * stride + col] = acc[i];
+    }
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at_scaled_bounded(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, unsigned int rowLimit, unsigned int colLimit, float alpha, float beta, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    const unsigned int row = rowOffset + localRow;
+    const unsigned int col = colOffset + localCol;
+    if (row < rowLimit && col < colLimit) {
+      const unsigned int idx = row * stride + col;
+      const float scaled = alpha * acc[i];
+      dst[idx] = (beta == 0.0f) ? scaled : (scaled + beta * dst[idx]);
+    }
+  }
+}
+#endif  // NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#ifndef NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+#define NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+__device__ inline __amdgpu_buffer_rsrc_t navatala_gpu_make_buffer_resource(const void* base) {
+  return __builtin_amdgcn_make_buffer_rsrc(const_cast<void*>(base), 0, 0xffffffffu, 0x00020000u);
+}
+template <typename T>
+__device__ inline void navatala_gpu_direct_load_dword_to_lds_prepared(__amdgpu_buffer_rsrc_t srcResource, unsigned int srcElemOffset, T* dstBase, unsigned int dstElemOffset) {
+#if defined(__gfx942__)
+  const unsigned int ldsAddr = (unsigned int)reinterpret_cast<unsigned long>(&dstBase[dstElemOffset]);
+  const unsigned int ldsBase = __builtin_amdgcn_readfirstlane(ldsAddr);
+  const unsigned int srcByteOffset = srcElemOffset * (unsigned int)sizeof(T);
+  asm volatile("s_mov_b32 m0, %0;\n\tbuffer_load_dword %1, %2, 0 offen lds;\n\t" :: "s"(ldsBase), "v"(srcByteOffset), "s"(srcResource) : "memory");
+#else
+  (void)srcResource;
+  (void)srcElemOffset;
+  (void)dstBase;
+  (void)dstElemOffset;
+#endif
+}
+template <typename T>
+__device__ inline void navatala_gpu_direct_load_dword_to_lds(const T* srcBase, unsigned int srcElemOffset, T* dstBase, unsigned int dstElemOffset) {
+#if defined(__gfx942__)
+  const __amdgpu_buffer_rsrc_t srcResource = navatala_gpu_make_buffer_resource(srcBase);
+  navatala_gpu_direct_load_dword_to_lds_prepared(srcResource, srcElemOffset, dstBase, dstElemOffset);
+#else
+  *reinterpret_cast<unsigned int*>(&dstBase[dstElemOffset]) = *reinterpret_cast<const unsigned int*>(&srcBase[srcElemOffset]);
+#endif
+}
+template <typename T>
+__device__ __attribute__((noinline)) void navatala_gpu_scalar_copy_global_to_shared(const T* srcBase, T* dstBase, unsigned int slot, unsigned int dstRow, unsigned int dstCol, unsigned int srcRow, unsigned int srcCol, unsigned int srcStride, unsigned int rows, unsigned int cols, unsigned int panelStride, unsigned int elemsPerSlot) {
+  for (unsigned int navatala_copy_i = (unsigned int)threadIdx.x; navatala_copy_i < rows * cols; navatala_copy_i += (unsigned int)blockDim.x) {
+    const unsigned int navatala_copy_r = navatala_copy_i / cols;
+    const unsigned int navatala_copy_c = navatala_copy_i - (navatala_copy_r * cols);
+    dstBase[(slot * elemsPerSlot) + ((dstRow + navatala_copy_r) * panelStride) + (dstCol + navatala_copy_c)] = srcBase[(srcRow + navatala_copy_r) * srcStride + (srcCol + navatala_copy_c)];
+  }
+}
+__device__ inline void navatala_gpu_wait_direct_lds_copy() {
+#if defined(__gfx942__)
+  asm volatile("s_waitcnt vmcnt(0)" ::: "memory");
+#endif
+}
+#endif  // NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+extern "C" __global__ __launch_bounds__(256) void navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined(const __half* a, const __half* b, const unsigned int* kTiles, const unsigned int* kStride, const unsigned int* nStride, float* c) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  unsigned int tid = ((unsigned int)((int)(threadIdx.x)));
+  unsigned int waveId = (tid / 64u);
+  unsigned int waveRowGroup = (waveId / 2u);
+  unsigned int waveColGroup = (waveId % 2u);
+  unsigned int blockRow = (((unsigned int)((int)(blockIdx.y))) * 64u);
+  unsigned int blockCol = (((unsigned int)((int)(blockIdx.x))) * 64u);
+  unsigned int tileRow = (blockRow + (waveRowGroup * 32u));
+  unsigned int tileCol = (blockCol + (waveColGroup * 32u));
+  unsigned int waveRowLocal = (waveRowGroup * 32u);
+  unsigned int waveColLocal = (waveColGroup * 32u);
+  unsigned int kTilesVal = kTiles[0u];
+  unsigned int kStrideVal = kStride[0u];
+  unsigned int nStrideVal = nStride[0u];
+  __shared__ __align__(16) __half panelA[1024]; /* R6 shared panel: GPU.MatrixPanelRole.A, slots=2 */
+  __shared__ __align__(16) __half panelB[1024]; /* R6 shared panel: GPU.MatrixPanelRole.B, slots=2 */
+  navatala_mfma_acc_f32_32x32x8 acc = navatala_mfma_zero_acc_f32_32x32x8();
+  for (int kTile = 0; kTile < (int)(kTilesVal); ++kTile) {
+    unsigned int kTileU32 = ((unsigned int)(kTile));
+    unsigned int slot = (kTileU32 % 2u);
+    unsigned int kBase = (kTileU32 * 8u);
+    bool isFirstTile = (kTileU32 == 0u);
+    {
+      /* R6 CopyGlobalToShared HIP direct global-to-LDS dword path for vector-b16; group=slot */
+      const bool navatala_copy_direct_ok = ((unsigned int)(kStrideVal) % 2u) == 0u && ((unsigned int)(kBase) % 2u) == 0u && ((unsigned int)(0u) % 2u) == 0u;
+      if (isFirstTile) {
+        if (__builtin_expect(navatala_copy_direct_ok, 1)) {
+          const __amdgpu_buffer_rsrc_t navatala_copy_src_resource = navatala_gpu_make_buffer_resource(&a[0]);
+          for (unsigned int navatala_copy_dw = (unsigned int)threadIdx.x; navatala_copy_dw < 256u; navatala_copy_dw += (unsigned int)blockDim.x) {
+            const unsigned int navatala_copy_elem = navatala_copy_dw * 2u;
+            const unsigned int navatala_copy_r = navatala_copy_elem / 8u;
+            const unsigned int navatala_copy_c = navatala_copy_elem - (navatala_copy_r * 8u);
+            const unsigned int navatala_dst_idx = ((slot) * 512u) + (((0u) + navatala_copy_r) * 8u) + ((0u) + navatala_copy_c);
+            const unsigned int navatala_src_idx = (((blockRow) + navatala_copy_r) * (kStrideVal)) + ((kBase) + navatala_copy_c);
+            navatala_gpu_direct_load_dword_to_lds_prepared(navatala_copy_src_resource, navatala_src_idx, &panelA[0], navatala_dst_idx);
+          }
+        } else {
+          navatala_gpu_scalar_copy_global_to_shared(&a[0], &panelA[0], (unsigned int)(slot), (unsigned int)(0u), (unsigned int)(0u), (unsigned int)(blockRow), (unsigned int)(kBase), (unsigned int)(kStrideVal), 64u, 8u, 8u, 512u);
+        }
+      }
+    }
+    {
+      /* R6 CopyGlobalToShared HIP direct global-to-LDS dword path for vector-b16; group=slot */
+      const bool navatala_copy_direct_ok = ((unsigned int)(nStrideVal) % 2u) == 0u && ((unsigned int)(blockCol) % 2u) == 0u && ((unsigned int)(0u) % 2u) == 0u;
+      if (isFirstTile) {
+        if (__builtin_expect(navatala_copy_direct_ok, 1)) {
+          const __amdgpu_buffer_rsrc_t navatala_copy_src_resource = navatala_gpu_make_buffer_resource(&b[0]);
+          for (unsigned int navatala_copy_dw = (unsigned int)threadIdx.x; navatala_copy_dw < 256u; navatala_copy_dw += (unsigned int)blockDim.x) {
+            const unsigned int navatala_copy_elem = navatala_copy_dw * 2u;
+            const unsigned int navatala_copy_r = navatala_copy_elem / 64u;
+            const unsigned int navatala_copy_c = navatala_copy_elem - (navatala_copy_r * 64u);
+            const unsigned int navatala_dst_idx = ((slot) * 512u) + (((0u) + navatala_copy_r) * 64u) + ((0u) + navatala_copy_c);
+            const unsigned int navatala_src_idx = (((kBase) + navatala_copy_r) * (nStrideVal)) + ((blockCol) + navatala_copy_c);
+            navatala_gpu_direct_load_dword_to_lds_prepared(navatala_copy_src_resource, navatala_src_idx, &panelB[0], navatala_dst_idx);
+          }
+        } else {
+          navatala_gpu_scalar_copy_global_to_shared(&b[0], &panelB[0], (unsigned int)(slot), (unsigned int)(0u), (unsigned int)(0u), (unsigned int)(kBase), (unsigned int)(blockCol), (unsigned int)(nStrideVal), 8u, 64u, 64u, 512u);
+        }
+      }
+    }
+    /* R6 AwaitCopyGroup HIP direct-LDS wait: group=slot */
+    navatala_gpu_wait_direct_lds_copy();
+    __syncthreads();
+    unsigned int nextTileU32 = (kTileU32 + 1u);
+    bool hasNextTile = (nextTileU32 < kTilesVal);
+    unsigned int nextSlot = (nextTileU32 % 2u);
+    unsigned int nextKBase = (nextTileU32 * 8u);
+    {
+      /* R6 CopyGlobalToShared HIP direct global-to-LDS dword path for vector-b16; group=nextSlot */
+      const bool navatala_copy_direct_ok = ((unsigned int)(kStrideVal) % 2u) == 0u && ((unsigned int)(nextKBase) % 2u) == 0u && ((unsigned int)(0u) % 2u) == 0u;
+      if (hasNextTile) {
+        if (__builtin_expect(navatala_copy_direct_ok, 1)) {
+          const __amdgpu_buffer_rsrc_t navatala_copy_src_resource = navatala_gpu_make_buffer_resource(&a[0]);
+          for (unsigned int navatala_copy_dw = (unsigned int)threadIdx.x; navatala_copy_dw < 256u; navatala_copy_dw += (unsigned int)blockDim.x) {
+            const unsigned int navatala_copy_elem = navatala_copy_dw * 2u;
+            const unsigned int navatala_copy_r = navatala_copy_elem / 8u;
+            const unsigned int navatala_copy_c = navatala_copy_elem - (navatala_copy_r * 8u);
+            const unsigned int navatala_dst_idx = ((nextSlot) * 512u) + (((0u) + navatala_copy_r) * 8u) + ((0u) + navatala_copy_c);
+            const unsigned int navatala_src_idx = (((blockRow) + navatala_copy_r) * (kStrideVal)) + ((nextKBase) + navatala_copy_c);
+            navatala_gpu_direct_load_dword_to_lds_prepared(navatala_copy_src_resource, navatala_src_idx, &panelA[0], navatala_dst_idx);
+          }
+        } else {
+          navatala_gpu_scalar_copy_global_to_shared(&a[0], &panelA[0], (unsigned int)(nextSlot), (unsigned int)(0u), (unsigned int)(0u), (unsigned int)(blockRow), (unsigned int)(nextKBase), (unsigned int)(kStrideVal), 64u, 8u, 8u, 512u);
+        }
+      }
+    }
+    {
+      /* R6 CopyGlobalToShared HIP direct global-to-LDS dword path for vector-b16; group=nextSlot */
+      const bool navatala_copy_direct_ok = ((unsigned int)(nStrideVal) % 2u) == 0u && ((unsigned int)(blockCol) % 2u) == 0u && ((unsigned int)(0u) % 2u) == 0u;
+      if (hasNextTile) {
+        if (__builtin_expect(navatala_copy_direct_ok, 1)) {
+          const __amdgpu_buffer_rsrc_t navatala_copy_src_resource = navatala_gpu_make_buffer_resource(&b[0]);
+          for (unsigned int navatala_copy_dw = (unsigned int)threadIdx.x; navatala_copy_dw < 256u; navatala_copy_dw += (unsigned int)blockDim.x) {
+            const unsigned int navatala_copy_elem = navatala_copy_dw * 2u;
+            const unsigned int navatala_copy_r = navatala_copy_elem / 64u;
+            const unsigned int navatala_copy_c = navatala_copy_elem - (navatala_copy_r * 64u);
+            const unsigned int navatala_dst_idx = ((nextSlot) * 512u) + (((0u) + navatala_copy_r) * 64u) + ((0u) + navatala_copy_c);
+            const unsigned int navatala_src_idx = (((nextKBase) + navatala_copy_r) * (nStrideVal)) + ((blockCol) + navatala_copy_c);
+            navatala_gpu_direct_load_dword_to_lds_prepared(navatala_copy_src_resource, navatala_src_idx, &panelB[0], navatala_dst_idx);
+          }
+        } else {
+          navatala_gpu_scalar_copy_global_to_shared(&b[0], &panelB[0], (unsigned int)(nextSlot), (unsigned int)(0u), (unsigned int)(0u), (unsigned int)(nextKBase), (unsigned int)(blockCol), (unsigned int)(nStrideVal), 8u, 64u, 64u, 512u);
+        }
+      }
+    }
+    navatala_mfma_f16x4 aFrag = navatala_mfma_load_a_f16_32x32x8(((panelA) + ((slot) * 512u)), waveRowLocal, 0u, 8u);
+    navatala_mfma_f16x4 bFrag = navatala_mfma_load_b_f16_32x32x8(((panelB) + ((slot) * 512u)), 0u, waveColLocal, 64u);
+    acc = __builtin_amdgcn_mfma_f32_32x32x8f16(aFrag, bFrag, acc, 0, 0, 0);
+    __syncthreads();
+  }
+  navatala_mfma_store_acc_f32_32x32x8_at(c, acc, tileRow, tileCol, nStrideVal, true);
+}
+
+)kernel";
+const char* k_hip_navatala_transformer_tiled_gemm_f16_mfma_cta128 = R"kernel(
+#include <hip/hip_runtime.h>
+#include <hip/hip_fp16.h>
+#ifndef NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#define NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#if defined(NAVATALA_GPU_ROCM_VERSION) && NAVATALA_GPU_ROCM_VERSION < 60200
+#error "matrix-intrinsic kernels require ROCm 6.2+"
+#endif
+typedef _Float16 navatala_mfma_f16x4 __attribute__((ext_vector_type(4)));
+typedef float navatala_mfma_acc_f32_32x32x8 __attribute__((ext_vector_type(16)));
+__device__ inline navatala_mfma_acc_f32_32x32x8 navatala_mfma_zero_acc_f32_32x32x8() {
+  return {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+}
+__device__ inline navatala_mfma_f16x4 navatala_mfma_load_a_f16_32x32x8(const __half* base, unsigned int row, unsigned int col, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localRow = lane & 31u;
+  const unsigned int kBase = (lane >> 5u) * 4u;
+  return {(_Float16)base[(row + localRow) * stride + (col + kBase + 0u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 1u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 2u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 3u)]};
+}
+__device__ inline navatala_mfma_f16x4 navatala_mfma_load_b_f16_32x32x8(const __half* base, unsigned int row, unsigned int col, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int kBase = (lane >> 5u) * 4u;
+  return {(_Float16)base[(row + kBase + 0u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 1u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 2u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 3u) * stride + (col + localCol)]};
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    dst[((unsigned int)(blockIdx.y * 32u) + localRow) * stride + ((unsigned int)(blockIdx.x * 32u) + localCol)] = acc[i];
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    dst[(rowOffset + localRow) * stride + (colOffset + localCol)] = acc[i];
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at_bounded(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, unsigned int rowLimit, unsigned int colLimit, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    const unsigned int row = rowOffset + localRow;
+    const unsigned int col = colOffset + localCol;
+    if (row < rowLimit && col < colLimit) {
+      dst[row * stride + col] = acc[i];
+    }
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at_scaled_bounded(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, unsigned int rowLimit, unsigned int colLimit, float alpha, float beta, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    const unsigned int row = rowOffset + localRow;
+    const unsigned int col = colOffset + localCol;
+    if (row < rowLimit && col < colLimit) {
+      const unsigned int idx = row * stride + col;
+      const float scaled = alpha * acc[i];
+      dst[idx] = (beta == 0.0f) ? scaled : (scaled + beta * dst[idx]);
+    }
+  }
+}
+#endif  // NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#ifndef NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+#define NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+__device__ inline __amdgpu_buffer_rsrc_t navatala_gpu_make_buffer_resource(const void* base) {
+  return __builtin_amdgcn_make_buffer_rsrc(const_cast<void*>(base), 0, 0xffffffffu, 0x00020000u);
+}
+template <typename T>
+__device__ inline void navatala_gpu_direct_load_dword_to_lds_prepared(__amdgpu_buffer_rsrc_t srcResource, unsigned int srcElemOffset, T* dstBase, unsigned int dstElemOffset) {
+#if defined(__gfx942__)
+  const unsigned int ldsAddr = (unsigned int)reinterpret_cast<unsigned long>(&dstBase[dstElemOffset]);
+  const unsigned int ldsBase = __builtin_amdgcn_readfirstlane(ldsAddr);
+  const unsigned int srcByteOffset = srcElemOffset * (unsigned int)sizeof(T);
+  asm volatile("s_mov_b32 m0, %0;\n\tbuffer_load_dword %1, %2, 0 offen lds;\n\t" :: "s"(ldsBase), "v"(srcByteOffset), "s"(srcResource) : "memory");
+#else
+  (void)srcResource;
+  (void)srcElemOffset;
+  (void)dstBase;
+  (void)dstElemOffset;
+#endif
+}
+template <typename T>
+__device__ inline void navatala_gpu_direct_load_dword_to_lds(const T* srcBase, unsigned int srcElemOffset, T* dstBase, unsigned int dstElemOffset) {
+#if defined(__gfx942__)
+  const __amdgpu_buffer_rsrc_t srcResource = navatala_gpu_make_buffer_resource(srcBase);
+  navatala_gpu_direct_load_dword_to_lds_prepared(srcResource, srcElemOffset, dstBase, dstElemOffset);
+#else
+  *reinterpret_cast<unsigned int*>(&dstBase[dstElemOffset]) = *reinterpret_cast<const unsigned int*>(&srcBase[srcElemOffset]);
+#endif
+}
+template <typename T>
+__device__ __attribute__((noinline)) void navatala_gpu_scalar_copy_global_to_shared(const T* srcBase, T* dstBase, unsigned int slot, unsigned int dstRow, unsigned int dstCol, unsigned int srcRow, unsigned int srcCol, unsigned int srcStride, unsigned int rows, unsigned int cols, unsigned int panelStride, unsigned int elemsPerSlot) {
+  for (unsigned int navatala_copy_i = (unsigned int)threadIdx.x; navatala_copy_i < rows * cols; navatala_copy_i += (unsigned int)blockDim.x) {
+    const unsigned int navatala_copy_r = navatala_copy_i / cols;
+    const unsigned int navatala_copy_c = navatala_copy_i - (navatala_copy_r * cols);
+    dstBase[(slot * elemsPerSlot) + ((dstRow + navatala_copy_r) * panelStride) + (dstCol + navatala_copy_c)] = srcBase[(srcRow + navatala_copy_r) * srcStride + (srcCol + navatala_copy_c)];
+  }
+}
+__device__ inline void navatala_gpu_wait_direct_lds_copy() {
+#if defined(__gfx942__)
+  asm volatile("s_waitcnt vmcnt(0)" ::: "memory");
+#endif
+}
+#endif  // NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+extern "C" __global__ __launch_bounds__(256) void navatala_transformer_tiled_gemm_f16_mfma_cta128(const __half* a, const __half* b, const unsigned int* kBlocks, const unsigned int* kStride, const unsigned int* nStride, float* c) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  unsigned int tid = ((unsigned int)((int)(threadIdx.x)));
+  unsigned int waveId = (tid / 64u);
+  unsigned int waveRowGroup = (waveId / 2u);
+  unsigned int waveColGroup = (waveId % 2u);
+  unsigned int blockRow = (((unsigned int)((int)(blockIdx.y))) * 128u);
+  unsigned int blockCol = (((unsigned int)((int)(blockIdx.x))) * 128u);
+  unsigned int waveRowLocalBase = (waveRowGroup * 64u);
+  unsigned int waveColLocalBase = (waveColGroup * 64u);
+  unsigned int waveRowBase = (blockRow + waveRowLocalBase);
+  unsigned int waveColBase = (blockCol + waveColLocalBase);
+  unsigned int kBlocksVal = kBlocks[0u];
+  unsigned int kStrideVal = kStride[0u];
+  unsigned int nStrideVal = nStride[0u];
+  __shared__ __half tileA[4096];
+  __shared__ __half tileB[4096];
+  navatala_mfma_acc_f32_32x32x8 acc00 = navatala_mfma_zero_acc_f32_32x32x8();
+  navatala_mfma_acc_f32_32x32x8 acc01 = navatala_mfma_zero_acc_f32_32x32x8();
+  navatala_mfma_acc_f32_32x32x8 acc10 = navatala_mfma_zero_acc_f32_32x32x8();
+  navatala_mfma_acc_f32_32x32x8 acc11 = navatala_mfma_zero_acc_f32_32x32x8();
+  for (int kBlock = 0; kBlock < (int)(kBlocksVal); ++kBlock) {
+    unsigned int kBlockU32 = ((unsigned int)(kBlock));
+    unsigned int kBase = (kBlockU32 * 32u);
+    for (int loadIter = 0; loadIter < (int)(16u); ++loadIter) {
+      unsigned int loadIterU32 = ((unsigned int)(loadIter));
+      unsigned int _flat = ((loadIterU32 * 256u) + tid);
+      unsigned int aRowLocal = (_flat / 32u);
+      unsigned int aColLocal = (_flat % 32u);
+      unsigned int aGlobalRow = (blockRow + aRowLocal);
+      unsigned int aGlobalCol = (kBase + aColLocal);
+      unsigned int aIdx = ((aGlobalRow * kStrideVal) + aGlobalCol);
+      __half aVal = a[aIdx];
+      unsigned int bRowLocal = (_flat / 128u);
+      unsigned int bColLocal = (_flat % 128u);
+      unsigned int bGlobalRow = (kBase + bRowLocal);
+      unsigned int bGlobalCol = (blockCol + bColLocal);
+      unsigned int bIdx = ((bGlobalRow * nStrideVal) + bGlobalCol);
+      __half bVal = b[bIdx];
+      tileA[_flat] = aVal;
+      tileB[_flat] = bVal;
+    }
+    __syncthreads();
+    for (int kkTile = 0; kkTile < (int)(4u); ++kkTile) {
+      unsigned int kkTileU32 = ((unsigned int)(kkTile));
+      unsigned int kkBase = (kkTileU32 * 8u);
+      navatala_mfma_f16x4 aFrag0 = navatala_mfma_load_a_f16_32x32x8(tileA, waveRowLocalBase, kkBase, 32u);
+      navatala_mfma_f16x4 aFrag1 = navatala_mfma_load_a_f16_32x32x8(tileA, (waveRowLocalBase + 32u), kkBase, 32u);
+      navatala_mfma_f16x4 bFrag0 = navatala_mfma_load_b_f16_32x32x8(tileB, kkBase, waveColLocalBase, 128u);
+      navatala_mfma_f16x4 bFrag1 = navatala_mfma_load_b_f16_32x32x8(tileB, kkBase, (waveColLocalBase + 32u), 128u);
+      acc00 = __builtin_amdgcn_mfma_f32_32x32x8f16(aFrag0, bFrag0, acc00, 0, 0, 0);
+      acc01 = __builtin_amdgcn_mfma_f32_32x32x8f16(aFrag0, bFrag1, acc01, 0, 0, 0);
+      acc10 = __builtin_amdgcn_mfma_f32_32x32x8f16(aFrag1, bFrag0, acc10, 0, 0, 0);
+      acc11 = __builtin_amdgcn_mfma_f32_32x32x8f16(aFrag1, bFrag1, acc11, 0, 0, 0);
+    }
+    __syncthreads();
+  }
+  navatala_mfma_store_acc_f32_32x32x8_at(c, acc00, waveRowBase, waveColBase, nStrideVal, true);
+  navatala_mfma_store_acc_f32_32x32x8_at(c, acc01, waveRowBase, (waveColBase + 32u), nStrideVal, true);
+  navatala_mfma_store_acc_f32_32x32x8_at(c, acc10, (waveRowBase + 32u), waveColBase, nStrideVal, true);
+  navatala_mfma_store_acc_f32_32x32x8_at(c, acc11, (waveRowBase + 32u), (waveColBase + 32u), nStrideVal, true);
+}
+
+)kernel";
+const char* k_hip_navatala_transformer_tiled_gemm_f16_mfma_cta128_edge = R"kernel(
+#include <hip/hip_runtime.h>
+#include <hip/hip_fp16.h>
+#ifndef NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#define NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#if defined(NAVATALA_GPU_ROCM_VERSION) && NAVATALA_GPU_ROCM_VERSION < 60200
+#error "matrix-intrinsic kernels require ROCm 6.2+"
+#endif
+typedef _Float16 navatala_mfma_f16x4 __attribute__((ext_vector_type(4)));
+typedef float navatala_mfma_acc_f32_32x32x8 __attribute__((ext_vector_type(16)));
+__device__ inline navatala_mfma_acc_f32_32x32x8 navatala_mfma_zero_acc_f32_32x32x8() {
+  return {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+}
+__device__ inline navatala_mfma_f16x4 navatala_mfma_load_a_f16_32x32x8(const __half* base, unsigned int row, unsigned int col, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localRow = lane & 31u;
+  const unsigned int kBase = (lane >> 5u) * 4u;
+  return {(_Float16)base[(row + localRow) * stride + (col + kBase + 0u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 1u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 2u)],
+          (_Float16)base[(row + localRow) * stride + (col + kBase + 3u)]};
+}
+__device__ inline navatala_mfma_f16x4 navatala_mfma_load_b_f16_32x32x8(const __half* base, unsigned int row, unsigned int col, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int kBase = (lane >> 5u) * 4u;
+  return {(_Float16)base[(row + kBase + 0u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 1u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 2u) * stride + (col + localCol)],
+          (_Float16)base[(row + kBase + 3u) * stride + (col + localCol)]};
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int stride) {
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    dst[((unsigned int)(blockIdx.y * 32u) + localRow) * stride + ((unsigned int)(blockIdx.x * 32u) + localCol)] = acc[i];
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    dst[(rowOffset + localRow) * stride + (colOffset + localCol)] = acc[i];
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at_bounded(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, unsigned int rowLimit, unsigned int colLimit, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    const unsigned int row = rowOffset + localRow;
+    const unsigned int col = colOffset + localCol;
+    if (row < rowLimit && col < colLimit) {
+      dst[row * stride + col] = acc[i];
+    }
+  }
+}
+__device__ inline void navatala_mfma_store_acc_f32_32x32x8_at_scaled_bounded(float* dst, navatala_mfma_acc_f32_32x32x8 acc, unsigned int rowOffset, unsigned int colOffset, unsigned int stride, unsigned int rowLimit, unsigned int colLimit, float alpha, float beta, bool predicate) {
+  if (!predicate) { return; }
+  const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
+  const unsigned int localCol = lane & 31u;
+  const unsigned int rowGroup = 4u * (lane >> 5u);
+  #pragma unroll
+  for (unsigned int i = 0; i < 16u; ++i) {
+    const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+    const unsigned int row = rowOffset + localRow;
+    const unsigned int col = colOffset + localCol;
+    if (row < rowLimit && col < colLimit) {
+      const unsigned int idx = row * stride + col;
+      const float scaled = alpha * acc[i];
+      dst[idx] = (beta == 0.0f) ? scaled : (scaled + beta * dst[idx]);
+    }
+  }
+}
+#endif  // NAVATALA_GPU_HIP_MFMA_F16_F32_32X32X8_HELPERS
+#ifndef NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+#define NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+__device__ inline __amdgpu_buffer_rsrc_t navatala_gpu_make_buffer_resource(const void* base) {
+  return __builtin_amdgcn_make_buffer_rsrc(const_cast<void*>(base), 0, 0xffffffffu, 0x00020000u);
+}
+template <typename T>
+__device__ inline void navatala_gpu_direct_load_dword_to_lds_prepared(__amdgpu_buffer_rsrc_t srcResource, unsigned int srcElemOffset, T* dstBase, unsigned int dstElemOffset) {
+#if defined(__gfx942__)
+  const unsigned int ldsAddr = (unsigned int)reinterpret_cast<unsigned long>(&dstBase[dstElemOffset]);
+  const unsigned int ldsBase = __builtin_amdgcn_readfirstlane(ldsAddr);
+  const unsigned int srcByteOffset = srcElemOffset * (unsigned int)sizeof(T);
+  asm volatile("s_mov_b32 m0, %0;\n\tbuffer_load_dword %1, %2, 0 offen lds;\n\t" :: "s"(ldsBase), "v"(srcByteOffset), "s"(srcResource) : "memory");
+#else
+  (void)srcResource;
+  (void)srcElemOffset;
+  (void)dstBase;
+  (void)dstElemOffset;
+#endif
+}
+template <typename T>
+__device__ inline void navatala_gpu_direct_load_dword_to_lds(const T* srcBase, unsigned int srcElemOffset, T* dstBase, unsigned int dstElemOffset) {
+#if defined(__gfx942__)
+  const __amdgpu_buffer_rsrc_t srcResource = navatala_gpu_make_buffer_resource(srcBase);
+  navatala_gpu_direct_load_dword_to_lds_prepared(srcResource, srcElemOffset, dstBase, dstElemOffset);
+#else
+  *reinterpret_cast<unsigned int*>(&dstBase[dstElemOffset]) = *reinterpret_cast<const unsigned int*>(&srcBase[srcElemOffset]);
+#endif
+}
+template <typename T>
+__device__ __attribute__((noinline)) void navatala_gpu_scalar_copy_global_to_shared(const T* srcBase, T* dstBase, unsigned int slot, unsigned int dstRow, unsigned int dstCol, unsigned int srcRow, unsigned int srcCol, unsigned int srcStride, unsigned int rows, unsigned int cols, unsigned int panelStride, unsigned int elemsPerSlot) {
+  for (unsigned int navatala_copy_i = (unsigned int)threadIdx.x; navatala_copy_i < rows * cols; navatala_copy_i += (unsigned int)blockDim.x) {
+    const unsigned int navatala_copy_r = navatala_copy_i / cols;
+    const unsigned int navatala_copy_c = navatala_copy_i - (navatala_copy_r * cols);
+    dstBase[(slot * elemsPerSlot) + ((dstRow + navatala_copy_r) * panelStride) + (dstCol + navatala_copy_c)] = srcBase[(srcRow + navatala_copy_r) * srcStride + (srcCol + navatala_copy_c)];
+  }
+}
+__device__ inline void navatala_gpu_wait_direct_lds_copy() {
+#if defined(__gfx942__)
+  asm volatile("s_waitcnt vmcnt(0)" ::: "memory");
+#endif
+}
+#endif  // NAVATALA_GPU_HIP_DIRECT_LDS_COPY_HELPERS
+extern "C" __global__ __launch_bounds__(256) void navatala_transformer_tiled_gemm_f16_mfma_cta128_edge(const __half* a, const __half* b, const unsigned int* mDim, const unsigned int* nDim, const unsigned int* kDim, const unsigned int* kBlocks, const unsigned int* aStride, const unsigned int* bStride, const unsigned int* cStride, const unsigned int* aBatchStride, const unsigned int* bBatchStride, const unsigned int* cBatchStride, const unsigned int* transA, const unsigned int* transB, const float* alpha, const float* beta, float* c) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  unsigned int tid = ((unsigned int)((int)(threadIdx.x)));
+  unsigned int batchIdx = ((unsigned int)((int)(blockIdx.z)));
+  unsigned int waveId = (tid / 64u);
+  unsigned int waveRowGroup = (waveId / 2u);
+  unsigned int waveColGroup = (waveId % 2u);
+  unsigned int blockRow = (((unsigned int)((int)(blockIdx.y))) * 128u);
+  unsigned int blockCol = (((unsigned int)((int)(blockIdx.x))) * 128u);
+  unsigned int waveRowLocalBase = (waveRowGroup * 64u);
+  unsigned int waveColLocalBase = (waveColGroup * 64u);
+  unsigned int waveRowBase = (blockRow + waveRowLocalBase);
+  unsigned int waveColBase = (blockCol + waveColLocalBase);
+  unsigned int mDimVal = mDim[0u];
+  unsigned int nDimVal = nDim[0u];
+  unsigned int kDimVal = kDim[0u];
+  unsigned int kBlocksVal = kBlocks[0u];
+  unsigned int aStrideVal = aStride[0u];
+  unsigned int bStrideVal = bStride[0u];
+  unsigned int cStrideVal = cStride[0u];
+  unsigned int aBatchStrideVal = aBatchStride[0u];
+  unsigned int bBatchStrideVal = bBatchStride[0u];
+  unsigned int cBatchStrideVal = cBatchStride[0u];
+  unsigned int transAVal = transA[0u];
+  unsigned int transBVal = transB[0u];
+  bool useTransA = (transAVal != 0u);
+  bool useTransB = (transBVal != 0u);
+  float alphaVal = alpha[0u];
+  float betaVal = beta[0u];
+  unsigned int aBatchBase = (batchIdx * aBatchStrideVal);
+  unsigned int bBatchBase = (batchIdx * bBatchStrideVal);
+  unsigned int cBatchBase = (batchIdx * cBatchStrideVal);
+  unsigned int cWaveColBase = (cBatchBase + waveColBase);
+  unsigned int cColLimit = (cBatchBase + nDimVal);
+  __shared__ __half tileA[4096];
+  __shared__ __half tileB[4096];
+  navatala_mfma_acc_f32_32x32x8 acc00 = navatala_mfma_zero_acc_f32_32x32x8();
+  navatala_mfma_acc_f32_32x32x8 acc01 = navatala_mfma_zero_acc_f32_32x32x8();
+  navatala_mfma_acc_f32_32x32x8 acc10 = navatala_mfma_zero_acc_f32_32x32x8();
+  navatala_mfma_acc_f32_32x32x8 acc11 = navatala_mfma_zero_acc_f32_32x32x8();
+  for (int kBlock = 0; kBlock < (int)(kBlocksVal); ++kBlock) {
+    unsigned int kBlockU32 = ((unsigned int)(kBlock));
+    unsigned int kBase = (kBlockU32 * 32u);
+    for (int loadIter = 0; loadIter < (int)(16u); ++loadIter) {
+      unsigned int loadIterU32 = ((unsigned int)(loadIter));
+      unsigned int _flat = ((loadIterU32 * 256u) + tid);
+      unsigned int aRowLocal = (_flat / 32u);
+      unsigned int aColLocal = (_flat % 32u);
+      unsigned int aGlobalRow = (blockRow + aRowLocal);
+      unsigned int aGlobalCol = (kBase + aColLocal);
+      unsigned int aIdxNN = ((aGlobalRow * aStrideVal) + aGlobalCol);
+      unsigned int aIdxT = ((aGlobalCol * aStrideVal) + aGlobalRow);
+      unsigned int aIdx = ((useTransA) ? (aIdxT) : (aIdxNN));
+      unsigned int aIdxBatch = (aBatchBase + aIdx);
+      bool aRowValid = (aGlobalRow < mDimVal);
+      bool aColValid = (aGlobalCol < kDimVal);
+      bool aLoadValid = (aRowValid && aColValid);
+      __half aVal = ((aLoadValid) ? (a[aIdxBatch]) : (__float2half(0.000000f)));
+      unsigned int bRowLocal = (_flat / 128u);
+      unsigned int bColLocal = (_flat % 128u);
+      unsigned int bGlobalRow = (kBase + bRowLocal);
+      unsigned int bGlobalCol = (blockCol + bColLocal);
+      unsigned int bIdxNN = ((bGlobalRow * bStrideVal) + bGlobalCol);
+      unsigned int bIdxT = ((bGlobalCol * bStrideVal) + bGlobalRow);
+      unsigned int bIdx = ((useTransB) ? (bIdxT) : (bIdxNN));
+      unsigned int bIdxBatch = (bBatchBase + bIdx);
+      bool bRowValid = (bGlobalRow < kDimVal);
+      bool bColValid = (bGlobalCol < nDimVal);
+      bool bLoadValid = (bRowValid && bColValid);
+      __half bVal = ((bLoadValid) ? (b[bIdxBatch]) : (__float2half(0.000000f)));
+      tileA[_flat] = aVal;
+      tileB[_flat] = bVal;
+    }
+    __syncthreads();
+    for (int kkTile = 0; kkTile < (int)(4u); ++kkTile) {
+      unsigned int kkTileU32 = ((unsigned int)(kkTile));
+      unsigned int kkBase = (kkTileU32 * 8u);
+      navatala_mfma_f16x4 aFrag0 = navatala_mfma_load_a_f16_32x32x8(tileA, waveRowLocalBase, kkBase, 32u);
+      navatala_mfma_f16x4 aFrag1 = navatala_mfma_load_a_f16_32x32x8(tileA, (waveRowLocalBase + 32u), kkBase, 32u);
+      navatala_mfma_f16x4 bFrag0 = navatala_mfma_load_b_f16_32x32x8(tileB, kkBase, waveColLocalBase, 128u);
+      navatala_mfma_f16x4 bFrag1 = navatala_mfma_load_b_f16_32x32x8(tileB, kkBase, (waveColLocalBase + 32u), 128u);
+      acc00 = __builtin_amdgcn_mfma_f32_32x32x8f16(aFrag0, bFrag0, acc00, 0, 0, 0);
+      acc01 = __builtin_amdgcn_mfma_f32_32x32x8f16(aFrag0, bFrag1, acc01, 0, 0, 0);
+      acc10 = __builtin_amdgcn_mfma_f32_32x32x8f16(aFrag1, bFrag0, acc10, 0, 0, 0);
+      acc11 = __builtin_amdgcn_mfma_f32_32x32x8f16(aFrag1, bFrag1, acc11, 0, 0, 0);
+    }
+    __syncthreads();
+  }
+  navatala_mfma_store_acc_f32_32x32x8_at_scaled_bounded(c, acc00, waveRowBase, cWaveColBase, cStrideVal, mDimVal, cColLimit, alphaVal, betaVal, true);
+  navatala_mfma_store_acc_f32_32x32x8_at_scaled_bounded(c, acc01, waveRowBase, (cWaveColBase + 32u), cStrideVal, mDimVal, cColLimit, alphaVal, betaVal, true);
+  navatala_mfma_store_acc_f32_32x32x8_at_scaled_bounded(c, acc10, (waveRowBase + 32u), cWaveColBase, cStrideVal, mDimVal, cColLimit, alphaVal, betaVal, true);
+  navatala_mfma_store_acc_f32_32x32x8_at_scaled_bounded(c, acc11, (waveRowBase + 32u), (cWaveColBase + 32u), cStrideVal, mDimVal, cColLimit, alphaVal, betaVal, true);
 }
 
 )kernel";
@@ -11979,6 +13919,28 @@ const KernelAbiManifestInfo kAbiManifest_hip_navatala_transformer_tiled_gemm_f16
   kAbiArgs_hip_navatala_transformer_tiled_gemm_f16
 };
 
+const KernelArgumentInfo kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_f32_out[] = {
+  { "a", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "b", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "m", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "n", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "k", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "alpha", 5, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "beta", 6, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "c", 7, KernelArgumentRole::InputOutput, KernelAccessMode::ReadWrite, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_f32_out = {
+  1,
+  "navatala_transformer_tiled_gemm_f16_f32_out",
+  "hip",
+  "navatala_transformer_tiled_gemm_f16_f32_out",
+  "kernel:hip:navatala_transformer_tiled_gemm_f16_f32_out",
+  "abi-r1:hip:navatala_transformer_tiled_gemm_f16_f32_out",
+  "abi-r1:hip:navatala_transformer_tiled_gemm_f16_f32_out",
+  8,
+  kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_f32_out
+};
+
 const KernelArgumentInfo kAbiArgs_hip_navatala_transformer_tiled_gemm_f32[] = {
   { "a", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
   { "b", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
@@ -12779,6 +14741,227 @@ const KernelAbiManifestInfo kAbiManifest_hip_navatala_transformer_precompute_rot
   kAbiArgs_hip_navatala_transformer_precompute_rotary_emb_f16
 };
 
+const KernelArgumentInfo kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma[] = {
+  { "a", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "b", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "kStride", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "nStride", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "c", 4, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma = {
+  1,
+  "navatala_transformer_tiled_gemm_f16_mfma",
+  "hip",
+  "navatala_transformer_tiled_gemm_f16_mfma",
+  "kernel:hip:navatala_transformer_tiled_gemm_f16_mfma",
+  "abi-r1:hip:navatala_transformer_tiled_gemm_f16_mfma",
+  "abi-r1:hip:navatala_transformer_tiled_gemm_f16_mfma",
+  5,
+  kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma
+};
+
+const KernelArgumentInfo kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma_k_loop[] = {
+  { "a", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "b", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "kTiles", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "kStride", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "nStride", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "c", 5, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma_k_loop = {
+  1,
+  "navatala_transformer_tiled_gemm_f16_mfma_k_loop",
+  "hip",
+  "navatala_transformer_tiled_gemm_f16_mfma_k_loop",
+  "kernel:hip:navatala_transformer_tiled_gemm_f16_mfma_k_loop",
+  "abi-r1:hip:navatala_transformer_tiled_gemm_f16_mfma_k_loop",
+  "abi-r1:hip:navatala_transformer_tiled_gemm_f16_mfma_k_loop",
+  6,
+  kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma_k_loop
+};
+
+const KernelArgumentInfo kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_direct[] = {
+  { "a", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "b", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "kTiles", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "kStride", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "nStride", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "c", 5, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_direct = {
+  1,
+  "navatala_transformer_tiled_gemm_f16_mfma_cta64_direct",
+  "hip",
+  "navatala_transformer_tiled_gemm_f16_mfma_cta64_direct",
+  "kernel:hip:navatala_transformer_tiled_gemm_f16_mfma_cta64_direct",
+  "abi-r1:hip:navatala_transformer_tiled_gemm_f16_mfma_cta64_direct",
+  "abi-r1:hip:navatala_transformer_tiled_gemm_f16_mfma_cta64_direct",
+  6,
+  kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_direct
+};
+
+const KernelArgumentInfo kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared[] = {
+  { "a", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "b", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "kTiles", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "kStride", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "nStride", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "c", 5, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared = {
+  1,
+  "navatala_transformer_tiled_gemm_f16_mfma_cta64_shared",
+  "hip",
+  "navatala_transformer_tiled_gemm_f16_mfma_cta64_shared",
+  "kernel:hip:navatala_transformer_tiled_gemm_f16_mfma_cta64_shared",
+  "abi-r1:hip:navatala_transformer_tiled_gemm_f16_mfma_cta64_shared",
+  "abi-r1:hip:navatala_transformer_tiled_gemm_f16_mfma_cta64_shared",
+  6,
+  kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared
+};
+
+const KernelArgumentInfo kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_edge[] = {
+  { "a", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "b", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "mDim", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "nDim", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "kDim", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "kTiles", 5, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "aStride", 6, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "bStride", 7, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "cStride", 8, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "aBatchStride", 9, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "bBatchStride", 10, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "cBatchStride", 11, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "transA", 12, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "transB", 13, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "alpha", 14, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "beta", 15, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "c", 16, KernelArgumentRole::InputOutput, KernelAccessMode::ReadWrite, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_edge = {
+  1,
+  "navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_edge",
+  "hip",
+  "navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_edge",
+  "kernel:hip:navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_edge",
+  "abi-r1:hip:navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_edge",
+  "abi-r1:hip:navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_edge",
+  17,
+  kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_edge
+};
+
+const KernelArgumentInfo kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_early_barrier[] = {
+  { "a", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "b", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "kTiles", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "kStride", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "nStride", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "c", 5, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_early_barrier = {
+  1,
+  "navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_early_barrier",
+  "hip",
+  "navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_early_barrier",
+  "kernel:hip:navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_early_barrier",
+  "abi-r1:hip:navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_early_barrier",
+  "abi-r1:hip:navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_early_barrier",
+  6,
+  kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_early_barrier
+};
+
+const KernelArgumentInfo kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_padded[] = {
+  { "a", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "b", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "kTiles", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "kStride", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "nStride", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "c", 5, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_padded = {
+  1,
+  "navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_padded",
+  "hip",
+  "navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_padded",
+  "kernel:hip:navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_padded",
+  "abi-r1:hip:navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_padded",
+  "abi-r1:hip:navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_padded",
+  6,
+  kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_padded
+};
+
+const KernelArgumentInfo kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined[] = {
+  { "a", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "b", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "kTiles", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "kStride", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "nStride", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "c", 5, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined = {
+  1,
+  "navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined",
+  "hip",
+  "navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined",
+  "kernel:hip:navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined",
+  "abi-r1:hip:navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined",
+  "abi-r1:hip:navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined",
+  6,
+  kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined
+};
+
+const KernelArgumentInfo kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma_cta128[] = {
+  { "a", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "b", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "kBlocks", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "kStride", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "nStride", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "c", 5, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma_cta128 = {
+  1,
+  "navatala_transformer_tiled_gemm_f16_mfma_cta128",
+  "hip",
+  "navatala_transformer_tiled_gemm_f16_mfma_cta128",
+  "kernel:hip:navatala_transformer_tiled_gemm_f16_mfma_cta128",
+  "abi-r1:hip:navatala_transformer_tiled_gemm_f16_mfma_cta128",
+  "abi-r1:hip:navatala_transformer_tiled_gemm_f16_mfma_cta128",
+  6,
+  kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma_cta128
+};
+
+const KernelArgumentInfo kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma_cta128_edge[] = {
+  { "a", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "b", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "mDim", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "nDim", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "kDim", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "kBlocks", 5, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "aStride", 6, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "bStride", 7, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "cStride", 8, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "aBatchStride", 9, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "bBatchStride", 10, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "cBatchStride", 11, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "transA", 12, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "transB", 13, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "alpha", 14, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "beta", 15, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "c", 16, KernelArgumentRole::InputOutput, KernelAccessMode::ReadWrite, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma_cta128_edge = {
+  1,
+  "navatala_transformer_tiled_gemm_f16_mfma_cta128_edge",
+  "hip",
+  "navatala_transformer_tiled_gemm_f16_mfma_cta128_edge",
+  "kernel:hip:navatala_transformer_tiled_gemm_f16_mfma_cta128_edge",
+  "abi-r1:hip:navatala_transformer_tiled_gemm_f16_mfma_cta128_edge",
+  "abi-r1:hip:navatala_transformer_tiled_gemm_f16_mfma_cta128_edge",
+  17,
+  kAbiArgs_hip_navatala_transformer_tiled_gemm_f16_mfma_cta128_edge
+};
+
 bool tryGetKernelAbiManifest_hip_transformer(const std::string& backend, const std::string& kernelName, const KernelAbiManifestInfo*& out) {
   if (backend == "hip" && kernelName == "navatala_transformer_gelu_f32") {
     out = &kAbiManifest_hip_navatala_transformer_gelu_f32;
@@ -13156,6 +15339,10 @@ bool tryGetKernelAbiManifest_hip_transformer(const std::string& backend, const s
     out = &kAbiManifest_hip_navatala_transformer_tiled_gemm_f16;
     return true;
   }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out = &kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_f32_out;
+    return true;
+  }
   if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f32") {
     out = &kAbiManifest_hip_navatala_transformer_tiled_gemm_f32;
     return true;
@@ -13318,6 +15505,46 @@ bool tryGetKernelAbiManifest_hip_transformer(const std::string& backend, const s
   }
   if (backend == "hip" && kernelName == "navatala_transformer_precompute_rotary_emb_f16") {
     out = &kAbiManifest_hip_navatala_transformer_precompute_rotary_emb_f16;
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_mfma") {
+    out = &kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma;
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_mfma_k_loop") {
+    out = &kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma_k_loop;
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_mfma_cta64_direct") {
+    out = &kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_direct;
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_mfma_cta64_shared") {
+    out = &kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared;
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_edge") {
+    out = &kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_edge;
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_early_barrier") {
+    out = &kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_early_barrier;
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_padded") {
+    out = &kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_padded;
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined") {
+    out = &kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined;
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_mfma_cta128") {
+    out = &kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma_cta128;
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_mfma_cta128_edge") {
+    out = &kAbiManifest_hip_navatala_transformer_tiled_gemm_f16_mfma_cta128_edge;
     return true;
   }
   out = nullptr;
@@ -13983,6 +16210,13 @@ bool tryGetKernelSource_hip_transformer(const std::string& backend, const std::s
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_hip_navatala_transformer_tiled_gemm_f16_f32_out);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
   if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f32") {
     out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
     out.entryPoint = "navatala_transformer_tiled_gemm_f32";
@@ -14267,6 +16501,146 @@ bool tryGetKernelSource_hip_transformer(const std::string& backend, const std::s
     out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
     out.entryPoint = "navatala_transformer_precompute_rotary_emb_f16";
     std::string_view sv(k_hip_navatala_transformer_precompute_rotary_emb_f16);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_mfma") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_mfma";
+    std::string_view sv(k_hip_navatala_transformer_tiled_gemm_f16_mfma);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16";
+    std::string_view sv(k_hip_navatala_transformer_tiled_gemm_f16);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_mfma_k_loop") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_mfma_k_loop";
+    std::string_view sv(k_hip_navatala_transformer_tiled_gemm_f16_mfma_k_loop);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16";
+    std::string_view sv(k_hip_navatala_transformer_tiled_gemm_f16);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_mfma_cta64_direct") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_mfma_cta64_direct";
+    std::string_view sv(k_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_direct);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_hip_navatala_transformer_tiled_gemm_f16_f32_out);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_mfma_cta64_shared") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_mfma_cta64_shared";
+    std::string_view sv(k_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_hip_navatala_transformer_tiled_gemm_f16_f32_out);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_edge") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_edge";
+    std::string_view sv(k_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_edge);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_hip_navatala_transformer_tiled_gemm_f16_f32_out);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_early_barrier") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_early_barrier";
+    std::string_view sv(k_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_early_barrier);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_hip_navatala_transformer_tiled_gemm_f16_f32_out);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_padded") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_padded";
+    std::string_view sv(k_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_padded);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_hip_navatala_transformer_tiled_gemm_f16_f32_out);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined";
+    std::string_view sv(k_hip_navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_hip_navatala_transformer_tiled_gemm_f16_f32_out);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_mfma_cta128") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_mfma_cta128";
+    std::string_view sv(k_hip_navatala_transformer_tiled_gemm_f16_mfma_cta128);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_hip_navatala_transformer_tiled_gemm_f16_f32_out);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_mfma_cta128_edge") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_mfma_cta128_edge";
+    std::string_view sv(k_hip_navatala_transformer_tiled_gemm_f16_mfma_cta128_edge);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_hip_navatala_transformer_tiled_gemm_f16_f32_out);
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }
