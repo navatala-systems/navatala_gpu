@@ -84,6 +84,30 @@ __device__ inline void navatala_mfma_store_acc_f32_32x32x8_at_scaled_bounded(flo
   const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
   const unsigned int localCol = lane & 31u;
   const unsigned int rowGroup = 4u * (lane >> 5u);
+  if (beta == 0.0f) {
+    if (alpha == 1.0f) {
+      #pragma unroll
+      for (unsigned int i = 0; i < 16u; ++i) {
+        const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+        const unsigned int row = rowOffset + localRow;
+        const unsigned int col = colOffset + localCol;
+        if (row < rowLimit && col < colLimit) {
+          dst[row * stride + col] = acc[i];
+        }
+      }
+      return;
+    }
+    #pragma unroll
+    for (unsigned int i = 0; i < 16u; ++i) {
+      const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+      const unsigned int row = rowOffset + localRow;
+      const unsigned int col = colOffset + localCol;
+      if (row < rowLimit && col < colLimit) {
+        dst[row * stride + col] = alpha * acc[i];
+      }
+    }
+    return;
+  }
   #pragma unroll
   for (unsigned int i = 0; i < 16u; ++i) {
     const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
@@ -91,8 +115,7 @@ __device__ inline void navatala_mfma_store_acc_f32_32x32x8_at_scaled_bounded(flo
     const unsigned int col = colOffset + localCol;
     if (row < rowLimit && col < colLimit) {
       const unsigned int idx = row * stride + col;
-      const float scaled = alpha * acc[i];
-      dst[idx] = (beta == 0.0f) ? scaled : (scaled + beta * dst[idx]);
+      dst[idx] = alpha * acc[i] + beta * dst[idx];
     }
   }
 }

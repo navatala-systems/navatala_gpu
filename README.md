@@ -96,6 +96,7 @@ For a fuller tour, see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 - [`docs/TUNING_ROADMAP.md`](docs/TUNING_ROADMAP.md) — selective backend tuning priorities and benchmark evidence rules.
 - [`docs/benchmarks/ROCM_VENDOR_BENCHMARKS.md`](docs/benchmarks/ROCM_VENDOR_BENCHMARKS.md) — optional HIP benchmark harness comparing selected generated kernels against rocBLAS/rocSPARSE.
 - [`docs/benchmarks/ROCM_VALIDATION_TEMPLATE.md`](docs/benchmarks/ROCM_VALIDATION_TEMPLATE.md) — template for public ROCm correctness/benchmark reports.
+- [`docs/benchmarks/METAL_VALIDATION.md`](docs/benchmarks/METAL_VALIDATION.md) — Apple Silicon validation and opt-in Metal runtime tuning guide.
 - [`docs/KERNEL_INDEX.md`](docs/KERNEL_INDEX.md) — generated domain-grouped kernel index.
 - [`docs/PUBLIC_PRIVATE_BOUNDARY.md`](docs/PUBLIC_PRIVATE_BOUNDARY.md) — what is public, private, and generated.
 - [`docs/SBOM.md`](docs/SBOM.md) — dependency and license summary for the release tree.

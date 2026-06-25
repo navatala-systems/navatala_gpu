@@ -1,7 +1,7 @@
 # ROCm Vendor Benchmark Harness
 
 This document records the public ROCm benchmark harness added in response to
-AMD reviewer feedback. The goal is to compare selected generated HIP kernels
+AMD reviewer feedback. The goal is to compare selected Navatala HIP kernels
 against ROCm vendor-library baselines on real AMD hardware, without implying
 that every HIP kernel is vendor-backed or hand-tuned.
 
@@ -89,6 +89,248 @@ dispatch rows, the rowNnz=15 and rowNnz=27 SpMV tuning rows, hipSPARSELt
 structured-sparse rows, `rocminfo` provenance, and `kernelClass` metadata. It is
 kept so tuning tickets and review notes can cite durable evidence rather than
 temporary `/tmp` artifacts. Release claims should still use a fresh run.
+
+The current public-wrapper semantic evidence is stored under:
+
+```bash
+python3 scripts/validate_rocm_benchmark_json.py \
+  benchmarks/fixtures/hardware_runs/20260624_mi300x_wrapper_semantics/rocm_vendor_benchmark.json \
+  --require-full
+python3 scripts/render_rocm_benchmark_report.py \
+  benchmarks/fixtures/hardware_runs/20260624_mi300x_wrapper_semantics/rocm_vendor_benchmark.json \
+  --output /tmp/rocm_vendor_benchmark_wrapper_semantics.md
+```
+
+This focused sweep validates the public F16-input/F32-output MFMA wrapper
+against rocBLAS for tail tiles, alpha/beta, transpose, and strided batching:
+
+| Row | Generated ms | Vendor ms | Ratio | Correctness |
+| --- | ---: | ---: | ---: | --- |
+| Tail small 513x511x257 | 0.023151 | 0.043337 | 0.534x | pass |
+| Tail large 1023x1024x2003 | 0.185373 | 0.093138 | 1.990x | pass |
+| Alpha/beta 512³ | 0.038582 | 0.033146 | 1.164x | pass |
+| Transpose 384x512x256 | 0.025538 | 0.020408 | 1.251x | pass |
+| Strided batch 256³ x3 | 0.018260 | 0.017542 | 1.041x | pass |
+
+The strided-batch row confirms the benchmark builds and runs
+`rocblas_gemm_strided_batched_ex` on the MI300X validation host.
+
+The follow-up full-tile semantic evidence is stored under:
+
+```bash
+python3 scripts/validate_rocm_benchmark_json.py \
+  benchmarks/fixtures/hardware_runs/20260624_mi300x_wrapper_semantic_fulltile_50iter/rocm_vendor_benchmark.json
+python3 scripts/render_rocm_benchmark_report.py \
+  benchmarks/fixtures/hardware_runs/20260624_mi300x_wrapper_semantic_fulltile_50iter/rocm_vendor_benchmark.json \
+  --output /tmp/rocm_vendor_benchmark_wrapper_semantic_fulltile_50iter.md
+```
+
+This rerun validates the full-tile semantic CTA64/CTA128 dispatch that avoids
+the EDGE path for tile-divisible alpha/beta and transpose calls:
+
+| Row | Generated ms | Vendor ms | Ratio | Correctness |
+| --- | ---: | ---: | ---: | --- |
+| Direct alpha/beta semantic 512³ | 0.025433 | 0.032781 | 0.776x | pass |
+| Wrapper alpha/beta 512³ | 0.025392 | 0.032899 | 0.772x | pass |
+| Direct transpose semantic 384x512x256 | 0.023343 | 0.020402 | 1.144x | pass |
+| Wrapper transpose 384x512x256 | 0.023297 | 0.020203 | 1.153x | pass |
+
+Alpha/beta now meets the representative Phase 2 performance target. Transpose
+is correctness-clean and no longer pays EDGE overhead, but it remains the active
+Phase 2 performance gap.
+
+The current broad/profile evidence is stored under:
+
+```bash
+python3 scripts/validate_rocm_benchmark_json.py \
+  benchmarks/fixtures/hardware_runs/20260624_mi300x_broad_wrapper_mfma_hipsparselt/rocm_vendor_benchmark.json \
+  --require-full \
+  --require-hipsparselt
+python3 scripts/render_rocm_benchmark_report.py \
+  benchmarks/fixtures/hardware_runs/20260624_mi300x_broad_wrapper_mfma_hipsparselt/rocm_vendor_benchmark.json \
+  --output /tmp/rocm_vendor_benchmark_broad_wrapper_mfma_hipsparselt.md
+```
+
+Key rows from that run:
+
+| Row | Generated ms | Vendor ms | Ratio | Correctness |
+| --- | ---: | ---: | ---: | --- |
+| CTA64 shared 512³ | 0.020573 | 0.025700 | 0.800x | pass |
+| CTA128 1024³ | 0.053449 | 0.042599 | 1.255x | pass |
+| Public wrapper MFMA 1024³ | 0.057410 | 0.046028 | 1.247x | pass |
+| CSR SpMV rowNnz=27 | 0.043661 | 0.019397 | 2.251x | pass |
+| hipSPARSELt structured GEMM 512³ | 0.011817 | 0.019310 | 0.612x | pass |
+
+The companion profile directory contains `mfma_resource_metadata.csv`; it
+confirms CTA128 is scratch-free (`Scratch_Size=0`, `VGPR_Count=84`) while
+CTA128_EDGE is also scratch-free but materially slower (`VGPR_Count=112` and
+about `4.005x` versus rocBLAS at 1024³ in the profile matrix). EDGE/tail
+performance remains the main MFMA production-hardening gap.
+
+The `20260624_mi300x_edge_tails_profile` fixture records true non-divisible
+tail shapes and a matching rocprof resource pass:
+
+```bash
+python3 scripts/validate_rocm_benchmark_json.py \
+  benchmarks/fixtures/hardware_runs/20260624_mi300x_edge_tails_profile/rocm_vendor_benchmark.json \
+  --require-full
+python3 scripts/render_rocm_benchmark_report.py \
+  benchmarks/fixtures/hardware_runs/20260624_mi300x_edge_tails_profile/rocm_vendor_benchmark.json \
+  --output /tmp/rocm_vendor_benchmark_edge_tails.md
+```
+
+Key rows from that run:
+
+| Row | Generated ms | Vendor ms | Ratio | Correctness |
+| --- | ---: | ---: | ---: | --- |
+| CTA64_EDGE 1023x1024x2003 | 0.187162 | 0.092749 | 2.018x | pass |
+| CTA128_EDGE 1023x1024x2003 | 0.354455 | 0.092947 | 3.814x | pass |
+| Wrapper auto 1023x1024x2003 | 0.093014 | 0.093081 | 0.999x | pass |
+| CTA64_EDGE 1024x1023x2047 | 0.195389 | 0.108331 | 1.804x | pass |
+| CTA128_EDGE 1024x1023x2047 | 0.378784 | 0.108510 | 3.491x | pass |
+| Wrapper auto 1024x1023x2047 | 0.108547 | 0.108140 | 1.004x | pass |
+| CTA64_EDGE 1025x513x1024 | 0.071904 | 0.060427 | 1.190x | pass |
+| CTA128_EDGE 1025x513x1024 | 0.128257 | 0.060246 | 2.129x | pass |
+| Wrapper auto 1025x513x1024 | 0.059872 | 0.059853 | 1.000x | pass |
+
+The profile resource summary confirms both EDGE kernels remain scratch-free on
+true-tail shapes. CTA64_EDGE reports `LDS_Block_Size=2048`,
+`VGPR_Count=32`, and `SGPR_Count=48`; CTA128_EDGE reports
+`LDS_Block_Size=16384`, `VGPR_Count=112`, and `SGPR_Count=112`. Public auto
+dispatch therefore keeps using rocBLAS for large true-tail mixed-precision
+GEMM when the vendor path is available; generated EDGE kernels remain
+correctness-validated fallback/diagnostic paths until their edge-path
+instruction overhead is reduced.
+
+The follow-up
+`20260624_mi300x_edge_tails_store_fastpath_rocm724` fixture validates the
+alpha/beta store fast path on ROCm 7.2.4. Correctness and the scratch-free
+resource envelope are preserved. Direct EDGE row timings improved only at
+noise-level scale versus `20260624_mi300x_edge_tails_profile`
+(`0.2%` to `0.6%` on sampled direct EDGE rows), so alpha/beta epilogue
+branching is not the dominant EDGE bottleneck. The remaining production work
+is still predicate/address/control overhead reduction in the generated EDGE
+kernel body, while wrapper auto remains vendor-routed for large true-tail
+HIP/gfx942 shapes.
+
+The `20260625_mi300x_edge_tails_predicate_hoist_rocm724` fixture validates the
+first CTA64_EDGE predicate-hoist cleanup. The generated source now hoists the
+M/N-side row and column predicates out of the K-loop body and emits two explicit
+cooperative-load steps instead of the previous `loadIter` loop. Correctness is
+unchanged and the profile remains scratch-free (`Scratch_Size=0`,
+`VGPR_Count=40`, `SGPR_Count=48` for CTA64_EDGE), but wall-time is effectively
+unchanged: direct CTA64_EDGE rows moved by about `+1%` on the sampled true-tail
+shapes versus the store-fastpath fixture. This makes predicate hoisting a
+source-shape cleanup rather than a throughput fix. The next meaningful EDGE
+performance step is structural: split-K/interior-border decomposition or a
+different EDGE kernel family, while public auto dispatch remains vendor-routed
+for the sampled large true-tail HIP/gfx942 cases.
+
+The `20260625_mi300x_edge_split_rocm724` fixture validates the first opt-in
+split EDGE wrapper path:
+
+```bash
+python3 scripts/validate_rocm_benchmark_json.py \
+  benchmarks/fixtures/hardware_runs/20260625_mi300x_edge_split_rocm724/rocm_vendor_benchmark.json \
+  --require-full
+python3 scripts/render_rocm_benchmark_report.py \
+  benchmarks/fixtures/hardware_runs/20260625_mi300x_edge_split_rocm724/rocm_vendor_benchmark.json \
+  --output /tmp/rocm_vendor_benchmark_edge_split.md
+```
+
+The split path is correctness-clean, but slower than the existing single-pass
+EDGE path on all sampled true-tail shapes. Forced wrapper MFMA split measured
+`3.459x`, `2.936x`, and `2.834x` versus rocBLAS for
+`1023x1024x2003`, `1024x1023x2047`, and `1025x513x1024`, respectively. The
+corresponding forced wrapper single-pass MFMA rows were `2.129x`, `1.789x`,
+and `1.198x`; public `AUTO` remained vendor-routed at `1.001x` to `1.003x`.
+The wrapper timing diagnostics show host wall time tracks stream-event time, so
+the split regression is device-path/multi-launch work rather than public ABI
+submission overhead. Treat split EDGE as a diagnostic path only unless a future
+fused true-tail kernel family changes this result.
+
+The `20260625_mi300x_edge_nn_rocm724` fixture validates the fused CTA64 NN-only
+fast-tail kernel:
+
+```bash
+python3 scripts/validate_rocm_benchmark_json.py \
+  benchmarks/fixtures/hardware_runs/20260625_mi300x_edge_nn_rocm724/rocm_vendor_benchmark.json \
+  --require-full
+python3 scripts/render_rocm_benchmark_report.py \
+  benchmarks/fixtures/hardware_runs/20260625_mi300x_edge_nn_rocm724/rocm_vendor_benchmark.json \
+  --output /tmp/rocm_vendor_benchmark_edge_nn.md
+```
+
+The row is applicable only to `NN`, `alpha = 1`, `beta = 0`, single-batch
+true-tail GEMM calls. It is correctness-clean and scratch-free. The profile
+captures a lower-pressure code object (`VGPR_Count=24`, `SGPR_Count=32`,
+`Scratch_Size=0`) than generic CTA64_EDGE (`VGPR_Count=40`, `SGPR_Count=48`,
+`Scratch_Size=0`), but measured timing only improves generic EDGE by about
+`2%` to `4%` on the sampled direct rows:
+
+| Shape | CTA64 EDGE ms | CTA64 EDGE NN ms | rocBLAS ms | AUTO ms |
+| --- | ---: | ---: | ---: | ---: |
+| 1023x1024x2003 | 0.183973 | 0.178986 | 0.093447 | 0.092904 |
+| 1024x1023x2047 | 0.196521 | 0.192181 | 0.108273 | 0.108736 |
+| 1025x513x1024 | 0.072629 | 0.069763 | 0.059975 | 0.059781 |
+
+Forced wrapper MFMA now routes these simple true-tail rows through the NN
+fast-tail candidate and is correctness-clean, but still trails rocBLAS.
+Public AUTO remains vendor-routed for these true-tail shapes.
+
+The `20260624_mi300x_vendor_wrapper_cache` fixture records the first
+Float32 vendor-wrapper cleanup check after rocBLAS pointer-mode and stream
+state were cached in the HIP `LibraryOps` adapter:
+
+```bash
+python3 scripts/validate_rocm_benchmark_json.py \
+  benchmarks/fixtures/hardware_runs/20260624_mi300x_vendor_wrapper_cache/rocm_vendor_benchmark.json \
+  --require-full
+python3 scripts/render_rocm_benchmark_report.py \
+  benchmarks/fixtures/hardware_runs/20260624_mi300x_vendor_wrapper_cache/rocm_vendor_benchmark.json \
+  --output /tmp/rocm_vendor_benchmark_vendor_wrapper_cache.md
+```
+
+Key rows from that run:
+
+| Row | Generated ms | Vendor ms | Ratio | Correctness |
+| --- | ---: | ---: | ---: | --- |
+| F32 vendor wrapper 512³ | 0.008297 | 0.008317 | 0.998x | pass |
+| F32 vendor wrapper 1024³ | 0.030552 | 0.025679 | 1.190x | pass |
+| F16/F32 wrapper MFMA 512³ | 0.021085 | 0.026753 | 0.788x | pass |
+| F16/F32 wrapper MFMA 1024³ | 0.057701 | 0.047498 | 1.215x | pass |
+
+This fixture shows that rocBLAS handle-state caching is correctness-safe but
+does not remove the large-shape Float32 vendor-wrapper overhead. Further work
+should instrument the public ABI path instead of repeatedly tuning rocBLAS
+handle setup.
+
+The `20260624_mi300x_cta128_evidence_after_cache` fixture reruns the focused
+CTA64/CTA128/direct/wrapper matrix after the same cleanup:
+
+```bash
+python3 scripts/validate_rocm_benchmark_json.py \
+  benchmarks/fixtures/hardware_runs/20260624_mi300x_cta128_evidence_after_cache/rocm_vendor_benchmark.json \
+  --require-full
+python3 scripts/render_rocm_benchmark_report.py \
+  benchmarks/fixtures/hardware_runs/20260624_mi300x_cta128_evidence_after_cache/rocm_vendor_benchmark.json \
+  --output /tmp/rocm_vendor_benchmark_cta128_after_cache.md
+```
+
+Key rows from that run:
+
+| Row | Generated ms | Vendor ms | Ratio | Correctness |
+| --- | ---: | ---: | ---: | --- |
+| CTA64 shared 512³ | 0.020528 | 0.025649 | 0.800x | pass |
+| CTA128 1024³ | 0.053284 | 0.042698 | 1.248x | pass |
+| Public wrapper MFMA 1024³ | 0.053464 | 0.042794 | 1.249x | pass |
+| CTA64 shared 512x1024x1024 | 0.039473 | 0.042325 | 0.933x | pass |
+| Public wrapper MFMA 512x1024x1024 | 0.039701 | 0.042443 | 0.935x | pass |
+
+The wrapper/direct relationship is again within measurement noise in the
+focused fixture. The larger wrapper row seen in the broad matrix should be read
+as broad-fixture variance or queue-state sensitivity, not as a confirmed
+fast-path regression.
 
 The 2026-06-23 fixture adds the HIP/gfx942 MFMA K-loop GEMM row to the broad
 matrix and records the same machine class with ROCm 7.2.4:
@@ -631,7 +873,7 @@ Benchmark reports also record implementation selection metadata:
 {
   "kernelClass": "scalar|mfma_f16|wmma_tf32|vendor_library",
   "implementationKind": "portable_kernel|tuned_kernel|vendor_library",
-  "tuningPath": "thread_per_row|subgroup_per_row|portable_f16_tiled|portable_f16_f32out_tiled|adaptive|vendor_dispatch|hip_mfma_gfx942_32x32x8_f16_f32_k_loop|hip_mfma_gfx942_64x64x8_f16_f32_cta64_direct|hip_mfma_gfx942_64x64x8_f16_f32_cta64_shared|hip_mfma_gfx942_64x64x8_f16_f32_cta64_shared_early_barrier|hip_mfma_gfx942_64x64x8_f16_f32_cta64_shared_padded|hip_mfma_gfx942_64x64x8_f16_f32_cta64_pipelined|hip_mfma_gfx942_128x128x32_f16_f32_cta128|hip_mfma_gfx942_wrapper_dispatch",
+  "tuningPath": "thread_per_row|subgroup_per_row|portable_f16_tiled|portable_f16_f32out_tiled|adaptive|vendor_dispatch|hip_mfma_gfx942_32x32x8_f16_f32_k_loop|hip_mfma_gfx942_64x64x8_f16_f32_cta64_direct|hip_mfma_gfx942_64x64x8_f16_f32_cta64_shared|hip_mfma_gfx942_64x64x8_f16_f32_cta64_shared_early_barrier|hip_mfma_gfx942_64x64x8_f16_f32_cta64_shared_padded|hip_mfma_gfx942_64x64x8_f16_f32_cta64_pipelined|hip_mfma_gfx942_64x64x8_f16_f32_cta64_shared_edge|hip_mfma_gfx942_64x64x8_f16_f32_cta64_shared_semantic|hip_mfma_gfx942_128x128x32_f16_f32_cta128|hip_mfma_gfx942_128x128x32_f16_f32_cta128_edge|hip_mfma_gfx942_128x128x32_f16_f32_cta128_semantic|hip_mfma_gfx942_wrapper_dispatch",
   "spmvRowNnzThreshold": 16,
   "vendorDispatchSelected": false
 }
@@ -642,6 +884,22 @@ rows such as `mfma_f16` and from vendor-library rows. Reports also carry a
 `rocminfo` object with the active GCN ISA, HIP runtime version, HIP driver
 version, and a compact `rocminfo` summary so dated fixtures preserve the
 hardware/runtime provenance needed for same-host comparisons.
+
+Wrapper rows may additionally carry host-side timing diagnostics:
+
+```json
+{
+  "hostSubmitMeanMs": 0.0,
+  "hostWallMeanMs": 0.0,
+  "hostSubmitOverGeneratedRatio": 0.0,
+  "hostWallOverGeneratedRatio": 0.0
+}
+```
+
+`hostSubmitMeanMs` measures CPU wall time to invoke the public wrapper repeatedly
+and enqueue work, excluding the final event wait. `hostWallMeanMs` includes that
+final wait. Compare these with `generatedMeanMs`, which remains the stream-event
+mean, to separate wrapper submission overhead from device-side work.
 
 The validator keeps these fields backward-compatible with existing
 `navatala_gpu.rocm_vendor_benchmark.v1` fixtures because the 2026-06-19 MI300X
@@ -669,7 +927,7 @@ must still treat them separately from vendor dispatch and from future
 MFMA/WMMA-style tuned kernels. A fresh post-tuning run is required before making
 any performance claim for the portable fallback path.
 
-The opt-in `GEMM_F16_MFMA*` rows exercise generated HIP MFMA kernels. They are
+The opt-in `GEMM_F16_MFMA*` rows exercise Navatala HIP MFMA kernels. They are
 intentionally narrower than the public FFI wrapper path: matrix sizes must be
 multiples of the timing-row tile constraints, and the timing rows keep
 alpha=1/beta=0 NN semantics so same-host comparisons stay stable. Use these
@@ -794,8 +1052,14 @@ NAVATALA_GPU_GEMM_MFMA_MODE=auto
 
 and compare against `rocblas_gemm_ex` with F16 inputs and F32 output/compute.
 Unlike the raw `GEMM_F16_MFMA_*` rows, this row exercises the user-facing
-runtime wrapper and the edge-capable CTA64/CTA128 dispatch policy. Its timing
-therefore includes wrapper scalar-parameter setup and synchronization overhead.
+runtime wrapper and the CTA64/CTA128 dispatch policy. Its timing therefore
+includes wrapper scalar-parameter setup and synchronization overhead. For the
+`wrapper-semantics` matrix, the runner implicitly enables
+`--include-mfma-benchmark` so the JSON also contains direct semantic full-tile
+rows (`GEMM_F16_MFMA_CTA64_SHARED_SEMANTIC_ALPHA_BETA` and
+`GEMM_F16_MFMA_CTA64_SHARED_SEMANTIC_TRANSPOSE`) next to the wrapper rows. Use
+those direct rows to separate Phase 2 kernel cost from public-wrapper routing
+cost.
 
 For versioned ROCm installs on rented hosts, pass the installation root
 explicitly or set `NAVATALA_GPU_ROCM_ROOT`:
@@ -874,7 +1138,7 @@ report format.
 
 This harness does not:
 
-- prove correctness for every generated HIP kernel;
+- prove correctness for every Navatala HIP kernel;
 - claim performance parity with rocBLAS, rocSPARSE, or hipSPARSELt;
 - replace future tuning work;
 - benchmark CUDA, Vulkan, OpenCL, or Metal.

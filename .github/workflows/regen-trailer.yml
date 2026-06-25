@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
-# Per #1513 §1.8 of the cleanup tracker. This workflow is the authoritative
+# Per release-hardening §1.8 of the cleanup tracker. This workflow is the authoritative
 # enforcement of the Regen-Manifest-Trailer policy: local hooks are best-effort
 # and can be bypassed with `git commit --no-verify`.
 name: Regen-Manifest-Trailer

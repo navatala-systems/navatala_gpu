@@ -7,7 +7,7 @@ validation, which is tracked separately per backend.
 | Backend | Kernels | Source files | Binary artifacts | Coverage vs CUDA | Missing vs CUDA |
 |---------|--------:|-------------:|-----------------:|-----------------:|----------------:|
 | CUDA | 2,083 | 2,083 | 0 | 100.0% | 0 |
-| HIP | 2,093 | 2,093 | 0 | 100.5% | 0 |
+| HIP | 2,097 | 2,097 | 0 | 100.7% | 0 |
 | OPENCL | 1,945 | 1,945 | 0 | 93.4% | 138 |
 | VULKAN | 1,931 | 1,931 | 1,931 | 92.7% | 152 |
 | METAL | 1,423 | 1,423 | 0 | 68.3% | 660 |

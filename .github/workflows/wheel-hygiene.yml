@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
-# Per #1513 T5: build, package-check, and verify the published wheel does
+# Per release-hardening T5: build, package-check, and verify the published wheel does
 # not reintroduce generator-content tells. Local hooks cover the source
 # tree; this workflow covers the artifact.
 name: Wheel-Hygiene

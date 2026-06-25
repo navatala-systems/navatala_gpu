@@ -8,6 +8,7 @@
 
 #include <limits>
 #include <memory>
+#include <mutex>
 
 namespace GpuRuntime {
 namespace {
@@ -200,13 +201,25 @@ bool fitsRocBlasInt(std::int64_t value)
     return value >= 0 && value <= static_cast<std::int64_t>(std::numeric_limits<rocblas_int>::max());
 }
 
+bool fitsRocBlasStride(std::int64_t value)
+{
+    return value >= 0;
+}
+
 class HipRocBlasLibraryOps final : public UnsupportedLibraryOps {
 public:
     HipRocBlasLibraryOps()
     {
         if (rocblas_create_handle(&handle_) != rocblas_status_success) {
             handle_ = nullptr;
+            return;
         }
+        if (rocblas_set_pointer_mode(handle_, rocblas_pointer_mode_host) != rocblas_status_success) {
+            rocblas_destroy_handle(handle_);
+            handle_ = nullptr;
+            return;
+        }
+        pointerModeHost_ = true;
     }
 
     ~HipRocBlasLibraryOps() override
@@ -237,9 +250,20 @@ public:
             return LibraryStatus::InvalidValue;
         }
 
-        if (rocblas_set_stream(handle_, static_cast<hipStream_t>(queue.nativeHandle())) != rocblas_status_success ||
-            rocblas_set_pointer_mode(handle_, rocblas_pointer_mode_host) != rocblas_status_success) {
-            return LibraryStatus::ExecutionFailed;
+        std::lock_guard<std::mutex> lock(mutex_);
+        hipStream_t stream = static_cast<hipStream_t>(queue.nativeHandle());
+        if (stream != currentStream_) {
+            if (rocblas_set_stream(handle_, stream) != rocblas_status_success) {
+                return LibraryStatus::ExecutionFailed;
+            }
+            currentStream_ = stream;
+        }
+
+        if (!pointerModeHost_) {
+            if (rocblas_set_pointer_mode(handle_, rocblas_pointer_mode_host) != rocblas_status_success) {
+                return LibraryStatus::ExecutionFailed;
+            }
+            pointerModeHost_ = true;
         }
 
         const auto transA = toRocBlasOp(params.transA);
@@ -293,8 +317,120 @@ public:
         return status == rocblas_status_success ? LibraryStatus::Success : LibraryStatus::ExecutionFailed;
     }
 
+    LibraryStatus gemmF16F32(
+        Queue& queue,
+        const GemmStridedParams& params,
+        Buffer& A,
+        Buffer& B,
+        Buffer& C) override
+    {
+        if (!handle_) {
+            return LibraryStatus::NotInitialized;
+        }
+        if (!fitsRocBlasInt(params.m) || !fitsRocBlasInt(params.n) || !fitsRocBlasInt(params.k) ||
+            !fitsRocBlasInt(params.lda) || !fitsRocBlasInt(params.ldb) || !fitsRocBlasInt(params.ldc) ||
+            !fitsRocBlasInt(params.batchCount) ||
+            !fitsRocBlasStride(params.strideA) || !fitsRocBlasStride(params.strideB) ||
+            !fitsRocBlasStride(params.strideC)) {
+            return LibraryStatus::InvalidValue;
+        }
+
+        std::lock_guard<std::mutex> lock(mutex_);
+        hipStream_t stream = static_cast<hipStream_t>(queue.nativeHandle());
+        if (stream != currentStream_) {
+            if (rocblas_set_stream(handle_, stream) != rocblas_status_success) {
+                return LibraryStatus::ExecutionFailed;
+            }
+            currentStream_ = stream;
+        }
+
+        if (!pointerModeHost_) {
+            if (rocblas_set_pointer_mode(handle_, rocblas_pointer_mode_host) != rocblas_status_success) {
+                return LibraryStatus::ExecutionFailed;
+            }
+            pointerModeHost_ = true;
+        }
+
+        const auto transA = toRocBlasOp(params.transA);
+        const auto transB = toRocBlasOp(params.transB);
+        const rocblas_int m = static_cast<rocblas_int>(params.m);
+        const rocblas_int n = static_cast<rocblas_int>(params.n);
+        const rocblas_int k = static_cast<rocblas_int>(params.k);
+        const rocblas_int lda = static_cast<rocblas_int>(params.lda);
+        const rocblas_int ldb = static_cast<rocblas_int>(params.ldb);
+        const rocblas_int ldc = static_cast<rocblas_int>(params.ldc);
+        const rocblas_int batchCount = static_cast<rocblas_int>(params.batchCount);
+        const float alpha = static_cast<float>(params.alpha);
+        const float beta = static_cast<float>(params.beta);
+        rocblas_status status = rocblas_status_internal_error;
+
+        if (batchCount <= 1) {
+            status = rocblas_gemm_ex(
+                handle_,
+                transA,
+                transB,
+                m,
+                n,
+                k,
+                &alpha,
+                A.getDevicePointer(),
+                rocblas_datatype_f16_r,
+                lda,
+                B.getDevicePointer(),
+                rocblas_datatype_f16_r,
+                ldb,
+                &beta,
+                C.getDevicePointer(),
+                rocblas_datatype_f32_r,
+                ldc,
+                C.getDevicePointer(),
+                rocblas_datatype_f32_r,
+                ldc,
+                rocblas_datatype_f32_r,
+                rocblas_gemm_algo_standard,
+                0,
+                0);
+        } else {
+            status = rocblas_gemm_strided_batched_ex(
+                handle_,
+                transA,
+                transB,
+                m,
+                n,
+                k,
+                &alpha,
+                A.getDevicePointer(),
+                rocblas_datatype_f16_r,
+                lda,
+                static_cast<rocblas_stride>(params.strideA),
+                B.getDevicePointer(),
+                rocblas_datatype_f16_r,
+                ldb,
+                static_cast<rocblas_stride>(params.strideB),
+                &beta,
+                C.getDevicePointer(),
+                rocblas_datatype_f32_r,
+                ldc,
+                static_cast<rocblas_stride>(params.strideC),
+                C.getDevicePointer(),
+                rocblas_datatype_f32_r,
+                ldc,
+                static_cast<rocblas_stride>(params.strideC),
+                batchCount,
+                rocblas_datatype_f32_r,
+                rocblas_gemm_algo_standard,
+                0,
+                0);
+        }
+
+        return status == rocblas_status_success ? LibraryStatus::Success : LibraryStatus::ExecutionFailed;
+    }
+
 private:
     rocblas_handle handle_ = nullptr;
+    hipStream_t currentStream_ = nullptr;
+    bool pointerModeHost_ = false;
+    std::mutex mutex_;
 };
 
 } // namespace

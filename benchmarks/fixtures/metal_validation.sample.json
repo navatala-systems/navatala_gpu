@@ -1,0 +1,126 @@
+{
+  "schema": "navatala_gpu.metal_validation.v1",
+  "timingMode": "ctest_runtime_profile",
+  "generatedAt": "2026-06-24T00:00:00Z",
+  "commit": "sample-fixture",
+  "host": {
+    "os": "Darwin",
+    "arch": "arm64",
+    "macOS": "15.0",
+    "xcode": "Xcode 16.0",
+    "deviceSummary": "Chipset Model: Apple M3 Max; Metal Support: Metal 3"
+  },
+  "build": {
+    "buildDir": "build-metal-validation",
+    "cmakeVersion": "cmake version 3.29.0",
+    "compiler": "Apple clang version 16.0.0",
+    "configuration": "Release"
+  },
+  "tests": {
+    "regex": "test_device_selection|test_events|test_graphs|test_kernel_execution|test_program_cache|test_memory_resources|test_stream_pool|test_device_buffer"
+  },
+  "runs": [
+    {
+      "name": "baseline",
+      "flags": {
+        "batchSubmits": false,
+        "batchLimit": 0,
+        "privateDeviceBuffers": false
+      },
+      "ctestPassed": true,
+      "exitCode": 0,
+      "wallSeconds": 2.31,
+      "log": "baseline.log",
+      "profileLineCount": 1,
+      "profileCounters": {
+        "submit": 12,
+        "sync": 9,
+        "command_buffer": 18,
+        "compute_encoder": 12,
+        "blit_encoder": 4,
+        "h2d_count": 5,
+        "h2d_bytes": 65536,
+        "d2h_count": 5,
+        "d2h_bytes": 65536,
+        "d2d_count": 2,
+        "d2d_bytes": 32768,
+        "hosthost_count": 0,
+        "hosthost_bytes": 0,
+        "host_visible_copy": 8,
+        "batch_dispatch": 0,
+        "batch_flush": 0,
+        "batch_limit_flush": 0,
+        "skipped_empty_sync": 3
+      },
+      "notes": "Sample fixture only; not a performance claim."
+    },
+    {
+      "name": "batched",
+      "flags": {
+        "batchSubmits": true,
+        "batchLimit": 64,
+        "privateDeviceBuffers": false
+      },
+      "ctestPassed": true,
+      "exitCode": 0,
+      "wallSeconds": 1.94,
+      "log": "batched.log",
+      "profileLineCount": 1,
+      "profileCounters": {
+        "submit": 12,
+        "sync": 9,
+        "command_buffer": 10,
+        "compute_encoder": 6,
+        "blit_encoder": 4,
+        "h2d_count": 5,
+        "h2d_bytes": 65536,
+        "d2h_count": 5,
+        "d2h_bytes": 65536,
+        "d2d_count": 2,
+        "d2d_bytes": 32768,
+        "hosthost_count": 0,
+        "hosthost_bytes": 0,
+        "host_visible_copy": 8,
+        "batch_dispatch": 12,
+        "batch_flush": 4,
+        "batch_limit_flush": 0,
+        "skipped_empty_sync": 3
+      },
+      "notes": "Sample fixture only; not a performance claim."
+    },
+    {
+      "name": "private",
+      "flags": {
+        "batchSubmits": false,
+        "batchLimit": 0,
+        "privateDeviceBuffers": true
+      },
+      "ctestPassed": true,
+      "exitCode": 0,
+      "wallSeconds": 2.57,
+      "log": "private.log",
+      "profileLineCount": 1,
+      "profileCounters": {
+        "submit": 12,
+        "sync": 9,
+        "command_buffer": 22,
+        "compute_encoder": 12,
+        "blit_encoder": 8,
+        "h2d_count": 5,
+        "h2d_bytes": 65536,
+        "d2h_count": 5,
+        "d2h_bytes": 65536,
+        "d2d_count": 2,
+        "d2d_bytes": 32768,
+        "hosthost_count": 0,
+        "hosthost_bytes": 0,
+        "host_visible_copy": 0,
+        "batch_dispatch": 0,
+        "batch_flush": 0,
+        "batch_limit_flush": 0,
+        "skipped_empty_sync": 0
+      },
+      "notes": "Sample fixture only; not a performance claim."
+    }
+  ]
+}

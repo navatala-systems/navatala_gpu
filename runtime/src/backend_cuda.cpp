@@ -203,9 +203,24 @@ public:
     }
 
     void memcpy(Buffer& dst, const Buffer& src, size_t size) override {
+        memcpyOffset(dst, 0, src, 0, size);
+    }
+
+    void memcpyOffset(Buffer& dst, size_t dstOffset,
+                      const Buffer& src, size_t srcOffset,
+                      size_t size) override {
         restoreContext_();
+        if (dstOffset > dst.sizeBytes() || size > dst.sizeBytes() - dstOffset ||
+            srcOffset > src.sizeBytes() || size > src.sizeBytes() - srcOffset) {
+            throw std::runtime_error("CUDA memcpyOffset out of bounds");
+        }
         // Use cudaMemcpyDefault so mapped pinned/managed pointers are handled correctly.
-        cudaError_t result = cudaMemcpyAsync(dst.getDevicePointer(), const_cast<Buffer&>(src).getDevicePointer(), size,
+        char* dstPtr = static_cast<char*>(dst.getDevicePointer());
+        const char* srcPtr = static_cast<const char*>(const_cast<Buffer&>(src).getDevicePointer());
+        if (!dstPtr || !srcPtr) {
+            throw std::runtime_error("CUDA memcpyOffset requires valid source and destination pointers");
+        }
+        cudaError_t result = cudaMemcpyAsync(dstPtr + dstOffset, srcPtr + srcOffset, size,
                                              cudaMemcpyDefault, stream_);
         if (result != cudaSuccess) {
             throw std::runtime_error("Failed to enqueue CUDA memcpy: "

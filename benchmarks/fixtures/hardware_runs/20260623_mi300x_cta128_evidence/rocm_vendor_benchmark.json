@@ -22,7 +22,7 @@
     {
       "operation": "GEMM_F16_PORTABLE_F32OUT",
       "shape": "m=128,n=128,k=128,output=F32,compute=F32",
-      "navatalaPath": "generated HIP kernel navatala_transformer_tiled_gemm_f16_f32_out",
+      "navatalaPath": "Navatala HIP kernel navatala_transformer_tiled_gemm_f16_f32_out",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 input/F32 output/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.0060031667,
@@ -39,7 +39,7 @@
     {
       "operation": "GEMM_F16_MFMA_CTA64_SHARED",
       "shape": "m=128,n=128,k=128,compute=F32,cta=64x64x8,lds_staged=true",
-      "navatalaPath": "generated HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta64_shared",
+      "navatalaPath": "Navatala HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta64_shared",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.0063104331,
@@ -56,7 +56,7 @@
     {
       "operation": "GEMM_F16_MFMA_CTA64_PIPELINED",
       "shape": "m=128,n=128,k=128,compute=F32,cta=64x64x8,lds_staged=true,two_slot=true,r6_panel_copy=true",
-      "navatalaPath": "generated HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined",
+      "navatalaPath": "Navatala HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.0072285334,
@@ -73,7 +73,7 @@
     {
       "operation": "GEMM_F16_MFMA_CTA128",
       "shape": "m=128,n=128,k=128,compute=F32,cta=128x128x32",
-      "navatalaPath": "generated HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta128",
+      "navatalaPath": "Navatala HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta128",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.0084537665,
@@ -90,7 +90,7 @@
     {
       "operation": "GEMM_F16_PORTABLE_F32OUT",
       "shape": "m=512,n=512,k=512,output=F32,compute=F32",
-      "navatalaPath": "generated HIP kernel navatala_transformer_tiled_gemm_f16_f32_out",
+      "navatalaPath": "Navatala HIP kernel navatala_transformer_tiled_gemm_f16_f32_out",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 input/F32 output/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.0272575,
@@ -107,7 +107,7 @@
     {
       "operation": "GEMM_F16_MFMA_CTA64_SHARED",
       "shape": "m=512,n=512,k=512,compute=F32,cta=64x64x8,lds_staged=true",
-      "navatalaPath": "generated HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta64_shared",
+      "navatalaPath": "Navatala HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta64_shared",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.020571733,
@@ -124,7 +124,7 @@
     {
       "operation": "GEMM_F16_MFMA_CTA64_PIPELINED",
       "shape": "m=512,n=512,k=512,compute=F32,cta=64x64x8,lds_staged=true,two_slot=true,r6_panel_copy=true",
-      "navatalaPath": "generated HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined",
+      "navatalaPath": "Navatala HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.022739299,
@@ -141,7 +141,7 @@
     {
       "operation": "GEMM_F16_MFMA_CTA128",
       "shape": "m=512,n=512,k=512,compute=F32,cta=128x128x32",
-      "navatalaPath": "generated HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta128",
+      "navatalaPath": "Navatala HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta128",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.026223201,
@@ -158,7 +158,7 @@
     {
       "operation": "GEMM_F16_PORTABLE_F32OUT",
       "shape": "m=1024,n=1024,k=1024,output=F32,compute=F32",
-      "navatalaPath": "generated HIP kernel navatala_transformer_tiled_gemm_f16_f32_out",
+      "navatalaPath": "Navatala HIP kernel navatala_transformer_tiled_gemm_f16_f32_out",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 input/F32 output/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.18167686,
@@ -175,7 +175,7 @@
     {
       "operation": "GEMM_F16_MFMA_CTA64_SHARED",
       "shape": "m=1024,n=1024,k=1024,compute=F32,cta=64x64x8,lds_staged=true",
-      "navatalaPath": "generated HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta64_shared",
+      "navatalaPath": "Navatala HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta64_shared",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.060056035,
@@ -192,7 +192,7 @@
     {
       "operation": "GEMM_F16_MFMA_CTA64_PIPELINED",
       "shape": "m=1024,n=1024,k=1024,compute=F32,cta=64x64x8,lds_staged=true,two_slot=true,r6_panel_copy=true",
-      "navatalaPath": "generated HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined",
+      "navatalaPath": "Navatala HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.061616568,
@@ -209,7 +209,7 @@
     {
       "operation": "GEMM_F16_MFMA_CTA128",
       "shape": "m=1024,n=1024,k=1024,compute=F32,cta=128x128x32",
-      "navatalaPath": "generated HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta128",
+      "navatalaPath": "Navatala HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta128",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.053518267,
@@ -226,7 +226,7 @@
     {
       "operation": "GEMM_F16_PORTABLE_F32OUT",
       "shape": "m=1024,n=512,k=1024,output=F32,compute=F32",
-      "navatalaPath": "generated HIP kernel navatala_transformer_tiled_gemm_f16_f32_out",
+      "navatalaPath": "Navatala HIP kernel navatala_transformer_tiled_gemm_f16_f32_out",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 input/F32 output/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.096475331,
@@ -243,7 +243,7 @@
     {
       "operation": "GEMM_F16_MFMA_CTA64_SHARED",
       "shape": "m=1024,n=512,k=1024,compute=F32,cta=64x64x8,lds_staged=true",
-      "navatalaPath": "generated HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta64_shared",
+      "navatalaPath": "Navatala HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta64_shared",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.053069266,
@@ -260,7 +260,7 @@
     {
       "operation": "GEMM_F16_MFMA_CTA64_PIPELINED",
       "shape": "m=1024,n=512,k=1024,compute=F32,cta=64x64x8,lds_staged=true,two_slot=true,r6_panel_copy=true",
-      "navatalaPath": "generated HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined",
+      "navatalaPath": "Navatala HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.055339702,
@@ -277,7 +277,7 @@
     {
       "operation": "GEMM_F16_MFMA_CTA128",
       "shape": "m=1024,n=512,k=1024,compute=F32,cta=128x128x32",
-      "navatalaPath": "generated HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta128",
+      "navatalaPath": "Navatala HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta128",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.0497003,
@@ -294,7 +294,7 @@
     {
       "operation": "GEMM_F16_PORTABLE_F32OUT",
       "shape": "m=512,n=1024,k=1024,output=F32,compute=F32",
-      "navatalaPath": "generated HIP kernel navatala_transformer_tiled_gemm_f16_f32_out",
+      "navatalaPath": "Navatala HIP kernel navatala_transformer_tiled_gemm_f16_f32_out",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 input/F32 output/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.094871704,
@@ -311,7 +311,7 @@
     {
       "operation": "GEMM_F16_MFMA_CTA64_SHARED",
       "shape": "m=512,n=1024,k=1024,compute=F32,cta=64x64x8,lds_staged=true",
-      "navatalaPath": "generated HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta64_shared",
+      "navatalaPath": "Navatala HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta64_shared",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.039427801,
@@ -328,7 +328,7 @@
     {
       "operation": "GEMM_F16_MFMA_CTA64_PIPELINED",
       "shape": "m=512,n=1024,k=1024,compute=F32,cta=64x64x8,lds_staged=true,two_slot=true,r6_panel_copy=true",
-      "navatalaPath": "generated HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined",
+      "navatalaPath": "Navatala HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.043785632,
@@ -345,7 +345,7 @@
     {
       "operation": "GEMM_F16_MFMA_CTA128",
       "shape": "m=512,n=1024,k=1024,compute=F32,cta=128x128x32",
-      "navatalaPath": "generated HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta128",
+      "navatalaPath": "Navatala HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta128",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.0497431,
@@ -362,7 +362,7 @@
     {
       "operation": "GEMM_F16_PORTABLE_F32OUT",
       "shape": "m=2048,n=512,k=1024,output=F32,compute=F32",
-      "navatalaPath": "generated HIP kernel navatala_transformer_tiled_gemm_f16_f32_out",
+      "navatalaPath": "Navatala HIP kernel navatala_transformer_tiled_gemm_f16_f32_out",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 input/F32 output/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.18326227,
@@ -379,7 +379,7 @@
     {
       "operation": "GEMM_F16_MFMA_CTA64_SHARED",
       "shape": "m=2048,n=512,k=1024,compute=F32,cta=64x64x8,lds_staged=true",
-      "navatalaPath": "generated HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta64_shared",
+      "navatalaPath": "Navatala HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta64_shared",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.058978868,
@@ -396,7 +396,7 @@
     {
       "operation": "GEMM_F16_MFMA_CTA64_PIPELINED",
       "shape": "m=2048,n=512,k=1024,compute=F32,cta=64x64x8,lds_staged=true,two_slot=true,r6_panel_copy=true",
-      "navatalaPath": "generated HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined",
+      "navatalaPath": "Navatala HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.059978501,
@@ -413,7 +413,7 @@
     {
       "operation": "GEMM_F16_MFMA_CTA128",
       "shape": "m=2048,n=512,k=1024,compute=F32,cta=128x128x32",
-      "navatalaPath": "generated HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta128",
+      "navatalaPath": "Navatala HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_cta128",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.053395434,

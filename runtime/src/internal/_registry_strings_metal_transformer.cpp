@@ -13634,6 +13634,34 @@ bool tryGetKernelSource_metal_transformer(const std::string& backend, const std:
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }
+  if (backend == "metal" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::Msl;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_metal_navatala_transformer_tiled_gemm_f16_f32_out);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "metal" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::Msl;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_metal_navatala_transformer_tiled_gemm_f16_f32_out);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "metal" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::Msl;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_metal_navatala_transformer_tiled_gemm_f16_f32_out);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "metal" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::Msl;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_metal_navatala_transformer_tiled_gemm_f16_f32_out);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
   return false;
 }
 

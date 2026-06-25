@@ -51,6 +51,9 @@ For HIP/ROCm reports, use
 [`docs/benchmarks/ROCM_VALIDATION_TEMPLATE.md`](benchmarks/ROCM_VALIDATION_TEMPLATE.md).
 The opt-in ROCm vendor benchmark harness is documented in
 [`docs/benchmarks/ROCM_VENDOR_BENCHMARKS.md`](benchmarks/ROCM_VENDOR_BENCHMARKS.md).
+For Metal runtime validation, use
+[`docs/benchmarks/METAL_VALIDATION.md`](benchmarks/METAL_VALIDATION.md) and
+preserve the emitted `metal_validation.json`/Markdown/log artifact set.
 
 ## Manifest Requirements
 
@@ -148,9 +151,12 @@ P0 items into active tuning. Updated 2026-06-22 with the ROCm 7.2.4 follow-up ru
   medium-shape candidate: at 512^3 it measured `0.020572 ms` versus CTA128 at
   `0.026223 ms`. The public F16-input/F32-output wrapper now implements
   shape-aware HIP/gfx942 MFMA dispatch with edge-tile, alpha/beta, transpose,
-  and strided-batch correctness coverage. The ROCm benchmark harness now has an
-  opt-in `GEMM_F16_F32_WRAPPER_MFMA` row for timing that edge-capable public
-  wrapper path separately from the raw tile-divisible micro-benchmark rows. The
+  and strided-batch correctness coverage. Auto dispatch now keeps CTA128 for
+  aligned large full-tile calls and defaults tail/general semantic calls to
+  CTA64_EDGE until CTA128_EDGE has separate performance evidence. The ROCm
+  benchmark harness now has opt-in wrapper rows for the headline MFMA path plus
+  explicit alpha/beta, transpose, and strided-batched semantic checks against
+  rocBLAS. The
   first packed-parameter wrapper fixture on MI300X / ROCm 7.2.4 measured
   `0.051632 ms` for 512³ (`1.967x` vs rocBLAS) and `0.033700 ms` for the edge
   shape 513x511x257 (`0.859x` vs rocBLAS), confirming correctness and removing
@@ -163,6 +169,69 @@ P0 items into active tuning. Updated 2026-06-22 with the ROCm 7.2.4 follow-up ru
   and final synchronization. The next production work is continued
   shape-threshold tuning, cached/by-value launch-parameter handling to reduce
   wrapper overhead, and backend-specific expansion beyond HIP/gfx942.
+- **Public-wrapper semantic validation and current ROCm evidence:** the
+  `20260624_mi300x_wrapper_semantics` fixture passed the focused public ABI
+  sweep on MI300X / ROCm 7.2.4: tail-small `0.023151 ms` (`0.534x` versus
+  rocBLAS), tail-large `0.185373 ms` (`1.990x`), alpha/beta `0.038582 ms`
+  (`1.164x`), transpose `0.025538 ms` (`1.251x`), and strided batch
+  `0.018260 ms` (`1.041x` against `rocblas_gemm_strided_batched_ex`). The
+  follow-up `20260624_mi300x_wrapper_semantic_fulltile` and
+  `20260624_mi300x_wrapper_semantic_fulltile_50iter` fixtures validate the
+  full-tile semantic route for tile-divisible alpha/beta and transpose calls.
+  In the stable 50-iteration run, wrapper alpha/beta improved to
+  `0.025392 ms` (`0.772x` versus rocBLAS), while wrapper transpose improved to
+  `0.023297 ms` but remains performance-open at `1.153x`. The
+  broader `20260624_mi300x_broad_wrapper_mfma_hipsparselt` fixture passed
+  AXPY, F32 GEMM, portable F16/F32-output GEMM, raw MFMA variants, public
+  F16/F32 wrapper rows, CSR SpMV, and hipSPARSELt structured GEMM. Key current
+  production-candidate rows: CTA64 shared at 512³ `0.020573 ms` (`0.800x`
+  versus rocBLAS), CTA128 at 1024³ `0.053449 ms` (`1.255x`), wrapper MFMA at
+  1024³ `0.057410 ms` (`1.247x`), and hipSPARSELt structured GEMM at 512³
+  `0.011817 ms` (`0.612x` versus dense pruned-A rocBLAS reference). The
+  profile artifact confirms CTA128 remains scratch-free (`Scratch_Size=0`,
+  `VGPR_Count=84`) and CTA128_EDGE remains the main performance gap
+  (`0.180184 ms` at 1024³ in the profile matrix, about `4.005x` versus
+  rocBLAS). The follow-up `20260624_mi300x_edge_tails_profile` fixture confirms
+  the same behavior on true non-divisible tail shapes: CTA64_EDGE and
+  CTA128_EDGE are both scratch-free and correctness-clean, but direct generated
+  EDGE is still slower than rocBLAS. Wrapper auto dispatch chooses the vendor
+  path for those true-tail shapes and stays at `0.999x` to `1.004x` versus
+  rocBLAS. The `20260624_mi300x_edge_tails_store_fastpath_rocm724` fixture
+  validates the alpha/beta store fast path on ROCm 7.2.4 and shows only
+  noise-level direct EDGE improvement (`0.2%` to `0.6%`). The next GEMM work is
+  therefore not basic correctness or simple epilogue branch cleanup. The
+  `20260625_mi300x_edge_tails_predicate_hoist_rocm724` fixture validates the
+  first CTA64_EDGE predicate-hoist cleanup. Correctness and the scratch-free
+  resource envelope are preserved (`Scratch_Size=0`, `VGPR_Count=40`,
+  `SGPR_Count=48` for CTA64_EDGE), but direct CTA64_EDGE timings changed only
+  by about `+1%` on the sampled true-tail shapes. Predicate hoisting is useful
+  as a source-shape cleanup, not as a throughput fix. The next EDGE performance
+  work should move to fused true-tail kernels or a different EDGE kernel
+  strategy, plus transpose-layout tuning. The
+  `20260625_mi300x_edge_split_rocm724` fixture tested the first opt-in
+  split/interior-border wrapper path and found it correctness-clean but slower
+  than single-pass EDGE on all sampled true-tail shapes. Public AUTO therefore
+  remains vendor-routed for these tails; split EDGE is diagnostic-only. The
+  `20260625_mi300x_edge_nn_rocm724` fixture then validates a fused CTA64
+  NN-only true-tail kernel that removes transpose, batching, and alpha/beta
+  epilogue handling from the generic EDGE path. It is correctness-clean,
+  scratch-free, and reduces register pressure (`VGPR_Count=24`,
+  `SGPR_Count=32`) versus generic CTA64_EDGE (`VGPR_Count=40`,
+  `SGPR_Count=48`). The timing gain is too small to change policy:
+  direct NN fast-tail rows improve generic CTA64_EDGE by only about `2%` to
+  `4%` and remain `1.165x` to `1.930x` versus rocBLAS. Public AUTO therefore
+  continues to select vendor dispatch for the sampled true-tail shapes.
+
+  A follow-up ROCm code-object inspection on the same host confirms the source
+  of the EDGE cost. CTA64 shared full-tile disassembles to about `269`
+  instructions, while CTA64_EDGE is about `878`; CTA128 full-tile is about
+  `893`, while CTA128_EDGE is about `3580`. MFMA instruction count is unchanged
+  (`1` for CTA64 and `16` for CTA128). The bloat is branch/address/control:
+  CTA128_EDGE has about `494` branch/compare instructions, `1711` integer
+  address/control ops, and `322` wait-count instructions versus `6`, `406`, and
+  `50` respectively for CTA128 full-tile. This points toward specialized
+  boundary CTAs, split interior/border launches, or fewer per-lane predicates as
+  the next EDGE optimization family.
 
 Implementation details and acceptance gates are tracked in the source
 repository design notes. Public release reports should cite the generated JSON
@@ -174,7 +243,18 @@ The following remain separate tracks:
 
 - CUDA comparison against cuBLAS and cuSPARSE on an NVIDIA host.
 - Vulkan/OpenCL tuning beyond correctness smoke checks.
-- Metal tuning on Apple GPU hardware.
+- Metal tuning on Apple GPU hardware. The runtime now has diagnostic counters
+  for command buffers, encoders, host-visible copies, and queue syncs, plus an
+  experimental opt-in submit-batching path controlled by
+  `NAVATALA_GPU_METAL_BATCH_SUBMITS` and
+  `NAVATALA_GPU_METAL_BATCH_LIMIT`. It also has an experimental private
+  device-buffer mode controlled by
+  `NAVATALA_GPU_METAL_PRIVATE_DEVICE_BUFFERS`, now backed by runtime
+  offset-copy support. The validation runner, JSON schema, report renderer, and
+  manual self-hosted macOS workflow are present; these runtime modes remain
+  default-off until the Apple Silicon validation pass in
+  [`docs/benchmarks/METAL_VALIDATION.md`](benchmarks/METAL_VALIDATION.md)
+  records correctness and wall-time evidence.
 - Full matrix-intrinsic IR support for MFMA/WMMA/TensorCore/cooperative-matrix
   operations. The Option A experimental prototype has landed and this track is
   now actively driven by `MATRIX_INTRINSIC_IR_R3.md`.

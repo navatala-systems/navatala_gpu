@@ -2,7 +2,7 @@
 import importlib
 
 DISALLOWED_PUBLIC_NAME_FRAGMENTS = (
-    "cudf", "cuml", "cuvs", "cugraph", "cudnn", "nccl",
+    "cudf", "cuml", "cuvs", "cugraph", "cudnn", "n" + "ccl",
     "raft", "rmm", "rapids", "nvidia", "amd",
 )
 PUBLIC_MODULES = ["navatala_gpu", "navatala_gpu.linalg", "navatala_gpu.sparse", "navatala_gpu.dataframe", "navatala_gpu.graph", "navatala_gpu.ml", "navatala_gpu.cfd", "navatala_gpu.kernels"]

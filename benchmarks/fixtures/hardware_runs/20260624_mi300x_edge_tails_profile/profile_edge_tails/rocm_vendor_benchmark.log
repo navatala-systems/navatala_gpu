@@ -1,0 +1,19 @@
+ROCm benchmark device: AMD Instinct MI300X VF, gcnArch=gfx942:sramecc+:xnack-, memory=196288 MiB
+hipSPARSELt detected at build time: yes
+MFMA benchmark built: yes
+operation      shape                    generated_mean_ms vendor_mean_ms ratio        correct    vendor
+GEMM_F16_MFMA_CTA64_SHARED_EDGE m=1023,n=1024,k=2003,compute=F32,edge=true 0.184642     0.099736     1.851        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F16_MFMA_CTA128_EDGE m=1023,n=1024,k=2003,compute=F32,edge=true 0.358116     0.095799     3.738        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F16_F32_WRAPPER_MFMA_TAIL_M1023_N1024_K2003 m=1023,n=1024,k=2003,transA=N,transB=N,alpha=1,beta=0,batch=1,output=F32,compute=F32,wrapper=mfma 0.187684     0.096784     1.939        pass       rocBLAS rocblas_gemm_ex F16 input/F32 output/F32 accumulation
+GEMM_F16_F32_WRAPPER_AUTO_TAIL_M1023_N1024_K2003 m=1023,n=1024,k=2003,transA=N,transB=N,alpha=1,beta=0,batch=1,output=F32,compute=F32,wrapper=auto 0.096047     0.095550     1.005        pass       rocBLAS rocblas_gemm_ex F16 input/F32 output/F32 accumulation
+GEMM_F16_F32_WRAPPER_VENDOR_TAIL_M1023_N1024_K2003 m=1023,n=1024,k=2003,transA=N,transB=N,alpha=1,beta=0,batch=1,output=F32,compute=F32,wrapper=vendor 0.095711     0.096008     0.997        pass       rocBLAS rocblas_gemm_ex F16 input/F32 output/F32 accumulation
+GEMM_F16_MFMA_CTA64_SHARED_EDGE m=1024,n=1023,k=2047,compute=F32,edge=true 0.196128     0.112076     1.750        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F16_MFMA_CTA128_EDGE m=1024,n=1023,k=2047,compute=F32,edge=true 0.380494     0.112517     3.382        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F16_F32_WRAPPER_MFMA_TAIL_M1024_N1023_K2047 m=1024,n=1023,k=2047,transA=N,transB=N,alpha=1,beta=0,batch=1,output=F32,compute=F32,wrapper=mfma 0.200747     0.112709     1.781        pass       rocBLAS rocblas_gemm_ex F16 input/F32 output/F32 accumulation
+GEMM_F16_F32_WRAPPER_AUTO_TAIL_M1024_N1023_K2047 m=1024,n=1023,k=2047,transA=N,transB=N,alpha=1,beta=0,batch=1,output=F32,compute=F32,wrapper=auto 0.112453     0.112285     1.001        pass       rocBLAS rocblas_gemm_ex F16 input/F32 output/F32 accumulation
+GEMM_F16_F32_WRAPPER_VENDOR_TAIL_M1024_N1023_K2047 m=1024,n=1023,k=2047,transA=N,transB=N,alpha=1,beta=0,batch=1,output=F32,compute=F32,wrapper=vendor 0.112637     0.111723     1.008        pass       rocBLAS rocblas_gemm_ex F16 input/F32 output/F32 accumulation
+GEMM_F16_MFMA_CTA64_SHARED_EDGE m=1025,n=513,k=1024,compute=F32,edge=true 0.073733     0.062965     1.171        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F16_MFMA_CTA128_EDGE m=1025,n=513,k=1024,compute=F32,edge=true 0.129025     0.062532     2.063        pass       rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation
+GEMM_F16_F32_WRAPPER_MFMA_TAIL_M1025_N513_K1024 m=1025,n=513,k=1024,transA=N,transB=N,alpha=1,beta=0,batch=1,output=F32,compute=F32,wrapper=mfma 0.075313     0.063278     1.190        pass       rocBLAS rocblas_gemm_ex F16 input/F32 output/F32 accumulation
+GEMM_F16_F32_WRAPPER_AUTO_TAIL_M1025_N513_K1024 m=1025,n=513,k=1024,transA=N,transB=N,alpha=1,beta=0,batch=1,output=F32,compute=F32,wrapper=auto 0.063326     0.062637     1.011        pass       rocBLAS rocblas_gemm_ex F16 input/F32 output/F32 accumulation
+GEMM_F16_F32_WRAPPER_VENDOR_TAIL_M1025_N513_K1024 m=1025,n=513,k=1024,transA=N,transB=N,alpha=1,beta=0,batch=1,output=F32,compute=F32,wrapper=vendor 0.061618     0.062276     0.989        pass       rocBLAS rocblas_gemm_ex F16 input/F32 output/F32 accumulation

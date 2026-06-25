@@ -480,10 +480,46 @@ Compact navigation aid for the kernel corpus, grouped by domain.
 
 ## Miscellaneous
 
-1,409 kernels.
+1,413 kernels.
 
 | Kernel | CUDA | HIP | OpenCL | Vulkan | Metal |
 |--------|:----:|:---:|:------:|:------:|:-----:|
+| `navatala_collectives_direct_recv_f16` | yes | yes | yes | yes | yes |
+| `navatala_collectives_direct_recv_f32` | yes | yes | yes | yes | yes |
+| `navatala_collectives_direct_recv_i32` | yes | yes | yes | yes | yes |
+| `navatala_collectives_direct_send_f16` | yes | yes | yes | yes | yes |
+| `navatala_collectives_direct_send_f32` | yes | yes | yes | yes | yes |
+| `navatala_collectives_direct_send_i32` | yes | yes | yes | yes | yes |
+| `navatala_collectives_linear_broadcast_f16` | yes | yes | yes | yes | yes |
+| `navatala_collectives_linear_broadcast_f32` | yes | yes | yes | yes | yes |
+| `navatala_collectives_linear_broadcast_i32` | yes | yes | yes | yes | yes |
+| `navatala_collectives_reduce_local_max_f16` | yes | yes | yes | yes | yes |
+| `navatala_collectives_reduce_local_max_f32` | yes | yes | yes | yes | yes |
+| `navatala_collectives_reduce_local_max_i32` | yes | yes | yes | yes | yes |
+| `navatala_collectives_reduce_local_min_f16` | yes | yes | yes | yes | yes |
+| `navatala_collectives_reduce_local_min_f32` | yes | yes | yes | yes | yes |
+| `navatala_collectives_reduce_local_min_i32` | yes | yes | yes | yes | yes |
+| `navatala_collectives_reduce_local_sum_f16` | yes | yes | yes | yes | yes |
+| `navatala_collectives_reduce_local_sum_f32` | yes | yes | yes | yes | yes |
+| `navatala_collectives_reduce_local_sum_i32` | yes | yes | yes | yes | yes |
+| `navatala_collectives_ring_all_gather_f16` | yes | yes | yes | yes | yes |
+| `navatala_collectives_ring_all_gather_f32` | yes | yes | yes | yes | yes |
+| `navatala_collectives_ring_all_gather_i32` | yes | yes | yes | yes | yes |
+| `navatala_collectives_ring_all_gather_step_f16` | yes | yes | yes | yes | yes |
+| `navatala_collectives_ring_all_gather_step_f32` | yes | yes | yes | yes | yes |
+| `navatala_collectives_ring_all_gather_step_i32` | yes | yes | yes | yes | yes |
+| `navatala_collectives_ring_all_reduce_sum_f16` | yes | yes | yes | yes | yes |
+| `navatala_collectives_ring_all_reduce_sum_f32` | yes | yes | yes | yes | yes |
+| `navatala_collectives_ring_all_reduce_sum_i32` | yes | yes | yes | yes | yes |
+| `navatala_collectives_ring_reduce_scatter_step_max_f16` | yes | yes | yes | yes | yes |
+| `navatala_collectives_ring_reduce_scatter_step_max_f32` | yes | yes | yes | yes | yes |
+| `navatala_collectives_ring_reduce_scatter_step_max_i32` | yes | yes | yes | yes | yes |
+| `navatala_collectives_ring_reduce_scatter_step_min_f16` | yes | yes | yes | yes | yes |
+| `navatala_collectives_ring_reduce_scatter_step_min_f32` | yes | yes | yes | yes | yes |
+| `navatala_collectives_ring_reduce_scatter_step_min_i32` | yes | yes | yes | yes | yes |
+| `navatala_collectives_ring_reduce_scatter_step_sum_f16` | yes | yes | yes | yes | yes |
+| `navatala_collectives_ring_reduce_scatter_step_sum_f32` | yes | yes | yes | yes | yes |
+| `navatala_collectives_ring_reduce_scatter_step_sum_i32` | yes | yes | yes | yes | yes |
 | `navatala_dataframe_abs_f32` | yes | yes | yes | yes | yes |
 | `navatala_dataframe_abs_f64` | yes | yes | yes | yes | - |
 | `navatala_dataframe_abs_i32` | yes | yes | yes | yes | yes |
@@ -1622,42 +1658,6 @@ Compact navigation aid for the kernel corpus, grouped by domain.
 | `navatala_ml_update_weights_f64` | yes | yes | yes | yes | - |
 | `navatala_ml_vote_majority_f32` | yes | yes | yes | yes | yes |
 | `navatala_ml_vote_majority_f64` | yes | yes | yes | yes | yes |
-| `navatala_nccl_direct_recv_f16` | yes | yes | yes | yes | yes |
-| `navatala_nccl_direct_recv_f32` | yes | yes | yes | yes | yes |
-| `navatala_nccl_direct_recv_i32` | yes | yes | yes | yes | yes |
-| `navatala_nccl_direct_send_f16` | yes | yes | yes | yes | yes |
-| `navatala_nccl_direct_send_f32` | yes | yes | yes | yes | yes |
-| `navatala_nccl_direct_send_i32` | yes | yes | yes | yes | yes |
-| `navatala_nccl_linear_broadcast_f16` | yes | yes | yes | yes | yes |
-| `navatala_nccl_linear_broadcast_f32` | yes | yes | yes | yes | yes |
-| `navatala_nccl_linear_broadcast_i32` | yes | yes | yes | yes | yes |
-| `navatala_nccl_reduce_local_max_f16` | yes | yes | yes | yes | yes |
-| `navatala_nccl_reduce_local_max_f32` | yes | yes | yes | yes | yes |
-| `navatala_nccl_reduce_local_max_i32` | yes | yes | yes | yes | yes |
-| `navatala_nccl_reduce_local_min_f16` | yes | yes | yes | yes | yes |
-| `navatala_nccl_reduce_local_min_f32` | yes | yes | yes | yes | yes |
-| `navatala_nccl_reduce_local_min_i32` | yes | yes | yes | yes | yes |
-| `navatala_nccl_reduce_local_sum_f16` | yes | yes | yes | yes | yes |
-| `navatala_nccl_reduce_local_sum_f32` | yes | yes | yes | yes | yes |
-| `navatala_nccl_reduce_local_sum_i32` | yes | yes | yes | yes | yes |
-| `navatala_nccl_ring_all_gather_f16` | yes | yes | yes | yes | yes |
-| `navatala_nccl_ring_all_gather_f32` | yes | yes | yes | yes | yes |
-| `navatala_nccl_ring_all_gather_i32` | yes | yes | yes | yes | yes |
-| `navatala_nccl_ring_all_gather_step_f16` | yes | yes | yes | yes | yes |
-| `navatala_nccl_ring_all_gather_step_f32` | yes | yes | yes | yes | yes |
-| `navatala_nccl_ring_all_gather_step_i32` | yes | yes | yes | yes | yes |
-| `navatala_nccl_ring_all_reduce_sum_f16` | yes | yes | yes | yes | yes |
-| `navatala_nccl_ring_all_reduce_sum_f32` | yes | yes | yes | yes | yes |
-| `navatala_nccl_ring_all_reduce_sum_i32` | yes | yes | yes | yes | yes |
-| `navatala_nccl_ring_reduce_scatter_step_max_f16` | yes | yes | yes | yes | yes |
-| `navatala_nccl_ring_reduce_scatter_step_max_f32` | yes | yes | yes | yes | yes |
-| `navatala_nccl_ring_reduce_scatter_step_max_i32` | yes | yes | yes | yes | yes |
-| `navatala_nccl_ring_reduce_scatter_step_min_f16` | yes | yes | yes | yes | yes |
-| `navatala_nccl_ring_reduce_scatter_step_min_f32` | yes | yes | yes | yes | yes |
-| `navatala_nccl_ring_reduce_scatter_step_min_i32` | yes | yes | yes | yes | yes |
-| `navatala_nccl_ring_reduce_scatter_step_sum_f16` | yes | yes | yes | yes | yes |
-| `navatala_nccl_ring_reduce_scatter_step_sum_f32` | yes | yes | yes | yes | yes |
-| `navatala_nccl_ring_reduce_scatter_step_sum_i32` | yes | yes | yes | yes | yes |
 | `navatala_runtime_deterministic_histogram_f32` | yes | yes | yes | yes | yes |
 | `navatala_runtime_deterministic_histogram_f64` | yes | yes | yes | yes | - |
 | `navatala_runtime_deterministic_reduce_f32` | yes | yes | yes | yes | yes |
@@ -1795,12 +1795,16 @@ Compact navigation aid for the kernel corpus, grouped by domain.
 | `navatala_transformer_tiled_gemm_f16_mfma` | - | yes | - | - | - |
 | `navatala_transformer_tiled_gemm_f16_mfma_cta128` | - | yes | - | - | - |
 | `navatala_transformer_tiled_gemm_f16_mfma_cta128_edge` | - | yes | - | - | - |
+| `navatala_transformer_tiled_gemm_f16_mfma_cta128_semantic` | - | yes | - | - | - |
 | `navatala_transformer_tiled_gemm_f16_mfma_cta64_direct` | - | yes | - | - | - |
 | `navatala_transformer_tiled_gemm_f16_mfma_cta64_pipelined` | - | yes | - | - | - |
 | `navatala_transformer_tiled_gemm_f16_mfma_cta64_shared` | - | yes | - | - | - |
 | `navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_early_barrier` | - | yes | - | - | - |
 | `navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_edge` | - | yes | - | - | - |
+| `navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_edge_nn` | - | yes | - | - | - |
+| `navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_edge_region` | - | yes | - | - | - |
 | `navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_padded` | - | yes | - | - | - |
+| `navatala_transformer_tiled_gemm_f16_mfma_cta64_shared_semantic` | - | yes | - | - | - |
 | `navatala_transformer_tiled_gemm_f16_mfma_k_loop` | - | yes | - | - | - |
 | `navatala_transformer_tiled_gemm_f32` | yes | yes | yes | yes | yes |
 | `navatala_transformer_top_k_gating_f16` | yes | yes | yes | yes | yes |

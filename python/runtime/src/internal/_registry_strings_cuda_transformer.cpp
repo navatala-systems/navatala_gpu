@@ -14482,6 +14482,34 @@ bool tryGetKernelSource_cuda_transformer(const std::string& backend, const std::
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }
+  if (backend == "cuda" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::CudaCpp;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_cuda_navatala_transformer_tiled_gemm_f16_f32_out);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "cuda" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::CudaCpp;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_cuda_navatala_transformer_tiled_gemm_f16_f32_out);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "cuda" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::CudaCpp;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_cuda_navatala_transformer_tiled_gemm_f16_f32_out);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "cuda" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::CudaCpp;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_cuda_navatala_transformer_tiled_gemm_f16_f32_out);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
   return false;
 }
 

@@ -13056,6 +13056,34 @@ bool tryGetKernelSource_opencl_transformer(const std::string& backend, const std
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }
+  if (backend == "opencl" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_opencl_navatala_transformer_tiled_gemm_f16_f32_out);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_opencl_navatala_transformer_tiled_gemm_f16_f32_out);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_opencl_navatala_transformer_tiled_gemm_f16_f32_out);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_transformer_tiled_gemm_f16_f32_out") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_transformer_tiled_gemm_f16_f32_out";
+    std::string_view sv(k_opencl_navatala_transformer_tiled_gemm_f16_f32_out);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
   return false;
 }
 

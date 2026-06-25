@@ -610,6 +610,16 @@ public:
     }
 
     void memcpy(Buffer& dst, const Buffer& src, size_t size) override {
+        memcpyOffset(dst, 0, src, 0, size);
+    }
+
+    void memcpyOffset(Buffer& dst, size_t dstOffset,
+                      const Buffer& src, size_t srcOffset,
+                      size_t size) override {
+        if (dstOffset > dst.sizeBytes() || size > dst.sizeBytes() - dstOffset ||
+            srcOffset > src.sizeBytes() || size > src.sizeBytes() - srcOffset) {
+            throw std::runtime_error("Vulkan memcpyOffset out of bounds");
+        }
         // Vulkan doesn't have direct memcpy - need to use buffer copy
         VkCommandBuffer cmdBuf = allocateCommandBuffer();
 
@@ -618,6 +628,8 @@ public:
         vkBeginCommandBuffer(cmdBuf, &beginInfo);
 
         VkBufferCopy copyRegion{};
+        copyRegion.srcOffset = srcOffset;
+        copyRegion.dstOffset = dstOffset;
         copyRegion.size = size;
 
         VkBuffer dstBuf = reinterpret_cast<VkBuffer>(dst.nativeHandle());

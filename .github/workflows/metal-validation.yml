@@ -1,0 +1,41 @@
+name: Metal validation
+
+on:
+  workflow_dispatch:
+    inputs:
+      test_regex:
+        description: "CTest regex to run"
+        required: false
+        default: "test_device_selection|test_events|test_graphs|test_kernel_execution|test_program_cache|test_memory_resources|test_stream_pool|test_device_buffer|manifest_conformance|metal_validation_sample_conformance|metal_validation_sample_render"
+      skip_private:
+        description: "Skip private-device-buffer pass"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+
+jobs:
+  metal-validation:
+    runs-on: [self-hosted, macOS]
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Metal validation
+        shell: bash
+        run: |
+          args=(
+            --test-regex "${{ inputs.test_regex }}"
+            --result-dir "$PWD/benchmarks/results/metal-validation"
+          )
+          if [[ "${{ inputs.skip_private }}" == "true" ]]; then
+            args+=(--skip-private)
+          fi
+          ./scripts/run_metal_validation.sh "${args[@]}"
+      - name: Upload Metal validation artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: metal-validation
+          path: benchmarks/results/metal-validation

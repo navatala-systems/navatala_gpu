@@ -4,6 +4,20 @@ All notable user-visible changes to `navatala_gpu` are recorded here. This
 file follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the
 project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.4] — Pre-alpha (2026-06-25)
+
+### Changed
+
+- Consolidated ROCm MFMA benchmark, dispatch, edge-tail, and fixture updates
+  into the public release tree.
+- Added Metal validation workflow scaffolding and sample validation fixtures.
+- Renamed public collective-communication kernel buckets to the neutral
+  `collectives` namespace.
+- Removed raw ROCm profiler traces from public benchmark fixtures while
+  retaining sanitized JSON, Markdown, and kernel-resource summaries.
+- Removed internal task references from public release documentation and CI
+  comments.
+
 ## [0.1.3] — Pre-alpha (2026-06-24)
 
 ### Changed

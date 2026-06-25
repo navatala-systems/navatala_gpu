@@ -89,6 +89,17 @@ static id<MTLDevice> selectMetalDevice(int device_id) {
 static MTLResourceOptions bufferOptionsFor(MemoryKind kind) {
     switch (kind) {
         case MemoryKind::Device:
+            if (const char* p = std::getenv("NAVATALA_GPU_METAL_PRIVATE_DEVICE_BUFFERS")) {
+                const bool disabled = p[0] == '\0'
+                    || (p[0] == '0' && p[1] == '\0')
+                    || std::strcmp(p, "false") == 0
+                    || std::strcmp(p, "FALSE") == 0
+                    || std::strcmp(p, "off") == 0
+                    || std::strcmp(p, "OFF") == 0;
+                if (!disabled) {
+                    return MTLResourceStorageModePrivate;
+                }
+            }
             // Apple GPUs use unified memory. Keeping runtime "Device" buffers
             // host-visible matches the generic Buffer API, where CFD-style
             // callers initialize device buffers via host-side staging.
@@ -133,6 +144,14 @@ struct RuntimeProfileCounters {
     std::atomic<std::uint64_t> hostHostBytes{0};
     std::atomic<std::uint64_t> syncs{0};
     std::atomic<std::uint64_t> submits{0};
+    std::atomic<std::uint64_t> commandBuffers{0};
+    std::atomic<std::uint64_t> computeEncoders{0};
+    std::atomic<std::uint64_t> blitEncoders{0};
+    std::atomic<std::uint64_t> hostVisibleCopies{0};
+    std::atomic<std::uint64_t> batchDispatches{0};
+    std::atomic<std::uint64_t> batchFlushes{0};
+    std::atomic<std::uint64_t> batchLimitFlushes{0};
+    std::atomic<std::uint64_t> skippedEmptySyncs{0};
 };
 inline bool runtimeProfileEnabled() {
     static const bool v = []() {
@@ -182,6 +201,27 @@ inline RuntimeProfileCounters& runtimeProfile() {
 inline void rtProfileBump(std::atomic<std::uint64_t>& c, std::uint64_t n = 1) {
     c.fetch_add(n, std::memory_order_relaxed);
 }
+inline bool envFlagEnabled(const char* name, bool defaultValue = false) {
+    const char* p = std::getenv(name);
+    if (p == nullptr) return defaultValue;
+    if (p[0] == '\0') return defaultValue;
+    if ((p[0] == '0' && p[1] == '\0')
+        || std::strcmp(p, "false") == 0
+        || std::strcmp(p, "FALSE") == 0
+        || std::strcmp(p, "off") == 0
+        || std::strcmp(p, "OFF") == 0) {
+        return false;
+    }
+    return true;
+}
+inline std::uint64_t envU64(const char* name, std::uint64_t defaultValue) {
+    const char* p = std::getenv(name);
+    if (p == nullptr || p[0] == '\0') return defaultValue;
+    char* end = nullptr;
+    unsigned long long v = std::strtoull(p, &end, 10);
+    if (end == p || v == 0) return defaultValue;
+    return static_cast<std::uint64_t>(v);
+}
 struct RuntimeProfileDumper {
     ~RuntimeProfileDumper() {
         if (!runtimeProfileEnabled()) return;
@@ -195,7 +235,11 @@ struct RuntimeProfileDumper {
                 " d2h_count=%llu d2h_bytes=%llu"
                 " d2d_count=%llu d2d_bytes=%llu"
                 " hosthost_count=%llu hosthost_bytes=%llu"
-                " sync=%llu submit=%llu\n",
+                " sync=%llu submit=%llu"
+                " command_buffer=%llu compute_encoder=%llu blit_encoder=%llu"
+                " host_visible_copy=%llu"
+                " batch_dispatch=%llu batch_flush=%llu batch_limit_flush=%llu"
+                " skipped_empty_sync=%llu\n",
                 static_cast<int>(::getpid()), kv.first.c_str(),
                 static_cast<unsigned long long>(c.hostPinnedMaps.load()),
                 static_cast<unsigned long long>(c.hostPinnedUnmaps.load()),
@@ -208,7 +252,15 @@ struct RuntimeProfileDumper {
                 static_cast<unsigned long long>(c.hostHostCopies.load()),
                 static_cast<unsigned long long>(c.hostHostBytes.load()),
                 static_cast<unsigned long long>(c.syncs.load()),
-                static_cast<unsigned long long>(c.submits.load()));
+                static_cast<unsigned long long>(c.submits.load()),
+                static_cast<unsigned long long>(c.commandBuffers.load()),
+                static_cast<unsigned long long>(c.computeEncoders.load()),
+                static_cast<unsigned long long>(c.blitEncoders.load()),
+                static_cast<unsigned long long>(c.hostVisibleCopies.load()),
+                static_cast<unsigned long long>(c.batchDispatches.load()),
+                static_cast<unsigned long long>(c.batchFlushes.load()),
+                static_cast<unsigned long long>(c.batchLimitFlushes.load()),
+                static_cast<unsigned long long>(c.skippedEmptySyncs.load()));
         }
     }
 };
@@ -779,7 +831,9 @@ private:
 class MetalQueue final : public Queue {
 public:
     MetalQueue(id<MTLDevice> device, StreamPriority priority)
-        : device_(device) {
+        : device_(device),
+          batchComputeSubmits_(envFlagEnabled("NAVATALA_GPU_METAL_BATCH_SUBMITS", false)),
+          batchSubmitLimit_(envU64("NAVATALA_GPU_METAL_BATCH_LIMIT", 64)) {
         (void)priority;
         queue_ = [device newCommandQueue];
         if (!queue_) {
@@ -787,7 +841,14 @@ public:
         }
     }
 
-    ~MetalQueue() override = default;
+    ~MetalQueue() override {
+        try {
+            (void)flushPendingCompute(false, "destructor");
+        } catch (...) {
+            // Destructors must not throw. Normal callers flush via synchronize,
+            // memcpy, record/wait, or event synchronization before destruction.
+        }
+    }
 
     void submit(Program& program, const std::vector<Buffer*>& args,
                 std::uint32_t grid_x, std::uint32_t grid_y, std::uint32_t grid_z,
@@ -807,8 +868,17 @@ public:
         // are freed only at process exit — the dominant per-step host-memory
         // growth on long Metal runs (worse at np>1 from extra halo dispatches).
         @autoreleasepool {
-            id<MTLCommandBuffer> cmd = [queue_ commandBuffer];
-            id<MTLComputeCommandEncoder> enc = [cmd computeCommandEncoder];
+            id<MTLCommandBuffer> cmd = nil;
+            id<MTLComputeCommandEncoder> enc = nil;
+            if (batchComputeSubmits_) {
+                ensurePendingComputeEncoder();
+                cmd = pendingComputeCommandBuffer_;
+                enc = pendingComputeEncoder_;
+                if (runtimeProfileEnabled()) rtProfileBump(runtimeProfile().batchDispatches);
+            } else {
+                cmd = newCommandBuffer("submit");
+                enc = newComputeEncoder(cmd, "submit");
+            }
             if (!cmd || !enc) {
                 throw std::runtime_error("Failed to create Metal command buffer/encoder");
             }
@@ -838,25 +908,47 @@ public:
             }
 
             [enc dispatchThreadgroups:grid threadsPerThreadgroup:tg];
-            [enc endEncoding];
-            [cmd commit];
+            if (batchComputeSubmits_) {
+                ++pendingComputeDispatches_;
+                if (pendingComputeDispatches_ >= batchSubmitLimit_) {
+                    if (runtimeProfileEnabled()) rtProfileBump(runtimeProfile().batchLimitFlushes);
+                    (void)flushPendingCompute(false, "batch-limit");
+                }
+            } else {
+                [enc endEncoding];
+                [cmd commit];
+                hasCommittedWork_ = true;
+            }
         }
     }
 
     void memcpy(Buffer& dst, const Buffer& src, size_t size) override {
+        memcpyOffset(dst, 0, src, 0, size);
+    }
+
+    void memcpyOffset(Buffer& dst, size_t dstOffset,
+                      const Buffer& src, size_t srcOffset,
+                      size_t size) override {
         auto* d = dynamic_cast<MetalBuffer*>(&dst);
         auto* s = dynamic_cast<const MetalBuffer*>(&src);
         if (!d || !s) {
-            throw std::runtime_error("MetalQueue memcpy requires MetalBuffer");
+            throw std::runtime_error("MetalQueue memcpyOffset requires MetalBuffer");
         }
+        if (dstOffset > dst.sizeBytes() || size > dst.sizeBytes() - dstOffset ||
+            srcOffset > src.sizeBytes() || size > src.sizeBytes() - srcOffset) {
+            throw std::runtime_error("Metal memcpyOffset out of bounds");
+        }
+
+        (void)flushPendingCompute(false, "memcpy");
+
+        const bool srcDev = (src.memoryKind() == MemoryKind::Device
+                          || src.memoryKind() == MemoryKind::Managed);
+        const bool dstDev = (dst.memoryKind() == MemoryKind::Device
+                          || dst.memoryKind() == MemoryKind::Managed);
 
         if (runtimeProfileEnabled()) {
             // Classify by semantic direction (HostPinned staging is neither
             // Device nor Managed, so staging->field is H2D, field->staging D2H).
-            const bool srcDev = (src.memoryKind() == MemoryKind::Device
-                              || src.memoryKind() == MemoryKind::Managed);
-            const bool dstDev = (dst.memoryKind() == MemoryKind::Device
-                              || dst.memoryKind() == MemoryKind::Managed);
             auto& c = runtimeProfile();
             if (srcDev && !dstDev) {
                 rtProfileBump(c.d2hCopies); rtProfileBump(c.d2hBytes, size);
@@ -869,45 +961,84 @@ public:
             }
         }
 
+        // Device-to-device copies should remain in the Metal command stream.
+        // Metal Device/Managed buffers are usually CPU-visible on Apple UMA, so
+        // a naïve host-pointer shortcut would otherwise force a queue sync and
+        // do the copy on the CPU. A blit keeps ordering async like CUDA/HIP.
+        if (srcDev && dstDev) {
+            @autoreleasepool {  // #312: drain autoreleased command buffer/encoder per blit
+                id<MTLCommandBuffer> cmd = newCommandBuffer("memcpy-d2d");
+                id<MTLBlitCommandEncoder> enc = newBlitEncoder(cmd, "memcpy-d2d");
+                if (!cmd || !enc) {
+                    throw std::runtime_error("Failed to create Metal D2D blit command encoder");
+                }
+
+                id<MTLBuffer> srcBuffer = const_cast<MetalBuffer*>(s)->bufferForKernel();
+                id<MTLBuffer> dstBuffer = d->bufferForKernel();
+                [enc copyFromBuffer:srcBuffer sourceOffset:srcOffset toBuffer:dstBuffer destinationOffset:dstOffset size:size];
+                [enc endEncoding];
+                [cmd commit];
+                hasCommittedWork_ = true;
+            }
+            return;
+        }
+
         void* dstHost = d->hostPointerForCopy();
         const void* srcHost = s->hostPointerForCopy();
         if (dstHost != nullptr && srcHost != nullptr) {
             // CPU-visible shared-memory copies are outside the Metal command
             // stream. Drain prior GPU work first so device-to-host copies read
             // completed kernel results.
-            if (src.memoryKind() == MemoryKind::Device || src.memoryKind() == MemoryKind::Managed) {
+            if (srcDev) {
                 synchronize();
             }
-            std::memcpy(dstHost, srcHost, size);
+            if (runtimeProfileEnabled()) rtProfileBump(runtimeProfile().hostVisibleCopies);
+            std::memcpy(static_cast<char*>(dstHost) + dstOffset,
+                        static_cast<const char*>(srcHost) + srcOffset,
+                        size);
             return;
         }
 
         @autoreleasepool {  // #312: drain autoreleased command buffer/encoder per blit
-            id<MTLCommandBuffer> cmd = [queue_ commandBuffer];
-            id<MTLBlitCommandEncoder> enc = [cmd blitCommandEncoder];
+            id<MTLCommandBuffer> cmd = newCommandBuffer("memcpy");
+            id<MTLBlitCommandEncoder> enc = newBlitEncoder(cmd, "memcpy");
             if (!cmd || !enc) {
                 throw std::runtime_error("Failed to create Metal blit command encoder");
             }
 
-            [enc copyFromBuffer:s->buffer() sourceOffset:0 toBuffer:d->buffer() destinationOffset:0 size:size];
+            id<MTLBuffer> srcBuffer = const_cast<MetalBuffer*>(s)->bufferForKernel();
+            id<MTLBuffer> dstBuffer = d->bufferForKernel();
+            [enc copyFromBuffer:srcBuffer sourceOffset:srcOffset toBuffer:dstBuffer destinationOffset:dstOffset size:size];
             [enc endEncoding];
             [cmd commit];
+            hasCommittedWork_ = true;
         }
     }
 
     void synchronize() override {
         if (runtimeProfileEnabled()) rtProfileBump(runtimeProfile().syncs);
+        if (flushPendingCompute(true, "synchronize")) {
+            hasCommittedWork_ = false;
+            return;
+        }
+        if (!hasCommittedWork_) {
+            if (runtimeProfileEnabled()) rtProfileBump(runtimeProfile().skippedEmptySyncs);
+            return;
+        }
         @autoreleasepool {  // #312: drain autoreleased command buffer per sync
-            id<MTLCommandBuffer> cmd = [queue_ commandBuffer];
+            id<MTLCommandBuffer> cmd = newCommandBuffer("synchronize");
             if (!cmd) {
                 throw std::runtime_error("Failed to create Metal command buffer for synchronize");
             }
             [cmd commit];
             [cmd waitUntilCompleted];
+            hasCommittedWork_ = false;
         }
     }
 
     void* nativeHandle() override {
+        (void)flushPendingCompute(false, "nativeHandle");
+        hasCommittedWork_ = true;
         return (__bridge void*)queue_;
     }
 
@@ -915,8 +1046,9 @@ public:
         auto* ev = dynamic_cast<MetalEvent*>(&event);
         if (!ev) throw std::runtime_error("MetalQueue record requires MetalEvent");
 
+        (void)flushPendingCompute(false, "record");
         @autoreleasepool {  // #312: drain autoreleased command buffer per record
-            id<MTLCommandBuffer> cmd = [queue_ commandBuffer];
+            id<MTLCommandBuffer> cmd = newCommandBuffer("record");
             if (!cmd) throw std::runtime_error("Failed to create Metal command buffer for record");
 
             uint64_t v = ev->recordValue();
@@ -936,6 +1068,7 @@ public:
                 sync->markComplete(v);
             }];
             [cmd commit];
+            hasCommittedWork_ = true;
         }
     }
 
@@ -943,8 +1076,9 @@ public:
         auto* ev = dynamic_cast<MetalEvent*>(&event);
         if (!ev) throw std::runtime_error("MetalQueue wait requires MetalEvent");
 
+        (void)flushPendingCompute(false, "wait");
         @autoreleasepool {  // #312: drain autoreleased command buffer per wait
-            id<MTLCommandBuffer> cmd = [queue_ commandBuffer];
+            id<MTLCommandBuffer> cmd = newCommandBuffer("wait");
             if (!cmd) throw std::runtime_error("Failed to create Metal command buffer for wait");
 
             uint64_t v = ev->recordedValue();
@@ -957,6 +1091,7 @@ public:
                 ev->wait();
             }
             [cmd commit];
+            hasCommittedWork_ = true;
         }
     }
 
@@ -975,8 +1110,77 @@ public:
     }
 
 private:
+    id<MTLCommandBuffer> newCommandBuffer(const char* where) {
+        (void)where;
+        id<MTLCommandBuffer> cmd = [queue_ commandBuffer];
+        if (runtimeProfileEnabled()) rtProfileBump(runtimeProfile().commandBuffers);
+        return cmd;
+    }
+
+    id<MTLComputeCommandEncoder> newComputeEncoder(id<MTLCommandBuffer> cmd, const char* where) {
+        (void)where;
+        id<MTLComputeCommandEncoder> enc = [cmd computeCommandEncoder];
+        if (runtimeProfileEnabled()) rtProfileBump(runtimeProfile().computeEncoders);
+        return enc;
+    }
+
+    id<MTLBlitCommandEncoder> newBlitEncoder(id<MTLCommandBuffer> cmd, const char* where) {
+        (void)where;
+        id<MTLBlitCommandEncoder> enc = [cmd blitCommandEncoder];
+        if (runtimeProfileEnabled()) rtProfileBump(runtimeProfile().blitEncoders);
+        return enc;
+    }
+
+    void ensurePendingComputeEncoder() {
+        if (pendingComputeCommandBuffer_ != nil && pendingComputeEncoder_ != nil) {
+            return;
+        }
+        pendingComputeCommandBuffer_ = newCommandBuffer("batch-submit");
+        pendingComputeEncoder_ = newComputeEncoder(pendingComputeCommandBuffer_, "batch-submit");
+        if (!pendingComputeCommandBuffer_ || !pendingComputeEncoder_) {
+            pendingComputeCommandBuffer_ = nil;
+            pendingComputeEncoder_ = nil;
+            pendingComputeDispatches_ = 0;
+            throw std::runtime_error("Failed to create batched Metal command buffer/encoder");
+        }
+    }
+
+    bool flushPendingCompute(bool waitUntilComplete, const char* where) {
+        (void)where;
+        if (pendingComputeCommandBuffer_ == nil) {
+            return false;
+        }
+        id<MTLCommandBuffer> cmd = pendingComputeCommandBuffer_;
+        id<MTLComputeCommandEncoder> enc = pendingComputeEncoder_;
+        const std::uint64_t dispatches = pendingComputeDispatches_;
+
+        pendingComputeCommandBuffer_ = nil;
+        pendingComputeEncoder_ = nil;
+        pendingComputeDispatches_ = 0;
+
+        if (enc != nil) {
+            [enc endEncoding];
+        }
+        [cmd commit];
+        hasCommittedWork_ = true;
+        if (waitUntilComplete) {
+            [cmd waitUntilCompleted];
+            hasCommittedWork_ = false;
+        }
+        if (runtimeProfileEnabled() && dispatches > 0) {
+            rtProfileBump(runtimeProfile().batchFlushes);
+        }
+        return true;
+    }
+
     __strong id<MTLDevice> device_;
     __strong id<MTLCommandQueue> queue_;
+    __strong id<MTLCommandBuffer> pendingComputeCommandBuffer_;
+    __strong id<MTLComputeCommandEncoder> pendingComputeEncoder_;
+    std::uint64_t pendingComputeDispatches_ = 0;
+    bool batchComputeSubmits_ = false;
+    std::uint64_t batchSubmitLimit_ = 64;
+    bool hasCommittedWork_ = false;
 };
 
 // ============================================================================
@@ -1051,6 +1255,7 @@ public:
 #endif
         }
         if (feature == "sharedMem") return true;
+        if (feature == "privateDeviceBuffers") return true;
         if (feature == "float16" || feature == "fp16") {
             if (@available(macOS 10.13, iOS 11.0, *)) return true;
             return false;

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Aggregate acceptance check for #1513 generator-content cleanup.
+# Aggregate acceptance check for release-hardening generator-content cleanup.
 # Run from the published navatala_gpu tree root. Exits non-zero on first
 # failure so it can wire cleanly into CI.
 set -euo pipefail
@@ -182,9 +182,9 @@ else
 fi
 
 # Phase 2.7: avg C ABI kernel symbol length under 40 chars.
-# Per #1513 §2.3, kernels live under kernels/<backend>/<module>/<stem>.<ext>
+# Per release-hardening §2.3, kernels live under kernels/<backend>/<module>/<stem>.<ext>
 # instead of a flat kernels/<backend>/ listing — so the scan must recurse.
-# Per #1513 §3 the published tree may ship without CUDA (alpha drops some
+# Per release-hardening §3 the published tree may ship without CUDA (alpha drops some
 # backends), so scan every backend directory rather than only `kernels/cuda`.
 # Uses `find -exec grep` (instead of xargs/grep) so per-file misses don't
 # cascade through `xargs`'s 123 exit and trip `set -e`.

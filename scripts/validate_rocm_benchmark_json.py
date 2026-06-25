@@ -31,6 +31,8 @@ KNOWN_MATRIX_SETS = {
     "standard",
     "broad",
     "cta128-evidence",
+    "edge-tails",
+    "wrapper-semantics",
     "cfd-fixture",
 }
 KNOWN_IMPLEMENTATION_KINDS = {
@@ -59,15 +61,25 @@ KNOWN_TUNING_PATHS = {
     "hip_mfma_gfx942_64x64x8_f16_f32_cta64_shared_padded",
     "hip_mfma_gfx942_64x64x8_f16_f32_cta64_pipelined",
     "hip_mfma_gfx942_64x64x8_f16_f32_cta64_shared_edge",
+    "hip_mfma_gfx942_64x64x8_f16_f32_cta64_shared_edge_nn",
+    "hip_mfma_gfx942_64x64x8_f16_f32_cta64_shared_semantic",
     "hip_mfma_gfx942_128x128x32_f16_f32_cta128",
     "hip_mfma_gfx942_128x128x32_f16_f32_cta128_edge",
+    "hip_mfma_gfx942_128x128x32_f16_f32_cta128_semantic",
     "hip_mfma_gfx942_wrapper_dispatch",
+    "hip_mfma_gfx942_wrapper_dispatch_edge_split",
 }
 TUNING_METADATA_KEYS = {
     "implementationKind",
     "tuningPath",
     "spmvRowNnzThreshold",
     "vendorDispatchSelected",
+}
+HOST_TIMING_KEYS = {
+    "hostSubmitMeanMs",
+    "hostWallMeanMs",
+    "hostSubmitOverGeneratedRatio",
+    "hostWallOverGeneratedRatio",
 }
 
 
@@ -244,6 +256,31 @@ def validate_report(
                 _fail(f"{path}.kernelClass", "vendor_library rows must set kernelClass='vendor_library'")
             if operation == "CSR_SPMV_F32" and tuning_path not in {"thread_per_row", "subgroup_per_row", "adaptive"}:
                 _fail(f"{path}.tuningPath", "CSR_SPMV_F32 requires a SpMV tuning path")
+        if any(key in result for key in HOST_TIMING_KEYS):
+            missing = sorted(key for key in HOST_TIMING_KEYS if key not in result)
+            if missing:
+                _fail(path, "incomplete host timing metadata: missing " + ", ".join(missing))
+            host_submit_ms = _require_number(result, "hostSubmitMeanMs", path, minimum=0.0)
+            host_wall_ms = _require_number(result, "hostWallMeanMs", path, minimum=0.0)
+            host_submit_ratio = _require_number(result, "hostSubmitOverGeneratedRatio", path, minimum=0.0)
+            host_wall_ratio = _require_number(result, "hostWallOverGeneratedRatio", path, minimum=0.0)
+            if host_wall_ms + 1.0e-6 < host_submit_ms:
+                _fail(f"{path}.hostWallMeanMs", "host wall time cannot be below host submit time")
+            if generated_ms > 0.0:
+                expected_submit_ratio = host_submit_ms / generated_ms
+                expected_wall_ratio = host_wall_ms / generated_ms
+                ratio_tolerance = max(1.0e-6, abs(expected_submit_ratio) * 1.0e-4)
+                if abs(host_submit_ratio - expected_submit_ratio) > ratio_tolerance:
+                    _fail(
+                        f"{path}.hostSubmitOverGeneratedRatio",
+                        f"expected approximately hostSubmitMeanMs/generatedMeanMs={expected_submit_ratio:.8g}, got {host_submit_ratio:.8g}",
+                    )
+                ratio_tolerance = max(1.0e-6, abs(expected_wall_ratio) * 1.0e-4)
+                if abs(host_wall_ratio - expected_wall_ratio) > ratio_tolerance:
+                    _fail(
+                        f"{path}.hostWallOverGeneratedRatio",
+                        f"expected approximately hostWallMeanMs/generatedMeanMs={expected_wall_ratio:.8g}, got {host_wall_ratio:.8g}",
+                    )
         if operation.startswith("HIPSPARSELT_"):
             has_hipsparselt_row = True
 

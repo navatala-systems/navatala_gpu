@@ -40,8 +40,7 @@ extern "C" {
 #endif
 
 #ifndef NAVATALA_GPU_FFI_ABI_VERSION
-// Per #1513 §2.5: bumped from 5 → 6 alongside the kernel symbol/filename
-// rename. Package metadata must expose the same ABI revision.
+// Public C ABI revision. Package metadata must expose the same ABI revision.
 #define NAVATALA_GPU_FFI_ABI_VERSION 6
 #endif
 

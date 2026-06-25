@@ -15,6 +15,7 @@ WARMUP="${NAVATALA_GPU_ROCM_BENCH_WARMUP:-10}"
 QUICK="${NAVATALA_GPU_ROCM_BENCH_QUICK:-0}"
 MATRIX="${NAVATALA_GPU_ROCM_BENCH_MATRIX:-standard}"
 PROFILE_CTA128="${NAVATALA_GPU_ROCM_BENCH_PROFILE_CTA128:-0}"
+PROFILE_EDGE_TAILS="${NAVATALA_GPU_ROCM_BENCH_PROFILE_EDGE_TAILS:-0}"
 CSR_FIXTURE_JSON="${NAVATALA_GPU_ROCM_BENCH_CSR_FIXTURE_JSON:-}"
 CSR_FIXTURE_BIN="${NAVATALA_GPU_ROCM_BENCH_CSR_FIXTURE_BIN:-}"
 REQUIRE_FULL="${NAVATALA_GPU_ROCM_BENCH_REQUIRE_FULL:-0}"
@@ -33,8 +34,9 @@ Options:
   --quick                         Run small smoke shapes instead of the selected matrix.
   --iterations N                  Benchmark iterations.
   --warmup N                      Warmup iterations.
-  --matrix NAME                   Matrix preset: standard, broad, cta128-evidence, cfd-fixture.
+  --matrix NAME                   Matrix preset: standard, broad, cta128-evidence, edge-tails, wrapper-semantics, cfd-fixture.
   --profile-cta128                Capture rocprof resource metadata for CTA128 MFMA rows.
+  --profile-edge-tails            Capture rocprof resource metadata for CTA64/CTA128 EDGE rows on true-tail shapes.
   --csr-fixture-json PATH         CSR fixture JSON sidecar for cfd-fixture mode.
   --csr-fixture-bin PATH          CSR fixture binary for cfd-fixture mode.
   --json PATH                     Output JSON path.
@@ -82,6 +84,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --profile-cta128)
       PROFILE_CTA128=1
+      shift
+      ;;
+    --profile-edge-tails)
+      PROFILE_EDGE_TAILS=1
       shift
       ;;
     --csr-fixture-json)
@@ -187,6 +193,22 @@ if [[ -n "$ROCM_ROOT" && -d "$ROCM_ROOT" ]]; then
   export ROCM_PATH="$ROCM_ROOT"
   export HIP_PATH="$ROCM_ROOT"
   export PATH="$ROCM_ROOT/bin:$PATH"
+fi
+
+if [[ "$QUICK" != "1" && "$MATRIX" == "wrapper-semantics" ]]; then
+  # The focused semantic matrix includes direct MFMA comparator rows alongside
+  # public-wrapper rows, so build and pass the MFMA benchmark flag implicitly.
+  INCLUDE_MFMA=1
+fi
+if [[ "$QUICK" != "1" && "$MATRIX" == "edge-tails" ]]; then
+  # The focused tail matrix exists to compare direct EDGE kernels with public
+  # wrapper policy rows, so enable both sides implicitly.
+  INCLUDE_MFMA=1
+  INCLUDE_WRAPPER_GEMM=1
+fi
+if [[ "$PROFILE_EDGE_TAILS" == "1" ]]; then
+  INCLUDE_MFMA=1
+  INCLUDE_WRAPPER_GEMM=1
 fi
 
 HIP_CMAKE_COMPILER=""
@@ -345,4 +367,63 @@ if [[ "$PROFILE_CTA128" == "1" ]]; then
   echo "  $PROFILE_DIR/rocm_vendor_benchmark.log"
   echo "  $PROFILE_DIR/rocm_vendor_benchmark.md"
   echo "  $PROFILE_DIR/mfma_resource_metadata.csv"
+fi
+
+if [[ "$PROFILE_EDGE_TAILS" == "1" ]]; then
+  if ! command -v rocprofv3 >/dev/null 2>&1; then
+    echo "ERROR: --profile-edge-tails requires rocprofv3 on PATH" >&2
+    exit 2
+  fi
+  if [[ "$INCLUDE_MFMA" != "1" ]]; then
+    echo "ERROR: --profile-edge-tails requires --include-mfma-benchmark" >&2
+    exit 2
+  fi
+
+  EDGE_PROFILE_DIR="$RESULT_DIR/profile_edge_tails"
+  EDGE_PROFILE_JSON="$EDGE_PROFILE_DIR/rocm_vendor_benchmark.json"
+  mkdir -p "$EDGE_PROFILE_DIR"
+  rm -f "$EDGE_PROFILE_DIR"/rocprof_edge_tails_*.csv \
+        "$EDGE_PROFILE_JSON" \
+        "$EDGE_PROFILE_DIR/edge_tail_resource_metadata.csv"
+
+  edge_profile_iterations="$ITERATIONS"
+  if (( edge_profile_iterations > 5 )); then
+    edge_profile_iterations=5
+  fi
+  edge_profile_warmup="$WARMUP"
+  if (( edge_profile_warmup > 1 )); then
+    edge_profile_warmup=1
+  fi
+
+  echo "=== ROCm EDGE tail profile ==="
+  rocprofv3 \
+    --kernel-trace \
+    --scratch-memory-trace \
+    --stats \
+    --output-format csv \
+    --output-directory "$EDGE_PROFILE_DIR" \
+    --output-file rocprof_edge_tails \
+    --kernel-include-regex "navatala_transformer_tiled_gemm_f16_mfma_cta.*edge" \
+    -- "$BUILD_DIR/benchmarks/rocm_vendor_benchmark" \
+      --matrix edge-tails \
+      --iterations "$edge_profile_iterations" \
+      --warmup "$edge_profile_warmup" \
+      --include-mfma-benchmark \
+      --include-wrapper-gemm-benchmark \
+      --json "$EDGE_PROFILE_JSON" \
+    | tee "$EDGE_PROFILE_DIR/rocm_vendor_benchmark.log"
+
+  python3 "$ROOT_DIR/scripts/validate_rocm_benchmark_json.py" "$EDGE_PROFILE_JSON"
+  python3 "$ROOT_DIR/scripts/render_rocm_benchmark_report.py" \
+    "$EDGE_PROFILE_JSON" \
+    --output "$EDGE_PROFILE_DIR/rocm_vendor_benchmark.md"
+  python3 "$ROOT_DIR/scripts/summarize_rocm_kernel_resources.py" \
+    "$EDGE_PROFILE_DIR" \
+    --output "$EDGE_PROFILE_DIR/edge_tail_resource_metadata.csv"
+
+  echo "Wrote EDGE tail profile:"
+  echo "  $EDGE_PROFILE_JSON"
+  echo "  $EDGE_PROFILE_DIR/rocm_vendor_benchmark.log"
+  echo "  $EDGE_PROFILE_DIR/rocm_vendor_benchmark.md"
+  echo "  $EDGE_PROFILE_DIR/edge_tail_resource_metadata.csv"
 fi

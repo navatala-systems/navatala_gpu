@@ -44,6 +44,18 @@ regenerate the public tree. The repository ships a `Regen-Manifest-Trailer:`
 git hook that enforces this distinction on commits; see
 [`CONTRIBUTING.md`](../CONTRIBUTING.md) for the full policy.
 
+## Projection Boundary
+
+The public tree is assembled from both authoritative runtime sources and
+generated host-layer artifacts. Core runtime headers such as
+`runtime/include/gpu_runtime.h` and `python/runtime/include/gpu_runtime.h` are
+authoritative runtime API files and are not overwritten by generated
+host-layer headers. Generated orchestrator headers and registry artifacts are
+projected normally. This distinction is intentional: GPU hardware builds
+exercise low-level runtime declarations more strictly than CPU-only packaging
+checks, so the projection excludes core runtime headers while preserving the
+generated orchestration layer.
+
 ## Maturity Label
 
 This package should be described as a developer preview / alpha release until

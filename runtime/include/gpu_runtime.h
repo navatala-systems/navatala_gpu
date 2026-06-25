@@ -231,6 +231,9 @@ public:
 
     // Memory operations
     virtual void memcpy(Buffer& dst, const Buffer& src, size_t size) = 0;
+    virtual void memcpyOffset(Buffer& dst, size_t dstOffset,
+                              const Buffer& src, size_t srcOffset,
+                              size_t size) = 0;
     virtual void synchronize() = 0;
 
     // Backend-native handle (e.g. cudaStream_t / hipStream_t / cl_command_queue / VkQueue)

@@ -246,8 +246,23 @@ public:
     }
 
     void memcpy(Buffer& dst, const Buffer& src, size_t size) override {
+        memcpyOffset(dst, 0, src, 0, size);
+    }
+
+    void memcpyOffset(Buffer& dst, size_t dstOffset,
+                      const Buffer& src, size_t srcOffset,
+                      size_t size) override {
+        if (dstOffset > dst.sizeBytes() || size > dst.sizeBytes() - dstOffset ||
+            srcOffset > src.sizeBytes() || size > src.sizeBytes() - srcOffset) {
+            throw std::runtime_error("HIP memcpyOffset out of bounds");
+        }
         // Use hipMemcpyDefault so host-pinned/managed pointers are handled correctly.
-        if (hipMemcpyAsync(dst.getDevicePointer(), const_cast<Buffer&>(src).getDevicePointer(), size,
+        char* dstPtr = static_cast<char*>(dst.getDevicePointer());
+        const char* srcPtr = static_cast<const char*>(const_cast<Buffer&>(src).getDevicePointer());
+        if (!dstPtr || !srcPtr) {
+            throw std::runtime_error("HIP memcpyOffset requires valid source and destination pointers");
+        }
+        if (hipMemcpyAsync(dstPtr + dstOffset, srcPtr + srcOffset, size,
                            hipMemcpyDefault, stream_) != hipSuccess) {
             throw std::runtime_error("Failed to enqueue HIP memcpy");
         }

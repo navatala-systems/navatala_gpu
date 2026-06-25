@@ -16,6 +16,10 @@ TEXT_SUFFIXES = {
 }
 
 PRIVATE_REPO_NAME = "codegen" + "_gpu"
+OLD_TASK_TRACKER_NAME = "Red" + "mine"
+OLD_TASK_ID = "#" + "1513"
+OLD_COLLECTIVE_VENDOR_LOWER = "n" + "ccl"
+OLD_COLLECTIVE_VENDOR_CAMEL = "N" + "ccl"
 
 PATTERNS = [
     ("absolute project path", re.compile(r"/opt/data/projects/")),
@@ -27,6 +31,15 @@ PATTERNS = [
     ("private generator namespace", re.compile(r"CodeGenGPU\.")),
     ("private GPU IR type namespace", re.compile(r"GPU\.GPUType")),
     ("legacy generated kernel path fragment", re.compile(r"Calculations_GPU")),
+    ("internal task tracker reference", re.compile(r"\b" + OLD_TASK_TRACKER_NAME + r"\s+#\d+\b|" + re.escape(OLD_TASK_ID) + r"\b")),
+    (
+        "old vendor-specific collective public name",
+        re.compile(
+            r"\bnavatala_" + OLD_COLLECTIVE_VENDOR_LOWER + r"_"
+            r"|\b" + OLD_COLLECTIVE_VENDOR_CAMEL + r"[A-Za-z0-9_]*"
+            r"|\b" + OLD_COLLECTIVE_VENDOR_LOWER + r"[A-Z][A-Za-z0-9_]*"
+        ),
+    ),
     (
         "credential-looking assignment",
         re.compile(

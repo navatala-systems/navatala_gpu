@@ -397,11 +397,11 @@ struct LinearSolveStats {
 };
 
 // ============================================================================
-// NCCL Types
+// Collective Types
 // ============================================================================
 
-/** Reduction operations for NCCL collectives. */
-enum class NcclRedOp {
+/** Reduction operations for collective communication. */
+enum class CollectiveRedOp {
     Sum,
     Prod,
     Min,
@@ -409,8 +409,8 @@ enum class NcclRedOp {
     Avg
 };
 
-/** Opaque NCCL communicator handle. */
-using NcclComm = void*;
+/** Opaque collective communicator handle. */
+using CollectiveComm = void*;
 
 // ============================================================================
 // LibraryOps - Abstract interface for GPU library operations
@@ -430,7 +430,7 @@ public:
     virtual bool hasStructuredSparseSupport() const { return false; }
     virtual bool hasSolverSupport() const = 0;
     virtual bool hasSortReduceSupport() const = 0;
-    virtual bool hasNcclSupport() const { return false; }
+    virtual bool hasCollectiveSupport() const { return false; }
     virtual bool hasLinearSolveSupport() const { return false; }
 
     // =========================================================================
@@ -464,6 +464,22 @@ public:
         Buffer& B,
         Buffer& C,
         DataType dtype) = 0;
+
+    /**
+     * Mixed-precision GEMM with Float16 inputs, Float32 accumulation, and
+     * Float32 output. Parameters follow the same BLAS-order convention as
+     * gemmStridedBatched; callers that expose row-major APIs should adapt
+     * operands/transpose flags before calling this method.
+     */
+    virtual LibraryStatus gemmF16F32(
+        Queue&,
+        const GemmStridedParams&,
+        Buffer&,
+        Buffer&,
+        Buffer&)
+    {
+        return LibraryStatus::NotSupported;
+    }
 
     /** AXPY: y = alpha * x + y */
     virtual LibraryStatus axpy(
@@ -893,107 +909,107 @@ public:
         DataType dtype) = 0;
 
     // =========================================================================
-    // NCCL / RCCL Operations
+    // Collective Operations
     // =========================================================================
 
     /** AllReduce: recvbuf[i] = op(sendbuf[i]) across all ranks */
-    virtual LibraryStatus ncclAllReduce(
+    virtual LibraryStatus collectiveAllReduce(
         Queue& queue, const void* sendbuf, void* recvbuf,
-        size_t count, DataType datatype, NcclRedOp op,
-        NcclComm comm, void* stream) {
+        size_t count, DataType datatype, CollectiveRedOp op,
+        CollectiveComm comm, void* stream) {
         (void)queue; (void)sendbuf; (void)recvbuf; (void)count;
         (void)datatype; (void)op; (void)comm; (void)stream;
         return LibraryStatus::NotSupported;
     }
 
     /** ReduceScatter: each rank receives reduced chunk */
-    virtual LibraryStatus ncclReduceScatter(
+    virtual LibraryStatus collectiveReduceScatter(
         Queue& queue, const void* sendbuf, void* recvbuf,
-        size_t recvcount, DataType datatype, NcclRedOp op,
-        NcclComm comm, void* stream) {
+        size_t recvcount, DataType datatype, CollectiveRedOp op,
+        CollectiveComm comm, void* stream) {
         (void)queue; (void)sendbuf; (void)recvbuf; (void)recvcount;
         (void)datatype; (void)op; (void)comm; (void)stream;
         return LibraryStatus::NotSupported;
     }
 
     /** Reduce: reduce to root rank */
-    virtual LibraryStatus ncclReduce(
+    virtual LibraryStatus collectiveReduce(
         Queue& queue, const void* sendbuf, void* recvbuf,
-        size_t count, DataType datatype, NcclRedOp op,
-        int root, NcclComm comm, void* stream) {
+        size_t count, DataType datatype, CollectiveRedOp op,
+        int root, CollectiveComm comm, void* stream) {
         (void)queue; (void)sendbuf; (void)recvbuf; (void)count;
         (void)datatype; (void)op; (void)root; (void)comm; (void)stream;
         return LibraryStatus::NotSupported;
     }
 
     /** AllGather: gather sendcount elements from each rank */
-    virtual LibraryStatus ncclAllGather(
+    virtual LibraryStatus collectiveAllGather(
         Queue& queue, const void* sendbuf, void* recvbuf,
         size_t sendcount, DataType datatype,
-        NcclComm comm, void* stream) {
+        CollectiveComm comm, void* stream) {
         (void)queue; (void)sendbuf; (void)recvbuf; (void)sendcount;
         (void)datatype; (void)comm; (void)stream;
         return LibraryStatus::NotSupported;
     }
 
     /** Broadcast: broadcast count elements from root */
-    virtual LibraryStatus ncclBroadcast(
+    virtual LibraryStatus collectiveBroadcast(
         Queue& queue, const void* sendbuf, void* recvbuf,
         size_t count, DataType datatype,
-        int root, NcclComm comm, void* stream) {
+        int root, CollectiveComm comm, void* stream) {
         (void)queue; (void)sendbuf; (void)recvbuf; (void)count;
         (void)datatype; (void)root; (void)comm; (void)stream;
         return LibraryStatus::NotSupported;
     }
 
     /** Send: point-to-point send to peer */
-    virtual LibraryStatus ncclSend(
+    virtual LibraryStatus collectiveSend(
         Queue& queue, const void* sendbuf,
         size_t count, DataType datatype,
-        int peer, NcclComm comm, void* stream) {
+        int peer, CollectiveComm comm, void* stream) {
         (void)queue; (void)sendbuf; (void)count;
         (void)datatype; (void)peer; (void)comm; (void)stream;
         return LibraryStatus::NotSupported;
     }
 
     /** Recv: point-to-point receive from peer */
-    virtual LibraryStatus ncclRecv(
+    virtual LibraryStatus collectiveRecv(
         Queue& queue, void* recvbuf,
         size_t count, DataType datatype,
-        int peer, NcclComm comm, void* stream) {
+        int peer, CollectiveComm comm, void* stream) {
         (void)queue; (void)recvbuf; (void)count;
         (void)datatype; (void)peer; (void)comm; (void)stream;
         return LibraryStatus::NotSupported;
     }
 
     /** AllToAll: each rank sends/receives count elements to/from every other rank.
-        Returns NotSupported if NCCL version is too old. */
-    virtual LibraryStatus ncclAllToAll(
+        Returns NotSupported if the vendor collective library is unavailable or too old. */
+    virtual LibraryStatus collectiveAllToAll(
         Queue& queue, const void* sendbuf, void* recvbuf,
         size_t count, DataType datatype,
-        NcclComm comm, void* stream) {
+        CollectiveComm comm, void* stream) {
         (void)queue; (void)sendbuf; (void)recvbuf; (void)count;
         (void)datatype; (void)comm; (void)stream;
         return LibraryStatus::NotSupported;
     }
 
     /** Scatter: root scatters count elements to each rank.
-        Returns NotSupported if NCCL version is too old. */
-    virtual LibraryStatus ncclScatter(
+        Returns NotSupported if the vendor collective library is unavailable or too old. */
+    virtual LibraryStatus collectiveScatter(
         Queue& queue, const void* sendbuf, void* recvbuf,
         size_t count, DataType datatype,
-        int root, NcclComm comm, void* stream) {
+        int root, CollectiveComm comm, void* stream) {
         (void)queue; (void)sendbuf; (void)recvbuf; (void)count;
         (void)datatype; (void)root; (void)comm; (void)stream;
         return LibraryStatus::NotSupported;
     }
 
     /** Gather: root gathers count elements from each rank.
-        Returns NotSupported if NCCL version is too old. */
-    virtual LibraryStatus ncclGather(
+        Returns NotSupported if the vendor collective library is unavailable or too old. */
+    virtual LibraryStatus collectiveGather(
         Queue& queue, const void* sendbuf, void* recvbuf,
         size_t count, DataType datatype,
-        int root, NcclComm comm, void* stream) {
+        int root, CollectiveComm comm, void* stream) {
         (void)queue; (void)sendbuf; (void)recvbuf; (void)count;
         (void)datatype; (void)root; (void)comm; (void)stream;
         return LibraryStatus::NotSupported;

@@ -383,13 +383,23 @@ public:
     }
 
     void memcpy(Buffer& dst, const Buffer& src, size_t size) override {
+        memcpyOffset(dst, 0, src, 0, size);
+    }
+
+    void memcpyOffset(Buffer& dst, size_t dstOffset,
+                      const Buffer& src, size_t srcOffset,
+                      size_t size) override {
+        if (dstOffset > dst.sizeBytes() || size > dst.sizeBytes() - dstOffset ||
+            srcOffset > src.sizeBytes() || size > src.sizeBytes() - srcOffset) {
+            throw std::runtime_error("OpenCL memcpyOffset out of bounds");
+        }
         // Ensure host-mapped buffers are unmapped before device-side operations.
         openclEnsureUnmappedForDevice(dst);
         openclEnsureUnmappedForDevice(src);
         cl_mem dstBuf = reinterpret_cast<cl_mem>(dst.nativeHandle());
         cl_mem srcBuf = reinterpret_cast<cl_mem>(src.nativeHandle());
 
-        if (clEnqueueCopyBuffer(queue_, srcBuf, dstBuf, 0, 0, size,
+        if (clEnqueueCopyBuffer(queue_, srcBuf, dstBuf, srcOffset, dstOffset, size,
                                   0, nullptr, nullptr) != CL_SUCCESS) {
             throw std::runtime_error("Failed to enqueue OpenCL memcpy");
         }

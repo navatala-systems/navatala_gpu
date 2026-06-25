@@ -22,7 +22,7 @@
     {
       "operation": "AXPY_F32",
       "shape": "n=65536",
-      "navatalaPath": "generated HIP kernel navatala_sparse_axpy_f32",
+      "navatalaPath": "Navatala HIP kernel navatala_sparse_axpy_f32",
       "vendorPath": "rocBLAS rocblas_saxpy",
       "correctness": true,
       "generatedMeanMs": 0.0027758399,
@@ -39,7 +39,7 @@
     {
       "operation": "AXPY_F32",
       "shape": "n=1048576",
-      "navatalaPath": "generated HIP kernel navatala_sparse_axpy_f32",
+      "navatalaPath": "Navatala HIP kernel navatala_sparse_axpy_f32",
       "vendorPath": "rocBLAS rocblas_saxpy",
       "correctness": true,
       "generatedMeanMs": 0.0059672201,
@@ -56,7 +56,7 @@
     {
       "operation": "AXPY_F32",
       "shape": "n=4194304",
-      "navatalaPath": "generated HIP kernel navatala_sparse_axpy_f32",
+      "navatalaPath": "Navatala HIP kernel navatala_sparse_axpy_f32",
       "vendorPath": "rocBLAS rocblas_saxpy",
       "correctness": true,
       "generatedMeanMs": 0.01818518,
@@ -73,7 +73,7 @@
     {
       "operation": "GEMM_F32",
       "shape": "m=128,n=128,k=128",
-      "navatalaPath": "generated HIP kernel navatala_transformer_tiled_gemm_f32",
+      "navatalaPath": "Navatala HIP kernel navatala_transformer_tiled_gemm_f32",
       "vendorPath": "rocBLAS rocblas_sgemm",
       "correctness": true,
       "generatedMeanMs": 0.0053184402,
@@ -90,7 +90,7 @@
     {
       "operation": "GEMM_F32",
       "shape": "m=512,n=512,k=512",
-      "navatalaPath": "generated HIP kernel navatala_transformer_tiled_gemm_f32",
+      "navatalaPath": "Navatala HIP kernel navatala_transformer_tiled_gemm_f32",
       "vendorPath": "rocBLAS rocblas_sgemm",
       "correctness": true,
       "generatedMeanMs": 0.027017579,
@@ -107,7 +107,7 @@
     {
       "operation": "GEMM_F32",
       "shape": "m=1024,n=1024,k=1024",
-      "navatalaPath": "generated HIP kernel navatala_transformer_tiled_gemm_f32",
+      "navatalaPath": "Navatala HIP kernel navatala_transformer_tiled_gemm_f32",
       "vendorPath": "rocBLAS rocblas_sgemm",
       "correctness": true,
       "generatedMeanMs": 0.17839937,
@@ -124,7 +124,7 @@
     {
       "operation": "GEMM_F16_PORTABLE",
       "shape": "m=128,n=128,k=128,output=F16,compute=F32",
-      "navatalaPath": "legacy generated HIP kernel navatala_transformer_tiled_gemm_f16",
+      "navatalaPath": "legacy Navatala HIP kernel navatala_transformer_tiled_gemm_f16",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 output/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.0060016799,
@@ -141,7 +141,7 @@
     {
       "operation": "GEMM_F16_PORTABLE",
       "shape": "m=512,n=512,k=512,output=F16,compute=F32",
-      "navatalaPath": "legacy generated HIP kernel navatala_transformer_tiled_gemm_f16",
+      "navatalaPath": "legacy Navatala HIP kernel navatala_transformer_tiled_gemm_f16",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 output/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.02730052,
@@ -158,7 +158,7 @@
     {
       "operation": "GEMM_F16_PORTABLE",
       "shape": "m=1024,n=1024,k=1024,output=F16,compute=F32",
-      "navatalaPath": "legacy generated HIP kernel navatala_transformer_tiled_gemm_f16",
+      "navatalaPath": "legacy Navatala HIP kernel navatala_transformer_tiled_gemm_f16",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 output/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.17796169,
@@ -175,7 +175,7 @@
     {
       "operation": "GEMM_F16_MFMA",
       "shape": "m=128,n=128,k=128,compute=F32",
-      "navatalaPath": "generated HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_k_loop",
+      "navatalaPath": "Navatala HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_k_loop",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.00603212,
@@ -192,7 +192,7 @@
     {
       "operation": "GEMM_F16_MFMA",
       "shape": "m=512,n=512,k=512,compute=F32",
-      "navatalaPath": "generated HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_k_loop",
+      "navatalaPath": "Navatala HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_k_loop",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.01939132,
@@ -209,7 +209,7 @@
     {
       "operation": "GEMM_F16_MFMA",
       "shape": "m=1024,n=1024,k=1024,compute=F32",
-      "navatalaPath": "generated HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_k_loop",
+      "navatalaPath": "Navatala HIP MFMA kernel navatala_transformer_tiled_gemm_f16_mfma_k_loop",
       "vendorPath": "rocBLAS rocblas_gemm_ex F16 inputs/F32 accumulation",
       "correctness": true,
       "generatedMeanMs": 0.1074976,
@@ -277,7 +277,7 @@
     {
       "operation": "CSR_SPMV_F32",
       "shape": "rows=16384,rowNnz=7,nnz=114688",
-      "navatalaPath": "generated HIP kernel navatala_graph_spmv_weighted_f32",
+      "navatalaPath": "Navatala HIP kernel navatala_graph_spmv_weighted_f32",
       "vendorPath": "rocSPARSE rocsparse_spmv",
       "correctness": true,
       "generatedMeanMs": 0.00289298,
@@ -294,7 +294,7 @@
     {
       "operation": "CSR_SPMV_F32",
       "shape": "rows=262144,rowNnz=7,nnz=1835008",
-      "navatalaPath": "generated HIP kernel navatala_graph_spmv_weighted_f32",
+      "navatalaPath": "Navatala HIP kernel navatala_graph_spmv_weighted_f32",
       "vendorPath": "rocSPARSE rocsparse_spmv",
       "correctness": true,
       "generatedMeanMs": 0.0063977402,
@@ -311,7 +311,7 @@
     {
       "operation": "CSR_SPMV_F32",
       "shape": "rows=1048576,rowNnz=7,nnz=7340032",
-      "navatalaPath": "generated HIP kernel navatala_graph_spmv_weighted_f32",
+      "navatalaPath": "Navatala HIP kernel navatala_graph_spmv_weighted_f32",
       "vendorPath": "rocSPARSE rocsparse_spmv",
       "correctness": true,
       "generatedMeanMs": 0.050279059,
@@ -328,7 +328,7 @@
     {
       "operation": "CSR_SPMV_F32",
       "shape": "rows=262144,rowNnz=15,nnz=3932160",
-      "navatalaPath": "generated HIP kernel navatala_graph_spmv_weighted_f32",
+      "navatalaPath": "Navatala HIP kernel navatala_graph_spmv_weighted_f32",
       "vendorPath": "rocSPARSE rocsparse_spmv",
       "correctness": true,
       "generatedMeanMs": 0.02392158,
@@ -345,7 +345,7 @@
     {
       "operation": "CSR_SPMV_F32",
       "shape": "rows=262144,rowNnz=27,nnz=7077888",
-      "navatalaPath": "generated HIP kernel navatala_graph_spmv_weighted_subgroup_f32",
+      "navatalaPath": "Navatala HIP kernel navatala_graph_spmv_weighted_subgroup_f32",
       "vendorPath": "rocSPARSE rocsparse_spmv",
       "correctness": true,
       "generatedMeanMs": 0.045504298,

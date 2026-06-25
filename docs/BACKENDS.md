@@ -63,6 +63,36 @@ even when the source is present.
 The Metal backend is implemented in Objective-C++ (`backend_metal.mm`) and
 is built only on Apple platforms.
 
+### Metal runtime tuning
+
+The runtime includes diagnostic counters for Metal host overhead and an
+experimental opt-in compute-submit batching mode. Enable counters with
+`NAVATALA_GPU_RUNTIME_PROFILE=1`. Enable batching with
+`NAVATALA_GPU_METAL_BATCH_SUBMITS=1`; `NAVATALA_GPU_METAL_BATCH_LIMIT`
+controls how many consecutive compute dispatches are encoded before an
+automatic flush. Batching is flushed before memory copies, queue
+synchronization, event record/wait calls, and queue destruction.
+
+`NAVATALA_GPU_METAL_PRIVATE_DEVICE_BUFFERS=1` is an experimental mode that
+allocates `MemoryKind::Device` buffers as Metal private storage. It relies on
+queued staging copies and offset-capable blits for public C ABI H2D/D2H/D2D
+operations.
+
+Submit batching and private device buffers are default-off until validated on
+Apple Silicon. See
+[`benchmarks/METAL_VALIDATION.md`](benchmarks/METAL_VALIDATION.md) for the
+required correctness and profiling pass.
+
+The one-command validation path is:
+
+```bash
+./scripts/run_metal_validation.sh
+```
+
+It emits a `metal_validation.json` artifact that is checked by
+`scripts/validate_metal_validation_json.py` and can be rendered with
+`scripts/render_metal_validation_report.py`.
+
 ### Metal coverage caveat
 
 Apple GPUs effectively have no double-precision support, so the Metal

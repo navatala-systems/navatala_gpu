@@ -124,6 +124,45 @@ def render_report(
     if report["hipSPARSELtMode"] == "capability_reporting_only":
         lines.append("- hipSPARSELt is reported as a capability only; no hipSPARSELt performance baseline is claimed.")
 
+    diagnostic_rows = [
+        row
+        for row in report["results"]
+        if "hostSubmitMeanMs" in row or "hostWallMeanMs" in row
+    ]
+    if diagnostic_rows:
+        lines.extend(
+            [
+                "",
+                "## Wrapper Timing Diagnostics",
+                "",
+                "| Operation | Shape | Stream-event mean ms | Host submit mean ms | Host wall mean ms | Submit/event | Wall/event |",
+                "| --- | --- | ---: | ---: | ---: | ---: | ---: |",
+            ]
+        )
+        for row in diagnostic_rows:
+            lines.append(
+                "| "
+                + " | ".join(
+                    [
+                        _markdown_escape(row["operation"]),
+                        _markdown_escape(row["shape"]),
+                        _fmt_ms(row["generatedMeanMs"]),
+                        _fmt_ms(row.get("hostSubmitMeanMs")),
+                        _fmt_ms(row.get("hostWallMeanMs")),
+                        _fmt_ratio(row.get("hostSubmitOverGeneratedRatio")),
+                        _fmt_ratio(row.get("hostWallOverGeneratedRatio")),
+                    ]
+                )
+                + " |"
+            )
+        lines.extend(
+            [
+                "",
+                "- `hostSubmitMeanMs` is CPU wall time to call the wrapper repeatedly and enqueue work, excluding the final event wait.",
+                "- `hostWallMeanMs` includes the final event wait. Compare both with the stream-event mean to separate host submission overhead from device work.",
+            ]
+        )
+
     has_hipsparselt_row = any(str(row.get("operation", "")).startswith("HIPSPARSELT_") for row in report["results"])
     has_mfma_row = any(
         "mfma" in str(row.get("kernelClass", "")).lower()

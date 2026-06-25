@@ -19,10 +19,10 @@ validation is intentionally conservative and backend-specific.
 | HIP/ROCm runtime smoke | Passed | `scripts/run_rocm_runtime_smoke.sh` passed on AMD Instinct MI300X VF / gfx942 with ROCm 7.2.4. |
 | OpenCL runtime smoke | Partial | OpenCL source coverage is present. Device/driver availability varies by host, so release evidence is not yet treated as complete conformance. |
 | Vulkan runtime smoke | Partial | Vulkan source and SPIR-V coverage are present. Full numerical comparison across the kernel corpus is pending. |
-| Metal runtime smoke | Pending hardware | Metal sources are present where the backend can represent the operation. Apple GPU validation is pending. |
+| Metal runtime smoke | Pending hardware | Metal sources are present where the backend can represent the operation. Runtime profile counters, opt-in submit batching, offset-copy support, opt-in private device buffers, and the `scripts/run_metal_validation.sh` artifact workflow are implemented, but Apple GPU correctness/performance validation is pending. |
 | Cross-backend numerical comparisons | Pending | Broad per-operation tolerances and reference-vector reports are being expanded. |
-| ROCm vendor benchmark harness | Passed on MI300X | Optional HIP benchmark target compares selected generated kernels against rocBLAS/rocSPARSE and can include an opt-in hipSPARSELt structured sparse GEMM row. A dated MI300X fixture is checked into `benchmarks/fixtures/rocm_vendor_benchmark_mi300x_20260622_rocm724.json` (the 06-19 fixture is retained as historical evidence). |
-| Vendor-library benchmark comparisons | Partial | ROCm AXPY/GEMM/CSR SpMV and opt-in hipSPARSELt structured GEMM evidence exists for MI300X. Passed on MI300X for ROCm wrapper-vendor GEMM and hipSPARSELt structured GEMM; CUDA cuBLAS/cuSPARSE on NVIDIA host still pending. |
+| ROCm vendor benchmark harness | Passed on MI300X | Optional HIP benchmark target compares selected generated kernels against rocBLAS/rocSPARSE and can include an opt-in hipSPARSELt structured sparse GEMM row. Dated MI300X fixtures are checked in under `benchmarks/fixtures/hardware_runs/`, including `20260624_mi300x_wrapper_semantics` and `20260624_mi300x_broad_wrapper_mfma_hipsparselt`. |
+| Vendor-library benchmark comparisons | Partial | ROCm AXPY/GEMM/CSR SpMV, public F16/F32 MFMA wrapper semantics, rocBLAS strided-batched GEMM, and opt-in hipSPARSELt structured GEMM evidence exists for MI300X. CUDA cuBLAS/cuSPARSE on NVIDIA host still pending. |
 
 ## What Has Been Validated
 
@@ -39,6 +39,9 @@ The current package has passed the following local gates before publication:
   Python-package paths.
 - HIP/ROCm runtime smoke and ROCm vendor benchmark execution on AMD Instinct
   MI300X VF for representative rocBLAS, rocSPARSE, and hipSPARSELt rows.
+- Public HIP/gfx942 F16-input/F32-output MFMA wrapper correctness for tail
+  tiles, alpha/beta, transpose, and strided batching. The strided-batch row
+  validates the `rocblas_gemm_strided_batched_ex` comparison path on MI300X.
 - Dated MI300X broad ROCm benchmark fixture validation and Markdown rendering
   through the no-GPU CTest path.
 
@@ -62,6 +65,8 @@ Use [`docs/benchmarks/ROCM_VALIDATION_TEMPLATE.md`](benchmarks/ROCM_VALIDATION_T
 for public HIP/ROCm validation and benchmark reports.
 The optional ROCm benchmark harness is documented in
 [`docs/benchmarks/ROCM_VENDOR_BENCHMARKS.md`](benchmarks/ROCM_VENDOR_BENCHMARKS.md).
+Use [`docs/benchmarks/METAL_VALIDATION.md`](benchmarks/METAL_VALIDATION.md)
+for the Apple Silicon Metal correctness and runtime-overhead validation pass.
 
 Floating-point comparisons should use both absolute and relative tolerances.
 Operations that rely on reductions, atomics, subgroup collectives, or
@@ -117,7 +122,9 @@ The near-term GEMM dispatch policy is:
   `vendor_library` paths separately.
 - MFMA runtime dispatch is wired for the public F16-input/F32-output wrapper on
   HIP/gfx942. The wrapper uses edge-capable CTA64/CTA128 kernels with
-  alpha/beta, transpose, and strided-batch correctness coverage. The
+  alpha/beta, transpose, and strided-batch correctness coverage. Auto dispatch
+  defaults tail/general semantic calls to CTA64_EDGE; CTA128_EDGE remains a
+  forced diagnostic route until edge-performance evidence improves. The
   CTA64/CTA128 benchmark rows remain prototype timing rows; the
   `20260623_mi300x_cta128_evidence` and
   `20260624_mi300x_cta128_edge_wrapper` fixtures record the shape-aware policy
@@ -131,16 +138,63 @@ The near-term GEMM dispatch policy is:
   pass numerically, but the large-shape timings remain slower than the raw MFMA
   micro-benchmark rows because the public wrapper still includes runtime
   dispatch, launch setup, packed-parameter lifetime management, and a final
-  synchronization.
+  synchronization. The `20260624_mi300x_wrapper_semantics` fixture records the
+  first focused semantic sweep: tail-small `0.534x`, tail-large `1.990x`,
+  alpha/beta `1.164x`, transpose `1.251x`, and strided-batch `1.041x` versus
+  rocBLAS, all passing correctness. The
+  `20260624_mi300x_wrapper_semantic_fulltile_50iter` fixture supersedes the
+  alpha/beta and transpose performance rows for tile-divisible single-batch
+  calls: wrapper alpha/beta is `0.772x` versus rocBLAS, while wrapper transpose
+  is correctness-clean but still performance-open at `1.153x`. The
+  `20260624_mi300x_broad_wrapper_mfma_hipsparselt` fixture records the broad
+  sweep: the public wrapper passes aligned, tail, alpha/beta, transpose, and
+  batched rows; CTA128 reaches `0.053449 ms` at 1024³ (`1.255x` versus
+  rocBLAS); CTA64 shared reaches `0.020573 ms` at 512³ (`0.800x` versus
+  rocBLAS); and hipSPARSELt structured GEMM passes, including `0.011817 ms`
+  at 512³ (`0.612x` versus the dense pruned-A rocBLAS reference).
+  The `20260624_mi300x_edge_tails_profile` fixture records true non-divisible
+  tail shapes. All direct CTA64_EDGE, direct CTA128_EDGE, forced wrapper MFMA,
+  wrapper auto, and wrapper vendor rows pass correctness. The resource profile
+  confirms CTA64_EDGE and CTA128_EDGE are scratch-free, but direct generated
+  EDGE remains slower than rocBLAS on the sampled true-tail shapes. Wrapper auto
+  therefore selects the vendor path when available and stays at vendor parity
+  (`0.999x` to `1.004x` in the fixture).
+  The follow-up `20260624_mi300x_edge_tails_store_fastpath_rocm724` fixture
+  validates the alpha/beta store fast path on ROCm 7.2.4. Correctness and
+  scratch-free resource metadata are preserved, but direct EDGE timing changes
+  are noise-level (`0.2%` to `0.6%` on sampled direct EDGE rows), so the
+  remaining EDGE performance gap is not primarily epilogue alpha/beta branch
+  overhead. The
+  `20260625_mi300x_edge_tails_predicate_hoist_rocm724` fixture validates the
+  subsequent CTA64_EDGE predicate-hoist cleanup. It also preserves correctness
+  and the scratch-free resource envelope, but direct CTA64_EDGE timings remain
+  effectively unchanged at about `+1%` versus the store-fastpath fixture. Public
+  auto dispatch continues to select the vendor path for these sampled true-tail
+  shapes. The `20260625_mi300x_edge_split_rocm724` fixture validates the
+  opt-in split EDGE wrapper path. Split rows are correctness-clean, but slower
+  than the existing single-pass forced MFMA EDGE path and much slower than
+  vendor-routed AUTO, so split EDGE remains diagnostic-only. The follow-up
+  `20260625_mi300x_edge_nn_rocm724` fixture validates a narrower CTA64 NN-only
+  fast-tail candidate. It is limited to `NN`, `alpha = 1`, `beta = 0`, and
+  single-batch true-tail calls. It is correctness-clean and scratch-free, and
+  lowers resource pressure from `VGPR_Count=40`, `SGPR_Count=48` for generic
+  CTA64_EDGE to `VGPR_Count=24`, `SGPR_Count=32`. Timing improves only modestly
+  over generic CTA64_EDGE (`~2%` to `~4%` on sampled direct rows) and remains
+  slower than rocBLAS, so public AUTO remains vendor-routed for these tails.
 
 ## Known Gaps Before Beta
 
 - Public HIP/ROCm CI runner with correctness smoke tests.
 - Real OpenFOAM pressure-matrix CSR distribution benchmark (the synthetic
   adaptive SpMV rowNnz=15/27 acceptance gates have been passed and captured in
-  the 06-22 fixture).
+  the MI300X fixtures; the 2026-06-24 broad run records rowNnz=27 at `2.251x`
+  versus rocSPARSE).
 - Full conformance-vector corpus for Python bindings and public C++ wrappers.
-- Metal validation on macOS hardware.
+- Metal validation on macOS hardware, including before/after evidence for
+  `NAVATALA_GPU_METAL_BATCH_SUBMITS` and correctness/performance evidence for
+  `NAVATALA_GPU_METAL_PRIVATE_DEVICE_BUFFERS`. The local schema, renderer, and
+  sample fixture are in place; the missing item is a real Apple Silicon
+  `metal_validation.json` fixture.
 - Explicit tolerance files checked into the release tree for operation
   families where backend drift is expected.
 

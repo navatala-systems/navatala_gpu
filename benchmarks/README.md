@@ -1,8 +1,12 @@
 # ROCm Vendor Benchmarks
 
 This directory contains optional ROCm benchmarks used to answer AMD reviewer
-feedback. They compare selected generated HIP kernels against ROCm vendor
+feedback. They compare selected Navatala HIP kernels against ROCm vendor
 libraries on real AMD hardware.
+
+Metal runtime validation artifacts use the same `benchmarks/results/` and
+`benchmarks/fixtures/` convention, but are documented separately in
+[`docs/benchmarks/METAL_VALIDATION.md`](../docs/benchmarks/METAL_VALIDATION.md).
 
 The benchmark is intentionally not part of the default build. It requires:
 
@@ -51,8 +55,17 @@ Use `--matrix broad` or `NAVATALA_GPU_ROCM_BENCH_MATRIX=broad` to sweep
 multiple sizes for each covered operation. Use `--matrix cta128-evidence` for
 the CTA128 hardening matrix: it records the portable F16/F32-output
 denominator, CTA64 shared, CTA64 pipelined, and CTA128 rows for 128³, 512³,
-1024³, and representative rectangular tile-divisible shapes. Quick mode always
-uses a small smoke-only matrix set and ignores the matrix selection.
+1024³, and representative rectangular tile-divisible shapes. Use
+`--matrix edge-tails` for the focused Phase 1 tail matrix: it records true
+non-divisible M/N/K shapes through direct CTA64_EDGE/CTA128_EDGE rows and
+public-wrapper `MFMA`, `AUTO`, and `VENDOR` policy rows. Use
+`--matrix wrapper-semantics --include-wrapper-gemm-benchmark` for a focused
+public-ABI run covering small and large tail shapes, alpha/beta, transpose, and
+strided batching without running the full broad matrix. The runner enables the
+MFMA benchmark flag automatically for this matrix so the report also includes
+direct semantic full-tile comparator rows for alpha/beta and transpose. Quick
+mode always uses a small smoke-only matrix set and ignores the matrix
+selection.
 
 Set `NAVATALA_GPU_ROCM_BENCH_INCLUDE_MFMA=1` or pass
 `--include-mfma-benchmark` to add the experimental HIP/gfx942 MFMA F16/F32 GEMM
@@ -86,9 +99,35 @@ that gate.
 For the current MFMA tuning line, the runtime wrapper policy is shape-aware:
 CTA64 shared remains the medium-shape candidate, while CTA128 is the large-shape
 candidate. The public `navatala_gpu_gemm_f16_f32` wrapper dispatches to the
-edge-capable HIP/gfx942 CTA64/CTA128 kernels and covers tail tiles, alpha/beta,
-transpose, and strided batching. The raw benchmark rows remain tile-divisible
-prototype timing rows so they can be compared cleanly against earlier fixtures.
+full-tile CTA64/CTA128 kernels for aligned `NN`, alpha=1, beta=0 calls; to
+full-tile semantic CTA64/CTA128 kernels for tile-divisible single-batch
+alpha/beta or transpose calls; and to the edge-capable HIP/gfx942 kernels for
+tail tiles or batching. Tail/general semantic calls default to CTA64_EDGE while
+CTA128_EDGE remains available through `NAVATALA_GPU_GEMM_MFMA_MODE=cta128` for
+diagnostics. The raw benchmark rows remain tile-divisible prototype timing rows
+so they can be compared cleanly against earlier fixtures. The broad wrapper
+matrix also emits explicit `GEMM_F16_F32_WRAPPER_MFMA_ALPHA_BETA`,
+`GEMM_F16_F32_WRAPPER_MFMA_TRANSPOSE`, and
+`GEMM_F16_F32_WRAPPER_MFMA_BATCHED` rows for hardware validation of the general
+public ABI semantics. It also emits `GEMM_F16_F32_WRAPPER_AUTO_*` and
+`GEMM_F16_F32_WRAPPER_VENDOR_*` comparator rows for measured vendor-favorable
+cases. The `AUTO` rows prove the default policy chooses the vendor path when it
+should; the `VENDOR` rows prove the explicit escape hatch remains correct.
+
+For the focused public-ABI semantic sweep:
+
+```bash
+./scripts/run_rocm_vendor_benchmarks.sh \
+  --matrix wrapper-semantics \
+  --include-wrapper-gemm-benchmark \
+  --iterations 30 \
+  --warmup 8
+```
+
+This matrix emits direct `GEMM_F16_MFMA_CTA64_SHARED_SEMANTIC_ALPHA_BETA` and
+`GEMM_F16_MFMA_CTA64_SHARED_SEMANTIC_TRANSPOSE` rows before the corresponding
+wrapper rows. These rows separate Phase 2 kernel cost from public-wrapper
+routing overhead.
 
 To capture current CTA128 resource metadata alongside a timing report, run:
 
@@ -103,6 +142,47 @@ To capture current CTA128 resource metadata alongside a timing report, run:
 
 The profile step writes `profile/mfma_resource_metadata.csv`; the CTA128 row
 must remain `Scratch_Size=0` before it can advance as a production candidate.
+
+For the focused true-tail matrix:
+
+```bash
+./scripts/run_rocm_vendor_benchmarks.sh \
+  --matrix edge-tails \
+  --iterations 30 \
+  --warmup 8
+```
+
+The runner automatically enables MFMA and wrapper GEMM rows for this preset.
+Use this when evaluating Phase 1 edge/tail performance before running the
+broader matrix.
+
+The CTA64 NN-only fast-tail candidate is intentionally narrower than the
+generic EDGE and split rows. Benchmark it only on `NN`, `alpha=1`, `beta=0`,
+single-batch true-tail cases, and keep public `AUTO` rows in the same fixture
+so the release policy remains evidence-based. The
+`20260625_mi300x_edge_nn_rocm724` fixture validates this candidate on MI300X
+with ROCm 7.2.4. It remains correctness-clean and scratch-free, with lower
+resource pressure than generic CTA64_EDGE (`VGPR=24`, `SGPR=32` versus
+`VGPR=40`, `SGPR=48`), but wall-time improves by only about 2-4 percent on the
+sampled true-tail shapes. Public `AUTO` therefore remains vendor-routed for
+these large true-tail shapes.
+
+To capture rocprof resource metadata for the same true-tail kernels:
+
+```bash
+./scripts/run_rocm_vendor_benchmarks.sh \
+  --matrix edge-tails \
+  --iterations 30 \
+  --warmup 8 \
+  --profile-edge-tails
+```
+
+The profile step writes
+`profile_edge_tails/edge_tail_resource_metadata.csv` with one row per
+CTA64_EDGE / CTA64_EDGE_NN / CTA128_EDGE kernel. As with the CTA128 profile,
+the profile pass caps iterations and warmup internally to keep the rocprof run
+short; use the top-level JSON for publication timings and the profile CSV for
+resource metadata.
 
 Use `--matrix cfd-fixture` to benchmark a persisted CSR pressure-matrix fixture:
 
@@ -223,13 +303,21 @@ wave64s per workgroup, tile-divisible NN only, alpha=1, beta=0. Use the CTA64
 direct/shared diagnostic rows and CTA128 row together for MI300/gfx942 speedup
 and register-pressure diagnosis against `GEMM_F16_PORTABLE_F32OUT`.
 
+The focused `edge-tails` matrix also emits
+`GEMM_F16_MFMA_CTA64_SHARED_EDGE_NN`. This is a narrow true-tail candidate for
+the common `NN`, `alpha=1`, `beta=0`, single-batch path. It removes transpose,
+batch, and scaled-store branches from the generic CTA64 EDGE row so same-host
+MI300X runs can measure whether reducing instruction count is enough before we
+promote any generated EDGE route over vendor AUTO dispatch.
+
 Wrapper validation can force high-level dispatch with
-`NAVATALA_GPU_GEMM_IMPL=auto|vendor|mfma|portable`. `vendor` forces BLAS,
-`portable` forces the fallback/reference path, and contradictory combinations
-with `NAVATALA_GPU_GEMM_VENDOR_MODE` fail loudly. `mfma` selects the public
-F16-input/F32-output wrapper (`navatala_gpu_gemm_f16_f32`) when the HIP
-transformer registry shard is built into the runtime; the current Float32 ABI
-returns `NAVATALA_NOT_IMPLEMENTED` for that selector.
+`NAVATALA_GPU_GEMM_IMPL=auto|vendor|mfma|portable`. `vendor` forces BLAS for
+supported Float32 and mixed F16-input/F32-output public wrappers, `portable`
+forces the fallback/reference path, and contradictory combinations with
+`NAVATALA_GPU_GEMM_VENDOR_MODE` fail loudly. `mfma` selects the generated
+HIP/gfx942 F16-input/F32-output wrapper (`navatala_gpu_gemm_f16_f32`) when the
+HIP transformer registry shard is built into the runtime; the current Float32
+ABI returns `NAVATALA_NOT_IMPLEMENTED` for that selector.
 
 The opt-in `GEMM_F16_F32_WRAPPER_MFMA` row is the wrapper-level timing and
 correctness row for that public ABI. It differs from the raw MFMA rows above:
@@ -237,6 +325,12 @@ it dispatches through the runtime registry, uses the edge-capable CTA64/CTA128
 kernels, and its measured time includes wrapper scalar-parameter setup and the
 necessary synchronization points. Treat it as user-facing wrapper evidence, not
 as a replacement for the raw kernel micro-benchmark rows.
+
+The `GEMM_F16_F32_WRAPPER_AUTO_*` rows run the default public ABI policy for
+transpose, large-tail, and strided-batched cases where the current generated
+MFMA path is correct but not yet the fastest measured implementation. The
+matching `GEMM_F16_F32_WRAPPER_VENDOR_*` rows force the same public ABI through
+rocBLAS to validate the explicit vendor escape hatch.
 
 The `GEMM_F16_PORTABLE_F32OUT` row is a portable-kernel denominator, not a
 tuned path. It is present so reports can evaluate MFMA speedup without relying
@@ -247,15 +341,21 @@ on either the unrelated F32 portable GEMM row or the legacy F16-output row.
 The benchmark writes a JSON report with:
 
 - operation and shape;
-- matrix set (`quick`, `standard`, `broad`, `cta128-evidence`, or
-  `cfd-fixture`);
-- generated HIP kernel path;
+- matrix set (`quick`, `standard`, `broad`, `cta128-evidence`,
+  `wrapper-semantics`, or `cfd-fixture`);
+- Navatala HIP kernel path;
 - vendor library baseline;
 - correctness result and max absolute error;
 - `timingMode: back_to_back_throughput_mean_per_launch`;
 - generated/vendor mean milliseconds per launch from HIP events;
 - generated/vendor runtime ratio;
 - hipSPARSELt availability and mode.
+
+Wrapper rows may also include `hostSubmitMeanMs`, `hostWallMeanMs`,
+`hostSubmitOverGeneratedRatio`, and `hostWallOverGeneratedRatio`. These fields
+are diagnostics for wrapper-overhead investigations: submit time is CPU wall
+time to invoke the public wrapper and enqueue work; wall time also includes the
+final event wait. Older fixtures do not contain these optional fields.
 
 For `--matrix cfd-fixture`, the result notes include row-distribution metadata:
 `min/mean/p50/p90/p99/max`, the active

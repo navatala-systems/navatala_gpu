@@ -84,6 +84,30 @@ __device__ inline void navatala_mfma_store_acc_f32_32x32x8_at_scaled_bounded(flo
   const unsigned int lane = (unsigned int)(threadIdx.x & 63u);
   const unsigned int localCol = lane & 31u;
   const unsigned int rowGroup = 4u * (lane >> 5u);
+  if (beta == 0.0f) {
+    if (alpha == 1.0f) {
+      #pragma unroll
+      for (unsigned int i = 0; i < 16u; ++i) {
+        const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+        const unsigned int row = rowOffset + localRow;
+        const unsigned int col = colOffset + localCol;
+        if (row < rowLimit && col < colLimit) {
+          dst[row * stride + col] = acc[i];
+        }
+      }
+      return;
+    }
+    #pragma unroll
+    for (unsigned int i = 0; i < 16u; ++i) {
+      const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
+      const unsigned int row = rowOffset + localRow;
+      const unsigned int col = colOffset + localCol;
+      if (row < rowLimit && col < colLimit) {
+        dst[row * stride + col] = alpha * acc[i];
+      }
+    }
+    return;
+  }
   #pragma unroll
   for (unsigned int i = 0; i < 16u; ++i) {
     const unsigned int localRow = (8u * (i / 4u)) + rowGroup + (i & 3u);
@@ -91,8 +115,7 @@ __device__ inline void navatala_mfma_store_acc_f32_32x32x8_at_scaled_bounded(flo
     const unsigned int col = colOffset + localCol;
     if (row < rowLimit && col < colLimit) {
       const unsigned int idx = row * stride + col;
-      const float scaled = alpha * acc[i];
-      dst[idx] = (beta == 0.0f) ? scaled : (scaled + beta * dst[idx]);
+      dst[idx] = alpha * acc[i] + beta * dst[idx];
     }
   }
 }
@@ -176,39 +199,56 @@ extern "C" __global__ __launch_bounds__(256) void navatala_transformer_tiled_gem
   __shared__ __half tileA[512];
   __shared__ __half tileB[512];
   navatala_mfma_acc_f32_32x32x8 acc = navatala_mfma_zero_acc_f32_32x32x8();
+  unsigned int aColLocalEdge = (tid % 8u);
+  unsigned int aRowLocalEdge0 = (tid / 8u);
+  unsigned int aRowLocalEdge1 = (aRowLocalEdge0 + 32u);
+  unsigned int aGlobalRowEdge0 = (blockRow + aRowLocalEdge0);
+  unsigned int aGlobalRowEdge1 = (blockRow + aRowLocalEdge1);
+  bool aRowValidEdge0 = (aGlobalRowEdge0 < mDimVal);
+  bool aRowValidEdge1 = (aGlobalRowEdge1 < mDimVal);
+  unsigned int bColLocalEdge = (tid % 64u);
+  unsigned int bRowLocalEdge0 = (tid / 64u);
+  unsigned int bRowLocalEdge1 = (bRowLocalEdge0 + 4u);
+  unsigned int bGlobalColEdge = (blockCol + bColLocalEdge);
+  bool bColValidEdge = (bGlobalColEdge < nDimVal);
   for (int kTile = 0; kTile < (int)(kTilesVal); ++kTile) {
     unsigned int kTileU32 = ((unsigned int)(kTile));
     unsigned int kBase = (kTileU32 * 8u);
-    for (int loadIter = 0; loadIter < (int)(2u); ++loadIter) {
-      unsigned int loadIterU32 = ((unsigned int)(loadIter));
-      unsigned int _flat = ((loadIterU32 * 256u) + tid);
-      unsigned int aRowLocal = (_flat / 8u);
-      unsigned int aColLocal = (_flat % 8u);
-      unsigned int aGlobalRow = (blockRow + aRowLocal);
-      unsigned int aGlobalCol = (kBase + aColLocal);
-      unsigned int aIdxNN = ((aGlobalRow * aStrideVal) + aGlobalCol);
-      unsigned int aIdxT = ((aGlobalCol * aStrideVal) + aGlobalRow);
-      unsigned int aIdx = ((useTransA) ? (aIdxT) : (aIdxNN));
-      unsigned int aIdxBatch = (aBatchBase + aIdx);
-      bool aRowValid = (aGlobalRow < mDimVal);
-      bool aColValid = (aGlobalCol < kDimVal);
-      bool aLoadValid = (aRowValid && aColValid);
-      __half aVal = ((aLoadValid) ? (a[aIdxBatch]) : (__float2half(0.000000f)));
-      unsigned int bRowLocal = (_flat / 64u);
-      unsigned int bColLocal = (_flat % 64u);
-      unsigned int bGlobalRow = (kBase + bRowLocal);
-      unsigned int bGlobalCol = (blockCol + bColLocal);
-      unsigned int bIdxNN = ((bGlobalRow * bStrideVal) + bGlobalCol);
-      unsigned int bIdxT = ((bGlobalCol * bStrideVal) + bGlobalRow);
-      unsigned int bIdx = ((useTransB) ? (bIdxT) : (bIdxNN));
-      unsigned int bIdxBatch = (bBatchBase + bIdx);
-      bool bRowValid = (bGlobalRow < kDimVal);
-      bool bColValid = (bGlobalCol < nDimVal);
-      bool bLoadValid = (bRowValid && bColValid);
-      __half bVal = ((bLoadValid) ? (b[bIdxBatch]) : (__float2half(0.000000f)));
-      tileA[_flat] = aVal;
-      tileB[_flat] = bVal;
-    }
+    unsigned int aGlobalColEdge = (kBase + aColLocalEdge);
+    bool aColValidEdge = (aGlobalColEdge < kDimVal);
+    unsigned int aIdxNNEdge0 = ((aGlobalRowEdge0 * aStrideVal) + aGlobalColEdge);
+    unsigned int aIdxTEdge0 = ((aGlobalColEdge * aStrideVal) + aGlobalRowEdge0);
+    unsigned int aIdxEdge0 = ((useTransA) ? (aIdxTEdge0) : (aIdxNNEdge0));
+    unsigned int aIdxBatchEdge0 = (aBatchBase + aIdxEdge0);
+    bool aLoadValidEdge0 = (aRowValidEdge0 && aColValidEdge);
+    __half aValEdge0 = ((aLoadValidEdge0) ? (a[aIdxBatchEdge0]) : (__float2half(0.000000f)));
+    unsigned int bGlobalRowEdge0 = (kBase + bRowLocalEdge0);
+    unsigned int bIdxNNEdge0 = ((bGlobalRowEdge0 * bStrideVal) + bGlobalColEdge);
+    unsigned int bIdxTEdge0 = ((bGlobalColEdge * bStrideVal) + bGlobalRowEdge0);
+    unsigned int bIdxEdge0 = ((useTransB) ? (bIdxTEdge0) : (bIdxNNEdge0));
+    unsigned int bIdxBatchEdge0 = (bBatchBase + bIdxEdge0);
+    bool bRowValidEdge0 = (bGlobalRowEdge0 < kDimVal);
+    bool bLoadValidEdge0 = (bRowValidEdge0 && bColValidEdge);
+    __half bValEdge0 = ((bLoadValidEdge0) ? (b[bIdxBatchEdge0]) : (__float2half(0.000000f)));
+    tileA[tid] = aValEdge0;
+    tileB[tid] = bValEdge0;
+    unsigned int flatEdge1 = (tid + 256u);
+    unsigned int aIdxNNEdge1 = ((aGlobalRowEdge1 * aStrideVal) + aGlobalColEdge);
+    unsigned int aIdxTEdge1 = ((aGlobalColEdge * aStrideVal) + aGlobalRowEdge1);
+    unsigned int aIdxEdge1 = ((useTransA) ? (aIdxTEdge1) : (aIdxNNEdge1));
+    unsigned int aIdxBatchEdge1 = (aBatchBase + aIdxEdge1);
+    bool aLoadValidEdge1 = (aRowValidEdge1 && aColValidEdge);
+    __half aValEdge1 = ((aLoadValidEdge1) ? (a[aIdxBatchEdge1]) : (__float2half(0.000000f)));
+    unsigned int bGlobalRowEdge1 = (kBase + bRowLocalEdge1);
+    unsigned int bIdxNNEdge1 = ((bGlobalRowEdge1 * bStrideVal) + bGlobalColEdge);
+    unsigned int bIdxTEdge1 = ((bGlobalColEdge * bStrideVal) + bGlobalRowEdge1);
+    unsigned int bIdxEdge1 = ((useTransB) ? (bIdxTEdge1) : (bIdxNNEdge1));
+    unsigned int bIdxBatchEdge1 = (bBatchBase + bIdxEdge1);
+    bool bRowValidEdge1 = (bGlobalRowEdge1 < kDimVal);
+    bool bLoadValidEdge1 = (bRowValidEdge1 && bColValidEdge);
+    __half bValEdge1 = ((bLoadValidEdge1) ? (b[bIdxBatchEdge1]) : (__float2half(0.000000f)));
+    tileA[flatEdge1] = aValEdge1;
+    tileB[flatEdge1] = bValEdge1;
     __syncthreads();
     navatala_mfma_f16x4 aFrag = navatala_mfma_load_a_f16_32x32x8(tileA, waveRowLocal, 0u, 8u);
     navatala_mfma_f16x4 bFrag = navatala_mfma_load_b_f16_32x32x8(tileB, 0u, waveColLocal, 64u);

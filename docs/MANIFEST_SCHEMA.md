@@ -5,7 +5,7 @@ Public reference for the JSON manifests emitted into the published
 each file. Implementation-private records and fields that are not intended
 for consumers are intentionally omitted.
 
-Status: companion document for Redmine #1513 T2. This public copy is
+Status: public manifest schema reference for the packaged tree. This copy is
 projected into `navatala_gpu/docs/MANIFEST_SCHEMA.md` during release-tree
 assembly so package consumers can inspect the manifest formats without
 access to internal tooling.
@@ -184,7 +184,7 @@ relative to the published `0.1.0` alpha baseline.
 
 ## Validation
 
-Per #1513 T2, the emitter is expected to validate that:
+the emitter is expected to validate that:
 
 - Every entry in `symbolToContractId` has a matching binding in the `bindings`
   array of `api_manifest.json`.
