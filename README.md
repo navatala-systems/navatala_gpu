@@ -3,6 +3,10 @@
 Cross-platform GPU compute runtime and kernel corpus for scientific computing,
 released under the Apache License 2.0.
 
+The goal is a portable, inspectable GPU library that can run across ROCm/HIP,
+CUDA, Metal, Vulkan compute, and OpenCL, while still dispatching to vendor
+libraries where those are the best backend for an operation.
+
 This distribution bundles two cooperating layers:
 
 1. **`runtime/`** — a C++20 abstraction that presents one API over CUDA, HIP,
@@ -38,6 +42,35 @@ This is a developer-preview / alpha release. The runtime library and kernel
 corpus are both in active use for CFD workloads, but the public packaging,
 documentation, CI matrix, and backend conformance reports are still being
 expanded.
+
+## Install
+
+The Python package is available on PyPI:
+
+```bash
+pip install navatala-gpu
+```
+
+Importing the package and inspecting its metadata does not require a GPU. Actual
+GPU execution requires a compatible backend runtime and the native extension for
+the selected backend.
+
+## Python quickstart
+
+```python
+import navatala_gpu as ng
+from navatala_gpu import linalg
+
+print("navatala-gpu", ng.__version__, "ABI", ng.__abi_version__)
+print("linalg ops:", ", ".join(linalg.list_bindings()))
+print("HIP AXPY in manifest:",
+      ng.supports("linalg.axpy", backend="hip", dtype="float32"))
+print("known backends:", sorted(ng.get_capabilities()["backends"].keys()))
+```
+
+For compute calls, pass DLPack-compatible tensors to APIs such as
+`linalg.axpy`, `linalg.gemm`, and `sparse.csr_spmv`. The bindings validate
+shape, dtype, and backend support before dispatch.
 
 ## Building
 
@@ -86,6 +119,15 @@ are safe to wire into CI even on CPU-only runners.
 
 For a fuller tour, see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
+## ROCm validation snapshot
+
+The repository includes dated MI300X benchmark fixtures under
+[`benchmarks/fixtures/hardware_runs/`](benchmarks/fixtures/hardware_runs/).
+Recent HIP runs compare generated kernels and public wrapper dispatch against
+rocBLAS, rocSPARSE, and hipSPARSELt. Exact commands, JSON fixtures, and summary
+reports are documented in
+[`docs/benchmarks/ROCM_VENDOR_BENCHMARKS.md`](docs/benchmarks/ROCM_VENDOR_BENCHMARKS.md).
+
 ## Documentation
 
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — how runtime and kernels fit together.
@@ -94,7 +136,7 @@ For a fuller tour, see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 - [`docs/BACKEND_COVERAGE.md`](docs/BACKEND_COVERAGE.md) — generated backend coverage matrix.
 - [`docs/NUMERICAL_CONFORMANCE.md`](docs/NUMERICAL_CONFORMANCE.md) — validation status and pending backend evidence.
 - [`docs/TUNING_ROADMAP.md`](docs/TUNING_ROADMAP.md) — selective backend tuning priorities and benchmark evidence rules.
-- [`docs/benchmarks/ROCM_VENDOR_BENCHMARKS.md`](docs/benchmarks/ROCM_VENDOR_BENCHMARKS.md) — optional HIP benchmark harness comparing selected generated kernels against rocBLAS/rocSPARSE.
+- [`docs/benchmarks/ROCM_VENDOR_BENCHMARKS.md`](docs/benchmarks/ROCM_VENDOR_BENCHMARKS.md) — optional HIP benchmark harness comparing selected generated kernels against rocBLAS, rocSPARSE, and hipSPARSELt.
 - [`docs/benchmarks/ROCM_VALIDATION_TEMPLATE.md`](docs/benchmarks/ROCM_VALIDATION_TEMPLATE.md) — template for public ROCm correctness/benchmark reports.
 - [`docs/benchmarks/METAL_VALIDATION.md`](docs/benchmarks/METAL_VALIDATION.md) — Apple Silicon validation and opt-in Metal runtime tuning guide.
 - [`docs/KERNEL_INDEX.md`](docs/KERNEL_INDEX.md) — generated domain-grouped kernel index.
@@ -112,6 +154,9 @@ hand-authored layers — runtime, examples, docs, tests, and tooling — are
 welcome through the normal pull-request flow. The kernel sources are
 regenerated as a unit; the contribution model for those paths is documented
 in CONTRIBUTING.md.
+
+For bug reports, backend validation results, or technical questions, open a
+GitHub Issue at <https://github.com/navatala-systems/navatala_gpu/issues>.
 
 ## Provenance
 
