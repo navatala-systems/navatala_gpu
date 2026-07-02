@@ -78,13 +78,16 @@ When a tuned or vendor-backed path is added, update the public manifest entry:
 ## Active P0 Work
 
 The 2026-06-19 MI300X ROCm run produced enough hardware evidence to move two
-P0 items into active tuning. Updated 2026-06-22 with the ROCm 7.2.4 follow-up run capturing acceptance evidence:
+P0 items into active tuning. Updated 2026-07-02 with ROCm 7.2.4 follow-up runs
+capturing current public-tree acceptance evidence:
 
 - **Adaptive CSR SpMV:** the generated HIP SpMV kernel is competitive for very
   short rows, but is 14.87x slower than rocSPARSE at `rows=262144,
-  rowNnz=27`. The near-term fix is a subgroup/wave-reduction path for
+  rowNnz=27`. The near-term fix was a subgroup/wave-reduction path for
   medium/high row-nnz while preserving the existing thread-per-row path for low
-  row-nnz. Hardware acceptance gate met on 06-22 (rowNnz=27 at 2.80x vs <=3x target); real-CFD pressure-matrix benchmark remains the closure gate.
+  row-nnz. Hardware acceptance remains met in the 2026-07-02 MI300X refresh
+  (`rowNnz=27` at `2.348x` versus the `<= 3x` target); real-CFD
+  pressure-matrix benchmark remains the closure gate.
 - **GEMM dispatch policy:** public GEMM wrappers should prefer rocBLAS/cuBLAS
   for supported CUDA/HIP large-shape calls. Generated tiled GEMM kernels remain
   portable fallback/reference paths unless their callers route through
@@ -92,7 +95,7 @@ P0 items into active tuning. Updated 2026-06-22 with the ROCm 7.2.4 follow-up ru
   `navatala_gpu_gemm_f32`, supports this policy in the real runtime FFI through
   `NAVATALA_GPU_GEMM_VENDOR_MODE` and
   `NAVATALA_GPU_GEMM_VENDOR_THRESHOLD_FLOPS`. The ROCm benchmark harness has an
-  opt-in `GEMM_F32_WRAPPER_VENDOR` row for same-host wrapper evidence. Wrapper-vendor parity captured 06-22 on MI300X at 128^3/512^3/1024^3 (ratio 1.000x); see the dated fixture. CUDA/cuBLAS and non-HIP backend comparisons remain pending. Accepted mode aliases are
+  opt-in `GEMM_F32_WRAPPER_VENDOR` row for same-host wrapper evidence. Wrapper-vendor parity captured 06-22 on MI300X at 128^3/512^3/1024^3 (ratio 1.000x); the 2026-07-02 refresh records 1.055x at 1024^3 with host wall/event timing still near 1.0x. CUDA/cuBLAS and non-HIP backend comparisons remain pending. Accepted mode aliases are
   `auto`/`1`/`true`, `vendor`/`always`/`force`, and
   `portable`/`reference`/`fallback`/`0`/`false`.
   `NAVATALA_GPU_GEMM_IMPL=auto|vendor|mfma|portable` has higher precedence for
@@ -221,6 +224,12 @@ P0 items into active tuning. Updated 2026-06-22 with the ROCm 7.2.4 follow-up ru
   direct NN fast-tail rows improve generic CTA64_EDGE by only about `2%` to
   `4%` and remain `1.165x` to `1.930x` versus rocBLAS. Public AUTO therefore
   continues to select vendor dispatch for the sampled true-tail shapes.
+  The 2026-07-02 MI300X refresh confirms the current public-tree state:
+  wrapper alpha/beta is faster than rocBLAS at `0.777x`, wrapper transpose is
+  still the main Phase 2 generated-path performance gap at `1.146x`, wrapper
+  AUTO routes transpose to vendor at `1.006x`, strided-batch AUTO is at
+  `1.009x`, and large true-tail AUTO remains vendor-routed at parity while
+  forced MFMA tail rows remain correctness-only fallback evidence.
 
   A follow-up ROCm code-object inspection on the same host confirms the source
   of the EDGE cost. CTA64 shared full-tile disassembles to about `269`

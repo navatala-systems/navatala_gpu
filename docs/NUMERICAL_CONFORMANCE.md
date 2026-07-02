@@ -21,7 +21,7 @@ validation is intentionally conservative and backend-specific.
 | Vulkan runtime smoke | Partial | Vulkan source and SPIR-V coverage are present. Full numerical comparison across the kernel corpus is pending. |
 | Metal runtime smoke | Pending hardware | Metal sources are present where the backend can represent the operation. Runtime profile counters, opt-in submit batching, offset-copy support, opt-in private device buffers, and the `scripts/run_metal_validation.sh` artifact workflow are implemented, but Apple GPU correctness/performance validation is pending. |
 | Cross-backend numerical comparisons | Pending | Broad per-operation tolerances and reference-vector reports are being expanded. |
-| ROCm vendor benchmark harness | Passed on MI300X | Optional HIP benchmark target compares selected generated kernels against rocBLAS/rocSPARSE and can include an opt-in hipSPARSELt structured sparse GEMM row. Dated MI300X fixtures are checked in under `benchmarks/fixtures/hardware_runs/`, including `20260624_mi300x_wrapper_semantics` and `20260624_mi300x_broad_wrapper_mfma_hipsparselt`. |
+| ROCm vendor benchmark harness | Passed on MI300X | Optional HIP benchmark target compares selected generated kernels against rocBLAS/rocSPARSE and can include an opt-in hipSPARSELt structured sparse GEMM row. Dated MI300X fixtures are checked in under `benchmarks/fixtures/hardware_runs/`, including the current `20260702_mi300x_broad_rocm724`, `20260702_mi300x_wrapper_semantics_rocm724`, and `20260702_mi300x_edge_tails_rocm724` refresh runs. |
 | Vendor-library benchmark comparisons | Partial | ROCm AXPY/GEMM/CSR SpMV, public F16/F32 MFMA wrapper semantics, rocBLAS strided-batched GEMM, and opt-in hipSPARSELt structured GEMM evidence exists for MI300X. CUDA cuBLAS/cuSPARSE on NVIDIA host still pending. |
 
 ## What Has Been Validated
@@ -42,6 +42,10 @@ The current package has passed the following local gates before publication:
 - Public HIP/gfx942 F16-input/F32-output MFMA wrapper correctness for tail
   tiles, alpha/beta, transpose, and strided batching. The strided-batch row
   validates the `rocblas_gemm_strided_batched_ex` comparison path on MI300X.
+- July 2026 MI300X / ROCm 7.2.4 refresh validation of the current public tree:
+  runtime smoke passed, broad ROCm benchmark passed with `--require-full
+  --require-hipsparselt`, and focused wrapper-semantics / true-tail matrices
+  passed correctness.
 - Dated MI300X broad ROCm benchmark fixture validation and Markdown rendering
   through the no-GPU CTest path.
 
@@ -181,13 +185,19 @@ The near-term GEMM dispatch policy is:
   CTA64_EDGE to `VGPR_Count=24`, `SGPR_Count=32`. Timing improves only modestly
   over generic CTA64_EDGE (`~2%` to `~4%` on sampled direct rows) and remains
   slower than rocBLAS, so public AUTO remains vendor-routed for these tails.
+  The `20260702_mi300x_broad_rocm724` refresh confirms the same release
+  position on the current public tree: CSR SpMV rowNnz=27 remains inside the
+  `<= 3x` gate at `2.348x`, hipSPARSELt structured GEMM at 512³ remains
+  vendor-beating at `0.585x`, alpha/beta remains faster than rocBLAS at
+  `0.756x`, transpose remains the main Phase 2 generated-path gap at `1.145x`,
+  and wrapper AUTO remains vendor-routed for large true-tail GEMM.
 
 ## Known Gaps Before Beta
 
 - Public HIP/ROCm CI runner with correctness smoke tests.
 - Real OpenFOAM pressure-matrix CSR distribution benchmark (the synthetic
   adaptive SpMV rowNnz=15/27 acceptance gates have been passed and captured in
-  the MI300X fixtures; the 2026-06-24 broad run records rowNnz=27 at `2.251x`
+  the MI300X fixtures; the 2026-07-02 broad run records rowNnz=27 at `2.348x`
   versus rocSPARSE).
 - Full conformance-vector corpus for Python bindings and public C++ wrappers.
 - Metal validation on macOS hardware, including before/after evidence for

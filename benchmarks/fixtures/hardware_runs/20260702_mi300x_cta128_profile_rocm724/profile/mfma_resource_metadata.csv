@@ -1,0 +1,3 @@
+Kernel_Name,Dispatch_Count,LDS_Block_Size,Scratch_Size,VGPR_Count,Accum_VGPR_Count,SGPR_Count,Workgroup_Size_X,Workgroup_Size_Y,Workgroup_Size_Z,Grid_Size_X,Grid_Size_Y,Grid_Size_Z,Avg_Duration_Ns,Min_Duration_Ns,Max_Duration_Ns
+navatala_transformer_tiled_gemm_f16_mfma_cta128,36,16384,0,84,68,112,256,1,1,256,1,1,42469.25,8099,66553
+navatala_transformer_tiled_gemm_f16_mfma_cta128_edge,36,16384,0,8,192,112,256,1,1,256,1,1,130650.528,19244,251020

@@ -278,6 +278,63 @@ Forced wrapper MFMA now routes these simple true-tail rows through the NN
 fast-tail candidate and is correctness-clean, but still trails rocBLAS.
 Public AUTO remains vendor-routed for these true-tail shapes.
 
+The `20260702_mi300x_broad_rocm724` fixture is a fresh MI300X / ROCm 7.2.4
+validation pass against the current public tree after the AMD host became
+available again:
+
+```bash
+python3 scripts/validate_rocm_benchmark_json.py \
+  benchmarks/fixtures/hardware_runs/20260702_mi300x_broad_rocm724/rocm_vendor_benchmark.json \
+  --require-full \
+  --require-hipsparselt
+python3 scripts/render_rocm_benchmark_report.py \
+  benchmarks/fixtures/hardware_runs/20260702_mi300x_broad_rocm724/rocm_vendor_benchmark.json \
+  --output /tmp/rocm_vendor_benchmark_20260702_broad.md
+```
+
+The public tree first passed `scripts/run_rocm_runtime_smoke.sh` on the same
+host (`AMD Instinct MI300X VF`, `gfx942:sramecc+:xnack-`, ROCm 7.2.4). The
+broad matrix then passed with `--require-full --require-hipsparselt`:
+
+| Row | Generated ms | Vendor ms | Ratio | Correctness |
+| --- | ---: | ---: | ---: | --- |
+| CTA64 shared 512³ | 0.020521 | 0.025609 | 0.801x | pass |
+| CTA128 1024³ | 0.053407 | 0.042657 | 1.252x | pass |
+| Public wrapper MFMA 512³ | 0.020866 | 0.025889 | 0.806x | pass |
+| Public wrapper MFMA 1024³ | 0.057392 | 0.042836 | 1.340x | pass |
+| Wrapper alpha/beta 512³ | 0.026572 | 0.035128 | 0.756x | pass |
+| Wrapper transpose 384x512x256 | 0.023205 | 0.020272 | 1.145x | pass |
+| Wrapper strided batch 256³ x3 | 0.018027 | 0.017515 | 1.029x | pass |
+| CSR SpMV rowNnz=27 | 0.045313 | 0.019299 | 2.348x | pass |
+| hipSPARSELt structured GEMM 512³ | 0.011683 | 0.019957 | 0.585x | pass |
+
+This refresh confirms the SpMV high-rowNnz gate remains met (`<= 3x`), the
+hipSPARSELt row remains vendor-beating at 512³, and public-wrapper host
+overhead remains small: the report's timing diagnostics show host wall/event
+ratios of about `1.003x` to `1.024x` for wrapper rows.
+
+The companion `20260702_mi300x_wrapper_semantics_rocm724` and
+`20260702_mi300x_edge_tails_rocm724` fixtures refresh the focused semantic and
+true-tail matrices:
+
+| Row | Generated ms | Vendor ms | Ratio | Correctness |
+| --- | ---: | ---: | ---: | --- |
+| Tail small 513x511x257 | 0.017850 | 0.038386 | 0.465x | pass |
+| Tail large forced MFMA 1023x1024x2003 | 0.184595 | 0.092764 | 1.990x | pass |
+| Tail large AUTO 1023x1024x2003 | 0.092545 | 0.092676 | 0.999x | pass |
+| Alpha/beta 512³ | 0.025480 | 0.032783 | 0.777x | pass |
+| Transpose forced MFMA 384x512x256 | 0.023193 | 0.020234 | 1.146x | pass |
+| Transpose AUTO 384x512x256 | 0.020138 | 0.020012 | 1.006x | pass |
+| Strided batch AUTO 256³ x3 | 0.017301 | 0.017152 | 1.009x | pass |
+| CTA64_EDGE_NN 1025x513x1024 | 0.069911 | 0.059816 | 1.169x | pass |
+| AUTO tail 1025x513x1024 | 0.059799 | 0.059687 | 1.002x | pass |
+
+The `20260702_mi300x_cta128_profile_rocm724` and
+`20260702_mi300x_edge_tails_profile_rocm724` fixtures preserve the matching
+rocprof resource CSVs. Use their resource metadata for register/LDS/scratch
+checks and the non-profile JSONs above for publication timing; the profile
+sub-runs intentionally use fewer iterations and may perturb vendor timing.
+
 The `20260624_mi300x_vendor_wrapper_cache` fixture records the first
 Float32 vendor-wrapper cleanup check after rocBLAS pointer-mode and stream
 state were cached in the HIP `LibraryOps` adapter:

@@ -117,6 +117,28 @@ if(Python3_Interpreter_FOUND)
             "${CMAKE_CURRENT_SOURCE_DIR}/../benchmarks/fixtures/hardware_runs/20260624_mi300x_cta128_evidence_after_cache/rocm_vendor_benchmark.json"
             "--require-full")
     add_test(
+        NAME rocm_benchmark_20260702_broad_conformance
+        COMMAND
+            "${Python3_EXECUTABLE}"
+            "${CMAKE_CURRENT_SOURCE_DIR}/../scripts/validate_rocm_benchmark_json.py"
+            "${CMAKE_CURRENT_SOURCE_DIR}/../benchmarks/fixtures/hardware_runs/20260702_mi300x_broad_rocm724/rocm_vendor_benchmark.json"
+            "--require-full"
+            "--require-hipsparselt")
+    add_test(
+        NAME rocm_benchmark_20260702_wrapper_semantics_conformance
+        COMMAND
+            "${Python3_EXECUTABLE}"
+            "${CMAKE_CURRENT_SOURCE_DIR}/../scripts/validate_rocm_benchmark_json.py"
+            "${CMAKE_CURRENT_SOURCE_DIR}/../benchmarks/fixtures/hardware_runs/20260702_mi300x_wrapper_semantics_rocm724/rocm_vendor_benchmark.json"
+            "--require-full")
+    add_test(
+        NAME rocm_benchmark_20260702_edge_tails_conformance
+        COMMAND
+            "${Python3_EXECUTABLE}"
+            "${CMAKE_CURRENT_SOURCE_DIR}/../scripts/validate_rocm_benchmark_json.py"
+            "${CMAKE_CURRENT_SOURCE_DIR}/../benchmarks/fixtures/hardware_runs/20260702_mi300x_edge_tails_rocm724/rocm_vendor_benchmark.json"
+            "--require-full")
+    add_test(
         NAME rocm_benchmark_report_fixture_render
         COMMAND
             "${Python3_EXECUTABLE}"
