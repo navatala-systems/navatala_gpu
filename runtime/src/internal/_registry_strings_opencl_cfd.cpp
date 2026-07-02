@@ -300,6 +300,475 @@ __kernel void navatala_cfd_scatter_vec3_mu_and_mask(__global const int* procFace
 }
 
 )kernel";
+const char* k_opencl_navatala_cfd_cf_mesh_volume_optimizer_gradient_f32 = R"kernel(
+__kernel void navatala_cfd_cf_mesh_volume_optimizer_gradient_f32(__global const float* pointX, __global const float* pointY, __global const float* pointZ, __global const int* tetConn, __global const int* tetOffsets, __global const int* tetCounts, __global const int* fixedMask, __global const float* kPerStencil, __global const int* counts, __global float* outGradX, __global float* outGradY, __global float* outGradZ) {
+  int gid0 = (int)get_global_id(0);
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
+    return;
+  } else {
+    if (fixedMask[((int)((int)(get_global_id(0))))] != 0) {
+      outGradX[((int)((int)(get_global_id(0))))] = as_float(0x00000000u);
+      outGradY[((int)((int)(get_global_id(0))))] = as_float(0x00000000u);
+      outGradZ[((int)((int)(get_global_id(0))))] = as_float(0x00000000u);
+    } else {
+      float k = kPerStencil[((int)((int)(get_global_id(0))))];
+      float gxSum = as_float(0x00000000u);
+      float gySum = as_float(0x00000000u);
+      float gzSum = as_float(0x00000000u);
+      int tetBeg = tetOffsets[((int)((int)(get_global_id(0))))];
+      int tetN = tetCounts[((int)((int)(get_global_id(0))))];
+      for (int t = 0; t < (int)(tetN); ++t) {
+        int aId = tetConn[(((tetBeg + t) * 4) + 0)];
+        int bId = tetConn[(((tetBeg + t) * 4) + 1)];
+        int cId = tetConn[(((tetBeg + t) * 4) + 2)];
+        int dId = tetConn[(((tetBeg + t) * 4) + 3)];
+        float ax = pointX[aId];
+        float ay = pointY[aId];
+        float az = pointZ[aId];
+        float bx = pointX[bId];
+        float by = pointY[bId];
+        float bz = pointZ[bId];
+        float cx = pointX[cId];
+        float cy = pointY[cId];
+        float cz = pointZ[cId];
+        float dx = pointX[dId];
+        float dy = pointY[dId];
+        float dz = pointZ[dId];
+        float bax = (bx - ax);
+        float bay = (by - ay);
+        float baz = (bz - az);
+        float cax = (cx - ax);
+        float cay = (cy - ay);
+        float caz = (cz - az);
+        float dax = (dx - ax);
+        float day = (dy - ay);
+        float daz = (dz - az);
+        float dbx = (dx - bx);
+        float dby = (dy - by);
+        float dbz = (dz - bz);
+        float dcx = (dx - cx);
+        float dcy = (dy - cy);
+        float dcz = (dz - cz);
+        float crossX = ((bay * caz) - (baz * cay));
+        float crossY = ((baz * cax) - (bax * caz));
+        float crossZ = ((bax * cay) - (bay * cax));
+        float dotVol = (((dax * crossX) + (day * crossY)) + (daz * crossZ));
+        float vtri = (dotVol / as_float(0x40c00000u));
+        float lsqr = (((((dax * dax) + (day * day)) + (daz * daz)) + (((dbx * dbx) + (dby * dby)) + (dbz * dbz))) + (((dcx * dcx) + (dcy * dcy)) + (dcz * dcz)));
+        float gradVx = (crossX / as_float(0x40c00000u));
+        float gradVy = (crossY / as_float(0x40c00000u));
+        float gradVz = (crossZ / as_float(0x40c00000u));
+        float stab = sqrt(((vtri * vtri) + k));
+        float vs = (((vtri < as_float(0x00000000u))) ? (((as_float(0x3f000000u) * k) / (stab - vtri))) : ((as_float(0x3f000000u) * (vtri + stab))));
+        float gradStabX = ((vtri * gradVx) / stab);
+        float gradStabY = ((vtri * gradVy) / stab);
+        float gradStabZ = ((vtri * gradVz) / stab);
+        float gradVsX = (((vtri < as_float(0x00000000u))) ? (((as_float(0xbf000000u) * (k * (gradStabX - gradVx))) / ((stab - vtri) * (stab - vtri)))) : ((as_float(0x3f000000u) * (gradVx + gradStabX))));
+        float gradVsY = (((vtri < as_float(0x00000000u))) ? (((as_float(0xbf000000u) * (k * (gradStabY - gradVy))) / ((stab - vtri) * (stab - vtri)))) : ((as_float(0x3f000000u) * (gradVy + gradStabY))));
+        float gradVsZ = (((vtri < as_float(0x00000000u))) ? (((as_float(0xbf000000u) * (k * (gradStabZ - gradVz))) / ((stab - vtri) * (stab - vtri)))) : ((as_float(0x3f000000u) * (gradVz + gradStabZ))));
+        float gradLsqX = (as_float(0x40000000u) * ((as_float(0x40400000u) * dx) - ((ax + bx) + cx)));
+        float gradLsqY = (as_float(0x40000000u) * ((as_float(0x40400000u) * dy) - ((ay + by) + cy)));
+        float gradLsqZ = (as_float(0x40000000u) * ((as_float(0x40400000u) * dz) - ((az + bz) + cz)));
+        float c0 = (as_float(0x3f2aaaabu) * pow(as_float(0x3f000000u), as_float(0x3f2aaaabu)));
+        float vs13 = pow((as_float(0x40000000u) * vs), as_float(0x3eaaaaabu));
+        float vstab = pow(vs, as_float(0x3f2aaaabu));
+        float sqrVstab = (vstab * vstab);
+        float gradVstabX = ((c0 * (as_float(0x40000000u) * gradVsX)) / vs13);
+        float gradVstabY = ((c0 * (as_float(0x40000000u) * gradVsY)) / vs13);
+        float gradVstabZ = ((c0 * (as_float(0x40000000u) * gradVsZ)) / vs13);
+        float termLX = (gradLsqX / vstab);
+        float termLY = (gradLsqY / vstab);
+        float termLZ = (gradLsqZ / vstab);
+        float termVX = ((lsqr * gradVstabX) / sqrVstab);
+        float termVY = ((lsqr * gradVstabY) / sqrVstab);
+        float termVZ = ((lsqr * gradVstabZ) / sqrVstab);
+        float gx = (termLX - termVX);
+        float gy = (termLY - termVY);
+        float gz = (termLZ - termVZ);
+        gxSum = (gxSum + gx);
+        gySum = (gySum + gy);
+        gzSum = (gzSum + gz);
+      }
+      outGradX[((int)((int)(get_global_id(0))))] = gxSum;
+      outGradY[((int)((int)(get_global_id(0))))] = gySum;
+      outGradZ[((int)((int)(get_global_id(0))))] = gzSum;
+    }
+  }
+}
+
+)kernel";
+const char* k_opencl_navatala_cfd_cf_mesh_volume_optimizer_gradient_f64 = R"kernel(
+#pragma OPENCL EXTENSION cl_khr_fp64 : enable
+__kernel void navatala_cfd_cf_mesh_volume_optimizer_gradient_f64(__global const double* pointX, __global const double* pointY, __global const double* pointZ, __global const int* tetConn, __global const int* tetOffsets, __global const int* tetCounts, __global const int* fixedMask, __global const double* kPerStencil, __global const int* counts, __global double* outGradX, __global double* outGradY, __global double* outGradZ) {
+  int gid0 = (int)get_global_id(0);
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
+    return;
+  } else {
+    if (fixedMask[((int)((int)(get_global_id(0))))] != 0) {
+      outGradX[((int)((int)(get_global_id(0))))] = as_double(0x0000000000000000ul);
+      outGradY[((int)((int)(get_global_id(0))))] = as_double(0x0000000000000000ul);
+      outGradZ[((int)((int)(get_global_id(0))))] = as_double(0x0000000000000000ul);
+    } else {
+      double k = kPerStencil[((int)((int)(get_global_id(0))))];
+      double gxSum = as_double(0x0000000000000000ul);
+      double gySum = as_double(0x0000000000000000ul);
+      double gzSum = as_double(0x0000000000000000ul);
+      int tetBeg = tetOffsets[((int)((int)(get_global_id(0))))];
+      int tetN = tetCounts[((int)((int)(get_global_id(0))))];
+      for (int t = 0; t < (int)(tetN); ++t) {
+        int aId = tetConn[(((tetBeg + t) * 4) + 0)];
+        int bId = tetConn[(((tetBeg + t) * 4) + 1)];
+        int cId = tetConn[(((tetBeg + t) * 4) + 2)];
+        int dId = tetConn[(((tetBeg + t) * 4) + 3)];
+        double ax = pointX[aId];
+        double ay = pointY[aId];
+        double az = pointZ[aId];
+        double bx = pointX[bId];
+        double by = pointY[bId];
+        double bz = pointZ[bId];
+        double cx = pointX[cId];
+        double cy = pointY[cId];
+        double cz = pointZ[cId];
+        double dx = pointX[dId];
+        double dy = pointY[dId];
+        double dz = pointZ[dId];
+        double bax = (bx - ax);
+        double bay = (by - ay);
+        double baz = (bz - az);
+        double cax = (cx - ax);
+        double cay = (cy - ay);
+        double caz = (cz - az);
+        double dax = (dx - ax);
+        double day = (dy - ay);
+        double daz = (dz - az);
+        double dbx = (dx - bx);
+        double dby = (dy - by);
+        double dbz = (dz - bz);
+        double dcx = (dx - cx);
+        double dcy = (dy - cy);
+        double dcz = (dz - cz);
+        double crossX = ((bay * caz) - (baz * cay));
+        double crossY = ((baz * cax) - (bax * caz));
+        double crossZ = ((bax * cay) - (bay * cax));
+        double dotVol = (((dax * crossX) + (day * crossY)) + (daz * crossZ));
+        double vtri = (dotVol / as_double(0x4018000000000000ul));
+        double lsqr = (((((dax * dax) + (day * day)) + (daz * daz)) + (((dbx * dbx) + (dby * dby)) + (dbz * dbz))) + (((dcx * dcx) + (dcy * dcy)) + (dcz * dcz)));
+        double gradVx = (crossX / as_double(0x4018000000000000ul));
+        double gradVy = (crossY / as_double(0x4018000000000000ul));
+        double gradVz = (crossZ / as_double(0x4018000000000000ul));
+        double stab = sqrt(((vtri * vtri) + k));
+        double vs = (((vtri < as_double(0x0000000000000000ul))) ? (((as_double(0x3fe0000000000000ul) * k) / (stab - vtri))) : ((as_double(0x3fe0000000000000ul) * (vtri + stab))));
+        double gradStabX = ((vtri * gradVx) / stab);
+        double gradStabY = ((vtri * gradVy) / stab);
+        double gradStabZ = ((vtri * gradVz) / stab);
+        double gradVsX = (((vtri < as_double(0x0000000000000000ul))) ? (((as_double(0xbfe0000000000000ul) * (k * (gradStabX - gradVx))) / ((stab - vtri) * (stab - vtri)))) : ((as_double(0x3fe0000000000000ul) * (gradVx + gradStabX))));
+        double gradVsY = (((vtri < as_double(0x0000000000000000ul))) ? (((as_double(0xbfe0000000000000ul) * (k * (gradStabY - gradVy))) / ((stab - vtri) * (stab - vtri)))) : ((as_double(0x3fe0000000000000ul) * (gradVy + gradStabY))));
+        double gradVsZ = (((vtri < as_double(0x0000000000000000ul))) ? (((as_double(0xbfe0000000000000ul) * (k * (gradStabZ - gradVz))) / ((stab - vtri) * (stab - vtri)))) : ((as_double(0x3fe0000000000000ul) * (gradVz + gradStabZ))));
+        double gradLsqX = (as_double(0x4000000000000000ul) * ((as_double(0x4008000000000000ul) * dx) - ((ax + bx) + cx)));
+        double gradLsqY = (as_double(0x4000000000000000ul) * ((as_double(0x4008000000000000ul) * dy) - ((ay + by) + cy)));
+        double gradLsqZ = (as_double(0x4000000000000000ul) * ((as_double(0x4008000000000000ul) * dz) - ((az + bz) + cz)));
+        double c0 = (as_double(0x3fe5555555555555ul) * pow(as_double(0x3fe0000000000000ul), as_double(0x3fe5555555555555ul)));
+        double vs13 = pow((as_double(0x4000000000000000ul) * vs), as_double(0x3fd5555555555555ul));
+        double vstab = pow(vs, as_double(0x3fe5555555555555ul));
+        double sqrVstab = (vstab * vstab);
+        double gradVstabX = ((c0 * (as_double(0x4000000000000000ul) * gradVsX)) / vs13);
+        double gradVstabY = ((c0 * (as_double(0x4000000000000000ul) * gradVsY)) / vs13);
+        double gradVstabZ = ((c0 * (as_double(0x4000000000000000ul) * gradVsZ)) / vs13);
+        double termLX = (gradLsqX / vstab);
+        double termLY = (gradLsqY / vstab);
+        double termLZ = (gradLsqZ / vstab);
+        double termVX = ((lsqr * gradVstabX) / sqrVstab);
+        double termVY = ((lsqr * gradVstabY) / sqrVstab);
+        double termVZ = ((lsqr * gradVstabZ) / sqrVstab);
+        double gx = (termLX - termVX);
+        double gy = (termLY - termVY);
+        double gz = (termLZ - termVZ);
+        gxSum = (gxSum + gx);
+        gySum = (gySum + gy);
+        gzSum = (gzSum + gz);
+      }
+      outGradX[((int)((int)(get_global_id(0))))] = gxSum;
+      outGradY[((int)((int)(get_global_id(0))))] = gySum;
+      outGradZ[((int)((int)(get_global_id(0))))] = gzSum;
+    }
+  }
+}
+
+)kernel";
+const char* k_opencl_navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32 = R"kernel(
+__kernel void navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32(__global const float* pointX, __global const float* pointY, __global const float* pointZ, __global const int* tetConn, __global const int* tetOffsets, __global const int* tetCounts, __global const int* fixedMask, __global const float* params, __global const int* counts, __global float* outK) {
+  int gid0 = (int)get_global_id(0);
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
+    return;
+  } else {
+    if (fixedMask[((int)((int)(get_global_id(0))))] != 0) {
+      outK[((int)((int)(get_global_id(0))))] = as_float(0x00000000u);
+    } else {
+      float small = params[0];
+      float vMin = as_float(0x7149f2cau);
+      float lSqrMax = as_float(0x00000000u);
+      int tetBeg = tetOffsets[((int)((int)(get_global_id(0))))];
+      int tetN = tetCounts[((int)((int)(get_global_id(0))))];
+      for (int t = 0; t < (int)(tetN); ++t) {
+        int aId = tetConn[(((tetBeg + t) * 4) + 0)];
+        int bId = tetConn[(((tetBeg + t) * 4) + 1)];
+        int cId = tetConn[(((tetBeg + t) * 4) + 2)];
+        int dId = tetConn[(((tetBeg + t) * 4) + 3)];
+        float ax = pointX[aId];
+        float ay = pointY[aId];
+        float az = pointZ[aId];
+        float bx = pointX[bId];
+        float by = pointY[bId];
+        float bz = pointZ[bId];
+        float cx = pointX[cId];
+        float cy = pointY[cId];
+        float cz = pointZ[cId];
+        float dx = pointX[dId];
+        float dy = pointY[dId];
+        float dz = pointZ[dId];
+        float bax = (bx - ax);
+        float bay = (by - ay);
+        float baz = (bz - az);
+        float cax = (cx - ax);
+        float cay = (cy - ay);
+        float caz = (cz - az);
+        float dax = (dx - ax);
+        float day = (dy - ay);
+        float daz = (dz - az);
+        float dbx = (dx - bx);
+        float dby = (dy - by);
+        float dbz = (dz - bz);
+        float dcx = (dx - cx);
+        float dcy = (dy - cy);
+        float dcz = (dz - cz);
+        float crossX = ((bay * caz) - (baz * cay));
+        float crossY = ((baz * cax) - (bax * caz));
+        float crossZ = ((bax * cay) - (bay * cax));
+        float dotVol = (((dax * crossX) + (day * crossY)) + (daz * crossZ));
+        float vtri = (dotVol / as_float(0x40c00000u));
+        float lsqr = (((((dax * dax) + (day * day)) + (daz * daz)) + (((dbx * dbx) + (dby * dby)) + (dbz * dbz))) + (((dcx * dcx) + (dcy * dcy)) + (dcz * dcz)));
+        vMin = (((vtri < vMin)) ? (vtri) : (vMin));
+        lSqrMax = (((lsqr > lSqrMax)) ? (lsqr) : (lSqrMax));
+      }
+      float threshold = (small * lSqrMax);
+      float kVal = (((vMin < threshold)) ? (threshold) : (as_float(0x00000000u)));
+      outK[((int)((int)(get_global_id(0))))] = kVal;
+    }
+  }
+}
+
+)kernel";
+const char* k_opencl_navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f64 = R"kernel(
+#pragma OPENCL EXTENSION cl_khr_fp64 : enable
+__kernel void navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f64(__global const double* pointX, __global const double* pointY, __global const double* pointZ, __global const int* tetConn, __global const int* tetOffsets, __global const int* tetCounts, __global const int* fixedMask, __global const double* params, __global const int* counts, __global double* outK) {
+  int gid0 = (int)get_global_id(0);
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
+    return;
+  } else {
+    if (fixedMask[((int)((int)(get_global_id(0))))] != 0) {
+      outK[((int)((int)(get_global_id(0))))] = as_double(0x0000000000000000ul);
+    } else {
+      double small = params[0];
+      double vMin = as_double(0x7e37e43c8800759cul);
+      double lSqrMax = as_double(0x0000000000000000ul);
+      int tetBeg = tetOffsets[((int)((int)(get_global_id(0))))];
+      int tetN = tetCounts[((int)((int)(get_global_id(0))))];
+      for (int t = 0; t < (int)(tetN); ++t) {
+        int aId = tetConn[(((tetBeg + t) * 4) + 0)];
+        int bId = tetConn[(((tetBeg + t) * 4) + 1)];
+        int cId = tetConn[(((tetBeg + t) * 4) + 2)];
+        int dId = tetConn[(((tetBeg + t) * 4) + 3)];
+        double ax = pointX[aId];
+        double ay = pointY[aId];
+        double az = pointZ[aId];
+        double bx = pointX[bId];
+        double by = pointY[bId];
+        double bz = pointZ[bId];
+        double cx = pointX[cId];
+        double cy = pointY[cId];
+        double cz = pointZ[cId];
+        double dx = pointX[dId];
+        double dy = pointY[dId];
+        double dz = pointZ[dId];
+        double bax = (bx - ax);
+        double bay = (by - ay);
+        double baz = (bz - az);
+        double cax = (cx - ax);
+        double cay = (cy - ay);
+        double caz = (cz - az);
+        double dax = (dx - ax);
+        double day = (dy - ay);
+        double daz = (dz - az);
+        double dbx = (dx - bx);
+        double dby = (dy - by);
+        double dbz = (dz - bz);
+        double dcx = (dx - cx);
+        double dcy = (dy - cy);
+        double dcz = (dz - cz);
+        double crossX = ((bay * caz) - (baz * cay));
+        double crossY = ((baz * cax) - (bax * caz));
+        double crossZ = ((bax * cay) - (bay * cax));
+        double dotVol = (((dax * crossX) + (day * crossY)) + (daz * crossZ));
+        double vtri = (dotVol / as_double(0x4018000000000000ul));
+        double lsqr = (((((dax * dax) + (day * day)) + (daz * daz)) + (((dbx * dbx) + (dby * dby)) + (dbz * dbz))) + (((dcx * dcx) + (dcy * dcy)) + (dcz * dcz)));
+        vMin = (((vtri < vMin)) ? (vtri) : (vMin));
+        lSqrMax = (((lsqr > lSqrMax)) ? (lsqr) : (lSqrMax));
+      }
+      double threshold = (small * lSqrMax);
+      double kVal = (((vMin < threshold)) ? (threshold) : (as_double(0x0000000000000000ul)));
+      outK[((int)((int)(get_global_id(0))))] = kVal;
+    }
+  }
+}
+
+)kernel";
+const char* k_opencl_navatala_cfd_cf_mesh_volume_optimizer_objective_f32 = R"kernel(
+__kernel void navatala_cfd_cf_mesh_volume_optimizer_objective_f32(__global const float* pointX, __global const float* pointY, __global const float* pointZ, __global const int* tetConn, __global const int* tetOffsets, __global const int* tetCounts, __global const int* fixedMask, __global const float* kPerStencil, __global const int* counts, __global float* outObjective) {
+  int gid0 = (int)get_global_id(0);
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
+    return;
+  } else {
+    if (fixedMask[((int)((int)(get_global_id(0))))] != 0) {
+      outObjective[((int)((int)(get_global_id(0))))] = as_float(0x00000000u);
+    } else {
+      float k = kPerStencil[((int)((int)(get_global_id(0))))];
+      float sum = as_float(0x00000000u);
+      int tetBeg = tetOffsets[((int)((int)(get_global_id(0))))];
+      int tetN = tetCounts[((int)((int)(get_global_id(0))))];
+      for (int t = 0; t < (int)(tetN); ++t) {
+        int aId = tetConn[(((tetBeg + t) * 4) + 0)];
+        int bId = tetConn[(((tetBeg + t) * 4) + 1)];
+        int cId = tetConn[(((tetBeg + t) * 4) + 2)];
+        int dId = tetConn[(((tetBeg + t) * 4) + 3)];
+        float ax = pointX[aId];
+        float ay = pointY[aId];
+        float az = pointZ[aId];
+        float bx = pointX[bId];
+        float by = pointY[bId];
+        float bz = pointZ[bId];
+        float cx = pointX[cId];
+        float cy = pointY[cId];
+        float cz = pointZ[cId];
+        float dx = pointX[dId];
+        float dy = pointY[dId];
+        float dz = pointZ[dId];
+        float bax = (bx - ax);
+        float bay = (by - ay);
+        float baz = (bz - az);
+        float cax = (cx - ax);
+        float cay = (cy - ay);
+        float caz = (cz - az);
+        float dax = (dx - ax);
+        float day = (dy - ay);
+        float daz = (dz - az);
+        float dbx = (dx - bx);
+        float dby = (dy - by);
+        float dbz = (dz - bz);
+        float dcx = (dx - cx);
+        float dcy = (dy - cy);
+        float dcz = (dz - cz);
+        float crossX = ((bay * caz) - (baz * cay));
+        float crossY = ((baz * cax) - (bax * caz));
+        float crossZ = ((bax * cay) - (bay * cax));
+        float dotVol = (((dax * crossX) + (day * crossY)) + (daz * crossZ));
+        float vtri = (dotVol / as_float(0x40c00000u));
+        float lsqr = (((((dax * dax) + (day * day)) + (daz * daz)) + (((dbx * dbx) + (dby * dby)) + (dbz * dbz))) + (((dcx * dcx) + (dcy * dcy)) + (dcz * dcz)));
+        float sqrtArg = ((vtri * vtri) + k);
+        float stab = sqrt(sqrtArg);
+        float vstab = (((vtri < as_float(0x00000000u))) ? (((as_float(0x3f000000u) * k) / (stab - vtri))) : ((as_float(0x3f000000u) * (vtri + stab))));
+        float denom = pow(vstab, as_float(0x3f2aaaabu));
+        float contrib = (lsqr / denom);
+        sum = (sum + contrib);
+      }
+      outObjective[((int)((int)(get_global_id(0))))] = sum;
+    }
+  }
+}
+
+)kernel";
+const char* k_opencl_navatala_cfd_cf_mesh_volume_optimizer_objective_f64 = R"kernel(
+#pragma OPENCL EXTENSION cl_khr_fp64 : enable
+__kernel void navatala_cfd_cf_mesh_volume_optimizer_objective_f64(__global const double* pointX, __global const double* pointY, __global const double* pointZ, __global const int* tetConn, __global const int* tetOffsets, __global const int* tetCounts, __global const int* fixedMask, __global const double* kPerStencil, __global const int* counts, __global double* outObjective) {
+  int gid0 = (int)get_global_id(0);
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
+    return;
+  } else {
+    if (fixedMask[((int)((int)(get_global_id(0))))] != 0) {
+      outObjective[((int)((int)(get_global_id(0))))] = as_double(0x0000000000000000ul);
+    } else {
+      double k = kPerStencil[((int)((int)(get_global_id(0))))];
+      double sum = as_double(0x0000000000000000ul);
+      int tetBeg = tetOffsets[((int)((int)(get_global_id(0))))];
+      int tetN = tetCounts[((int)((int)(get_global_id(0))))];
+      for (int t = 0; t < (int)(tetN); ++t) {
+        int aId = tetConn[(((tetBeg + t) * 4) + 0)];
+        int bId = tetConn[(((tetBeg + t) * 4) + 1)];
+        int cId = tetConn[(((tetBeg + t) * 4) + 2)];
+        int dId = tetConn[(((tetBeg + t) * 4) + 3)];
+        double ax = pointX[aId];
+        double ay = pointY[aId];
+        double az = pointZ[aId];
+        double bx = pointX[bId];
+        double by = pointY[bId];
+        double bz = pointZ[bId];
+        double cx = pointX[cId];
+        double cy = pointY[cId];
+        double cz = pointZ[cId];
+        double dx = pointX[dId];
+        double dy = pointY[dId];
+        double dz = pointZ[dId];
+        double bax = (bx - ax);
+        double bay = (by - ay);
+        double baz = (bz - az);
+        double cax = (cx - ax);
+        double cay = (cy - ay);
+        double caz = (cz - az);
+        double dax = (dx - ax);
+        double day = (dy - ay);
+        double daz = (dz - az);
+        double dbx = (dx - bx);
+        double dby = (dy - by);
+        double dbz = (dz - bz);
+        double dcx = (dx - cx);
+        double dcy = (dy - cy);
+        double dcz = (dz - cz);
+        double crossX = ((bay * caz) - (baz * cay));
+        double crossY = ((baz * cax) - (bax * caz));
+        double crossZ = ((bax * cay) - (bay * cax));
+        double dotVol = (((dax * crossX) + (day * crossY)) + (daz * crossZ));
+        double vtri = (dotVol / as_double(0x4018000000000000ul));
+        double lsqr = (((((dax * dax) + (day * day)) + (daz * daz)) + (((dbx * dbx) + (dby * dby)) + (dbz * dbz))) + (((dcx * dcx) + (dcy * dcy)) + (dcz * dcz)));
+        double sqrtArg = ((vtri * vtri) + k);
+        double stab = sqrt(sqrtArg);
+        double vstab = (((vtri < as_double(0x0000000000000000ul))) ? (((as_double(0x3fe0000000000000ul) * k) / (stab - vtri))) : ((as_double(0x3fe0000000000000ul) * (vtri + stab))));
+        double denom = pow(vstab, as_double(0x3fe5555555555555ul));
+        double contrib = (lsqr / denom);
+        sum = (sum + contrib);
+      }
+      outObjective[((int)((int)(get_global_id(0))))] = sum;
+    }
+  }
+}
+
+)kernel";
 const char* k_opencl_navatala_cfd_add_vol_vector = R"kernel(
 __kernel void navatala_cfd_add_vol_vector(__global const float* ax, __global const float* ay, __global const float* az, __global const float* bx, __global const float* by_, __global const float* bz, __global const int* params, __global float* outX, __global float* outY, __global float* outZ) {
   int gid0 = (int)get_global_id(0);
@@ -1537,9 +2006,9 @@ __kernel void navatala_cfd_axpy_in_place(__global const float* x, __global float
 const char* k_opencl_navatala_cfd_bc_dirichlet_face_flux = R"kernel(
 __kernel void navatala_cfd_bc_dirichlet_face_flux(__global const float* cf, __global const float* bcVal, __global const int* bcMask, __global const int* counts, __global float* outFlux) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int nSafeMax = (((int)(counts[1])) > 0 ? ((int)(counts[1])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
-  if (gid0 >= ((int)(counts[0]))) return;
+  if (gid0 >= ((int)(counts[1]))) return;
   if (((int)((int)(get_global_id(0)))) >= counts[1]) {
     return;
   } else {
@@ -1555,9 +2024,9 @@ __kernel void navatala_cfd_bc_dirichlet_face_flux(__global const float* cf, __gl
 const char* k_opencl_navatala_cfd_bc_sn_grad_face_flux = R"kernel(
 __kernel void navatala_cfd_bc_sn_grad_face_flux(__global const float* cf, __global const float* delta, __global const float* bcSnGrad, __global const int* bcSnGradMask, __global const int* counts, __global float* outFlux) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int nSafeMax = (((int)(counts[1])) > 0 ? ((int)(counts[1])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
-  if (gid0 >= ((int)(counts[0]))) return;
+  if (gid0 >= ((int)(counts[1]))) return;
   if (((int)((int)(get_global_id(0)))) >= counts[1]) {
     return;
   } else {
@@ -1574,12 +2043,42 @@ __kernel void navatala_cfd_bc_sn_grad_face_flux(__global const float* cf, __glob
 }
 
 )kernel";
-const char* k_opencl_navatala_cfd_coeff_to_cf_in_place = R"kernel(
-__kernel void navatala_cfd_coeff_to_cf_in_place(__global float* cf, __global const float* magSf, __global const float* delta, __global const int* counts) {
+const char* k_opencl_navatala_cfd_cast_f32_to_f64 = R"kernel(
+#pragma OPENCL EXTENSION cl_khr_fp64 : enable
+__kernel void navatala_cfd_cast_f32_to_f64(__global const float* src, __global double* dst, __global const int* counts) {
   int gid0 = (int)get_global_id(0);
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
+  if ((int)(get_global_id(0)) >= counts[0]) {
+    return;
+  } else {
+    dst[(int)(get_global_id(0))] = ((double)(src[(int)(get_global_id(0))]));
+  }
+}
+
+)kernel";
+const char* k_opencl_navatala_cfd_cast_f64_to_f32 = R"kernel(
+#pragma OPENCL EXTENSION cl_khr_fp64 : enable
+__kernel void navatala_cfd_cast_f64_to_f32(__global const double* src, __global float* dst, __global const int* counts) {
+  int gid0 = (int)get_global_id(0);
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
+  if ((int)(get_global_id(0)) >= counts[0]) {
+    return;
+  } else {
+    dst[(int)(get_global_id(0))] = ((float)(src[(int)(get_global_id(0))]));
+  }
+}
+
+)kernel";
+const char* k_opencl_navatala_cfd_coeff_to_cf_in_place = R"kernel(
+__kernel void navatala_cfd_coeff_to_cf_in_place(__global float* cf, __global const float* magSf, __global const float* delta, __global const int* counts) {
+  int gid0 = (int)get_global_id(0);
+  const int nSafeMax = (((int)(counts[1])) > 0 ? ((int)(counts[1])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[1]))) return;
   if (((int)((int)(get_global_id(0)))) >= counts[1]) {
     return;
   } else {
@@ -1717,9 +2216,9 @@ __kernel void navatala_cfd_dot_partials(__global const float* a, __global const 
 const char* k_opencl_navatala_cfd_face_flux = R"kernel(
 __kernel void navatala_cfd_face_flux(__global const float* x, __global const int* owner, __global const int* neighbour, __global const float* cf, __global const float* bcVal, __global const int* bcMask, __global const int* counts, __global float* outFlux) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int nSafeMax = (((int)(counts[1])) > 0 ? ((int)(counts[1])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
-  if (gid0 >= ((int)(counts[0]))) return;
+  if (gid0 >= ((int)(counts[1]))) return;
   if (((int)((int)(get_global_id(0)))) >= counts[1]) {
     return;
   } else {
@@ -1916,9 +2415,9 @@ __kernel void navatala_cfd_sum_abs_partials(__global const float* a, __global co
 const char* k_opencl_navatala_cfd_upper_from_cf = R"kernel(
 __kernel void navatala_cfd_upper_from_cf(__global const float* cf, __global const int* counts, __global float* upper) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int nSafeMax = (((int)(counts[2])) > 0 ? ((int)(counts[2])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
-  if (gid0 >= ((int)(counts[0]))) return;
+  if (gid0 >= ((int)(counts[2]))) return;
   if (((int)((int)(get_global_id(0)))) >= counts[2]) {
     return;
   } else {
@@ -3917,6 +4416,154 @@ const KernelAbiManifestInfo kAbiManifest_opencl_navatala_cfd_scatter_vec3_mu_and
   kAbiArgs_opencl_navatala_cfd_scatter_vec3_mu_and_mask
 };
 
+const KernelArgumentInfo kAbiArgs_opencl_navatala_cfd_cf_mesh_volume_optimizer_gradient_f32[] = {
+  { "pointX", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "pointY", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "pointZ", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "tetConn", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "tetOffsets", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "tetCounts", 5, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "fixedMask", 6, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "kPerStencil", 7, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "counts", 8, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "outGradX", 9, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "outGradY", 10, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "outGradZ", 11, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_opencl_navatala_cfd_cf_mesh_volume_optimizer_gradient_f32 = {
+  1,
+  "navatala_cfd_cf_mesh_volume_optimizer_gradient_f32",
+  "opencl",
+  "navatala_cfd_cf_mesh_volume_optimizer_gradient_f32",
+  "kernel:opencl:navatala_cfd_cf_mesh_volume_optimizer_gradient_f32",
+  "abi-r1:opencl:navatala_cfd_cf_mesh_volume_optimizer_gradient_f32",
+  "abi-r1:opencl:navatala_cfd_cf_mesh_volume_optimizer_gradient_f32",
+  12,
+  kAbiArgs_opencl_navatala_cfd_cf_mesh_volume_optimizer_gradient_f32
+};
+
+const KernelArgumentInfo kAbiArgs_opencl_navatala_cfd_cf_mesh_volume_optimizer_gradient_f64[] = {
+  { "pointX", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "pointY", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "pointZ", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "tetConn", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "tetOffsets", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "tetCounts", 5, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "fixedMask", 6, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "kPerStencil", 7, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "counts", 8, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "outGradX", 9, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "outGradY", 10, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "outGradZ", 11, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_opencl_navatala_cfd_cf_mesh_volume_optimizer_gradient_f64 = {
+  1,
+  "navatala_cfd_cf_mesh_volume_optimizer_gradient_f64",
+  "opencl",
+  "navatala_cfd_cf_mesh_volume_optimizer_gradient_f64",
+  "kernel:opencl:navatala_cfd_cf_mesh_volume_optimizer_gradient_f64",
+  "abi-r1:opencl:navatala_cfd_cf_mesh_volume_optimizer_gradient_f64",
+  "abi-r1:opencl:navatala_cfd_cf_mesh_volume_optimizer_gradient_f64",
+  12,
+  kAbiArgs_opencl_navatala_cfd_cf_mesh_volume_optimizer_gradient_f64
+};
+
+const KernelArgumentInfo kAbiArgs_opencl_navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32[] = {
+  { "pointX", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "pointY", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "pointZ", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "tetConn", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "tetOffsets", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "tetCounts", 5, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "fixedMask", 6, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "params", 7, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "counts", 8, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "outK", 9, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_opencl_navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32 = {
+  1,
+  "navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32",
+  "opencl",
+  "navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32",
+  "kernel:opencl:navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32",
+  "abi-r1:opencl:navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32",
+  "abi-r1:opencl:navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32",
+  10,
+  kAbiArgs_opencl_navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32
+};
+
+const KernelArgumentInfo kAbiArgs_opencl_navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f64[] = {
+  { "pointX", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "pointY", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "pointZ", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "tetConn", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "tetOffsets", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "tetCounts", 5, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "fixedMask", 6, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "params", 7, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 8, 8, 256, nullptr, 0, 0 },
+  { "counts", 8, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "outK", 9, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_opencl_navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f64 = {
+  1,
+  "navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f64",
+  "opencl",
+  "navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f64",
+  "kernel:opencl:navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f64",
+  "abi-r1:opencl:navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f64",
+  "abi-r1:opencl:navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f64",
+  10,
+  kAbiArgs_opencl_navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f64
+};
+
+const KernelArgumentInfo kAbiArgs_opencl_navatala_cfd_cf_mesh_volume_optimizer_objective_f32[] = {
+  { "pointX", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "pointY", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "pointZ", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "tetConn", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "tetOffsets", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "tetCounts", 5, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "fixedMask", 6, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "kPerStencil", 7, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "counts", 8, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "outObjective", 9, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_opencl_navatala_cfd_cf_mesh_volume_optimizer_objective_f32 = {
+  1,
+  "navatala_cfd_cf_mesh_volume_optimizer_objective_f32",
+  "opencl",
+  "navatala_cfd_cf_mesh_volume_optimizer_objective_f32",
+  "kernel:opencl:navatala_cfd_cf_mesh_volume_optimizer_objective_f32",
+  "abi-r1:opencl:navatala_cfd_cf_mesh_volume_optimizer_objective_f32",
+  "abi-r1:opencl:navatala_cfd_cf_mesh_volume_optimizer_objective_f32",
+  10,
+  kAbiArgs_opencl_navatala_cfd_cf_mesh_volume_optimizer_objective_f32
+};
+
+const KernelArgumentInfo kAbiArgs_opencl_navatala_cfd_cf_mesh_volume_optimizer_objective_f64[] = {
+  { "pointX", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "pointY", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "pointZ", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "tetConn", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "tetOffsets", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "tetCounts", 5, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "fixedMask", 6, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "kPerStencil", 7, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "counts", 8, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "outObjective", 9, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_opencl_navatala_cfd_cf_mesh_volume_optimizer_objective_f64 = {
+  1,
+  "navatala_cfd_cf_mesh_volume_optimizer_objective_f64",
+  "opencl",
+  "navatala_cfd_cf_mesh_volume_optimizer_objective_f64",
+  "kernel:opencl:navatala_cfd_cf_mesh_volume_optimizer_objective_f64",
+  "abi-r1:opencl:navatala_cfd_cf_mesh_volume_optimizer_objective_f64",
+  "abi-r1:opencl:navatala_cfd_cf_mesh_volume_optimizer_objective_f64",
+  10,
+  kAbiArgs_opencl_navatala_cfd_cf_mesh_volume_optimizer_objective_f64
+};
+
 const KernelArgumentInfo kAbiArgs_opencl_navatala_cfd_add_vol_vector[] = {
   { "ax", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
   { "ay", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
@@ -4985,6 +5632,40 @@ const KernelAbiManifestInfo kAbiManifest_opencl_navatala_cfd_bc_sn_grad_face_flu
   "abi-r1:opencl:navatala_cfd_bc_sn_grad_face_flux",
   6,
   kAbiArgs_opencl_navatala_cfd_bc_sn_grad_face_flux
+};
+
+const KernelArgumentInfo kAbiArgs_opencl_navatala_cfd_cast_f32_to_f64[] = {
+  { "src", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "dst", 1, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "counts", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 12, 12, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_opencl_navatala_cfd_cast_f32_to_f64 = {
+  1,
+  "navatala_cfd_cast_f32_to_f64",
+  "opencl",
+  "navatala_cfd_cast_f32_to_f64",
+  "kernel:opencl:navatala_cfd_cast_f32_to_f64",
+  "abi-r1:opencl:navatala_cfd_cast_f32_to_f64",
+  "abi-r1:opencl:navatala_cfd_cast_f32_to_f64",
+  3,
+  kAbiArgs_opencl_navatala_cfd_cast_f32_to_f64
+};
+
+const KernelArgumentInfo kAbiArgs_opencl_navatala_cfd_cast_f64_to_f32[] = {
+  { "src", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "dst", 1, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "counts", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 12, 12, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_opencl_navatala_cfd_cast_f64_to_f32 = {
+  1,
+  "navatala_cfd_cast_f64_to_f32",
+  "opencl",
+  "navatala_cfd_cast_f64_to_f32",
+  "kernel:opencl:navatala_cfd_cast_f64_to_f32",
+  "abi-r1:opencl:navatala_cfd_cast_f64_to_f32",
+  "abi-r1:opencl:navatala_cfd_cast_f64_to_f32",
+  3,
+  kAbiArgs_opencl_navatala_cfd_cast_f64_to_f32
 };
 
 const KernelArgumentInfo kAbiArgs_opencl_navatala_cfd_coeff_to_cf_in_place[] = {
@@ -6438,6 +7119,30 @@ bool tryGetKernelAbiManifest_opencl_cfd(const std::string& backend, const std::s
     out = &kAbiManifest_opencl_navatala_cfd_scatter_vec3_mu_and_mask;
     return true;
   }
+  if (backend == "opencl" && kernelName == "navatala_cfd_cf_mesh_volume_optimizer_gradient_f32") {
+    out = &kAbiManifest_opencl_navatala_cfd_cf_mesh_volume_optimizer_gradient_f32;
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_cfd_cf_mesh_volume_optimizer_gradient_f64") {
+    out = &kAbiManifest_opencl_navatala_cfd_cf_mesh_volume_optimizer_gradient_f64;
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32") {
+    out = &kAbiManifest_opencl_navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32;
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f64") {
+    out = &kAbiManifest_opencl_navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f64;
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_cfd_cf_mesh_volume_optimizer_objective_f32") {
+    out = &kAbiManifest_opencl_navatala_cfd_cf_mesh_volume_optimizer_objective_f32;
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_cfd_cf_mesh_volume_optimizer_objective_f64") {
+    out = &kAbiManifest_opencl_navatala_cfd_cf_mesh_volume_optimizer_objective_f64;
+    return true;
+  }
   if (backend == "opencl" && kernelName == "navatala_cfd_add_vol_vector") {
     out = &kAbiManifest_opencl_navatala_cfd_add_vol_vector;
     return true;
@@ -6636,6 +7341,14 @@ bool tryGetKernelAbiManifest_opencl_cfd(const std::string& backend, const std::s
   }
   if (backend == "opencl" && kernelName == "navatala_cfd_bc_sn_grad_face_flux") {
     out = &kAbiManifest_opencl_navatala_cfd_bc_sn_grad_face_flux;
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_cfd_cast_f32_to_f64") {
+    out = &kAbiManifest_opencl_navatala_cfd_cast_f32_to_f64;
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_cfd_cast_f64_to_f32") {
+    out = &kAbiManifest_opencl_navatala_cfd_cast_f64_to_f32;
     return true;
   }
   if (backend == "opencl" && kernelName == "navatala_cfd_coeff_to_cf_in_place") {
@@ -6977,6 +7690,48 @@ bool tryGetKernelSource_opencl_cfd(const std::string& backend, const std::string
     out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
     out.entryPoint = "navatala_cfd_scatter_vec3_mu_and_mask";
     std::string_view sv(k_opencl_navatala_cfd_scatter_vec3_mu_and_mask);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_cfd_cf_mesh_volume_optimizer_gradient_f32") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_cfd_cf_mesh_volume_optimizer_gradient_f32";
+    std::string_view sv(k_opencl_navatala_cfd_cf_mesh_volume_optimizer_gradient_f32);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_cfd_cf_mesh_volume_optimizer_gradient_f64") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_cfd_cf_mesh_volume_optimizer_gradient_f64";
+    std::string_view sv(k_opencl_navatala_cfd_cf_mesh_volume_optimizer_gradient_f64);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32";
+    std::string_view sv(k_opencl_navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f64") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f64";
+    std::string_view sv(k_opencl_navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f64);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_cfd_cf_mesh_volume_optimizer_objective_f32") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_cfd_cf_mesh_volume_optimizer_objective_f32";
+    std::string_view sv(k_opencl_navatala_cfd_cf_mesh_volume_optimizer_objective_f32);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_cfd_cf_mesh_volume_optimizer_objective_f64") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_cfd_cf_mesh_volume_optimizer_objective_f64";
+    std::string_view sv(k_opencl_navatala_cfd_cf_mesh_volume_optimizer_objective_f64);
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }
@@ -7327,6 +8082,20 @@ bool tryGetKernelSource_opencl_cfd(const std::string& backend, const std::string
     out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
     out.entryPoint = "navatala_cfd_bc_sn_grad_face_flux";
     std::string_view sv(k_opencl_navatala_cfd_bc_sn_grad_face_flux);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_cfd_cast_f32_to_f64") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_cfd_cast_f32_to_f64";
+    std::string_view sv(k_opencl_navatala_cfd_cast_f32_to_f64);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_cfd_cast_f64_to_f32") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_cfd_cast_f64_to_f32";
+    std::string_view sv(k_opencl_navatala_cfd_cast_f64_to_f32);
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }

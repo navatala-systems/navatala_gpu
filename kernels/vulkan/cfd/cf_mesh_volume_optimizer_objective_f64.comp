@@ -1,0 +1,130 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+double gpu_cbrt_pos_f64(double x) {
+  double ax = (x > 0.0 ? x : 0.0);
+  if (ax == 0.0) { return 0.0; }
+  double y = double(pow(float(ax), 0.3333333432674408));
+  if (y == 0.0) { y = 1.0e-100; }
+  y = ((2.0 * y) + (ax / (y * y))) / 3.0;
+  y = ((2.0 * y) + (ax / (y * y))) / 3.0;
+  y = ((2.0 * y) + (ax / (y * y))) / 3.0;
+  y = ((2.0 * y) + (ax / (y * y))) / 3.0;
+  y = ((2.0 * y) + (ax / (y * y))) / 3.0;
+  return y;
+}
+
+double gpu_pow_pos_f64_two_thirds(double x) {
+  double r = gpu_cbrt_pos_f64(x);
+  return r * r;
+}
+
+layout(local_size_x = 128, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_pointX {
+  double pointX[];
+};
+layout(std430, binding = 1) readonly buffer buf_pointY {
+  double pointY[];
+};
+layout(std430, binding = 2) readonly buffer buf_pointZ {
+  double pointZ[];
+};
+layout(std430, binding = 3) readonly buffer buf_tetConn {
+  int tetConn[];
+};
+layout(std430, binding = 4) readonly buffer buf_tetOffsets {
+  int tetOffsets[];
+};
+layout(std430, binding = 5) readonly buffer buf_tetCounts {
+  int tetCounts[];
+};
+layout(std430, binding = 6) readonly buffer buf_fixedMask {
+  int fixedMask[];
+};
+layout(std430, binding = 7) readonly buffer buf_kPerStencil {
+  double kPerStencil[];
+};
+layout(std430, binding = 8) readonly buffer buf_counts {
+  int counts[];
+};
+layout(std430, binding = 9) writeonly buffer buf_outObjective {
+  double outObjective[];
+};
+
+// kernel: navatala_cfd_cf_mesh_volume_optimizer_objective_f64
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  if (int(int(gl_GlobalInvocationID.x)) >= counts[0]) {
+    return;
+  } else {
+    if (fixedMask[int(int(gl_GlobalInvocationID.x))] != 0) {
+      outObjective[int(int(gl_GlobalInvocationID.x))] = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
+    } else {
+      double k = kPerStencil[int(int(gl_GlobalInvocationID.x))];
+      double sum = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
+      int tetBeg = tetOffsets[int(int(gl_GlobalInvocationID.x))];
+      int tetN = tetCounts[int(int(gl_GlobalInvocationID.x))];
+      for (int t = 0; t < int(tetN); ++t) {
+        int aId = tetConn[(((tetBeg + t) * 4) + 0)];
+        int bId = tetConn[(((tetBeg + t) * 4) + 1)];
+        int cId = tetConn[(((tetBeg + t) * 4) + 2)];
+        int dId = tetConn[(((tetBeg + t) * 4) + 3)];
+        double ax = pointX[aId];
+        double ay = pointY[aId];
+        double az = pointZ[aId];
+        double bx = pointX[bId];
+        double by = pointY[bId];
+        double bz = pointZ[bId];
+        double cx = pointX[cId];
+        double cy = pointY[cId];
+        double cz = pointZ[cId];
+        double dx = pointX[dId];
+        double dy = pointY[dId];
+        double dz = pointZ[dId];
+        double bax = (bx - ax);
+        double bay = (by - ay);
+        double baz = (bz - az);
+        double cax = (cx - ax);
+        double cay = (cy - ay);
+        double caz = (cz - az);
+        double dax = (dx - ax);
+        double day = (dy - ay);
+        double daz = (dz - az);
+        double dbx = (dx - bx);
+        double dby = (dy - by);
+        double dbz = (dz - bz);
+        double dcx = (dx - cx);
+        double dcy = (dy - cy);
+        double dcz = (dz - cz);
+        double crossX = ((bay * caz) - (baz * cay));
+        double crossY = ((baz * cax) - (bax * caz));
+        double crossZ = ((bax * cay) - (bay * cax));
+        double dotVol = (((dax * crossX) + (day * crossY)) + (daz * crossZ));
+        double vtri = (dotVol / packDouble2x32(uvec2(0x00000000u, 0x40180000u)));
+        double lsqr = (((((dax * dax) + (day * day)) + (daz * daz)) + (((dbx * dbx) + (dby * dby)) + (dbz * dbz))) + (((dcx * dcx) + (dcy * dcy)) + (dcz * dcz)));
+        double sqrtArg = ((vtri * vtri) + k);
+        double stab = sqrt(sqrtArg);
+        double vstab = (((vtri < packDouble2x32(uvec2(0x00000000u, 0x00000000u)))) ? (((packDouble2x32(uvec2(0x00000000u, 0x3fe00000u)) * k) / (stab - vtri))) : ((packDouble2x32(uvec2(0x00000000u, 0x3fe00000u)) * (vtri + stab))));
+        double denom = gpu_pow_pos_f64_two_thirds(vstab);
+        double contrib = (lsqr / denom);
+        sum = (sum + contrib);
+      }
+      outObjective[int(int(gl_GlobalInvocationID.x))] = sum;
+    }
+  }
+}

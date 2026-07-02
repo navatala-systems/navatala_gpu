@@ -2001,7 +2001,7 @@ Compact navigation aid for the kernel corpus, grouped by domain.
 
 ## Volume-of-Fluid CFD
 
-157 kernels.
+170 kernels.
 
 | Kernel | CUDA | HIP | OpenCL | Vulkan | Metal |
 |--------|:----:|:---:|:------:|:------:|:-----:|
@@ -2012,6 +2012,14 @@ Compact navigation aid for the kernel corpus, grouped by domain.
 | `navatala_cfd_bc_dirichlet_face_flux` | yes | yes | yes | yes | yes |
 | `navatala_cfd_bc_sn_grad_face_flux` | yes | yes | yes | yes | yes |
 | `navatala_cfd_boundary_force_partials` | yes | yes | yes | yes | yes |
+| `navatala_cfd_cast_f32_to_f64` | yes | yes | yes | yes | - |
+| `navatala_cfd_cast_f64_to_f32` | yes | yes | yes | yes | - |
+| `navatala_cfd_cf_mesh_volume_optimizer_gradient_f32` | yes | yes | yes | yes | yes |
+| `navatala_cfd_cf_mesh_volume_optimizer_gradient_f64` | yes | yes | yes | yes | - |
+| `navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32` | yes | yes | yes | yes | yes |
+| `navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f64` | yes | yes | yes | yes | - |
+| `navatala_cfd_cf_mesh_volume_optimizer_objective_f32` | yes | yes | yes | yes | yes |
+| `navatala_cfd_cf_mesh_volume_optimizer_objective_f64` | yes | yes | yes | yes | - |
 | `navatala_cfd_chebyshev_smooth_post_fused_mixed` | yes | yes | yes | yes | - |
 | `navatala_cfd_chebyshev_sweep_mixed_f32_f64` | yes | yes | yes | yes | - |
 | `navatala_cfd_coeff_to_cf_in_place` | yes | yes | yes | yes | yes |
@@ -2147,10 +2155,15 @@ Compact navigation aid for the kernel corpus, grouped by domain.
 | `navatala_cfd_u_correct` | yes | yes | yes | yes | yes |
 | `navatala_cfd_u_correct_reconstruct` | yes | yes | yes | yes | yes |
 | `navatala_cfd_upper_from_cf` | yes | yes | yes | yes | yes |
+| `navatala_cfd_vof_alpha_face_average_internal` | yes | yes | yes | yes | yes |
 | `navatala_cfd_vof_alpha_phi_all` | yes | yes | yes | yes | yes |
 | `navatala_cfd_vof_alpha_phi_int` | yes | yes | yes | yes | yes |
 | `navatala_cfd_vof_alpha_update` | yes | yes | yes | yes | yes |
 | `navatala_cfd_vof_average_face_scalar_to_cell` | yes | yes | yes | yes | yes |
+| `navatala_cfd_vof_cmules_apply_correction` | yes | yes | yes | yes | yes |
+| `navatala_cfd_vof_cmules_boundary_face_update` | yes | yes | yes | yes | yes |
+| `navatala_cfd_vof_cmules_correct` | yes | yes | yes | yes | yes |
+| `navatala_cfd_vof_cmules_limiter_corr_prepare` | yes | yes | yes | yes | yes |
 | `navatala_cfd_vof_interp_scalar_face_all` | yes | yes | yes | yes | yes |
 | `navatala_cfd_vof_mules_apply` | yes | yes | yes | yes | yes |
 | `navatala_cfd_vof_mules_cell_lambda` | yes | yes | yes | yes | yes |

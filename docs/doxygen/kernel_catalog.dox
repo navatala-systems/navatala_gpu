@@ -16,7 +16,7 @@ requirements.
 - Neural / spectral operators: 12 kernels
 - Parallel primitives: 14 kernels
 - Sparse linear algebra: 54 kernels
-- Volume-of-Fluid CFD: 157 kernels
+- Volume-of-Fluid CFD: 170 kernels
 
 \section kernel_catalog_usage Usage
 

@@ -15,9 +15,9 @@
 
 __kernel void navatala_cfd_bc_dirichlet_face_flux(__global const float* cf, __global const float* bcVal, __global const int* bcMask, __global const int* counts, __global float* outFlux) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int nSafeMax = (((int)(counts[1])) > 0 ? ((int)(counts[1])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
-  if (gid0 >= ((int)(counts[0]))) return;
+  if (gid0 >= ((int)(counts[1]))) return;
   if (((int)((int)(get_global_id(0)))) >= counts[1]) {
     return;
   } else {

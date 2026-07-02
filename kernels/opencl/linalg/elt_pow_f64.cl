@@ -20,8 +20,6 @@ __kernel void navatala_linalg_elt_pow_f64(__global const double* A, __global con
   double pVal = p[(uint)(0u)];
   if (i < n[(uint)(0u)]) {
     double a = A[i];
-    double logA = log(a);
-    double pLogA = (pVal * logA);
-    C[i] = exp(pLogA);
+    C[i] = pow(a, pVal);
   }
 }

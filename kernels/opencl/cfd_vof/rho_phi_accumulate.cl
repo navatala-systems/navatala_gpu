@@ -15,9 +15,9 @@
 
 __kernel void navatala_cfd_vof_rho_phi_accumulate(__global const float* alphaPhi, __global const float* phi, __global float* rhoPhi, __global const int* counts, __global const float* paramsF) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int nSafeMax = (((int)(counts[1])) > 0 ? ((int)(counts[1])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
-  if (gid0 >= ((int)(counts[0]))) return;
+  if (gid0 >= ((int)(counts[1]))) return;
   if (((int)((int)(get_global_id(0)))) >= counts[1]) {
     return;
   } else {

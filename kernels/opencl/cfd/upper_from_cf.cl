@@ -15,9 +15,9 @@
 
 __kernel void navatala_cfd_upper_from_cf(__global const float* cf, __global const int* counts, __global float* upper) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int nSafeMax = (((int)(counts[2])) > 0 ? ((int)(counts[2])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
-  if (gid0 >= ((int)(counts[0]))) return;
+  if (gid0 >= ((int)(counts[2]))) return;
   if (((int)((int)(get_global_id(0)))) >= counts[2]) {
     return;
   } else {

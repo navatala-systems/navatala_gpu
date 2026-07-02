@@ -37,6 +37,106 @@ VofPressureOrchestrator::VofPressureOrchestrator(
 
 bool VofPressureOrchestrator::execute(Foam::Time& runTime, const Foam::fvMesh& mesh)
 {
+    // FieldSync: owner → device
+    adapter_.fieldSync("owner", true);
+    // FieldSync: neighbour → device
+    adapter_.fieldSync("neighbour", true);
+    // FieldSync: weights → device
+    adapter_.fieldSync("weights", true);
+    // FieldSync: offsets → device
+    adapter_.fieldSync("offsets", true);
+    // FieldSync: faceIdx → device
+    adapter_.fieldSync("faceIdx", true);
+    // FieldSync: sign → device
+    adapter_.fieldSync("sign", true);
+    // FieldSync: signF → device
+    adapter_.fieldSync("signF", true);
+    // FieldSync: counts → device
+    adapter_.fieldSync("counts", true);
+    // FieldSync: params → device
+    adapter_.fieldSync("params", true);
+    // FieldSync: paramsF → device
+    adapter_.fieldSync("paramsF", true);
+    // FieldSync: sfX → device
+    adapter_.fieldSync("sfX", true);
+    // FieldSync: sfY → device
+    adapter_.fieldSync("sfY", true);
+    // FieldSync: sfZ → device
+    adapter_.fieldSync("sfZ", true);
+    // FieldSync: magSf → device
+    adapter_.fieldSync("magSf", true);
+    // FieldSync: vol → device
+    adapter_.fieldSync("vol", true);
+    // FieldSync: delta → device
+    adapter_.fieldSync("delta", true);
+    // FieldSync: deltaCoeffs → device
+    adapter_.fieldSync("deltaCoeffs", true);
+    // FieldSync: cf → device
+    adapter_.fieldSync("cf", true);
+    // FieldSync: coeff → device
+    adapter_.fieldSync("coeff", true);
+    // FieldSync: bcX → device
+    adapter_.fieldSync("bcX", true);
+    // FieldSync: bcY → device
+    adapter_.fieldSync("bcY", true);
+    // FieldSync: bcZ → device
+    adapter_.fieldSync("bcZ", true);
+    // FieldSync: bcVal → device
+    adapter_.fieldSync("bcVal", true);
+    // FieldSync: bcMask → device
+    adapter_.fieldSync("bcMask", true);
+    // FieldSync: bcSnGrad → device
+    adapter_.fieldSync("bcSnGrad", true);
+    // FieldSync: bcSnGradMask → device
+    adapter_.fieldSync("bcSnGradMask", true);
+    // FieldSync: rhoBcVal → device
+    adapter_.fieldSync("rhoBcVal", true);
+    // FieldSync: rhoBcMask → device
+    adapter_.fieldSync("rhoBcMask", true);
+    // FieldSync: alpha1 → device
+    adapter_.fieldSync("alpha1", true);
+    // FieldSync: alpha2 → device
+    adapter_.fieldSync("alpha2", true);
+    // FieldSync: p_rgh → device
+    adapter_.fieldSync("p_rgh", true);
+    // FieldSync: pCell → device
+    adapter_.fieldSync("pCell", true);
+    // FieldSync: ux → device
+    adapter_.fieldSync("ux", true);
+    // FieldSync: uy → device
+    adapter_.fieldSync("uy", true);
+    // FieldSync: uz → device
+    adapter_.fieldSync("uz", true);
+    // FieldSync: hbx → device
+    adapter_.fieldSync("hbx", true);
+    // FieldSync: hby → device
+    adapter_.fieldSync("hby", true);
+    // FieldSync: hbz → device
+    adapter_.fieldSync("hbz", true);
+    // FieldSync: rAU → device
+    adapter_.fieldSync("rAU", true);
+    // FieldSync: rAUf → device
+    adapter_.fieldSync("rAUf", true);
+    // FieldSync: phig → device
+    adapter_.fieldSync("phig", true);
+    // FieldSync: faceFlux → device
+    adapter_.fieldSync("faceFlux", true);
+    // FieldSync: faceFluxCorrection → device
+    adapter_.fieldSync("faceFluxCorrection", true);
+    // FieldSync: b → device
+    adapter_.fieldSync("b", true);
+    // FieldSync: matDiag → device
+    adapter_.fieldSync("matDiag", true);
+    // FieldSync: matUpper → device
+    adapter_.fieldSync("matUpper", true);
+    // FieldSync: matLower → device
+    adapter_.fieldSync("matLower", true);
+    // FieldSync: rhs → device
+    adapter_.fieldSync("rhs", true);
+    // FieldSync: p_pcg → device
+    adapter_.fieldSync("p_pcg", true);
+    // FieldSync: x → device
+    adapter_.fieldSync("x", true);
     while (runTime.loop()) {
       // FieldSync: U → host
       adapter_.fieldSync("U", false);
@@ -97,7 +197,7 @@ bool VofPressureOrchestrator::execute(Foam::Time& runTime, const Foam::fvMesh& m
         auto* buf_params = findBufferWithWorkspace(buffers, workspace, "params");
         if (!buf_params) return false;
         binding.bind("params", buf_params);
-        auto* buf_outPhi = findBufferWithWorkspace(buffers, workspace, "outPhi");
+        auto* buf_outPhi = findBufferWithWorkspace(buffers, workspace, "phi");
         if (!buf_outPhi) return false;
         binding.bind("outPhi", buf_outPhi);
         FinalizedKernelBinding finalizedBinding;
@@ -107,6 +207,8 @@ bool VofPressureOrchestrator::execute(Foam::Time& runTime, const Foam::fvMesh& m
       }
       adapter_.boundaryRefresh("U");
       adapter_.boundaryRefresh("p_rgh");
+      // FieldSync: phi → host
+      adapter_.fieldSync("phi", false);
       adapter_.haloExchange("U");
       adapter_.haloExchange("p_rgh");
       adapter_.haloExchange("phi");
@@ -246,7 +348,7 @@ bool VofPressureOrchestrator::execute(Foam::Time& runTime, const Foam::fvMesh& m
               auto* buf_counts = findBufferWithWorkspace(buffers, workspace, "counts");
               if (!buf_counts) return false;
               binding.bind("counts", buf_counts);
-              auto* buf_outLap = findBufferWithWorkspace(buffers, workspace, "outLap");
+              auto* buf_outLap = findBufferWithWorkspace(buffers, workspace, "ax");
               if (!buf_outLap) return false;
               binding.bind("outLap", buf_outLap);
               FinalizedKernelBinding finalizedBinding;
@@ -276,7 +378,7 @@ bool VofPressureOrchestrator::execute(Foam::Time& runTime, const Foam::fvMesh& m
               auto* buf_counts = findBufferWithWorkspace(buffers, workspace, "counts");
               if (!buf_counts) return false;
               binding.bind("counts", buf_counts);
-              auto* buf_outFlux = findBufferWithWorkspace(buffers, workspace, "outFlux");
+              auto* buf_outFlux = findBufferWithWorkspace(buffers, workspace, "bndSrc");
               if (!buf_outFlux) return false;
               binding.bind("outFlux", buf_outFlux);
               FinalizedKernelBinding finalizedBinding;
@@ -524,13 +626,13 @@ bool VofPressureOrchestrator::execute(Foam::Time& runTime, const Foam::fvMesh& m
           auto* buf_paramsF = findBufferWithWorkspace(buffers, workspace, "paramsF");
           if (!buf_paramsF) return false;
           binding.bind("paramsF", buf_paramsF);
-          auto* buf_outX = findBufferWithWorkspace(buffers, workspace, "outX");
+          auto* buf_outX = findBufferWithWorkspace(buffers, workspace, "ux");
           if (!buf_outX) return false;
           binding.bind("outX", buf_outX);
-          auto* buf_outY = findBufferWithWorkspace(buffers, workspace, "outY");
+          auto* buf_outY = findBufferWithWorkspace(buffers, workspace, "uy");
           if (!buf_outY) return false;
           binding.bind("outY", buf_outY);
-          auto* buf_outZ = findBufferWithWorkspace(buffers, workspace, "outZ");
+          auto* buf_outZ = findBufferWithWorkspace(buffers, workspace, "uz");
           if (!buf_outZ) return false;
           binding.bind("outZ", buf_outZ);
           FinalizedKernelBinding finalizedBinding;
@@ -547,7 +649,7 @@ bool VofPressureOrchestrator::execute(Foam::Time& runTime, const Foam::fvMesh& m
           if (!prog) return false;
           KernelBindingBuilder binding;
           if (!KernelBindings::make(backend, "Calculations.GPU.NavatalaCFD.Pressure.PhiCorrect.phiCorrect", binding)) return false;
-          auto* buf_phiIn = findBufferWithWorkspace(buffers, workspace, "phiIn");
+          auto* buf_phiIn = findBufferWithWorkspace(buffers, workspace, "phi");
           if (!buf_phiIn) return false;
           binding.bind("phiIn", buf_phiIn);
           auto* buf_pCell = findBufferWithWorkspace(buffers, workspace, "pCell");
@@ -589,7 +691,7 @@ bool VofPressureOrchestrator::execute(Foam::Time& runTime, const Foam::fvMesh& m
           auto* buf_paramsF = findBufferWithWorkspace(buffers, workspace, "paramsF");
           if (!buf_paramsF) return false;
           binding.bind("paramsF", buf_paramsF);
-          auto* buf_phiOut = findBufferWithWorkspace(buffers, workspace, "phiOut");
+          auto* buf_phiOut = findBufferWithWorkspace(buffers, workspace, "phi");
           if (!buf_phiOut) return false;
           binding.bind("phiOut", buf_phiOut);
           FinalizedKernelBinding finalizedBinding;
@@ -597,6 +699,8 @@ bool VofPressureOrchestrator::execute(Foam::Time& runTime, const Foam::fvMesh& m
           if (!binding.finalize(finalizedBinding, &bindingError)) return false;
           queue.submit(*prog, finalizedBinding.args(), 1, 1, 1, 256, 1, 1);
         }
+        // FieldSync: phi → host
+        adapter_.fieldSync("phi", false);
         adapter_.haloExchange("phi");
         {
           // ConservationCheck: cellContinuity

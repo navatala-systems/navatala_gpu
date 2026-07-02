@@ -289,6 +289,236 @@ kernel void navatala_cfd_scatter_vec3_mu_and_mask(device const int* procFaces [[
 }
 
 )kernel";
+const char* k_metal_navatala_cfd_cf_mesh_volume_optimizer_gradient_f32 = R"kernel(
+#include <metal_stdlib>
+using namespace metal;
+
+kernel void navatala_cfd_cf_mesh_volume_optimizer_gradient_f32(device const float* pointX [[buffer(0)]], device const float* pointY [[buffer(1)]], device const float* pointZ [[buffer(2)]], device const int* tetConn [[buffer(3)]], device const int* tetOffsets [[buffer(4)]], device const int* tetCounts [[buffer(5)]], device const int* fixedMask [[buffer(6)]], device const float* kPerStencil [[buffer(7)]], device const int* counts [[buffer(8)]], device float* outGradX [[buffer(9)]], device float* outGradY [[buffer(10)]], device float* outGradZ [[buffer(11)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
+    return;
+  } else {
+    if (fixedMask[((int)(int(__gid.x)))] != 0) {
+      outGradX[((int)(int(__gid.x)))] = as_type<float>(0x00000000u);
+      outGradY[((int)(int(__gid.x)))] = as_type<float>(0x00000000u);
+      outGradZ[((int)(int(__gid.x)))] = as_type<float>(0x00000000u);
+    } else {
+      float k = kPerStencil[((int)(int(__gid.x)))];
+      float gxSum = as_type<float>(0x00000000u);
+      float gySum = as_type<float>(0x00000000u);
+      float gzSum = as_type<float>(0x00000000u);
+      int tetBeg = tetOffsets[((int)(int(__gid.x)))];
+      int tetN = tetCounts[((int)(int(__gid.x)))];
+      for (int t = 0; t < (int)(tetN); ++t) {
+        int aId = tetConn[(((tetBeg + t) * 4) + 0)];
+        int bId = tetConn[(((tetBeg + t) * 4) + 1)];
+        int cId = tetConn[(((tetBeg + t) * 4) + 2)];
+        int dId = tetConn[(((tetBeg + t) * 4) + 3)];
+        float ax = pointX[aId];
+        float ay = pointY[aId];
+        float az = pointZ[aId];
+        float bx = pointX[bId];
+        float by = pointY[bId];
+        float bz = pointZ[bId];
+        float cx = pointX[cId];
+        float cy = pointY[cId];
+        float cz = pointZ[cId];
+        float dx = pointX[dId];
+        float dy = pointY[dId];
+        float dz = pointZ[dId];
+        float bax = (bx - ax);
+        float bay = (by - ay);
+        float baz = (bz - az);
+        float cax = (cx - ax);
+        float cay = (cy - ay);
+        float caz = (cz - az);
+        float dax = (dx - ax);
+        float day = (dy - ay);
+        float daz = (dz - az);
+        float dbx = (dx - bx);
+        float dby = (dy - by);
+        float dbz = (dz - bz);
+        float dcx = (dx - cx);
+        float dcy = (dy - cy);
+        float dcz = (dz - cz);
+        float crossX = ((bay * caz) - (baz * cay));
+        float crossY = ((baz * cax) - (bax * caz));
+        float crossZ = ((bax * cay) - (bay * cax));
+        float dotVol = (((dax * crossX) + (day * crossY)) + (daz * crossZ));
+        float vtri = (dotVol / as_type<float>(0x40c00000u));
+        float lsqr = (((((dax * dax) + (day * day)) + (daz * daz)) + (((dbx * dbx) + (dby * dby)) + (dbz * dbz))) + (((dcx * dcx) + (dcy * dcy)) + (dcz * dcz)));
+        float gradVx = (crossX / as_type<float>(0x40c00000u));
+        float gradVy = (crossY / as_type<float>(0x40c00000u));
+        float gradVz = (crossZ / as_type<float>(0x40c00000u));
+        float stab = sqrt(((vtri * vtri) + k));
+        float vs = (((vtri < as_type<float>(0x00000000u))) ? (((as_type<float>(0x3f000000u) * k) / (stab - vtri))) : ((as_type<float>(0x3f000000u) * (vtri + stab))));
+        float gradStabX = ((vtri * gradVx) / stab);
+        float gradStabY = ((vtri * gradVy) / stab);
+        float gradStabZ = ((vtri * gradVz) / stab);
+        float gradVsX = (((vtri < as_type<float>(0x00000000u))) ? (((as_type<float>(0xbf000000u) * (k * (gradStabX - gradVx))) / ((stab - vtri) * (stab - vtri)))) : ((as_type<float>(0x3f000000u) * (gradVx + gradStabX))));
+        float gradVsY = (((vtri < as_type<float>(0x00000000u))) ? (((as_type<float>(0xbf000000u) * (k * (gradStabY - gradVy))) / ((stab - vtri) * (stab - vtri)))) : ((as_type<float>(0x3f000000u) * (gradVy + gradStabY))));
+        float gradVsZ = (((vtri < as_type<float>(0x00000000u))) ? (((as_type<float>(0xbf000000u) * (k * (gradStabZ - gradVz))) / ((stab - vtri) * (stab - vtri)))) : ((as_type<float>(0x3f000000u) * (gradVz + gradStabZ))));
+        float gradLsqX = (as_type<float>(0x40000000u) * ((as_type<float>(0x40400000u) * dx) - ((ax + bx) + cx)));
+        float gradLsqY = (as_type<float>(0x40000000u) * ((as_type<float>(0x40400000u) * dy) - ((ay + by) + cy)));
+        float gradLsqZ = (as_type<float>(0x40000000u) * ((as_type<float>(0x40400000u) * dz) - ((az + bz) + cz)));
+        float c0 = (as_type<float>(0x3f2aaaabu) * pow(as_type<float>(0x3f000000u), as_type<float>(0x3f2aaaabu)));
+        float vs13 = pow((as_type<float>(0x40000000u) * vs), as_type<float>(0x3eaaaaabu));
+        float vstab = pow(vs, as_type<float>(0x3f2aaaabu));
+        float sqrVstab = (vstab * vstab);
+        float gradVstabX = ((c0 * (as_type<float>(0x40000000u) * gradVsX)) / vs13);
+        float gradVstabY = ((c0 * (as_type<float>(0x40000000u) * gradVsY)) / vs13);
+        float gradVstabZ = ((c0 * (as_type<float>(0x40000000u) * gradVsZ)) / vs13);
+        float termLX = (gradLsqX / vstab);
+        float termLY = (gradLsqY / vstab);
+        float termLZ = (gradLsqZ / vstab);
+        float termVX = ((lsqr * gradVstabX) / sqrVstab);
+        float termVY = ((lsqr * gradVstabY) / sqrVstab);
+        float termVZ = ((lsqr * gradVstabZ) / sqrVstab);
+        float gx = (termLX - termVX);
+        float gy = (termLY - termVY);
+        float gz = (termLZ - termVZ);
+        gxSum = (gxSum + gx);
+        gySum = (gySum + gy);
+        gzSum = (gzSum + gz);
+      }
+      outGradX[((int)(int(__gid.x)))] = gxSum;
+      outGradY[((int)(int(__gid.x)))] = gySum;
+      outGradZ[((int)(int(__gid.x)))] = gzSum;
+    }
+  }
+}
+
+)kernel";
+const char* k_metal_navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32 = R"kernel(
+#include <metal_stdlib>
+using namespace metal;
+
+kernel void navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32(device const float* pointX [[buffer(0)]], device const float* pointY [[buffer(1)]], device const float* pointZ [[buffer(2)]], device const int* tetConn [[buffer(3)]], device const int* tetOffsets [[buffer(4)]], device const int* tetCounts [[buffer(5)]], device const int* fixedMask [[buffer(6)]], device const float* params [[buffer(7)]], device const int* counts [[buffer(8)]], device float* outK [[buffer(9)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
+    return;
+  } else {
+    if (fixedMask[((int)(int(__gid.x)))] != 0) {
+      outK[((int)(int(__gid.x)))] = as_type<float>(0x00000000u);
+    } else {
+      float small = params[0];
+      float vMin = as_type<float>(0x7149f2cau);
+      float lSqrMax = as_type<float>(0x00000000u);
+      int tetBeg = tetOffsets[((int)(int(__gid.x)))];
+      int tetN = tetCounts[((int)(int(__gid.x)))];
+      for (int t = 0; t < (int)(tetN); ++t) {
+        int aId = tetConn[(((tetBeg + t) * 4) + 0)];
+        int bId = tetConn[(((tetBeg + t) * 4) + 1)];
+        int cId = tetConn[(((tetBeg + t) * 4) + 2)];
+        int dId = tetConn[(((tetBeg + t) * 4) + 3)];
+        float ax = pointX[aId];
+        float ay = pointY[aId];
+        float az = pointZ[aId];
+        float bx = pointX[bId];
+        float by = pointY[bId];
+        float bz = pointZ[bId];
+        float cx = pointX[cId];
+        float cy = pointY[cId];
+        float cz = pointZ[cId];
+        float dx = pointX[dId];
+        float dy = pointY[dId];
+        float dz = pointZ[dId];
+        float bax = (bx - ax);
+        float bay = (by - ay);
+        float baz = (bz - az);
+        float cax = (cx - ax);
+        float cay = (cy - ay);
+        float caz = (cz - az);
+        float dax = (dx - ax);
+        float day = (dy - ay);
+        float daz = (dz - az);
+        float dbx = (dx - bx);
+        float dby = (dy - by);
+        float dbz = (dz - bz);
+        float dcx = (dx - cx);
+        float dcy = (dy - cy);
+        float dcz = (dz - cz);
+        float crossX = ((bay * caz) - (baz * cay));
+        float crossY = ((baz * cax) - (bax * caz));
+        float crossZ = ((bax * cay) - (bay * cax));
+        float dotVol = (((dax * crossX) + (day * crossY)) + (daz * crossZ));
+        float vtri = (dotVol / as_type<float>(0x40c00000u));
+        float lsqr = (((((dax * dax) + (day * day)) + (daz * daz)) + (((dbx * dbx) + (dby * dby)) + (dbz * dbz))) + (((dcx * dcx) + (dcy * dcy)) + (dcz * dcz)));
+        vMin = (((vtri < vMin)) ? (vtri) : (vMin));
+        lSqrMax = (((lsqr > lSqrMax)) ? (lsqr) : (lSqrMax));
+      }
+      float threshold = (small * lSqrMax);
+      float kVal = (((vMin < threshold)) ? (threshold) : (as_type<float>(0x00000000u)));
+      outK[((int)(int(__gid.x)))] = kVal;
+    }
+  }
+}
+
+)kernel";
+const char* k_metal_navatala_cfd_cf_mesh_volume_optimizer_objective_f32 = R"kernel(
+#include <metal_stdlib>
+using namespace metal;
+
+kernel void navatala_cfd_cf_mesh_volume_optimizer_objective_f32(device const float* pointX [[buffer(0)]], device const float* pointY [[buffer(1)]], device const float* pointZ [[buffer(2)]], device const int* tetConn [[buffer(3)]], device const int* tetOffsets [[buffer(4)]], device const int* tetCounts [[buffer(5)]], device const int* fixedMask [[buffer(6)]], device const float* kPerStencil [[buffer(7)]], device const int* counts [[buffer(8)]], device float* outObjective [[buffer(9)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
+  if (((int)(int(__gid.x))) >= counts[0]) {
+    return;
+  } else {
+    if (fixedMask[((int)(int(__gid.x)))] != 0) {
+      outObjective[((int)(int(__gid.x)))] = as_type<float>(0x00000000u);
+    } else {
+      float k = kPerStencil[((int)(int(__gid.x)))];
+      float sum = as_type<float>(0x00000000u);
+      int tetBeg = tetOffsets[((int)(int(__gid.x)))];
+      int tetN = tetCounts[((int)(int(__gid.x)))];
+      for (int t = 0; t < (int)(tetN); ++t) {
+        int aId = tetConn[(((tetBeg + t) * 4) + 0)];
+        int bId = tetConn[(((tetBeg + t) * 4) + 1)];
+        int cId = tetConn[(((tetBeg + t) * 4) + 2)];
+        int dId = tetConn[(((tetBeg + t) * 4) + 3)];
+        float ax = pointX[aId];
+        float ay = pointY[aId];
+        float az = pointZ[aId];
+        float bx = pointX[bId];
+        float by = pointY[bId];
+        float bz = pointZ[bId];
+        float cx = pointX[cId];
+        float cy = pointY[cId];
+        float cz = pointZ[cId];
+        float dx = pointX[dId];
+        float dy = pointY[dId];
+        float dz = pointZ[dId];
+        float bax = (bx - ax);
+        float bay = (by - ay);
+        float baz = (bz - az);
+        float cax = (cx - ax);
+        float cay = (cy - ay);
+        float caz = (cz - az);
+        float dax = (dx - ax);
+        float day = (dy - ay);
+        float daz = (dz - az);
+        float dbx = (dx - bx);
+        float dby = (dy - by);
+        float dbz = (dz - bz);
+        float dcx = (dx - cx);
+        float dcy = (dy - cy);
+        float dcz = (dz - cz);
+        float crossX = ((bay * caz) - (baz * cay));
+        float crossY = ((baz * cax) - (bax * caz));
+        float crossZ = ((bax * cay) - (bay * cax));
+        float dotVol = (((dax * crossX) + (day * crossY)) + (daz * crossZ));
+        float vtri = (dotVol / as_type<float>(0x40c00000u));
+        float lsqr = (((((dax * dax) + (day * day)) + (daz * daz)) + (((dbx * dbx) + (dby * dby)) + (dbz * dbz))) + (((dcx * dcx) + (dcy * dcy)) + (dcz * dcz)));
+        float sqrtArg = ((vtri * vtri) + k);
+        float stab = sqrt(sqrtArg);
+        float vstab = (((vtri < as_type<float>(0x00000000u))) ? (((as_type<float>(0x3f000000u) * k) / (stab - vtri))) : ((as_type<float>(0x3f000000u) * (vtri + stab))));
+        float denom = pow(vstab, as_type<float>(0x3f2aaaabu));
+        float contrib = (lsqr / denom);
+        sum = (sum + contrib);
+      }
+      outObjective[((int)(int(__gid.x)))] = sum;
+    }
+  }
+}
+
+)kernel";
 const char* k_metal_navatala_cfd_add_vol_vector = R"kernel(
 #include <metal_stdlib>
 using namespace metal;
@@ -3646,6 +3876,80 @@ const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_scatter_vec3_mu_and_
   kAbiArgs_metal_navatala_cfd_scatter_vec3_mu_and_mask
 };
 
+const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_cf_mesh_volume_optimizer_gradient_f32[] = {
+  { "pointX", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "pointY", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "pointZ", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "tetConn", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "tetOffsets", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "tetCounts", 5, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "fixedMask", 6, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "kPerStencil", 7, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "counts", 8, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "outGradX", 9, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "outGradY", 10, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "outGradZ", 11, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_cf_mesh_volume_optimizer_gradient_f32 = {
+  1,
+  "navatala_cfd_cf_mesh_volume_optimizer_gradient_f32",
+  "metal",
+  "navatala_cfd_cf_mesh_volume_optimizer_gradient_f32",
+  "kernel:metal:navatala_cfd_cf_mesh_volume_optimizer_gradient_f32",
+  "abi-r1:metal:navatala_cfd_cf_mesh_volume_optimizer_gradient_f32",
+  "abi-r1:metal:navatala_cfd_cf_mesh_volume_optimizer_gradient_f32",
+  12,
+  kAbiArgs_metal_navatala_cfd_cf_mesh_volume_optimizer_gradient_f32
+};
+
+const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32[] = {
+  { "pointX", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "pointY", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "pointZ", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "tetConn", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "tetOffsets", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "tetCounts", 5, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "fixedMask", 6, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "params", 7, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "counts", 8, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "outK", 9, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32 = {
+  1,
+  "navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32",
+  "metal",
+  "navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32",
+  "kernel:metal:navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32",
+  "abi-r1:metal:navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32",
+  "abi-r1:metal:navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32",
+  10,
+  kAbiArgs_metal_navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32
+};
+
+const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_cf_mesh_volume_optimizer_objective_f32[] = {
+  { "pointX", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "pointY", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "pointZ", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "tetConn", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "tetOffsets", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "tetCounts", 5, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "fixedMask", 6, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "kPerStencil", 7, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "counts", 8, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "outObjective", 9, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_cf_mesh_volume_optimizer_objective_f32 = {
+  1,
+  "navatala_cfd_cf_mesh_volume_optimizer_objective_f32",
+  "metal",
+  "navatala_cfd_cf_mesh_volume_optimizer_objective_f32",
+  "kernel:metal:navatala_cfd_cf_mesh_volume_optimizer_objective_f32",
+  "abi-r1:metal:navatala_cfd_cf_mesh_volume_optimizer_objective_f32",
+  "abi-r1:metal:navatala_cfd_cf_mesh_volume_optimizer_objective_f32",
+  10,
+  kAbiArgs_metal_navatala_cfd_cf_mesh_volume_optimizer_objective_f32
+};
+
 const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_add_vol_vector[] = {
   { "ax", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
   { "ay", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
@@ -5883,6 +6187,18 @@ bool tryGetKernelAbiManifest_metal_cfd(const std::string& backend, const std::st
     out = &kAbiManifest_metal_navatala_cfd_scatter_vec3_mu_and_mask;
     return true;
   }
+  if (backend == "metal" && kernelName == "navatala_cfd_cf_mesh_volume_optimizer_gradient_f32") {
+    out = &kAbiManifest_metal_navatala_cfd_cf_mesh_volume_optimizer_gradient_f32;
+    return true;
+  }
+  if (backend == "metal" && kernelName == "navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32") {
+    out = &kAbiManifest_metal_navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32;
+    return true;
+  }
+  if (backend == "metal" && kernelName == "navatala_cfd_cf_mesh_volume_optimizer_objective_f32") {
+    out = &kAbiManifest_metal_navatala_cfd_cf_mesh_volume_optimizer_objective_f32;
+    return true;
+  }
   if (backend == "metal" && kernelName == "navatala_cfd_add_vol_vector") {
     out = &kAbiManifest_metal_navatala_cfd_add_vol_vector;
     return true;
@@ -6370,6 +6686,27 @@ bool tryGetKernelSource_metal_cfd(const std::string& backend, const std::string&
     out.kind = GpuRuntime::ProgramSource::Kind::Msl;
     out.entryPoint = "navatala_cfd_scatter_vec3_mu_and_mask";
     std::string_view sv(k_metal_navatala_cfd_scatter_vec3_mu_and_mask);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "metal" && kernelName == "navatala_cfd_cf_mesh_volume_optimizer_gradient_f32") {
+    out.kind = GpuRuntime::ProgramSource::Kind::Msl;
+    out.entryPoint = "navatala_cfd_cf_mesh_volume_optimizer_gradient_f32";
+    std::string_view sv(k_metal_navatala_cfd_cf_mesh_volume_optimizer_gradient_f32);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "metal" && kernelName == "navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32") {
+    out.kind = GpuRuntime::ProgramSource::Kind::Msl;
+    out.entryPoint = "navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32";
+    std::string_view sv(k_metal_navatala_cfd_cf_mesh_volume_optimizer_k_prepass_f32);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "metal" && kernelName == "navatala_cfd_cf_mesh_volume_optimizer_objective_f32") {
+    out.kind = GpuRuntime::ProgramSource::Kind::Msl;
+    out.entryPoint = "navatala_cfd_cf_mesh_volume_optimizer_objective_f32";
+    std::string_view sv(k_metal_navatala_cfd_cf_mesh_volume_optimizer_objective_f32);
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }

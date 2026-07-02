@@ -618,9 +618,23 @@ private:
 // ----------------------------------------------------------------------------
 static bool metalBinaryArchiveEnabled() {
     const char* e = std::getenv("GPU_RUNTIME_METAL_BINARY_ARCHIVE");
-    // Default ON; explicit "0" disables (falls back to direct JIT pipeline build).
+    // Explicit env var override -- "0" disables, "1" forces enable.
     if (e && e[0] == '0' && e[1] == '\0') return false;
+    if (e && e[0] == '1' && e[1] == '\0') return true;
+
+    // Default policy.  The flock-contention mitigation only matters for
+    // multi-process startup (server tools where many ranks come up
+    // concurrently).  iOS apps are single-process AND additionally trip
+    // a hard abort in `MTLDebugBinaryArchive` when Metal API Validation is
+    // enabled in the Xcode scheme (`MTLLoader sliceIDForDevice:...` -> `__assert_rtn`
+    // inside `legacySerializeToURL`).  The wrapping `@try/@catch(...)` cannot
+    // catch `abort()`, so the app SIGABRTs before the fallback path runs.
+    // Default OFF on iOS/tvOS; the env var still lets test runs opt in.
+#if TARGET_OS_IOS || TARGET_OS_TV
+    return false;
+#else
     return true;
+#endif
 }
 
 static NSString* metalUniqueTempPath(const char* ext) {

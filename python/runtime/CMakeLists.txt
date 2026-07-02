@@ -155,6 +155,7 @@ set(CORE_SOURCES
     src/stream_pool.cpp
     src/resource_adaptors.cpp
     src/public_runtime_stubs.cpp
+    src/runtime_profile.cpp
     ${GPU_LIBRARY_OPS_SOURCES}
 )
 

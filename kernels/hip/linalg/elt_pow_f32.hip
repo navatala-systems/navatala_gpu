@@ -20,8 +20,6 @@ extern "C" __global__ void navatala_linalg_elt_pow_f32(const float* A, const flo
   float pVal = p[0u];
   if (i < n[0u]) {
     float a = A[i];
-    float logA = log(a);
-    float pLogA = (pVal * logA);
-    C[i] = exp(pLogA);
+    C[i] = powf(a, pVal);
   }
 }

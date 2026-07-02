@@ -266,6 +266,47 @@ void test_device_buffer_memory_kinds() {
     std::cout << "PASS: DeviceBuffer memory kinds" << std::endl;
 }
 
+void test_queue_memcpy_explicit_map_unmap() {
+    std::cout << "=== Test: Queue Memcpy Explicit Map/Unmap ===" << std::endl;
+
+    auto device = Device::create(0);
+    if (!device) {
+        std::cout << "SKIP: No GPU device available" << std::endl;
+        return;
+    }
+
+    auto queue = device->createQueue(StreamPriority::Normal);
+    assert(queue != nullptr);
+
+    const size_t N = 1024;
+    auto host_in = device->createBuffer(sizeof(float) * N, MemoryKind::HostPinned);
+    auto host_out = device->createBuffer(sizeof(float) * N, MemoryKind::HostPinned);
+    auto dev = device->createBuffer(sizeof(float) * N, MemoryKind::Device);
+    assert(host_in && host_out && dev);
+
+    {
+        float* p = static_cast<float*>(host_in->mapPtr(MapMode::Write));
+        assert(p != nullptr);
+        for (size_t i = 0; i < N; ++i) {
+            p[i] = static_cast<float>(i) * 0.5f;
+        }
+        host_in->unmap();
+    }
+
+    queue->memcpy(*dev, *host_in, sizeof(float) * N);
+    queue->memcpy(*host_out, *dev, sizeof(float) * N);
+    queue->synchronize();
+
+    const float* out = static_cast<const float*>(host_out->mapPtr(MapMode::Read));
+    assert(out != nullptr);
+    for (size_t i = 0; i < N; ++i) {
+        assert(out[i] == static_cast<float>(i) * 0.5f);
+    }
+    host_out->unmap();
+
+    std::cout << "PASS: Queue memcpy explicit map/unmap" << std::endl;
+}
+
 // ============================================================================
 // DeviceScalar Tests
 // ============================================================================
@@ -414,6 +455,7 @@ int main() {
     test_device_buffer_resize_preserve();
     test_device_buffer_release();
     test_device_buffer_memory_kinds();
+    test_queue_memcpy_explicit_map_unmap();
 
     // DeviceScalar tests
     test_device_scalar_create();

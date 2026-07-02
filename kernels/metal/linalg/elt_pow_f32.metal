@@ -21,8 +21,6 @@ kernel void navatala_linalg_elt_pow_f32(device const float* A [[buffer(0)]], dev
   float pVal = p[0u];
   if (i < n[0u]) {
     float a = A[i];
-    float logA = log(a);
-    float pLogA = (pVal * logA);
-    C[i] = exp(pLogA);
+    C[i] = pow(a, pVal);
   }
 }

@@ -130,6 +130,30 @@ extern "C" __global__ void navatala_cfd_vof_interp_scalar_face_all(const float* 
 }
 
 )kernel";
+const char* k_hip_navatala_cfd_vof_alpha_face_average_internal = R"kernel(
+#include <hip/hip_runtime.h>
+extern "C" __global__ void navatala_cfd_vof_alpha_face_average_internal(const float* alpha, const int* owner, const int* neighbour, float* alphaF, const int* counts) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0]) {
+    return;
+  } else {
+    int o = owner[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
+    int n = neighbour[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
+    float a = (__uint_as_float(0x3f000000u) * (alpha[o] + alpha[n]));
+    if (a < __uint_as_float(0x00000000u)) {
+      a = __uint_as_float(0x00000000u);
+    }
+    if (a > __uint_as_float(0x3f800000u)) {
+      a = __uint_as_float(0x3f800000u);
+    }
+    alphaF[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = a;
+  }
+}
+
+)kernel";
 const char* k_hip_navatala_cfd_vof_alpha_update = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_cfd_vof_alpha_update(const float* alpha, const float* divA, const float* paramsF, const int* counts, const float* rSubDeltaT, float* alphaNew) {
@@ -152,13 +176,192 @@ extern "C" __global__ void navatala_cfd_vof_alpha_update(const float* alpha, con
 }
 
 )kernel";
-const char* k_hip_navatala_cfd_vof_mules_apply = R"kernel(
+const char* k_hip_navatala_cfd_vof_cmules_apply_correction = R"kernel(
 #include <hip/hip_runtime.h>
-extern "C" __global__ void navatala_cfd_vof_mules_apply(const float* phiBD, const float* phiCorr, const float* lambda, const int* counts, const float* paramsF, float* alphaPhi) {
+extern "C" __global__ void navatala_cfd_vof_cmules_apply_correction(const float* phiCorr, const float* lambda, const int* counts, const float* paramsF, float* phiCorrLimited) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  const int nSafeMax = (((int)(counts[1])) > 0 ? ((int)(counts[1])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[1]))) return;
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1]) {
+    return;
+  } else {
+    phiCorrLimited[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (lambda[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] * phiCorr[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]);
+  }
+}
+
+)kernel";
+const char* k_hip_navatala_cfd_vof_cmules_boundary_face_update = R"kernel(
+#include <hip/hip_runtime.h>
+extern "C" __global__ void navatala_cfd_vof_cmules_boundary_face_update(const float* phi, const float* phiCorr, float* lambda, const int* ownerAll, const float* lambdam, const float* lambdap, const int* counts, const float* paramsF) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  const int nSafeMax = (((int)(counts[1])) > 0 ? ((int)(counts[1])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[1]))) return;
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1]) {
+    return;
+  } else {
+    if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) < counts[2]) {
+      return;
+    } else {
+      float pc = phiCorr[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
+      float combined = (phi[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] + pc);
+      float eps2 = (paramsF[1] * paramsF[1]);
+      if (combined <= eps2) {
+        return;
+      } else {
+        int o = ownerAll[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
+        float lim = lambdam[o];
+        if (pc > __uint_as_float(0x00000000u)) {
+          lim = lambdap[o];
+        }
+        float cur = lambda[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
+        float _out = cur;
+        if (_out > lim) {
+          _out = lim;
+        }
+        lambda[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = _out;
+      }
+    }
+  }
+}
+
+)kernel";
+const char* k_hip_navatala_cfd_vof_cmules_correct = R"kernel(
+#include <hip/hip_runtime.h>
+extern "C" __global__ void navatala_cfd_vof_cmules_correct(const float* alphaOld, const float* rSubDeltaT, const float* sp, const float* su, const float* phiCorrLimited, const int* offsets, const int* faceIdx, const float* sign, const float* vol, const int* counts, const float* paramsF, float* alphaNext) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
   if (gid0 >= ((int)(counts[0]))) return;
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0]) {
+    return;
+  } else {
+    int beg = offsets[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
+    int c1 = (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) + 1);
+    int end = offsets[c1];
+    int len = (end - beg);
+    float acc = __uint_as_float(0x00000000u);
+    for (int t = 0; t < (int)(len); ++t) {
+      int k = (beg + t);
+      int f = faceIdx[k];
+      float term = (sign[k] * phiCorrLimited[f]);
+      acc = (acc + term);
+    }
+    float divCorr = (acc / vol[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]);
+    float rdt = rSubDeltaT[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
+    float spv = sp[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
+    float suv = su[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
+    float den = (rdt - spv);
+    alphaNext[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = ((((alphaOld[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] * rdt) + suv) - divCorr) / den);
+  }
+}
+
+)kernel";
+const char* k_hip_navatala_cfd_vof_cmules_limiter_corr_prepare = R"kernel(
+#include <hip/hip_runtime.h>
+extern "C" __global__ void navatala_cfd_vof_cmules_limiter_corr_prepare(const float* alpha, const float* alphaF, const float* phiCorr, const int* offsets, const int* faceIdx, const float* sign, const int* owner, const int* nei, const float* vol, const float* rSubDeltaT, const float* sp, const float* su, const float* psiMax, const float* psiMin, const int* counts, const float* paramsF, float* psiMaxCap, float* psiMinCap, float* sumPhip, float* mSumPhim) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0]) {
+    return;
+  } else {
+    float psi = alpha[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
+    float psiMaxCell = psiMax[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
+    float psiMinCell = psiMin[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
+    float maxN = psiMinCell;
+    float minN = psiMaxCell;
+    float spSum = __uint_as_float(0x00000000u);
+    float smSum = __uint_as_float(0x00000000u);
+    int beg = offsets[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
+    int c1 = (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) + 1);
+    int end = offsets[c1];
+    int len = (end - beg);
+    for (int t = 0; t < (int)(len); ++t) {
+      int k = (beg + t);
+      int f = faceIdx[k];
+      float s = sign[k];
+      float v = __uint_as_float(0x00000000u);
+      if (f < counts[2]) {
+        int nbr = owner[f];
+        if (s > __uint_as_float(0x00000000u)) {
+          nbr = nei[f];
+        }
+        v = alpha[nbr];
+      } else {
+        v = alphaF[f];
+      }
+      if (v > maxN) {
+        maxN = v;
+      }
+      if (v < minN) {
+        minN = v;
+      }
+      float pc = phiCorr[f];
+      if (f < counts[2]) {
+        if (s > __uint_as_float(0x00000000u)) {
+          if (pc > __uint_as_float(0x00000000u)) {
+            spSum = (spSum + pc);
+          } else {
+            smSum = (smSum - pc);
+          }
+        } else {
+          if (pc > __uint_as_float(0x00000000u)) {
+            smSum = (smSum + pc);
+          } else {
+            spSum = (spSum - pc);
+          }
+        }
+      } else {
+        if (pc > __uint_as_float(0x00000000u)) {
+          spSum = (spSum + pc);
+        } else {
+          smSum = (smSum - pc);
+        }
+      }
+    }
+    float range = (psiMaxCell - psiMinCell);
+    maxN = (maxN + (paramsF[2] * range));
+    if (maxN > psiMaxCell) {
+      maxN = psiMaxCell;
+    }
+    minN = (minN - (paramsF[2] * range));
+    if (minN < psiMinCell) {
+      minN = psiMinCell;
+    }
+    if (paramsF[3] > __uint_as_float(0x00000000u)) {
+      float omSmooth = (__uint_as_float(0x3f800000u) - paramsF[3]);
+      maxN = ((paramsF[3] * psi) + (omSmooth * maxN));
+      if (maxN > psiMaxCell) {
+        maxN = psiMaxCell;
+      }
+      minN = ((paramsF[3] * psi) + (omSmooth * minN));
+      if (minN < psiMinCell) {
+        minN = psiMinCell;
+      }
+    }
+    sumPhip[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = spSum;
+    mSumPhim[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = smSum;
+    float V = vol[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
+    float rdt = rSubDeltaT[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
+    float spv = sp[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
+    float suv = su[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
+    float diag = (rdt - spv);
+    psiMaxCap[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (V * (((diag * maxN) - suv) - (rdt * psi)));
+    psiMinCap[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = (V * ((suv - (diag * minN)) + (rdt * psi)));
+  }
+}
+
+)kernel";
+const char* k_hip_navatala_cfd_vof_mules_apply = R"kernel(
+#include <hip/hip_runtime.h>
+extern "C" __global__ void navatala_cfd_vof_mules_apply(const float* phiBD, const float* phiCorr, const float* lambda, const int* counts, const float* paramsF, float* alphaPhi) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  const int nSafeMax = (((int)(counts[1])) > 0 ? ((int)(counts[1])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[1]))) return;
   if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1]) {
     return;
   } else {
@@ -250,9 +453,9 @@ const char* k_hip_navatala_cfd_vof_mules_face_update = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_cfd_vof_mules_face_update(const float* phiCorr, float* lambda, const int* owner, const int* nei, const float* lambdam, const float* lambdap, const int* counts, const float* paramsF) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int nSafeMax = (((int)(counts[2])) > 0 ? ((int)(counts[2])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
-  if (gid0 >= ((int)(counts[0]))) return;
+  if (gid0 >= ((int)(counts[2]))) return;
   if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[2]) {
     return;
   } else {
@@ -288,9 +491,9 @@ const char* k_hip_navatala_cfd_vof_mules_fill_lambda = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_cfd_vof_mules_fill_lambda(const int* counts, const float* paramsF, float* lambda) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int nSafeMax = (((int)(counts[1])) > 0 ? ((int)(counts[1])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
-  if (gid0 >= ((int)(counts[0]))) return;
+  if (gid0 >= ((int)(counts[1]))) return;
   if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1]) {
     return;
   } else {
@@ -473,9 +676,9 @@ const char* k_hip_navatala_cfd_vof_rho_phi_accumulate = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_cfd_vof_rho_phi_accumulate(const float* alphaPhi, const float* phi, float* rhoPhi, const int* counts, const float* paramsF) {
   int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
-  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int nSafeMax = (((int)(counts[1])) > 0 ? ((int)(counts[1])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
-  if (gid0 >= ((int)(counts[0]))) return;
+  if (gid0 >= ((int)(counts[1]))) return;
   if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[1]) {
     return;
   } else {
@@ -573,6 +776,25 @@ const KernelAbiManifestInfo kAbiManifest_hip_navatala_cfd_vof_interp_scalar_face
   kAbiArgs_hip_navatala_cfd_vof_interp_scalar_face_all
 };
 
+const KernelArgumentInfo kAbiArgs_hip_navatala_cfd_vof_alpha_face_average_internal[] = {
+  { "alpha", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "owner", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "neighbour", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "alphaF", 3, KernelArgumentRole::InputOutput, KernelAccessMode::ReadWrite, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "counts", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_hip_navatala_cfd_vof_alpha_face_average_internal = {
+  1,
+  "navatala_cfd_vof_alpha_face_average_internal",
+  "hip",
+  "navatala_cfd_vof_alpha_face_average_internal",
+  "kernel:hip:navatala_cfd_vof_alpha_face_average_internal",
+  "abi-r1:hip:navatala_cfd_vof_alpha_face_average_internal",
+  "abi-r1:hip:navatala_cfd_vof_alpha_face_average_internal",
+  5,
+  kAbiArgs_hip_navatala_cfd_vof_alpha_face_average_internal
+};
+
 const KernelArgumentInfo kAbiArgs_hip_navatala_cfd_vof_alpha_update[] = {
   { "alpha", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
   { "divA", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
@@ -591,6 +813,107 @@ const KernelAbiManifestInfo kAbiManifest_hip_navatala_cfd_vof_alpha_update = {
   "abi-r1:hip:navatala_cfd_vof_alpha_update",
   6,
   kAbiArgs_hip_navatala_cfd_vof_alpha_update
+};
+
+const KernelArgumentInfo kAbiArgs_hip_navatala_cfd_vof_cmules_apply_correction[] = {
+  { "phiCorr", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "lambda", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "counts", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 12, 12, 256, nullptr, 0, 0 },
+  { "paramsF", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 16, 16, 256, nullptr, 0, 0 },
+  { "phiCorrLimited", 4, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_hip_navatala_cfd_vof_cmules_apply_correction = {
+  1,
+  "navatala_cfd_vof_cmules_apply_correction",
+  "hip",
+  "navatala_cfd_vof_cmules_apply_correction",
+  "kernel:hip:navatala_cfd_vof_cmules_apply_correction",
+  "abi-r1:hip:navatala_cfd_vof_cmules_apply_correction",
+  "abi-r1:hip:navatala_cfd_vof_cmules_apply_correction",
+  5,
+  kAbiArgs_hip_navatala_cfd_vof_cmules_apply_correction
+};
+
+const KernelArgumentInfo kAbiArgs_hip_navatala_cfd_vof_cmules_boundary_face_update[] = {
+  { "phi", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "phiCorr", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "lambda", 2, KernelArgumentRole::InputOutput, KernelAccessMode::ReadWrite, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "ownerAll", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "lambdam", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "lambdap", 5, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "counts", 6, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 12, 12, 256, nullptr, 0, 0 },
+  { "paramsF", 7, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 16, 16, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_hip_navatala_cfd_vof_cmules_boundary_face_update = {
+  1,
+  "navatala_cfd_vof_cmules_boundary_face_update",
+  "hip",
+  "navatala_cfd_vof_cmules_boundary_face_update",
+  "kernel:hip:navatala_cfd_vof_cmules_boundary_face_update",
+  "abi-r1:hip:navatala_cfd_vof_cmules_boundary_face_update",
+  "abi-r1:hip:navatala_cfd_vof_cmules_boundary_face_update",
+  8,
+  kAbiArgs_hip_navatala_cfd_vof_cmules_boundary_face_update
+};
+
+const KernelArgumentInfo kAbiArgs_hip_navatala_cfd_vof_cmules_correct[] = {
+  { "alphaOld", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "rSubDeltaT", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "sp", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "su", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "phiCorrLimited", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "offsets", 5, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "faceIdx", 6, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "sign", 7, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "vol", 8, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "counts", 9, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 12, 12, 256, nullptr, 0, 0 },
+  { "paramsF", 10, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 16, 16, 256, nullptr, 0, 0 },
+  { "alphaNext", 11, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_hip_navatala_cfd_vof_cmules_correct = {
+  1,
+  "navatala_cfd_vof_cmules_correct",
+  "hip",
+  "navatala_cfd_vof_cmules_correct",
+  "kernel:hip:navatala_cfd_vof_cmules_correct",
+  "abi-r1:hip:navatala_cfd_vof_cmules_correct",
+  "abi-r1:hip:navatala_cfd_vof_cmules_correct",
+  12,
+  kAbiArgs_hip_navatala_cfd_vof_cmules_correct
+};
+
+const KernelArgumentInfo kAbiArgs_hip_navatala_cfd_vof_cmules_limiter_corr_prepare[] = {
+  { "alpha", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "alphaF", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "phiCorr", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "offsets", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "faceIdx", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "sign", 5, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "owner", 6, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "nei", 7, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "vol", 8, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "rSubDeltaT", 9, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "sp", 10, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "su", 11, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "psiMax", 12, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "psiMin", 13, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "counts", 14, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 12, 12, 256, nullptr, 0, 0 },
+  { "paramsF", 15, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 16, 16, 256, nullptr, 0, 0 },
+  { "psiMaxCap", 16, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "psiMinCap", 17, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "sumPhip", 18, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "mSumPhim", 19, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_hip_navatala_cfd_vof_cmules_limiter_corr_prepare = {
+  1,
+  "navatala_cfd_vof_cmules_limiter_corr_prepare",
+  "hip",
+  "navatala_cfd_vof_cmules_limiter_corr_prepare",
+  "kernel:hip:navatala_cfd_vof_cmules_limiter_corr_prepare",
+  "abi-r1:hip:navatala_cfd_vof_cmules_limiter_corr_prepare",
+  "abi-r1:hip:navatala_cfd_vof_cmules_limiter_corr_prepare",
+  20,
+  kAbiArgs_hip_navatala_cfd_vof_cmules_limiter_corr_prepare
 };
 
 const KernelArgumentInfo kAbiArgs_hip_navatala_cfd_vof_mules_apply[] = {
@@ -816,8 +1139,28 @@ bool tryGetKernelAbiManifest_hip_cfd_vof(const std::string& backend, const std::
     out = &kAbiManifest_hip_navatala_cfd_vof_interp_scalar_face_all;
     return true;
   }
+  if (backend == "hip" && kernelName == "navatala_cfd_vof_alpha_face_average_internal") {
+    out = &kAbiManifest_hip_navatala_cfd_vof_alpha_face_average_internal;
+    return true;
+  }
   if (backend == "hip" && kernelName == "navatala_cfd_vof_alpha_update") {
     out = &kAbiManifest_hip_navatala_cfd_vof_alpha_update;
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_cfd_vof_cmules_apply_correction") {
+    out = &kAbiManifest_hip_navatala_cfd_vof_cmules_apply_correction;
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_cfd_vof_cmules_boundary_face_update") {
+    out = &kAbiManifest_hip_navatala_cfd_vof_cmules_boundary_face_update;
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_cfd_vof_cmules_correct") {
+    out = &kAbiManifest_hip_navatala_cfd_vof_cmules_correct;
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_cfd_vof_cmules_limiter_corr_prepare") {
+    out = &kAbiManifest_hip_navatala_cfd_vof_cmules_limiter_corr_prepare;
     return true;
   }
   if (backend == "hip" && kernelName == "navatala_cfd_vof_mules_apply") {
@@ -889,10 +1232,45 @@ bool tryGetKernelSource_hip_cfd_vof(const std::string& backend, const std::strin
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }
+  if (backend == "hip" && kernelName == "navatala_cfd_vof_alpha_face_average_internal") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_cfd_vof_alpha_face_average_internal";
+    std::string_view sv(k_hip_navatala_cfd_vof_alpha_face_average_internal);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
   if (backend == "hip" && kernelName == "navatala_cfd_vof_alpha_update") {
     out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
     out.entryPoint = "navatala_cfd_vof_alpha_update";
     std::string_view sv(k_hip_navatala_cfd_vof_alpha_update);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_cfd_vof_cmules_apply_correction") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_cfd_vof_cmules_apply_correction";
+    std::string_view sv(k_hip_navatala_cfd_vof_cmules_apply_correction);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_cfd_vof_cmules_boundary_face_update") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_cfd_vof_cmules_boundary_face_update";
+    std::string_view sv(k_hip_navatala_cfd_vof_cmules_boundary_face_update);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_cfd_vof_cmules_correct") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_cfd_vof_cmules_correct";
+    std::string_view sv(k_hip_navatala_cfd_vof_cmules_correct);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_cfd_vof_cmules_limiter_corr_prepare") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_cfd_vof_cmules_limiter_corr_prepare";
+    std::string_view sv(k_hip_navatala_cfd_vof_cmules_limiter_corr_prepare);
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }
