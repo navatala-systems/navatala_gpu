@@ -66,6 +66,75 @@ __kernel void navatala_cfd_vof_alpha_phi_int(__global const float* alpha, __glob
 }
 
 )kernel";
+const char* k_opencl_navatala_cfd_vof_alpha_phi_van_leer_int = R"kernel(
+__kernel void navatala_cfd_vof_alpha_phi_van_leer_int(__global const float* alpha, __global const float* phi, __global const int* owner, __global const int* nei, __global const float* gradX, __global const float* gradY, __global const float* gradZ, __global const float* cellCx, __global const float* cellCy, __global const float* cellCz, __global const float* weights, __global const float* phir, __global const float* alphaF, __global const int* faceParams, __global float* outAlphaPhi) {
+  int gid0 = (int)get_global_id(0);
+  if (((int)((int)(get_global_id(0)))) >= faceParams[0]) {
+    return;
+  } else {
+    float ph = phi[((int)((int)(get_global_id(0))))];
+    int o = owner[((int)((int)(get_global_id(0))))];
+    int n = nei[((int)((int)(get_global_id(0))))];
+    float aO = alpha[o];
+    float aN = alpha[n];
+    float gradf = (aN - aO);
+    float gxU = gradX[n];
+    float gyU = gradY[n];
+    float gzU = gradZ[n];
+    if (ph > as_float(0x00000000u)) {
+      gxU = gradX[o];
+      gyU = gradY[o];
+      gzU = gradZ[o];
+    }
+    float dx = (cellCx[n] - cellCx[o]);
+    float dy = (cellCy[n] - cellCy[o]);
+    float dz = (cellCz[n] - cellCz[o]);
+    float gradcf = (((dx * gxU) + (dy * gyU)) + (dz * gzU));
+    float absGradf = fabs(gradf);
+    float absGradcf = fabs(gradcf);
+    float gradfSign = as_float(0x3f800000u);
+    if (gradf < as_float(0x00000000u)) {
+      gradfSign = as_float(0xbf800000u);
+    }
+    float gradcfSign = as_float(0x3f800000u);
+    if (gradcf < as_float(0x00000000u)) {
+      gradcfSign = as_float(0xbf800000u);
+    }
+    float r = as_float(0x00000000u);
+    if (absGradf > as_float(0x0da24260u)) {
+      if (absGradcf >= (as_float(0x447a0000u) * absGradf)) {
+        r = ((as_float(0x44fa0000u) * (gradcfSign * gradfSign)) - as_float(0x3f800000u));
+      } else {
+        r = ((as_float(0x40000000u) * (gradcf / gradf)) - as_float(0x3f800000u));
+      }
+    }
+    float absR = fabs(r);
+    float psi = ((r + absR) / (as_float(0x3f800000u) + absR));
+    if (((ph > as_float(0x00000000u)) && ((aO < as_float(0x00000000u)) || (aN > as_float(0x3f800000u)))) || ((ph < as_float(0x00000000u)) && ((aN < as_float(0x00000000u)) || (aO > as_float(0x3f800000u))))) {
+      psi = as_float(0x00000000u);
+    }
+    float pos0 = as_float(0x00000000u);
+    if (ph >= as_float(0x00000000u)) {
+      pos0 = as_float(0x3f800000u);
+    }
+    float cdw = weights[((int)((int)(get_global_id(0))))];
+    float w = ((psi * cdw) + ((as_float(0x3f800000u) - psi) * pos0));
+    float oneMinusW = (as_float(0x3f800000u) - w);
+    float a = ((w * aO) + (oneMinusW * aN));
+    float ac = alphaF[((int)((int)(get_global_id(0))))];
+    if (ac < as_float(0x00000000u)) {
+      ac = as_float(0x00000000u);
+    }
+    if (ac > as_float(0x3f800000u)) {
+      ac = as_float(0x3f800000u);
+    }
+    float oneMinusAc = (as_float(0x3f800000u) - ac);
+    float comp = (ac * oneMinusAc);
+    outAlphaPhi[((int)((int)(get_global_id(0))))] = ((ph * a) + (phir[((int)((int)(get_global_id(0))))] * comp));
+  }
+}
+
+)kernel";
 const char* k_opencl_navatala_cfd_vof_average_face_scalar_to_cell = R"kernel(
 __kernel void navatala_cfd_vof_average_face_scalar_to_cell(__global const float* alphaF, __global const float* magSf, __global const uint* offsets, __global const uint* faceIdx, __global const float* sumMag, __global const uint* counts, __global float* outAlpha) {
   int gid0 = (int)get_global_id(0);
@@ -249,8 +318,19 @@ __kernel void navatala_cfd_vof_cmules_correct(__global const float* alphaOld, __
 }
 
 )kernel";
+const char* k_opencl_navatala_cfd_vof_cmules_flux_diff = R"kernel(
+__kernel void navatala_cfd_vof_cmules_flux_diff(__global const float* alphaPhiUn, __global const float* alphaPhi10, __global const int* faceCounts, __global float* outPhiCorr) {
+  int gid0 = (int)get_global_id(0);
+  if (((int)((int)(get_global_id(0)))) >= faceCounts[0]) {
+    return;
+  } else {
+    outPhiCorr[((int)((int)(get_global_id(0))))] = (alphaPhiUn[((int)((int)(get_global_id(0))))] - alphaPhi10[((int)((int)(get_global_id(0))))]);
+  }
+}
+
+)kernel";
 const char* k_opencl_navatala_cfd_vof_cmules_limiter_corr_prepare = R"kernel(
-__kernel void navatala_cfd_vof_cmules_limiter_corr_prepare(__global const float* alpha, __global const float* alphaF, __global const float* phiCorr, __global const int* offsets, __global const int* faceIdx, __global const float* sign, __global const int* owner, __global const int* nei, __global const float* vol, __global const float* rSubDeltaT, __global const float* sp, __global const float* su, __global const float* psiMax, __global const float* psiMin, __global const int* counts, __global const float* paramsF, __global float* psiMaxCap, __global float* psiMinCap, __global float* sumPhip, __global float* mSumPhim) {
+__kernel void navatala_cfd_vof_cmules_limiter_corr_prepare(__global const float* alpha, __global const float* alphaF, __global const int* boundaryExtremaMask, __global const float* phiCorr, __global const int* offsets, __global const int* faceIdx, __global const float* sign, __global const int* owner, __global const int* nei, __global const float* vol, __global const float* rSubDeltaT, __global const float* sp, __global const float* su, __global const float* psiMax, __global const float* psiMin, __global const int* counts, __global const float* paramsF, __global float* psiMaxCap, __global float* psiMinCap, __global float* sumPhip, __global float* mSumPhim) {
   int gid0 = (int)get_global_id(0);
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
@@ -265,6 +345,11 @@ __kernel void navatala_cfd_vof_cmules_limiter_corr_prepare(__global const float*
     float minN = psiMaxCell;
     float spSum = as_float(0x00000000u);
     float smSum = as_float(0x00000000u);
+    float range = (psiMaxCell - psiMinCell);
+    float boundaryDeltaExtremaCoeff = (paramsF[0] - paramsF[2]);
+    if (boundaryDeltaExtremaCoeff < as_float(0x00000000u)) {
+      boundaryDeltaExtremaCoeff = as_float(0x00000000u);
+    }
     int beg = offsets[((int)((int)(get_global_id(0))))];
     int c1 = (((int)((int)(get_global_id(0)))) + 1);
     int end = offsets[c1];
@@ -281,13 +366,28 @@ __kernel void navatala_cfd_vof_cmules_limiter_corr_prepare(__global const float*
         }
         v = alpha[nbr];
       } else {
-        v = alphaF[f];
+        int mask = boundaryExtremaMask[f];
+        if (mask != 0) {
+          v = alphaF[f];
+        } else {
+          if (boundaryDeltaExtremaCoeff > as_float(0x00000000u)) {
+            float boundaryExt = (boundaryDeltaExtremaCoeff * range);
+            maxN = (maxN + boundaryExt);
+            minN = (minN - boundaryExt);
+          }
+        }
       }
-      if (v > maxN) {
-        maxN = v;
+      int includeValue = 1;
+      if (f >= counts[2]) {
+        includeValue = boundaryExtremaMask[f];
       }
-      if (v < minN) {
-        minN = v;
+      if (includeValue != 0) {
+        if (v > maxN) {
+          maxN = v;
+        }
+        if (v < minN) {
+          minN = v;
+        }
       }
       float pc = phiCorr[f];
       if (f < counts[2]) {
@@ -312,7 +412,6 @@ __kernel void navatala_cfd_vof_cmules_limiter_corr_prepare(__global const float*
         }
       }
     }
-    float range = (psiMaxCell - psiMinCell);
     maxN = (maxN + (paramsF[2] * range));
     if (maxN > psiMaxCell) {
       maxN = psiMaxCell;
@@ -341,6 +440,110 @@ __kernel void navatala_cfd_vof_cmules_limiter_corr_prepare(__global const float*
     float diag = (rdt - spv);
     psiMaxCap[((int)((int)(get_global_id(0))))] = (V * (((diag * maxN) - suv) - (rdt * psi)));
     psiMinCap[((int)((int)(get_global_id(0))))] = (V * ((suv - (diag * minN)) + (rdt * psi)));
+  }
+}
+
+)kernel";
+const char* k_opencl_navatala_cfd_vof_cmules_accumulate_correction = R"kernel(
+__kernel void navatala_cfd_vof_cmules_accumulate_correction(__global float* alphaPhiBase, __global const float* phiCorrLimited, __global const int* counts, __global const float* paramsF) {
+  int gid0 = (int)get_global_id(0);
+  const int nSafeMax = (((int)(counts[1])) > 0 ? ((int)(counts[1])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[1]))) return;
+  if (((int)((int)(get_global_id(0)))) >= counts[1]) {
+    return;
+  } else {
+    alphaPhiBase[((int)((int)(get_global_id(0))))] = (alphaPhiBase[((int)((int)(get_global_id(0))))] + (paramsF[0] * phiCorrLimited[((int)((int)(get_global_id(0))))]));
+  }
+}
+
+)kernel";
+const char* k_opencl_navatala_cfd_vof_cmules_blend_alpha = R"kernel(
+__kernel void navatala_cfd_vof_cmules_blend_alpha(__global float* alpha, __global const float* alphaRef, __global const int* counts, __global const float* paramsF) {
+  int gid0 = (int)get_global_id(0);
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
+  if (((int)((int)(get_global_id(0)))) >= counts[0]) {
+    return;
+  } else {
+    alpha[((int)((int)(get_global_id(0))))] = ((paramsF[0] * alpha[((int)((int)(get_global_id(0))))]) + (paramsF[1] * alphaRef[((int)((int)(get_global_id(0))))]));
+  }
+}
+
+)kernel";
+const char* k_opencl_navatala_cfd_vof_cmules_update_prev_correction = R"kernel(
+__kernel void navatala_cfd_vof_cmules_update_prev_correction(__global const float* alphaPhiBase, __global float* prevCorr, __global const int* counts, __global const float* paramsF) {
+  int gid0 = (int)get_global_id(0);
+  const int nSafeMax = (((int)(counts[1])) > 0 ? ((int)(counts[1])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[1]))) return;
+  if (((int)((int)(get_global_id(0)))) >= counts[1]) {
+    return;
+  } else {
+    prevCorr[((int)((int)(get_global_id(0))))] = (alphaPhiBase[((int)((int)(get_global_id(0))))] - prevCorr[((int)((int)(get_global_id(0))))]);
+  }
+}
+
+)kernel";
+const char* k_opencl_navatala_cfd_vof_cmules_predictor_boundary_flux = R"kernel(
+__kernel void navatala_cfd_vof_cmules_predictor_boundary_flux(__global const float* alphaPred, __global const int* boundaryFaceOwner, __global const int* boundaryFaceGlobal, __global const float* internalCoeffs, __global const float* boundaryCoeffs, __global const int* counts, __global float* outPhiUD) {
+  int gid0 = (int)get_global_id(0);
+  const int nSafeMax = (((int)(counts[3])) > 0 ? ((int)(counts[3])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[3]))) return;
+  if (((int)((int)(get_global_id(0)))) >= counts[3]) {
+    return;
+  } else {
+    int ownerCell = boundaryFaceOwner[((int)((int)(get_global_id(0))))];
+    int globalFace = boundaryFaceGlobal[((int)((int)(get_global_id(0))))];
+    float alpha = alphaPred[ownerCell];
+    float ic = internalCoeffs[((int)((int)(get_global_id(0))))];
+    float bc = boundaryCoeffs[((int)((int)(get_global_id(0))))];
+    outPhiUD[globalFace] = ((ic * alpha) - bc);
+  }
+}
+
+)kernel";
+const char* k_opencl_navatala_cfd_vof_cmules_predictor_coupled_boundary_flux = R"kernel(
+__kernel void navatala_cfd_vof_cmules_predictor_coupled_boundary_flux(__global const float* alphaPred, __global const int* boundaryFaceOwner, __global const int* boundaryFaceGlobal, __global const float* internalCoeffs, __global const float* boundaryCoeffs, __global const float* neighbourAlpha, __global const int* counts, __global float* outPhiUD) {
+  int gid0 = (int)get_global_id(0);
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
+  if (((int)((int)(get_global_id(0)))) >= counts[3]) {
+    return;
+  } else {
+    int ownerCell = boundaryFaceOwner[((int)((int)(get_global_id(0))))];
+    int globalFace = boundaryFaceGlobal[((int)((int)(get_global_id(0))))];
+    float alphaOwn = alphaPred[ownerCell];
+    float alphaNbr = neighbourAlpha[((int)((int)(get_global_id(0))))];
+    float ic = internalCoeffs[((int)((int)(get_global_id(0))))];
+    float bc = boundaryCoeffs[((int)((int)(get_global_id(0))))];
+    outPhiUD[globalFace] = ((ic * alphaOwn) - (bc * alphaNbr));
+  }
+}
+
+)kernel";
+const char* k_opencl_navatala_cfd_vof_cmules_predictor_internal_flux = R"kernel(
+__kernel void navatala_cfd_vof_cmules_predictor_internal_flux(__global const float* alphaPred, __global const float* phiCN, __global const int* owner, __global const int* nei, __global const int* counts, __global float* outPhiUD) {
+  int gid0 = (int)get_global_id(0);
+  const int nSafeMax = (((int)(counts[2])) > 0 ? ((int)(counts[2])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[2]))) return;
+  if (((int)((int)(get_global_id(0)))) >= counts[2]) {
+    return;
+  } else {
+    float ph = phiCN[((int)((int)(get_global_id(0))))];
+    int o = owner[((int)((int)(get_global_id(0))))];
+    int n = nei[((int)((int)(get_global_id(0))))];
+    float a = as_float(0x00000000u);
+    if (ph >= as_float(0x00000000u)) {
+      a = alphaPred[o];
+    } else {
+      a = alphaPred[n];
+    }
+    outPhiUD[((int)((int)(get_global_id(0))))] = (ph * a);
   }
 }
 
@@ -715,6 +918,35 @@ const KernelAbiManifestInfo kAbiManifest_opencl_navatala_cfd_vof_alpha_phi_int =
   kAbiArgs_opencl_navatala_cfd_vof_alpha_phi_int
 };
 
+const KernelArgumentInfo kAbiArgs_opencl_navatala_cfd_vof_alpha_phi_van_leer_int[] = {
+  { "alpha", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "phi", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "owner", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "nei", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "gradX", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "gradY", 5, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "gradZ", 6, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "cellCx", 7, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "cellCy", 8, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "cellCz", 9, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "weights", 10, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "phir", 11, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "alphaF", 12, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "faceParams", 13, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "outAlphaPhi", 14, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_opencl_navatala_cfd_vof_alpha_phi_van_leer_int = {
+  1,
+  "navatala_cfd_vof_alpha_phi_van_leer_int",
+  "opencl",
+  "navatala_cfd_vof_alpha_phi_van_leer_int",
+  "kernel:opencl:navatala_cfd_vof_alpha_phi_van_leer_int",
+  "abi-r1:opencl:navatala_cfd_vof_alpha_phi_van_leer_int",
+  "abi-r1:opencl:navatala_cfd_vof_alpha_phi_van_leer_int",
+  15,
+  kAbiArgs_opencl_navatala_cfd_vof_alpha_phi_van_leer_int
+};
+
 const KernelArgumentInfo kAbiArgs_opencl_navatala_cfd_vof_average_face_scalar_to_cell[] = {
   { "alphaF", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
   { "magSf", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
@@ -863,27 +1095,46 @@ const KernelAbiManifestInfo kAbiManifest_opencl_navatala_cfd_vof_cmules_correct 
   kAbiArgs_opencl_navatala_cfd_vof_cmules_correct
 };
 
+const KernelArgumentInfo kAbiArgs_opencl_navatala_cfd_vof_cmules_flux_diff[] = {
+  { "alphaPhiUn", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "alphaPhi10", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "faceCounts", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "outPhiCorr", 3, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_opencl_navatala_cfd_vof_cmules_flux_diff = {
+  1,
+  "navatala_cfd_vof_cmules_flux_diff",
+  "opencl",
+  "navatala_cfd_vof_cmules_flux_diff",
+  "kernel:opencl:navatala_cfd_vof_cmules_flux_diff",
+  "abi-r1:opencl:navatala_cfd_vof_cmules_flux_diff",
+  "abi-r1:opencl:navatala_cfd_vof_cmules_flux_diff",
+  4,
+  kAbiArgs_opencl_navatala_cfd_vof_cmules_flux_diff
+};
+
 const KernelArgumentInfo kAbiArgs_opencl_navatala_cfd_vof_cmules_limiter_corr_prepare[] = {
   { "alpha", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
   { "alphaF", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
-  { "phiCorr", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
-  { "offsets", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
-  { "faceIdx", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
-  { "sign", 5, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
-  { "owner", 6, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
-  { "nei", 7, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
-  { "vol", 8, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
-  { "rSubDeltaT", 9, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
-  { "sp", 10, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
-  { "su", 11, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
-  { "psiMax", 12, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
-  { "psiMin", 13, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
-  { "counts", 14, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 12, 12, 256, nullptr, 0, 0 },
-  { "paramsF", 15, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 16, 16, 256, nullptr, 0, 0 },
-  { "psiMaxCap", 16, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
-  { "psiMinCap", 17, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
-  { "sumPhip", 18, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
-  { "mSumPhim", 19, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+  { "boundaryExtremaMask", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "phiCorr", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "offsets", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "faceIdx", 5, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "sign", 6, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "owner", 7, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "nei", 8, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "vol", 9, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "rSubDeltaT", 10, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "sp", 11, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "su", 12, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "psiMax", 13, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "psiMin", 14, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "counts", 15, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 12, 12, 256, nullptr, 0, 0 },
+  { "paramsF", 16, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 16, 16, 256, nullptr, 0, 0 },
+  { "psiMaxCap", 17, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "psiMinCap", 18, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "sumPhip", 19, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "mSumPhim", 20, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
 };
 const KernelAbiManifestInfo kAbiManifest_opencl_navatala_cfd_vof_cmules_limiter_corr_prepare = {
   1,
@@ -893,8 +1144,125 @@ const KernelAbiManifestInfo kAbiManifest_opencl_navatala_cfd_vof_cmules_limiter_
   "kernel:opencl:navatala_cfd_vof_cmules_limiter_corr_prepare",
   "abi-r1:opencl:navatala_cfd_vof_cmules_limiter_corr_prepare",
   "abi-r1:opencl:navatala_cfd_vof_cmules_limiter_corr_prepare",
-  20,
+  21,
   kAbiArgs_opencl_navatala_cfd_vof_cmules_limiter_corr_prepare
+};
+
+const KernelArgumentInfo kAbiArgs_opencl_navatala_cfd_vof_cmules_accumulate_correction[] = {
+  { "alphaPhiBase", 0, KernelArgumentRole::InputOutput, KernelAccessMode::ReadWrite, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "phiCorrLimited", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "counts", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 12, 12, 256, nullptr, 0, 0 },
+  { "paramsF", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 16, 16, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_opencl_navatala_cfd_vof_cmules_accumulate_correction = {
+  1,
+  "navatala_cfd_vof_cmules_accumulate_correction",
+  "opencl",
+  "navatala_cfd_vof_cmules_accumulate_correction",
+  "kernel:opencl:navatala_cfd_vof_cmules_accumulate_correction",
+  "abi-r1:opencl:navatala_cfd_vof_cmules_accumulate_correction",
+  "abi-r1:opencl:navatala_cfd_vof_cmules_accumulate_correction",
+  4,
+  kAbiArgs_opencl_navatala_cfd_vof_cmules_accumulate_correction
+};
+
+const KernelArgumentInfo kAbiArgs_opencl_navatala_cfd_vof_cmules_blend_alpha[] = {
+  { "alpha", 0, KernelArgumentRole::InputOutput, KernelAccessMode::ReadWrite, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "alphaRef", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "counts", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 12, 12, 256, nullptr, 0, 0 },
+  { "paramsF", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 16, 16, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_opencl_navatala_cfd_vof_cmules_blend_alpha = {
+  1,
+  "navatala_cfd_vof_cmules_blend_alpha",
+  "opencl",
+  "navatala_cfd_vof_cmules_blend_alpha",
+  "kernel:opencl:navatala_cfd_vof_cmules_blend_alpha",
+  "abi-r1:opencl:navatala_cfd_vof_cmules_blend_alpha",
+  "abi-r1:opencl:navatala_cfd_vof_cmules_blend_alpha",
+  4,
+  kAbiArgs_opencl_navatala_cfd_vof_cmules_blend_alpha
+};
+
+const KernelArgumentInfo kAbiArgs_opencl_navatala_cfd_vof_cmules_update_prev_correction[] = {
+  { "alphaPhiBase", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "prevCorr", 1, KernelArgumentRole::InputOutput, KernelAccessMode::ReadWrite, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "counts", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 12, 12, 256, nullptr, 0, 0 },
+  { "paramsF", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 16, 16, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_opencl_navatala_cfd_vof_cmules_update_prev_correction = {
+  1,
+  "navatala_cfd_vof_cmules_update_prev_correction",
+  "opencl",
+  "navatala_cfd_vof_cmules_update_prev_correction",
+  "kernel:opencl:navatala_cfd_vof_cmules_update_prev_correction",
+  "abi-r1:opencl:navatala_cfd_vof_cmules_update_prev_correction",
+  "abi-r1:opencl:navatala_cfd_vof_cmules_update_prev_correction",
+  4,
+  kAbiArgs_opencl_navatala_cfd_vof_cmules_update_prev_correction
+};
+
+const KernelArgumentInfo kAbiArgs_opencl_navatala_cfd_vof_cmules_predictor_boundary_flux[] = {
+  { "alphaPred", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "boundaryFaceOwner", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "boundaryFaceGlobal", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "internalCoeffs", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "boundaryCoeffs", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "counts", 5, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 16, 16, 256, nullptr, 0, 0 },
+  { "outPhiUD", 6, KernelArgumentRole::InputOutput, KernelAccessMode::ReadWrite, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_opencl_navatala_cfd_vof_cmules_predictor_boundary_flux = {
+  1,
+  "navatala_cfd_vof_cmules_predictor_boundary_flux",
+  "opencl",
+  "navatala_cfd_vof_cmules_predictor_boundary_flux",
+  "kernel:opencl:navatala_cfd_vof_cmules_predictor_boundary_flux",
+  "abi-r1:opencl:navatala_cfd_vof_cmules_predictor_boundary_flux",
+  "abi-r1:opencl:navatala_cfd_vof_cmules_predictor_boundary_flux",
+  7,
+  kAbiArgs_opencl_navatala_cfd_vof_cmules_predictor_boundary_flux
+};
+
+const KernelArgumentInfo kAbiArgs_opencl_navatala_cfd_vof_cmules_predictor_coupled_boundary_flux[] = {
+  { "alphaPred", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "boundaryFaceOwner", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "boundaryFaceGlobal", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "internalCoeffs", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "boundaryCoeffs", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "neighbourAlpha", 5, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "counts", 6, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 16, 16, 256, nullptr, 0, 0 },
+  { "outPhiUD", 7, KernelArgumentRole::InputOutput, KernelAccessMode::ReadWrite, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_opencl_navatala_cfd_vof_cmules_predictor_coupled_boundary_flux = {
+  1,
+  "navatala_cfd_vof_cmules_predictor_coupled_boundary_flux",
+  "opencl",
+  "navatala_cfd_vof_cmules_predictor_coupled_boundary_flux",
+  "kernel:opencl:navatala_cfd_vof_cmules_predictor_coupled_boundary_flux",
+  "abi-r1:opencl:navatala_cfd_vof_cmules_predictor_coupled_boundary_flux",
+  "abi-r1:opencl:navatala_cfd_vof_cmules_predictor_coupled_boundary_flux",
+  8,
+  kAbiArgs_opencl_navatala_cfd_vof_cmules_predictor_coupled_boundary_flux
+};
+
+const KernelArgumentInfo kAbiArgs_opencl_navatala_cfd_vof_cmules_predictor_internal_flux[] = {
+  { "alphaPred", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "phiCN", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "owner", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "nei", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "counts", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 12, 12, 256, nullptr, 0, 0 },
+  { "outPhiUD", 5, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_opencl_navatala_cfd_vof_cmules_predictor_internal_flux = {
+  1,
+  "navatala_cfd_vof_cmules_predictor_internal_flux",
+  "opencl",
+  "navatala_cfd_vof_cmules_predictor_internal_flux",
+  "kernel:opencl:navatala_cfd_vof_cmules_predictor_internal_flux",
+  "abi-r1:opencl:navatala_cfd_vof_cmules_predictor_internal_flux",
+  "abi-r1:opencl:navatala_cfd_vof_cmules_predictor_internal_flux",
+  6,
+  kAbiArgs_opencl_navatala_cfd_vof_cmules_predictor_internal_flux
 };
 
 const KernelArgumentInfo kAbiArgs_opencl_navatala_cfd_vof_mules_apply[] = {
@@ -1112,6 +1480,10 @@ bool tryGetKernelAbiManifest_opencl_cfd_vof(const std::string& backend, const st
     out = &kAbiManifest_opencl_navatala_cfd_vof_alpha_phi_int;
     return true;
   }
+  if (backend == "opencl" && kernelName == "navatala_cfd_vof_alpha_phi_van_leer_int") {
+    out = &kAbiManifest_opencl_navatala_cfd_vof_alpha_phi_van_leer_int;
+    return true;
+  }
   if (backend == "opencl" && kernelName == "navatala_cfd_vof_average_face_scalar_to_cell") {
     out = &kAbiManifest_opencl_navatala_cfd_vof_average_face_scalar_to_cell;
     return true;
@@ -1140,8 +1512,36 @@ bool tryGetKernelAbiManifest_opencl_cfd_vof(const std::string& backend, const st
     out = &kAbiManifest_opencl_navatala_cfd_vof_cmules_correct;
     return true;
   }
+  if (backend == "opencl" && kernelName == "navatala_cfd_vof_cmules_flux_diff") {
+    out = &kAbiManifest_opencl_navatala_cfd_vof_cmules_flux_diff;
+    return true;
+  }
   if (backend == "opencl" && kernelName == "navatala_cfd_vof_cmules_limiter_corr_prepare") {
     out = &kAbiManifest_opencl_navatala_cfd_vof_cmules_limiter_corr_prepare;
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_cfd_vof_cmules_accumulate_correction") {
+    out = &kAbiManifest_opencl_navatala_cfd_vof_cmules_accumulate_correction;
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_cfd_vof_cmules_blend_alpha") {
+    out = &kAbiManifest_opencl_navatala_cfd_vof_cmules_blend_alpha;
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_cfd_vof_cmules_update_prev_correction") {
+    out = &kAbiManifest_opencl_navatala_cfd_vof_cmules_update_prev_correction;
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_cfd_vof_cmules_predictor_boundary_flux") {
+    out = &kAbiManifest_opencl_navatala_cfd_vof_cmules_predictor_boundary_flux;
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_cfd_vof_cmules_predictor_coupled_boundary_flux") {
+    out = &kAbiManifest_opencl_navatala_cfd_vof_cmules_predictor_coupled_boundary_flux;
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_cfd_vof_cmules_predictor_internal_flux") {
+    out = &kAbiManifest_opencl_navatala_cfd_vof_cmules_predictor_internal_flux;
     return true;
   }
   if (backend == "opencl" && kernelName == "navatala_cfd_vof_mules_apply") {
@@ -1199,6 +1599,13 @@ bool tryGetKernelSource_opencl_cfd_vof(const std::string& backend, const std::st
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }
+  if (backend == "opencl" && kernelName == "navatala_cfd_vof_alpha_phi_van_leer_int") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_cfd_vof_alpha_phi_van_leer_int";
+    std::string_view sv(k_opencl_navatala_cfd_vof_alpha_phi_van_leer_int);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
   if (backend == "opencl" && kernelName == "navatala_cfd_vof_average_face_scalar_to_cell") {
     out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
     out.entryPoint = "navatala_cfd_vof_average_face_scalar_to_cell";
@@ -1248,10 +1655,59 @@ bool tryGetKernelSource_opencl_cfd_vof(const std::string& backend, const std::st
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }
+  if (backend == "opencl" && kernelName == "navatala_cfd_vof_cmules_flux_diff") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_cfd_vof_cmules_flux_diff";
+    std::string_view sv(k_opencl_navatala_cfd_vof_cmules_flux_diff);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
   if (backend == "opencl" && kernelName == "navatala_cfd_vof_cmules_limiter_corr_prepare") {
     out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
     out.entryPoint = "navatala_cfd_vof_cmules_limiter_corr_prepare";
     std::string_view sv(k_opencl_navatala_cfd_vof_cmules_limiter_corr_prepare);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_cfd_vof_cmules_accumulate_correction") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_cfd_vof_cmules_accumulate_correction";
+    std::string_view sv(k_opencl_navatala_cfd_vof_cmules_accumulate_correction);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_cfd_vof_cmules_blend_alpha") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_cfd_vof_cmules_blend_alpha";
+    std::string_view sv(k_opencl_navatala_cfd_vof_cmules_blend_alpha);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_cfd_vof_cmules_update_prev_correction") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_cfd_vof_cmules_update_prev_correction";
+    std::string_view sv(k_opencl_navatala_cfd_vof_cmules_update_prev_correction);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_cfd_vof_cmules_predictor_boundary_flux") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_cfd_vof_cmules_predictor_boundary_flux";
+    std::string_view sv(k_opencl_navatala_cfd_vof_cmules_predictor_boundary_flux);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_cfd_vof_cmules_predictor_coupled_boundary_flux") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_cfd_vof_cmules_predictor_coupled_boundary_flux";
+    std::string_view sv(k_opencl_navatala_cfd_vof_cmules_predictor_coupled_boundary_flux);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_cfd_vof_cmules_predictor_internal_flux") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_cfd_vof_cmules_predictor_internal_flux";
+    std::string_view sv(k_opencl_navatala_cfd_vof_cmules_predictor_internal_flux);
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }

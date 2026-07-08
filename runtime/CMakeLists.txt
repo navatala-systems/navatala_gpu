@@ -8,7 +8,7 @@
 # silently skipped at configure time.
 
 cmake_minimum_required(VERSION 3.18)
-project(gpu_runtime VERSION 0.1.4 LANGUAGES CXX)
+project(gpu_runtime VERSION 0.1.5 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -153,6 +153,7 @@ set(CORE_SOURCES
     src/memory_resource.cpp
     src/pool_memory_resource.cpp
     src/binning_memory_resource.cpp
+    src/device_mem_telemetry.cpp
     src/program_cache.cpp
     src/stream_pool.cpp
     src/resource_adaptors.cpp

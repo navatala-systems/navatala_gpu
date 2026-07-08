@@ -209,7 +209,7 @@ static std::optional<fs::path> getCacheFilePath(
     } else if (backend == "opencl") {
         extension = ".bin";
     } else if (backend == "metal") {
-        extension = ".metallib";
+        extension = ".metalar";
     } else {
         return std::nullopt;  // Unknown backend
     }

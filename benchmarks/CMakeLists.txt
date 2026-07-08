@@ -4,6 +4,24 @@
 # Optional benchmark drivers. These targets are intentionally opt-in because
 # they require vendor SDKs and real GPU hardware.
 
+if(NAVATALA_GPU_USE_METAL)
+    if(NOT TARGET gpu_runtime)
+        message(FATAL_ERROR
+            "[Navatala GPU] Metal runtime benchmark requires NAVATALA_GPU_BUILD_RUNTIME=ON")
+    endif()
+    add_executable(metal_runtime_benchmark metal_runtime_benchmark.cpp)
+    target_compile_features(metal_runtime_benchmark PRIVATE cxx_std_20)
+    target_include_directories(metal_runtime_benchmark PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/../runtime/include")
+    target_link_libraries(metal_runtime_benchmark PRIVATE gpu_runtime)
+
+    if(BUILD_TESTING AND NAVATALA_GPU_BUILD_BENCHMARK_TESTS)
+        add_test(NAME metal_runtime_benchmark_smoke
+            COMMAND metal_runtime_benchmark --quick
+                    --json metal_runtime_benchmark_smoke.json)
+    endif()
+endif()
+
 if(NOT NAVATALA_GPU_USE_HIP)
     message(STATUS "[Navatala GPU] ROCm benchmarks requested but HIP backend is disabled")
     return()

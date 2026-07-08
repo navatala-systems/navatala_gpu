@@ -63,8 +63,8 @@ def render_report(
         "",
         "## Runs",
         "",
-        "| Run | Batching | Private buffers | CTest | Wall s | submit | sync | command buffers | compute encoders | blit encoders | host-visible copies | batch dispatches | skipped empty syncs |",
-        "| --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+        "| Run | Batching | Blit batching | Private buffers | CTest | Wall s | submit | sync | command buffers | compute encoders | blit encoders | host-visible copies | batch dispatches | skipped empty syncs | archive hit/miss/store |",
+        "| --- | --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
     ]
 
     for run in report["runs"]:
@@ -76,6 +76,7 @@ def render_report(
                 [
                     _markdown_escape(run["name"]),
                     str(flags["batchSubmits"]).lower(),
+                    str(flags.get("batchBlits", False)).lower(),
                     str(flags["privateDeviceBuffers"]).lower(),
                     _status(run["ctestPassed"]),
                     _fmt_seconds(run["wallSeconds"]),
@@ -87,6 +88,11 @@ def render_report(
                     str(_counter(profile, "host_visible_copy")),
                     str(_counter(profile, "batch_dispatch")),
                     str(_counter(profile, "skipped_empty_sync")),
+                    (
+                        f"{_counter(profile, 'metal_archive_cache_hit')}/"
+                        f"{_counter(profile, 'metal_archive_cache_miss')}/"
+                        f"{_counter(profile, 'metal_archive_cache_store')}"
+                    ),
                 ]
             )
             + " |"

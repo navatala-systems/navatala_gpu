@@ -1,0 +1,7 @@
+NAVATALA_GPU_RUNTIME_PROFILE: pid=70420 label=(root) hostpinned_map=12 hostpinned_unmap=12 h2d_count=800 h2d_bytes=834666512 d2h_count=794 d2h_bytes=832569344 d2d_count=0 d2d_bytes=0 hosthost_count=0 hosthost_bytes=0 sync=202 submit=2178 command_buffer=2248 compute_encoder=2178 blit_encoder=70 host_visible_copy=0 batch_dispatch=0 batch_flush=0 batch_limit_flush=0 skipped_empty_sync=0 metal_archive_cache_hit=1 metal_archive_cache_miss=0 metal_archive_cache_store=0 metal_archive_cache_store_bytes=0
+submit_sync mean_ms=0.112019 repeats=1 checksum=0.290407 PASS
+submit_burst mean_ms=0.496883 repeats=32 checksum=0.292499 PASS
+copy_roundtrip mean_ms=0.152312 repeats=12 checksum=507.25 throughput_GBps=165.226 PASS
+real 0.07
+user 0.02
+sys 0.03

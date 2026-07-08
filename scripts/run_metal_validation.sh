@@ -9,8 +9,23 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BUILD_DIR="${NAVATALA_GPU_METAL_BUILD_DIR:-$ROOT_DIR/build-metal-validation}"
 RESULT_DIR="${NAVATALA_GPU_METAL_RESULT_DIR:-$ROOT_DIR/benchmarks/results/metal-validation}"
-TEST_REGEX="${NAVATALA_GPU_METAL_TEST_REGEX:-test_device_selection|test_events|test_graphs|test_kernel_execution|test_program_cache|test_memory_resources|test_stream_pool|test_device_buffer|manifest_conformance|metal_validation_sample_conformance|metal_validation_sample_render}"
+if [[ -n "${NAVATALA_GPU_METAL_CACHE_HOME:-}" ]]; then
+  CACHE_HOME="$NAVATALA_GPU_METAL_CACHE_HOME"
+  CACHE_HOME_EXPLICIT=1
+else
+  CACHE_HOME="$RESULT_DIR/cache_home"
+  CACHE_HOME_EXPLICIT=0
+fi
+FULL_TEST_REGEX="test_device_selection|test_events|test_graphs|test_kernel_execution|test_program_cache|test_memory_resources|test_stream_pool|test_device_buffer|manifest_conformance|metal_validation_sample_conformance|metal_validation_sample_render"
+RUNTIME_ONLY_TEST_REGEX="test_device_selection|test_events|test_graphs|test_kernel_execution|test_program_cache|test_memory_resources|test_stream_pool|test_device_buffer|metal_validation_sample_conformance|metal_validation_sample_render"
+TEST_REGEX="${NAVATALA_GPU_METAL_TEST_REGEX:-$FULL_TEST_REGEX}"
+TEST_REGEX_EXPLICIT=0
+if [[ -n "${NAVATALA_GPU_METAL_TEST_REGEX:-}" ]]; then
+  TEST_REGEX_EXPLICIT=1
+fi
 RUN_PRIVATE="${NAVATALA_GPU_METAL_RUN_PRIVATE:-1}"
+RUNTIME_ONLY="${NAVATALA_GPU_METAL_RUNTIME_ONLY:-0}"
+PRIVATE_MIN_BYTES="${NAVATALA_GPU_METAL_PRIVATE_MIN_BYTES:-0}"
 RESULT_JSON="$RESULT_DIR/metal_validation.json"
 RESULT_REPORT="$RESULT_DIR/metal_validation.md"
 
@@ -22,13 +37,26 @@ Options:
   --build-dir PATH       CMake build directory.
   --result-dir PATH      Result directory for logs and JSON/Markdown artifacts.
   --test-regex REGEX     CTest regular expression.
+  --runtime-only         Skip release-shape manifest_conformance. Use this for
+                         Metal runtime iteration on a Metal-only generated corpus.
   --skip-private         Skip the private-device-buffer validation pass.
   --json PATH            Output JSON path.
   -h, --help             Show this help.
 
 Environment:
   NAVATALA_GPU_METAL_BATCH_LIMIT defaults to 64 for the batched pass.
+  NAVATALA_GPU_METAL_BATCH_BLIT_LIMIT defaults to the same value for the
+  private-device-buffer pass, where opt-in blit batching is exercised.
+  NAVATALA_GPU_METAL_PRIVATE_MIN_BYTES keeps smaller Device buffers in shared
+  storage even when NAVATALA_GPU_METAL_PRIVATE_DEVICE_BUFFERS=1. Default 0.
+  NAVATALA_GPU_METAL_CACHE_HOME sets the isolated XDG cache root used for
+  Metal binary-archive cache measurements. Defaults under --result-dir.
+  NAVATALA_GPU_METAL_PRESERVE_CACHE=1 preserves the cache between invocations;
+  by default the Metal cache under CACHE_HOME is cleared before the matrix.
   NAVATALA_GPU_METAL_RUN_PRIVATE=0 is equivalent to --skip-private.
+  NAVATALA_GPU_METAL_RUNTIME_ONLY=1 is equivalent to --runtime-only.
+  NAVATALA_GPU_SOURCE_COMMIT overrides the JSON commit field when validation
+  runs from a regenerated tree that is not itself a Git checkout.
 EOF
 }
 
@@ -46,20 +74,32 @@ while [[ $# -gt 0 ]]; do
       RESULT_DIR="${2:?missing value for --result-dir}"
       RESULT_JSON="$RESULT_DIR/metal_validation.json"
       RESULT_REPORT="$RESULT_DIR/metal_validation.md"
+      if [[ "$CACHE_HOME_EXPLICIT" == "0" ]]; then
+        CACHE_HOME="$RESULT_DIR/cache_home"
+      fi
       shift 2
       ;;
     --result-dir=*)
       RESULT_DIR="${1#*=}"
       RESULT_JSON="$RESULT_DIR/metal_validation.json"
       RESULT_REPORT="$RESULT_DIR/metal_validation.md"
+      if [[ "$CACHE_HOME_EXPLICIT" == "0" ]]; then
+        CACHE_HOME="$RESULT_DIR/cache_home"
+      fi
       shift
       ;;
     --test-regex)
       TEST_REGEX="${2:?missing value for --test-regex}"
+      TEST_REGEX_EXPLICIT=1
       shift 2
       ;;
     --test-regex=*)
       TEST_REGEX="${1#*=}"
+      TEST_REGEX_EXPLICIT=1
+      shift
+      ;;
+    --runtime-only)
+      RUNTIME_ONLY=1
       shift
       ;;
     --skip-private)
@@ -88,6 +128,10 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+if [[ "$RUNTIME_ONLY" == "1" && "$TEST_REGEX_EXPLICIT" == "0" ]]; then
+  TEST_REGEX="$RUNTIME_ONLY_TEST_REGEX"
+fi
+
 if [[ "$(uname -s)" != "Darwin" ]]; then
   echo "ERROR: Metal validation must run on macOS with Apple Metal support." >&2
   exit 2
@@ -95,6 +139,10 @@ fi
 
 mkdir -p "$RESULT_DIR"
 mkdir -p "$(dirname "$RESULT_JSON")"
+mkdir -p "$CACHE_HOME"
+if [[ "${NAVATALA_GPU_METAL_PRESERVE_CACHE:-0}" != "1" ]]; then
+  rm -rf "$CACHE_HOME/gpu_runtime/metal"
+fi
 
 NPROC="$(sysctl -n hw.ncpu 2>/dev/null || echo 4)"
 BATCH_LIMIT="${NAVATALA_GPU_METAL_BATCH_LIMIT:-64}"
@@ -129,8 +177,9 @@ run_pass() {
   set +e
   /usr/bin/time -p env "$@" \
     GPU_RUNTIME_BACKEND=metal \
+    XDG_CACHE_HOME="$CACHE_HOME" \
     NAVATALA_GPU_RUNTIME_PROFILE=1 \
-    ctest --test-dir "$BUILD_DIR" --output-on-failure -R "$TEST_REGEX" \
+    ctest --test-dir "$BUILD_DIR" --output-on-failure --verbose -R "$TEST_REGEX" \
     >"$log" 2>&1
   local status=$?
   set -e
@@ -150,10 +199,13 @@ run_pass batched \
 if [[ "$RUN_PRIVATE" == "1" ]]; then
   run_pass private \
     NAVATALA_GPU_METAL_BATCH_SUBMITS=0 \
-    NAVATALA_GPU_METAL_PRIVATE_DEVICE_BUFFERS=1
+    NAVATALA_GPU_METAL_BATCH_BLITS=1 \
+    NAVATALA_GPU_METAL_BATCH_BLIT_LIMIT="$BATCH_LIMIT" \
+    NAVATALA_GPU_METAL_PRIVATE_DEVICE_BUFFERS=1 \
+    NAVATALA_GPU_METAL_PRIVATE_MIN_BYTES="$PRIVATE_MIN_BYTES"
 fi
 
-python3 - "$ROOT_DIR" "$BUILD_DIR" "$RESULT_DIR" "$RESULT_JSON" "$TEST_REGEX" "$BATCH_LIMIT" "$RUN_PRIVATE" <<'PY'
+python3 - "$ROOT_DIR" "$BUILD_DIR" "$RESULT_DIR" "$RESULT_JSON" "$TEST_REGEX" "$BATCH_LIMIT" "$RUN_PRIVATE" "$RUNTIME_ONLY" "$PRIVATE_MIN_BYTES" "$CACHE_HOME" <<'PY'
 from __future__ import annotations
 
 import datetime as dt
@@ -172,6 +224,9 @@ result_json = Path(sys.argv[4])
 test_regex = sys.argv[5]
 batch_limit = int(sys.argv[6])
 run_private = sys.argv[7] == "1"
+runtime_only = sys.argv[8] == "1"
+private_min_bytes = int(sys.argv[9])
+cache_home = sys.argv[10]
 
 COUNTERS = {
     "submit": 0,
@@ -192,6 +247,10 @@ COUNTERS = {
     "batch_flush": 0,
     "batch_limit_flush": 0,
     "skipped_empty_sync": 0,
+    "metal_archive_cache_hit": 0,
+    "metal_archive_cache_miss": 0,
+    "metal_archive_cache_store": 0,
+    "metal_archive_cache_store_bytes": 0,
 }
 
 
@@ -230,7 +289,10 @@ def parse_log(name: str) -> dict:
     flags = {
         "batchSubmits": name == "batched",
         "batchLimit": batch_limit if name == "batched" else 0,
+        "batchBlits": name == "private",
+        "batchBlitLimit": batch_limit if name == "private" else 0,
         "privateDeviceBuffers": name == "private",
+        "privateMinBytes": private_min_bytes if name == "private" else 0,
     }
     return {
         "name": name,
@@ -249,7 +311,7 @@ runs = [parse_log("baseline"), parse_log("batched")]
 if run_private:
     runs.append(parse_log("private"))
 
-commit = run_text(["git", "-C", str(root), "rev-parse", "HEAD"])
+commit = os.environ.get("NAVATALA_GPU_SOURCE_COMMIT") or run_text(["git", "-C", str(root), "rev-parse", "HEAD"])
 device_summary = run_text(["/usr/sbin/system_profiler", "SPDisplaysDataType"])
 device_lines = []
 for line in device_summary.splitlines():
@@ -271,12 +333,14 @@ report = {
     },
     "build": {
         "buildDir": str(build_dir),
+        "cacheHome": cache_home,
         "cmakeVersion": first_line(run_text(["cmake", "--version"])),
         "compiler": first_line(run_text([os.environ.get("CXX", "c++"), "--version"])),
         "configuration": "Release",
     },
     "tests": {
         "regex": test_regex,
+        "mode": "runtime_only" if runtime_only else "full_release",
     },
     "runs": runs,
 }

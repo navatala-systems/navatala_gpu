@@ -64,6 +64,102 @@ extern "C" __global__ void navatala_cfd_boundary_force_partials(const float* pAl
 }
 
 )kernel";
+const char* k_hip_navatala_cfd_alpha_proc_face_interp = R"kernel(
+#include <hip/hip_runtime.h>
+extern "C" __global__ void navatala_cfd_alpha_proc_face_interp(const int* procFaces, const float* sendOwn, const float* recvNei, const int* counts, float* alphaF) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0]) {
+    return;
+  } else {
+    int face = procFaces[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
+    float a = (__uint_as_float(0x3f000000u) * (sendOwn[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] + recvNei[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))]));
+    float clamped = a;
+    if (clamped < __uint_as_float(0x00000000u)) {
+      clamped = __uint_as_float(0x00000000u);
+    }
+    if (clamped > __uint_as_float(0x3f800000u)) {
+      clamped = __uint_as_float(0x3f800000u);
+    }
+    alphaF[face] = clamped;
+  }
+}
+
+)kernel";
+const char* k_hip_navatala_cfd_mules_proc_face_update = R"kernel(
+#include <hip/hip_runtime.h>
+extern "C" __global__ void navatala_cfd_mules_proc_face_update(const int* procFaces, const int* counts, const float* phiCorr, float* lambda, const float* lambdapCell, const float* lambdamCell, const int* ownerAll, const float* nbrLambdaP, const float* nbrLambdaM) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0]) {
+    return;
+  } else {
+    int face = procFaces[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
+    int o = ownerAll[face];
+    float pc = phiCorr[face];
+    float lim = lambdamCell[o];
+    float other = nbrLambdaP[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
+    if (lim > other) {
+      lim = other;
+    }
+    if (pc > __uint_as_float(0x00000000u)) {
+      float limPos = lambdapCell[o];
+      float otherPos = nbrLambdaM[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
+      if (limPos > otherPos) {
+        limPos = otherPos;
+      }
+      lim = limPos;
+    }
+    float cur = lambda[face];
+    float _out = cur;
+    if (_out > lim) {
+      _out = lim;
+    }
+    lambda[face] = _out;
+  }
+}
+
+)kernel";
+const char* k_hip_navatala_cfd_mules_proc_face_update_f64 = R"kernel(
+#include <hip/hip_runtime.h>
+extern "C" __global__ void navatala_cfd_mules_proc_face_update_f64(const int* procFaces, const int* counts, const double* phiCorr, double* lambda, const double* lambdapCell, const double* lambdamCell, const int* ownerAll, const double* nbrLambdaP, const double* nbrLambdaM) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0]) {
+    return;
+  } else {
+    int face = procFaces[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
+    int o = ownerAll[face];
+    double pc = phiCorr[face];
+    double lim = lambdamCell[o];
+    double other = nbrLambdaP[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
+    if (lim > other) {
+      lim = other;
+    }
+    if (pc > __longlong_as_double(0x0000000000000000ull)) {
+      double limPos = lambdapCell[o];
+      double otherPos = nbrLambdaM[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
+      if (limPos > otherPos) {
+        limPos = otherPos;
+      }
+      lim = limPos;
+    }
+    double cur = lambda[face];
+    double _out = cur;
+    if (_out > lim) {
+      _out = lim;
+    }
+    lambda[face] = _out;
+  }
+}
+
+)kernel";
 const char* k_hip_navatala_cfd_pack_owner_values = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_cfd_pack_owner_values(const float* x, const int* owner, const int* procFaces, const int* counts, float* outSend) {
@@ -77,6 +173,24 @@ extern "C" __global__ void navatala_cfd_pack_owner_values(const float* x, const 
     int face = procFaces[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
     int o = owner[face];
     float v = x[o];
+    outSend[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = v;
+  }
+}
+
+)kernel";
+const char* k_hip_navatala_cfd_pack_owner_values_f64 = R"kernel(
+#include <hip/hip_runtime.h>
+extern "C" __global__ void navatala_cfd_pack_owner_values_f64(const double* x, const int* owner, const int* procFaces, const int* counts, double* outSend) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= counts[0]) {
+    return;
+  } else {
+    int face = procFaces[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
+    int o = owner[face];
+    double v = x[o];
     outSend[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = v;
   }
 }
@@ -1171,6 +1285,24 @@ extern "C" __global__ void navatala_cfd_ddt_diagonal(const float* rho, const flo
 }
 
 )kernel";
+const char* k_hip_navatala_cfd_ddt_source = R"kernel(
+#include <hip/hip_runtime.h>
+extern "C" __global__ void navatala_cfd_ddt_source(const float* oldField, const float* vol0, const int* counts, const float* paramsF, float* outSource) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[0]) {
+    return;
+  } else {
+    float oldVal = oldField[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
+    float volVal = vol0[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
+    float src = ((oldVal * volVal) * paramsF[0]);
+    outSource[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = src;
+  }
+}
+
+)kernel";
 const char* k_hip_navatala_cfd_div_upwind_coeffs = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_cfd_div_upwind_coeffs(const float* weights, const float* flux, const int* counts, float* outLower, float* outUpper) {
@@ -1433,6 +1565,23 @@ extern "C" __global__ void navatala_cfd_scalar_jacobi_update(const float* ax, co
 }
 
 )kernel";
+const char* k_hip_navatala_cfd_scalar_ldu_coupled_interface_add = R"kernel(
+#include <hip/hip_runtime.h>
+extern "C" __global__ void navatala_cfd_scalar_ldu_coupled_interface_add(const int* faceCells, const float* coeffs, const float* recvNeighbourX, const unsigned int* counts, float* ax) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0]))) {
+    return;
+  } else {
+    int cell = faceCells[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
+    float delta = (coeffs[(int)(blockIdx.x * blockDim.x + threadIdx.x)] * recvNeighbourX[(int)(blockIdx.x * blockDim.x + threadIdx.x)]);
+    ax[cell] = (ax[cell] - delta);
+  }
+}
+
+)kernel";
 const char* k_hip_navatala_cfd_scalar_ldu_mat_vec = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_cfd_scalar_ldu_mat_vec(const float* diag, const float* upper, const float* lower, const float* x, const int* owner, const int* neighbour, const unsigned int* offsets, const unsigned int* faceIdx, const int* sign, const unsigned int* counts, float* ax) {
@@ -1550,6 +1699,28 @@ extern "C" __global__ void navatala_cfd_sum_mag_off_diag(const float* upper, con
       }
     }
     outSumOff[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = sum;
+  }
+}
+
+)kernel";
+const char* k_hip_navatala_cfd_upwind_weights = R"kernel(
+#include <hip/hip_runtime.h>
+extern "C" __global__ void navatala_cfd_upwind_weights(const float* flux, const int* counts, float* outWeights) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  const int nSafeMax = (((int)(counts[2])) > 0 ? ((int)(counts[2])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[2]))) return;
+  if (((int)((int)(blockIdx.x * blockDim.x + threadIdx.x))) >= counts[2]) {
+    return;
+  } else {
+    float phi = flux[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))];
+    float w = __uint_as_float(0x00000000u);
+    if (phi >= __uint_as_float(0x00000000u)) {
+      w = __uint_as_float(0x3f800000u);
+    } else {
+      w = __uint_as_float(0x00000000u);
+    }
+    outWeights[((int)((int)(blockIdx.x * blockDim.x + threadIdx.x)))] = w;
   }
 }
 
@@ -2389,6 +2560,20 @@ extern "C" __global__ void navatala_cfd_ref_add_ax(const float* diag, const floa
 }
 
 )kernel";
+const char* k_hip_navatala_cfd_ref_add_ax_native_f64 = R"kernel(
+#include <hip/hip_runtime.h>
+extern "C" __global__ void navatala_cfd_ref_add_ax_native_f64(const double* diag, const double* x, double* outAx, const int* refCell) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  int c = refCell[0];
+  if (c < 0) {
+    return;
+  } else {
+    double cur = outAx[c];
+    outAx[c] = (cur + (diag[c] * x[c]));
+  }
+}
+
+)kernel";
 const char* k_hip_navatala_cfd_ref_add_b = R"kernel(
 #include <hip/hip_runtime.h>
 extern "C" __global__ void navatala_cfd_ref_add_b(const float* diag, float* b, const int* refCell, const float* refVal) {
@@ -2398,6 +2583,20 @@ extern "C" __global__ void navatala_cfd_ref_add_b(const float* diag, float* b, c
     return;
   } else {
     float cur = b[c];
+    b[c] = (cur + (diag[c] * refVal[0]));
+  }
+}
+
+)kernel";
+const char* k_hip_navatala_cfd_ref_add_b_native_f64 = R"kernel(
+#include <hip/hip_runtime.h>
+extern "C" __global__ void navatala_cfd_ref_add_b_native_f64(const double* diag, double* b, const int* refCell, const double* refVal) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  int c = refCell[0];
+  if (c < 0) {
+    return;
+  } else {
+    double cur = b[c];
     b[c] = (cur + (diag[c] * refVal[0]));
   }
 }
@@ -2647,6 +2846,40 @@ extern "C" __global__ void navatala_cfd_exact_mat_vec_f64(const float* x, const 
       }
     }
     outAx[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = ((float)(s));
+  }
+}
+
+)kernel";
+const char* k_hip_navatala_cfd_exact_mat_vec_native_f64 = R"kernel(
+#include <hip/hip_runtime.h>
+extern "C" __global__ void navatala_cfd_exact_mat_vec_native_f64(const double* x, const int* owner, const int* neighbour, const unsigned int* offsets, const unsigned int* faceIdx, const int* sign, const double* upper, const double* lower, const double* diag, const int* counts, double* outAx) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
+  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
+  if (gid0 >= ((int)(counts[0]))) return;
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) >= ((int)(counts[0]))) {
+    return;
+  } else {
+    double s = (diag[(int)(blockIdx.x * blockDim.x + threadIdx.x)] * x[(int)(blockIdx.x * blockDim.x + threadIdx.x)]);
+    unsigned int beg = offsets[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
+    int c1 = ((int)(blockIdx.x * blockDim.x + threadIdx.x) + 1);
+    unsigned int end = offsets[c1];
+    int len = ((int)((end - beg)));
+    for (int t = 0; t < (int)(len); ++t) {
+      int k = (((int)(beg)) + t);
+      unsigned int f = faceIdx[k];
+      if (((int)(f)) < ((int)(counts[2]))) {
+        int sg = sign[k];
+        if (sg >= 0) {
+          int nb = neighbour[((int)(f))];
+          s = (s + (upper[((int)(f))] * x[nb]));
+        } else {
+          int ow = owner[((int)(f))];
+          s = (s + (lower[((int)(f))] * x[ow]));
+        }
+      }
+    }
+    outAx[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = s;
   }
 }
 
@@ -4339,6 +4572,71 @@ const KernelAbiManifestInfo kAbiManifest_hip_navatala_cfd_boundary_force_partial
   kAbiArgs_hip_navatala_cfd_boundary_force_partials
 };
 
+const KernelArgumentInfo kAbiArgs_hip_navatala_cfd_alpha_proc_face_interp[] = {
+  { "procFaces", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "sendOwn", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "recvNei", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "counts", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "alphaF", 4, KernelArgumentRole::InputOutput, KernelAccessMode::ReadWrite, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_hip_navatala_cfd_alpha_proc_face_interp = {
+  1,
+  "navatala_cfd_alpha_proc_face_interp",
+  "hip",
+  "navatala_cfd_alpha_proc_face_interp",
+  "kernel:hip:navatala_cfd_alpha_proc_face_interp",
+  "abi-r1:hip:navatala_cfd_alpha_proc_face_interp",
+  "abi-r1:hip:navatala_cfd_alpha_proc_face_interp",
+  5,
+  kAbiArgs_hip_navatala_cfd_alpha_proc_face_interp
+};
+
+const KernelArgumentInfo kAbiArgs_hip_navatala_cfd_mules_proc_face_update[] = {
+  { "procFaces", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "counts", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "phiCorr", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "lambda", 3, KernelArgumentRole::InputOutput, KernelAccessMode::ReadWrite, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "lambdapCell", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "lambdamCell", 5, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "ownerAll", 6, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "nbrLambdaP", 7, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "nbrLambdaM", 8, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_hip_navatala_cfd_mules_proc_face_update = {
+  1,
+  "navatala_cfd_mules_proc_face_update",
+  "hip",
+  "navatala_cfd_mules_proc_face_update",
+  "kernel:hip:navatala_cfd_mules_proc_face_update",
+  "abi-r1:hip:navatala_cfd_mules_proc_face_update",
+  "abi-r1:hip:navatala_cfd_mules_proc_face_update",
+  9,
+  kAbiArgs_hip_navatala_cfd_mules_proc_face_update
+};
+
+const KernelArgumentInfo kAbiArgs_hip_navatala_cfd_mules_proc_face_update_f64[] = {
+  { "procFaces", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "counts", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "phiCorr", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "lambda", 3, KernelArgumentRole::InputOutput, KernelAccessMode::ReadWrite, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "lambdapCell", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "lambdamCell", 5, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "ownerAll", 6, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "nbrLambdaP", 7, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "nbrLambdaM", 8, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_hip_navatala_cfd_mules_proc_face_update_f64 = {
+  1,
+  "navatala_cfd_mules_proc_face_update_f64",
+  "hip",
+  "navatala_cfd_mules_proc_face_update_f64",
+  "kernel:hip:navatala_cfd_mules_proc_face_update_f64",
+  "abi-r1:hip:navatala_cfd_mules_proc_face_update_f64",
+  "abi-r1:hip:navatala_cfd_mules_proc_face_update_f64",
+  9,
+  kAbiArgs_hip_navatala_cfd_mules_proc_face_update_f64
+};
+
 const KernelArgumentInfo kAbiArgs_hip_navatala_cfd_pack_owner_values[] = {
   { "x", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
   { "owner", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
@@ -4356,6 +4654,25 @@ const KernelAbiManifestInfo kAbiManifest_hip_navatala_cfd_pack_owner_values = {
   "abi-r1:hip:navatala_cfd_pack_owner_values",
   5,
   kAbiArgs_hip_navatala_cfd_pack_owner_values
+};
+
+const KernelArgumentInfo kAbiArgs_hip_navatala_cfd_pack_owner_values_f64[] = {
+  { "x", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "owner", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "procFaces", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "counts", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "outSend", 4, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_hip_navatala_cfd_pack_owner_values_f64 = {
+  1,
+  "navatala_cfd_pack_owner_values_f64",
+  "hip",
+  "navatala_cfd_pack_owner_values_f64",
+  "kernel:hip:navatala_cfd_pack_owner_values_f64",
+  "abi-r1:hip:navatala_cfd_pack_owner_values_f64",
+  "abi-r1:hip:navatala_cfd_pack_owner_values_f64",
+  5,
+  kAbiArgs_hip_navatala_cfd_pack_owner_values_f64
 };
 
 const KernelArgumentInfo kAbiArgs_hip_navatala_cfd_scatter_values_and_mask[] = {
@@ -4993,6 +5310,25 @@ const KernelAbiManifestInfo kAbiManifest_hip_navatala_cfd_ddt_diagonal = {
   kAbiArgs_hip_navatala_cfd_ddt_diagonal
 };
 
+const KernelArgumentInfo kAbiArgs_hip_navatala_cfd_ddt_source[] = {
+  { "oldField", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "vol0", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "counts", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "paramsF", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "outSource", 4, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_hip_navatala_cfd_ddt_source = {
+  1,
+  "navatala_cfd_ddt_source",
+  "hip",
+  "navatala_cfd_ddt_source",
+  "kernel:hip:navatala_cfd_ddt_source",
+  "abi-r1:hip:navatala_cfd_ddt_source",
+  "abi-r1:hip:navatala_cfd_ddt_source",
+  5,
+  kAbiArgs_hip_navatala_cfd_ddt_source
+};
+
 const KernelArgumentInfo kAbiArgs_hip_navatala_cfd_div_upwind_coeffs[] = {
   { "weights", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
   { "flux", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
@@ -5214,6 +5550,25 @@ const KernelAbiManifestInfo kAbiManifest_hip_navatala_cfd_scalar_jacobi_update =
   kAbiArgs_hip_navatala_cfd_scalar_jacobi_update
 };
 
+const KernelArgumentInfo kAbiArgs_hip_navatala_cfd_scalar_ldu_coupled_interface_add[] = {
+  { "faceCells", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "coeffs", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "recvNeighbourX", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "counts", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "ax", 4, KernelArgumentRole::InputOutput, KernelAccessMode::ReadWrite, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_hip_navatala_cfd_scalar_ldu_coupled_interface_add = {
+  1,
+  "navatala_cfd_scalar_ldu_coupled_interface_add",
+  "hip",
+  "navatala_cfd_scalar_ldu_coupled_interface_add",
+  "kernel:hip:navatala_cfd_scalar_ldu_coupled_interface_add",
+  "abi-r1:hip:navatala_cfd_scalar_ldu_coupled_interface_add",
+  "abi-r1:hip:navatala_cfd_scalar_ldu_coupled_interface_add",
+  5,
+  kAbiArgs_hip_navatala_cfd_scalar_ldu_coupled_interface_add
+};
+
 const KernelArgumentInfo kAbiArgs_hip_navatala_cfd_scalar_ldu_mat_vec[] = {
   { "diag", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
   { "upper", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
@@ -5286,6 +5641,23 @@ const KernelAbiManifestInfo kAbiManifest_hip_navatala_cfd_sum_mag_off_diag = {
   "abi-r1:hip:navatala_cfd_sum_mag_off_diag",
   7,
   kAbiArgs_hip_navatala_cfd_sum_mag_off_diag
+};
+
+const KernelArgumentInfo kAbiArgs_hip_navatala_cfd_upwind_weights[] = {
+  { "flux", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "counts", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 12, 12, 256, nullptr, 0, 0 },
+  { "outWeights", 2, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_hip_navatala_cfd_upwind_weights = {
+  1,
+  "navatala_cfd_upwind_weights",
+  "hip",
+  "navatala_cfd_upwind_weights",
+  "kernel:hip:navatala_cfd_upwind_weights",
+  "abi-r1:hip:navatala_cfd_upwind_weights",
+  "abi-r1:hip:navatala_cfd_upwind_weights",
+  3,
+  kAbiArgs_hip_navatala_cfd_upwind_weights
 };
 
 const KernelArgumentInfo kAbiArgs_hip_navatala_cfd_gamg_axpy_in_place[] = {
@@ -6007,6 +6379,24 @@ const KernelAbiManifestInfo kAbiManifest_hip_navatala_cfd_ref_add_ax = {
   kAbiArgs_hip_navatala_cfd_ref_add_ax
 };
 
+const KernelArgumentInfo kAbiArgs_hip_navatala_cfd_ref_add_ax_native_f64[] = {
+  { "diag", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "x", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "outAx", 2, KernelArgumentRole::InputOutput, KernelAccessMode::ReadWrite, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "refCell", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_hip_navatala_cfd_ref_add_ax_native_f64 = {
+  1,
+  "navatala_cfd_ref_add_ax_native_f64",
+  "hip",
+  "navatala_cfd_ref_add_ax_native_f64",
+  "kernel:hip:navatala_cfd_ref_add_ax_native_f64",
+  "abi-r1:hip:navatala_cfd_ref_add_ax_native_f64",
+  "abi-r1:hip:navatala_cfd_ref_add_ax_native_f64",
+  4,
+  kAbiArgs_hip_navatala_cfd_ref_add_ax_native_f64
+};
+
 const KernelArgumentInfo kAbiArgs_hip_navatala_cfd_ref_add_b[] = {
   { "diag", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
   { "b", 1, KernelArgumentRole::InputOutput, KernelAccessMode::ReadWrite, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
@@ -6023,6 +6413,24 @@ const KernelAbiManifestInfo kAbiManifest_hip_navatala_cfd_ref_add_b = {
   "abi-r1:hip:navatala_cfd_ref_add_b",
   4,
   kAbiArgs_hip_navatala_cfd_ref_add_b
+};
+
+const KernelArgumentInfo kAbiArgs_hip_navatala_cfd_ref_add_b_native_f64[] = {
+  { "diag", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "b", 1, KernelArgumentRole::InputOutput, KernelAccessMode::ReadWrite, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "refCell", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "refVal", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 8, 8, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_hip_navatala_cfd_ref_add_b_native_f64 = {
+  1,
+  "navatala_cfd_ref_add_b_native_f64",
+  "hip",
+  "navatala_cfd_ref_add_b_native_f64",
+  "kernel:hip:navatala_cfd_ref_add_b_native_f64",
+  "abi-r1:hip:navatala_cfd_ref_add_b_native_f64",
+  "abi-r1:hip:navatala_cfd_ref_add_b_native_f64",
+  4,
+  kAbiArgs_hip_navatala_cfd_ref_add_b_native_f64
 };
 
 const KernelArgumentInfo kAbiArgs_hip_navatala_cfd_rhs_sub[] = {
@@ -6228,6 +6636,31 @@ const KernelAbiManifestInfo kAbiManifest_hip_navatala_cfd_exact_mat_vec_f64 = {
   "abi-r1:hip:navatala_cfd_exact_mat_vec_f64",
   11,
   kAbiArgs_hip_navatala_cfd_exact_mat_vec_f64
+};
+
+const KernelArgumentInfo kAbiArgs_hip_navatala_cfd_exact_mat_vec_native_f64[] = {
+  { "x", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "owner", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "neighbour", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "offsets", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "faceIdx", 4, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "sign", 5, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "upper", 6, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "lower", 7, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "diag", 8, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "counts", 9, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "outAx", 10, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_hip_navatala_cfd_exact_mat_vec_native_f64 = {
+  1,
+  "navatala_cfd_exact_mat_vec_native_f64",
+  "hip",
+  "navatala_cfd_exact_mat_vec_native_f64",
+  "kernel:hip:navatala_cfd_exact_mat_vec_native_f64",
+  "abi-r1:hip:navatala_cfd_exact_mat_vec_native_f64",
+  "abi-r1:hip:navatala_cfd_exact_mat_vec_native_f64",
+  11,
+  kAbiArgs_hip_navatala_cfd_exact_mat_vec_native_f64
 };
 
 const KernelArgumentInfo kAbiArgs_hip_navatala_cfd_face_flux_boundary[] = {
@@ -7262,8 +7695,24 @@ bool tryGetKernelAbiManifest_hip_cfd(const std::string& backend, const std::stri
     out = &kAbiManifest_hip_navatala_cfd_boundary_force_partials;
     return true;
   }
+  if (backend == "hip" && kernelName == "navatala_cfd_alpha_proc_face_interp") {
+    out = &kAbiManifest_hip_navatala_cfd_alpha_proc_face_interp;
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_cfd_mules_proc_face_update") {
+    out = &kAbiManifest_hip_navatala_cfd_mules_proc_face_update;
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_cfd_mules_proc_face_update_f64") {
+    out = &kAbiManifest_hip_navatala_cfd_mules_proc_face_update_f64;
+    return true;
+  }
   if (backend == "hip" && kernelName == "navatala_cfd_pack_owner_values") {
     out = &kAbiManifest_hip_navatala_cfd_pack_owner_values;
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_cfd_pack_owner_values_f64") {
+    out = &kAbiManifest_hip_navatala_cfd_pack_owner_values_f64;
     return true;
   }
   if (backend == "hip" && kernelName == "navatala_cfd_scatter_values_and_mask") {
@@ -7370,6 +7819,10 @@ bool tryGetKernelAbiManifest_hip_cfd(const std::string& backend, const std::stri
     out = &kAbiManifest_hip_navatala_cfd_ddt_diagonal;
     return true;
   }
+  if (backend == "hip" && kernelName == "navatala_cfd_ddt_source") {
+    out = &kAbiManifest_hip_navatala_cfd_ddt_source;
+    return true;
+  }
   if (backend == "hip" && kernelName == "navatala_cfd_div_upwind_coeffs") {
     out = &kAbiManifest_hip_navatala_cfd_div_upwind_coeffs;
     return true;
@@ -7414,6 +7867,10 @@ bool tryGetKernelAbiManifest_hip_cfd(const std::string& backend, const std::stri
     out = &kAbiManifest_hip_navatala_cfd_scalar_jacobi_update;
     return true;
   }
+  if (backend == "hip" && kernelName == "navatala_cfd_scalar_ldu_coupled_interface_add") {
+    out = &kAbiManifest_hip_navatala_cfd_scalar_ldu_coupled_interface_add;
+    return true;
+  }
   if (backend == "hip" && kernelName == "navatala_cfd_scalar_ldu_mat_vec") {
     out = &kAbiManifest_hip_navatala_cfd_scalar_ldu_mat_vec;
     return true;
@@ -7424,6 +7881,10 @@ bool tryGetKernelAbiManifest_hip_cfd(const std::string& backend, const std::stri
   }
   if (backend == "hip" && kernelName == "navatala_cfd_sum_mag_off_diag") {
     out = &kAbiManifest_hip_navatala_cfd_sum_mag_off_diag;
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_cfd_upwind_weights") {
+    out = &kAbiManifest_hip_navatala_cfd_upwind_weights;
     return true;
   }
   if (backend == "hip" && kernelName == "navatala_cfd_gamg_axpy_in_place") {
@@ -7574,8 +8035,16 @@ bool tryGetKernelAbiManifest_hip_cfd(const std::string& backend, const std::stri
     out = &kAbiManifest_hip_navatala_cfd_ref_add_ax;
     return true;
   }
+  if (backend == "hip" && kernelName == "navatala_cfd_ref_add_ax_native_f64") {
+    out = &kAbiManifest_hip_navatala_cfd_ref_add_ax_native_f64;
+    return true;
+  }
   if (backend == "hip" && kernelName == "navatala_cfd_ref_add_b") {
     out = &kAbiManifest_hip_navatala_cfd_ref_add_b;
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_cfd_ref_add_b_native_f64") {
+    out = &kAbiManifest_hip_navatala_cfd_ref_add_b_native_f64;
     return true;
   }
   if (backend == "hip" && kernelName == "navatala_cfd_rhs_sub") {
@@ -7620,6 +8089,10 @@ bool tryGetKernelAbiManifest_hip_cfd(const std::string& backend, const std::stri
   }
   if (backend == "hip" && kernelName == "navatala_cfd_exact_mat_vec_f64") {
     out = &kAbiManifest_hip_navatala_cfd_exact_mat_vec_f64;
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_cfd_exact_mat_vec_native_f64") {
+    out = &kAbiManifest_hip_navatala_cfd_exact_mat_vec_native_f64;
     return true;
   }
   if (backend == "hip" && kernelName == "navatala_cfd_face_flux_boundary") {
@@ -7814,10 +8287,38 @@ bool tryGetKernelSource_hip_cfd(const std::string& backend, const std::string& k
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }
+  if (backend == "hip" && kernelName == "navatala_cfd_alpha_proc_face_interp") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_cfd_alpha_proc_face_interp";
+    std::string_view sv(k_hip_navatala_cfd_alpha_proc_face_interp);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_cfd_mules_proc_face_update") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_cfd_mules_proc_face_update";
+    std::string_view sv(k_hip_navatala_cfd_mules_proc_face_update);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_cfd_mules_proc_face_update_f64") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_cfd_mules_proc_face_update_f64";
+    std::string_view sv(k_hip_navatala_cfd_mules_proc_face_update_f64);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
   if (backend == "hip" && kernelName == "navatala_cfd_pack_owner_values") {
     out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
     out.entryPoint = "navatala_cfd_pack_owner_values";
     std::string_view sv(k_hip_navatala_cfd_pack_owner_values);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_cfd_pack_owner_values_f64") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_cfd_pack_owner_values_f64";
+    std::string_view sv(k_hip_navatala_cfd_pack_owner_values_f64);
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }
@@ -8003,6 +8504,13 @@ bool tryGetKernelSource_hip_cfd(const std::string& backend, const std::string& k
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }
+  if (backend == "hip" && kernelName == "navatala_cfd_ddt_source") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_cfd_ddt_source";
+    std::string_view sv(k_hip_navatala_cfd_ddt_source);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
   if (backend == "hip" && kernelName == "navatala_cfd_div_upwind_coeffs") {
     out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
     out.entryPoint = "navatala_cfd_div_upwind_coeffs";
@@ -8080,6 +8588,13 @@ bool tryGetKernelSource_hip_cfd(const std::string& backend, const std::string& k
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }
+  if (backend == "hip" && kernelName == "navatala_cfd_scalar_ldu_coupled_interface_add") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_cfd_scalar_ldu_coupled_interface_add";
+    std::string_view sv(k_hip_navatala_cfd_scalar_ldu_coupled_interface_add);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
   if (backend == "hip" && kernelName == "navatala_cfd_scalar_ldu_mat_vec") {
     out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
     out.entryPoint = "navatala_cfd_scalar_ldu_mat_vec";
@@ -8098,6 +8613,13 @@ bool tryGetKernelSource_hip_cfd(const std::string& backend, const std::string& k
     out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
     out.entryPoint = "navatala_cfd_sum_mag_off_diag";
     std::string_view sv(k_hip_navatala_cfd_sum_mag_off_diag);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_cfd_upwind_weights") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_cfd_upwind_weights";
+    std::string_view sv(k_hip_navatala_cfd_upwind_weights);
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }
@@ -8360,10 +8882,24 @@ bool tryGetKernelSource_hip_cfd(const std::string& backend, const std::string& k
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }
+  if (backend == "hip" && kernelName == "navatala_cfd_ref_add_ax_native_f64") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_cfd_ref_add_ax_native_f64";
+    std::string_view sv(k_hip_navatala_cfd_ref_add_ax_native_f64);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
   if (backend == "hip" && kernelName == "navatala_cfd_ref_add_b") {
     out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
     out.entryPoint = "navatala_cfd_ref_add_b";
     std::string_view sv(k_hip_navatala_cfd_ref_add_b);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_cfd_ref_add_b_native_f64") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_cfd_ref_add_b_native_f64";
+    std::string_view sv(k_hip_navatala_cfd_ref_add_b_native_f64);
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }
@@ -8441,6 +8977,13 @@ bool tryGetKernelSource_hip_cfd(const std::string& backend, const std::string& k
     out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
     out.entryPoint = "navatala_cfd_exact_mat_vec_f64";
     std::string_view sv(k_hip_navatala_cfd_exact_mat_vec_f64);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "hip" && kernelName == "navatala_cfd_exact_mat_vec_native_f64") {
+    out.kind = GpuRuntime::ProgramSource::Kind::HipCpp;
+    out.entryPoint = "navatala_cfd_exact_mat_vec_native_f64";
+    std::string_view sv(k_hip_navatala_cfd_exact_mat_vec_native_f64);
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }

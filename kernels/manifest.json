@@ -147,6 +147,116 @@
         "cuda": {
           "available": true,
           "binary": null,
+          "entryPoint": "navatala_cfd_alpha_proc_face_interp",
+          "implementation": "portable_kernel",
+          "source": "cuda/cfd/alpha_proc_face_interp.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_alpha_proc_face_interp",
+          "implementation": "portable_kernel",
+          "source": "hip/cfd/alpha_proc_face_interp.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_alpha_proc_face_interp",
+          "implementation": "portable_kernel",
+          "source": "metal/cfd/alpha_proc_face_interp.metal",
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_alpha_proc_face_interp",
+          "implementation": "portable_kernel",
+          "source": "opencl/cfd/alpha_proc_face_interp.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": true,
+          "binary": "vulkan/cfd/alpha_proc_face_interp.spv",
+          "entryPoint": "main",
+          "implementation": "portable_kernel",
+          "source": "vulkan/cfd/alpha_proc_face_interp.comp",
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Volume-of-Fluid CFD",
+      "entryPoint": "navatala_cfd_alpha_proc_face_interp",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadOnly",
+          "name": "procFaces",
+          "space": "Global",
+          "type": "Int32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "sendOwn",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "recvNei",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "counts",
+          "space": "Global",
+          "type": "Int32[1]"
+        },
+        {
+          "access": "ReadWrite",
+          "name": "alphaF",
+          "space": "Global",
+          "type": "Float32[?]"
+        }
+      ],
+      "name": "navatala_cfd_alpha_proc_face_interp",
+      "outputs": [],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 256,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
           "entryPoint": "navatala_cfd_apply_sp_to_hby_a",
           "implementation": "portable_kernel",
           "source": "cuda/cfd/apply_sp_to_hby_a.cu",
@@ -2818,6 +2928,117 @@
         "cuda": {
           "available": true,
           "binary": null,
+          "entryPoint": "navatala_cfd_ddt_source",
+          "implementation": "portable_kernel",
+          "source": "cuda/cfd/ddt_source.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_ddt_source",
+          "implementation": "portable_kernel",
+          "source": "hip/cfd/ddt_source.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_ddt_source",
+          "implementation": "portable_kernel",
+          "source": "metal/cfd/ddt_source.metal",
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_ddt_source",
+          "implementation": "portable_kernel",
+          "source": "opencl/cfd/ddt_source.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": true,
+          "binary": "vulkan/cfd/ddt_source.spv",
+          "entryPoint": "main",
+          "implementation": "portable_kernel",
+          "source": "vulkan/cfd/ddt_source.comp",
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Volume-of-Fluid CFD",
+      "entryPoint": "navatala_cfd_ddt_source",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadOnly",
+          "name": "oldField",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "vol0",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "counts",
+          "space": "Global",
+          "type": "Int32[1]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "paramsF",
+          "space": "Global",
+          "type": "Float32[1]"
+        }
+      ],
+      "name": "navatala_cfd_ddt_source",
+      "outputs": [
+        {
+          "access": "WriteOnly",
+          "name": "outSource",
+          "space": "Global",
+          "type": "Float32[?]"
+        }
+      ],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 256,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
           "entryPoint": "navatala_cfd_diag_from_cf",
           "implementation": "portable_kernel",
           "source": "cuda/cfd/diag_from_cf.cu",
@@ -4193,6 +4414,153 @@
           "name": "outAx",
           "space": "Global",
           "type": "Float32[?]"
+        }
+      ],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 256,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_exact_mat_vec_native_f64",
+          "implementation": "portable_kernel",
+          "source": "cuda/cfd/exact_mat_vec_native_f64.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_exact_mat_vec_native_f64",
+          "implementation": "portable_kernel",
+          "source": "hip/cfd/exact_mat_vec_native_f64.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": false,
+          "binary": null,
+          "entryPoint": null,
+          "implementation": "unsupported",
+          "source": null,
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_exact_mat_vec_native_f64",
+          "implementation": "portable_kernel",
+          "source": "opencl/cfd/exact_mat_vec_native_f64.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": true,
+          "binary": "vulkan/cfd/exact_mat_vec_native_f64.spv",
+          "entryPoint": "main",
+          "implementation": "portable_kernel",
+          "source": "vulkan/cfd/exact_mat_vec_native_f64.comp",
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Volume-of-Fluid CFD",
+      "entryPoint": "navatala_cfd_exact_mat_vec_native_f64",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadOnly",
+          "name": "x",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "owner",
+          "space": "Global",
+          "type": "Int32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "neighbour",
+          "space": "Global",
+          "type": "Int32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "offsets",
+          "space": "Global",
+          "type": "UInt32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "faceIdx",
+          "space": "Global",
+          "type": "UInt32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "sign",
+          "space": "Global",
+          "type": "Int32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "upper",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "lower",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "diag",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "counts",
+          "space": "Global",
+          "type": "Int32[?]"
+        }
+      ],
+      "name": "navatala_cfd_exact_mat_vec_native_f64",
+      "outputs": [
+        {
+          "access": "WriteOnly",
+          "name": "outAx",
+          "space": "Global",
+          "type": "Float64[?]"
         }
       ],
       "requirements": {
@@ -9904,6 +10272,274 @@
         "cuda": {
           "available": true,
           "binary": null,
+          "entryPoint": "navatala_cfd_mules_proc_face_update",
+          "implementation": "portable_kernel",
+          "source": "cuda/cfd/mules_proc_face_update.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_mules_proc_face_update",
+          "implementation": "portable_kernel",
+          "source": "hip/cfd/mules_proc_face_update.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_mules_proc_face_update",
+          "implementation": "portable_kernel",
+          "source": "metal/cfd/mules_proc_face_update.metal",
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_mules_proc_face_update",
+          "implementation": "portable_kernel",
+          "source": "opencl/cfd/mules_proc_face_update.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": true,
+          "binary": "vulkan/cfd/mules_proc_face_update.spv",
+          "entryPoint": "main",
+          "implementation": "portable_kernel",
+          "source": "vulkan/cfd/mules_proc_face_update.comp",
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Volume-of-Fluid CFD",
+      "entryPoint": "navatala_cfd_mules_proc_face_update",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadOnly",
+          "name": "procFaces",
+          "space": "Global",
+          "type": "Int32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "counts",
+          "space": "Global",
+          "type": "Int32[1]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "phiCorr",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadWrite",
+          "name": "lambda",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "lambdapCell",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "lambdamCell",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "ownerAll",
+          "space": "Global",
+          "type": "Int32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "nbrLambdaP",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "nbrLambdaM",
+          "space": "Global",
+          "type": "Float32[?]"
+        }
+      ],
+      "name": "navatala_cfd_mules_proc_face_update",
+      "outputs": [],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 256,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_mules_proc_face_update_f64",
+          "implementation": "portable_kernel",
+          "source": "cuda/cfd/mules_proc_face_update_f64.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_mules_proc_face_update_f64",
+          "implementation": "portable_kernel",
+          "source": "hip/cfd/mules_proc_face_update_f64.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": false,
+          "binary": null,
+          "entryPoint": null,
+          "implementation": "unsupported",
+          "source": null,
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_mules_proc_face_update_f64",
+          "implementation": "portable_kernel",
+          "source": "opencl/cfd/mules_proc_face_update_f64.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": true,
+          "binary": "vulkan/cfd/mules_proc_face_update_f64.spv",
+          "entryPoint": "main",
+          "implementation": "portable_kernel",
+          "source": "vulkan/cfd/mules_proc_face_update_f64.comp",
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Volume-of-Fluid CFD",
+      "entryPoint": "navatala_cfd_mules_proc_face_update_f64",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadOnly",
+          "name": "procFaces",
+          "space": "Global",
+          "type": "Int32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "counts",
+          "space": "Global",
+          "type": "Int32[1]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "phiCorr",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadWrite",
+          "name": "lambda",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "lambdapCell",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "lambdamCell",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "ownerAll",
+          "space": "Global",
+          "type": "Int32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "nbrLambdaP",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "nbrLambdaM",
+          "space": "Global",
+          "type": "Float64[?]"
+        }
+      ],
+      "name": "navatala_cfd_mules_proc_face_update_f64",
+      "outputs": [],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 256,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
           "entryPoint": "navatala_cfd_n_hatf_all",
           "implementation": "portable_kernel",
           "source": "cuda/cfd/n_hatf_all.cu",
@@ -10948,6 +11584,117 @@
           "name": "outSend",
           "space": "Global",
           "type": "Float32[?]"
+        }
+      ],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 256,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_pack_owner_values_f64",
+          "implementation": "portable_kernel",
+          "source": "cuda/cfd/pack_owner_values_f64.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_pack_owner_values_f64",
+          "implementation": "portable_kernel",
+          "source": "hip/cfd/pack_owner_values_f64.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": false,
+          "binary": null,
+          "entryPoint": null,
+          "implementation": "unsupported",
+          "source": null,
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_pack_owner_values_f64",
+          "implementation": "portable_kernel",
+          "source": "opencl/cfd/pack_owner_values_f64.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": true,
+          "binary": "vulkan/cfd/pack_owner_values_f64.spv",
+          "entryPoint": "main",
+          "implementation": "portable_kernel",
+          "source": "vulkan/cfd/pack_owner_values_f64.comp",
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Volume-of-Fluid CFD",
+      "entryPoint": "navatala_cfd_pack_owner_values_f64",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadOnly",
+          "name": "x",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "owner",
+          "space": "Global",
+          "type": "Int32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "procFaces",
+          "space": "Global",
+          "type": "Int32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "counts",
+          "space": "Global",
+          "type": "Int32[1]"
+        }
+      ],
+      "name": "navatala_cfd_pack_owner_values_f64",
+      "outputs": [
+        {
+          "access": "WriteOnly",
+          "name": "outSend",
+          "space": "Global",
+          "type": "Float64[?]"
         }
       ],
       "requirements": {
@@ -16875,6 +17622,110 @@
         "cuda": {
           "available": true,
           "binary": null,
+          "entryPoint": "navatala_cfd_ref_add_ax_native_f64",
+          "implementation": "portable_kernel",
+          "source": "cuda/cfd/ref_add_ax_native_f64.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_ref_add_ax_native_f64",
+          "implementation": "portable_kernel",
+          "source": "hip/cfd/ref_add_ax_native_f64.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": false,
+          "binary": null,
+          "entryPoint": null,
+          "implementation": "unsupported",
+          "source": null,
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_ref_add_ax_native_f64",
+          "implementation": "portable_kernel",
+          "source": "opencl/cfd/ref_add_ax_native_f64.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": true,
+          "binary": "vulkan/cfd/ref_add_ax_native_f64.spv",
+          "entryPoint": "main",
+          "implementation": "portable_kernel",
+          "source": "vulkan/cfd/ref_add_ax_native_f64.comp",
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Volume-of-Fluid CFD",
+      "entryPoint": "navatala_cfd_ref_add_ax_native_f64",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadOnly",
+          "name": "diag",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "x",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadWrite",
+          "name": "outAx",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "refCell",
+          "space": "Global",
+          "type": "Int32[?]"
+        }
+      ],
+      "name": "navatala_cfd_ref_add_ax_native_f64",
+      "outputs": [],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
           "entryPoint": "navatala_cfd_ref_add_b",
           "implementation": "portable_kernel",
           "source": "cuda/cfd/ref_add_b.cu",
@@ -16956,6 +17807,110 @@
         }
       ],
       "name": "navatala_cfd_ref_add_b",
+      "outputs": [],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_ref_add_b_native_f64",
+          "implementation": "portable_kernel",
+          "source": "cuda/cfd/ref_add_b_native_f64.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_ref_add_b_native_f64",
+          "implementation": "portable_kernel",
+          "source": "hip/cfd/ref_add_b_native_f64.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": false,
+          "binary": null,
+          "entryPoint": null,
+          "implementation": "unsupported",
+          "source": null,
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_ref_add_b_native_f64",
+          "implementation": "portable_kernel",
+          "source": "opencl/cfd/ref_add_b_native_f64.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": true,
+          "binary": "vulkan/cfd/ref_add_b_native_f64.spv",
+          "entryPoint": "main",
+          "implementation": "portable_kernel",
+          "source": "vulkan/cfd/ref_add_b_native_f64.comp",
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Volume-of-Fluid CFD",
+      "entryPoint": "navatala_cfd_ref_add_b_native_f64",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadOnly",
+          "name": "diag",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadWrite",
+          "name": "b",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "refCell",
+          "space": "Global",
+          "type": "Int32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "refVal",
+          "space": "Global",
+          "type": "Float64[1]"
+        }
+      ],
+      "name": "navatala_cfd_ref_add_b_native_f64",
       "outputs": [],
       "requirements": {
         "estimatedSharedMemoryBytes": 0,
@@ -17490,6 +18445,117 @@
         {
           "access": "ReadWrite",
           "name": "x",
+          "space": "Global",
+          "type": "Float32[?]"
+        }
+      ],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 256,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_scalar_ldu_coupled_interface_add",
+          "implementation": "portable_kernel",
+          "source": "cuda/cfd/scalar_ldu_coupled_interface_add.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_scalar_ldu_coupled_interface_add",
+          "implementation": "portable_kernel",
+          "source": "hip/cfd/scalar_ldu_coupled_interface_add.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_scalar_ldu_coupled_interface_add",
+          "implementation": "portable_kernel",
+          "source": "metal/cfd/scalar_ldu_coupled_interface_add.metal",
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_scalar_ldu_coupled_interface_add",
+          "implementation": "portable_kernel",
+          "source": "opencl/cfd/scalar_ldu_coupled_interface_add.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": true,
+          "binary": "vulkan/cfd/scalar_ldu_coupled_interface_add.spv",
+          "entryPoint": "main",
+          "implementation": "portable_kernel",
+          "source": "vulkan/cfd/scalar_ldu_coupled_interface_add.comp",
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Volume-of-Fluid CFD",
+      "entryPoint": "navatala_cfd_scalar_ldu_coupled_interface_add",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadOnly",
+          "name": "faceCells",
+          "space": "Global",
+          "type": "Int32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "coeffs",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "recvNeighbourX",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "counts",
+          "space": "Global",
+          "type": "UInt32[1]"
+        }
+      ],
+      "name": "navatala_cfd_scalar_ldu_coupled_interface_add",
+      "outputs": [
+        {
+          "access": "ReadWrite",
+          "name": "ax",
           "space": "Global",
           "type": "Float32[?]"
         }
@@ -21042,6 +22108,105 @@
         "cuda": {
           "available": true,
           "binary": null,
+          "entryPoint": "navatala_cfd_upwind_weights",
+          "implementation": "portable_kernel",
+          "source": "cuda/cfd/upwind_weights.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_upwind_weights",
+          "implementation": "portable_kernel",
+          "source": "hip/cfd/upwind_weights.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_upwind_weights",
+          "implementation": "portable_kernel",
+          "source": "metal/cfd/upwind_weights.metal",
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_upwind_weights",
+          "implementation": "portable_kernel",
+          "source": "opencl/cfd/upwind_weights.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": true,
+          "binary": "vulkan/cfd/upwind_weights.spv",
+          "entryPoint": "main",
+          "implementation": "portable_kernel",
+          "source": "vulkan/cfd/upwind_weights.comp",
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Volume-of-Fluid CFD",
+      "entryPoint": "navatala_cfd_upwind_weights",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadOnly",
+          "name": "flux",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "counts",
+          "space": "Global",
+          "type": "Int32[3]"
+        }
+      ],
+      "name": "navatala_cfd_upwind_weights",
+      "outputs": [
+        {
+          "access": "WriteOnly",
+          "name": "outWeights",
+          "space": "Global",
+          "type": "Float32[?]"
+        }
+      ],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 256,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
           "entryPoint": "navatala_cfd_vof_alpha_face_average_internal",
           "implementation": "portable_kernel",
           "source": "cuda/cfd_vof/alpha_face_average_internal.cu",
@@ -21392,6 +22557,177 @@
         "cuda": {
           "available": true,
           "binary": null,
+          "entryPoint": "navatala_cfd_vof_alpha_phi_van_leer_int",
+          "implementation": "portable_kernel",
+          "source": "cuda/cfd_vof/alpha_phi_van_leer_int.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_vof_alpha_phi_van_leer_int",
+          "implementation": "portable_kernel",
+          "source": "hip/cfd_vof/alpha_phi_van_leer_int.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_vof_alpha_phi_van_leer_int",
+          "implementation": "portable_kernel",
+          "source": "metal/cfd_vof/alpha_phi_van_leer_int.metal",
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_vof_alpha_phi_van_leer_int",
+          "implementation": "portable_kernel",
+          "source": "opencl/cfd_vof/alpha_phi_van_leer_int.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": true,
+          "binary": "vulkan/cfd_vof/alpha_phi_van_leer_int.spv",
+          "entryPoint": "main",
+          "implementation": "portable_kernel",
+          "source": "vulkan/cfd_vof/alpha_phi_van_leer_int.comp",
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Volume-of-Fluid CFD",
+      "entryPoint": "navatala_cfd_vof_alpha_phi_van_leer_int",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadOnly",
+          "name": "alpha",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "phi",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "owner",
+          "space": "Global",
+          "type": "Int32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "nei",
+          "space": "Global",
+          "type": "Int32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "gradX",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "gradY",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "gradZ",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "cellCx",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "cellCy",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "cellCz",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "weights",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "phir",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "alphaF",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "faceParams",
+          "space": "Global",
+          "type": "Int32[1]"
+        }
+      ],
+      "name": "navatala_cfd_vof_alpha_phi_van_leer_int",
+      "outputs": [
+        {
+          "access": "WriteOnly",
+          "name": "outAlphaPhi",
+          "space": "Global",
+          "type": "Float32[?]"
+        }
+      ],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 256,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
           "entryPoint": "navatala_cfd_vof_alpha_update",
           "implementation": "portable_kernel",
           "source": "cuda/cfd_vof/alpha_update.cu",
@@ -21632,6 +22968,110 @@
         "cuda": {
           "available": true,
           "binary": null,
+          "entryPoint": "navatala_cfd_vof_cmules_accumulate_correction",
+          "implementation": "portable_kernel",
+          "source": "cuda/cfd_vof/cmules_accumulate_correction.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_vof_cmules_accumulate_correction",
+          "implementation": "portable_kernel",
+          "source": "hip/cfd_vof/cmules_accumulate_correction.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_vof_cmules_accumulate_correction",
+          "implementation": "portable_kernel",
+          "source": "metal/cfd_vof/cmules_accumulate_correction.metal",
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_vof_cmules_accumulate_correction",
+          "implementation": "portable_kernel",
+          "source": "opencl/cfd_vof/cmules_accumulate_correction.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": true,
+          "binary": "vulkan/cfd_vof/cmules_accumulate_correction.spv",
+          "entryPoint": "main",
+          "implementation": "portable_kernel",
+          "source": "vulkan/cfd_vof/cmules_accumulate_correction.comp",
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Volume-of-Fluid CFD",
+      "entryPoint": "navatala_cfd_vof_cmules_accumulate_correction",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadWrite",
+          "name": "alphaPhiBase",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "phiCorrLimited",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "counts",
+          "space": "Global",
+          "type": "Int32[3]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "paramsF",
+          "space": "Global",
+          "type": "Float32[4]"
+        }
+      ],
+      "name": "navatala_cfd_vof_cmules_accumulate_correction",
+      "outputs": [],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 256,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
           "entryPoint": "navatala_cfd_vof_cmules_apply_correction",
           "implementation": "portable_kernel",
           "source": "cuda/cfd_vof/cmules_apply_correction.cu",
@@ -21721,6 +23161,110 @@
           "type": "Float32[?]"
         }
       ],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 256,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_vof_cmules_blend_alpha",
+          "implementation": "portable_kernel",
+          "source": "cuda/cfd_vof/cmules_blend_alpha.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_vof_cmules_blend_alpha",
+          "implementation": "portable_kernel",
+          "source": "hip/cfd_vof/cmules_blend_alpha.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_vof_cmules_blend_alpha",
+          "implementation": "portable_kernel",
+          "source": "metal/cfd_vof/cmules_blend_alpha.metal",
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_vof_cmules_blend_alpha",
+          "implementation": "portable_kernel",
+          "source": "opencl/cfd_vof/cmules_blend_alpha.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": true,
+          "binary": "vulkan/cfd_vof/cmules_blend_alpha.spv",
+          "entryPoint": "main",
+          "implementation": "portable_kernel",
+          "source": "vulkan/cfd_vof/cmules_blend_alpha.comp",
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Volume-of-Fluid CFD",
+      "entryPoint": "navatala_cfd_vof_cmules_blend_alpha",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadWrite",
+          "name": "alpha",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "alphaRef",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "counts",
+          "space": "Global",
+          "type": "Int32[3]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "paramsF",
+          "space": "Global",
+          "type": "Float32[4]"
+        }
+      ],
+      "name": "navatala_cfd_vof_cmules_blend_alpha",
+      "outputs": [],
       "requirements": {
         "estimatedSharedMemoryBytes": 0,
         "requiresAtomic64": false,
@@ -22024,6 +23568,111 @@
         "cuda": {
           "available": true,
           "binary": null,
+          "entryPoint": "navatala_cfd_vof_cmules_flux_diff",
+          "implementation": "portable_kernel",
+          "source": "cuda/cfd_vof/cmules_flux_diff.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_vof_cmules_flux_diff",
+          "implementation": "portable_kernel",
+          "source": "hip/cfd_vof/cmules_flux_diff.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_vof_cmules_flux_diff",
+          "implementation": "portable_kernel",
+          "source": "metal/cfd_vof/cmules_flux_diff.metal",
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_vof_cmules_flux_diff",
+          "implementation": "portable_kernel",
+          "source": "opencl/cfd_vof/cmules_flux_diff.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": true,
+          "binary": "vulkan/cfd_vof/cmules_flux_diff.spv",
+          "entryPoint": "main",
+          "implementation": "portable_kernel",
+          "source": "vulkan/cfd_vof/cmules_flux_diff.comp",
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Volume-of-Fluid CFD",
+      "entryPoint": "navatala_cfd_vof_cmules_flux_diff",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadOnly",
+          "name": "alphaPhiUn",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "alphaPhi10",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "faceCounts",
+          "space": "Global",
+          "type": "Int32[1]"
+        }
+      ],
+      "name": "navatala_cfd_vof_cmules_flux_diff",
+      "outputs": [
+        {
+          "access": "WriteOnly",
+          "name": "outPhiCorr",
+          "space": "Global",
+          "type": "Float32[?]"
+        }
+      ],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 256,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
           "entryPoint": "navatala_cfd_vof_cmules_limiter_corr_prepare",
           "implementation": "portable_kernel",
           "source": "cuda/cfd_vof/cmules_limiter_corr_prepare.cu",
@@ -22090,6 +23739,12 @@
           "name": "alphaF",
           "space": "Global",
           "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "boundaryExtremaMask",
+          "space": "Global",
+          "type": "Int32[?]"
         },
         {
           "access": "ReadOnly",
@@ -22203,6 +23858,479 @@
           "type": "Float32[?]"
         }
       ],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 256,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_vof_cmules_predictor_boundary_flux",
+          "implementation": "portable_kernel",
+          "source": "cuda/cfd_vof/cmules_predictor_boundary_flux.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_vof_cmules_predictor_boundary_flux",
+          "implementation": "portable_kernel",
+          "source": "hip/cfd_vof/cmules_predictor_boundary_flux.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_vof_cmules_predictor_boundary_flux",
+          "implementation": "portable_kernel",
+          "source": "metal/cfd_vof/cmules_predictor_boundary_flux.metal",
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_vof_cmules_predictor_boundary_flux",
+          "implementation": "portable_kernel",
+          "source": "opencl/cfd_vof/cmules_predictor_boundary_flux.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": true,
+          "binary": "vulkan/cfd_vof/cmules_predictor_boundary_flux.spv",
+          "entryPoint": "main",
+          "implementation": "portable_kernel",
+          "source": "vulkan/cfd_vof/cmules_predictor_boundary_flux.comp",
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Volume-of-Fluid CFD",
+      "entryPoint": "navatala_cfd_vof_cmules_predictor_boundary_flux",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadOnly",
+          "name": "alphaPred",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "boundaryFaceOwner",
+          "space": "Global",
+          "type": "Int32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "boundaryFaceGlobal",
+          "space": "Global",
+          "type": "Int32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "internalCoeffs",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "boundaryCoeffs",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "counts",
+          "space": "Global",
+          "type": "Int32[4]"
+        }
+      ],
+      "name": "navatala_cfd_vof_cmules_predictor_boundary_flux",
+      "outputs": [
+        {
+          "access": "ReadWrite",
+          "name": "outPhiUD",
+          "space": "Global",
+          "type": "Float32[?]"
+        }
+      ],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 256,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_vof_cmules_predictor_coupled_boundary_flux",
+          "implementation": "portable_kernel",
+          "source": "cuda/cfd_vof/cmules_predictor_coupled_boundary_flux.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_vof_cmules_predictor_coupled_boundary_flux",
+          "implementation": "portable_kernel",
+          "source": "hip/cfd_vof/cmules_predictor_coupled_boundary_flux.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_vof_cmules_predictor_coupled_boundary_flux",
+          "implementation": "portable_kernel",
+          "source": "metal/cfd_vof/cmules_predictor_coupled_boundary_flux.metal",
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_vof_cmules_predictor_coupled_boundary_flux",
+          "implementation": "portable_kernel",
+          "source": "opencl/cfd_vof/cmules_predictor_coupled_boundary_flux.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": true,
+          "binary": "vulkan/cfd_vof/cmules_predictor_coupled_boundary_flux.spv",
+          "entryPoint": "main",
+          "implementation": "portable_kernel",
+          "source": "vulkan/cfd_vof/cmules_predictor_coupled_boundary_flux.comp",
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Volume-of-Fluid CFD",
+      "entryPoint": "navatala_cfd_vof_cmules_predictor_coupled_boundary_flux",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadOnly",
+          "name": "alphaPred",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "boundaryFaceOwner",
+          "space": "Global",
+          "type": "Int32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "boundaryFaceGlobal",
+          "space": "Global",
+          "type": "Int32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "internalCoeffs",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "boundaryCoeffs",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "neighbourAlpha",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "counts",
+          "space": "Global",
+          "type": "Int32[4]"
+        }
+      ],
+      "name": "navatala_cfd_vof_cmules_predictor_coupled_boundary_flux",
+      "outputs": [
+        {
+          "access": "ReadWrite",
+          "name": "outPhiUD",
+          "space": "Global",
+          "type": "Float32[?]"
+        }
+      ],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 256,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_vof_cmules_predictor_internal_flux",
+          "implementation": "portable_kernel",
+          "source": "cuda/cfd_vof/cmules_predictor_internal_flux.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_vof_cmules_predictor_internal_flux",
+          "implementation": "portable_kernel",
+          "source": "hip/cfd_vof/cmules_predictor_internal_flux.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_vof_cmules_predictor_internal_flux",
+          "implementation": "portable_kernel",
+          "source": "metal/cfd_vof/cmules_predictor_internal_flux.metal",
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_vof_cmules_predictor_internal_flux",
+          "implementation": "portable_kernel",
+          "source": "opencl/cfd_vof/cmules_predictor_internal_flux.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": true,
+          "binary": "vulkan/cfd_vof/cmules_predictor_internal_flux.spv",
+          "entryPoint": "main",
+          "implementation": "portable_kernel",
+          "source": "vulkan/cfd_vof/cmules_predictor_internal_flux.comp",
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Volume-of-Fluid CFD",
+      "entryPoint": "navatala_cfd_vof_cmules_predictor_internal_flux",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadOnly",
+          "name": "alphaPred",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "phiCN",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "owner",
+          "space": "Global",
+          "type": "Int32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "nei",
+          "space": "Global",
+          "type": "Int32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "counts",
+          "space": "Global",
+          "type": "Int32[3]"
+        }
+      ],
+      "name": "navatala_cfd_vof_cmules_predictor_internal_flux",
+      "outputs": [
+        {
+          "access": "WriteOnly",
+          "name": "outPhiUD",
+          "space": "Global",
+          "type": "Float32[?]"
+        }
+      ],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 256,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_vof_cmules_update_prev_correction",
+          "implementation": "portable_kernel",
+          "source": "cuda/cfd_vof/cmules_update_prev_correction.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_vof_cmules_update_prev_correction",
+          "implementation": "portable_kernel",
+          "source": "hip/cfd_vof/cmules_update_prev_correction.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_vof_cmules_update_prev_correction",
+          "implementation": "portable_kernel",
+          "source": "metal/cfd_vof/cmules_update_prev_correction.metal",
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_cfd_vof_cmules_update_prev_correction",
+          "implementation": "portable_kernel",
+          "source": "opencl/cfd_vof/cmules_update_prev_correction.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": true,
+          "binary": "vulkan/cfd_vof/cmules_update_prev_correction.spv",
+          "entryPoint": "main",
+          "implementation": "portable_kernel",
+          "source": "vulkan/cfd_vof/cmules_update_prev_correction.comp",
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Volume-of-Fluid CFD",
+      "entryPoint": "navatala_cfd_vof_cmules_update_prev_correction",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadOnly",
+          "name": "alphaPhiBase",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadWrite",
+          "name": "prevCorr",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "counts",
+          "space": "Global",
+          "type": "Int32[3]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "paramsF",
+          "space": "Global",
+          "type": "Float32[4]"
+        }
+      ],
+      "name": "navatala_cfd_vof_cmules_update_prev_correction",
+      "outputs": [],
       "requirements": {
         "estimatedSharedMemoryBytes": 0,
         "requiresAtomic64": false,
@@ -257782,33 +259910,33 @@
     "backendCoverage": {
       "cuda": {
         "binaryFiles": 0,
-        "kernelsAvailable": 2096,
+        "kernelsAvailable": 2114,
         "missingVsCuda": 0,
-        "sourceFiles": 2096
+        "sourceFiles": 2114
       },
       "hip": {
         "binaryFiles": 0,
-        "kernelsAvailable": 2110,
+        "kernelsAvailable": 2128,
         "missingVsCuda": 0,
-        "sourceFiles": 2110
+        "sourceFiles": 2128
       },
       "metal": {
         "binaryFiles": 0,
-        "kernelsAvailable": 1431,
-        "missingVsCuda": 665,
-        "sourceFiles": 1431
+        "kernelsAvailable": 1444,
+        "missingVsCuda": 670,
+        "sourceFiles": 1444
       },
       "opencl": {
         "binaryFiles": 0,
-        "kernelsAvailable": 1958,
+        "kernelsAvailable": 1976,
         "missingVsCuda": 138,
-        "sourceFiles": 1958
+        "sourceFiles": 1976
       },
       "vulkan": {
-        "binaryFiles": 1944,
-        "kernelsAvailable": 1944,
+        "binaryFiles": 1962,
+        "kernelsAvailable": 1962,
         "missingVsCuda": 152,
-        "sourceFiles": 1944
+        "sourceFiles": 1962
       }
     },
     "domains": {
@@ -257820,9 +259948,9 @@
       "Neural / spectral operators": 12,
       "Parallel primitives": 14,
       "Sparse linear algebra": 54,
-      "Volume-of-Fluid CFD": 170
+      "Volume-of-Fluid CFD": 188
     },
-    "kernelCount": 2110,
+    "kernelCount": 2128,
     "libraryOperationCount": 319
   }
 }

@@ -1,0 +1,410 @@
+Internal ctest changing into directory: /tmp/navatala_gpu_metal_fixture_tree/build-metal-validation
+UpdateCTestConfiguration  from :/tmp/navatala_gpu_metal_fixture_tree/build-metal-validation/DartConfiguration.tcl
+Parse Config file:/tmp/navatala_gpu_metal_fixture_tree/build-metal-validation/DartConfiguration.tcl
+UpdateCTestConfiguration  from :/tmp/navatala_gpu_metal_fixture_tree/build-metal-validation/DartConfiguration.tcl
+Parse Config file:/tmp/navatala_gpu_metal_fixture_tree/build-metal-validation/DartConfiguration.tcl
+Test project /tmp/navatala_gpu_metal_fixture_tree/build-metal-validation
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+      Start  1: test_device_selection
+
+1: Test command: /tmp/navatala_gpu_metal_fixture_tree/build-metal-validation/runtime/tests/test_device_selection
+1: Working Directory: /tmp/navatala_gpu_metal_fixture_tree/build-metal-validation/runtime/tests
+1: Test timeout computed to be: 1500
+1: ========================================
+1: GPU Runtime Device Selection Tests
+1: ========================================
+1:
+1: === Test: Device Factory ===
+1: PASS: Device factory created device
+1:
+1: === Test: Device Metadata ===
+1: Device Name: Apple M4 Max
+1: Total Memory: 110100 MB
+1: Compute Capability: Apple7
+1: PASS: Device metadata queries
+1:
+1: === Test: Device Feature Support ===
+1: Float64 Support: No
+1: Float16 Support: Yes
+1: Managed Memory: Yes
+1: Shared Memory: Yes
+1: Graph Support: No
+1: PASS: Device feature queries
+1:
+1: === Test: Queue Creation ===
+1: Created normal queue
+1: Created high priority queue
+1: Created low priority queue
+1: PASS: Queue creation
+1:
+1: === Test: Buffer Allocation ===
+1: Created 1MB device buffer
+1: Created 1MB pinned buffer
+1: Created 1MB managed buffer
+1: PASS: Buffer allocation
+1:
+1: === Test: Buffer Host Access ===
+1: PASS: Buffer host access
+1:
+1: === Test: Multi-Device ===
+1: Device 0: Apple M4 Max
+1: Device 1: Apple M4 Max
+1: Multiple devices available
+1: PASS: Multi-device enumeration
+1:
+1: ========================================
+1: ALL TESTS PASSED
+1: ========================================
+ 1/10 Test  #1: test_device_selection .................   Passed    0.01 sec
+test 2
+      Start  2: test_events
+
+2: Test command: /tmp/navatala_gpu_metal_fixture_tree/build-metal-validation/runtime/tests/test_events
+2: Working Directory: /tmp/navatala_gpu_metal_fixture_tree/build-metal-validation/runtime/tests
+2: Test timeout computed to be: 1500
+2: ========================================
+2: GPU Runtime Event Synchronization Tests
+2: ========================================
+2:
+2: === Test: Event Creation ===
+2: PASS: Event creation
+2:
+2: === Test: Event Record + Wait ===
+2: PASS: Event record + wait
+2:
+2: === Test: Event Completion Query ===
+2: PASS: Event completion query
+2:
+2: === Test: Event Wait ===
+2: PASS: Event wait
+2:
+2: === Test: Event Wait with Timeout ===
+2: waitFor completed in 36 us
+2: PASS: Event wait with timeout
+2:
+2: === Test: Multi-Queue Synchronization ===
+2: PASS: Multi-queue synchronization
+2:
+2: === Test: Chained Operations with Events ===
+2: PASS: Chained operations with events
+2:
+2: === Test: Concurrent Queue Operations ===
+2: PASS: Concurrent queue operations
+2:
+2: === Test: Event Stress Test ===
+2: Completed 100 event operations
+2: PASS: Event stress test
+2:
+2: ========================================
+2: ALL EVENT TESTS PASSED
+2: ========================================
+2: NAVATALA_GPU_RUNTIME_PROFILE: pid=67847 label=(root) hostpinned_map=0 hostpinned_unmap=0 h2d_count=0 h2d_bytes=0 d2h_count=0 d2h_bytes=0 d2d_count=0 d2d_bytes=0 hosthost_count=3 hosthost_bytes=3072 sync=109 submit=0 command_buffer=5 compute_encoder=0 blit_encoder=0 host_visible_copy=3 batch_dispatch=0 batch_flush=0 batch_limit_flush=0 skipped_empty_sync=107 metal_archive_cache_hit=0 metal_archive_cache_miss=0 metal_archive_cache_store=0 metal_archive_cache_store_bytes=0
+ 2/10 Test  #2: test_events ...........................   Passed    0.01 sec
+test 3
+      Start  3: test_graphs
+
+3: Test command: /tmp/navatala_gpu_metal_fixture_tree/build-metal-validation/runtime/tests/test_graphs
+3: Working Directory: /tmp/navatala_gpu_metal_fixture_tree/build-metal-validation/runtime/tests
+3: Test timeout computed to be: 1500
+3: ========================================
+3: GPU Runtime Graph Capture Tests
+3: ========================================
+3:
+3: === Test: Graph Creation ===
+3: SKIP: Graphs not supported on this device
+3:
+3: === Test: Graph Launch ===
+3: SKIP: Graphs not supported on this device
+3:
+3: === Test: Graph Update ===
+3: SKIP: Graphs not supported on this device
+3:
+3: === Test: Multiple Graph Launches ===
+3: SKIP: Graphs not supported on this device
+3:
+3: === Test: Graph Parameter Mutation ===
+3: SKIP: Graphs not supported on this device
+3:
+3: === Test: Graph with Kernel Launches ===
+3: SKIP: Graphs not supported on this device
+3:
+3: === Test: Graph with Memory Operations ===
+3: SKIP: Graphs not supported on this device
+3:
+3: === Test: Graph Performance ===
+3: SKIP: Graphs not supported on this device
+3:
+3: === Test: Graph Error Handling ===
+3: SKIP: Graphs not supported on this device
+3:
+3: === Test: Graph Reinstantiation ===
+3: SKIP: Graphs not supported on this device
+3:
+3: ========================================
+3: ALL GRAPH TESTS PASSED
+3: ========================================
+ 3/10 Test  #3: test_graphs ...........................   Passed    0.01 sec
+test 4
+      Start  4: test_kernel_execution
+
+4: Test command: /tmp/navatala_gpu_metal_fixture_tree/build-metal-validation/runtime/tests/test_kernel_execution
+4: Working Directory: /tmp/navatala_gpu_metal_fixture_tree/build-metal-validation/runtime/tests
+4: Test timeout computed to be: 1500
+4: ==================================================
+4: GPU Runtime: End-to-End Kernel Execution Tests
+4: ==================================================
+4:
+4: === Test: Backend Availability ===
+4: [ERROR] OpenCL backend requested but OpenCL not available at compile time
+4: opencl: NOT AVAILABLE
+4: [ERROR] Vulkan backend requested but Vulkan not available at compile time
+4: vulkan: NOT AVAILABLE
+4: [ERROR] CUDA backend requested but CUDA not available at compile time
+4: cuda: NOT AVAILABLE
+4: [ERROR] HIP backend requested but HIP not available at compile time
+4: hip: NOT AVAILABLE
+4: metal: AVAILABLE
+4:
+4: === Test: Square (OpenCL) ===
+4: [ERROR] OpenCL backend requested but OpenCL not available at compile time
+4: SKIP: OpenCL backend not available
+4:
+4: === Test: SAXPY (OpenCL) ===
+4: [ERROR] OpenCL backend requested but OpenCL not available at compile time
+4: SKIP: OpenCL backend not available
+4:
+4: === Test: Square (Vulkan) ===
+4: [ERROR] Vulkan backend requested but Vulkan not available at compile time
+4: SKIP: Vulkan backend not available
+4:
+4: === Test: Square (CUDA) ===
+4: [ERROR] CUDA backend requested but CUDA not available at compile time
+4: SKIP: CUDA backend not available
+4:
+4: === Test: SAXPY (CUDA) ===
+4: [ERROR] CUDA backend requested but CUDA not available at compile time
+4: SKIP: CUDA backend not available
+4:
+4: === Test: Square (HIP) ===
+4: [ERROR] HIP backend requested but HIP not available at compile time
+4: SKIP: HIP backend not available
+4:
+4: === Test: SAXPY (HIP) ===
+4: [ERROR] HIP backend requested but HIP not available at compile time
+4: SKIP: HIP backend not available
+4:
+4: === Test: Param Buffer Overwrite Ordering (HIP) ===
+4: [ERROR] HIP backend requested but HIP not available at compile time
+4: SKIP: HIP backend not available
+4:
+4: === Test: Square (Metal) ===
+4: === Running: Square (metal) ===
+4: Verified: First 16 elements correct
+4: PASS: Square
+4:
+4: === Test: SAXPY (Metal) ===
+4: === Running: SAXPY (metal) ===
+4: Verified: First 16 elements correct
+4: PASS: SAXPY
+4:
+4: ==================================================
+4: All tests completed!
+4: ==================================================
+4: NAVATALA_GPU_RUNTIME_PROFILE: pid=67862 label=(root) hostpinned_map=8 hostpinned_unmap=8 h2d_count=0 h2d_bytes=0 d2h_count=0 d2h_bytes=0 d2d_count=0 d2d_bytes=0 hosthost_count=0 hosthost_bytes=0 sync=2 submit=2 command_buffer=2 compute_encoder=2 blit_encoder=0 host_visible_copy=0 batch_dispatch=0 batch_flush=0 batch_limit_flush=0 skipped_empty_sync=0 metal_archive_cache_hit=2 metal_archive_cache_miss=0 metal_archive_cache_store=0 metal_archive_cache_store_bytes=0
+ 4/10 Test  #4: test_kernel_execution .................   Passed    0.02 sec
+test 5
+      Start  5: test_program_cache
+
+5: Test command: /tmp/navatala_gpu_metal_fixture_tree/build-metal-validation/runtime/tests/test_program_cache
+5: Working Directory: /tmp/navatala_gpu_metal_fixture_tree/build-metal-validation/runtime/tests
+5: Test timeout computed to be: 1500
+5: ========================================
+5: GPU Runtime Program Cache Tests
+5: ========================================
+5:
+5: ========================================
+5: ALL TESTS PASSED
+5: ========================================
+ 5/10 Test  #5: test_program_cache ....................   Passed    0.00 sec
+test 6
+      Start  6: test_memory_resources
+
+6: Test command: /tmp/navatala_gpu_metal_fixture_tree/build-metal-validation/runtime/tests/test_memory_resources
+6: Working Directory: /tmp/navatala_gpu_metal_fixture_tree/build-metal-validation/runtime/tests
+6: Test timeout computed to be: 1500
+6:
+6: ========================================
+6: GPU Runtime Memory Resource Tests
+6: ========================================
+6:
+6: === Test: Default Resource Basic Allocation ===
+6: PASS: Default resource basic allocation
+6: === Test: Default Resource Multiple Allocations ===
+6: PASS: Default resource multiple allocations
+6: === Test: Pool Resource Basic Allocation ===
+6: PASS: Pool resource basic allocation
+6: === Test: Pool Resource Memory Reuse ===
+6: PASS: Pool resource memory reuse
+6: === Test: Pool Resource Statistics ===
+6: PASS: Pool resource statistics
+6: === Test: Binning Resource Basic Allocation ===
+6: PASS: Binning resource basic allocation
+6: === Test: Binning Resource Different Sizes ===
+6: PASS: Binning resource different sizes
+6: === Test: Aligned Resource Adaptor ===
+6: PASS: Aligned resource adaptor
+6: === Test: Tracking Resource Adaptor ===
+6: PASS: Tracking resource adaptor
+6: === Test: Limiting Resource Adaptor ===
+6: PASS: Limiting resource adaptor
+6: === Test: Statistics Resource Adaptor ===
+6: PASS: Statistics resource adaptor
+6: === Test: Composed Resources ===
+6: PASS: Composed resources
+6: === Test: Binning Rounded Size Dealloc ===
+6: PASS: Binning rounded size dealloc
+6: === Test: Pool Stats With Rounding ===
+6: PASS: Pool stats with rounding
+6: === Test: Memory Resource Zero Size ===
+6: PASS: Memory resource zero size
+6: === Test: Deep Adaptor Stacking ===
+6: PASS: Deep adaptor stacking
+6: === Test: Pool Realloc Pattern ===
+6: PASS: Pool realloc pattern
+6: === Test: Pool No Growth After Warmup ===
+6: PASS: Pool no growth after warmup
+6:
+6: ========================================
+6: All Memory Resource Tests Completed!
+6: ========================================
+6:
+ 6/10 Test  #6: test_memory_resources .................   Passed    0.01 sec
+test 7
+      Start  7: test_stream_pool
+
+7: Test command: /tmp/navatala_gpu_metal_fixture_tree/build-metal-validation/runtime/tests/test_stream_pool
+7: Working Directory: /tmp/navatala_gpu_metal_fixture_tree/build-metal-validation/runtime/tests
+7: Test timeout computed to be: 1500
+7:
+7: ========================================
+7: GPU Runtime Stream Pool Tests
+7: ========================================
+7:
+7: === Test: Stream Pool Creation ===
+7: PASS: Stream pool creation
+7: === Test: Stream Pool Acquire/Release ===
+7: PASS: Stream pool acquire/release
+7: === Test: Stream Pool Priority ===
+7: PASS: Stream pool priority
+7: === Test: Stream Pool Use Queue ===
+7: PASS: Stream pool use queue
+7: === Test: Stream Pool Trim ===
+7: PASS: Stream pool trim
+7: === Test: Stream Pool Clear ===
+7: PASS: Stream pool clear
+7: === Test: Stream Pool Move ===
+7: PASS: Stream pool move
+7: === Test: Stream Pool Multiple Devices ===
+7: PASS: Stream pool multiple devices (2 devices)
+7: === Test: Stream Pool Stress ===
+7: PASS: Stream pool stress
+7:
+7: ========================================
+7: All Stream Pool Tests Completed!
+7: ========================================
+7:
+7: NAVATALA_GPU_RUNTIME_PROFILE: pid=67936 label=(root) hostpinned_map=0 hostpinned_unmap=0 h2d_count=0 h2d_bytes=0 d2h_count=0 d2h_bytes=0 d2d_count=1 d2d_bytes=1024 hosthost_count=0 hosthost_bytes=0 sync=122 submit=0 command_buffer=1 compute_encoder=0 blit_encoder=1 host_visible_copy=0 batch_dispatch=0 batch_flush=0 batch_limit_flush=0 skipped_empty_sync=121 metal_archive_cache_hit=0 metal_archive_cache_miss=0 metal_archive_cache_store=0 metal_archive_cache_store_bytes=0
+ 7/10 Test  #7: test_stream_pool ......................   Passed    0.02 sec
+test 8
+      Start  8: test_device_buffer
+
+8: Test command: /tmp/navatala_gpu_metal_fixture_tree/build-metal-validation/runtime/tests/test_device_buffer
+8: Working Directory: /tmp/navatala_gpu_metal_fixture_tree/build-metal-validation/runtime/tests
+8: Test timeout computed to be: 1500
+8:
+8: ========================================
+8: GPU Runtime Device Buffer Tests
+8: ========================================
+8:
+8: === Test: DeviceBuffer Creation ===
+8: PASS: DeviceBuffer creation
+8: === Test: DeviceBuffer Move Semantics ===
+8: PASS: DeviceBuffer move semantics
+8: === Test: DeviceBuffer Copy From/To Host ===
+8: PASS: DeviceBuffer copy from/to host
+8: === Test: DeviceBuffer Partial Copy ===
+8: PASS: DeviceBuffer partial copy
+8: === Test: DeviceBuffer Resize ===
+8: PASS: DeviceBuffer resize
+8: === Test: DeviceBuffer Resize Preserve ===
+8: PASS: DeviceBuffer resize preserve
+8: === Test: DeviceBuffer Release ===
+8: PASS: DeviceBuffer release
+8: === Test: DeviceBuffer Memory Kinds ===
+8: PASS: DeviceBuffer memory kinds
+8: === Test: Queue Memcpy Explicit Map/Unmap ===
+8: PASS: Queue memcpy explicit map/unmap
+8: === Test: DeviceScalar Creation ===
+8: PASS: DeviceScalar creation
+8: === Test: DeviceScalar Set/Get ===
+8: PASS: DeviceScalar set/get
+8: === Test: DeviceScalar Float ===
+8: PASS: DeviceScalar float
+8: === Test: DeviceScalar Double ===
+8: PASS: DeviceScalar double
+8: === Test: DeviceBuffer Zero Size ===
+8: PASS: DeviceBuffer zero size
+8: === Test: DeviceBuffer Large Allocation ===
+8: PASS: DeviceBuffer large allocation
+8:
+8: ========================================
+8: All Device Buffer Tests Completed!
+8: ========================================
+8:
+8: NAVATALA_GPU_RUNTIME_PROFILE: pid=67937 label=(root) hostpinned_map=2 hostpinned_unmap=2 h2d_count=8 h2d_bytes=6052 d2h_count=8 d2h_bytes=6052 d2d_count=1 d2d_bytes=400 hosthost_count=0 hosthost_bytes=0 sync=23 submit=0 command_buffer=1 compute_encoder=0 blit_encoder=1 host_visible_copy=16 batch_dispatch=0 batch_flush=0 batch_limit_flush=0 skipped_empty_sync=22 metal_archive_cache_hit=0 metal_archive_cache_miss=0 metal_archive_cache_store=0 metal_archive_cache_store_bytes=0
+ 8/10 Test  #8: test_device_buffer ....................   Passed    0.02 sec
+test 29
+      Start 29: metal_validation_sample_conformance
+
+29: Test command: /opt/homebrew/Frameworks/Python.framework/Versions/3.12/bin/python3.12 "/tmp/navatala_gpu_metal_fixture_tree/tests/../scripts/validate_metal_validation_json.py" "/tmp/navatala_gpu_metal_fixture_tree/tests/../benchmarks/fixtures/metal_validation.sample.json" "--require-full"
+29: Working Directory: /tmp/navatala_gpu_metal_fixture_tree/build-metal-validation/tests
+29: Environment variables:
+29:  PYTHONDONTWRITEBYTECODE=1
+29: Test timeout computed to be: 1500
+29: PASS: Metal validation artifact /tmp/navatala_gpu_metal_fixture_tree/tests/../benchmarks/fixtures/metal_validation.sample.json
+ 9/10 Test #29: metal_validation_sample_conformance ...   Passed    0.03 sec
+test 30
+      Start 30: metal_validation_sample_render
+
+30: Test command: /opt/homebrew/Frameworks/Python.framework/Versions/3.12/bin/python3.12 "/tmp/navatala_gpu_metal_fixture_tree/tests/../scripts/render_metal_validation_report.py" "/tmp/navatala_gpu_metal_fixture_tree/tests/../benchmarks/fixtures/metal_validation.sample.json" "--require-full" "--output" "/tmp/navatala_gpu_metal_fixture_tree/build-metal-validation/tests/metal_validation.sample.md"
+30: Working Directory: /tmp/navatala_gpu_metal_fixture_tree/build-metal-validation/tests
+30: Environment variables:
+30:  PYTHONDONTWRITEBYTECODE=1
+30: Test timeout computed to be: 1500
+30: Wrote Metal validation report: /tmp/navatala_gpu_metal_fixture_tree/build-metal-validation/tests/metal_validation.sample.md
+10/10 Test #30: metal_validation_sample_render ........   Passed    0.03 sec
+
+The following tests passed:
+	test_device_selection
+	test_events
+	test_graphs
+	test_kernel_execution
+	test_program_cache
+	test_memory_resources
+	test_stream_pool
+	test_device_buffer
+	metal_validation_sample_conformance
+	metal_validation_sample_render
+
+100% tests passed, 0 tests failed out of 10
+
+Total Test time (real) =   0.17 sec
+real 0.17
+user 0.08
+sys 0.06

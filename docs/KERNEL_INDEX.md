@@ -2001,11 +2001,12 @@ Compact navigation aid for the kernel corpus, grouped by domain.
 
 ## Volume-of-Fluid CFD
 
-170 kernels.
+188 kernels.
 
 | Kernel | CUDA | HIP | OpenCL | Vulkan | Metal |
 |--------|:----:|:---:|:------:|:------:|:-----:|
 | `navatala_cfd_add_vol_vector` | yes | yes | yes | yes | yes |
+| `navatala_cfd_alpha_proc_face_interp` | yes | yes | yes | yes | yes |
 | `navatala_cfd_apply_sp_to_hby_a` | yes | yes | yes | yes | yes |
 | `navatala_cfd_axpy_cells` | yes | yes | yes | yes | yes |
 | `navatala_cfd_axpy_in_place` | yes | yes | yes | yes | yes |
@@ -2026,6 +2027,7 @@ Compact navigation aid for the kernel corpus, grouped by domain.
 | `navatala_cfd_compute_face_area_pair_weights_f32` | yes | yes | yes | yes | yes |
 | `navatala_cfd_csr_sp_m_v_mixed_f32_f64` | yes | yes | yes | yes | - |
 | `navatala_cfd_ddt_diagonal` | yes | yes | yes | yes | yes |
+| `navatala_cfd_ddt_source` | yes | yes | yes | yes | yes |
 | `navatala_cfd_diag_from_cf` | yes | yes | yes | yes | yes |
 | `navatala_cfd_diag_inv_apply_f32` | yes | yes | yes | yes | yes |
 | `navatala_cfd_dic_apply` | yes | yes | yes | yes | yes |
@@ -2037,6 +2039,7 @@ Compact navigation aid for the kernel corpus, grouped by domain.
 | `navatala_cfd_ell_sp_m_v_mixed_f32_f64` | yes | yes | yes | yes | - |
 | `navatala_cfd_exact_mat_vec` | yes | yes | yes | yes | yes |
 | `navatala_cfd_exact_mat_vec_f64` | yes | yes | yes | yes | - |
+| `navatala_cfd_exact_mat_vec_native_f64` | yes | yes | yes | yes | - |
 | `navatala_cfd_face_flux` | yes | yes | yes | yes | yes |
 | `navatala_cfd_face_flux_boundary` | yes | yes | yes | yes | yes |
 | `navatala_cfd_face_flux_internal` | yes | yes | yes | yes | yes |
@@ -2081,6 +2084,8 @@ Compact navigation aid for the kernel corpus, grouped by domain.
 | `navatala_cfd_mu_eff_from_rho_nu_eff` | yes | yes | yes | yes | yes |
 | `navatala_cfd_mu_eff_from_rho_nut_and_nu_mix` | yes | yes | yes | yes | yes |
 | `navatala_cfd_mul_by_vol_in_place` | yes | yes | yes | yes | yes |
+| `navatala_cfd_mules_proc_face_update` | yes | yes | yes | yes | yes |
+| `navatala_cfd_mules_proc_face_update_f64` | yes | yes | yes | yes | - |
 | `navatala_cfd_n_hatf_all` | yes | yes | yes | yes | yes |
 | `navatala_cfd_n_hatf_all_f64` | yes | yes | yes | yes | - |
 | `navatala_cfd_neg_sum_diag` | yes | yes | yes | yes | yes |
@@ -2089,6 +2094,7 @@ Compact navigation aid for the kernel corpus, grouped by domain.
 | `navatala_cfd_pack_mu_grad_owner` | yes | yes | yes | yes | yes |
 | `navatala_cfd_pack_owner_rho_vec3` | yes | yes | yes | yes | yes |
 | `navatala_cfd_pack_owner_values` | yes | yes | yes | yes | yes |
+| `navatala_cfd_pack_owner_values_f64` | yes | yes | yes | yes | - |
 | `navatala_cfd_pack_owner_vec3` | yes | yes | yes | yes | yes |
 | `navatala_cfd_pack_owner_vec3_mu` | yes | yes | yes | yes | yes |
 | `navatala_cfd_pcg_compute_alpha` | yes | yes | yes | yes | - |
@@ -2130,12 +2136,15 @@ Compact navigation aid for the kernel corpus, grouped by domain.
 | `navatala_cfd_primitives_sn_grad_scalar` | yes | yes | yes | yes | yes |
 | `navatala_cfd_prolongate_by_agglomeration_f32` | yes | yes | yes | yes | yes |
 | `navatala_cfd_ref_add_ax` | yes | yes | yes | yes | yes |
+| `navatala_cfd_ref_add_ax_native_f64` | yes | yes | yes | yes | - |
 | `navatala_cfd_ref_add_b` | yes | yes | yes | yes | yes |
+| `navatala_cfd_ref_add_b_native_f64` | yes | yes | yes | yes | - |
 | `navatala_cfd_restrict_by_agglomeration_f32` | yes | yes | - | - | - |
 | `navatala_cfd_restrict_by_agglomeration_gather_f32` | yes | yes | yes | yes | yes |
 | `navatala_cfd_rhs_sub` | yes | yes | yes | yes | yes |
 | `navatala_cfd_scalar_jacobi_clamp_min` | yes | yes | yes | yes | yes |
 | `navatala_cfd_scalar_jacobi_update` | yes | yes | yes | yes | yes |
+| `navatala_cfd_scalar_ldu_coupled_interface_add` | yes | yes | yes | yes | yes |
 | `navatala_cfd_scalar_ldu_mat_vec` | yes | yes | yes | yes | yes |
 | `navatala_cfd_scalar_ldu_multi_color_gs_sweep` | yes | yes | yes | yes | yes |
 | `navatala_cfd_scatter_mu_grad_ghost` | yes | yes | yes | yes | yes |
@@ -2155,15 +2164,24 @@ Compact navigation aid for the kernel corpus, grouped by domain.
 | `navatala_cfd_u_correct` | yes | yes | yes | yes | yes |
 | `navatala_cfd_u_correct_reconstruct` | yes | yes | yes | yes | yes |
 | `navatala_cfd_upper_from_cf` | yes | yes | yes | yes | yes |
+| `navatala_cfd_upwind_weights` | yes | yes | yes | yes | yes |
 | `navatala_cfd_vof_alpha_face_average_internal` | yes | yes | yes | yes | yes |
 | `navatala_cfd_vof_alpha_phi_all` | yes | yes | yes | yes | yes |
 | `navatala_cfd_vof_alpha_phi_int` | yes | yes | yes | yes | yes |
+| `navatala_cfd_vof_alpha_phi_van_leer_int` | yes | yes | yes | yes | yes |
 | `navatala_cfd_vof_alpha_update` | yes | yes | yes | yes | yes |
 | `navatala_cfd_vof_average_face_scalar_to_cell` | yes | yes | yes | yes | yes |
+| `navatala_cfd_vof_cmules_accumulate_correction` | yes | yes | yes | yes | yes |
 | `navatala_cfd_vof_cmules_apply_correction` | yes | yes | yes | yes | yes |
+| `navatala_cfd_vof_cmules_blend_alpha` | yes | yes | yes | yes | yes |
 | `navatala_cfd_vof_cmules_boundary_face_update` | yes | yes | yes | yes | yes |
 | `navatala_cfd_vof_cmules_correct` | yes | yes | yes | yes | yes |
+| `navatala_cfd_vof_cmules_flux_diff` | yes | yes | yes | yes | yes |
 | `navatala_cfd_vof_cmules_limiter_corr_prepare` | yes | yes | yes | yes | yes |
+| `navatala_cfd_vof_cmules_predictor_boundary_flux` | yes | yes | yes | yes | yes |
+| `navatala_cfd_vof_cmules_predictor_coupled_boundary_flux` | yes | yes | yes | yes | yes |
+| `navatala_cfd_vof_cmules_predictor_internal_flux` | yes | yes | yes | yes | yes |
+| `navatala_cfd_vof_cmules_update_prev_correction` | yes | yes | yes | yes | yes |
 | `navatala_cfd_vof_interp_scalar_face_all` | yes | yes | yes | yes | yes |
 | `navatala_cfd_vof_mules_apply` | yes | yes | yes | yes | yes |
 | `navatala_cfd_vof_mules_cell_lambda` | yes | yes | yes | yes | yes |

@@ -53,7 +53,11 @@ The opt-in ROCm vendor benchmark harness is documented in
 [`docs/benchmarks/ROCM_VENDOR_BENCHMARKS.md`](benchmarks/ROCM_VENDOR_BENCHMARKS.md).
 For Metal runtime validation, use
 [`docs/benchmarks/METAL_VALIDATION.md`](benchmarks/METAL_VALIDATION.md) and
-preserve the emitted `metal_validation.json`/Markdown/log artifact set.
+preserve the emitted `metal_validation.json`/Markdown/log artifact set. Metal
+runtime tuning evidence should also include a dated hardware-run directory for
+the `metal_runtime_benchmark` matrix, plus the policy sweep when command-buffer
+batching, blit batching, archive caching, or private-buffer thresholds are used
+to justify opt-in policy values.
 
 ## Manifest Requirements
 

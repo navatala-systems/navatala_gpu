@@ -6,11 +6,6 @@
 
 namespace GpuRuntime {
 
-DeviceMemTelemetry deviceMemTelemetry()
-{
-    return {};
-}
-
 std::unique_ptr<LibraryOps> createLibraryOps()
 {
 #if defined(GPU_RUNTIME_HAVE_ROCBLAS) && GPU_RUNTIME_HAVE_ROCBLAS

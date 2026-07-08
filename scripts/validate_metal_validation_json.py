@@ -155,6 +155,10 @@ def validate_report(
         flags = _require_object(run.get("flags"), f"{path}.flags")
         _require_bool(flags, "batchSubmits", f"{path}.flags")
         _require_int(flags, "batchLimit", f"{path}.flags", minimum=0)
+        if "batchBlits" in flags:
+            _require_bool(flags, "batchBlits", f"{path}.flags")
+        if "batchBlitLimit" in flags:
+            _require_int(flags, "batchBlitLimit", f"{path}.flags", minimum=0)
         _require_bool(flags, "privateDeviceBuffers", f"{path}.flags")
 
         ctest_passed = _require_bool(run, "ctestPassed", path)
@@ -183,6 +187,8 @@ def validate_report(
                 warnings.append("batched run has batch_dispatch=0; workload may not exercise batching")
         if name == "private" and not flags["privateDeviceBuffers"]:
             _fail(f"{path}.flags.privateDeviceBuffers", "private run must enable private device buffers")
+        if flags.get("batchBlits") and not flags["privateDeviceBuffers"]:
+            warnings.append(f"{name}: blit batching is enabled outside private-buffer mode")
         if profile.get("command_buffer", 0) == 0 and profile.get("submit", 0) > 0:
             warnings.append(f"{name}: submit count is non-zero but command_buffer=0")
 

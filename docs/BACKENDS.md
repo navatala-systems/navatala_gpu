@@ -76,7 +76,11 @@ synchronization, event record/wait calls, and queue destruction.
 `NAVATALA_GPU_METAL_PRIVATE_DEVICE_BUFFERS=1` is an experimental mode that
 allocates `MemoryKind::Device` buffers as Metal private storage. It relies on
 queued staging copies and offset-capable blits for public C ABI H2D/D2H/D2D
-operations.
+operations. `NAVATALA_GPU_METAL_PRIVATE_MIN_BYTES=N` can be combined with this
+mode to leave smaller buffers in shared storage while using private storage for
+larger arrays; this matches the Apple unified-memory benchmark result that
+small transfers prefer shared buffers and larger transfers can benefit from
+private storage plus batched blits.
 
 Submit batching and private device buffers are default-off until validated on
 Apple Silicon. See

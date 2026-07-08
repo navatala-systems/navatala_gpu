@@ -1,0 +1,149 @@
+{
+  "schema": "navatala_gpu.metal_validation.v1",
+  "timingMode": "ctest_runtime_profile",
+  "generatedAt": "2026-07-08T01:45:15Z",
+  "commit": "navatala:3eee3d6;runtime:9cc277c",
+  "host": {
+    "os": "Darwin",
+    "arch": "arm64",
+    "macOS": "26.5.2",
+    "xcode": "Xcode 26.6",
+    "deviceSummary": "Chipset Model: Apple M4 Max; Vendor: Apple (0x106b); Metal Support: Metal 4"
+  },
+  "build": {
+    "buildDir": "/tmp/navatala_gpu_metal_fixture_tree/build-metal-validation",
+    "cacheHome": "/tmp/navatala_gpu_metal_fixtures/20260708_apple_m4max_metal_validation_runtime/cache_home",
+    "cmakeVersion": "cmake version 3.26.0-rc1",
+    "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)",
+    "configuration": "Release"
+  },
+  "tests": {
+    "regex": "test_device_selection|test_events|test_graphs|test_kernel_execution|test_program_cache|test_memory_resources|test_stream_pool|test_device_buffer|metal_validation_sample_conformance|metal_validation_sample_render",
+    "mode": "runtime_only"
+  },
+  "runs": [
+    {
+      "name": "baseline",
+      "flags": {
+        "batchSubmits": false,
+        "batchLimit": 0,
+        "batchBlits": false,
+        "batchBlitLimit": 0,
+        "privateDeviceBuffers": false,
+        "privateMinBytes": 0
+      },
+      "ctestPassed": true,
+      "exitCode": 0,
+      "wallSeconds": 1.07,
+      "log": "baseline.log",
+      "profileLineCount": 4,
+      "profileCounters": {
+        "submit": 2,
+        "sync": 256,
+        "command_buffer": 9,
+        "compute_encoder": 2,
+        "blit_encoder": 2,
+        "h2d_count": 8,
+        "h2d_bytes": 6052,
+        "d2h_count": 8,
+        "d2h_bytes": 6052,
+        "d2d_count": 2,
+        "d2d_bytes": 1424,
+        "hosthost_count": 3,
+        "hosthost_bytes": 3072,
+        "host_visible_copy": 19,
+        "batch_dispatch": 0,
+        "batch_flush": 0,
+        "batch_limit_flush": 0,
+        "skipped_empty_sync": 250,
+        "metal_archive_cache_hit": 0,
+        "metal_archive_cache_miss": 2,
+        "metal_archive_cache_store": 2,
+        "metal_archive_cache_store_bytes": 27792
+      },
+      "notes": ""
+    },
+    {
+      "name": "batched",
+      "flags": {
+        "batchSubmits": true,
+        "batchLimit": 64,
+        "batchBlits": false,
+        "batchBlitLimit": 0,
+        "privateDeviceBuffers": false,
+        "privateMinBytes": 0
+      },
+      "ctestPassed": true,
+      "exitCode": 0,
+      "wallSeconds": 0.17,
+      "log": "batched.log",
+      "profileLineCount": 4,
+      "profileCounters": {
+        "submit": 2,
+        "sync": 256,
+        "command_buffer": 9,
+        "compute_encoder": 2,
+        "blit_encoder": 2,
+        "h2d_count": 8,
+        "h2d_bytes": 6052,
+        "d2h_count": 8,
+        "d2h_bytes": 6052,
+        "d2d_count": 2,
+        "d2d_bytes": 1424,
+        "hosthost_count": 3,
+        "hosthost_bytes": 3072,
+        "host_visible_copy": 19,
+        "batch_dispatch": 2,
+        "batch_flush": 2,
+        "batch_limit_flush": 0,
+        "skipped_empty_sync": 250,
+        "metal_archive_cache_hit": 2,
+        "metal_archive_cache_miss": 0,
+        "metal_archive_cache_store": 0,
+        "metal_archive_cache_store_bytes": 0
+      },
+      "notes": ""
+    },
+    {
+      "name": "private",
+      "flags": {
+        "batchSubmits": false,
+        "batchLimit": 0,
+        "batchBlits": true,
+        "batchBlitLimit": 64,
+        "privateDeviceBuffers": true,
+        "privateMinBytes": 1048576
+      },
+      "ctestPassed": true,
+      "exitCode": 0,
+      "wallSeconds": 0.17,
+      "log": "private.log",
+      "profileLineCount": 4,
+      "profileCounters": {
+        "submit": 2,
+        "sync": 256,
+        "command_buffer": 9,
+        "compute_encoder": 2,
+        "blit_encoder": 2,
+        "h2d_count": 8,
+        "h2d_bytes": 6052,
+        "d2h_count": 8,
+        "d2h_bytes": 6052,
+        "d2d_count": 2,
+        "d2d_bytes": 1424,
+        "hosthost_count": 3,
+        "hosthost_bytes": 3072,
+        "host_visible_copy": 19,
+        "batch_dispatch": 0,
+        "batch_flush": 0,
+        "batch_limit_flush": 0,
+        "skipped_empty_sync": 250,
+        "metal_archive_cache_hit": 2,
+        "metal_archive_cache_miss": 0,
+        "metal_archive_cache_store": 0,
+        "metal_archive_cache_store_bytes": 0
+      },
+      "notes": ""
+    }
+  ]
+}

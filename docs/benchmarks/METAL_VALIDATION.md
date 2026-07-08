@@ -50,11 +50,17 @@ For the private device-buffer experiment, add:
 
 ```bash
 NAVATALA_GPU_METAL_PRIVATE_DEVICE_BUFFERS=1
+# Optional: keep smaller buffers shared even when private mode is enabled.
+NAVATALA_GPU_METAL_PRIVATE_MIN_BYTES=1048576
 ```
 
 This allocates `MemoryKind::Device` buffers with `MTLResourceStorageModePrivate`
 instead of shared storage. Host transfers then use queued staging copies rather
-than direct CPU access to shared memory.
+than direct CPU access to shared memory. `NAVATALA_GPU_METAL_PRIVATE_MIN_BYTES`
+is a size gate for this experiment: buffers smaller than the threshold remain
+shared, which avoids penalizing tiny transfer/control buffers on Apple unified
+memory while still allowing large arrays to use private storage and queued
+blits.
 
 ## Opt-In Submit Batching
 
@@ -159,6 +165,13 @@ For any release claim, preserve:
 - correctness result;
 - timing summary before and after batching.
 
+When the artifact is captured from a regenerated public tree that is not a Git
+checkout, set `NAVATALA_GPU_SOURCE_COMMIT` to the source provenance string
+before running the validation or runtime benchmark, for example
+`navatala:<hash>;runtime:<hash>`. The runners use that value for the JSON
+`commit` field. Keep this string public-safe because it is copied into release
+fixtures.
+
 ## Acceptance Criteria
 
 Submit batching can be promoted from experimental only if:
@@ -180,6 +193,18 @@ benchmarks/fixtures/hardware_runs/YYYYMMDD_apple_metal_validation/
 and should include `metal_validation.json`, `metal_validation.md`, and the
 three pass logs. The sample fixture is only a schema example and must not be
 quoted as hardware evidence.
+
+Metal runtime benchmark matrices should follow the same dated-hardware-run
+pattern once the public tree is regenerated on the Apple Silicon host:
+
+```text
+benchmarks/fixtures/hardware_runs/YYYYMMDD_apple_metal_runtime/
+```
+
+Include `metal_runtime_benchmark.json`, `metal_runtime_benchmark.md`, the pass
+logs, and any `metal_runtime_policy_sweep.*` files used to justify opt-in
+policy values. Until such a dated artifact exists, Metal runtime tuning should
+be treated as locally validated but not release-fixtured.
 
 The device-to-device blit path should be treated as correct if:
 

@@ -16,7 +16,7 @@
 #include <metal_stdlib>
 using namespace metal;
 
-kernel void navatala_cfd_vof_cmules_limiter_corr_prepare(device const float* alpha [[buffer(0)]], device const float* alphaF [[buffer(1)]], device const float* phiCorr [[buffer(2)]], device const int* offsets [[buffer(3)]], device const int* faceIdx [[buffer(4)]], device const float* sign [[buffer(5)]], device const int* owner [[buffer(6)]], device const int* nei [[buffer(7)]], device const float* vol [[buffer(8)]], device const float* rSubDeltaT [[buffer(9)]], device const float* sp [[buffer(10)]], device const float* su [[buffer(11)]], device const float* psiMax [[buffer(12)]], device const float* psiMin [[buffer(13)]], device const int* counts [[buffer(14)]], device const float* paramsF [[buffer(15)]], device float* psiMaxCap [[buffer(16)]], device float* psiMinCap [[buffer(17)]], device float* sumPhip [[buffer(18)]], device float* mSumPhim [[buffer(19)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
+kernel void navatala_cfd_vof_cmules_limiter_corr_prepare(device const float* alpha [[buffer(0)]], device const float* alphaF [[buffer(1)]], device const int* boundaryExtremaMask [[buffer(2)]], device const float* phiCorr [[buffer(3)]], device const int* offsets [[buffer(4)]], device const int* faceIdx [[buffer(5)]], device const float* sign [[buffer(6)]], device const int* owner [[buffer(7)]], device const int* nei [[buffer(8)]], device const float* vol [[buffer(9)]], device const float* rSubDeltaT [[buffer(10)]], device const float* sp [[buffer(11)]], device const float* su [[buffer(12)]], device const float* psiMax [[buffer(13)]], device const float* psiMin [[buffer(14)]], device const int* counts [[buffer(15)]], device const float* paramsF [[buffer(16)]], device float* psiMaxCap [[buffer(17)]], device float* psiMinCap [[buffer(18)]], device float* sumPhip [[buffer(19)]], device float* mSumPhim [[buffer(20)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
   if (((int)(int(__gid.x))) >= counts[0]) {
     return;
   } else {
@@ -27,6 +27,11 @@ kernel void navatala_cfd_vof_cmules_limiter_corr_prepare(device const float* alp
     float minN = psiMaxCell;
     float spSum = as_type<float>(0x00000000u);
     float smSum = as_type<float>(0x00000000u);
+    float range = (psiMaxCell - psiMinCell);
+    float boundaryDeltaExtremaCoeff = (paramsF[0] - paramsF[2]);
+    if (boundaryDeltaExtremaCoeff < as_type<float>(0x00000000u)) {
+      boundaryDeltaExtremaCoeff = as_type<float>(0x00000000u);
+    }
     int beg = offsets[((int)(int(__gid.x)))];
     int c1 = (((int)(int(__gid.x))) + 1);
     int end = offsets[c1];
@@ -43,13 +48,28 @@ kernel void navatala_cfd_vof_cmules_limiter_corr_prepare(device const float* alp
         }
         v = alpha[nbr];
       } else {
-        v = alphaF[f];
+        int mask = boundaryExtremaMask[f];
+        if (mask != 0) {
+          v = alphaF[f];
+        } else {
+          if (boundaryDeltaExtremaCoeff > as_type<float>(0x00000000u)) {
+            float boundaryExt = (boundaryDeltaExtremaCoeff * range);
+            maxN = (maxN + boundaryExt);
+            minN = (minN - boundaryExt);
+          }
+        }
       }
-      if (v > maxN) {
-        maxN = v;
+      int includeValue = 1;
+      if (f >= counts[2]) {
+        includeValue = boundaryExtremaMask[f];
       }
-      if (v < minN) {
-        minN = v;
+      if (includeValue != 0) {
+        if (v > maxN) {
+          maxN = v;
+        }
+        if (v < minN) {
+          minN = v;
+        }
       }
       float pc = phiCorr[f];
       if (f < counts[2]) {
@@ -74,7 +94,6 @@ kernel void navatala_cfd_vof_cmules_limiter_corr_prepare(device const float* alp
         }
       }
     }
-    float range = (psiMaxCell - psiMinCell);
     maxN = (maxN + (paramsF[2] * range));
     if (maxN > psiMaxCell) {
       maxN = psiMaxCell;

@@ -1,0 +1,98 @@
+=== Metal runtime benchmark environment ===
+ProductName:		macOS
+ProductVersion:		26.5.2
+BuildVersion:		25F84
+Xcode 26.6
+Build version 17F113
+Graphics/Displays:
+
+    Apple M4 Max:
+
+      Chipset Model: Apple M4 Max
+      Type: GPU
+      Bus: Built-In
+      Total Number of Cores: 40
+      Vendor: Apple (0x106b)
+      Metal Support: Metal 4
+      Displays:
+        Color LCD:
+          Display Type: Built-in Liquid Retina XDR Display
+          Resolution: 3456 x 2234 Retina
+          Main Display: Yes
+          Mirror: Off
+          Online: Yes
+          Automatically Adjust Brightness: No
+          Connection Type: Internal
+        S27B80P:
+          Resolution: 3840 x 2160 (2160p/4K UHD 1 - Ultra High Definition)
+          UI Looks like: 3840 x 2160 @ 60.00Hz
+          Mirror: Off
+          Online: Yes
+          Rotation: Supported
+
+cmake version 3.26.0-rc1
+Apple clang version 21.0.0 (clang-2100.1.1.101)
+-- [Navatala GPU] Metal backend enabled
+-- [Navatala GPU] public FFI enabled (stub mode)
+-- [Navatala GPU] ROCm benchmarks requested but HIP backend is disabled
+--
+-- Navatala GPU build configuration
+--   Runtime library:    ON
+--   Examples:           OFF
+--   Runtime tests:      OFF
+--   Benchmarks:         ON
+--   Benchmark tests:    OFF
+--   CUDA backend:       OFF
+--   HIP backend:        OFF
+--   Vulkan backend:     OFF
+--   OpenCL backend:     OFF
+--   Metal backend:      ON
+--
+-- Configuring done (0.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /tmp/navatala_gpu_metal_fixture_bench_build
+[ 90%] Built target gpu_runtime
+[100%] Built target metal_runtime_benchmark
+=== Metal runtime benchmark pass: baseline ===
+NAVATALA_GPU_RUNTIME_PROFILE: pid=68704 label=(root) hostpinned_map=12 hostpinned_unmap=12 h2d_count=800 h2d_bytes=3338666000 d2h_count=794 d2h_bytes=3330277376 d2d_count=0 d2d_bytes=0 hosthost_count=0 hosthost_bytes=0 sync=996 submit=2178 command_buffer=2178 compute_encoder=2178 blit_encoder=0 host_visible_copy=1594 batch_dispatch=0 batch_flush=0 batch_limit_flush=0 skipped_empty_sync=864 metal_archive_cache_hit=0 metal_archive_cache_miss=1 metal_archive_cache_store=1 metal_archive_cache_store_bytes=14592
+submit_sync mean_ms=0.252741 repeats=1 checksum=0.288487 PASS
+submit_burst mean_ms=1.10394 repeats=32 checksum=0.290576 PASS
+copy_roundtrip mean_ms=1.33571 repeats=12 checksum=483.25 throughput_GBps=75.3632 PASS
+real 0.23
+user 0.11
+sys 0.04
+=== Metal runtime benchmark pass: batch_submits ===
+NAVATALA_GPU_RUNTIME_PROFILE: pid=68708 label=(root) hostpinned_map=12 hostpinned_unmap=12 h2d_count=800 h2d_bytes=3338666000 d2h_count=794 d2h_bytes=3330277376 d2d_count=0 d2d_bytes=0 hosthost_count=0 hosthost_bytes=0 sync=996 submit=2178 command_buffer=330 compute_encoder=330 blit_encoder=0 host_visible_copy=1594 batch_dispatch=2178 batch_flush=330 batch_limit_flush=264 skipped_empty_sync=864 metal_archive_cache_hit=1 metal_archive_cache_miss=0 metal_archive_cache_store=0 metal_archive_cache_store_bytes=0
+submit_sync mean_ms=0.164222 repeats=1 checksum=0.288487 PASS
+submit_burst mean_ms=1.0305 repeats=32 checksum=0.290576 PASS
+copy_roundtrip mean_ms=1.39217 repeats=12 checksum=483.25 throughput_GBps=72.3066 PASS
+real 0.19
+user 0.10
+sys 0.01
+=== Metal runtime benchmark pass: private ===
+NAVATALA_GPU_RUNTIME_PROFILE: pid=68795 label=(root) hostpinned_map=12 hostpinned_unmap=12 h2d_count=800 h2d_bytes=3338666000 d2h_count=794 d2h_bytes=3330277376 d2d_count=0 d2d_bytes=0 hosthost_count=0 hosthost_bytes=0 sync=202 submit=2178 command_buffer=3772 compute_encoder=2178 blit_encoder=1594 host_visible_copy=0 batch_dispatch=0 batch_flush=0 batch_limit_flush=0 skipped_empty_sync=0 metal_archive_cache_hit=1 metal_archive_cache_miss=0 metal_archive_cache_store=0 metal_archive_cache_store_bytes=0
+submit_sync mean_ms=0.181132 repeats=1 checksum=0.288487 PASS
+submit_burst mean_ms=1.09991 repeats=32 checksum=0.290576 PASS
+copy_roundtrip mean_ms=0.369644 repeats=12 checksum=483.25 throughput_GBps=272.325 PASS
+real 0.13
+user 0.03
+sys 0.06
+=== Metal runtime benchmark pass: private_batch_blits ===
+NAVATALA_GPU_RUNTIME_PROFILE: pid=68798 label=(root) hostpinned_map=12 hostpinned_unmap=12 h2d_count=800 h2d_bytes=3338666000 d2h_count=794 d2h_bytes=3330277376 d2d_count=0 d2d_bytes=0 hosthost_count=0 hosthost_bytes=0 sync=202 submit=2178 command_buffer=2380 compute_encoder=2178 blit_encoder=202 host_visible_copy=0 batch_dispatch=0 batch_flush=0 batch_limit_flush=0 skipped_empty_sync=0 metal_archive_cache_hit=1 metal_archive_cache_miss=0 metal_archive_cache_store=0 metal_archive_cache_store_bytes=0
+submit_sync mean_ms=0.122437 repeats=1 checksum=0.288487 PASS
+submit_burst mean_ms=1.08915 repeats=32 checksum=0.290576 PASS
+copy_roundtrip mean_ms=0.305349 repeats=12 checksum=483.25 throughput_GBps=329.667 PASS
+real 0.12
+user 0.02
+sys 0.04
+Wrote:
+  /tmp/navatala_gpu_metal_fixtures/20260708_apple_m4max_metal_policy_sweep/batch_limit_8/metal_runtime_benchmark.json
+  /tmp/navatala_gpu_metal_fixtures/20260708_apple_m4max_metal_policy_sweep/batch_limit_8/metal_runtime_benchmark.md
+  /tmp/navatala_gpu_metal_fixtures/20260708_apple_m4max_metal_policy_sweep/batch_limit_8/baseline.log
+  /tmp/navatala_gpu_metal_fixtures/20260708_apple_m4max_metal_policy_sweep/batch_limit_8/baseline.json
+  /tmp/navatala_gpu_metal_fixtures/20260708_apple_m4max_metal_policy_sweep/batch_limit_8/batch_submits.log
+  /tmp/navatala_gpu_metal_fixtures/20260708_apple_m4max_metal_policy_sweep/batch_limit_8/batch_submits.json
+  /tmp/navatala_gpu_metal_fixtures/20260708_apple_m4max_metal_policy_sweep/batch_limit_8/private.log
+  /tmp/navatala_gpu_metal_fixtures/20260708_apple_m4max_metal_policy_sweep/batch_limit_8/private.json
+  /tmp/navatala_gpu_metal_fixtures/20260708_apple_m4max_metal_policy_sweep/batch_limit_8/private_batch_blits.log
+  /tmp/navatala_gpu_metal_fixtures/20260708_apple_m4max_metal_policy_sweep/batch_limit_8/private_batch_blits.json

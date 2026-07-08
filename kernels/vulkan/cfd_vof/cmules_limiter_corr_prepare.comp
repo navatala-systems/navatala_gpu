@@ -22,58 +22,61 @@ layout(std430, binding = 0) readonly buffer buf_alpha {
 layout(std430, binding = 1) readonly buffer buf_alphaF {
   float alphaF[];
 };
-layout(std430, binding = 2) readonly buffer buf_phiCorr {
+layout(std430, binding = 2) readonly buffer buf_boundaryExtremaMask {
+  int boundaryExtremaMask[];
+};
+layout(std430, binding = 3) readonly buffer buf_phiCorr {
   float phiCorr[];
 };
-layout(std430, binding = 3) readonly buffer buf_offsets {
+layout(std430, binding = 4) readonly buffer buf_offsets {
   int offsets[];
 };
-layout(std430, binding = 4) readonly buffer buf_faceIdx {
+layout(std430, binding = 5) readonly buffer buf_faceIdx {
   int faceIdx[];
 };
-layout(std430, binding = 5) readonly buffer buf_sign {
+layout(std430, binding = 6) readonly buffer buf_sign {
   float sign[];
 };
-layout(std430, binding = 6) readonly buffer buf_owner {
+layout(std430, binding = 7) readonly buffer buf_owner {
   int owner[];
 };
-layout(std430, binding = 7) readonly buffer buf_nei {
+layout(std430, binding = 8) readonly buffer buf_nei {
   int nei[];
 };
-layout(std430, binding = 8) readonly buffer buf_vol {
+layout(std430, binding = 9) readonly buffer buf_vol {
   float vol[];
 };
-layout(std430, binding = 9) readonly buffer buf_rSubDeltaT {
+layout(std430, binding = 10) readonly buffer buf_rSubDeltaT {
   float rSubDeltaT[];
 };
-layout(std430, binding = 10) readonly buffer buf_sp {
+layout(std430, binding = 11) readonly buffer buf_sp {
   float sp[];
 };
-layout(std430, binding = 11) readonly buffer buf_su {
+layout(std430, binding = 12) readonly buffer buf_su {
   float su[];
 };
-layout(std430, binding = 12) readonly buffer buf_psiMax {
+layout(std430, binding = 13) readonly buffer buf_psiMax {
   float psiMax[];
 };
-layout(std430, binding = 13) readonly buffer buf_psiMin {
+layout(std430, binding = 14) readonly buffer buf_psiMin {
   float psiMin[];
 };
-layout(std430, binding = 14) readonly buffer buf_counts {
+layout(std430, binding = 15) readonly buffer buf_counts {
   int counts[];
 };
-layout(std430, binding = 15) readonly buffer buf_paramsF {
+layout(std430, binding = 16) readonly buffer buf_paramsF {
   float paramsF[];
 };
-layout(std430, binding = 16) writeonly buffer buf_psiMaxCap {
+layout(std430, binding = 17) writeonly buffer buf_psiMaxCap {
   float psiMaxCap[];
 };
-layout(std430, binding = 17) writeonly buffer buf_psiMinCap {
+layout(std430, binding = 18) writeonly buffer buf_psiMinCap {
   float psiMinCap[];
 };
-layout(std430, binding = 18) writeonly buffer buf_sumPhip {
+layout(std430, binding = 19) writeonly buffer buf_sumPhip {
   float sumPhip[];
 };
-layout(std430, binding = 19) writeonly buffer buf_mSumPhim {
+layout(std430, binding = 20) writeonly buffer buf_mSumPhim {
   float mSumPhim[];
 };
 
@@ -90,6 +93,11 @@ void main() {
     float minN = psiMaxCell;
     float spSum = uintBitsToFloat(0x00000000u);
     float smSum = uintBitsToFloat(0x00000000u);
+    float range = (psiMaxCell - psiMinCell);
+    float boundaryDeltaExtremaCoeff = (paramsF[0] - paramsF[2]);
+    if (boundaryDeltaExtremaCoeff < uintBitsToFloat(0x00000000u)) {
+      boundaryDeltaExtremaCoeff = uintBitsToFloat(0x00000000u);
+    }
     int beg = offsets[int(int(gl_GlobalInvocationID.x))];
     int c1 = (int(int(gl_GlobalInvocationID.x)) + 1);
     int end = offsets[c1];
@@ -106,13 +114,28 @@ void main() {
         }
         v = alpha[nbr];
       } else {
-        v = alphaF[f];
+        int mask = boundaryExtremaMask[f];
+        if (mask != 0) {
+          v = alphaF[f];
+        } else {
+          if (boundaryDeltaExtremaCoeff > uintBitsToFloat(0x00000000u)) {
+            float boundaryExt = (boundaryDeltaExtremaCoeff * range);
+            maxN = (maxN + boundaryExt);
+            minN = (minN - boundaryExt);
+          }
+        }
       }
-      if (v > maxN) {
-        maxN = v;
+      int includeValue = 1;
+      if (f >= counts[2]) {
+        includeValue = boundaryExtremaMask[f];
       }
-      if (v < minN) {
-        minN = v;
+      if (includeValue != 0) {
+        if (v > maxN) {
+          maxN = v;
+        }
+        if (v < minN) {
+          minN = v;
+        }
       }
       float pc = phiCorr[f];
       if (f < counts[2]) {
@@ -137,7 +160,6 @@ void main() {
         }
       }
     }
-    float range = (psiMaxCell - psiMinCell);
     maxN = (maxN + (paramsF[2] * range));
     if (maxN > psiMaxCell) {
       maxN = psiMaxCell;

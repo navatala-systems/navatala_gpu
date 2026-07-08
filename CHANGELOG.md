@@ -4,6 +4,15 @@ All notable user-visible changes to `navatala_gpu` are recorded here. This
 file follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the
 project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.5] — Pre-alpha (2026-07-09)
+
+### Changed
+
+- Updated the Metal runtime path with lower command-buffer synchronization
+  churn, opt-in blit batching, and binary archive caching support.
+- Fixed Metal runtime telemetry and batching lifetime accounting.
+- Kept binary archive serialization opt-in on iOS/tvOS.
+
 ## [0.1.4] — Pre-alpha (2026-06-25)
 
 ### Changed

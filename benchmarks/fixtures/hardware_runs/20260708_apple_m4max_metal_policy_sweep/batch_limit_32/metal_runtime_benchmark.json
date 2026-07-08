@@ -1,0 +1,319 @@
+{
+  "schema": "navatala_gpu.metal_runtime_benchmark_matrix.v1",
+  "timingMode": "host_wall_synchronized_runtime_api",
+  "generatedAt": "2026-07-08T01:45:26Z",
+  "commit": "navatala:3eee3d6;runtime:9cc277c",
+  "host": {
+    "os": "Darwin",
+    "arch": "arm64",
+    "macOS": "26.5.2",
+    "xcode": "Xcode 26.6",
+    "deviceSummary": "Chipset Model: Apple M4 Max; Vendor: Apple (0x106b); Metal Support: Metal 4"
+  },
+  "build": {
+    "buildDir": "/tmp/navatala_gpu_metal_fixture_bench_build",
+    "cacheHome": "/tmp/navatala_gpu_metal_fixtures/20260708_apple_m4max_metal_policy_sweep/batch_limit_32/cache_home",
+    "cmakeVersion": "cmake version 3.26.0-rc1",
+    "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)",
+    "configuration": "Release"
+  },
+  "mode": "full",
+  "runs": [
+    {
+      "name": "baseline",
+      "flags": {
+        "batchSubmits": false,
+        "batchBlits": false,
+        "privateDeviceBuffers": false
+      },
+      "exitCode": 0,
+      "passed": true,
+      "wallSeconds": 0.23,
+      "log": "baseline.log",
+      "benchmarkJson": "baseline.json",
+      "profileLineCount": 1,
+      "profileCounters": {
+        "submit": 2178,
+        "sync": 996,
+        "command_buffer": 2178,
+        "compute_encoder": 2178,
+        "blit_encoder": 0,
+        "h2d_count": 800,
+        "h2d_bytes": 3338666000,
+        "d2h_count": 794,
+        "d2h_bytes": 3330277376,
+        "d2d_count": 0,
+        "d2d_bytes": 0,
+        "hosthost_count": 0,
+        "hosthost_bytes": 0,
+        "host_visible_copy": 1594,
+        "batch_dispatch": 0,
+        "batch_flush": 0,
+        "batch_limit_flush": 0,
+        "skipped_empty_sync": 864,
+        "metal_archive_cache_hit": 0,
+        "metal_archive_cache_miss": 1,
+        "metal_archive_cache_store": 1,
+        "metal_archive_cache_store_bytes": 14592
+      },
+      "rows": [
+        {
+          "operation": "submit_sync",
+          "iterations": 60,
+          "innerRepeats": 1,
+          "totalMs": 14.965542,
+          "meanMs": 0.2494257,
+          "throughputGBps": 0,
+          "passed": true,
+          "checksum": 0.2884873673,
+          "notes": "kernel submits per outer iteration"
+        },
+        {
+          "operation": "submit_burst",
+          "iterations": 60,
+          "innerRepeats": 32,
+          "totalMs": 65.859208,
+          "meanMs": 1.097653467,
+          "throughputGBps": 0,
+          "passed": true,
+          "checksum": 0.29057578,
+          "notes": "kernel submits per outer iteration"
+        },
+        {
+          "operation": "copy_roundtrip",
+          "iterations": 60,
+          "innerRepeats": 12,
+          "totalMs": 79.700125,
+          "meanMs": 1.328335417,
+          "throughputGBps": 75.78153434,
+          "passed": true,
+          "checksum": 483.25,
+          "notes": "H2D+D2H roundtrips per outer iteration"
+        }
+      ]
+    },
+    {
+      "name": "batch_submits",
+      "flags": {
+        "batchSubmits": true,
+        "batchLimit": 32,
+        "batchBlits": false,
+        "privateDeviceBuffers": false
+      },
+      "exitCode": 0,
+      "passed": true,
+      "wallSeconds": 0.19,
+      "log": "batch_submits.log",
+      "benchmarkJson": "batch_submits.json",
+      "profileLineCount": 1,
+      "profileCounters": {
+        "submit": 2178,
+        "sync": 996,
+        "command_buffer": 132,
+        "compute_encoder": 132,
+        "blit_encoder": 0,
+        "h2d_count": 800,
+        "h2d_bytes": 3338666000,
+        "d2h_count": 794,
+        "d2h_bytes": 3330277376,
+        "d2d_count": 0,
+        "d2d_bytes": 0,
+        "hosthost_count": 0,
+        "hosthost_bytes": 0,
+        "host_visible_copy": 1594,
+        "batch_dispatch": 2178,
+        "batch_flush": 132,
+        "batch_limit_flush": 66,
+        "skipped_empty_sync": 864,
+        "metal_archive_cache_hit": 1,
+        "metal_archive_cache_miss": 0,
+        "metal_archive_cache_store": 0,
+        "metal_archive_cache_store_bytes": 0
+      },
+      "rows": [
+        {
+          "operation": "submit_sync",
+          "iterations": 60,
+          "innerRepeats": 1,
+          "totalMs": 9.489083,
+          "meanMs": 0.1581513833,
+          "throughputGBps": 0,
+          "passed": true,
+          "checksum": 0.2884873673,
+          "notes": "kernel submits per outer iteration"
+        },
+        {
+          "operation": "submit_burst",
+          "iterations": 60,
+          "innerRepeats": 32,
+          "totalMs": 62.929625,
+          "meanMs": 1.048827083,
+          "throughputGBps": 0,
+          "passed": true,
+          "checksum": 0.29057578,
+          "notes": "kernel submits per outer iteration"
+        },
+        {
+          "operation": "copy_roundtrip",
+          "iterations": 60,
+          "innerRepeats": 12,
+          "totalMs": 79.80525,
+          "meanMs": 1.3300875,
+          "throughputGBps": 75.68170966,
+          "passed": true,
+          "checksum": 483.25,
+          "notes": "H2D+D2H roundtrips per outer iteration"
+        }
+      ]
+    },
+    {
+      "name": "private",
+      "flags": {
+        "batchSubmits": false,
+        "batchBlits": false,
+        "privateDeviceBuffers": true,
+        "privateMinBytes": 0
+      },
+      "exitCode": 0,
+      "passed": true,
+      "wallSeconds": 0.13,
+      "log": "private.log",
+      "benchmarkJson": "private.json",
+      "profileLineCount": 1,
+      "profileCounters": {
+        "submit": 2178,
+        "sync": 202,
+        "command_buffer": 3772,
+        "compute_encoder": 2178,
+        "blit_encoder": 1594,
+        "h2d_count": 800,
+        "h2d_bytes": 3338666000,
+        "d2h_count": 794,
+        "d2h_bytes": 3330277376,
+        "d2d_count": 0,
+        "d2d_bytes": 0,
+        "hosthost_count": 0,
+        "hosthost_bytes": 0,
+        "host_visible_copy": 0,
+        "batch_dispatch": 0,
+        "batch_flush": 0,
+        "batch_limit_flush": 0,
+        "skipped_empty_sync": 0,
+        "metal_archive_cache_hit": 1,
+        "metal_archive_cache_miss": 0,
+        "metal_archive_cache_store": 0,
+        "metal_archive_cache_store_bytes": 0
+      },
+      "rows": [
+        {
+          "operation": "submit_sync",
+          "iterations": 60,
+          "innerRepeats": 1,
+          "totalMs": 11.36925,
+          "meanMs": 0.1894875,
+          "throughputGBps": 0,
+          "passed": true,
+          "checksum": 0.2884873673,
+          "notes": "kernel submits per outer iteration"
+        },
+        {
+          "operation": "submit_burst",
+          "iterations": 60,
+          "innerRepeats": 32,
+          "totalMs": 65.891583,
+          "meanMs": 1.09819305,
+          "throughputGBps": 0,
+          "passed": true,
+          "checksum": 0.29057578,
+          "notes": "kernel submits per outer iteration"
+        },
+        {
+          "operation": "copy_roundtrip",
+          "iterations": 60,
+          "innerRepeats": 12,
+          "totalMs": 22.319666,
+          "meanMs": 0.3719944333,
+          "throughputGBps": 270.6043075,
+          "passed": true,
+          "checksum": 483.25,
+          "notes": "H2D+D2H roundtrips per outer iteration"
+        }
+      ]
+    },
+    {
+      "name": "private_batch_blits",
+      "flags": {
+        "batchSubmits": false,
+        "batchBlits": true,
+        "batchBlitLimit": 32,
+        "privateDeviceBuffers": true,
+        "privateMinBytes": 0
+      },
+      "exitCode": 0,
+      "passed": true,
+      "wallSeconds": 0.12,
+      "log": "private_batch_blits.log",
+      "benchmarkJson": "private_batch_blits.json",
+      "profileLineCount": 1,
+      "profileCounters": {
+        "submit": 2178,
+        "sync": 202,
+        "command_buffer": 2248,
+        "compute_encoder": 2178,
+        "blit_encoder": 70,
+        "h2d_count": 800,
+        "h2d_bytes": 3338666000,
+        "d2h_count": 794,
+        "d2h_bytes": 3330277376,
+        "d2d_count": 0,
+        "d2d_bytes": 0,
+        "hosthost_count": 0,
+        "hosthost_bytes": 0,
+        "host_visible_copy": 0,
+        "batch_dispatch": 0,
+        "batch_flush": 0,
+        "batch_limit_flush": 0,
+        "skipped_empty_sync": 0,
+        "metal_archive_cache_hit": 1,
+        "metal_archive_cache_miss": 0,
+        "metal_archive_cache_store": 0,
+        "metal_archive_cache_store_bytes": 0
+      },
+      "rows": [
+        {
+          "operation": "submit_sync",
+          "iterations": 60,
+          "innerRepeats": 1,
+          "totalMs": 7.268416997,
+          "meanMs": 0.1211402833,
+          "throughputGBps": 0,
+          "passed": true,
+          "checksum": 0.2884873673,
+          "notes": "kernel submits per outer iteration"
+        },
+        {
+          "operation": "submit_burst",
+          "iterations": 60,
+          "innerRepeats": 32,
+          "totalMs": 65.511334,
+          "meanMs": 1.091855567,
+          "throughputGBps": 0,
+          "passed": true,
+          "checksum": 0.29057578,
+          "notes": "kernel submits per outer iteration"
+        },
+        {
+          "operation": "copy_roundtrip",
+          "iterations": 60,
+          "innerRepeats": 12,
+          "totalMs": 18.760291,
+          "meanMs": 0.3126715167,
+          "throughputGBps": 321.9458461,
+          "passed": true,
+          "checksum": 483.25,
+          "notes": "H2D+D2H roundtrips per outer iteration"
+        }
+      ]
+    }
+  ]
+}

@@ -20,6 +20,7 @@
 #include <gpu_runtime.h>
 
 #include "device_mem_telemetry_internal.h"
+#include "program_cache.h"
 
 #import <CoreFoundation/CoreFoundation.h>
 #import <Foundation/Foundation.h>
@@ -152,6 +153,10 @@ struct RuntimeProfileCounters {
     std::atomic<std::uint64_t> batchFlushes{0};
     std::atomic<std::uint64_t> batchLimitFlushes{0};
     std::atomic<std::uint64_t> skippedEmptySyncs{0};
+    std::atomic<std::uint64_t> metalArchiveCacheHits{0};
+    std::atomic<std::uint64_t> metalArchiveCacheMisses{0};
+    std::atomic<std::uint64_t> metalArchiveCacheStores{0};
+    std::atomic<std::uint64_t> metalArchiveCacheStoreBytes{0};
 };
 inline bool runtimeProfileEnabled() {
     static const bool v = []() {
@@ -239,7 +244,9 @@ struct RuntimeProfileDumper {
                 " command_buffer=%llu compute_encoder=%llu blit_encoder=%llu"
                 " host_visible_copy=%llu"
                 " batch_dispatch=%llu batch_flush=%llu batch_limit_flush=%llu"
-                " skipped_empty_sync=%llu\n",
+                " skipped_empty_sync=%llu"
+                " metal_archive_cache_hit=%llu metal_archive_cache_miss=%llu"
+                " metal_archive_cache_store=%llu metal_archive_cache_store_bytes=%llu\n",
                 static_cast<int>(::getpid()), kv.first.c_str(),
                 static_cast<unsigned long long>(c.hostPinnedMaps.load()),
                 static_cast<unsigned long long>(c.hostPinnedUnmaps.load()),
@@ -260,7 +267,11 @@ struct RuntimeProfileDumper {
                 static_cast<unsigned long long>(c.batchDispatches.load()),
                 static_cast<unsigned long long>(c.batchFlushes.load()),
                 static_cast<unsigned long long>(c.batchLimitFlushes.load()),
-                static_cast<unsigned long long>(c.skippedEmptySyncs.load()));
+                static_cast<unsigned long long>(c.skippedEmptySyncs.load()),
+                static_cast<unsigned long long>(c.metalArchiveCacheHits.load()),
+                static_cast<unsigned long long>(c.metalArchiveCacheMisses.load()),
+                static_cast<unsigned long long>(c.metalArchiveCacheStores.load()),
+                static_cast<unsigned long long>(c.metalArchiveCacheStoreBytes.load()));
         }
     }
 };
@@ -542,7 +553,7 @@ public:
                 throw std::runtime_error("Failed to create Metal host-pinned kernel backing buffer");
             }
             metalContents_ = buffer_.contents;
-            metalNoteAlloc(size_);
+            noteDeviceMemAlloc(size_);
             countedBytes_ = size_;
             if (kind_ == MemoryKind::HostPinned && contents_ != nullptr && metalContents_ != nullptr) {
                 checkHostGuard_("kernel-backing");
@@ -847,7 +858,9 @@ public:
     MetalQueue(id<MTLDevice> device, StreamPriority priority)
         : device_(device),
           batchComputeSubmits_(envFlagEnabled("NAVATALA_GPU_METAL_BATCH_SUBMITS", false)),
-          batchSubmitLimit_(envU64("NAVATALA_GPU_METAL_BATCH_LIMIT", 64)) {
+          batchSubmitLimit_(envU64("NAVATALA_GPU_METAL_BATCH_LIMIT", 64)),
+          batchBlitSubmits_(envFlagEnabled("NAVATALA_GPU_METAL_BATCH_BLITS", false)),
+          batchBlitLimit_(envU64("NAVATALA_GPU_METAL_BATCH_BLIT_LIMIT", 64)) {
         (void)priority;
         queue_ = [device newCommandQueue];
         if (!queue_) {
@@ -858,10 +871,13 @@ public:
     ~MetalQueue() override {
         try {
             (void)flushPendingCompute(false, "destructor");
+            (void)flushPendingBlit(false, "destructor");
         } catch (...) {
             // Destructors must not throw. Normal callers flush via synchronize,
             // memcpy, record/wait, or event synchronization before destruction.
         }
+        [lastCommittedCommandBuffer_ release];
+        lastCommittedCommandBuffer_ = nil;
     }
 
     void submit(Program& program, const std::vector<Buffer*>& args,
@@ -872,6 +888,7 @@ public:
         if (!mp) {
             throw std::runtime_error("MetalQueue received non-Metal program");
         }
+        (void)flushPendingBlit(false, "submit");
 
         // #312: wrap per-dispatch command encoding in an autorelease pool.
         // [queue_ commandBuffer] / [cmd computeCommandEncoder] return
@@ -931,6 +948,7 @@ public:
             } else {
                 [enc endEncoding];
                 [cmd commit];
+                rememberCommittedCommandBuffer(cmd);
                 hasCommittedWork_ = true;
             }
         }
@@ -980,19 +998,29 @@ public:
         // a naïve host-pointer shortcut would otherwise force a queue sync and
         // do the copy on the CPU. A blit keeps ordering async like CUDA/HIP.
         if (srcDev && dstDev) {
-            @autoreleasepool {  // #312: drain autoreleased command buffer/encoder per blit
-                id<MTLCommandBuffer> cmd = newCommandBuffer("memcpy-d2d");
-                id<MTLBlitCommandEncoder> enc = newBlitEncoder(cmd, "memcpy-d2d");
-                if (!cmd || !enc) {
-                    throw std::runtime_error("Failed to create Metal D2D blit command encoder");
+            id<MTLBuffer> srcBuffer = const_cast<MetalBuffer*>(s)->bufferForKernel();
+            id<MTLBuffer> dstBuffer = d->bufferForKernel();
+            if (batchBlitSubmits_) {
+                ensurePendingBlitEncoder();
+                [pendingBlitEncoder_ copyFromBuffer:srcBuffer sourceOffset:srcOffset toBuffer:dstBuffer destinationOffset:dstOffset size:size];
+                ++pendingBlitCopies_;
+                if (pendingBlitCopies_ >= batchBlitLimit_) {
+                    (void)flushPendingBlit(false, "blit-limit");
                 }
+            } else {
+                @autoreleasepool {  // #312: drain autoreleased command buffer/encoder per blit
+                    id<MTLCommandBuffer> cmd = newCommandBuffer("memcpy-d2d");
+                    id<MTLBlitCommandEncoder> enc = newBlitEncoder(cmd, "memcpy-d2d");
+                    if (!cmd || !enc) {
+                        throw std::runtime_error("Failed to create Metal D2D blit command encoder");
+                    }
 
-                id<MTLBuffer> srcBuffer = const_cast<MetalBuffer*>(s)->bufferForKernel();
-                id<MTLBuffer> dstBuffer = d->bufferForKernel();
-                [enc copyFromBuffer:srcBuffer sourceOffset:srcOffset toBuffer:dstBuffer destinationOffset:dstOffset size:size];
-                [enc endEncoding];
-                [cmd commit];
-                hasCommittedWork_ = true;
+                    [enc copyFromBuffer:srcBuffer sourceOffset:srcOffset toBuffer:dstBuffer destinationOffset:dstOffset size:size];
+                    [enc endEncoding];
+                    [cmd commit];
+                    rememberCommittedCommandBuffer(cmd);
+                    hasCommittedWork_ = true;
+                }
             }
             return;
         }
@@ -1000,6 +1028,7 @@ public:
         void* dstHost = d->hostPointerForCopy();
         const void* srcHost = s->hostPointerForCopy();
         if (dstHost != nullptr && srcHost != nullptr) {
+            (void)flushPendingBlit(false, "memcpy-host-visible");
             // CPU-visible shared-memory copies are outside the Metal command
             // stream. Drain prior GPU work first so device-to-host copies read
             // completed kernel results.
@@ -1013,19 +1042,29 @@ public:
             return;
         }
 
-        @autoreleasepool {  // #312: drain autoreleased command buffer/encoder per blit
-            id<MTLCommandBuffer> cmd = newCommandBuffer("memcpy");
-            id<MTLBlitCommandEncoder> enc = newBlitEncoder(cmd, "memcpy");
-            if (!cmd || !enc) {
-                throw std::runtime_error("Failed to create Metal blit command encoder");
+        id<MTLBuffer> srcBuffer = const_cast<MetalBuffer*>(s)->bufferForKernel();
+        id<MTLBuffer> dstBuffer = d->bufferForKernel();
+        if (batchBlitSubmits_) {
+            ensurePendingBlitEncoder();
+            [pendingBlitEncoder_ copyFromBuffer:srcBuffer sourceOffset:srcOffset toBuffer:dstBuffer destinationOffset:dstOffset size:size];
+            ++pendingBlitCopies_;
+            if (pendingBlitCopies_ >= batchBlitLimit_) {
+                (void)flushPendingBlit(false, "blit-limit");
             }
+        } else {
+            @autoreleasepool {  // #312: drain autoreleased command buffer/encoder per blit
+                id<MTLCommandBuffer> cmd = newCommandBuffer("memcpy");
+                id<MTLBlitCommandEncoder> enc = newBlitEncoder(cmd, "memcpy");
+                if (!cmd || !enc) {
+                    throw std::runtime_error("Failed to create Metal blit command encoder");
+                }
 
-            id<MTLBuffer> srcBuffer = const_cast<MetalBuffer*>(s)->bufferForKernel();
-            id<MTLBuffer> dstBuffer = d->bufferForKernel();
-            [enc copyFromBuffer:srcBuffer sourceOffset:srcOffset toBuffer:dstBuffer destinationOffset:dstOffset size:size];
-            [enc endEncoding];
-            [cmd commit];
-            hasCommittedWork_ = true;
+                [enc copyFromBuffer:srcBuffer sourceOffset:srcOffset toBuffer:dstBuffer destinationOffset:dstOffset size:size];
+                [enc endEncoding];
+                [cmd commit];
+                rememberCommittedCommandBuffer(cmd);
+                hasCommittedWork_ = true;
+            }
         }
     }
 
@@ -1035,11 +1074,24 @@ public:
             hasCommittedWork_ = false;
             return;
         }
+        if (flushPendingBlit(true, "synchronize")) {
+            hasCommittedWork_ = false;
+            return;
+        }
         if (!hasCommittedWork_) {
             if (runtimeProfileEnabled()) rtProfileBump(runtimeProfile().skippedEmptySyncs);
             return;
         }
-        @autoreleasepool {  // #312: drain autoreleased command buffer per sync
+        if (lastCommittedCommandBuffer_ != nil) {
+            [lastCommittedCommandBuffer_ waitUntilCompleted];
+            releaseLastCommittedCommandBuffer();
+            hasCommittedWork_ = false;
+            return;
+        }
+        // Fallback for nativeHandle() users: external code may have submitted
+        // work to queue_ that the runtime cannot retain/track. Commit an empty
+        // command buffer behind it to preserve the old queue-drain semantics.
+        @autoreleasepool {
             id<MTLCommandBuffer> cmd = newCommandBuffer("synchronize");
             if (!cmd) {
                 throw std::runtime_error("Failed to create Metal command buffer for synchronize");
@@ -1052,6 +1104,7 @@ public:
 
     void* nativeHandle() override {
         (void)flushPendingCompute(false, "nativeHandle");
+        (void)flushPendingBlit(false, "nativeHandle");
         hasCommittedWork_ = true;
         return (__bridge void*)queue_;
     }
@@ -1061,6 +1114,7 @@ public:
         if (!ev) throw std::runtime_error("MetalQueue record requires MetalEvent");
 
         (void)flushPendingCompute(false, "record");
+        (void)flushPendingBlit(false, "record");
         @autoreleasepool {  // #312: drain autoreleased command buffer per record
             id<MTLCommandBuffer> cmd = newCommandBuffer("record");
             if (!cmd) throw std::runtime_error("Failed to create Metal command buffer for record");
@@ -1082,6 +1136,7 @@ public:
                 sync->markComplete(v);
             }];
             [cmd commit];
+            rememberCommittedCommandBuffer(cmd);
             hasCommittedWork_ = true;
         }
     }
@@ -1091,6 +1146,7 @@ public:
         if (!ev) throw std::runtime_error("MetalQueue wait requires MetalEvent");
 
         (void)flushPendingCompute(false, "wait");
+        (void)flushPendingBlit(false, "wait");
         @autoreleasepool {  // #312: drain autoreleased command buffer per wait
             id<MTLCommandBuffer> cmd = newCommandBuffer("wait");
             if (!cmd) throw std::runtime_error("Failed to create Metal command buffer for wait");
@@ -1105,6 +1161,7 @@ public:
                 ev->wait();
             }
             [cmd commit];
+            rememberCommittedCommandBuffer(cmd);
             hasCommittedWork_ = true;
         }
     }
@@ -1145,17 +1202,52 @@ private:
         return enc;
     }
 
+    void rememberCommittedCommandBuffer(id<MTLCommandBuffer> cmd) {
+        if (cmd == nil) {
+            return;
+        }
+        [cmd retain];
+        [lastCommittedCommandBuffer_ release];
+        lastCommittedCommandBuffer_ = cmd;
+    }
+
+    void releaseLastCommittedCommandBuffer() {
+        [lastCommittedCommandBuffer_ release];
+        lastCommittedCommandBuffer_ = nil;
+    }
+
     void ensurePendingComputeEncoder() {
         if (pendingComputeCommandBuffer_ != nil && pendingComputeEncoder_ != nil) {
             return;
         }
-        pendingComputeCommandBuffer_ = newCommandBuffer("batch-submit");
-        pendingComputeEncoder_ = newComputeEncoder(pendingComputeCommandBuffer_, "batch-submit");
+        // This file is built without ARC. Command buffers/encoders returned by
+        // Metal factory methods are autoreleased, so batched submits must hold
+        // an explicit retain across the per-submit autorelease pool.
+        pendingComputeCommandBuffer_ = [newCommandBuffer("batch-submit") retain];
+        pendingComputeEncoder_ = [newComputeEncoder(pendingComputeCommandBuffer_, "batch-submit") retain];
         if (!pendingComputeCommandBuffer_ || !pendingComputeEncoder_) {
+            [pendingComputeEncoder_ release];
+            [pendingComputeCommandBuffer_ release];
             pendingComputeCommandBuffer_ = nil;
             pendingComputeEncoder_ = nil;
             pendingComputeDispatches_ = 0;
             throw std::runtime_error("Failed to create batched Metal command buffer/encoder");
+        }
+    }
+
+    void ensurePendingBlitEncoder() {
+        if (pendingBlitCommandBuffer_ != nil && pendingBlitEncoder_ != nil) {
+            return;
+        }
+        pendingBlitCommandBuffer_ = [newCommandBuffer("batch-blit") retain];
+        pendingBlitEncoder_ = [newBlitEncoder(pendingBlitCommandBuffer_, "batch-blit") retain];
+        if (!pendingBlitCommandBuffer_ || !pendingBlitEncoder_) {
+            [pendingBlitEncoder_ release];
+            [pendingBlitCommandBuffer_ release];
+            pendingBlitCommandBuffer_ = nil;
+            pendingBlitEncoder_ = nil;
+            pendingBlitCopies_ = 0;
+            throw std::runtime_error("Failed to create batched Metal blit command buffer/encoder");
         }
     }
 
@@ -1180,10 +1272,44 @@ private:
         if (waitUntilComplete) {
             [cmd waitUntilCompleted];
             hasCommittedWork_ = false;
+            releaseLastCommittedCommandBuffer();
+        } else {
+            rememberCommittedCommandBuffer(cmd);
         }
+        [enc release];
+        [cmd release];
         if (runtimeProfileEnabled() && dispatches > 0) {
             rtProfileBump(runtimeProfile().batchFlushes);
         }
+        return true;
+    }
+
+    bool flushPendingBlit(bool waitUntilComplete, const char* where) {
+        (void)where;
+        if (pendingBlitCommandBuffer_ == nil) {
+            return false;
+        }
+        id<MTLCommandBuffer> cmd = pendingBlitCommandBuffer_;
+        id<MTLBlitCommandEncoder> enc = pendingBlitEncoder_;
+
+        pendingBlitCommandBuffer_ = nil;
+        pendingBlitEncoder_ = nil;
+        pendingBlitCopies_ = 0;
+
+        if (enc != nil) {
+            [enc endEncoding];
+        }
+        [cmd commit];
+        hasCommittedWork_ = true;
+        if (waitUntilComplete) {
+            [cmd waitUntilCompleted];
+            hasCommittedWork_ = false;
+            releaseLastCommittedCommandBuffer();
+        } else {
+            rememberCommittedCommandBuffer(cmd);
+        }
+        [enc release];
+        [cmd release];
         return true;
     }
 
@@ -1191,9 +1317,15 @@ private:
     __strong id<MTLCommandQueue> queue_;
     __strong id<MTLCommandBuffer> pendingComputeCommandBuffer_;
     __strong id<MTLComputeCommandEncoder> pendingComputeEncoder_;
+    __strong id<MTLCommandBuffer> pendingBlitCommandBuffer_;
+    __strong id<MTLBlitCommandEncoder> pendingBlitEncoder_;
+    id<MTLCommandBuffer> lastCommittedCommandBuffer_ = nil;
     std::uint64_t pendingComputeDispatches_ = 0;
+    std::uint64_t pendingBlitCopies_ = 0;
     bool batchComputeSubmits_ = false;
     std::uint64_t batchSubmitLimit_ = 64;
+    bool batchBlitSubmits_ = false;
+    std::uint64_t batchBlitLimit_ = 64;
     bool hasCommittedWork_ = false;
 };
 
@@ -1220,6 +1352,38 @@ public:
     }
 
     std::unique_ptr<Program> createProgram(const ProgramSource& source) override {
+        if (source.kind == ProgramSource::Kind::Msl && metalBinaryArchiveEnabled()) {
+            ProgramSource cached = source;
+            const std::string sourceText(
+                reinterpret_cast<const char*>(source.bytes.data()),
+                source.bytes.size());
+            const std::string cacheKeySource =
+                "metalarchive-v1\nentry=" + source.entryPoint + "\n" + sourceText;
+
+            if (cached.binaryArchive.empty()) {
+                if (tryLoadFromDiskCache("metal", source.entryPoint, cacheKeySource,
+                                         cached.binaryArchive)) {
+                    if (runtimeProfileEnabled()) {
+                        rtProfileBump(runtimeProfile().metalArchiveCacheHits);
+                    }
+                } else if (runtimeProfileEnabled()) {
+                    rtProfileBump(runtimeProfile().metalArchiveCacheMisses);
+                }
+            }
+
+            auto program = std::make_unique<MetalProgram>(device_, cached);
+            const std::vector<std::uint8_t> compiled = program->getCompiledBytes();
+            if (program->getCompiledFormat() == "metalarchive" && !compiled.empty()) {
+                if (saveToDiskCache("metal", source.entryPoint, cacheKeySource, compiled)) {
+                    if (runtimeProfileEnabled()) {
+                        rtProfileBump(runtimeProfile().metalArchiveCacheStores);
+                        rtProfileBump(runtimeProfile().metalArchiveCacheStoreBytes,
+                                      compiled.size());
+                    }
+                }
+            }
+            return program;
+        }
         return std::make_unique<MetalProgram>(device_, source);
     }
 

@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-__kernel void navatala_cfd_vof_cmules_limiter_corr_prepare(__global const float* alpha, __global const float* alphaF, __global const float* phiCorr, __global const int* offsets, __global const int* faceIdx, __global const float* sign, __global const int* owner, __global const int* nei, __global const float* vol, __global const float* rSubDeltaT, __global const float* sp, __global const float* su, __global const float* psiMax, __global const float* psiMin, __global const int* counts, __global const float* paramsF, __global float* psiMaxCap, __global float* psiMinCap, __global float* sumPhip, __global float* mSumPhim) {
+__kernel void navatala_cfd_vof_cmules_limiter_corr_prepare(__global const float* alpha, __global const float* alphaF, __global const int* boundaryExtremaMask, __global const float* phiCorr, __global const int* offsets, __global const int* faceIdx, __global const float* sign, __global const int* owner, __global const int* nei, __global const float* vol, __global const float* rSubDeltaT, __global const float* sp, __global const float* su, __global const float* psiMax, __global const float* psiMin, __global const int* counts, __global const float* paramsF, __global float* psiMaxCap, __global float* psiMinCap, __global float* sumPhip, __global float* mSumPhim) {
   int gid0 = (int)get_global_id(0);
   const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
   const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
@@ -28,6 +28,11 @@ __kernel void navatala_cfd_vof_cmules_limiter_corr_prepare(__global const float*
     float minN = psiMaxCell;
     float spSum = as_float(0x00000000u);
     float smSum = as_float(0x00000000u);
+    float range = (psiMaxCell - psiMinCell);
+    float boundaryDeltaExtremaCoeff = (paramsF[0] - paramsF[2]);
+    if (boundaryDeltaExtremaCoeff < as_float(0x00000000u)) {
+      boundaryDeltaExtremaCoeff = as_float(0x00000000u);
+    }
     int beg = offsets[((int)((int)(get_global_id(0))))];
     int c1 = (((int)((int)(get_global_id(0)))) + 1);
     int end = offsets[c1];
@@ -44,13 +49,28 @@ __kernel void navatala_cfd_vof_cmules_limiter_corr_prepare(__global const float*
         }
         v = alpha[nbr];
       } else {
-        v = alphaF[f];
+        int mask = boundaryExtremaMask[f];
+        if (mask != 0) {
+          v = alphaF[f];
+        } else {
+          if (boundaryDeltaExtremaCoeff > as_float(0x00000000u)) {
+            float boundaryExt = (boundaryDeltaExtremaCoeff * range);
+            maxN = (maxN + boundaryExt);
+            minN = (minN - boundaryExt);
+          }
+        }
       }
-      if (v > maxN) {
-        maxN = v;
+      int includeValue = 1;
+      if (f >= counts[2]) {
+        includeValue = boundaryExtremaMask[f];
       }
-      if (v < minN) {
-        minN = v;
+      if (includeValue != 0) {
+        if (v > maxN) {
+          maxN = v;
+        }
+        if (v < minN) {
+          minN = v;
+        }
       }
       float pc = phiCorr[f];
       if (f < counts[2]) {
@@ -75,7 +95,6 @@ __kernel void navatala_cfd_vof_cmules_limiter_corr_prepare(__global const float*
         }
       }
     }
-    float range = (psiMaxCell - psiMinCell);
     maxN = (maxN + (paramsF[2] * range));
     if (maxN > psiMaxCell) {
       maxN = psiMaxCell;

@@ -1,0 +1,60 @@
+{
+  "schema": "navatala_gpu.metal_runtime_benchmark.v1",
+  "timingMode": "host_wall_synchronized_runtime_api",
+  "backend": "metal",
+  "device": {
+    "name": "Apple M4 Max",
+    "computeCapability": "Apple7",
+    "totalMemoryBytes": 115448725504
+  },
+  "config": {
+    "elements": 131072,
+    "iterations": 60,
+    "warmup": 6,
+    "burstSubmits": 32,
+    "copyRepeats": 12
+  },
+  "env": {
+    "batchSubmits": false,
+    "batchLimit": "64",
+    "batchBlits": false,
+    "batchBlitLimit": "64",
+    "privateDeviceBuffers": false,
+    "privateMinBytes": "0"
+  },
+  "rows": [
+    {
+      "operation": "submit_sync",
+      "iterations": 60,
+      "innerRepeats": 1,
+      "totalMs": 10.597292,
+      "meanMs": 0.1766215333,
+      "throughputGBps": 0,
+      "passed": true,
+      "checksum": 0.2907274747,
+      "notes": "kernel submits per outer iteration"
+    },
+    {
+      "operation": "submit_burst",
+      "iterations": 60,
+      "innerRepeats": 32,
+      "totalMs": 33.851291,
+      "meanMs": 0.5641881833,
+      "throughputGBps": 0,
+      "passed": true,
+      "checksum": 0.292819222,
+      "notes": "kernel submits per outer iteration"
+    },
+    {
+      "operation": "copy_roundtrip",
+      "iterations": 60,
+      "innerRepeats": 12,
+      "totalMs": 9.595167,
+      "meanMs": 0.15991945,
+      "throughputGBps": 78.68281188,
+      "passed": true,
+      "checksum": 511.25,
+      "notes": "H2D+D2H roundtrips per outer iteration"
+    }
+  ]
+}
