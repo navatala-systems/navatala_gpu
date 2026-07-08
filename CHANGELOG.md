@@ -4,6 +4,15 @@ All notable user-visible changes to `navatala_gpu` are recorded here. This
 file follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the
 project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.6] — Pre-alpha (2026-07-09)
+
+### Changed
+
+- Included the Metal private-device-buffer size threshold in the public runtime
+  projection.
+- Supersedes `0.1.5`, which carried the other same-day Metal runtime updates
+  but not this threshold commit.
+
 ## [0.1.5] — Pre-alpha (2026-07-09)
 
 ### Changed

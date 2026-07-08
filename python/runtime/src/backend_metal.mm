@@ -87,19 +87,37 @@ static id<MTLDevice> selectMetalDevice(int device_id) {
     return MTLCreateSystemDefaultDevice();
 }
 
-static MTLResourceOptions bufferOptionsFor(MemoryKind kind) {
+static bool envValueDisabled(const char* p) {
+    return p == nullptr
+        || p[0] == '\0'
+        || (p[0] == '0' && p[1] == '\0')
+        || std::strcmp(p, "false") == 0
+        || std::strcmp(p, "FALSE") == 0
+        || std::strcmp(p, "off") == 0
+        || std::strcmp(p, "OFF") == 0;
+}
+
+static bool metalPrivateDeviceBufferEnabledForSize(size_t size) {
+    if (envValueDisabled(std::getenv("NAVATALA_GPU_METAL_PRIVATE_DEVICE_BUFFERS"))) {
+        return false;
+    }
+
+    const char* minBytesEnv = std::getenv("NAVATALA_GPU_METAL_PRIVATE_MIN_BYTES");
+    if (minBytesEnv != nullptr && minBytesEnv[0] != '\0') {
+        char* end = nullptr;
+        const unsigned long long minBytes = std::strtoull(minBytesEnv, &end, 10);
+        if (end != minBytesEnv && minBytes > 0 && size < static_cast<size_t>(minBytes)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+static MTLResourceOptions bufferOptionsFor(MemoryKind kind, size_t size) {
     switch (kind) {
         case MemoryKind::Device:
-            if (const char* p = std::getenv("NAVATALA_GPU_METAL_PRIVATE_DEVICE_BUFFERS")) {
-                const bool disabled = p[0] == '\0'
-                    || (p[0] == '0' && p[1] == '\0')
-                    || std::strcmp(p, "false") == 0
-                    || std::strcmp(p, "FALSE") == 0
-                    || std::strcmp(p, "off") == 0
-                    || std::strcmp(p, "OFF") == 0;
-                if (!disabled) {
-                    return MTLResourceStorageModePrivate;
-                }
+            if (metalPrivateDeviceBufferEnabledForSize(size)) {
+                return MTLResourceStorageModePrivate;
             }
             // Apple GPUs use unified memory. Keeping runtime "Device" buffers
             // host-visible matches the generic Buffer API, where CFD-style
@@ -452,7 +470,7 @@ public:
             return;
         }
 
-        MTLResourceOptions options = bufferOptionsFor(kind);
+        MTLResourceOptions options = bufferOptionsFor(kind, size);
         buffer_ = [device newBufferWithLength:size options:options];
         if (!buffer_) {
             throw std::runtime_error("Failed to create Metal buffer");
