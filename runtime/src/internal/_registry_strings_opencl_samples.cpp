@@ -53,6 +53,16 @@ __kernel void navatala_samples_axpy_fallback(__global const float* x, __global c
 }
 
 )kernel";
+const char* k_opencl_navatala_samples_det_prepare_scatter_0 = R"kernel(
+__kernel void navatala_samples_det_prepare_scatter_0(__global const uint* dstIdx, __global const float* messages, __global const int* detN, __global uint* keys_scatter_0, __global float* vals_scatter_0) {
+  int gid0 = (int)get_global_id(0);
+  if ((int)(get_global_id(0)) < detN[0]) {
+    keys_scatter_0[(int)(get_global_id(0))] = dstIdx[(int)(get_global_id(0))];
+    vals_scatter_0[(int)(get_global_id(0))] = messages[(int)(get_global_id(0))];
+  }
+}
+
+)kernel";
 
 namespace NavatalaRegistry {
 
@@ -108,6 +118,25 @@ const KernelAbiManifestInfo kAbiManifest_opencl_navatala_samples_axpy_fallback =
   kAbiArgs_opencl_navatala_samples_axpy_fallback
 };
 
+const KernelArgumentInfo kAbiArgs_opencl_navatala_samples_det_prepare_scatter_0[] = {
+  { "dstIdx", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "messages", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "detN", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "keys_scatter_0", 3, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 16384, 16384, 256, nullptr, 0, 0 },
+  { "vals_scatter_0", 4, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 16384, 16384, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_opencl_navatala_samples_det_prepare_scatter_0 = {
+  1,
+  "navatala_samples_det_prepare_scatter_0",
+  "opencl",
+  "navatala_samples_det_prepare_scatter_0",
+  "kernel:opencl:navatala_samples_det_prepare_scatter_0",
+  "abi-r1:opencl:navatala_samples_det_prepare_scatter_0",
+  "abi-r1:opencl:navatala_samples_det_prepare_scatter_0",
+  5,
+  kAbiArgs_opencl_navatala_samples_det_prepare_scatter_0
+};
+
 bool tryGetKernelAbiManifest_opencl_samples(const std::string& backend, const std::string& kernelName, const KernelAbiManifestInfo*& out) {
   if (backend == "opencl" && kernelName == "navatala_samples_float32_add") {
     out = &kAbiManifest_opencl_navatala_samples_float32_add;
@@ -119,6 +148,10 @@ bool tryGetKernelAbiManifest_opencl_samples(const std::string& backend, const st
   }
   if (backend == "opencl" && kernelName == "navatala_samples_axpy_fallback") {
     out = &kAbiManifest_opencl_navatala_samples_axpy_fallback;
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_samples_det_prepare_scatter_0") {
+    out = &kAbiManifest_opencl_navatala_samples_det_prepare_scatter_0;
     return true;
   }
   out = nullptr;
@@ -144,6 +177,13 @@ bool tryGetKernelSource_opencl_samples(const std::string& backend, const std::st
     out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
     out.entryPoint = "navatala_samples_axpy_fallback";
     std::string_view sv(k_opencl_navatala_samples_axpy_fallback);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "opencl" && kernelName == "navatala_samples_det_prepare_scatter_0") {
+    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
+    out.entryPoint = "navatala_samples_det_prepare_scatter_0";
+    std::string_view sv(k_opencl_navatala_samples_det_prepare_scatter_0);
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }

@@ -64,6 +64,17 @@ extern "C" __global__ void navatala_samples_axpy_fallback(const float* x, const 
 }
 
 )kernel";
+const char* k_cuda_navatala_samples_det_prepare_scatter_0 = R"kernel(
+#include <cuda_runtime.h>
+extern "C" __global__ void navatala_samples_det_prepare_scatter_0(const unsigned int* dstIdx, const float* messages, const int* detN, unsigned int* keys_scatter_0, float* vals_scatter_0) {
+  int gid0 = (int)(blockIdx.x * blockDim.x + threadIdx.x);
+  if ((int)(blockIdx.x * blockDim.x + threadIdx.x) < detN[0]) {
+    keys_scatter_0[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = dstIdx[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
+    vals_scatter_0[(int)(blockIdx.x * blockDim.x + threadIdx.x)] = messages[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
+  }
+}
+
+)kernel";
 
 namespace NavatalaRegistry {
 
@@ -136,6 +147,25 @@ const KernelAbiManifestInfo kAbiManifest_cuda_navatala_samples_axpy_fallback = {
   kAbiArgs_cuda_navatala_samples_axpy_fallback
 };
 
+const KernelArgumentInfo kAbiArgs_cuda_navatala_samples_det_prepare_scatter_0[] = {
+  { "dstIdx", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "messages", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "detN", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "keys_scatter_0", 3, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 16384, 16384, 256, nullptr, 0, 0 },
+  { "vals_scatter_0", 4, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 16384, 16384, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_cuda_navatala_samples_det_prepare_scatter_0 = {
+  1,
+  "navatala_samples_det_prepare_scatter_0",
+  "cuda",
+  "navatala_samples_det_prepare_scatter_0",
+  "kernel:cuda:navatala_samples_det_prepare_scatter_0",
+  "abi-r1:cuda:navatala_samples_det_prepare_scatter_0",
+  "abi-r1:cuda:navatala_samples_det_prepare_scatter_0",
+  5,
+  kAbiArgs_cuda_navatala_samples_det_prepare_scatter_0
+};
+
 bool tryGetKernelAbiManifest_cuda_samples(const std::string& backend, const std::string& kernelName, const KernelAbiManifestInfo*& out) {
   if (backend == "cuda" && kernelName == "navatala_samples_scatter_add_float32") {
     out = &kAbiManifest_cuda_navatala_samples_scatter_add_float32;
@@ -151,6 +181,10 @@ bool tryGetKernelAbiManifest_cuda_samples(const std::string& backend, const std:
   }
   if (backend == "cuda" && kernelName == "navatala_samples_axpy_fallback") {
     out = &kAbiManifest_cuda_navatala_samples_axpy_fallback;
+    return true;
+  }
+  if (backend == "cuda" && kernelName == "navatala_samples_det_prepare_scatter_0") {
+    out = &kAbiManifest_cuda_navatala_samples_det_prepare_scatter_0;
     return true;
   }
   out = nullptr;
@@ -183,6 +217,13 @@ bool tryGetKernelSource_cuda_samples(const std::string& backend, const std::stri
     out.kind = GpuRuntime::ProgramSource::Kind::CudaCpp;
     out.entryPoint = "navatala_samples_axpy_fallback";
     std::string_view sv(k_cuda_navatala_samples_axpy_fallback);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "cuda" && kernelName == "navatala_samples_det_prepare_scatter_0") {
+    out.kind = GpuRuntime::ProgramSource::Kind::CudaCpp;
+    out.entryPoint = "navatala_samples_det_prepare_scatter_0";
+    std::string_view sv(k_cuda_navatala_samples_det_prepare_scatter_0);
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }

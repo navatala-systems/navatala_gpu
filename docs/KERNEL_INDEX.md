@@ -480,10 +480,22 @@ Compact navigation aid for the kernel corpus, grouped by domain.
 
 ## Miscellaneous
 
-1,413 kernels.
+1,426 kernels.
 
 | Kernel | CUDA | HIP | OpenCL | Vulkan | Metal |
 |--------|:----:|:---:|:------:|:------:|:-----:|
+| `Solver_CFD_StandaloneCfd03MarineGpuKernels_alphaIsoVerticalProbeF64` | yes | yes | yes | - | - |
+| `Solver_CFD_StandaloneCfd03MarineGpuKernels_barthJespersenCellF64` | yes | yes | yes | - | - |
+| `Solver_CFD_StandaloneCfd03MarineGpuKernels_hullLaminarFaceTractionF64` | yes | yes | yes | yes | - |
+| `Solver_CFD_StandaloneCfd03MarineGpuKernels_hullPairwiseReductionLevelF64` | yes | yes | yes | yes | - |
+| `Solver_CFD_StandaloneCfd03MarineGpuKernels_hullPressureFaceTractionF64` | yes | yes | yes | yes | - |
+| `Solver_CFD_StandaloneCfd03MarineGpuKernels_hullSstFaceTractionF64` | yes | yes | yes | yes | - |
+| `Solver_CFD_StandaloneCfd03MarineGpuKernels_hullWindowStatisticsF64` | yes | yes | yes | yes | - |
+| `Solver_CFD_StandaloneCfd03MarineGpuKernels_marineInterfaceCompressionF64` | yes | yes | yes | yes | - |
+| `Solver_CFD_StandaloneCfd03MarineGpuKernels_marineMomentumDampingF64` | yes | yes | yes | yes | - |
+| `Solver_CFD_StandaloneCfd03MarineGpuKernels_marinePressureTargetF64` | yes | yes | yes | yes | - |
+| `Solver_CFD_StandaloneCfd03SstGpuKernels_sstProfilePointwiseFieldsF64` | yes | yes | yes | yes | - |
+| `Solver_CFD_StandaloneCfd03SstGpuKernels_sstSpaldingWallFacesF64` | yes | yes | yes | yes | - |
 | `navatala_collectives_direct_recv_f16` | yes | yes | yes | yes | yes |
 | `navatala_collectives_direct_recv_f32` | yes | yes | yes | yes | yes |
 | `navatala_collectives_direct_recv_i32` | yes | yes | yes | yes | yes |
@@ -1662,6 +1674,7 @@ Compact navigation aid for the kernel corpus, grouped by domain.
 | `navatala_runtime_deterministic_histogram_f64` | yes | yes | yes | yes | - |
 | `navatala_runtime_deterministic_reduce_f32` | yes | yes | yes | yes | yes |
 | `navatala_runtime_deterministic_reduce_f64` | yes | yes | yes | yes | - |
+| `navatala_samples_det_prepare_scatter_0` | yes | yes | yes | yes | yes |
 | `navatala_samples_float32_add` | yes | yes | yes | yes | yes |
 | `navatala_samples_scatter_add_float32` | yes | yes | - | - | - |
 | `navatala_samples_triangle_normals2` | yes | yes | yes | yes | yes |
@@ -2144,7 +2157,7 @@ Compact navigation aid for the kernel corpus, grouped by domain.
 | `navatala_cfd_rhs_sub` | yes | yes | yes | yes | yes |
 | `navatala_cfd_scalar_jacobi_clamp_min` | yes | yes | yes | yes | yes |
 | `navatala_cfd_scalar_jacobi_update` | yes | yes | yes | yes | yes |
-| `navatala_cfd_scalar_ldu_coupled_interface_add` | yes | yes | yes | yes | yes |
+| `navatala_cfd_scalar_ldu_coupled_interface_add` | yes | yes | - | - | - |
 | `navatala_cfd_scalar_ldu_mat_vec` | yes | yes | yes | yes | yes |
 | `navatala_cfd_scalar_ldu_multi_color_gs_sweep` | yes | yes | yes | yes | yes |
 | `navatala_cfd_scatter_mu_grad_ghost` | yes | yes | yes | yes | yes |

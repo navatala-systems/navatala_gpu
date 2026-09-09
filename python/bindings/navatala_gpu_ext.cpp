@@ -505,12 +505,16 @@ void launch_kernel_object(nb::object source, const std::string& entry_point, nb:
 std::atomic<std::uint64_t>& live_dlpack_export_count();
 
 nb::dict backend_status(NavatalaBackend backend) {
-    bool available = navatala_is_backend_available(backend) != 0;
+    NavatalaBackendCapabilities probed{};
+    auto probe_status = navatala_get_backend_capabilities(backend, 0, &probed);
+    bool available = probe_status == NAVATALA_SUCCESS;
     nb::dict status;
-    status["compiled"] = available;
+    status["compiled"] = navatala_is_backend_compiled(backend) != 0;
     status["available"] = available;
-    status["initialized"] = available;
-    status["selected"] = navatala_get_current_backend() == backend;
+    status["initialized"] = navatala_is_backend_initialized(backend) != 0;
+    status["selected"] = available && navatala_get_current_backend() == backend;
+    status["device_name"] = available ? probed.device_name : "";
+    status["probe_error_code"] = ffi_error_name(probe_status);
     std::size_t free_bytes = 0;
     std::size_t total_bytes = 0;
     std::uint8_t memory_supported = 0;
@@ -533,6 +537,8 @@ nb::dict get_capabilities_dict() {
     backends["vulkan"] = backend_status(NAVATALA_BACKEND_VULKAN_FFI);
     nb::dict caps;
     caps["extension_loaded"] = true;
+    caps["runtime_mode"] = navatala_get_runtime_mode();
+    caps["release_version"] = navatala_get_release_version();
     caps["ffi_abi_version"] = NAVATALA_GPU_FFI_ABI_VERSION;
     caps["backends"] = backends;
     caps["live_dlpack_exports"] = live_dlpack_export_count().load(std::memory_order_relaxed);
@@ -1019,7 +1025,345 @@ NB_MODULE(navatala_gpu_ext, m) {
     m.attr("__navatala_ffi_abi_version__") = NAVATALA_GPU_FFI_ABI_VERSION;
     m.attr("__navatala_python_binding_abi_version__") = 6;
     m.def("_get_abi_version", []() { return NAVATALA_GPU_FFI_ABI_VERSION; });
-    m.def("get_capabilities", &navatala_gpu::python::get_capabilities_dict);
+    m.def("get_capabilities", []() {
+        auto caps = navatala_gpu::python::get_capabilities_dict();
+        nb::dict linked;
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"float32"};
+        row["hip"] = std::vector<std::string>{"float32"};
+        row["opencl"] = std::vector<std::string>{"float32"};
+        row["vulkan"] = std::vector<std::string>{"float32"};
+        row["metal"] = std::vector<std::string>{"float32"};
+        linked["linalg.axpy"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"float32"};
+        row["hip"] = std::vector<std::string>{"float32"};
+        row["opencl"] = std::vector<std::string>{"float32"};
+        row["vulkan"] = std::vector<std::string>{"float32"};
+        row["metal"] = std::vector<std::string>{"float32"};
+        linked["linalg.axpy_dispatch"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"float32"};
+        row["hip"] = std::vector<std::string>{"float32"};
+        row["opencl"] = std::vector<std::string>{"float32"};
+        row["vulkan"] = std::vector<std::string>{"float32"};
+        row["metal"] = std::vector<std::string>{"float32"};
+        linked["linalg.gemm"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"float32"};
+        row["hip"] = std::vector<std::string>{"float32"};
+        row["opencl"] = std::vector<std::string>{"float32"};
+        row["vulkan"] = std::vector<std::string>{"float32"};
+        row["metal"] = std::vector<std::string>{"float32"};
+        linked["linalg.nrm2"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"float32", "uint32"};
+        row["hip"] = std::vector<std::string>{"float32", "uint32"};
+        row["opencl"] = std::vector<std::string>{"float32", "uint32"};
+        row["vulkan"] = std::vector<std::string>{"float32", "uint32"};
+        row["metal"] = std::vector<std::string>{"float32", "uint32"};
+        linked["dataframe.reduce_sum"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"int32", "int64", "uint32"};
+        row["hip"] = std::vector<std::string>{"int32", "int64", "uint32"};
+        row["opencl"] = std::vector<std::string>{"int32", "int64", "uint32"};
+        row["vulkan"] = std::vector<std::string>{"int32", "int64", "uint32"};
+        row["metal"] = std::vector<std::string>{"int32", "int64", "uint32"};
+        linked["dataframe.reduce_sum_i32_to_i64"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"int32", "uint32"};
+        row["hip"] = std::vector<std::string>{"int32", "uint32"};
+        row["opencl"] = std::vector<std::string>{"int32", "uint32"};
+        row["vulkan"] = std::vector<std::string>{"int32", "uint32"};
+        row["metal"] = std::vector<std::string>{"int32", "uint32"};
+        linked["dataframe.reduce_min_i32"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"int32", "uint32"};
+        row["hip"] = std::vector<std::string>{"int32", "uint32"};
+        row["opencl"] = std::vector<std::string>{"int32", "uint32"};
+        row["vulkan"] = std::vector<std::string>{"int32", "uint32"};
+        row["metal"] = std::vector<std::string>{"int32", "uint32"};
+        linked["dataframe.reduce_max_i32"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"float32", "uint32"};
+        row["hip"] = std::vector<std::string>{"float32", "uint32"};
+        row["opencl"] = std::vector<std::string>{"float32", "uint32"};
+        row["vulkan"] = std::vector<std::string>{"float32", "uint32"};
+        row["metal"] = std::vector<std::string>{"float32", "uint32"};
+        linked["dataframe.fill_null"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"int32", "uint32"};
+        row["hip"] = std::vector<std::string>{"int32", "uint32"};
+        row["opencl"] = std::vector<std::string>{"int32", "uint32"};
+        row["vulkan"] = std::vector<std::string>{"int32", "uint32"};
+        row["metal"] = std::vector<std::string>{"int32", "uint32"};
+        linked["dataframe.fill_null_i32"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"float32", "uint32", "int32"};
+        row["hip"] = std::vector<std::string>{"float32", "uint32", "int32"};
+        row["opencl"] = std::vector<std::string>{"float32", "uint32", "int32"};
+        row["vulkan"] = std::vector<std::string>{"float32", "uint32", "int32"};
+        row["metal"] = std::vector<std::string>{"float32", "uint32", "int32"};
+        linked["dataframe.gather"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"int32", "uint32"};
+        row["hip"] = std::vector<std::string>{"int32", "uint32"};
+        row["opencl"] = std::vector<std::string>{"int32", "uint32"};
+        row["vulkan"] = std::vector<std::string>{"int32", "uint32"};
+        row["metal"] = std::vector<std::string>{"int32", "uint32"};
+        linked["dataframe.gather_i32"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"float32", "uint32", "int32"};
+        row["hip"] = std::vector<std::string>{"float32", "uint32", "int32"};
+        row["opencl"] = std::vector<std::string>{"float32", "uint32", "int32"};
+        row["vulkan"] = std::vector<std::string>{"float32", "uint32", "int32"};
+        row["metal"] = std::vector<std::string>{"float32", "uint32", "int32"};
+        linked["dataframe.scatter"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"int32", "uint32"};
+        row["hip"] = std::vector<std::string>{"int32", "uint32"};
+        row["opencl"] = std::vector<std::string>{"int32", "uint32"};
+        row["vulkan"] = std::vector<std::string>{"int32", "uint32"};
+        row["metal"] = std::vector<std::string>{"int32", "uint32"};
+        linked["dataframe.scatter_i32"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"float32", "uint32"};
+        row["hip"] = std::vector<std::string>{"float32", "uint32"};
+        row["opencl"] = std::vector<std::string>{"float32", "uint32"};
+        row["vulkan"] = std::vector<std::string>{"float32", "uint32"};
+        row["metal"] = std::vector<std::string>{"float32", "uint32"};
+        linked["dataframe.compact_by_mask"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"int32", "uint32"};
+        row["hip"] = std::vector<std::string>{"int32", "uint32"};
+        row["opencl"] = std::vector<std::string>{"int32", "uint32"};
+        row["vulkan"] = std::vector<std::string>{"int32", "uint32"};
+        row["metal"] = std::vector<std::string>{"int32", "uint32"};
+        linked["dataframe.compact_by_mask_i32"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"float32", "uint32"};
+        row["hip"] = std::vector<std::string>{"float32", "uint32"};
+        row["opencl"] = std::vector<std::string>{"float32", "uint32"};
+        row["vulkan"] = std::vector<std::string>{"float32", "uint32"};
+        row["metal"] = std::vector<std::string>{"float32", "uint32"};
+        linked["dataframe.coalesce"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"float32", "uint32"};
+        row["hip"] = std::vector<std::string>{"float32", "uint32"};
+        row["opencl"] = std::vector<std::string>{"float32", "uint32"};
+        row["vulkan"] = std::vector<std::string>{"float32", "uint32"};
+        row["metal"] = std::vector<std::string>{"float32", "uint32"};
+        linked["dataframe.copy_if_valid"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"float32", "uint32"};
+        row["hip"] = std::vector<std::string>{"float32", "uint32"};
+        row["opencl"] = std::vector<std::string>{"float32", "uint32"};
+        row["vulkan"] = std::vector<std::string>{"float32", "uint32"};
+        row["metal"] = std::vector<std::string>{"float32", "uint32"};
+        linked["dataframe.inclusive_scan_sum_valid_prefix"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"int32", "int64", "uint32"};
+        row["hip"] = std::vector<std::string>{"int32", "int64", "uint32"};
+        row["opencl"] = std::vector<std::string>{"int32", "int64", "uint32"};
+        row["vulkan"] = std::vector<std::string>{"int32", "int64", "uint32"};
+        row["metal"] = std::vector<std::string>{"int32", "int64", "uint32"};
+        linked["dataframe.inclusive_scan_sum_i32_to_i64_skip_nulls"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"uint32"};
+        row["hip"] = std::vector<std::string>{"uint32"};
+        row["opencl"] = std::vector<std::string>{"uint32"};
+        row["vulkan"] = std::vector<std::string>{"uint32"};
+        row["metal"] = std::vector<std::string>{"uint32"};
+        linked["dataframe.count_valid"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"uint32", "uint8"};
+        row["hip"] = std::vector<std::string>{"uint32", "uint8"};
+        row["opencl"] = std::vector<std::string>{"uint32", "uint8"};
+        row["vulkan"] = std::vector<std::string>{"uint32", "uint8"};
+        row["metal"] = std::vector<std::string>{"uint32", "uint8"};
+        linked["dataframe.is_valid"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"uint32", "uint8"};
+        row["hip"] = std::vector<std::string>{"uint32", "uint8"};
+        row["opencl"] = std::vector<std::string>{"uint32", "uint8"};
+        row["vulkan"] = std::vector<std::string>{"uint32", "uint8"};
+        row["metal"] = std::vector<std::string>{"uint32", "uint8"};
+        linked["dataframe.is_null"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"float32"};
+        row["hip"] = std::vector<std::string>{"float32"};
+        row["opencl"] = std::vector<std::string>{"float32"};
+        row["vulkan"] = std::vector<std::string>{"float32"};
+        row["metal"] = std::vector<std::string>{"float32"};
+        linked["dataframe.fill_constant"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"int32"};
+        row["hip"] = std::vector<std::string>{"int32"};
+        row["opencl"] = std::vector<std::string>{"int32"};
+        row["vulkan"] = std::vector<std::string>{"int32"};
+        row["metal"] = std::vector<std::string>{"int32"};
+        linked["dataframe.fill_constant_i32"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"int32"};
+        row["hip"] = std::vector<std::string>{"int32"};
+        row["opencl"] = std::vector<std::string>{"int32"};
+        row["vulkan"] = std::vector<std::string>{"int32"};
+        row["metal"] = std::vector<std::string>{"int32"};
+        linked["dataframe.fill_range"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"uint32"};
+        row["hip"] = std::vector<std::string>{"uint32"};
+        row["opencl"] = std::vector<std::string>{"uint32"};
+        row["vulkan"] = std::vector<std::string>{"uint32"};
+        row["metal"] = std::vector<std::string>{"uint32"};
+        linked["dataframe.fill_validity_all_valid"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"uint32"};
+        row["hip"] = std::vector<std::string>{"uint32"};
+        row["opencl"] = std::vector<std::string>{"uint32"};
+        row["vulkan"] = std::vector<std::string>{"uint32"};
+        row["metal"] = std::vector<std::string>{"uint32"};
+        linked["dataframe.fill_validity_all_null"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"float32"};
+        row["hip"] = std::vector<std::string>{"float32"};
+        row["opencl"] = std::vector<std::string>{"float32"};
+        row["vulkan"] = std::vector<std::string>{"float32"};
+        row["metal"] = std::vector<std::string>{"float32"};
+        linked["ml.mean_squared_error"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"float32"};
+        row["hip"] = std::vector<std::string>{"float32"};
+        row["opencl"] = std::vector<std::string>{"float32"};
+        row["vulkan"] = std::vector<std::string>{"float32"};
+        row["metal"] = std::vector<std::string>{"float32"};
+        linked["ml.root_mean_squared_error"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"float32"};
+        row["hip"] = std::vector<std::string>{"float32"};
+        row["opencl"] = std::vector<std::string>{"float32"};
+        row["vulkan"] = std::vector<std::string>{"float32"};
+        row["metal"] = std::vector<std::string>{"float32"};
+        linked["ml.mean_absolute_error"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"float32"};
+        row["hip"] = std::vector<std::string>{"float32"};
+        row["opencl"] = std::vector<std::string>{"float32"};
+        row["vulkan"] = std::vector<std::string>{"float32"};
+        row["metal"] = std::vector<std::string>{"float32"};
+        linked["ml.mean_absolute_percentage_error"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"float32"};
+        row["hip"] = std::vector<std::string>{"float32"};
+        row["opencl"] = std::vector<std::string>{"float32"};
+        row["vulkan"] = std::vector<std::string>{"float32"};
+        row["metal"] = std::vector<std::string>{"float32"};
+        linked["ml.r2_score"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"float32"};
+        row["hip"] = std::vector<std::string>{"float32"};
+        row["opencl"] = std::vector<std::string>{"float32"};
+        row["vulkan"] = std::vector<std::string>{"float32"};
+        row["metal"] = std::vector<std::string>{"float32"};
+        linked["ml.explained_variance_score"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"float32", "uint32"};
+        row["hip"] = std::vector<std::string>{"float32", "uint32"};
+        row["opencl"] = std::vector<std::string>{"float32", "uint32"};
+        row["vulkan"] = std::vector<std::string>{"float32", "uint32"};
+        row["metal"] = std::vector<std::string>{"float32", "uint32"};
+        linked["sparse.csr_spmv"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"uint32"};
+        row["hip"] = std::vector<std::string>{"uint32"};
+        row["opencl"] = std::vector<std::string>{"uint32"};
+        row["vulkan"] = std::vector<std::string>{"uint32"};
+        row["metal"] = std::vector<std::string>{"uint32"};
+        linked["graph.out_degree"] = row;
+        }
+        {
+        nb::dict row;
+        row["cuda"] = std::vector<std::string>{"uint32"};
+        row["hip"] = std::vector<std::string>{"uint32"};
+        row["opencl"] = std::vector<std::string>{"uint32"};
+        row["vulkan"] = std::vector<std::string>{"uint32"};
+        row["metal"] = std::vector<std::string>{"uint32"};
+        linked["graph.in_degree"] = row;
+        }
+        caps["linked_operation_support"] = linked;
+        return caps;
+    });
     nb::module_ m_runtime = m.def_submodule("runtime");
     m_runtime.def("queue_create", [](nb::object device, int priority) {
         return navatala_gpu::python::translate_status([&]() {

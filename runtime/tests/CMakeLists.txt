@@ -29,6 +29,8 @@ foreach(test_name IN LISTS GPU_RUNTIME_TESTS)
     add_test(NAME ${test_name} COMMAND ${test_name})
 endforeach()
 
+include(ffi_controls.cmake)
+
 # Convenience: build all tests in one shot.
 add_custom_target(gpu_runtime_tests
     DEPENDS ${GPU_RUNTIME_TESTS}

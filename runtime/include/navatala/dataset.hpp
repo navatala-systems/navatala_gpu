@@ -174,7 +174,8 @@ public:
     /// Returns the data type of elements.
     [[nodiscard]] data_type dtype() const noexcept { return dtype_; }
 
-    /// Returns the base pointer to device memory (without offset).
+    /// Returns the base pointer when the backend exposes raw device pointers.
+    /// A valid opaque-handle allocation such as Vulkan may return nullptr.
     /// @note For sliced datasets, use device_ptr() to get the offset-adjusted pointer.
     [[nodiscard]] void* base_ptr() const noexcept {
         return buffer_.is_valid() ? buffer_.data() : external_ptr_;
@@ -183,7 +184,7 @@ public:
     /// Returns the byte offset into the base pointer for this view.
     [[nodiscard]] size_t offset_bytes() const noexcept { return offset_bytes_; }
 
-    /// Returns a raw pointer to the device memory (offset-adjusted for sliced views).
+    /// Returns a raw pointer to device memory, when available, adjusted for slices.
     [[nodiscard]] void* device_ptr() const noexcept {
         void* base = base_ptr();
         if (base == nullptr || offset_bytes_ == 0) {

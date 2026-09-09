@@ -99,9 +99,21 @@ def can_zero_copy_dlpack(producer, consumer=None, *, dtype: str | None = None) -
         return False
     if dtype is not None and str(dtype) not in _DTYPE_ALIASES:
         return False
-    return producer_backend == consumer_backend and producer_backend in _ZERO_COPY_DLPACK_BACKENDS
+    caps = get_capabilities()
+    return (caps.get("runtime_mode") == "real" and caps.get("extension_loaded") is True
+            and caps.get("backends", {}).get(producer_backend, {}).get("available") is True
+            and producer_backend == consumer_backend and producer_backend in _ZERO_COPY_DLPACK_BACKENDS)
 
-def _operation_support() -> dict[str, Any]:
+def _available_operation_support(caps) -> dict[str, Any]:
+    if caps.get("runtime_mode") != "real" or not caps.get("extension_loaded"):
+        return {}
+    backends = caps.get("backends", {})
+    return {name: {backend: dtypes for backend, dtypes in rows.items()
+                   if dtypes and backends.get(backend, {}).get("available") is True}
+            for name, rows in caps.get("linked_operation_support", {}).items()}
+
+def _operation_support(caps) -> dict[str, Any]:
+    available = _available_operation_support(caps)
     operations: dict[str, Any] = {}
     for binding in _API_MANIFEST.get("bindings", []):
         key = f"{binding.get('module')}.{binding.get('pythonName')}"
@@ -110,7 +122,9 @@ def _operation_support() -> dict[str, Any]:
             "target": binding.get("target"),
             "implementation": binding.get("implementation", {"kind": "portable_kernel", "vendorBacked": False}),
             "syncPolicy": binding.get("syncPolicy"),
-            "backends": {
+            "available": bool(available.get(key, {})),
+            "backends": available.get(key, {}),
+            "declared_backends": {
                 row.get("backend"): row.get("dtypes", [])
                 for row in binding.get("backendSupport", [])
             },
@@ -597,26 +611,26 @@ def get_capabilities() -> dict[str, Any]:
     else:
         caps = {
         "extension_loaded": False,
+        "runtime_mode": "unavailable",
         "extension_error": repr(_core.extension_error()),
         "backends": {backend: {"compiled": True, "available": False, "initialized": False, "selected": False, "memory": {"supported": False, "free_bytes": 0, "total_bytes": 0, "error_code": "not_loaded"}} for backend in _KNOWN_BACKENDS},
         "live_dlpack_exports": 0,
         }
     caps["manifest_id"] = "pyabi6-2675513039"
     caps["abi_version"] = 6
-    caps["operations"] = _operation_support()
+    caps["operations"] = _operation_support(caps)
     return caps
 
 def supports(operation: str, *, backend: str | None = None, dtype: str | None = None) -> bool:
+    available = _available_operation_support(get_capabilities())
     for binding in _API_MANIFEST.get("bindings", []):
         public_name = f"{binding.get('module')}.{binding.get('pythonName')}"
         if operation not in {binding.get("pythonName"), public_name}:
             continue
-        if backend is None and dtype is None:
-            return True
-        for support in binding.get("backendSupport", []):
-            if backend is not None and support.get("backend") != backend:
+        for backend_name, dtypes in available.get(public_name, {}).items():
+            if backend is not None and backend_name != backend:
                 continue
-            if dtype is not None and not _dtype_supported(dtype, support.get("dtypes", [])):
+            if dtype is not None and not _dtype_supported(dtype, dtypes):
                 continue
             return True
     return False

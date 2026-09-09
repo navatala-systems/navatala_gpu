@@ -1526,22 +1526,6 @@ __kernel void navatala_cfd_scalar_jacobi_update(__global const float* ax, __glob
 }
 
 )kernel";
-const char* k_opencl_navatala_cfd_scalar_ldu_coupled_interface_add = R"kernel(
-__kernel void navatala_cfd_scalar_ldu_coupled_interface_add(__global const int* faceCells, __global const float* coeffs, __global const float* recvNeighbourX, __global const uint* counts, __global float* ax) {
-  int gid0 = (int)get_global_id(0);
-  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
-  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
-  if (gid0 >= ((int)(counts[0]))) return;
-  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
-    return;
-  } else {
-    int cell = faceCells[(int)(get_global_id(0))];
-    float delta = (coeffs[(int)(get_global_id(0))] * recvNeighbourX[(int)(get_global_id(0))]);
-    ax[cell] = (ax[cell] - delta);
-  }
-}
-
-)kernel";
 const char* k_opencl_navatala_cfd_scalar_ldu_mat_vec = R"kernel(
 __kernel void navatala_cfd_scalar_ldu_mat_vec(__global const float* diag, __global const float* upper, __global const float* lower, __global const float* x, __global const int* owner, __global const int* neighbour, __global const uint* offsets, __global const uint* faceIdx, __global const int* sign, __global const uint* counts, __global float* ax) {
   int gid0 = (int)get_global_id(0);
@@ -5399,25 +5383,6 @@ const KernelAbiManifestInfo kAbiManifest_opencl_navatala_cfd_scalar_jacobi_updat
   kAbiArgs_opencl_navatala_cfd_scalar_jacobi_update
 };
 
-const KernelArgumentInfo kAbiArgs_opencl_navatala_cfd_scalar_ldu_coupled_interface_add[] = {
-  { "faceCells", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
-  { "coeffs", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
-  { "recvNeighbourX", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
-  { "counts", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
-  { "ax", 4, KernelArgumentRole::InputOutput, KernelAccessMode::ReadWrite, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
-};
-const KernelAbiManifestInfo kAbiManifest_opencl_navatala_cfd_scalar_ldu_coupled_interface_add = {
-  1,
-  "navatala_cfd_scalar_ldu_coupled_interface_add",
-  "opencl",
-  "navatala_cfd_scalar_ldu_coupled_interface_add",
-  "kernel:opencl:navatala_cfd_scalar_ldu_coupled_interface_add",
-  "abi-r1:opencl:navatala_cfd_scalar_ldu_coupled_interface_add",
-  "abi-r1:opencl:navatala_cfd_scalar_ldu_coupled_interface_add",
-  5,
-  kAbiArgs_opencl_navatala_cfd_scalar_ldu_coupled_interface_add
-};
-
 const KernelArgumentInfo kAbiArgs_opencl_navatala_cfd_scalar_ldu_mat_vec[] = {
   { "diag", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
   { "upper", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
@@ -7679,10 +7644,6 @@ bool tryGetKernelAbiManifest_opencl_cfd(const std::string& backend, const std::s
     out = &kAbiManifest_opencl_navatala_cfd_scalar_jacobi_update;
     return true;
   }
-  if (backend == "opencl" && kernelName == "navatala_cfd_scalar_ldu_coupled_interface_add") {
-    out = &kAbiManifest_opencl_navatala_cfd_scalar_ldu_coupled_interface_add;
-    return true;
-  }
   if (backend == "opencl" && kernelName == "navatala_cfd_scalar_ldu_mat_vec") {
     out = &kAbiManifest_opencl_navatala_cfd_scalar_ldu_mat_vec;
     return true;
@@ -8389,13 +8350,6 @@ bool tryGetKernelSource_opencl_cfd(const std::string& backend, const std::string
     out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
     out.entryPoint = "navatala_cfd_scalar_jacobi_update";
     std::string_view sv(k_opencl_navatala_cfd_scalar_jacobi_update);
-    out.bytes.assign(sv.begin(), sv.end());
-    return true;
-  }
-  if (backend == "opencl" && kernelName == "navatala_cfd_scalar_ldu_coupled_interface_add") {
-    out.kind = GpuRuntime::ProgramSource::Kind::OpenClC;
-    out.entryPoint = "navatala_cfd_scalar_ldu_coupled_interface_add";
-    std::string_view sv(k_opencl_navatala_cfd_scalar_ldu_coupled_interface_add);
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }

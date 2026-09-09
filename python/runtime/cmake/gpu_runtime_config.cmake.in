@@ -2,9 +2,13 @@
 
 include(CMakeFindDependencyMacro)
 
-# Find optional dependencies
-find_dependency(Vulkan)
-find_dependency(OpenCL)
+# Find dependencies selected when this package was built.
+if(@GPU_RUNTIME_HAVE_VULKAN@)
+    find_dependency(Vulkan)
+endif()
+if(@GPU_RUNTIME_HAVE_OPENCL@)
+    find_dependency(OpenCL)
+endif()
 
 # Note: CUDA and HIP dependencies are handled differently
 # Users should link against CUDA::cudart / roc::hip_runtime explicitly if needed

@@ -1577,7 +1577,8 @@ extern "C" __global__ void navatala_cfd_scalar_ldu_coupled_interface_add(const i
   } else {
     int cell = faceCells[(int)(blockIdx.x * blockDim.x + threadIdx.x)];
     float delta = (coeffs[(int)(blockIdx.x * blockDim.x + threadIdx.x)] * recvNeighbourX[(int)(blockIdx.x * blockDim.x + threadIdx.x)]);
-    ax[cell] = (ax[cell] - delta);
+    float negDelta = (__uint_as_float(0x00000000u) - delta);
+    float scatterResult = atomicAdd(&(ax[cell]), negDelta);
   }
 }
 

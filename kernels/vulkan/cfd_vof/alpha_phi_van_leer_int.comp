@@ -106,9 +106,6 @@ void main() {
     }
     float absR = abs(r);
     float psi = ((r + absR) / (uintBitsToFloat(0x3f800000u) + absR));
-    if (((ph > uintBitsToFloat(0x00000000u)) && ((aO < uintBitsToFloat(0x00000000u)) || (aN > uintBitsToFloat(0x3f800000u)))) || ((ph < uintBitsToFloat(0x00000000u)) && ((aN < uintBitsToFloat(0x00000000u)) || (aO > uintBitsToFloat(0x3f800000u))))) {
-      psi = uintBitsToFloat(0x00000000u);
-    }
     float pos0 = uintBitsToFloat(0x00000000u);
     if (ph >= uintBitsToFloat(0x00000000u)) {
       pos0 = uintBitsToFloat(0x3f800000u);

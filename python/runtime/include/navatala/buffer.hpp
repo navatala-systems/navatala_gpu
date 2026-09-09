@@ -207,10 +207,11 @@ public:
 
     // -------------------- Accessors --------------------
 
-    /// Returns a raw pointer to the device memory.
+    /// Returns a raw pointer when the backend exposes one.
+    /// A valid opaque-handle allocation such as Vulkan may return nullptr.
     [[nodiscard]] void* data() const noexcept { return device_ptr_; }
 
-    /// Returns a typed pointer to the device memory.
+    /// Returns a typed raw pointer when the backend exposes one.
     template<typename T>
     [[nodiscard]] T* data() const noexcept {
         return static_cast<T*>(device_ptr_);

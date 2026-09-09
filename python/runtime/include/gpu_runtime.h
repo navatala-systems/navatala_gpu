@@ -128,6 +128,7 @@ public:
 enum class StreamPriority { Low, Normal, High };
 enum class MemoryKind { Device, HostPinned, Managed };
 enum class MapMode { Read, Write, ReadWrite };
+enum class BackendKind { Auto, Cuda, Hip, Metal, OpenCl, Vulkan };
 
 // #1475 step 2 — call-site/phase attribution for the runtime staging census.
 // Push/pop a label onto a thread-local stack; the runtime's map/unmap/H2D/D2H/
@@ -173,6 +174,9 @@ class Device {
 public:
     // Factory: create device by ID (auto-selects backend via GPU_RUNTIME_BACKEND env var)
     static std::unique_ptr<Device> create(int device_id);
+    // Factory: create a device for an explicit backend without process-global
+    // environment mediation.
+    static std::unique_ptr<Device> create(BackendKind backend, int device_id);
     virtual ~Device() = default;
 
     // Queue creation

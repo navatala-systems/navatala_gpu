@@ -86,13 +86,13 @@ struct NavatalaGpuMemoryResourceImpl {
 };
 
 // Backend availability (stub: always report CUDA and OpenCL as available)
-bool g_cuda_available = true;
+bool g_cuda_available = false;
 bool g_hip_available = false;
 bool g_metal_available = false;
-bool g_opencl_available = true;
+bool g_opencl_available = false;
 bool g_vulkan_available = false;
 
-NavatalaBackend g_current_backend = NAVATALA_BACKEND_CUDA_FFI;
+NavatalaBackend g_current_backend = NAVATALA_BACKEND_AUTO_FFI;
 
 bool compatible_contexts(const NavatalaGpuContextImpl* lhs, const NavatalaGpuContextImpl* rhs) {
     return lhs != nullptr && rhs != nullptr &&
@@ -839,201 +839,55 @@ float navatala_bfloat16_to_float(uint16_t b) noexcept {
 // Backend Query Functions
 // ============================================================================
 
+const char* navatala_get_release_version(void) {
+#ifdef NAVATALA_GPU_RELEASE_VERSION
+    return NAVATALA_GPU_RELEASE_VERSION;
+#else
+    return "unversioned";
+#endif
+}
+
+const char* navatala_get_runtime_mode(void) {
+    return "stub";
+}
+
+int navatala_is_backend_compiled(NavatalaBackend) { return 0; }
+int navatala_is_backend_initialized(NavatalaBackend) { return 0; }
+
 int navatala_get_available_backend_count(void) {
-    int count = 0;
-    if (g_cuda_available) count++;
-    if (g_hip_available) count++;
-    if (g_metal_available) count++;
-    if (g_opencl_available) count++;
-    if (g_vulkan_available) count++;
-    return count;
+    return 0;
 }
 
-int navatala_get_available_backends(NavatalaBackend* backends, int max_count) {
-    int count = 0;
-    if (g_cuda_available && count < max_count) {
-        backends[count++] = NAVATALA_BACKEND_CUDA_FFI;
-    }
-    if (g_hip_available && count < max_count) {
-        backends[count++] = NAVATALA_BACKEND_HIP_FFI;
-    }
-    if (g_metal_available && count < max_count) {
-        backends[count++] = NAVATALA_BACKEND_METAL_FFI;
-    }
-    if (g_opencl_available && count < max_count) {
-        backends[count++] = NAVATALA_BACKEND_OPENCL_FFI;
-    }
-    if (g_vulkan_available && count < max_count) {
-        backends[count++] = NAVATALA_BACKEND_VULKAN_FFI;
-    }
-    return count;
+int navatala_get_available_backends(NavatalaBackend*, int) {
+    return 0;
 }
 
-int navatala_is_backend_available(NavatalaBackend backend) {
-    switch (backend) {
-        case NAVATALA_BACKEND_CUDA_FFI:   return g_cuda_available ? 1 : 0;
-        case NAVATALA_BACKEND_HIP_FFI:    return g_hip_available ? 1 : 0;
-        case NAVATALA_BACKEND_METAL_FFI:  return g_metal_available ? 1 : 0;
-        case NAVATALA_BACKEND_OPENCL_FFI: return g_opencl_available ? 1 : 0;
-        case NAVATALA_BACKEND_VULKAN_FFI: return g_vulkan_available ? 1 : 0;
-        case NAVATALA_BACKEND_AUTO_FFI:   return navatala_get_available_backend_count() > 0 ? 1 : 0;
-        default: return 0;
-    }
+int navatala_is_backend_available(NavatalaBackend) {
+    return 0;
 }
 
 NavatalaErrorCode navatala_get_backend_capabilities(
-    NavatalaBackend backend,
-    int device_id,
-    NavatalaBackendCapabilities* caps)
+    NavatalaBackend backend, int device_id, NavatalaBackendCapabilities* caps)
 {
-    if (!caps) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    if (device_id < 0) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    // Fill with stub/default values
+    if (!caps || device_id < 0) return NAVATALA_INVALID_PARAM;
     std::memset(caps, 0, sizeof(*caps));
     caps->type = backend;
-
-    const char* backend_name = nullptr;
-    const char* device_name = nullptr;
-
-    switch (backend) {
-        case NAVATALA_BACKEND_CUDA_FFI:
-            if (!g_cuda_available) return NAVATALA_NOT_FOUND;
-            backend_name = "NVIDIA CUDA 12.0 (stub)";
-            device_name = "Stub CUDA Device";
-            caps->supports_streams = 1;
-            caps->supports_events = 1;
-            caps->supports_graphs = 1;
-            caps->supports_fp16 = 1;
-            caps->supports_bf16 = 1;
-            caps->supports_tf32 = 1;
-            caps->supports_tensor_cores = 1;
-            caps->supports_memory_pools = 1;
-            caps->threads_per_warp = 32;
-            break;
-
-        case NAVATALA_BACKEND_HIP_FFI:
-            if (!g_hip_available) return NAVATALA_NOT_FOUND;
-            backend_name = "AMD HIP 5.0 (stub)";
-            device_name = "Stub HIP Device";
-            caps->supports_streams = 1;
-            caps->supports_events = 1;
-            caps->supports_graphs = 1;
-            caps->supports_fp16 = 1;
-            caps->threads_per_warp = 64;
-            break;
-
-        case NAVATALA_BACKEND_METAL_FFI:
-            if (!g_metal_available) return NAVATALA_NOT_FOUND;
-            backend_name = "Apple Metal 3.0 (stub)";
-            device_name = "Stub Metal Device";
-            caps->supports_fp16 = 1;
-            break;
-
-        case NAVATALA_BACKEND_OPENCL_FFI:
-            if (!g_opencl_available) return NAVATALA_NOT_FOUND;
-            backend_name = "OpenCL 3.0 (stub)";
-            device_name = "Stub OpenCL Device";
-            caps->supports_streams = 1;
-            caps->supports_events = 1;
-            break;
-
-        case NAVATALA_BACKEND_VULKAN_FFI:
-            if (!g_vulkan_available) return NAVATALA_NOT_FOUND;
-            backend_name = "Vulkan 1.3 (stub)";
-            device_name = "Stub Vulkan Device";
-            caps->supports_streams = 1;
-            caps->supports_events = 1;
-            caps->supports_fp16 = 1;
-            break;
-
-        default:
-            return NAVATALA_INVALID_PARAM;
-    }
-
-    std::strncpy(caps->name, backend_name, sizeof(caps->name) - 1);
-    std::strncpy(caps->device_name, device_name, sizeof(caps->device_name) - 1);
-    std::strncpy(caps->driver_version, "1.0.0-stub", sizeof(caps->driver_version) - 1);
-
-    caps->major_version = 1;
-    caps->minor_version = 0;
-    caps->patch_version = 0;
-
-    // Reasonable stub limits
-    caps->max_global_memory_bytes = 8ULL * 1024 * 1024 * 1024;  // 8 GB
-    caps->max_shared_memory_bytes = 48 * 1024;  // 48 KB
-    caps->max_constant_memory_bytes = 64 * 1024;  // 64 KB
-    caps->max_register_bytes = 256;
-    caps->max_allocation_bytes = 4ULL * 1024 * 1024 * 1024;  // 4 GB
-
-    caps->max_thread_block_size = 1024;
-    caps->max_grid_dim_x = 2147483647;
-    caps->max_grid_dim_y = 65535;
-    caps->max_grid_dim_z = 65535;
-    caps->max_thread_blocks = 32;
-    caps->multiprocessor_count = 80;
-    caps->max_warps_per_multiprocessor = 64;
-
-    return NAVATALA_SUCCESS;
+    return NAVATALA_NOT_IMPLEMENTED;
 }
 
 NavatalaErrorCode navatala_get_backend_memory_info(
-    NavatalaBackend backend,
-    int device_id,
-    size_t* free_bytes,
-    size_t* total_bytes,
-    uint8_t* supported)
+    NavatalaBackend, int device_id, size_t* free_bytes,
+    size_t* total_bytes, uint8_t* supported)
 {
-    if (!free_bytes || !total_bytes || !supported) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
+    if (!free_bytes || !total_bytes || !supported) return NAVATALA_INVALID_PARAM;
     *free_bytes = 0;
     *total_bytes = 0;
     *supported = 0;
-
-    if (device_id < 0) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    if (!navatala_is_backend_available(backend)) {
-        return NAVATALA_NOT_FOUND;
-    }
-
-    switch (backend) {
-        case NAVATALA_BACKEND_CUDA_FFI:
-        case NAVATALA_BACKEND_HIP_FFI:
-            *total_bytes = 8ULL * 1024 * 1024 * 1024;
-            *free_bytes = 6ULL * 1024 * 1024 * 1024;
-            *supported = 1;
-            break;
-        case NAVATALA_BACKEND_AUTO_FFI:
-            *total_bytes = 8ULL * 1024 * 1024 * 1024;
-            *free_bytes = 6ULL * 1024 * 1024 * 1024;
-            *supported = 1;
-            break;
-        case NAVATALA_BACKEND_METAL_FFI:
-        case NAVATALA_BACKEND_OPENCL_FFI:
-        case NAVATALA_BACKEND_VULKAN_FFI:
-            break;
-        default:
-            return NAVATALA_INVALID_PARAM;
-    }
-
-    return NAVATALA_SUCCESS;
+    return device_id < 0 ? NAVATALA_INVALID_PARAM : NAVATALA_NOT_IMPLEMENTED;
 }
 
-int navatala_get_device_count(NavatalaBackend backend) {
-    if (!navatala_is_backend_available(backend)) {
-        return 0;
-    }
-    // Stub: report 1 device for each available backend
-    return 1;
+int navatala_get_device_count(NavatalaBackend) {
+    return 0;
 }
 
 NavatalaBackend navatala_get_current_backend(void) {
@@ -1167,10 +1021,12 @@ NavatalaErrorCode navatala_gpu_queue_native_handle(
     return NAVATALA_SUCCESS;
 }
 
-int navatala_gpu_queue_is_ready(NavatalaGpuQueue* queue) {
-    if (!queue) return 0;
-    // Stub: always ready
-    return 1;
+NavatalaErrorCode navatala_gpu_queue_query(NavatalaGpuQueue*, uint8_t*) {
+    return NAVATALA_NOT_IMPLEMENTED;
+}
+
+int navatala_gpu_queue_is_ready(NavatalaGpuQueue*) {
+    return 0;
 }
 
 NavatalaBackend navatala_gpu_queue_get_backend(NavatalaGpuQueue* queue) {

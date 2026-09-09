@@ -96,7 +96,9 @@ public:
     /// Destructor - buffer automatically freed by unique_ptr
     ~DeviceBuffer() = default;
 
-    /// Get pointer to device memory
+    /// Get a raw device pointer when the backend exposes one.
+    /// Opaque-handle backends such as Vulkan may return nullptr for a valid
+    /// device allocation; use buffer() for backend-neutral operations.
     T* data() noexcept {
         return buffer_ ? static_cast<T*>(buffer_->getDevicePointer()) : nullptr;
     }
@@ -258,7 +260,7 @@ public:
         set(initial_value, queue);
     }
 
-    /// Get pointer to device value
+    /// Get a raw device pointer when the backend exposes one.
     T* data() noexcept { return buffer_.data(); }
     const T* data() const noexcept { return buffer_.data(); }
 

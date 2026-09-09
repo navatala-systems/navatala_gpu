@@ -215,6 +215,14 @@ float navatala_bfloat16_to_float(uint16_t b) NAVATALA_NOEXCEPT;
  * Get the number of available backends.
  * @return The number of available backends.
  */
+/** Runtime implementation mode; does not imply an available device. */
+const char* navatala_get_runtime_mode(void);
+// Release assembly version, or "unversioned" for a private/unbound build.
+const char* navatala_get_release_version(void);
+int navatala_is_backend_compiled(NavatalaBackend backend);
+/** True only while at least one FFI-owned context of this backend exists. */
+int navatala_is_backend_initialized(NavatalaBackend backend);
+
 int navatala_get_available_backend_count(void);
 
 /**
@@ -364,9 +372,11 @@ NavatalaErrorCode navatala_gpu_queue_native_handle(
 /**
  * Check if a queue is ready (all operations completed).
  * @param queue The queue to check.
- * @return 1 if ready, 0 if still executing.
+ * @return 1 only for observed completion; 0 also covers unsupported queries.
  */
 int navatala_gpu_queue_is_ready(NavatalaGpuQueue* queue);
+/** Unsupported queries return NAVATALA_NOT_IMPLEMENTED without changing ready. */
+NavatalaErrorCode navatala_gpu_queue_query(NavatalaGpuQueue* queue, uint8_t* ready);
 
 /**
  * Get the backend type of a queue.

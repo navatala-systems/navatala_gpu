@@ -58,9 +58,6 @@ kernel void navatala_cfd_vof_alpha_phi_van_leer_int(device const float* alpha [[
     }
     float absR = abs(r);
     float psi = ((r + absR) / (as_type<float>(0x3f800000u) + absR));
-    if (((ph > as_type<float>(0x00000000u)) && ((aO < as_type<float>(0x00000000u)) || (aN > as_type<float>(0x3f800000u)))) || ((ph < as_type<float>(0x00000000u)) && ((aN < as_type<float>(0x00000000u)) || (aO > as_type<float>(0x3f800000u))))) {
-      psi = as_type<float>(0x00000000u);
-    }
     float pos0 = as_type<float>(0x00000000u);
     if (ph >= as_type<float>(0x00000000u)) {
       pos0 = as_type<float>(0x3f800000u);

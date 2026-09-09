@@ -6,6 +6,2328 @@
         "cuda": {
           "available": true,
           "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_alphaIsoVerticalProbeF64",
+          "implementation": "portable_kernel",
+          "source": "cuda/Solver_CFD_StandaloneCfd03MarineGpuKernels_alphaIsoVerticalProbeF64.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_alphaIsoVerticalProbeF64",
+          "implementation": "portable_kernel",
+          "source": "hip/Solver_CFD_StandaloneCfd03MarineGpuKernels_alphaIsoVerticalProbeF64.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": false,
+          "binary": null,
+          "entryPoint": null,
+          "implementation": "unsupported",
+          "source": null,
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_alphaIsoVerticalProbeF64",
+          "implementation": "portable_kernel",
+          "source": "opencl/Solver_CFD_StandaloneCfd03MarineGpuKernels_alphaIsoVerticalProbeF64.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": false,
+          "binary": null,
+          "entryPoint": null,
+          "implementation": "unsupported",
+          "source": null,
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Miscellaneous",
+      "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_alphaIsoVerticalProbeF64",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadOnly",
+          "name": "probeOffsets",
+          "space": "Global",
+          "type": "UInt64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "verticalCoordinates",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "alphaValues",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "nProbes",
+          "space": "Global",
+          "type": "UInt32[1]"
+        }
+      ],
+      "name": "Solver_CFD_StandaloneCfd03MarineGpuKernels_alphaIsoVerticalProbeF64",
+      "outputs": [
+        {
+          "access": "WriteOnly",
+          "name": "elevationOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "lowerPointOut",
+          "space": "Global",
+          "type": "UInt64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "crossingCountOut",
+          "space": "Global",
+          "type": "UInt32[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "exactPointOut",
+          "space": "Global",
+          "type": "UInt32[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "crossingValidOut",
+          "space": "Global",
+          "type": "UInt32[?]"
+        }
+      ],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 256,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_barthJespersenCellF64",
+          "implementation": "portable_kernel",
+          "source": "cuda/Solver_CFD_StandaloneCfd03MarineGpuKernels_barthJespersenCellF64.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_barthJespersenCellF64",
+          "implementation": "portable_kernel",
+          "source": "hip/Solver_CFD_StandaloneCfd03MarineGpuKernels_barthJespersenCellF64.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": false,
+          "binary": null,
+          "entryPoint": null,
+          "implementation": "unsupported",
+          "source": null,
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_barthJespersenCellF64",
+          "implementation": "portable_kernel",
+          "source": "opencl/Solver_CFD_StandaloneCfd03MarineGpuKernels_barthJespersenCellF64.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": false,
+          "binary": null,
+          "entryPoint": null,
+          "implementation": "unsupported",
+          "source": null,
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Miscellaneous",
+      "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_barthJespersenCellF64",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadOnly",
+          "name": "alphaCell",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "alphaMinimum",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "alphaMaximum",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "incidentOffsets",
+          "space": "Global",
+          "type": "UInt64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "gradientDotDisplacements",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "nCells",
+          "space": "Global",
+          "type": "UInt32[1]"
+        }
+      ],
+      "name": "Solver_CFD_StandaloneCfd03MarineGpuKernels_barthJespersenCellF64",
+      "outputs": [
+        {
+          "access": "WriteOnly",
+          "name": "psiOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "limitingFaceOut",
+          "space": "Global",
+          "type": "UInt64[?]"
+        }
+      ],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 256,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_hullLaminarFaceTractionF64",
+          "implementation": "portable_kernel",
+          "source": "cuda/Solver_CFD_StandaloneCfd03MarineGpuKernels_hullLaminarFaceTractionF64.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_hullLaminarFaceTractionF64",
+          "implementation": "portable_kernel",
+          "source": "hip/Solver_CFD_StandaloneCfd03MarineGpuKernels_hullLaminarFaceTractionF64.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": false,
+          "binary": null,
+          "entryPoint": null,
+          "implementation": "unsupported",
+          "source": null,
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_hullLaminarFaceTractionF64",
+          "implementation": "portable_kernel",
+          "source": "opencl/Solver_CFD_StandaloneCfd03MarineGpuKernels_hullLaminarFaceTractionF64.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": true,
+          "binary": "vulkan/Solver_CFD_StandaloneCfd03MarineGpuKernels_hullLaminarFaceTractionF64.spv",
+          "entryPoint": "main",
+          "implementation": "portable_kernel",
+          "source": "vulkan/Solver_CFD_StandaloneCfd03MarineGpuKernels_hullLaminarFaceTractionF64.comp",
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Miscellaneous",
+      "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_hullLaminarFaceTractionF64",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadOnly",
+          "name": "velocityGradient00",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "velocityGradient01",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "velocityGradient02",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "velocityGradient10",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "velocityGradient11",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "velocityGradient12",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "velocityGradient20",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "velocityGradient21",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "velocityGradient22",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "dynamicViscosity",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "fluidAreaVectorX",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "fluidAreaVectorY",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "fluidAreaVectorZ",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "faceCentroidX",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "faceCentroidY",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "faceCentroidZ",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "hullLaminarDatum",
+          "space": "Global",
+          "type": "Float64[3]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "nFaces",
+          "space": "Global",
+          "type": "UInt32[1]"
+        }
+      ],
+      "name": "Solver_CFD_StandaloneCfd03MarineGpuKernels_hullLaminarFaceTractionF64",
+      "outputs": [
+        {
+          "access": "WriteOnly",
+          "name": "areaOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "forceXOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "forceYOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "forceZOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "momentXOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "momentYOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "momentZOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        }
+      ],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 256,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_hullPairwiseReductionLevelF64",
+          "implementation": "portable_kernel",
+          "source": "cuda/Solver_CFD_StandaloneCfd03MarineGpuKernels_hullPairwiseReductionLevelF64.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_hullPairwiseReductionLevelF64",
+          "implementation": "portable_kernel",
+          "source": "hip/Solver_CFD_StandaloneCfd03MarineGpuKernels_hullPairwiseReductionLevelF64.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": false,
+          "binary": null,
+          "entryPoint": null,
+          "implementation": "unsupported",
+          "source": null,
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_hullPairwiseReductionLevelF64",
+          "implementation": "portable_kernel",
+          "source": "opencl/Solver_CFD_StandaloneCfd03MarineGpuKernels_hullPairwiseReductionLevelF64.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": true,
+          "binary": "vulkan/Solver_CFD_StandaloneCfd03MarineGpuKernels_hullPairwiseReductionLevelF64.spv",
+          "entryPoint": "main",
+          "implementation": "portable_kernel",
+          "source": "vulkan/Solver_CFD_StandaloneCfd03MarineGpuKernels_hullPairwiseReductionLevelF64.comp",
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Miscellaneous",
+      "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_hullPairwiseReductionLevelF64",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadOnly",
+          "name": "pressureForceXIn",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "pressureForceYIn",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "pressureForceZIn",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "viscousForceXIn",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "viscousForceYIn",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "viscousForceZIn",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "pressureMomentXIn",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "pressureMomentYIn",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "pressureMomentZIn",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "viscousMomentXIn",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "viscousMomentYIn",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "viscousMomentZIn",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "activeCount",
+          "space": "Global",
+          "type": "UInt32[1]"
+        }
+      ],
+      "name": "Solver_CFD_StandaloneCfd03MarineGpuKernels_hullPairwiseReductionLevelF64",
+      "outputs": [
+        {
+          "access": "WriteOnly",
+          "name": "pressureForceXOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "pressureForceYOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "pressureForceZOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "viscousForceXOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "viscousForceYOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "viscousForceZOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "pressureMomentXOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "pressureMomentYOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "pressureMomentZOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "viscousMomentXOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "viscousMomentYOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "viscousMomentZOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        }
+      ],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 256,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_hullPressureFaceTractionF64",
+          "implementation": "portable_kernel",
+          "source": "cuda/Solver_CFD_StandaloneCfd03MarineGpuKernels_hullPressureFaceTractionF64.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_hullPressureFaceTractionF64",
+          "implementation": "portable_kernel",
+          "source": "hip/Solver_CFD_StandaloneCfd03MarineGpuKernels_hullPressureFaceTractionF64.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": false,
+          "binary": null,
+          "entryPoint": null,
+          "implementation": "unsupported",
+          "source": null,
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_hullPressureFaceTractionF64",
+          "implementation": "portable_kernel",
+          "source": "opencl/Solver_CFD_StandaloneCfd03MarineGpuKernels_hullPressureFaceTractionF64.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": true,
+          "binary": "vulkan/Solver_CFD_StandaloneCfd03MarineGpuKernels_hullPressureFaceTractionF64.spv",
+          "entryPoint": "main",
+          "implementation": "portable_kernel",
+          "source": "vulkan/Solver_CFD_StandaloneCfd03MarineGpuKernels_hullPressureFaceTractionF64.comp",
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Miscellaneous",
+      "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_hullPressureFaceTractionF64",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadOnly",
+          "name": "fluidAreaVectorX",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "fluidAreaVectorY",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "fluidAreaVectorZ",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "faceCentroidX",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "faceCentroidY",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "faceCentroidZ",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "ownerCentroidX",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "ownerCentroidY",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "ownerCentroidZ",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "pressureGradientOwnerX",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "pressureGradientOwnerY",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "pressureGradientOwnerZ",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "pRghOwner",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "densityOwner",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "hullPressureDatum",
+          "space": "Global",
+          "type": "Float64[10]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "nFaces",
+          "space": "Global",
+          "type": "UInt32[1]"
+        }
+      ],
+      "name": "Solver_CFD_StandaloneCfd03MarineGpuKernels_hullPressureFaceTractionF64",
+      "outputs": [
+        {
+          "access": "WriteOnly",
+          "name": "areaOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "pRghFaceOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "absolutePressureOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "relativePressureOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "forceXOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "forceYOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "forceZOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "momentXOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "momentYOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "momentZOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        }
+      ],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 256,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_hullSstFaceTractionF64",
+          "implementation": "portable_kernel",
+          "source": "cuda/Solver_CFD_StandaloneCfd03MarineGpuKernels_hullSstFaceTractionF64.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_hullSstFaceTractionF64",
+          "implementation": "portable_kernel",
+          "source": "hip/Solver_CFD_StandaloneCfd03MarineGpuKernels_hullSstFaceTractionF64.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": false,
+          "binary": null,
+          "entryPoint": null,
+          "implementation": "unsupported",
+          "source": null,
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_hullSstFaceTractionF64",
+          "implementation": "portable_kernel",
+          "source": "opencl/Solver_CFD_StandaloneCfd03MarineGpuKernels_hullSstFaceTractionF64.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": true,
+          "binary": "vulkan/Solver_CFD_StandaloneCfd03MarineGpuKernels_hullSstFaceTractionF64.spv",
+          "entryPoint": "main",
+          "implementation": "portable_kernel",
+          "source": "vulkan/Solver_CFD_StandaloneCfd03MarineGpuKernels_hullSstFaceTractionF64.comp",
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Miscellaneous",
+      "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_hullSstFaceTractionF64",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadOnly",
+          "name": "wallShearOnFluidX",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "wallShearOnFluidY",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "wallShearOnFluidZ",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "fluidAreaVectorX",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "fluidAreaVectorY",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "fluidAreaVectorZ",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "faceCentroidX",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "faceCentroidY",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "faceCentroidZ",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "hullSstDatum",
+          "space": "Global",
+          "type": "Float64[3]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "nFaces",
+          "space": "Global",
+          "type": "UInt32[1]"
+        }
+      ],
+      "name": "Solver_CFD_StandaloneCfd03MarineGpuKernels_hullSstFaceTractionF64",
+      "outputs": [
+        {
+          "access": "WriteOnly",
+          "name": "areaOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "forceXOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "forceYOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "forceZOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "momentXOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "momentYOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "momentZOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        }
+      ],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 256,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_hullWindowStatisticsF64",
+          "implementation": "portable_kernel",
+          "source": "cuda/Solver_CFD_StandaloneCfd03MarineGpuKernels_hullWindowStatisticsF64.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_hullWindowStatisticsF64",
+          "implementation": "portable_kernel",
+          "source": "hip/Solver_CFD_StandaloneCfd03MarineGpuKernels_hullWindowStatisticsF64.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": false,
+          "binary": null,
+          "entryPoint": null,
+          "implementation": "unsupported",
+          "source": null,
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_hullWindowStatisticsF64",
+          "implementation": "portable_kernel",
+          "source": "opencl/Solver_CFD_StandaloneCfd03MarineGpuKernels_hullWindowStatisticsF64.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": true,
+          "binary": "vulkan/Solver_CFD_StandaloneCfd03MarineGpuKernels_hullWindowStatisticsF64.spv",
+          "entryPoint": "main",
+          "implementation": "portable_kernel",
+          "source": "vulkan/Solver_CFD_StandaloneCfd03MarineGpuKernels_hullWindowStatisticsF64.comp",
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Miscellaneous",
+      "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_hullWindowStatisticsF64",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadOnly",
+          "name": "times",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "values",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "count",
+          "space": "Global",
+          "type": "UInt32[1]"
+        },
+        {
+          "access": "ReadWrite",
+          "name": "scratchA",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadWrite",
+          "name": "scratchB",
+          "space": "Global",
+          "type": "Float64[?]"
+        }
+      ],
+      "name": "Solver_CFD_StandaloneCfd03MarineGpuKernels_hullWindowStatisticsF64",
+      "outputs": [
+        {
+          "access": "WriteOnly",
+          "name": "firstTimeOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "lastTimeOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "meanOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "sampleStandardDeviationOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "minimumOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "maximumOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "driftSlopeOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        }
+      ],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 256,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_marineInterfaceCompressionF64",
+          "implementation": "portable_kernel",
+          "source": "cuda/Solver_CFD_StandaloneCfd03MarineGpuKernels_marineInterfaceCompressionF64.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_marineInterfaceCompressionF64",
+          "implementation": "portable_kernel",
+          "source": "hip/Solver_CFD_StandaloneCfd03MarineGpuKernels_marineInterfaceCompressionF64.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": false,
+          "binary": null,
+          "entryPoint": null,
+          "implementation": "unsupported",
+          "source": null,
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_marineInterfaceCompressionF64",
+          "implementation": "portable_kernel",
+          "source": "opencl/Solver_CFD_StandaloneCfd03MarineGpuKernels_marineInterfaceCompressionF64.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": true,
+          "binary": "vulkan/Solver_CFD_StandaloneCfd03MarineGpuKernels_marineInterfaceCompressionF64.spv",
+          "entryPoint": "main",
+          "implementation": "portable_kernel",
+          "source": "vulkan/Solver_CFD_StandaloneCfd03MarineGpuKernels_marineInterfaceCompressionF64.comp",
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Miscellaneous",
+      "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_marineInterfaceCompressionF64",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadOnly",
+          "name": "volumeFlux",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "faceArea",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "maximumIncidentFaceSpeed",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "interfaceNormalDotArea",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "alphaFace",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "compressionDatum",
+          "space": "Global",
+          "type": "Float64[1]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "nFaces",
+          "space": "Global",
+          "type": "UInt32[1]"
+        }
+      ],
+      "name": "Solver_CFD_StandaloneCfd03MarineGpuKernels_marineInterfaceCompressionF64",
+      "outputs": [
+        {
+          "access": "WriteOnly",
+          "name": "compressionSpeedOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "compressionFluxOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "alphaCompressionFluxOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        }
+      ],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 256,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_marineMomentumDampingF64",
+          "implementation": "portable_kernel",
+          "source": "cuda/Solver_CFD_StandaloneCfd03MarineGpuKernels_marineMomentumDampingF64.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_marineMomentumDampingF64",
+          "implementation": "portable_kernel",
+          "source": "hip/Solver_CFD_StandaloneCfd03MarineGpuKernels_marineMomentumDampingF64.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": false,
+          "binary": null,
+          "entryPoint": null,
+          "implementation": "unsupported",
+          "source": null,
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_marineMomentumDampingF64",
+          "implementation": "portable_kernel",
+          "source": "opencl/Solver_CFD_StandaloneCfd03MarineGpuKernels_marineMomentumDampingF64.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": true,
+          "binary": "vulkan/Solver_CFD_StandaloneCfd03MarineGpuKernels_marineMomentumDampingF64.spv",
+          "entryPoint": "main",
+          "implementation": "portable_kernel",
+          "source": "vulkan/Solver_CFD_StandaloneCfd03MarineGpuKernels_marineMomentumDampingF64.comp",
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Miscellaneous",
+      "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_marineMomentumDampingF64",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadOnly",
+          "name": "density",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "volume",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "streamwiseCoordinate",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "acceptedVelocityX",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "acceptedVelocityY",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "acceptedVelocityZ",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "dampingDatum",
+          "space": "Global",
+          "type": "Float64[7]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "nCells",
+          "space": "Global",
+          "type": "UInt32[1]"
+        }
+      ],
+      "name": "Solver_CFD_StandaloneCfd03MarineGpuKernels_marineMomentumDampingF64",
+      "outputs": [
+        {
+          "access": "WriteOnly",
+          "name": "lambdaOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "implicitDiagonalOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "implicitTargetRhsXOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "implicitTargetRhsYOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "implicitTargetRhsZOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "momentumSourceXOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "momentumSourceYOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "momentumSourceZOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "signedPowerOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "signedWorkOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "activeOut",
+          "space": "Global",
+          "type": "UInt32[?]"
+        }
+      ],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 256,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_marinePressureTargetF64",
+          "implementation": "portable_kernel",
+          "source": "cuda/Solver_CFD_StandaloneCfd03MarineGpuKernels_marinePressureTargetF64.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_marinePressureTargetF64",
+          "implementation": "portable_kernel",
+          "source": "hip/Solver_CFD_StandaloneCfd03MarineGpuKernels_marinePressureTargetF64.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": false,
+          "binary": null,
+          "entryPoint": null,
+          "implementation": "unsupported",
+          "source": null,
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_marinePressureTargetF64",
+          "implementation": "portable_kernel",
+          "source": "opencl/Solver_CFD_StandaloneCfd03MarineGpuKernels_marinePressureTargetF64.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": true,
+          "binary": "vulkan/Solver_CFD_StandaloneCfd03MarineGpuKernels_marinePressureTargetF64.spv",
+          "entryPoint": "main",
+          "implementation": "portable_kernel",
+          "source": "vulkan/Solver_CFD_StandaloneCfd03MarineGpuKernels_marinePressureTargetF64.comp",
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Miscellaneous",
+      "entryPoint": "Solver_CFD_StandaloneCfd03MarineGpuKernels_marinePressureTargetF64",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadOnly",
+          "name": "pointX",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "pointY",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "pointZ",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "liquidFraction",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "datum",
+          "space": "Global",
+          "type": "Float64[12]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "nCells",
+          "space": "Global",
+          "type": "UInt32[1]"
+        }
+      ],
+      "name": "Solver_CFD_StandaloneCfd03MarineGpuKernels_marinePressureTargetF64",
+      "outputs": [
+        {
+          "access": "WriteOnly",
+          "name": "densityOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "pRghOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "absolutePressureOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        }
+      ],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 256,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03SstGpuKernels_sstProfilePointwiseFieldsF64",
+          "implementation": "portable_kernel",
+          "source": "cuda/Solver_CFD_StandaloneCfd03SstGpuKernels_sstProfilePointwiseFieldsF64.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03SstGpuKernels_sstProfilePointwiseFieldsF64",
+          "implementation": "portable_kernel",
+          "source": "hip/Solver_CFD_StandaloneCfd03SstGpuKernels_sstProfilePointwiseFieldsF64.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": false,
+          "binary": null,
+          "entryPoint": null,
+          "implementation": "unsupported",
+          "source": null,
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03SstGpuKernels_sstProfilePointwiseFieldsF64",
+          "implementation": "portable_kernel",
+          "source": "opencl/Solver_CFD_StandaloneCfd03SstGpuKernels_sstProfilePointwiseFieldsF64.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": true,
+          "binary": "vulkan/Solver_CFD_StandaloneCfd03SstGpuKernels_sstProfilePointwiseFieldsF64.spv",
+          "entryPoint": "main",
+          "implementation": "portable_kernel",
+          "source": "vulkan/Solver_CFD_StandaloneCfd03SstGpuKernels_sstProfilePointwiseFieldsF64.comp",
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Miscellaneous",
+      "entryPoint": "Solver_CFD_StandaloneCfd03SstGpuKernels_sstProfilePointwiseFieldsF64",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadOnly",
+          "name": "alpha1",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "k",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "omega",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "wallDistance",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "gradientDotProduct",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "strainMagnitudeSquared2",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "datum",
+          "space": "Global",
+          "type": "Float64[4]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "nCells",
+          "space": "Global",
+          "type": "UInt32[1]"
+        }
+      ],
+      "name": "Solver_CFD_StandaloneCfd03SstGpuKernels_sstProfilePointwiseFieldsF64",
+      "outputs": [
+        {
+          "access": "WriteOnly",
+          "name": "densityOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "dynamicViscosityOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "kinematicViscosityOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "crossDiffusionOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "positiveCrossDiffusionOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "argument1Out",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "argument2Out",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "f1Out",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "f2Out",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "turbulentKinematicViscosityOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "turbulentDynamicViscosityOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "effectiveDynamicViscosityOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "nutToNuOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "gammaOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "betaOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "sigmaKOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "sigmaOmegaOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "productionRawOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "productionLimitedOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "kExplicitSourceOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "kImplicitSinkOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "omegaBaseSourceOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "crossLagOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "omegaCrossExplicitSourceOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "omegaCrossImplicitSinkOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "omegaImplicitSinkOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "kEffectiveDiffusivityOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "omegaEffectiveDiffusivityOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        }
+      ],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 256,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03SstGpuKernels_sstSpaldingWallFacesF64",
+          "implementation": "portable_kernel",
+          "source": "cuda/Solver_CFD_StandaloneCfd03SstGpuKernels_sstSpaldingWallFacesF64.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03SstGpuKernels_sstSpaldingWallFacesF64",
+          "implementation": "portable_kernel",
+          "source": "hip/Solver_CFD_StandaloneCfd03SstGpuKernels_sstSpaldingWallFacesF64.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": false,
+          "binary": null,
+          "entryPoint": null,
+          "implementation": "unsupported",
+          "source": null,
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "Solver_CFD_StandaloneCfd03SstGpuKernels_sstSpaldingWallFacesF64",
+          "implementation": "portable_kernel",
+          "source": "opencl/Solver_CFD_StandaloneCfd03SstGpuKernels_sstSpaldingWallFacesF64.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": true,
+          "binary": "vulkan/Solver_CFD_StandaloneCfd03SstGpuKernels_sstSpaldingWallFacesF64.spv",
+          "entryPoint": "main",
+          "implementation": "portable_kernel",
+          "source": "vulkan/Solver_CFD_StandaloneCfd03SstGpuKernels_sstSpaldingWallFacesF64.comp",
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Miscellaneous",
+      "entryPoint": "Solver_CFD_StandaloneCfd03SstGpuKernels_sstSpaldingWallFacesF64",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadOnly",
+          "name": "tangentialVelocityX",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "tangentialVelocityY",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "tangentialVelocityZ",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "wallDistance",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "kinematicViscosity",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "density",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "dynamicViscosity",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "referenceVelocity",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "nFaces",
+          "space": "Global",
+          "type": "UInt32[1]"
+        }
+      ],
+      "name": "Solver_CFD_StandaloneCfd03SstGpuKernels_sstSpaldingWallFacesF64",
+      "outputs": [
+        {
+          "access": "WriteOnly",
+          "name": "densityOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "tangentMagnitudeOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "frictionVelocityOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "tangentUnitXOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "tangentUnitYOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "tangentUnitZOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "wallShearOnFluidXOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "wallShearOnFluidYOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "wallShearOnFluidZOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "uPlusOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "yPlusOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "wallShearMagnitudeOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "omegaViscousOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "omegaLogarithmicOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "omegaWallOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "turbulentKinematicViscosityWallOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "finalResidualOut",
+          "space": "Global",
+          "type": "Float64[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "iterationsOut",
+          "space": "Global",
+          "type": "UInt32[?]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "zeroVelocityBranchOut",
+          "space": "Global",
+          "type": "UInt32[?]"
+        }
+      ],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 256,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
           "entryPoint": "navatala_cfd_add_vol_vector",
           "implementation": "portable_kernel",
           "source": "cuda/cfd/add_vol_vector.cu",
@@ -18485,27 +20807,27 @@
           "vendorBacked": false
         },
         "metal": {
-          "available": true,
+          "available": false,
           "binary": null,
-          "entryPoint": "navatala_cfd_scalar_ldu_coupled_interface_add",
-          "implementation": "portable_kernel",
-          "source": "metal/cfd/scalar_ldu_coupled_interface_add.metal",
+          "entryPoint": null,
+          "implementation": "unsupported",
+          "source": null,
           "vendorBacked": false
         },
         "opencl": {
-          "available": true,
+          "available": false,
           "binary": null,
-          "entryPoint": "navatala_cfd_scalar_ldu_coupled_interface_add",
-          "implementation": "portable_kernel",
-          "source": "opencl/cfd/scalar_ldu_coupled_interface_add.cl",
+          "entryPoint": null,
+          "implementation": "unsupported",
+          "source": null,
           "vendorBacked": false
         },
         "vulkan": {
-          "available": true,
-          "binary": "vulkan/cfd/scalar_ldu_coupled_interface_add.spv",
-          "entryPoint": "main",
-          "implementation": "portable_kernel",
-          "source": "vulkan/cfd/scalar_ldu_coupled_interface_add.comp",
+          "available": false,
+          "binary": null,
+          "entryPoint": null,
+          "implementation": "unsupported",
+          "source": null,
           "vendorBacked": false
         }
       },
@@ -161305,6 +163627,117 @@
         "cuda": {
           "available": true,
           "binary": null,
+          "entryPoint": "navatala_samples_det_prepare_scatter_0",
+          "implementation": "portable_kernel",
+          "source": "cuda/samples/det_prepare_scatter_0.cu",
+          "vendorBacked": false
+        },
+        "hip": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_samples_det_prepare_scatter_0",
+          "implementation": "portable_kernel",
+          "source": "hip/samples/det_prepare_scatter_0.hip",
+          "vendorBacked": false
+        },
+        "metal": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_samples_det_prepare_scatter_0",
+          "implementation": "portable_kernel",
+          "source": "metal/samples/det_prepare_scatter_0.metal",
+          "vendorBacked": false
+        },
+        "opencl": {
+          "available": true,
+          "binary": null,
+          "entryPoint": "navatala_samples_det_prepare_scatter_0",
+          "implementation": "portable_kernel",
+          "source": "opencl/samples/det_prepare_scatter_0.cl",
+          "vendorBacked": false
+        },
+        "vulkan": {
+          "available": true,
+          "binary": "vulkan/samples/det_prepare_scatter_0.spv",
+          "entryPoint": "main",
+          "implementation": "portable_kernel",
+          "source": "vulkan/samples/det_prepare_scatter_0.comp",
+          "vendorBacked": false
+        }
+      },
+      "defaultDispatch": {
+        "x": 16,
+        "y": 1,
+        "z": 1
+      },
+      "determinism": {
+        "defaultDeterministic": false,
+        "supportsDeterministicMode": true
+      },
+      "domain": "Miscellaneous",
+      "entryPoint": "navatala_samples_det_prepare_scatter_0",
+      "implementation": {
+        "kind": "portable_kernel",
+        "notes": "Portable Navatala kernel source. Do not infer vendor-library dispatch unless a future manifest explicitly marks the path as vendor-backed.",
+        "vendorBacked": false
+      },
+      "inputs": [
+        {
+          "access": "ReadOnly",
+          "name": "dstIdx",
+          "space": "Global",
+          "type": "UInt32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "messages",
+          "space": "Global",
+          "type": "Float32[?]"
+        },
+        {
+          "access": "ReadOnly",
+          "name": "detN",
+          "space": "Global",
+          "type": "Int32[1]"
+        }
+      ],
+      "name": "navatala_samples_det_prepare_scatter_0",
+      "outputs": [
+        {
+          "access": "WriteOnly",
+          "name": "keys_scatter_0",
+          "space": "Global",
+          "type": "UInt32[4096]"
+        },
+        {
+          "access": "WriteOnly",
+          "name": "vals_scatter_0",
+          "space": "Global",
+          "type": "Float32[4096]"
+        }
+      ],
+      "requirements": {
+        "estimatedSharedMemoryBytes": 0,
+        "requiresAtomic64": false,
+        "requiresAtomicFloat": false,
+        "requiresAtomics": false,
+        "requiresBFloat16": false,
+        "requiresFloat16": false,
+        "requiresFloat64": false,
+        "requiresSubgroupShuffle": false,
+        "requiresSubgroupVote": false
+      },
+      "workgroupSize": {
+        "x": 256,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "backends": {
+        "cuda": {
+          "available": true,
+          "binary": null,
           "entryPoint": "navatala_samples_float32_add",
           "implementation": "portable_kernel",
           "source": "cuda/samples/float32_add.cu",
@@ -259910,33 +262343,33 @@
     "backendCoverage": {
       "cuda": {
         "binaryFiles": 0,
-        "kernelsAvailable": 2114,
+        "kernelsAvailable": 2127,
         "missingVsCuda": 0,
-        "sourceFiles": 2114
+        "sourceFiles": 2127
       },
       "hip": {
         "binaryFiles": 0,
-        "kernelsAvailable": 2128,
+        "kernelsAvailable": 2141,
         "missingVsCuda": 0,
-        "sourceFiles": 2128
+        "sourceFiles": 2141
       },
       "metal": {
         "binaryFiles": 0,
         "kernelsAvailable": 1444,
-        "missingVsCuda": 670,
+        "missingVsCuda": 683,
         "sourceFiles": 1444
       },
       "opencl": {
         "binaryFiles": 0,
-        "kernelsAvailable": 1976,
-        "missingVsCuda": 138,
-        "sourceFiles": 1976
+        "kernelsAvailable": 1988,
+        "missingVsCuda": 139,
+        "sourceFiles": 1988
       },
       "vulkan": {
-        "binaryFiles": 1962,
-        "kernelsAvailable": 1962,
-        "missingVsCuda": 152,
-        "sourceFiles": 1962
+        "binaryFiles": 1972,
+        "kernelsAvailable": 1972,
+        "missingVsCuda": 155,
+        "sourceFiles": 1972
       }
     },
     "domains": {
@@ -259944,13 +262377,13 @@
       "BLAS / dense linear algebra": 2,
       "Distributed communication": 20,
       "Linear solvers": 409,
-      "Miscellaneous": 1413,
+      "Miscellaneous": 1426,
       "Neural / spectral operators": 12,
       "Parallel primitives": 14,
       "Sparse linear algebra": 54,
       "Volume-of-Fluid CFD": 188
     },
-    "kernelCount": 2128,
+    "kernelCount": 2141,
     "libraryOperationCount": 319
   }
 }

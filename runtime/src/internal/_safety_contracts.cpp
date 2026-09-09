@@ -275,12 +275,14 @@ const std::vector<std::string>& declaredPrograms() {
   static const std::vector<std::string> values = {
   "Solver.CFD.VofPressureAMGPressureSolve",
   "Solver.CFD.VofPressureOrchestrator",
+  "Solver.CFD.VofPressurePressureSolve",
   };
   return values;
 }
 
 const std::vector<RankConsistencyPolicy>& rankConsistencyPolicies() {
   static const std::vector<RankConsistencyPolicy> values = {
+    {true, true, "CFD_ASSEMBLY_OPERATOR_R4"},
     {true, true, "CFD_ASSEMBLY_OPERATOR_R4"},
     {true, true, "CFD_ASSEMBLY_OPERATOR_R4"},
   };
@@ -297,12 +299,19 @@ const std::vector<ContractHashRecord>& rankContractHashes() {
     {"vofPressureFieldState", "vofpressure-r4-field-v1"},
     {"pressureSolverDecision", "vofpressure-r4-solver-v1"},
     {"backendCapabilities", "vofpressure-r4-backend-v1"},
+    {"pressureHaloRegistry", "vofpressure-r4-halo-v1"},
+    {"vofPressureFieldState", "vofpressure-r4-field-v1"},
+    {"pressureSolverDecision", "vofpressure-r4-solver-v1"},
+    {"backendCapabilities", "vofpressure-r4-backend-v1"},
   };
   return values;
 }
 
 const std::vector<FieldStateRecord>& fieldStateRecords() {
   static const std::vector<FieldStateRecord> values = {
+    {"pressure", "phiHbyA", "gpuRequired", "clean", "clean", "clean", "unallocated", "clean", "clean", "deviceRequired", "allowExplicit", "initial", "", false, false},
+    {"pressure", "rAUf", "gpuRequired", "clean", "clean", "clean", "unallocated", "clean", "clean", "deviceRequired", "allowExplicit", "initial", "", false, false},
+    {"pressure", "p_rgh", "gpuRequired", "clean", "clean", "clean", "unallocated", "clean", "clean", "mirrorRequired", "allowExplicit", "initial", "", false, false},
     {"pressure", "phiHbyA", "gpuRequired", "clean", "clean", "clean", "unallocated", "clean", "clean", "deviceRequired", "allowExplicit", "initial", "", false, false},
     {"pressure", "rAUf", "gpuRequired", "clean", "clean", "clean", "unallocated", "clean", "clean", "deviceRequired", "allowExplicit", "initial", "", false, false},
     {"pressure", "p_rgh", "gpuRequired", "clean", "clean", "clean", "unallocated", "clean", "clean", "mirrorRequired", "allowExplicit", "initial", "", false, false},
@@ -325,6 +334,7 @@ const std::vector<RunGateDefinition>& runGateDefinitions() {
 
 const std::vector<SolverCompatibilityPolicy>& solverCompatibilityPolicies() {
   static const std::vector<SolverCompatibilityPolicy> values = {
+    {"pcg", "spd", "spd", "jacobi(1.000000)", false, true},
     {"pcg", "spd", "spd", "jacobi(1.000000)", false, true},
     {"pcg", "spd", "spd", "jacobi(1.000000)", false, true},
   };
@@ -433,6 +443,11 @@ const std::vector<BackendCapability>& backendCapabilities() {
     {"metal", "metal", false, true, false, false, false, true, false, 256, 32, "hostStaged"},
     {"vulkan", "glslang", false, true, false, true, false, true, false, 256, 64, "hostStaged"},
     {"opencl", "opencl", false, true, false, true, false, true, false, 256, 64, "hostStaged"},
+    {"cuda", "nvrtc", false, true, false, true, false, true, true, 256, 32, "hostStaged"},
+    {"hip", "hiprtc", false, true, false, true, false, true, true, 256, 64, "hostStaged"},
+    {"metal", "metal", false, true, false, false, false, true, false, 256, 32, "hostStaged"},
+    {"vulkan", "glslang", false, true, false, true, false, true, false, 256, 64, "hostStaged"},
+    {"opencl", "opencl", false, true, false, true, false, true, false, 256, 64, "hostStaged"},
   };
   return values;
 }
@@ -441,12 +456,14 @@ const std::vector<HaloDescriptor>& haloDescriptors() {
   static const std::vector<HaloDescriptor> values = {
     {1, "pressureProcessorPatchHalo", "GpuSnGrad", "pressure", "patchPair", "Float32", 1, 700000},
     {1, "pressureProcessorPatchHalo", "GpuSnGrad", "pressure", "patchPair", "Float32", 1, 700000},
+    {1, "pressureProcessorPatchHalo", "GpuSnGrad", "pressure", "patchPair", "Float32", 1, 700000},
   };
   return values;
 }
 
 const std::vector<WorkspacePlan>& workspacePlans() {
   static const std::vector<WorkspacePlan> values = {
+    {0, "cuda", 0, 0, 0, "mixed", 1, 1},
     {0, "cuda", 0, 0, 0, "mixed", 1, 1},
     {0, "cuda", 0, 0, 0, "mixed", 1, 1},
   };

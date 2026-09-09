@@ -13,16 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-__kernel void navatala_cfd_scalar_ldu_coupled_interface_add(__global const int* faceCells, __global const float* coeffs, __global const float* recvNeighbourX, __global const uint* counts, __global float* ax) {
+__kernel void navatala_samples_det_prepare_scatter_0(__global const uint* dstIdx, __global const float* messages, __global const int* detN, __global uint* keys_scatter_0, __global float* vals_scatter_0) {
   int gid0 = (int)get_global_id(0);
-  const int nSafeMax = (((int)(counts[0])) > 0 ? ((int)(counts[0])) - 1 : 0);
-  const int safeIdx = (gid0 < nSafeMax ? gid0 : nSafeMax);
-  if (gid0 >= ((int)(counts[0]))) return;
-  if ((int)(get_global_id(0)) >= ((int)(counts[0]))) {
-    return;
-  } else {
-    int cell = faceCells[(int)(get_global_id(0))];
-    float delta = (coeffs[(int)(get_global_id(0))] * recvNeighbourX[(int)(get_global_id(0))]);
-    ax[cell] = (ax[cell] - delta);
+  if ((int)(get_global_id(0)) < detN[0]) {
+    keys_scatter_0[(int)(get_global_id(0))] = dstIdx[(int)(get_global_id(0))];
+    vals_scatter_0[(int)(get_global_id(0))] = messages[(int)(get_global_id(0))];
   }
 }

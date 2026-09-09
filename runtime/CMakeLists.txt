@@ -8,7 +8,14 @@
 # silently skipped at configure time.
 
 cmake_minimum_required(VERSION 3.18)
-project(gpu_runtime VERSION 0.1.6 LANGUAGES CXX)
+if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/cmake/NavatalaReleaseVersion.cmake")
+    include("${CMAKE_CURRENT_LIST_DIR}/cmake/NavatalaReleaseVersion.cmake")
+elseif(GPU_RUNTIME_PROFILE STREQUAL "SEALED_EXACT")
+    message(FATAL_ERROR "SEALED_EXACT requires the recorded release-version transform")
+else()
+    set(NAVATALA_GPU_RELEASE_VERSION "0.1.6")
+endif()
+project(gpu_runtime VERSION ${NAVATALA_GPU_RELEASE_VERSION} LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -40,6 +47,7 @@ option(GPU_RUNTIME_INSTALL_STANDALONE_ARTIFACTS
 # `-DNAVATALA_GPU_BUILD_TESTS=OFF` switch suppresses tests across the tree.
 # Default ON to match BUILD_TESTING's default behaviour for standalone builds.
 option(GPU_RUNTIME_BUILD_TESTS "Build the runtime test suite" ON)
+include(cmake/GpuRuntimeProfile.cmake)
 
 # ============================================================================
 # Backend probing
@@ -62,7 +70,10 @@ if(GPU_RUNTIME_USE_CUDA)
     if(CUDAToolkit_FOUND)
         set(GPU_RUNTIME_HAVE_CUDA 1)
         list(APPEND BACKEND_SOURCES src/backend_cuda.cpp)
-        list(APPEND BACKEND_LIBS CUDA::cudart CUDA::cuda_driver CUDA::nvrtc)
+        list(APPEND BACKEND_LIBS CUDA::cudart CUDA::cuda_driver)
+        if(GPU_RUNTIME_ENABLE_NVRTC)
+            list(APPEND BACKEND_LIBS CUDA::nvrtc)
+        endif()
         message(STATUS "[Navatala GPU] CUDA backend enabled")
     else()
         message(STATUS "[Navatala GPU] CUDA backend requested but CUDAToolkit not found — skipping")
@@ -162,6 +173,8 @@ set(CORE_SOURCES
     ${GPU_LIBRARY_OPS_SOURCES}
 )
 
+gpu_runtime_validate_backend_profile()
+
 set(NAVATALA_FFI_SOURCES "")
 set(NAVATALA_CPP_WRAPPER_SOURCES
     src/navatala_backend.cpp
@@ -215,6 +228,8 @@ endif()
 # ============================================================================
 
 add_library(gpu_runtime SHARED ${CORE_SOURCES} ${BACKEND_SOURCES} ${NAVATALA_FFI_SOURCES})
+target_compile_definitions(gpu_runtime PRIVATE
+    NAVATALA_GPU_RELEASE_VERSION="${NAVATALA_GPU_RELEASE_VERSION}")
 
 if(GPU_RUNTIME_NAVATALA_WRAPPER)
     target_compile_definitions(gpu_runtime PUBLIC NAVATALA_ENABLE_EXCEPTIONS=1)
@@ -229,6 +244,7 @@ target_include_directories(gpu_runtime
 )
 
 target_compile_definitions(gpu_runtime PRIVATE
+    GPU_RUNTIME_ENABLE_NVRTC=$<BOOL:${GPU_RUNTIME_ENABLE_NVRTC}>
     GPU_RUNTIME_HAVE_CUDA=${GPU_RUNTIME_HAVE_CUDA}
     GPU_RUNTIME_HAVE_HIP=${GPU_RUNTIME_HAVE_HIP}
     GPU_RUNTIME_HAVE_ROCBLAS=${GPU_RUNTIME_HAVE_ROCBLAS}

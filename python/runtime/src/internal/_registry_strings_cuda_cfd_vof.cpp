@@ -113,9 +113,6 @@ extern "C" __global__ void navatala_cfd_vof_alpha_phi_van_leer_int(const float* 
     }
     float absR = abs(r);
     float psi = ((r + absR) / (__uint_as_float(0x3f800000u) + absR));
-    if (((ph > __uint_as_float(0x00000000u)) && ((aO < __uint_as_float(0x00000000u)) || (aN > __uint_as_float(0x3f800000u)))) || ((ph < __uint_as_float(0x00000000u)) && ((aN < __uint_as_float(0x00000000u)) || (aO > __uint_as_float(0x3f800000u))))) {
-      psi = __uint_as_float(0x00000000u);
-    }
     float pos0 = __uint_as_float(0x00000000u);
     if (ph >= __uint_as_float(0x00000000u)) {
       pos0 = __uint_as_float(0x3f800000u);

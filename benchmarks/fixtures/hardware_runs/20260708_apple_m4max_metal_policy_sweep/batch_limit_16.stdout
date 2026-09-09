@@ -35,7 +35,7 @@ Apple clang version 21.0.0 (clang-2100.1.1.101)
 -- [Navatala GPU] Metal backend enabled
 -- [Navatala GPU] public FFI enabled (stub mode)
 -- [Navatala GPU] ROCm benchmarks requested but HIP backend is disabled
---
+-- 
 -- Navatala GPU build configuration
 --   Runtime library:    ON
 --   Examples:           OFF
@@ -47,7 +47,7 @@ Apple clang version 21.0.0 (clang-2100.1.1.101)
 --   Vulkan backend:     OFF
 --   OpenCL backend:     OFF
 --   Metal backend:      ON
---
+-- 
 -- Configuring done (0.0s)
 -- Generating done (0.0s)
 -- Build files have been written to: /tmp/navatala_gpu_metal_fixture_bench_build

@@ -34,3 +34,4 @@
 - Shared buffers remain preferable for very small transfers; private buffers with batched blits become attractive around 512 KiB and strongly favorable from roughly 1 MiB upward.
 - Use `NAVATALA_GPU_METAL_PRIVATE_MIN_BYTES` to keep small runtime buffers shared while allowing larger buffers to use private storage.
 - These are local runtime-policy probes. Keep the knobs opt-in until the regenerated public tree has release-corpus benchmark fixtures.
+

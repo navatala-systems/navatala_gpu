@@ -16,6 +16,26 @@ disabled when its toolkit is not present.
 | JIT (text → PTX)  | yes  | yes | n/a    | yes    | yes   |
 | AOT (binary)      | yes  | yes | yes    | no     | yes   |
 
+## Coupled-interface scatter availability
+
+`navatala_cfd_scalar_ldu_coupled_interface_add` requires Float32 scatter
+accumulation because several interface faces can address the same cell.
+Its generated manifest capability is available for CUDA/HIP and unavailable
+for Metal/Vulkan/OpenCL. Availability here describes emitted implementations,
+not proof of device execution or an exactness qualification.
+
+The Metal, OpenCL and Vulkan GLSL sources and Vulkan SPIR-V artifact shipped
+previously used an older
+non-atomic contract and are retired. For example, two faces reading the same
+initial accumulator can each write their own update and lose the other's
+contribution. Reintroducing a plain store is not a correct fallback. The
+current Metal/Vulkan scatter validation accepts only Int32/UInt32, and OpenCL
+only Int32. The F32-only specialty-kernel category does not override these
+operation-specific restrictions. No old artifact is copied into new builds.
+
+Other backend sources and the Metal/ROCm source-build workflows remain in the
+public tree. The sealed CUDA profile makes no validation claim for them.
+
 ## CUDA
 
 Requires CUDA Toolkit 11.0 or newer with `nvcc`, NVRTC, and the CUDA driver

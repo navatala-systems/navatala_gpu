@@ -2,6 +2,7 @@
 import importlib
 
 def test_ml_exports_are_importable():
+    pkg = importlib.import_module("navatala_gpu")
     mod = importlib.import_module("navatala_gpu.ml")
     assert hasattr(mod, "mean_squared_error")
     assert hasattr(mod, "root_mean_squared_error")
@@ -17,7 +18,10 @@ def test_ml_exports_are_importable():
     assert listed == ("mean_squared_error", "root_mean_squared_error", "mean_absolute_error", "mean_absolute_percentage_error", "r2_score", "explained_variance_score")
     for public_name in listed:
         assert public_name in mod.__all__
-        assert mod.supports(public_name) is True
+        caps = pkg.get_capabilities()
+        key = "ml" + "." + public_name
+        expected = bool(caps.get("operations", {}).get(key, {}).get("backends", {}))
+        assert mod.supports(public_name) is expected
     assert mod.supports("__missing_operation__") is False
 
 def test_ml_unsupported_backend_fails_before_extension_load():

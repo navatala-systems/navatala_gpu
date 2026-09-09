@@ -19,7 +19,9 @@
 #include <gpu_runtime.h>
 #include <cuda_runtime.h>
 #include <cuda.h>
+#if GPU_RUNTIME_ENABLE_NVRTC
 #include <nvrtc.h>
+#endif
 #include <memory>
 #include <iostream>
 #include <sstream>
@@ -507,6 +509,7 @@ public:
         // - PTX (precompiled)
         // - CUDA C++ source (JIT via NVRTC to PTX)
         if (source.kind == ProgramSource::Kind::CudaCpp) {
+#if GPU_RUNTIME_ENABLE_NVRTC
             std::string cudaSrc(reinterpret_cast<const char*>(source.bytes.data()), source.bytes.size());
             if (cudaSrc.empty() || cudaSrc.back() != '\0') {
                 cudaSrc.push_back('\0');
@@ -583,6 +586,9 @@ public:
             compiledBytes_.assign(reinterpret_cast<const std::uint8_t*>(ptx.data()),
                                   reinterpret_cast<const std::uint8_t*>(ptx.data()) + ptx.size());
             compiledFormat_ = "ptx";
+#else
+            throw std::runtime_error("CUDA source compilation is disabled in this runtime build");
+#endif
         } else if (source.kind == ProgramSource::Kind::Ptx) {
             compiledBytes_ = source.bytes;
             compiledFormat_ = "ptx";

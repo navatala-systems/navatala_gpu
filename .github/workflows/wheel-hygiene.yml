@@ -13,6 +13,9 @@ on:
       - 'python/**'
       - 'bindings/**'
       - 'CMakeLists.txt'
+      - 'runtime/**'
+      - 'tools/check_gpu_less_capabilities.py'
+      - 'tools/check_release_hygiene.py'
       - 'tools/check_generated_content_tells.sh'
 
 jobs:
@@ -83,6 +86,7 @@ jobs:
           print('abi_version', navatala_gpu.__abi_version__)
           print('manifest_id', navatala_gpu._meta.manifest_id())
           PY
+          python tools/check_gpu_less_capabilities.py
       - name: Install sdist + smoke test in fresh venv
         run: |
           set -euo pipefail
@@ -96,15 +100,11 @@ jobs:
           print('abi_version', navatala_gpu.__abi_version__)
           print('manifest_id', navatala_gpu._meta.manifest_id())
           PY
+          python tools/check_gpu_less_capabilities.py
       - name: Run acceptance checks on installed tree
         run: |
-          if [ -x tools/check_generated_content_tells.sh ]; then
-              tools/check_generated_content_tells.sh
-          else
-              echo "::warning::tools/check_generated_content_tells.sh not present in checkout — skipped"
-          fi
-          if [ -x tools/check_release_hygiene.py ]; then
-              python tools/check_release_hygiene.py .
-          else
-              echo "::warning::tools/check_release_hygiene.py not present in checkout — skipped"
-          fi
+          set -euo pipefail
+          test -x tools/check_generated_content_tells.sh
+          test -f tools/check_release_hygiene.py
+          tools/check_generated_content_tells.sh
+          python tools/check_release_hygiene.py .

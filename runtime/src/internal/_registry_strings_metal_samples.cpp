@@ -59,6 +59,18 @@ kernel void navatala_samples_axpy_fallback(device const float* x [[buffer(0)]], 
 }
 
 )kernel";
+const char* k_metal_navatala_samples_det_prepare_scatter_0 = R"kernel(
+#include <metal_stdlib>
+using namespace metal;
+
+kernel void navatala_samples_det_prepare_scatter_0(device const uint* dstIdx [[buffer(0)]], device const float* messages [[buffer(1)]], device const int* detN [[buffer(2)]], device uint* keys_scatter_0 [[buffer(3)]], device float* vals_scatter_0 [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
+  if (int(__gid.x) < detN[0]) {
+    keys_scatter_0[int(__gid.x)] = dstIdx[int(__gid.x)];
+    vals_scatter_0[int(__gid.x)] = messages[int(__gid.x)];
+  }
+}
+
+)kernel";
 
 namespace NavatalaRegistry {
 
@@ -114,6 +126,25 @@ const KernelAbiManifestInfo kAbiManifest_metal_navatala_samples_axpy_fallback = 
   kAbiArgs_metal_navatala_samples_axpy_fallback
 };
 
+const KernelArgumentInfo kAbiArgs_metal_navatala_samples_det_prepare_scatter_0[] = {
+  { "dstIdx", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "messages", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
+  { "detN", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
+  { "keys_scatter_0", 3, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 16384, 16384, 256, nullptr, 0, 0 },
+  { "vals_scatter_0", 4, KernelArgumentRole::Output, KernelAccessMode::WriteOnly, GpuRuntime::MemoryKind::Device, true, 16384, 16384, 256, nullptr, 0, 0 }
+};
+const KernelAbiManifestInfo kAbiManifest_metal_navatala_samples_det_prepare_scatter_0 = {
+  1,
+  "navatala_samples_det_prepare_scatter_0",
+  "metal",
+  "navatala_samples_det_prepare_scatter_0",
+  "kernel:metal:navatala_samples_det_prepare_scatter_0",
+  "abi-r1:metal:navatala_samples_det_prepare_scatter_0",
+  "abi-r1:metal:navatala_samples_det_prepare_scatter_0",
+  5,
+  kAbiArgs_metal_navatala_samples_det_prepare_scatter_0
+};
+
 bool tryGetKernelAbiManifest_metal_samples(const std::string& backend, const std::string& kernelName, const KernelAbiManifestInfo*& out) {
   if (backend == "metal" && kernelName == "navatala_samples_float32_add") {
     out = &kAbiManifest_metal_navatala_samples_float32_add;
@@ -125,6 +156,10 @@ bool tryGetKernelAbiManifest_metal_samples(const std::string& backend, const std
   }
   if (backend == "metal" && kernelName == "navatala_samples_axpy_fallback") {
     out = &kAbiManifest_metal_navatala_samples_axpy_fallback;
+    return true;
+  }
+  if (backend == "metal" && kernelName == "navatala_samples_det_prepare_scatter_0") {
+    out = &kAbiManifest_metal_navatala_samples_det_prepare_scatter_0;
     return true;
   }
   out = nullptr;
@@ -150,6 +185,13 @@ bool tryGetKernelSource_metal_samples(const std::string& backend, const std::str
     out.kind = GpuRuntime::ProgramSource::Kind::Msl;
     out.entryPoint = "navatala_samples_axpy_fallback";
     std::string_view sv(k_metal_navatala_samples_axpy_fallback);
+    out.bytes.assign(sv.begin(), sv.end());
+    return true;
+  }
+  if (backend == "metal" && kernelName == "navatala_samples_det_prepare_scatter_0") {
+    out.kind = GpuRuntime::ProgramSource::Kind::Msl;
+    out.entryPoint = "navatala_samples_det_prepare_scatter_0";
+    std::string_view sv(k_metal_navatala_samples_det_prepare_scatter_0);
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }

@@ -1,0 +1,227 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+double gpu_cbrt_pos_f64(double x) {
+  double ax = (x > 0.0 ? x : 0.0);
+  if (ax == 0.0) { return 0.0; }
+  double y = double(pow(float(ax), 0.3333333432674408));
+  if (y == 0.0) { y = 1.0e-100; }
+  y = ((2.0 * y) + (ax / (y * y))) / 3.0;
+  y = ((2.0 * y) + (ax / (y * y))) / 3.0;
+  y = ((2.0 * y) + (ax / (y * y))) / 3.0;
+  y = ((2.0 * y) + (ax / (y * y))) / 3.0;
+  y = ((2.0 * y) + (ax / (y * y))) / 3.0;
+  return y;
+}
+
+double gpu_pow_pos_f64_two_thirds(double x) {
+  double r = gpu_cbrt_pos_f64(x);
+  return r * r;
+}
+
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_alpha1 {
+  double alpha1[];
+};
+layout(std430, binding = 1) readonly buffer buf_k {
+  double k[];
+};
+layout(std430, binding = 2) readonly buffer buf_omega {
+  double omega[];
+};
+layout(std430, binding = 3) readonly buffer buf_wallDistance {
+  double wallDistance[];
+};
+layout(std430, binding = 4) readonly buffer buf_gradientDotProduct {
+  double gradientDotProduct[];
+};
+layout(std430, binding = 5) readonly buffer buf_strainMagnitudeSquared2 {
+  double strainMagnitudeSquared2[];
+};
+layout(std430, binding = 6) readonly buffer buf_datum {
+  double datum[];
+};
+layout(std430, binding = 7) readonly buffer buf_nCells {
+  uint nCells[];
+};
+layout(std430, binding = 8) writeonly buffer buf_densityOut {
+  double densityOut[];
+};
+layout(std430, binding = 9) writeonly buffer buf_dynamicViscosityOut {
+  double dynamicViscosityOut[];
+};
+layout(std430, binding = 10) writeonly buffer buf_kinematicViscosityOut {
+  double kinematicViscosityOut[];
+};
+layout(std430, binding = 11) writeonly buffer buf_crossDiffusionOut {
+  double crossDiffusionOut[];
+};
+layout(std430, binding = 12) writeonly buffer buf_positiveCrossDiffusionOut {
+  double positiveCrossDiffusionOut[];
+};
+layout(std430, binding = 13) writeonly buffer buf_argument1Out {
+  double argument1Out[];
+};
+layout(std430, binding = 14) writeonly buffer buf_argument2Out {
+  double argument2Out[];
+};
+layout(std430, binding = 15) writeonly buffer buf_f1Out {
+  double f1Out[];
+};
+layout(std430, binding = 16) writeonly buffer buf_f2Out {
+  double f2Out[];
+};
+layout(std430, binding = 17) writeonly buffer buf_turbulentKinematicViscosityOut {
+  double turbulentKinematicViscosityOut[];
+};
+layout(std430, binding = 18) writeonly buffer buf_turbulentDynamicViscosityOut {
+  double turbulentDynamicViscosityOut[];
+};
+layout(std430, binding = 19) writeonly buffer buf_effectiveDynamicViscosityOut {
+  double effectiveDynamicViscosityOut[];
+};
+layout(std430, binding = 20) writeonly buffer buf_nutToNuOut {
+  double nutToNuOut[];
+};
+layout(std430, binding = 21) writeonly buffer buf_gammaOut {
+  double gammaOut[];
+};
+layout(std430, binding = 22) writeonly buffer buf_betaOut {
+  double betaOut[];
+};
+layout(std430, binding = 23) writeonly buffer buf_sigmaKOut {
+  double sigmaKOut[];
+};
+layout(std430, binding = 24) writeonly buffer buf_sigmaOmegaOut {
+  double sigmaOmegaOut[];
+};
+layout(std430, binding = 25) writeonly buffer buf_productionRawOut {
+  double productionRawOut[];
+};
+layout(std430, binding = 26) writeonly buffer buf_productionLimitedOut {
+  double productionLimitedOut[];
+};
+layout(std430, binding = 27) writeonly buffer buf_kExplicitSourceOut {
+  double kExplicitSourceOut[];
+};
+layout(std430, binding = 28) writeonly buffer buf_kImplicitSinkOut {
+  double kImplicitSinkOut[];
+};
+layout(std430, binding = 29) writeonly buffer buf_omegaBaseSourceOut {
+  double omegaBaseSourceOut[];
+};
+layout(std430, binding = 30) writeonly buffer buf_crossLagOut {
+  double crossLagOut[];
+};
+layout(std430, binding = 31) writeonly buffer buf_omegaCrossExplicitSourceOut {
+  double omegaCrossExplicitSourceOut[];
+};
+layout(std430, binding = 32) writeonly buffer buf_omegaCrossImplicitSinkOut {
+  double omegaCrossImplicitSinkOut[];
+};
+layout(std430, binding = 33) writeonly buffer buf_omegaImplicitSinkOut {
+  double omegaImplicitSinkOut[];
+};
+layout(std430, binding = 34) writeonly buffer buf_kEffectiveDiffusivityOut {
+  double kEffectiveDiffusivityOut[];
+};
+layout(std430, binding = 35) writeonly buffer buf_omegaEffectiveDiffusivityOut {
+  double omegaEffectiveDiffusivityOut[];
+};
+
+// kernel: Solver_CFD_StandaloneCfd03SstGpuKernels_sstProfilePointwiseFieldsF64
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint gid = uint(int(gl_GlobalInvocationID.x));
+  uint cellCount = nCells[0];
+  if (gid < cellCount) {
+    double alpha = alpha1[gid];
+    double kValue = k[gid];
+    double omegaValue = omega[gid];
+    double distance = wallDistance[gid];
+    double gradientDot = gradientDotProduct[gid];
+    double strain2 = strainMagnitudeSquared2[gid];
+    double oneMinusAlpha = (packDouble2x32(uvec2(0x00000000u, 0x3ff00000u)) - alpha);
+    double density = ((alpha * datum[0]) + (oneMinusAlpha * datum[1]));
+    double dynamicViscosity = ((alpha * datum[2]) + (oneMinusAlpha * datum[3]));
+    double kinematicViscosity = (dynamicViscosity / density);
+    double crossDiffusion = (((packDouble2x32(uvec2(0x00000000u, 0x40000000u)) * packDouble2x32(uvec2(0x1cac0831u, 0x3feb645au))) / omegaValue) * gradientDot);
+    double positiveCrossDiffusion = (((crossDiffusion < packDouble2x32(uvec2(0xd9d7bdbbu, 0x3ddb7cdfu)))) ? (packDouble2x32(uvec2(0xd9d7bdbbu, 0x3ddb7cdfu))) : (crossDiffusion));
+    double rootK = sqrt(kValue);
+    double distanceSquared = (distance * distance);
+    double firstA = (rootK / ((packDouble2x32(uvec2(0x70a3d70au, 0x3fb70a3du)) * omegaValue) * distance));
+    double firstB = ((packDouble2x32(uvec2(0x00000000u, 0x407f4000u)) * kinematicViscosity) / (distanceSquared * omegaValue));
+    double firstC = (((packDouble2x32(uvec2(0x00000000u, 0x40100000u)) * packDouble2x32(uvec2(0x1cac0831u, 0x3feb645au))) * kValue) / (positiveCrossDiffusion * distanceSquared));
+    double argument1 = (((firstC < (((firstA < firstB)) ? (firstB) : (firstA)))) ? (firstC) : ((((firstA < firstB)) ? (firstB) : (firstA))));
+    double argument2 = ((((packDouble2x32(uvec2(0x00000000u, 0x40000000u)) * firstA) < firstB)) ? (firstB) : ((packDouble2x32(uvec2(0x00000000u, 0x40000000u)) * firstA)));
+    double f1Value = (((((argument1 * argument1) * (argument1 * argument1)) < packDouble2x32(uvec2(0x00000000u, 0x40340000u)))) ? (double(tanh(float(((argument1 * argument1) * (argument1 * argument1)))))) : (packDouble2x32(uvec2(0x00000000u, 0x3ff00000u))));
+    double f2Value = ((((argument2 * argument2) < packDouble2x32(uvec2(0x00000000u, 0x40340000u)))) ? (double(tanh(float((argument2 * argument2))))) : (packDouble2x32(uvec2(0x00000000u, 0x3ff00000u))));
+    double strainMagnitude = sqrt(strain2);
+    double nutDenominator = ((((packDouble2x32(uvec2(0x3d70a3d7u, 0x3fd3d70au)) * omegaValue) < ((packDouble2x32(uvec2(0x00000000u, 0x3ff00000u)) * f2Value) * strainMagnitude))) ? (((packDouble2x32(uvec2(0x00000000u, 0x3ff00000u)) * f2Value) * strainMagnitude)) : ((packDouble2x32(uvec2(0x3d70a3d7u, 0x3fd3d70au)) * omegaValue)));
+    double nut = ((packDouble2x32(uvec2(0x3d70a3d7u, 0x3fd3d70au)) * kValue) / nutDenominator);
+    double turbulentDynamicViscosity = (density * nut);
+    double effectiveDynamicViscosity = (dynamicViscosity + turbulentDynamicViscosity);
+    double nutToNu = (nut / (dynamicViscosity / density));
+    double oneMinusF1 = (packDouble2x32(uvec2(0x00000000u, 0x3ff00000u)) - f1Value);
+    double gamma = ((f1Value * packDouble2x32(uvec2(0x71c71c72u, 0x3fe1c71cu))) + (oneMinusF1 * packDouble2x32(uvec2(0xc28f5c29u, 0x3fdc28f5u))));
+    double beta = ((f1Value * packDouble2x32(uvec2(0x33333333u, 0x3fb33333u))) + (oneMinusF1 * packDouble2x32(uvec2(0x7c1bda51u, 0x3fb53261u))));
+    double sigmaK = ((f1Value * packDouble2x32(uvec2(0x33333333u, 0x3feb3333u))) + (oneMinusF1 * packDouble2x32(uvec2(0x00000000u, 0x3ff00000u))));
+    double sigmaOmega = ((f1Value * packDouble2x32(uvec2(0x00000000u, 0x3fe00000u))) + (oneMinusF1 * packDouble2x32(uvec2(0x1cac0831u, 0x3feb645au))));
+    double productionRaw = (turbulentDynamicViscosity * strain2);
+    double productionLimit = ((((packDouble2x32(uvec2(0x00000000u, 0x40240000u)) * packDouble2x32(uvec2(0x70a3d70au, 0x3fb70a3du))) * density) * kValue) * omegaValue);
+    double productionLimited = (((productionLimit < productionRaw)) ? (productionLimit) : (productionRaw));
+    double kExplicitSource = (((productionLimited < packDouble2x32(uvec2(0x00000000u, 0x00000000u)))) ? (packDouble2x32(uvec2(0x00000000u, 0x00000000u))) : (productionLimited));
+    double kImplicitSink = ((packDouble2x32(uvec2(0x70a3d70au, 0x3fb70a3du)) * density) * omegaValue);
+    double omegaBaseSource = ((gamma * density) * strain2);
+    double admittedOmega = (((omegaValue < packDouble2x32(uvec2(0x812dea11u, 0x3d719799u)))) ? (packDouble2x32(uvec2(0x812dea11u, 0x3d719799u))) : (omegaValue));
+    double crossLag = (((((packDouble2x32(uvec2(0x00000000u, 0x40000000u)) * oneMinusF1) * density) * packDouble2x32(uvec2(0x1cac0831u, 0x3feb645au))) / admittedOmega) * gradientDot);
+    double omegaCrossExplicitSource = (((crossLag < packDouble2x32(uvec2(0x00000000u, 0x00000000u)))) ? (packDouble2x32(uvec2(0x00000000u, 0x00000000u))) : (crossLag));
+    double omegaCrossImplicitSink = (((((-crossLag) < packDouble2x32(uvec2(0x00000000u, 0x00000000u)))) ? (packDouble2x32(uvec2(0x00000000u, 0x00000000u))) : ((-crossLag))) / admittedOmega);
+    double omegaImplicitSink = (((beta * density) * omegaValue) + omegaCrossImplicitSink);
+    double kEffectiveDiffusivity = (dynamicViscosity + (sigmaK * turbulentDynamicViscosity));
+    double omegaEffectiveDiffusivity = (dynamicViscosity + (sigmaOmega * turbulentDynamicViscosity));
+    densityOut[gid] = density;
+    dynamicViscosityOut[gid] = dynamicViscosity;
+    kinematicViscosityOut[gid] = kinematicViscosity;
+    crossDiffusionOut[gid] = crossDiffusion;
+    positiveCrossDiffusionOut[gid] = positiveCrossDiffusion;
+    argument1Out[gid] = argument1;
+    argument2Out[gid] = argument2;
+    f1Out[gid] = f1Value;
+    f2Out[gid] = f2Value;
+    turbulentKinematicViscosityOut[gid] = nut;
+    turbulentDynamicViscosityOut[gid] = turbulentDynamicViscosity;
+    effectiveDynamicViscosityOut[gid] = effectiveDynamicViscosity;
+    nutToNuOut[gid] = nutToNu;
+    gammaOut[gid] = gamma;
+    betaOut[gid] = beta;
+    sigmaKOut[gid] = sigmaK;
+    sigmaOmegaOut[gid] = sigmaOmega;
+    productionRawOut[gid] = productionRaw;
+    productionLimitedOut[gid] = productionLimited;
+    kExplicitSourceOut[gid] = kExplicitSource;
+    kImplicitSinkOut[gid] = kImplicitSink;
+    omegaBaseSourceOut[gid] = omegaBaseSource;
+    crossLagOut[gid] = crossLag;
+    omegaCrossExplicitSourceOut[gid] = omegaCrossExplicitSource;
+    omegaCrossImplicitSinkOut[gid] = omegaCrossImplicitSink;
+    omegaImplicitSinkOut[gid] = omegaImplicitSink;
+    kEffectiveDiffusivityOut[gid] = kEffectiveDiffusivity;
+    omegaEffectiveDiffusivityOut[gid] = omegaEffectiveDiffusivity;
+  }
+}

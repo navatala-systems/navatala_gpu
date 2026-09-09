@@ -8,7 +8,14 @@
 # this file delegates to.
 
 cmake_minimum_required(VERSION 3.18)
-project(navatala_gpu VERSION 0.1.6 LANGUAGES CXX)
+if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/cmake/NavatalaReleaseVersion.cmake")
+    include("${CMAKE_CURRENT_LIST_DIR}/cmake/NavatalaReleaseVersion.cmake")
+elseif(GPU_RUNTIME_PROFILE STREQUAL "SEALED_EXACT")
+    message(FATAL_ERROR "SEALED_EXACT requires the recorded release-version transform")
+else()
+    set(NAVATALA_GPU_RELEASE_VERSION "0.1.6")
+endif()
+project(navatala_gpu VERSION ${NAVATALA_GPU_RELEASE_VERSION} LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

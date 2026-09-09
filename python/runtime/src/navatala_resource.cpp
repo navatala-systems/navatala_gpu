@@ -298,7 +298,8 @@ result<resources> resources::create(int device_id, backend b) {
                                           NAVATALA_DEFAULT_POOL_MAX_SIZE,
                                           &pool_handle);
     if (err != NAVATALA_SUCCESS) {
-        // Queue destructor will be called, context needs manual cleanup
+        // Child handles must be destroyed before their context/device.
+        default_q = queue();
         navatala_gpu_destroy_context(ctx);
         return result<resources>(translate_error(err), "resources::create() memory pool");
     }
@@ -312,11 +313,12 @@ result<resources> resources::create(int device_id, backend b) {
 }
 
 resources::~resources() noexcept {
-    // Memory pool will be destroyed by unique_ptr
-    // Default queue destructor handles its cleanup
+    // Member destructors run after this body. Release context-owned children
+    // explicitly so Vulkan/CUDA/HIP handles never outlive their device.
+    memory_pool_.reset();
+    default_queue_ = queue();
 
     if (handle_) {
-        // Destroy context last
         navatala_gpu_destroy_context(handle_);
         handle_ = nullptr;
     }

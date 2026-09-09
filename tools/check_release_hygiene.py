@@ -70,6 +70,7 @@ def main() -> int:
             ".github/workflows/wheel-hygiene.yml",
             ".github/workflows/publish-pypi.yml",
             ".github/workflows/rocm-validation.yml",
+            ".github/workflows/cuda-validation.yml",
         }:
             continue
         try:

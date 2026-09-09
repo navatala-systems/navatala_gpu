@@ -59,9 +59,54 @@ std::unique_ptr<Device> OpenCLDevice_tryCreate(int device_id);
 std::unique_ptr<Device> MetalDevice_tryCreate(int device_id);
 #endif
 
-std::unique_ptr<Device> Device::create(int device_id) {
+namespace {
+
+bool backendFromEnvironment(BackendKind* backend) {
+    if (!backend) {
+        return false;
+    }
     const char* backend_env = std::getenv("GPU_RUNTIME_BACKEND");
-    std::string backend = backend_env ? backend_env : "auto";
+    if (!backend_env || std::strcmp(backend_env, "auto") == 0) {
+        *backend = BackendKind::Auto;
+        return true;
+    }
+    if (std::strcmp(backend_env, "cuda") == 0) {
+        *backend = BackendKind::Cuda;
+        return true;
+    }
+    if (std::strcmp(backend_env, "hip") == 0) {
+        *backend = BackendKind::Hip;
+        return true;
+    }
+    if (std::strcmp(backend_env, "metal") == 0) {
+        *backend = BackendKind::Metal;
+        return true;
+    }
+    if (std::strcmp(backend_env, "opencl") == 0) {
+        *backend = BackendKind::OpenCl;
+        return true;
+    }
+    if (std::strcmp(backend_env, "vulkan") == 0) {
+        *backend = BackendKind::Vulkan;
+        return true;
+    }
+
+    std::cerr << "[ERROR] Unknown backend: " << backend_env << "\n";
+    std::cerr << "   Available backends: auto, cuda, hip, vulkan, opencl, metal\n";
+    return false;
+}
+
+} // namespace
+
+std::unique_ptr<Device> Device::create(int device_id) {
+    BackendKind backend = BackendKind::Auto;
+    if (!backendFromEnvironment(&backend)) {
+        return nullptr;
+    }
+    return create(backend, device_id);
+}
+
+std::unique_ptr<Device> Device::create(BackendKind backend, int device_id) {
 
     auto tryCreate = [&](auto&& fn) -> std::unique_ptr<Device> {
         try {
@@ -75,7 +120,7 @@ std::unique_ptr<Device> Device::create(int device_id) {
         }
     };
 
-    if (backend == "auto") {
+    if (backend == BackendKind::Auto) {
         // Platform probing order
         // Use CMake-defined macros for proper optional compilation
 #if GPU_RUNTIME_HAVE_METAL
@@ -116,7 +161,7 @@ std::unique_ptr<Device> Device::create(int device_id) {
     }
 
     // Explicit backend selection
-    if (backend == "cuda") {
+    if (backend == BackendKind::Cuda) {
 #if GPU_RUNTIME_HAVE_CUDA
         return tryCreate([&] { return CudaDevice_create(device_id); });
 #else
@@ -124,7 +169,7 @@ std::unique_ptr<Device> Device::create(int device_id) {
         return nullptr;
 #endif
     }
-    if (backend == "hip") {
+    if (backend == BackendKind::Hip) {
 #if GPU_RUNTIME_HAVE_HIP
         return tryCreate([&] { return HipDevice_create(device_id); });
 #else
@@ -132,7 +177,7 @@ std::unique_ptr<Device> Device::create(int device_id) {
         return nullptr;
 #endif
     }
-    if (backend == "vulkan") {
+    if (backend == BackendKind::Vulkan) {
 #if GPU_RUNTIME_HAVE_VULKAN
         return tryCreate([&] { return VulkanDevice_tryCreate(device_id); });
 #else
@@ -140,7 +185,7 @@ std::unique_ptr<Device> Device::create(int device_id) {
         return nullptr;
 #endif
     }
-    if (backend == "opencl") {
+    if (backend == BackendKind::OpenCl) {
 #if GPU_RUNTIME_HAVE_OPENCL
         return tryCreate([&] { return OpenCLDevice_tryCreate(device_id); });
 #else
@@ -148,7 +193,7 @@ std::unique_ptr<Device> Device::create(int device_id) {
         return nullptr;
 #endif
     }
-    if (backend == "metal") {
+    if (backend == BackendKind::Metal) {
 #if GPU_RUNTIME_HAVE_METAL
         return tryCreate([&] { return MetalDevice_tryCreate(device_id); });
 #else
@@ -157,8 +202,6 @@ std::unique_ptr<Device> Device::create(int device_id) {
 #endif
     }
 
-    std::cerr << "[ERROR] Unknown backend: " << backend << "\n";
-    std::cerr << "   Available backends: auto, cuda, hip, vulkan, opencl, metal\n";
     return nullptr;
 }
 

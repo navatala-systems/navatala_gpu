@@ -1,0 +1,296 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+double gpu_cbrt_pos_f64(double x) {
+  double ax = (x > 0.0 ? x : 0.0);
+  if (ax == 0.0) { return 0.0; }
+  double y = double(pow(float(ax), 0.3333333432674408));
+  if (y == 0.0) { y = 1.0e-100; }
+  y = ((2.0 * y) + (ax / (y * y))) / 3.0;
+  y = ((2.0 * y) + (ax / (y * y))) / 3.0;
+  y = ((2.0 * y) + (ax / (y * y))) / 3.0;
+  y = ((2.0 * y) + (ax / (y * y))) / 3.0;
+  y = ((2.0 * y) + (ax / (y * y))) / 3.0;
+  return y;
+}
+
+double gpu_pow_pos_f64_two_thirds(double x) {
+  double r = gpu_cbrt_pos_f64(x);
+  return r * r;
+}
+
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_times {
+  double times[];
+};
+layout(std430, binding = 1) readonly buffer buf_values {
+  double values[];
+};
+layout(std430, binding = 2) readonly buffer buf_count {
+  uint count[];
+};
+layout(std430, binding = 3) buffer buf_scratchA {
+  double scratchA[];
+};
+layout(std430, binding = 4) buffer buf_scratchB {
+  double scratchB[];
+};
+layout(std430, binding = 5) writeonly buffer buf_firstTimeOut {
+  double firstTimeOut[];
+};
+layout(std430, binding = 6) writeonly buffer buf_lastTimeOut {
+  double lastTimeOut[];
+};
+layout(std430, binding = 7) writeonly buffer buf_meanOut {
+  double meanOut[];
+};
+layout(std430, binding = 8) writeonly buffer buf_sampleStandardDeviationOut {
+  double sampleStandardDeviationOut[];
+};
+layout(std430, binding = 9) writeonly buffer buf_minimumOut {
+  double minimumOut[];
+};
+layout(std430, binding = 10) writeonly buffer buf_maximumOut {
+  double maximumOut[];
+};
+layout(std430, binding = 11) writeonly buffer buf_driftSlopeOut {
+  double driftSlopeOut[];
+};
+
+// kernel: Solver_CFD_StandaloneCfd03MarineGpuKernels_hullWindowStatisticsF64
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint gid = uint(int(gl_GlobalInvocationID.x));
+  uint sampleCount = count[0];
+  if (gid == 0u) {
+    double firstTime = times[0u];
+    uint lastIndex = (sampleCount - 1u);
+    double lastTime = times[lastIndex];
+    double minimum = values[0u];
+    double maximum = values[0u];
+    for (int _sample = 0; _sample < int(sampleCount); ++_sample) {
+      uint sampleIndex = uint(_sample);
+      double sampleValue = values[sampleIndex];
+      scratchA[sampleIndex] = sampleValue;
+      if (sampleValue < minimum) {
+        minimum = sampleValue;
+      }
+      if (maximum < sampleValue) {
+        maximum = sampleValue;
+      }
+    }
+    uint valueActive = sampleCount;
+    uint valueCurrentA = 1u;
+    for (int reductionLevel = 0; reductionLevel < int(32u); ++reductionLevel) {
+      if (1u < valueActive) {
+        uint pairs = (valueActive / 2u);
+        for (int pair = 0; pair < int(pairs); ++pair) {
+          uint pairIndex = uint(pair);
+          uint leftIndex = (pairIndex * 2u);
+          uint rightIndex = (leftIndex + 1u);
+          double leftValue = (((valueCurrentA == 1u)) ? (scratchA[leftIndex]) : (scratchB[leftIndex]));
+          double rightValue = (((valueCurrentA == 1u)) ? (scratchA[rightIndex]) : (scratchB[rightIndex]));
+          double pairValue = (leftValue + rightValue);
+          if (valueCurrentA == 1u) {
+            scratchB[pairIndex] = pairValue;
+          } else {
+            scratchA[pairIndex] = pairValue;
+          }
+        }
+        uint odd = (valueActive % 2u);
+        if (odd == 1u) {
+          uint carryIndex = (valueActive - 1u);
+          double carryValue = (((valueCurrentA == 1u)) ? (scratchA[carryIndex]) : (scratchB[carryIndex]));
+          if (valueCurrentA == 1u) {
+            scratchB[pairs] = carryValue;
+          } else {
+            scratchA[pairs] = carryValue;
+          }
+        }
+        valueActive = (pairs + odd);
+        valueCurrentA = (((valueCurrentA == 1u)) ? (0u) : (1u));
+      }
+    }
+    double valueSum = (((valueCurrentA == 1u)) ? (scratchA[0u]) : (scratchB[0u]));
+    double sampleCountF64 = double(sampleCount);
+    double mean = (valueSum / sampleCountF64);
+    for (int _sample = 0; _sample < int(sampleCount); ++_sample) {
+      uint sampleIndex = uint(_sample);
+      scratchA[sampleIndex] = times[sampleIndex];
+    }
+    uint timeActive = sampleCount;
+    uint timeCurrentA = 1u;
+    for (int reductionLevel = 0; reductionLevel < int(32u); ++reductionLevel) {
+      if (1u < timeActive) {
+        uint pairs = (timeActive / 2u);
+        for (int pair = 0; pair < int(pairs); ++pair) {
+          uint pairIndex = uint(pair);
+          uint leftIndex = (pairIndex * 2u);
+          uint rightIndex = (leftIndex + 1u);
+          double leftValue = (((timeCurrentA == 1u)) ? (scratchA[leftIndex]) : (scratchB[leftIndex]));
+          double rightValue = (((timeCurrentA == 1u)) ? (scratchA[rightIndex]) : (scratchB[rightIndex]));
+          double pairValue = (leftValue + rightValue);
+          if (timeCurrentA == 1u) {
+            scratchB[pairIndex] = pairValue;
+          } else {
+            scratchA[pairIndex] = pairValue;
+          }
+        }
+        uint odd = (timeActive % 2u);
+        if (odd == 1u) {
+          uint carryIndex = (timeActive - 1u);
+          double carryValue = (((timeCurrentA == 1u)) ? (scratchA[carryIndex]) : (scratchB[carryIndex]));
+          if (timeCurrentA == 1u) {
+            scratchB[pairs] = carryValue;
+          } else {
+            scratchA[pairs] = carryValue;
+          }
+        }
+        timeActive = (pairs + odd);
+        timeCurrentA = (((timeCurrentA == 1u)) ? (0u) : (1u));
+      }
+    }
+    double timeSum = (((timeCurrentA == 1u)) ? (scratchA[0u]) : (scratchB[0u]));
+    double meanTime = (timeSum / sampleCountF64);
+    for (int _sample = 0; _sample < int(sampleCount); ++_sample) {
+      uint sampleIndex = uint(_sample);
+      double deviation = (values[sampleIndex] - mean);
+      scratchA[sampleIndex] = (deviation * deviation);
+    }
+    uint varianceActive = sampleCount;
+    uint varianceCurrentA = 1u;
+    for (int reductionLevel = 0; reductionLevel < int(32u); ++reductionLevel) {
+      if (1u < varianceActive) {
+        uint pairs = (varianceActive / 2u);
+        for (int pair = 0; pair < int(pairs); ++pair) {
+          uint pairIndex = uint(pair);
+          uint leftIndex = (pairIndex * 2u);
+          uint rightIndex = (leftIndex + 1u);
+          double leftValue = (((varianceCurrentA == 1u)) ? (scratchA[leftIndex]) : (scratchB[leftIndex]));
+          double rightValue = (((varianceCurrentA == 1u)) ? (scratchA[rightIndex]) : (scratchB[rightIndex]));
+          double pairValue = (leftValue + rightValue);
+          if (varianceCurrentA == 1u) {
+            scratchB[pairIndex] = pairValue;
+          } else {
+            scratchA[pairIndex] = pairValue;
+          }
+        }
+        uint odd = (varianceActive % 2u);
+        if (odd == 1u) {
+          uint carryIndex = (varianceActive - 1u);
+          double carryValue = (((varianceCurrentA == 1u)) ? (scratchA[carryIndex]) : (scratchB[carryIndex]));
+          if (varianceCurrentA == 1u) {
+            scratchB[pairs] = carryValue;
+          } else {
+            scratchA[pairs] = carryValue;
+          }
+        }
+        varianceActive = (pairs + odd);
+        varianceCurrentA = (((varianceCurrentA == 1u)) ? (0u) : (1u));
+      }
+    }
+    double varianceSum = (((varianceCurrentA == 1u)) ? (scratchA[0u]) : (scratchB[0u]));
+    double sampleDenominator = double((sampleCount - 1u));
+    double sampleStandardDeviation = sqrt((varianceSum / sampleDenominator));
+    for (int _sample = 0; _sample < int(sampleCount); ++_sample) {
+      uint sampleIndex = uint(_sample);
+      double timeDeviation = (times[sampleIndex] - meanTime);
+      double valueDeviation = (values[sampleIndex] - mean);
+      scratchA[sampleIndex] = (timeDeviation * valueDeviation);
+    }
+    uint covarianceActive = sampleCount;
+    uint covarianceCurrentA = 1u;
+    for (int reductionLevel = 0; reductionLevel < int(32u); ++reductionLevel) {
+      if (1u < covarianceActive) {
+        uint pairs = (covarianceActive / 2u);
+        for (int pair = 0; pair < int(pairs); ++pair) {
+          uint pairIndex = uint(pair);
+          uint leftIndex = (pairIndex * 2u);
+          uint rightIndex = (leftIndex + 1u);
+          double leftValue = (((covarianceCurrentA == 1u)) ? (scratchA[leftIndex]) : (scratchB[leftIndex]));
+          double rightValue = (((covarianceCurrentA == 1u)) ? (scratchA[rightIndex]) : (scratchB[rightIndex]));
+          double pairValue = (leftValue + rightValue);
+          if (covarianceCurrentA == 1u) {
+            scratchB[pairIndex] = pairValue;
+          } else {
+            scratchA[pairIndex] = pairValue;
+          }
+        }
+        uint odd = (covarianceActive % 2u);
+        if (odd == 1u) {
+          uint carryIndex = (covarianceActive - 1u);
+          double carryValue = (((covarianceCurrentA == 1u)) ? (scratchA[carryIndex]) : (scratchB[carryIndex]));
+          if (covarianceCurrentA == 1u) {
+            scratchB[pairs] = carryValue;
+          } else {
+            scratchA[pairs] = carryValue;
+          }
+        }
+        covarianceActive = (pairs + odd);
+        covarianceCurrentA = (((covarianceCurrentA == 1u)) ? (0u) : (1u));
+      }
+    }
+    double covarianceSum = (((covarianceCurrentA == 1u)) ? (scratchA[0u]) : (scratchB[0u]));
+    for (int _sample = 0; _sample < int(sampleCount); ++_sample) {
+      uint sampleIndex = uint(_sample);
+      double timeDeviation = (times[sampleIndex] - meanTime);
+      scratchA[sampleIndex] = (timeDeviation * timeDeviation);
+    }
+    uint timeVarianceActive = sampleCount;
+    uint timeVarianceCurrentA = 1u;
+    for (int reductionLevel = 0; reductionLevel < int(32u); ++reductionLevel) {
+      if (1u < timeVarianceActive) {
+        uint pairs = (timeVarianceActive / 2u);
+        for (int pair = 0; pair < int(pairs); ++pair) {
+          uint pairIndex = uint(pair);
+          uint leftIndex = (pairIndex * 2u);
+          uint rightIndex = (leftIndex + 1u);
+          double leftValue = (((timeVarianceCurrentA == 1u)) ? (scratchA[leftIndex]) : (scratchB[leftIndex]));
+          double rightValue = (((timeVarianceCurrentA == 1u)) ? (scratchA[rightIndex]) : (scratchB[rightIndex]));
+          double pairValue = (leftValue + rightValue);
+          if (timeVarianceCurrentA == 1u) {
+            scratchB[pairIndex] = pairValue;
+          } else {
+            scratchA[pairIndex] = pairValue;
+          }
+        }
+        uint odd = (timeVarianceActive % 2u);
+        if (odd == 1u) {
+          uint carryIndex = (timeVarianceActive - 1u);
+          double carryValue = (((timeVarianceCurrentA == 1u)) ? (scratchA[carryIndex]) : (scratchB[carryIndex]));
+          if (timeVarianceCurrentA == 1u) {
+            scratchB[pairs] = carryValue;
+          } else {
+            scratchA[pairs] = carryValue;
+          }
+        }
+        timeVarianceActive = (pairs + odd);
+        timeVarianceCurrentA = (((timeVarianceCurrentA == 1u)) ? (0u) : (1u));
+      }
+    }
+    double timeVarianceSum = (((timeVarianceCurrentA == 1u)) ? (scratchA[0u]) : (scratchB[0u]));
+    double driftSlope = (covarianceSum / timeVarianceSum);
+    firstTimeOut[0u] = firstTime;
+    lastTimeOut[0u] = lastTime;
+    meanOut[0u] = mean;
+    sampleStandardDeviationOut[0u] = sampleStandardDeviation;
+    minimumOut[0u] = minimum;
+    maximumOut[0u] = maximum;
+    driftSlopeOut[0u] = driftSlope;
+  }
+}

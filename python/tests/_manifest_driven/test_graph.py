@@ -2,6 +2,7 @@
 import importlib
 
 def test_graph_exports_are_importable():
+    pkg = importlib.import_module("navatala_gpu")
     mod = importlib.import_module("navatala_gpu.graph")
     assert hasattr(mod, "out_degree")
     assert hasattr(mod, "in_degree")
@@ -13,7 +14,10 @@ def test_graph_exports_are_importable():
     assert listed == ("out_degree", "in_degree")
     for public_name in listed:
         assert public_name in mod.__all__
-        assert mod.supports(public_name) is True
+        caps = pkg.get_capabilities()
+        key = "graph" + "." + public_name
+        expected = bool(caps.get("operations", {}).get(key, {}).get("backends", {}))
+        assert mod.supports(public_name) is expected
     assert mod.supports("__missing_operation__") is False
 
 def test_graph_unsupported_backend_fails_before_extension_load():

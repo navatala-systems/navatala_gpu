@@ -1,0 +1,30 @@
+# SPDX-License-Identifier: Apache-2.0
+name: Real CUDA Validation
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  sealed-cuda-correctness:
+    runs-on: [self-hosted, linux, cuda, nvidia-gpu]
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run owner-installed recorded CUDA campaign
+        run: |
+          set -euo pipefail
+          test -f /opt/navatala/recorders/scripts/navatala_gpu_d0_campaign.py
+          test -f /opt/navatala/d0/validation.json
+          python3 /opt/navatala/recorders/scripts/navatala_gpu_d0_campaign.py \
+            --configuration /opt/navatala/d0/validation.json \
+            --public-source "$GITHUB_WORKSPACE" \
+            --output "$RUNNER_TEMP/navatala-cuda-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT" --rebuild
+      - name: Retain CUDA correctness and instrumentation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: real-cuda-validation
+          path: ${{ runner.temp }}/navatala-cuda-${{ github.run_id }}-${{ github.run_attempt }}*
+          if-no-files-found: error

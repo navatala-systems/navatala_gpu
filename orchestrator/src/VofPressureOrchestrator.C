@@ -214,12 +214,14 @@ bool VofPressureOrchestrator::execute(Foam::Time& runTime, const Foam::fvMesh& m
       adapter_.haloExchange("phi");
       // FieldSync: phi → host
       adapter_.fieldSync("phi", false);
-      // @FFI: alphaEqn.solve(alpha1, phi, alphaScheme)
-      bool ok = alphaEqn.solve(alpha1, phi, alphaScheme);
+      // @FFI: alphaEqn.solve(alpha1, phi, alphaScheme) // may publish rhoPhi as MULES side effect
+      bool ok = alphaEqn.solve(alpha1, phi, alphaScheme) // may publish rhoPhi as MULES side effect;
       // FieldSync: alpha1 → device
       adapter_.fieldSync("alpha1", true);
       // FieldSync: alpha2 → device
       adapter_.fieldSync("alpha2", true);
+      // FieldSync: rhoPhi → device
+      adapter_.fieldSync("rhoPhi", true);
       {
         // ConservationCheck: alphaBounded
         adapter_.fieldSync("alpha1", false);

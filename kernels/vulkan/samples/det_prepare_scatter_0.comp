@@ -16,30 +16,27 @@
 #version 450
 layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
 
-layout(std430, binding = 0) readonly buffer buf_faceCells {
-  int faceCells[];
+layout(std430, binding = 0) readonly buffer buf_dstIdx {
+  uint dstIdx[];
 };
-layout(std430, binding = 1) readonly buffer buf_coeffs {
-  float coeffs[];
+layout(std430, binding = 1) readonly buffer buf_messages {
+  float messages[];
 };
-layout(std430, binding = 2) readonly buffer buf_recvNeighbourX {
-  float recvNeighbourX[];
+layout(std430, binding = 2) readonly buffer buf_detN {
+  int detN[];
 };
-layout(std430, binding = 3) readonly buffer buf_counts {
-  uint counts[];
+layout(std430, binding = 3) writeonly buffer buf_keys_scatter_0 {
+  uint keys_scatter_0[];
 };
-layout(std430, binding = 4) buffer buf_ax {
-  float ax[];
+layout(std430, binding = 4) writeonly buffer buf_vals_scatter_0 {
+  float vals_scatter_0[];
 };
 
-// kernel: navatala_cfd_scalar_ldu_coupled_interface_add
+// kernel: navatala_samples_det_prepare_scatter_0
 void main() {
   int gid0 = int(gl_GlobalInvocationID.x);
-  if (int(gl_GlobalInvocationID.x) >= int(counts[0])) {
-    return;
-  } else {
-    int cell = faceCells[int(gl_GlobalInvocationID.x)];
-    float delta = (coeffs[int(gl_GlobalInvocationID.x)] * recvNeighbourX[int(gl_GlobalInvocationID.x)]);
-    ax[cell] = (ax[cell] - delta);
+  if (int(gl_GlobalInvocationID.x) < detN[0]) {
+    keys_scatter_0[int(gl_GlobalInvocationID.x)] = dstIdx[int(gl_GlobalInvocationID.x)];
+    vals_scatter_0[int(gl_GlobalInvocationID.x)] = messages[int(gl_GlobalInvocationID.x)];
   }
 }

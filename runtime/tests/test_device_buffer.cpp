@@ -48,7 +48,8 @@ void test_device_buffer_create() {
     // Construct with size
     DeviceBuffer<float> buf(*device, 1024);
     assert(!buf.empty() && "Buffer should not be empty");
-    assert(buf.data() != nullptr && "Buffer data should not be null");
+    assert(buf.buffer() != nullptr && "Buffer handle should not be null");
+    assert(buf.buffer()->nativeHandle() != nullptr && "Native buffer handle should not be null");
     assert(buf.size() == 1024);
     assert(buf.size_bytes() == 1024 * sizeof(float));
 
@@ -65,12 +66,12 @@ void test_device_buffer_move() {
     }
 
     DeviceBuffer<int> buf1(*device, 512);
-    void* original_ptr = buf1.data();
+    Buffer* original_buffer = buf1.buffer();
     size_t original_size = buf1.size();
 
     // Move construct
     DeviceBuffer<int> buf2(std::move(buf1));
-    assert(buf2.data() == original_ptr && "Move should transfer pointer");
+    assert(buf2.buffer() == original_buffer && "Move should transfer buffer ownership");
     assert(buf2.size() == original_size && "Move should transfer size");
     assert(buf1.empty() && "Moved-from buffer should be empty");
     assert(buf1.data() == nullptr && "Moved-from buffer data should be null");
@@ -78,7 +79,7 @@ void test_device_buffer_move() {
     // Move assign
     DeviceBuffer<int> buf3(*device, 256);
     buf3 = std::move(buf2);
-    assert(buf3.data() == original_ptr);
+    assert(buf3.buffer() == original_buffer);
     assert(buf3.size() == original_size);
     assert(buf2.empty());
 
@@ -166,7 +167,7 @@ void test_device_buffer_resize() {
 
     buf.resize(200);
     assert(buf.size() == 200);
-    assert(buf.data() != nullptr);
+    assert(buf.buffer() != nullptr);
 
     buf.resize(50);
     assert(buf.size() == 50);
@@ -230,8 +231,10 @@ void test_device_buffer_release() {
     assert(buf.empty() && "Buffer should be empty after release");
     assert(buf.data() == nullptr);
 
-    // The released buffer should still be usable
-    assert(released_buffer->getDevicePointer() != nullptr);
+    // The released buffer should still be usable on pointer-addressable and
+    // opaque-handle backends.
+    assert(released_buffer->sizeBytes() == 100 * sizeof(float));
+    assert(released_buffer->nativeHandle() != nullptr);
 
     std::cout << "PASS: DeviceBuffer release" << std::endl;
 }
@@ -248,12 +251,14 @@ void test_device_buffer_memory_kinds() {
     // Device memory
     DeviceBuffer<int> device_buf(*device, 100, MemoryKind::Device);
     assert(!device_buf.empty());
-    assert(device_buf.data() != nullptr);
+    assert(device_buf.buffer() != nullptr);
+    assert(device_buf.buffer()->nativeHandle() != nullptr);
 
     // Host pinned memory
     DeviceBuffer<int> pinned_buf(*device, 100, MemoryKind::HostPinned);
     assert(!pinned_buf.empty());
-    assert(pinned_buf.data() != nullptr);
+    assert(pinned_buf.buffer() != nullptr);
+    assert(pinned_buf.buffer()->getHostPointer() != nullptr);
 
     // Managed memory (may not be supported on all devices)
     try {
@@ -322,7 +327,8 @@ void test_device_scalar_create() {
 
     // Uninitialized scalar
     DeviceScalar<int> scalar(*device);
-    assert(scalar.data() != nullptr);
+    assert(scalar.buffer() != nullptr);
+    assert(scalar.buffer()->nativeHandle() != nullptr);
 
     std::cout << "PASS: DeviceScalar creation" << std::endl;
 }

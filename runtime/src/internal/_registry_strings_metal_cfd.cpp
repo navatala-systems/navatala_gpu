@@ -1218,21 +1218,6 @@ kernel void navatala_cfd_scalar_jacobi_update(device const float* ax [[buffer(0)
 }
 
 )kernel";
-const char* k_metal_navatala_cfd_scalar_ldu_coupled_interface_add = R"kernel(
-#include <metal_stdlib>
-using namespace metal;
-
-kernel void navatala_cfd_scalar_ldu_coupled_interface_add(device const int* faceCells [[buffer(0)]], device const float* coeffs [[buffer(1)]], device const float* recvNeighbourX [[buffer(2)]], device const uint* counts [[buffer(3)]], device float* ax [[buffer(4)]], uint3 __gid [[thread_position_in_grid]], uint3 __tid [[thread_position_in_threadgroup]], uint3 __tgid [[threadgroup_position_in_grid]], uint3 __tgsz [[threads_per_threadgroup]], uint3 __grid_size [[threads_per_grid]], uint __lane [[thread_index_in_simdgroup]], uint __simd_size [[threads_per_simdgroup]]) {
-  if (int(__gid.x) >= ((int)(counts[0]))) {
-    return;
-  } else {
-    int cell = faceCells[int(__gid.x)];
-    float delta = (coeffs[int(__gid.x)] * recvNeighbourX[int(__gid.x)]);
-    ax[cell] = (ax[cell] - delta);
-  }
-}
-
-)kernel";
 const char* k_metal_navatala_cfd_scalar_ldu_mat_vec = R"kernel(
 #include <metal_stdlib>
 using namespace metal;
@@ -4622,25 +4607,6 @@ const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_scalar_jacobi_update
   kAbiArgs_metal_navatala_cfd_scalar_jacobi_update
 };
 
-const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_scalar_ldu_coupled_interface_add[] = {
-  { "faceCells", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
-  { "coeffs", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
-  { "recvNeighbourX", 2, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
-  { "counts", 3, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 4, 4, 256, nullptr, 0, 0 },
-  { "ax", 4, KernelArgumentRole::InputOutput, KernelAccessMode::ReadWrite, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 }
-};
-const KernelAbiManifestInfo kAbiManifest_metal_navatala_cfd_scalar_ldu_coupled_interface_add = {
-  1,
-  "navatala_cfd_scalar_ldu_coupled_interface_add",
-  "metal",
-  "navatala_cfd_scalar_ldu_coupled_interface_add",
-  "kernel:metal:navatala_cfd_scalar_ldu_coupled_interface_add",
-  "abi-r1:metal:navatala_cfd_scalar_ldu_coupled_interface_add",
-  "abi-r1:metal:navatala_cfd_scalar_ldu_coupled_interface_add",
-  5,
-  kAbiArgs_metal_navatala_cfd_scalar_ldu_coupled_interface_add
-};
-
 const KernelArgumentInfo kAbiArgs_metal_navatala_cfd_scalar_ldu_mat_vec[] = {
   { "diag", 0, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
   { "upper", 1, KernelArgumentRole::Input, KernelAccessMode::ReadOnly, GpuRuntime::MemoryKind::Device, true, 0, 0, 256, nullptr, 0, 0 },
@@ -6503,10 +6469,6 @@ bool tryGetKernelAbiManifest_metal_cfd(const std::string& backend, const std::st
     out = &kAbiManifest_metal_navatala_cfd_scalar_jacobi_update;
     return true;
   }
-  if (backend == "metal" && kernelName == "navatala_cfd_scalar_ldu_coupled_interface_add") {
-    out = &kAbiManifest_metal_navatala_cfd_scalar_ldu_coupled_interface_add;
-    return true;
-  }
   if (backend == "metal" && kernelName == "navatala_cfd_scalar_ldu_mat_vec") {
     out = &kAbiManifest_metal_navatala_cfd_scalar_ldu_mat_vec;
     return true;
@@ -7106,13 +7068,6 @@ bool tryGetKernelSource_metal_cfd(const std::string& backend, const std::string&
     out.kind = GpuRuntime::ProgramSource::Kind::Msl;
     out.entryPoint = "navatala_cfd_scalar_jacobi_update";
     std::string_view sv(k_metal_navatala_cfd_scalar_jacobi_update);
-    out.bytes.assign(sv.begin(), sv.end());
-    return true;
-  }
-  if (backend == "metal" && kernelName == "navatala_cfd_scalar_ldu_coupled_interface_add") {
-    out.kind = GpuRuntime::ProgramSource::Kind::Msl;
-    out.entryPoint = "navatala_cfd_scalar_ldu_coupled_interface_add";
-    std::string_view sv(k_metal_navatala_cfd_scalar_ldu_coupled_interface_add);
     out.bytes.assign(sv.begin(), sv.end());
     return true;
   }

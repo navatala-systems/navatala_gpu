@@ -2,6 +2,7 @@
 import importlib
 
 def test_sparse_exports_are_importable():
+    pkg = importlib.import_module("navatala_gpu")
     mod = importlib.import_module("navatala_gpu.sparse")
     assert hasattr(mod, "csr_spmv")
     assert hasattr(mod, "__all__")
@@ -12,7 +13,10 @@ def test_sparse_exports_are_importable():
     assert listed == ("csr_spmv",)
     for public_name in listed:
         assert public_name in mod.__all__
-        assert mod.supports(public_name) is True
+        caps = pkg.get_capabilities()
+        key = "sparse" + "." + public_name
+        expected = bool(caps.get("operations", {}).get(key, {}).get("backends", {}))
+        assert mod.supports(public_name) is expected
     assert mod.supports("__missing_operation__") is False
 
 def test_sparse_unsupported_backend_fails_before_extension_load():

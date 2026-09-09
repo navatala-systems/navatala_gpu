@@ -28,6 +28,7 @@
 #include "stream_pool.h"
 
 #if GPU_RUNTIME_HAVE_CUDA
+#include <cuda.h>
 #include <cuda_runtime_api.h>
 #endif
 
@@ -37,6 +38,7 @@
 
 #include <algorithm>
 #include <array>
+#include <atomic>
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
@@ -71,16 +73,15 @@ bool tryGetKernelSource_hip_transformer(
 
 namespace {
 
-// Map NavatalaBackend to string for Device creation
-const char* backend_to_env_value(NavatalaBackend backend) {
+GpuRuntime::BackendKind backend_to_runtime_kind(NavatalaBackend backend) {
     switch (backend) {
-        case NAVATALA_BACKEND_CUDA_FFI:   return "cuda";
-        case NAVATALA_BACKEND_HIP_FFI:    return "hip";
-        case NAVATALA_BACKEND_METAL_FFI:  return "metal";
-        case NAVATALA_BACKEND_OPENCL_FFI: return "opencl";
-        case NAVATALA_BACKEND_VULKAN_FFI: return "vulkan";
-        case NAVATALA_BACKEND_AUTO_FFI:   return nullptr;  // Use default selection
-        default: return nullptr;
+        case NAVATALA_BACKEND_CUDA_FFI:   return GpuRuntime::BackendKind::Cuda;
+        case NAVATALA_BACKEND_HIP_FFI:    return GpuRuntime::BackendKind::Hip;
+        case NAVATALA_BACKEND_METAL_FFI:  return GpuRuntime::BackendKind::Metal;
+        case NAVATALA_BACKEND_OPENCL_FFI: return GpuRuntime::BackendKind::OpenCl;
+        case NAVATALA_BACKEND_VULKAN_FFI: return GpuRuntime::BackendKind::Vulkan;
+        case NAVATALA_BACKEND_AUTO_FFI:   return GpuRuntime::BackendKind::Auto;
+        default:                          return GpuRuntime::BackendKind::Auto;
     }
 }
 
@@ -344,20 +345,23 @@ NavatalaErrorCode copy_host_to_device_backend(
     if (bytes == 0) {
         return NAVATALA_SUCCESS;
     }
-    char* dst_ptr = static_cast<char*>(buffer_device_pointer(dst));
-    if (!dst_ptr) {
+    if (!dst || !src) {
         return NAVATALA_INVALID_HANDLE;
-    }
-
-    void* native = nullptr;
-    NavatalaErrorCode q_status = queue_native_handle_for_context(queue, dst->context, &native);
-    if (q_status != NAVATALA_SUCCESS) {
-        return q_status;
     }
 
     switch (dst->context ? dst->context->backend : NAVATALA_BACKEND_AUTO_FFI) {
 #if GPU_RUNTIME_HAVE_HIP
         case NAVATALA_BACKEND_HIP_FFI: {
+            char* dst_ptr = static_cast<char*>(buffer_device_pointer(dst));
+            if (!dst_ptr) {
+                return NAVATALA_INVALID_HANDLE;
+            }
+            void* native = nullptr;
+            NavatalaErrorCode q_status =
+                queue_native_handle_for_context(queue, dst->context, &native);
+            if (q_status != NAVATALA_SUCCESS) {
+                return q_status;
+            }
             auto* stream = static_cast<hipStream_t>(native);
             hipError_t status = stream
                 ? hipMemcpyAsync(dst_ptr + dst_offset_bytes, src, bytes, hipMemcpyHostToDevice, stream)
@@ -373,6 +377,16 @@ NavatalaErrorCode copy_host_to_device_backend(
 #endif
 #if GPU_RUNTIME_HAVE_CUDA
         case NAVATALA_BACKEND_CUDA_FFI: {
+            char* dst_ptr = static_cast<char*>(buffer_device_pointer(dst));
+            if (!dst_ptr) {
+                return NAVATALA_INVALID_HANDLE;
+            }
+            void* native = nullptr;
+            NavatalaErrorCode q_status =
+                queue_native_handle_for_context(queue, dst->context, &native);
+            if (q_status != NAVATALA_SUCCESS) {
+                return q_status;
+            }
             auto* stream = static_cast<cudaStream_t>(native);
             cudaError_t status = stream
                 ? cudaMemcpyAsync(dst_ptr + dst_offset_bytes, src, bytes, cudaMemcpyHostToDevice, stream)
@@ -401,20 +415,23 @@ NavatalaErrorCode copy_device_to_host_backend(
     if (bytes == 0) {
         return NAVATALA_SUCCESS;
     }
-    const char* src_ptr = static_cast<const char*>(buffer_device_pointer(src));
-    if (!src_ptr) {
+    if (!src || !dst) {
         return NAVATALA_INVALID_HANDLE;
-    }
-
-    void* native = nullptr;
-    NavatalaErrorCode q_status = queue_native_handle_for_context(queue, src->context, &native);
-    if (q_status != NAVATALA_SUCCESS) {
-        return q_status;
     }
 
     switch (src->context ? src->context->backend : NAVATALA_BACKEND_AUTO_FFI) {
 #if GPU_RUNTIME_HAVE_HIP
         case NAVATALA_BACKEND_HIP_FFI: {
+            const char* src_ptr = static_cast<const char*>(buffer_device_pointer(src));
+            if (!src_ptr) {
+                return NAVATALA_INVALID_HANDLE;
+            }
+            void* native = nullptr;
+            NavatalaErrorCode q_status =
+                queue_native_handle_for_context(queue, src->context, &native);
+            if (q_status != NAVATALA_SUCCESS) {
+                return q_status;
+            }
             auto* stream = static_cast<hipStream_t>(native);
             hipError_t status = stream
                 ? hipMemcpyAsync(dst, src_ptr + src_offset_bytes, bytes, hipMemcpyDeviceToHost, stream)
@@ -430,6 +447,16 @@ NavatalaErrorCode copy_device_to_host_backend(
 #endif
 #if GPU_RUNTIME_HAVE_CUDA
         case NAVATALA_BACKEND_CUDA_FFI: {
+            const char* src_ptr = static_cast<const char*>(buffer_device_pointer(src));
+            if (!src_ptr) {
+                return NAVATALA_INVALID_HANDLE;
+            }
+            void* native = nullptr;
+            NavatalaErrorCode q_status =
+                queue_native_handle_for_context(queue, src->context, &native);
+            if (q_status != NAVATALA_SUCCESS) {
+                return q_status;
+            }
             auto* stream = static_cast<cudaStream_t>(native);
             cudaError_t status = stream
                 ? cudaMemcpyAsync(dst, src_ptr + src_offset_bytes, bytes, cudaMemcpyDeviceToHost, stream)
@@ -459,24 +486,27 @@ NavatalaErrorCode copy_device_to_device_backend(
     if (bytes == 0) {
         return NAVATALA_SUCCESS;
     }
-    char* dst_ptr = static_cast<char*>(buffer_device_pointer(dst));
-    const char* src_ptr = static_cast<const char*>(buffer_device_pointer(src));
-    if (!dst_ptr || !src_ptr) {
+    if (!dst || !src) {
         return NAVATALA_INVALID_HANDLE;
     }
     if (dst->context != src->context) {
         return NAVATALA_INVALID_PARAM;
     }
 
-    void* native = nullptr;
-    NavatalaErrorCode q_status = queue_native_handle_for_context(queue, dst->context, &native);
-    if (q_status != NAVATALA_SUCCESS) {
-        return q_status;
-    }
-
     switch (dst->context ? dst->context->backend : NAVATALA_BACKEND_AUTO_FFI) {
 #if GPU_RUNTIME_HAVE_HIP
         case NAVATALA_BACKEND_HIP_FFI: {
+            char* dst_ptr = static_cast<char*>(buffer_device_pointer(dst));
+            const char* src_ptr = static_cast<const char*>(buffer_device_pointer(src));
+            if (!dst_ptr || !src_ptr) {
+                return NAVATALA_INVALID_HANDLE;
+            }
+            void* native = nullptr;
+            NavatalaErrorCode q_status =
+                queue_native_handle_for_context(queue, dst->context, &native);
+            if (q_status != NAVATALA_SUCCESS) {
+                return q_status;
+            }
             auto* stream = static_cast<hipStream_t>(native);
             hipError_t status = stream
                 ? hipMemcpyAsync(dst_ptr + dst_offset_bytes, src_ptr + src_offset_bytes, bytes, hipMemcpyDeviceToDevice, stream)
@@ -486,6 +516,17 @@ NavatalaErrorCode copy_device_to_device_backend(
 #endif
 #if GPU_RUNTIME_HAVE_CUDA
         case NAVATALA_BACKEND_CUDA_FFI: {
+            char* dst_ptr = static_cast<char*>(buffer_device_pointer(dst));
+            const char* src_ptr = static_cast<const char*>(buffer_device_pointer(src));
+            if (!dst_ptr || !src_ptr) {
+                return NAVATALA_INVALID_HANDLE;
+            }
+            void* native = nullptr;
+            NavatalaErrorCode q_status =
+                queue_native_handle_for_context(queue, dst->context, &native);
+            if (q_status != NAVATALA_SUCCESS) {
+                return q_status;
+            }
             auto* stream = static_cast<cudaStream_t>(native);
             cudaError_t status = stream
                 ? cudaMemcpyAsync(dst_ptr + dst_offset_bytes, src_ptr + src_offset_bytes, bytes, cudaMemcpyDeviceToDevice, stream)
@@ -503,20 +544,26 @@ NavatalaErrorCode fill_device_backend(
     uint8_t pattern,
     NavatalaGpuQueue* queue)
 {
-    char* dst_ptr = static_cast<char*>(buffer_device_pointer(dst));
-    if (!dst_ptr) {
+    if (!dst || !dst->buffer || !dst->context || !dst->context->device) {
         return NAVATALA_INVALID_HANDLE;
     }
-
-    void* native = nullptr;
-    NavatalaErrorCode q_status = queue_native_handle_for_context(queue, dst->context, &native);
-    if (q_status != NAVATALA_SUCCESS) {
-        return q_status;
+    if (dst->size == 0) {
+        return NAVATALA_SUCCESS;
     }
 
     switch (dst->context ? dst->context->backend : NAVATALA_BACKEND_AUTO_FFI) {
 #if GPU_RUNTIME_HAVE_HIP
         case NAVATALA_BACKEND_HIP_FFI: {
+            char* dst_ptr = static_cast<char*>(buffer_device_pointer(dst));
+            if (!dst_ptr) {
+                return NAVATALA_INVALID_HANDLE;
+            }
+            void* native = nullptr;
+            NavatalaErrorCode q_status =
+                queue_native_handle_for_context(queue, dst->context, &native);
+            if (q_status != NAVATALA_SUCCESS) {
+                return q_status;
+            }
             auto* stream = static_cast<hipStream_t>(native);
             hipError_t status = stream
                 ? hipMemsetAsync(dst_ptr, static_cast<int>(pattern), dst->size, stream)
@@ -532,6 +579,16 @@ NavatalaErrorCode fill_device_backend(
 #endif
 #if GPU_RUNTIME_HAVE_CUDA
         case NAVATALA_BACKEND_CUDA_FFI: {
+            char* dst_ptr = static_cast<char*>(buffer_device_pointer(dst));
+            if (!dst_ptr) {
+                return NAVATALA_INVALID_HANDLE;
+            }
+            void* native = nullptr;
+            NavatalaErrorCode q_status =
+                queue_native_handle_for_context(queue, dst->context, &native);
+            if (q_status != NAVATALA_SUCCESS) {
+                return q_status;
+            }
             auto* stream = static_cast<cudaStream_t>(native);
             cudaError_t status = stream
                 ? cudaMemsetAsync(dst_ptr, static_cast<int>(pattern), dst->size, stream)
@@ -545,12 +602,47 @@ NavatalaErrorCode fill_device_backend(
             return NAVATALA_SUCCESS;
         }
 #endif
-        default:
-            return NAVATALA_NOT_IMPLEMENTED;
+        default: {
+            try {
+                constexpr size_t staging_limit = 1024U * 1024U;
+                const size_t staging_size = std::min(dst->size, staging_limit);
+                auto staging = dst->context->device->createBuffer(
+                    staging_size, GpuRuntime::MemoryKind::HostPinned);
+                if (!staging) {
+                    return NAVATALA_OUT_OF_MEMORY;
+                }
+                staging->map(GpuRuntime::MapMode::Write);
+                void* mapped = staging->getHostPointer();
+                if (!mapped) {
+                    staging->unmap();
+                    return NAVATALA_GPU_ERROR;
+                }
+                std::memset(mapped, pattern, staging_size);
+                staging->unmap();
+
+                std::unique_ptr<GpuRuntime::Queue> owned_queue;
+                GpuRuntime::Queue* q = nullptr;
+                NavatalaErrorCode q_status =
+                    queue_for_context(queue, dst->context, owned_queue, &q);
+                if (q_status != NAVATALA_SUCCESS) {
+                    return q_status;
+                }
+                for (size_t offset = 0; offset < dst->size; offset += staging_size) {
+                    const size_t chunk = std::min(staging_size, dst->size - offset);
+                    q->memcpyOffset(*dst->buffer, offset, *staging, 0, chunk);
+                }
+                q->synchronize();
+                return NAVATALA_SUCCESS;
+            } catch (const std::bad_alloc&) {
+                return NAVATALA_OUT_OF_MEMORY;
+            } catch (...) {
+                return NAVATALA_GPU_ERROR;
+            }
+        }
     }
 }
 
-// Backend availability detection based on compile-time macros
+// Build inventory is distinct from execution availability.
 bool is_backend_compiled(NavatalaBackend backend) {
     switch (backend) {
 #if GPU_RUNTIME_HAVE_CUDA
@@ -568,8 +660,62 @@ bool is_backend_compiled(NavatalaBackend backend) {
 #if GPU_RUNTIME_HAVE_VULKAN
         case NAVATALA_BACKEND_VULKAN_FFI: return true;
 #endif
-        case NAVATALA_BACKEND_AUTO_FFI: return true;  // Auto is always "available"
+        case NAVATALA_BACKEND_AUTO_FFI: return false;  // A selector, not a backend.
         default: return false;
+    }
+}
+
+constexpr NavatalaBackend concrete_backends[] = {
+    NAVATALA_BACKEND_CUDA_FFI, NAVATALA_BACKEND_HIP_FFI,
+    NAVATALA_BACKEND_METAL_FFI, NAVATALA_BACKEND_OPENCL_FFI,
+    NAVATALA_BACKEND_VULKAN_FFI,
+};
+std::array<std::atomic<size_t>, 5> live_context_counts{};
+
+// Temporary capability devices must not leave another caller's context unbound.
+struct ProbeContextRestore {
+    explicit ProbeContextRestore(NavatalaBackend backend) {
+        (void)backend;
+#if GPU_RUNTIME_HAVE_CUDA
+        if (backend == NAVATALA_BACKEND_CUDA_FFI || backend == NAVATALA_BACKEND_AUTO_FFI)
+            cuda_saved = cuInit(0) == CUDA_SUCCESS && cuCtxGetCurrent(&cuda_context) == CUDA_SUCCESS;
+#endif
+#if GPU_RUNTIME_HAVE_HIP
+        if (backend == NAVATALA_BACKEND_HIP_FFI || backend == NAVATALA_BACKEND_AUTO_FFI)
+            hip_saved = hipCtxGetCurrent(&hip_context) == hipSuccess;
+#endif
+    }
+    ~ProbeContextRestore() {
+#if GPU_RUNTIME_HAVE_CUDA
+        if (cuda_saved) (void)cuCtxSetCurrent(cuda_context);
+#endif
+#if GPU_RUNTIME_HAVE_HIP
+        if (hip_saved) (void)hipCtxSetCurrent(hip_context);
+#endif
+    }
+#if GPU_RUNTIME_HAVE_CUDA
+    CUcontext cuda_context = nullptr;
+    bool cuda_saved = false;
+#endif
+#if GPU_RUNTIME_HAVE_HIP
+    hipCtx_t hip_context = nullptr;
+    bool hip_saved = false;
+#endif
+};
+
+bool probe_backend(NavatalaBackend backend) {
+    if (!is_backend_compiled(backend)) return false;
+#if GPU_RUNTIME_HAVE_CUDA
+    if (backend == NAVATALA_BACKEND_CUDA_FFI) {
+        int count = 0;
+        return cuInit(0) == CUDA_SUCCESS && cuDeviceGetCount(&count) == CUDA_SUCCESS && count > 0;
+    }
+#endif
+    ProbeContextRestore restore(backend);
+    try {
+        return static_cast<bool>(GpuRuntime::Device::create(backend_to_runtime_kind(backend), 0));
+    } catch (...) {
+        return false;
     }
 }
 
@@ -2163,19 +2309,10 @@ bool map_program_source_kind(NavatalaProgramSourceKind kind, GpuRuntime::Program
 
 // Get the preferred backend based on compiled support and availability
 NavatalaBackend get_preferred_backend() {
-#if GPU_RUNTIME_HAVE_CUDA
-    return NAVATALA_BACKEND_CUDA_FFI;
-#elif GPU_RUNTIME_HAVE_HIP
-    return NAVATALA_BACKEND_HIP_FFI;
-#elif GPU_RUNTIME_HAVE_METAL
-    return NAVATALA_BACKEND_METAL_FFI;
-#elif GPU_RUNTIME_HAVE_VULKAN
-    return NAVATALA_BACKEND_VULKAN_FFI;
-#elif GPU_RUNTIME_HAVE_OPENCL
-    return NAVATALA_BACKEND_OPENCL_FFI;
-#else
+    for (auto backend : concrete_backends) {
+        if (probe_backend(backend)) return backend;
+    }
     return NAVATALA_BACKEND_AUTO_FFI;
-#endif
 }
 
 } // anonymous namespace
@@ -2272,43 +2409,42 @@ float navatala_bfloat16_to_float(uint16_t b) noexcept {
 // Backend Query Functions
 // ============================================================================
 
+const char* navatala_get_release_version(void) {
+#ifdef NAVATALA_GPU_RELEASE_VERSION
+    return NAVATALA_GPU_RELEASE_VERSION;
+#else
+    return "unversioned";
+#endif
+}
+
+const char* navatala_get_runtime_mode(void) {
+    return "real";
+}
+
+int navatala_is_backend_compiled(NavatalaBackend backend) {
+    return is_backend_compiled(backend) ? 1 : 0;
+}
+
+int navatala_is_backend_initialized(NavatalaBackend backend) {
+    if (backend < NAVATALA_BACKEND_CUDA_FFI || backend > NAVATALA_BACKEND_VULKAN_FFI) return 0;
+    return live_context_counts[static_cast<size_t>(backend)].load() != 0 ? 1 : 0;
+}
+
 int navatala_get_available_backend_count(void) {
     int count = 0;
-#if GPU_RUNTIME_HAVE_CUDA
-    count++;
-#endif
-#if GPU_RUNTIME_HAVE_HIP
-    count++;
-#endif
-#if GPU_RUNTIME_HAVE_METAL
-    count++;
-#endif
-#if GPU_RUNTIME_HAVE_OPENCL
-    count++;
-#endif
-#if GPU_RUNTIME_HAVE_VULKAN
-    count++;
-#endif
+    for (auto backend : concrete_backends) {
+        if (probe_backend(backend)) ++count;
+    }
     return count;
 }
 
 int navatala_get_available_backends(NavatalaBackend* backends, int max_count) {
+    if (!backends || max_count <= 0) return 0;
     int count = 0;
-#if GPU_RUNTIME_HAVE_CUDA
-    if (count < max_count) backends[count++] = NAVATALA_BACKEND_CUDA_FFI;
-#endif
-#if GPU_RUNTIME_HAVE_HIP
-    if (count < max_count) backends[count++] = NAVATALA_BACKEND_HIP_FFI;
-#endif
-#if GPU_RUNTIME_HAVE_METAL
-    if (count < max_count) backends[count++] = NAVATALA_BACKEND_METAL_FFI;
-#endif
-#if GPU_RUNTIME_HAVE_OPENCL
-    if (count < max_count) backends[count++] = NAVATALA_BACKEND_OPENCL_FFI;
-#endif
-#if GPU_RUNTIME_HAVE_VULKAN
-    if (count < max_count) backends[count++] = NAVATALA_BACKEND_VULKAN_FFI;
-#endif
+    for (auto backend : concrete_backends) {
+        if (count == max_count) break;
+        if (probe_backend(backend)) backends[count++] = backend;
+    }
     return count;
 }
 
@@ -2316,7 +2452,7 @@ int navatala_is_backend_available(NavatalaBackend backend) {
     if (backend == NAVATALA_BACKEND_AUTO_FFI) {
         return navatala_get_available_backend_count() > 0 ? 1 : 0;
     }
-    return is_backend_compiled(backend) ? 1 : 0;
+    return probe_backend(backend) ? 1 : 0;
 }
 
 NavatalaErrorCode navatala_get_backend_capabilities(
@@ -2336,15 +2472,10 @@ NavatalaErrorCode navatala_get_backend_capabilities(
         return NAVATALA_NOT_FOUND;
     }
 
-    // Set environment variable to select backend for device creation
-    const char* backend_env = backend_to_env_value(backend);
-    if (backend_env) {
-        setenv("GPU_RUNTIME_BACKEND", backend_env, 1);
-    }
-
     // Try to create a device to query capabilities
+    ProbeContextRestore restore(backend);
     try {
-        auto device = GpuRuntime::Device::create(device_id);
+        auto device = GpuRuntime::Device::create(backend_to_runtime_kind(backend), device_id);
         if (!device) {
             return NAVATALA_NOT_FOUND;
         }
@@ -2415,13 +2546,9 @@ NavatalaErrorCode navatala_get_backend_memory_info(
         return NAVATALA_NOT_FOUND;
     }
 
-    const char* backend_env = backend_to_env_value(actual_backend);
-    if (backend_env) {
-        setenv("GPU_RUNTIME_BACKEND", backend_env, 1);
-    }
-
+    ProbeContextRestore restore(actual_backend);
     try {
-        auto device = GpuRuntime::Device::create(device_id);
+        auto device = GpuRuntime::Device::create(backend_to_runtime_kind(actual_backend), device_id);
         if (!device) {
             return NAVATALA_NOT_FOUND;
         }
@@ -2442,21 +2569,27 @@ NavatalaErrorCode navatala_get_backend_memory_info(
 }
 
 int navatala_get_device_count(NavatalaBackend backend) {
+    if (backend == NAVATALA_BACKEND_AUTO_FFI) {
+        backend = get_preferred_backend();
+        if (backend == NAVATALA_BACKEND_AUTO_FFI) return 0;
+    }
     if (!is_backend_compiled(backend) && backend != NAVATALA_BACKEND_AUTO_FFI) {
         return 0;
     }
-
-    // The GpuRuntime doesn't expose a static device count function,
-    // so we try to create devices until we fail
-    const char* backend_env = backend_to_env_value(backend);
-    if (backend_env) {
-        setenv("GPU_RUNTIME_BACKEND", backend_env, 1);
+#if GPU_RUNTIME_HAVE_CUDA
+    if (backend == NAVATALA_BACKEND_CUDA_FFI) {
+        int count = 0;
+        return cuInit(0) == CUDA_SUCCESS && cuDeviceGetCount(&count) == CUDA_SUCCESS && count >= 0 ? count : 0;
     }
+#endif
 
+    ProbeContextRestore restore(backend);
+    // The GpuRuntime doesn't expose a static device count function,
+    // so we try to create devices until we fail.
     int count = 0;
     for (int i = 0; i < 16; ++i) {  // Reasonable upper limit
         try {
-            auto device = GpuRuntime::Device::create(i);
+            auto device = GpuRuntime::Device::create(backend_to_runtime_kind(backend), i);
             if (device) {
                 count++;
             } else {
@@ -2467,11 +2600,17 @@ int navatala_get_device_count(NavatalaBackend backend) {
         }
     }
 
-    return count > 0 ? count : (is_backend_compiled(backend) ? 1 : 0);
+    return count;
 }
 
 NavatalaBackend navatala_get_current_backend(void) {
-    return get_preferred_backend();
+    NavatalaBackend selected = NAVATALA_BACKEND_AUTO_FFI;
+    for (auto backend : concrete_backends) {
+        if (!navatala_is_backend_initialized(backend)) continue;
+        if (selected != NAVATALA_BACKEND_AUTO_FFI) return NAVATALA_BACKEND_AUTO_FFI;
+        selected = backend;
+    }
+    return selected; // No unique selection if zero or several backend kinds are live.
 }
 
 // ============================================================================
@@ -2504,19 +2643,13 @@ NavatalaErrorCode navatala_gpu_create_context(
         return NAVATALA_NOT_FOUND;
     }
 
-    // Set environment variable to select backend
-    const char* backend_env = backend_to_env_value(actual_backend);
-    if (backend_env) {
-        setenv("GPU_RUNTIME_BACKEND", backend_env, 1);
-    }
-
     try {
-        auto device = GpuRuntime::Device::create(device_id);
+        auto device = GpuRuntime::Device::create(backend_to_runtime_kind(actual_backend), device_id);
         if (!device) {
             return NAVATALA_NOT_FOUND;
         }
 
-        auto* impl = new (std::nothrow) NavatalaGpuContextImpl;
+        auto impl = std::unique_ptr<NavatalaGpuContextImpl>(new (std::nothrow) NavatalaGpuContextImpl);
         if (!impl) {
             return NAVATALA_OUT_OF_MEMORY;
         }
@@ -2529,7 +2662,8 @@ NavatalaErrorCode navatala_gpu_create_context(
             impl->library_ops = GpuRuntime::createLibraryOpsForBackend(library_backend);
         }
 
-        *ctx = reinterpret_cast<NavatalaGpuContext*>(impl);
+        ++live_context_counts[static_cast<size_t>(actual_backend)];
+        *ctx = reinterpret_cast<NavatalaGpuContext*>(impl.release());
         return NAVATALA_SUCCESS;
     } catch (const std::bad_alloc&) {
         return NAVATALA_OUT_OF_MEMORY;
@@ -2542,6 +2676,7 @@ void navatala_gpu_destroy_context(NavatalaGpuContext* ctx) {
     if (!ctx) return;
     auto* impl = reinterpret_cast<NavatalaGpuContextImpl*>(ctx);
     impl->valid = false;
+    --live_context_counts[static_cast<size_t>(impl->backend)];
     delete impl;
 }
 
@@ -2660,15 +2795,13 @@ NavatalaErrorCode navatala_gpu_queue_native_handle(
     return NAVATALA_SUCCESS;
 }
 
-int navatala_gpu_queue_is_ready(NavatalaGpuQueue* queue) {
-    if (!queue) return 0;
+NavatalaErrorCode navatala_gpu_queue_query(NavatalaGpuQueue*, uint8_t*) {
+    return NAVATALA_NOT_IMPLEMENTED;
+}
 
-    auto* impl = reinterpret_cast<NavatalaGpuQueueImpl*>(queue);
-    if (!impl->valid) return 0;
-
-    // GpuRuntime::Queue doesn't have a query method, so we return 1
-    // A real implementation would check if all operations have completed
-    return 1;
+int navatala_gpu_queue_is_ready(NavatalaGpuQueue*) {
+    // The legacy boolean cannot express unsupported; never manufacture completion.
+    return 0;
 }
 
 NavatalaBackend navatala_gpu_queue_get_backend(NavatalaGpuQueue* queue) {
@@ -5566,7 +5699,8 @@ NavatalaErrorCode navatala_gpu_copy_h2d_offset(
         return NAVATALA_INVALID_HANDLE;
     }
 
-    if (buffer_offset_bytes + bytes > buf_impl->size) {
+    if (buffer_offset_bytes > buf_impl->size ||
+        bytes > buf_impl->size - buffer_offset_bytes) {
         return NAVATALA_INVALID_PARAM;
     }
 
@@ -5618,7 +5752,8 @@ NavatalaErrorCode navatala_gpu_copy_d2h_offset(
         return NAVATALA_INVALID_HANDLE;
     }
 
-    if (buffer_offset_bytes + bytes > buf_impl->size) {
+    if (buffer_offset_bytes > buf_impl->size ||
+        bytes > buf_impl->size - buffer_offset_bytes) {
         return NAVATALA_INVALID_PARAM;
     }
 
@@ -5674,8 +5809,10 @@ NavatalaErrorCode navatala_gpu_copy_d2d_offset(
         return NAVATALA_INVALID_HANDLE;
     }
 
-    if (dst_offset_bytes + bytes > dst_impl->size ||
-        src_offset_bytes + bytes > src_impl->size) {
+    if (dst_offset_bytes > dst_impl->size ||
+        bytes > dst_impl->size - dst_offset_bytes ||
+        src_offset_bytes > src_impl->size ||
+        bytes > src_impl->size - src_offset_bytes) {
         return NAVATALA_INVALID_PARAM;
     }
 
@@ -5741,21 +5878,29 @@ NavatalaErrorCode navatala_gpu_buffer_fill(
 
     try {
         if (impl->buffer) {
-            impl->buffer->map(GpuRuntime::MapMode::Write);
-            void* mapped = impl->buffer->getHostPointer();
-            if (mapped) {
-                std::memset(mapped, pattern, impl->size);
-                impl->buffer->unmap();
-                if (queue) {
-                    auto* q_impl = reinterpret_cast<NavatalaGpuQueueImpl*>(queue);
-                    if (!q_impl->valid || q_impl->context != impl->context) {
-                        return NAVATALA_INVALID_HANDLE;
+            bool mapped_buffer = false;
+            try {
+                impl->buffer->map(GpuRuntime::MapMode::Write);
+                mapped_buffer = true;
+                void* mapped = impl->buffer->getHostPointer();
+                if (mapped) {
+                    std::memset(mapped, pattern, impl->size);
+                    impl->buffer->unmap();
+                    if (queue) {
+                        auto* q_impl = reinterpret_cast<NavatalaGpuQueueImpl*>(queue);
+                        if (!q_impl->valid || q_impl->context != impl->context) {
+                            return NAVATALA_INVALID_HANDLE;
+                        }
+                        q_impl->queue->synchronize();
                     }
-                    q_impl->queue->synchronize();
+                    return NAVATALA_SUCCESS;
                 }
-                return NAVATALA_SUCCESS;
+                impl->buffer->unmap();
+            } catch (...) {
+                if (mapped_buffer) {
+                    try { impl->buffer->unmap(); } catch (...) {}
+                }
             }
-            impl->buffer->unmap();
         }
         return fill_device_backend(impl, pattern, queue);
     } catch (...) {
@@ -5913,1411 +6058,203 @@ int navatala_gpu_resource_owns(
 // Vector Index Stub Implementation
 // ============================================================================
 
-struct NavatalaVectorIndexImpl {
-    int index_type;  // 0=cagra, 1=ivfpq, 2=ivfflat
-    size_t dims;
-    size_t n_vectors;
-    void* data;  // Copy of indexed data for stub
-    size_t data_size;
-
-    // CAGRA-specific
-    size_t graph_degree;
-
-    // IVF-specific
-    size_t n_lists;
-    size_t pq_dim;
-    size_t pq_bits;
-
-    int metric;
-};
-
-struct NavatalaIndexFileHeader {
-    uint32_t magic;
-    uint32_t version;
-    int32_t index_type;
-    int32_t metric;
-    uint64_t dims;
-    uint64_t n_vectors;
-    uint64_t data_size;
-    uint64_t graph_degree;
-    uint64_t n_lists;
-    uint64_t pq_dim;
-    uint64_t pq_bits;
-};
-
-constexpr uint32_t kNavatalaIndexFileMagic = 0x56445849;  // "IXDV"
-constexpr uint32_t kNavatalaIndexFileVersion = 1;
-
-NavatalaErrorCode save_index_to_file(const NavatalaVectorIndexImpl* impl, const char* path) {
-    if (!impl || !path) {
-        return NAVATALA_INVALID_PARAM;
-    }
-    std::ofstream out(path, std::ios::binary | std::ios::trunc);
-    if (!out) {
-        return NAVATALA_IO_ERROR;
-    }
-
-    NavatalaIndexFileHeader header{};
-    header.magic = kNavatalaIndexFileMagic;
-    header.version = kNavatalaIndexFileVersion;
-    header.index_type = impl->index_type;
-    header.metric = impl->metric;
-    header.dims = impl->dims;
-    header.n_vectors = impl->n_vectors;
-    header.data_size = impl->data_size;
-    header.graph_degree = impl->graph_degree;
-    header.n_lists = impl->n_lists;
-    header.pq_dim = impl->pq_dim;
-    header.pq_bits = impl->pq_bits;
-
-    out.write(reinterpret_cast<const char*>(&header), sizeof(header));
-    if (!out) {
-        return NAVATALA_IO_ERROR;
-    }
-    if (impl->data_size > 0 && impl->data) {
-        out.write(reinterpret_cast<const char*>(impl->data), static_cast<std::streamsize>(impl->data_size));
-        if (!out) {
-            return NAVATALA_IO_ERROR;
-        }
-    }
-    return NAVATALA_SUCCESS;
-}
-
-NavatalaErrorCode load_index_from_file(
-    const char* path,
-    int expected_index_type,
-    NavatalaVectorIndex** index,
-    size_t* dims,
-    size_t* n_vectors,
-    size_t* graph_degree,
-    size_t* n_lists,
-    size_t* pq_dim,
-    size_t* pq_bits,
-    int* metric)
-{
-    if (!path || !index) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    std::ifstream in(path, std::ios::binary);
-    if (!in) {
-        return NAVATALA_IO_ERROR;
-    }
-
-    NavatalaIndexFileHeader header{};
-    in.read(reinterpret_cast<char*>(&header), sizeof(header));
-    if (!in) {
-        return NAVATALA_IO_ERROR;
-    }
-    if (header.magic != kNavatalaIndexFileMagic || header.version != kNavatalaIndexFileVersion) {
-        return NAVATALA_RUNTIME_ERROR;
-    }
-    if (expected_index_type >= 0 && header.index_type != expected_index_type) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    auto* impl = new (std::nothrow) NavatalaVectorIndexImpl{};
-    if (!impl) {
-        return NAVATALA_OUT_OF_MEMORY;
-    }
-    impl->index_type = header.index_type;
-    impl->metric = header.metric;
-    impl->dims = static_cast<size_t>(header.dims);
-    impl->n_vectors = static_cast<size_t>(header.n_vectors);
-    impl->data_size = static_cast<size_t>(header.data_size);
-    impl->graph_degree = static_cast<size_t>(header.graph_degree);
-    impl->n_lists = static_cast<size_t>(header.n_lists);
-    impl->pq_dim = static_cast<size_t>(header.pq_dim);
-    impl->pq_bits = static_cast<size_t>(header.pq_bits);
-    impl->data = nullptr;
-
-    if (impl->data_size > 0) {
-        impl->data = std::malloc(impl->data_size);
-        if (!impl->data) {
-            delete impl;
-            return NAVATALA_OUT_OF_MEMORY;
-        }
-        in.read(reinterpret_cast<char*>(impl->data), static_cast<std::streamsize>(impl->data_size));
-        if (!in) {
-            std::free(impl->data);
-            delete impl;
-            return NAVATALA_IO_ERROR;
-        }
-    }
-
-    *index = reinterpret_cast<NavatalaVectorIndex*>(impl);
-    if (dims) *dims = impl->dims;
-    if (n_vectors) *n_vectors = impl->n_vectors;
-    if (graph_degree) *graph_degree = impl->graph_degree;
-    if (n_lists) *n_lists = impl->n_lists;
-    if (pq_dim) *pq_dim = impl->pq_dim;
-    if (pq_bits) *pq_bits = impl->pq_bits;
-    if (metric) *metric = impl->metric;
-    return NAVATALA_SUCCESS;
-}
-
-void navatala_vector_index_destroy(NavatalaVectorIndex* index) {
-    if (!index) return;
-    auto* impl = reinterpret_cast<NavatalaVectorIndexImpl*>(index);
-    if (impl->data) {
-        std::free(impl->data);
-    }
-    delete impl;
-}
-
-// ============================================================================
-// CAGRA Stub Implementation
-// ============================================================================
+// No index factory succeeds in this runtime; null cleanup remains ABI-compatible.
+void navatala_vector_index_destroy(NavatalaVectorIndex*) {}
 
 NavatalaErrorCode navatala_cagra_build(
-    NavatalaGpuContext* ctx,
-    const void* data,
-    size_t n_vectors,
-    size_t dims,
-    const NavatalaCagraBuildParams* params,
-    NavatalaVectorIndex** index)
-{
-    if (!ctx || !data || !params || !index) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    auto* impl = new (std::nothrow) NavatalaVectorIndexImpl;
-    if (!impl) {
-        return NAVATALA_OUT_OF_MEMORY;
-    }
-
-    size_t data_size = n_vectors * dims * sizeof(float);
-    impl->data = std::malloc(data_size);
-    if (!impl->data) {
-        delete impl;
-        return NAVATALA_OUT_OF_MEMORY;
-    }
-
-    std::memcpy(impl->data, data, data_size);
-    impl->index_type = 0;
-    impl->dims = dims;
-    impl->n_vectors = n_vectors;
-    impl->data_size = data_size;
-    impl->graph_degree = params->graph_degree;
-    impl->metric = params->metric;
-
-    *index = reinterpret_cast<NavatalaVectorIndex*>(impl);
-    return NAVATALA_SUCCESS;
+    NavatalaGpuContext*, const void*, size_t, size_t, const NavatalaCagraBuildParams*, NavatalaVectorIndex**) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
 NavatalaErrorCode navatala_cagra_load(
-    NavatalaGpuContext* /*ctx*/,
-    const char* path,
-    NavatalaVectorIndex** index,
-    size_t* dims,
-    size_t* n_vectors,
-    size_t* graph_degree,
-    int* metric)
-{
-    return load_index_from_file(path, 0, index, dims, n_vectors, graph_degree, nullptr, nullptr, nullptr, metric);
+    NavatalaGpuContext*, const char*, NavatalaVectorIndex**, size_t*, size_t*, size_t*, int*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
 NavatalaErrorCode navatala_cagra_search(
-    NavatalaVectorIndex* index,
-    const void* queries,
-    size_t n_queries,
-    size_t k,
-    const NavatalaCagraSearchParams* /*params*/,
-    void* indices,
-    void* distances,
-    NavatalaGpuQueue* /*queue*/)
-{
-    if (!index || !queries || !indices || !distances) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    auto* impl = reinterpret_cast<NavatalaVectorIndexImpl*>(index);
-    const float* db = static_cast<const float*>(impl->data);
-    const float* q = static_cast<const float*>(queries);
-    uint32_t* idx_out = static_cast<uint32_t*>(indices);
-    float* dist_out = static_cast<float*>(distances);
-
-    // Simple brute-force stub for testing
-    for (size_t qi = 0; qi < n_queries; ++qi) {
-        // Find k nearest neighbors by brute force
-        std::vector<std::pair<float, uint32_t>> dists;
-        dists.reserve(impl->n_vectors);
-
-        for (size_t vi = 0; vi < impl->n_vectors; ++vi) {
-            float d = 0.0f;
-            for (size_t di = 0; di < impl->dims; ++di) {
-                float diff = q[qi * impl->dims + di] - db[vi * impl->dims + di];
-                d += diff * diff;
-            }
-            dists.emplace_back(d, static_cast<uint32_t>(vi));
-        }
-
-        // Partial sort to get top-k
-        size_t actual_k = std::min(k, impl->n_vectors);
-        std::partial_sort(dists.begin(), dists.begin() + actual_k, dists.end());
-
-        // Copy results
-        for (size_t ki = 0; ki < actual_k; ++ki) {
-            idx_out[qi * k + ki] = dists[ki].second;
-            dist_out[qi * k + ki] = dists[ki].first;
-        }
-        // Fill remaining with invalid
-        for (size_t ki = actual_k; ki < k; ++ki) {
-            idx_out[qi * k + ki] = UINT32_MAX;
-            dist_out[qi * k + ki] = std::numeric_limits<float>::infinity();
-        }
-    }
-
-    return NAVATALA_SUCCESS;
+    NavatalaVectorIndex*, const void*, size_t, size_t, const NavatalaCagraSearchParams*,
+    void*, void*, NavatalaGpuQueue*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
-NavatalaErrorCode navatala_cagra_save(
-    NavatalaVectorIndex* index,
-    const char* path)
-{
-    if (!index) {
-        return NAVATALA_INVALID_HANDLE;
-    }
-    return save_index_to_file(reinterpret_cast<NavatalaVectorIndexImpl*>(index), path);
+NavatalaErrorCode navatala_cagra_save(NavatalaVectorIndex*, const char*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
-// ============================================================================
-// IVF-PQ Stub Implementation
-// ============================================================================
-
 NavatalaErrorCode navatala_ivfpq_build(
-    NavatalaGpuContext* ctx,
-    const void* data,
-    size_t n_vectors,
-    size_t dims,
-    const NavatalaIvfpqBuildParams* params,
-    NavatalaVectorIndex** index)
-{
-    if (!ctx || !data || !params || !index) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    auto* impl = new (std::nothrow) NavatalaVectorIndexImpl;
-    if (!impl) {
-        return NAVATALA_OUT_OF_MEMORY;
-    }
-
-    size_t data_size = n_vectors * dims * sizeof(float);
-    impl->data = std::malloc(data_size);
-    if (!impl->data) {
-        delete impl;
-        return NAVATALA_OUT_OF_MEMORY;
-    }
-
-    std::memcpy(impl->data, data, data_size);
-    impl->index_type = 1;
-    impl->dims = dims;
-    impl->n_vectors = n_vectors;
-    impl->data_size = data_size;
-    impl->n_lists = params->n_lists;
-    impl->pq_dim = params->pq_dim;
-    impl->pq_bits = params->pq_bits;
-    impl->metric = params->metric;
-
-    *index = reinterpret_cast<NavatalaVectorIndex*>(impl);
-    return NAVATALA_SUCCESS;
+    NavatalaGpuContext*, const void*, size_t, size_t, const NavatalaIvfpqBuildParams*, NavatalaVectorIndex**) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
 NavatalaErrorCode navatala_ivfpq_load(
-    NavatalaGpuContext* /*ctx*/,
-    const char* path,
-    NavatalaVectorIndex** index,
-    size_t* dims,
-    size_t* n_vectors,
-    size_t* n_lists,
-    size_t* pq_dim,
-    size_t* pq_bits,
-    int* metric)
-{
-    return load_index_from_file(path, 1, index, dims, n_vectors, nullptr, n_lists, pq_dim, pq_bits, metric);
+    NavatalaGpuContext*, const char*, NavatalaVectorIndex**, size_t*, size_t*, size_t*, size_t*, size_t*, int*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
 NavatalaErrorCode navatala_ivfpq_search(
-    NavatalaVectorIndex* index,
-    const void* queries,
-    size_t n_queries,
-    size_t k,
-    const NavatalaIvfpqSearchParams* /*params*/,
-    void* indices,
-    void* distances,
-    NavatalaGpuQueue* queue)
-{
-    // Use same brute-force stub as CAGRA
-    NavatalaCagraSearchParams cagra_params{};
-    return navatala_cagra_search(index, queries, n_queries, k, &cagra_params, indices, distances, queue);
+    NavatalaVectorIndex*, const void*, size_t, size_t, const NavatalaIvfpqSearchParams*,
+    void*, void*, NavatalaGpuQueue*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
-NavatalaErrorCode navatala_ivfpq_save(
-    NavatalaVectorIndex* index,
-    const char* path)
-{
-    if (!index) {
-        return NAVATALA_INVALID_HANDLE;
-    }
-    return save_index_to_file(reinterpret_cast<NavatalaVectorIndexImpl*>(index), path);
+NavatalaErrorCode navatala_ivfpq_save(NavatalaVectorIndex*, const char*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
-// ============================================================================
-// IVF-Flat Stub Implementation
-// ============================================================================
-
 NavatalaErrorCode navatala_ivfflat_build(
-    NavatalaGpuContext* ctx,
-    const void* data,
-    size_t n_vectors,
-    size_t dims,
-    const NavatalaIvfflatBuildParams* params,
-    NavatalaVectorIndex** index)
-{
-    if (!ctx || !data || !params || !index) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    auto* impl = new (std::nothrow) NavatalaVectorIndexImpl;
-    if (!impl) {
-        return NAVATALA_OUT_OF_MEMORY;
-    }
-
-    size_t data_size = n_vectors * dims * sizeof(float);
-    impl->data = std::malloc(data_size);
-    if (!impl->data) {
-        delete impl;
-        return NAVATALA_OUT_OF_MEMORY;
-    }
-
-    std::memcpy(impl->data, data, data_size);
-    impl->index_type = 2;
-    impl->dims = dims;
-    impl->n_vectors = n_vectors;
-    impl->data_size = data_size;
-    impl->n_lists = params->n_lists;
-    impl->metric = params->metric;
-
-    *index = reinterpret_cast<NavatalaVectorIndex*>(impl);
-    return NAVATALA_SUCCESS;
+    NavatalaGpuContext*, const void*, size_t, size_t, const NavatalaIvfflatBuildParams*, NavatalaVectorIndex**) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
 NavatalaErrorCode navatala_ivfflat_load(
-    NavatalaGpuContext* /*ctx*/,
-    const char* path,
-    NavatalaVectorIndex** index,
-    size_t* dims,
-    size_t* n_vectors,
-    size_t* n_lists,
-    int* metric)
-{
-    return load_index_from_file(path, 2, index, dims, n_vectors, nullptr, n_lists, nullptr, nullptr, metric);
+    NavatalaGpuContext*, const char*, NavatalaVectorIndex**, size_t*, size_t*, size_t*, int*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
 NavatalaErrorCode navatala_ivfflat_search(
-    NavatalaVectorIndex* index,
-    const void* queries,
-    size_t n_queries,
-    size_t k,
-    const NavatalaIvfflatSearchParams* /*params*/,
-    void* indices,
-    void* distances,
-    NavatalaGpuQueue* queue)
-{
-    NavatalaCagraSearchParams cagra_params{};
-    return navatala_cagra_search(index, queries, n_queries, k, &cagra_params, indices, distances, queue);
+    NavatalaVectorIndex*, const void*, size_t, size_t, const NavatalaIvfflatSearchParams*,
+    void*, void*, NavatalaGpuQueue*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
-NavatalaErrorCode navatala_ivfflat_save(
-    NavatalaVectorIndex* index,
-    const char* path)
-{
-    if (!index) {
-        return NAVATALA_INVALID_HANDLE;
-    }
-    return save_index_to_file(reinterpret_cast<NavatalaVectorIndexImpl*>(index), path);
+NavatalaErrorCode navatala_ivfflat_save(NavatalaVectorIndex*, const char*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
-// ============================================================================
-// Brute Force Search
-// ============================================================================
-
 NavatalaErrorCode navatala_brute_force_search(
-    NavatalaGpuContext* /*ctx*/,
-    const void* database,
-    size_t n_vectors,
-    size_t dims,
-    const void* queries,
-    size_t n_queries,
-    size_t k,
-    int /*metric*/,
-    void* indices,
-    void* distances,
-    NavatalaGpuQueue* /*queue*/)
-{
-    if (!database || !queries || !indices || !distances) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    const float* db = static_cast<const float*>(database);
-    const float* q = static_cast<const float*>(queries);
-    uint32_t* idx_out = static_cast<uint32_t*>(indices);
-    float* dist_out = static_cast<float*>(distances);
-
-    for (size_t qi = 0; qi < n_queries; ++qi) {
-        std::vector<std::pair<float, uint32_t>> dists;
-        dists.reserve(n_vectors);
-
-        for (size_t vi = 0; vi < n_vectors; ++vi) {
-            float d = 0.0f;
-            for (size_t di = 0; di < dims; ++di) {
-                float diff = q[qi * dims + di] - db[vi * dims + di];
-                d += diff * diff;
-            }
-            dists.emplace_back(d, static_cast<uint32_t>(vi));
-        }
-
-        size_t actual_k = std::min(k, n_vectors);
-        std::partial_sort(dists.begin(), dists.begin() + actual_k, dists.end());
-
-        for (size_t ki = 0; ki < actual_k; ++ki) {
-            idx_out[qi * k + ki] = dists[ki].second;
-            dist_out[qi * k + ki] = dists[ki].first;
-        }
-        for (size_t ki = actual_k; ki < k; ++ki) {
-            idx_out[qi * k + ki] = UINT32_MAX;
-            dist_out[qi * k + ki] = std::numeric_limits<float>::infinity();
-        }
-    }
-
-    return NAVATALA_SUCCESS;
+    NavatalaGpuContext*, const void*, size_t, size_t, const void*, size_t, size_t,
+    int, void*, void*, NavatalaGpuQueue*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
-// ============================================================================
-// Distance Functions
-// ============================================================================
-
 NavatalaErrorCode navatala_pairwise_distance(
-    const void* x, size_t m,
-    const void* y, size_t n,
-    size_t dims,
-    int /*metric*/,
-    void* output,
-    NavatalaGpuQueue* /*queue*/)
-{
-    if (!x || !y || !output) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    const float* xp = static_cast<const float*>(x);
-    const float* yp = static_cast<const float*>(y);
-    float* out = static_cast<float*>(output);
-
-    for (size_t i = 0; i < m; ++i) {
-        for (size_t j = 0; j < n; ++j) {
-            float d = 0.0f;
-            for (size_t di = 0; di < dims; ++di) {
-                float diff = xp[i * dims + di] - yp[j * dims + di];
-                d += diff * diff;
-            }
-            out[i * n + j] = d;
-        }
-    }
-
-    return NAVATALA_SUCCESS;
+    const void*, size_t, const void*, size_t, size_t, int, void*, NavatalaGpuQueue*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
 NavatalaErrorCode navatala_fused_l2_nn(
-    const void* x, size_t m,
-    const void* y, size_t n,
-    size_t dims,
-    void* min_dists,
-    void* argmin,
-    NavatalaGpuQueue* /*queue*/)
-{
-    if (!x || !y || !min_dists || !argmin) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    const float* xp = static_cast<const float*>(x);
-    const float* yp = static_cast<const float*>(y);
-    float* md = static_cast<float*>(min_dists);
-    int32_t* am = static_cast<int32_t*>(argmin);
-
-    for (size_t i = 0; i < m; ++i) {
-        float min_d = std::numeric_limits<float>::infinity();
-        int32_t min_j = -1;
-
-        for (size_t j = 0; j < n; ++j) {
-            float d = 0.0f;
-            for (size_t di = 0; di < dims; ++di) {
-                float diff = xp[i * dims + di] - yp[j * dims + di];
-                d += diff * diff;
-            }
-            if (d < min_d) {
-                min_d = d;
-                min_j = static_cast<int32_t>(j);
-            }
-        }
-
-        md[i] = min_d;
-        am[i] = min_j;
-    }
-
-    return NAVATALA_SUCCESS;
+    const void*, size_t, const void*, size_t, size_t, void*, void*, NavatalaGpuQueue*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
-NavatalaErrorCode navatala_distance_row_min(
-    const void* distances,
-    size_t m,
-    size_t n,
-    void* mins,
-    NavatalaGpuQueue* /*queue*/)
-{
-    if (!distances || !mins) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    const float* d = static_cast<const float*>(distances);
-    float* out = static_cast<float*>(mins);
-
-    for (size_t i = 0; i < m; ++i) {
-        float min_val = std::numeric_limits<float>::infinity();
-        for (size_t j = 0; j < n; ++j) {
-            min_val = std::min(min_val, d[i * n + j]);
-        }
-        out[i] = min_val;
-    }
-
-    return NAVATALA_SUCCESS;
+NavatalaErrorCode navatala_distance_row_min(const void*, size_t, size_t, void*, NavatalaGpuQueue*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
-NavatalaErrorCode navatala_distance_row_argmin(
-    const void* distances,
-    size_t m,
-    size_t n,
-    void* argmins,
-    NavatalaGpuQueue* /*queue*/)
-{
-    if (!distances || !argmins) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    const float* d = static_cast<const float*>(distances);
-    int32_t* out = static_cast<int32_t*>(argmins);
-
-    for (size_t i = 0; i < m; ++i) {
-        float min_val = std::numeric_limits<float>::infinity();
-        int32_t min_j = 0;
-        for (size_t j = 0; j < n; ++j) {
-            if (d[i * n + j] < min_val) {
-                min_val = d[i * n + j];
-                min_j = static_cast<int32_t>(j);
-            }
-        }
-        out[i] = min_j;
-    }
-
-    return NAVATALA_SUCCESS;
+NavatalaErrorCode navatala_distance_row_argmin(const void*, size_t, size_t, void*, NavatalaGpuQueue*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
 NavatalaErrorCode navatala_distance_row_topk(
-    const void* distances,
-    size_t m,
-    size_t n,
-    size_t k,
-    int largest,
-    void* values,
-    void* indices,
-    NavatalaGpuQueue* /*queue*/)
-{
-    if (!distances || !values || !indices) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    const float* d = static_cast<const float*>(distances);
-    float* val_out = static_cast<float*>(values);
-    int32_t* idx_out = static_cast<int32_t*>(indices);
-
-    for (size_t i = 0; i < m; ++i) {
-        std::vector<std::pair<float, int32_t>> row;
-        row.reserve(n);
-        for (size_t j = 0; j < n; ++j) {
-            row.emplace_back(d[i * n + j], static_cast<int32_t>(j));
-        }
-
-        if (largest) {
-            std::partial_sort(row.begin(), row.begin() + k, row.end(),
-                              std::greater<std::pair<float, int32_t>>());
-        } else {
-            std::partial_sort(row.begin(), row.begin() + k, row.end());
-        }
-
-        for (size_t ki = 0; ki < k; ++ki) {
-            val_out[i * k + ki] = row[ki].first;
-            idx_out[i * k + ki] = row[ki].second;
-        }
-    }
-
-    return NAVATALA_SUCCESS;
+    const void*, size_t, size_t, size_t, int, void*, void*, NavatalaGpuQueue*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
-NavatalaErrorCode navatala_normalize_l2(
-    void* data,
-    size_t n_vectors,
-    size_t dims,
-    NavatalaGpuQueue* /*queue*/)
-{
-    if (!data) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    float* d = static_cast<float*>(data);
-
-    for (size_t i = 0; i < n_vectors; ++i) {
-        float norm_sq = 0.0f;
-        for (size_t j = 0; j < dims; ++j) {
-            norm_sq += d[i * dims + j] * d[i * dims + j];
-        }
-        float norm = std::sqrt(norm_sq);
-        if (norm > 0.0f) {
-            for (size_t j = 0; j < dims; ++j) {
-                d[i * dims + j] /= norm;
-            }
-        }
-    }
-
-    return NAVATALA_SUCCESS;
+NavatalaErrorCode navatala_normalize_l2(void*, size_t, size_t, NavatalaGpuQueue*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
-NavatalaErrorCode navatala_compute_norms(
-    const void* data,
-    size_t n_vectors,
-    size_t dims,
-    void* norms,
-    NavatalaGpuQueue* /*queue*/)
-{
-    if (!data || !norms) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    const float* d = static_cast<const float*>(data);
-    float* out = static_cast<float*>(norms);
-
-    for (size_t i = 0; i < n_vectors; ++i) {
-        float norm_sq = 0.0f;
-        for (size_t j = 0; j < dims; ++j) {
-            norm_sq += d[i * dims + j] * d[i * dims + j];
-        }
-        out[i] = std::sqrt(norm_sq);
-    }
-
-    return NAVATALA_SUCCESS;
+NavatalaErrorCode navatala_compute_norms(const void*, size_t, size_t, void*, NavatalaGpuQueue*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
-// ============================================================================
-// K-Means Functions
-// ============================================================================
-
 NavatalaErrorCode navatala_kmeans_fit(
-    NavatalaGpuContext* /*ctx*/,
-    const void* data,
-    size_t n_samples,
-    size_t dims,
-    size_t n_clusters,
-    size_t max_iters,
-    float tol,
-    int /*init_method*/,
-    uint64_t /*seed*/,
-    int /*metric*/,
-    void* centroids,
-    float* inertia,
-    size_t* n_iter,
-    NavatalaGpuQueue* /*queue*/)
-{
-    if (!data || !centroids) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    const float* d = static_cast<const float*>(data);
-    float* c = static_cast<float*>(centroids);
-
-    // Simple k-means stub: use first n_clusters points as initial centroids
-    for (size_t i = 0; i < n_clusters && i < n_samples; ++i) {
-        for (size_t j = 0; j < dims; ++j) {
-            c[i * dims + j] = d[i * dims + j];
-        }
-    }
-
-    // Simple k-means iterations
-    std::vector<int> labels(n_samples);
-    float prev_inertia = std::numeric_limits<float>::infinity();
-
-    size_t iter = 0;
-    for (; iter < max_iters; ++iter) {
-        // Assign points to nearest centroid
-        float curr_inertia = 0.0f;
-        for (size_t i = 0; i < n_samples; ++i) {
-            float min_d = std::numeric_limits<float>::infinity();
-            int min_k = 0;
-            for (size_t k = 0; k < n_clusters; ++k) {
-                float dist = 0.0f;
-                for (size_t j = 0; j < dims; ++j) {
-                    float diff = d[i * dims + j] - c[k * dims + j];
-                    dist += diff * diff;
-                }
-                if (dist < min_d) {
-                    min_d = dist;
-                    min_k = static_cast<int>(k);
-                }
-            }
-            labels[i] = min_k;
-            curr_inertia += min_d;
-        }
-
-        // Update centroids
-        std::vector<float> new_centroids(n_clusters * dims, 0.0f);
-        std::vector<int> counts(n_clusters, 0);
-
-        for (size_t i = 0; i < n_samples; ++i) {
-            int k = labels[i];
-            counts[k]++;
-            for (size_t j = 0; j < dims; ++j) {
-                new_centroids[k * dims + j] += d[i * dims + j];
-            }
-        }
-
-        for (size_t k = 0; k < n_clusters; ++k) {
-            if (counts[k] > 0) {
-                for (size_t j = 0; j < dims; ++j) {
-                    c[k * dims + j] = new_centroids[k * dims + j] / counts[k];
-                }
-            }
-        }
-
-        // Check convergence
-        if (std::abs(prev_inertia - curr_inertia) / prev_inertia < tol) {
-            break;
-        }
-        prev_inertia = curr_inertia;
-    }
-
-    if (inertia) *inertia = prev_inertia;
-    if (n_iter) *n_iter = iter;
-
-    return NAVATALA_SUCCESS;
+    NavatalaGpuContext*, const void*, size_t, size_t, size_t, size_t, float, int,
+    uint64_t, int, void*, float*, size_t*, NavatalaGpuQueue*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
 NavatalaErrorCode navatala_kmeans_predict(
-    NavatalaGpuContext* /*ctx*/,
-    const void* centroids,
-    size_t n_clusters,
-    size_t dims,
-    const void* data,
-    size_t n_samples,
-    int /*metric*/,
-    void* labels,
-    NavatalaGpuQueue* /*queue*/)
-{
-    if (!centroids || !data || !labels) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    const float* c = static_cast<const float*>(centroids);
-    const float* d = static_cast<const float*>(data);
-    int32_t* l = static_cast<int32_t*>(labels);
-
-    for (size_t i = 0; i < n_samples; ++i) {
-        float min_d = std::numeric_limits<float>::infinity();
-        int32_t min_k = 0;
-        for (size_t k = 0; k < n_clusters; ++k) {
-            float dist = 0.0f;
-            for (size_t j = 0; j < dims; ++j) {
-                float diff = d[i * dims + j] - c[k * dims + j];
-                dist += diff * diff;
-            }
-            if (dist < min_d) {
-                min_d = dist;
-                min_k = static_cast<int32_t>(k);
-            }
-        }
-        l[i] = min_k;
-    }
-
-    return NAVATALA_SUCCESS;
+    NavatalaGpuContext*, const void*, size_t, size_t, const void*, size_t, int, void*, NavatalaGpuQueue*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
 NavatalaErrorCode navatala_kmeans_transform(
-    NavatalaGpuContext* /*ctx*/,
-    const void* centroids,
-    size_t n_clusters,
-    size_t dims,
-    const void* data,
-    size_t n_samples,
-    int /*metric*/,
-    void* distances,
-    NavatalaGpuQueue* /*queue*/)
-{
-    if (!centroids || !data || !distances) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    const float* c = static_cast<const float*>(centroids);
-    const float* d = static_cast<const float*>(data);
-    float* dist_out = static_cast<float*>(distances);
-
-    for (size_t i = 0; i < n_samples; ++i) {
-        for (size_t k = 0; k < n_clusters; ++k) {
-            float dist = 0.0f;
-            for (size_t j = 0; j < dims; ++j) {
-                float diff = d[i * dims + j] - c[k * dims + j];
-                dist += diff * diff;
-            }
-            dist_out[i * n_clusters + k] = dist;
-        }
-    }
-
-    return NAVATALA_SUCCESS;
+    NavatalaGpuContext*, const void*, size_t, size_t, const void*, size_t, int, void*, NavatalaGpuQueue*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
 
 // ============================================================================
 // Neural Operators Stub Implementations (- Experimental)
 // ============================================================================
 
-// Internal structures for neural operator handles
-struct NavatalaFnoLayerImpl {
-    NavatalaGpuContextImpl* context;
-    NavatalaFnoConfig config;
-    size_t num_params;
-    bool valid;
-};
-
-struct NavatalaPINOLayerImpl {
-    NavatalaGpuContextImpl* context;
-    NavatalaPINOConfig config;
-    size_t training_steps;
-    bool valid;
-};
-
-struct NavatalaMeshGraphNetImpl {
-    NavatalaGpuContextImpl* context;
-    NavatalaMGNConfig config;
-    size_t num_params;
-    bool valid;
-};
-
-// FNO Functions
-
+// These public signatures have no implementation honoring device-pointer and
+// queue semantics. Reject before inspecting handles or modifying outputs.
 NavatalaErrorCode navatala_fno_create(
-    NavatalaGpuContext* ctx,
-    const NavatalaFnoConfig* config,
-    NavatalaFnoLayer** out_layer)
-{
-    if (!ctx || !config || !out_layer) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    auto* ctx_impl = reinterpret_cast<NavatalaGpuContextImpl*>(ctx);
-    if (!ctx_impl->valid) {
-        return NAVATALA_INVALID_HANDLE;
-    }
-
-    auto* impl = new (std::nothrow) NavatalaFnoLayerImpl;
-    if (!impl) {
-        return NAVATALA_OUT_OF_MEMORY;
-    }
-
-    impl->context = ctx_impl;
-    impl->config = *config;
-    impl->valid = true;
-
-    // Calculate approximate number of parameters
-    size_t hidden = config->hidden_size;
-    size_t n_layers = config->n_layers;
-    size_t n_modes = config->n_modes;
-    // Spectral weights + bias per layer
-    impl->num_params = n_layers * (hidden * hidden * n_modes * 2 + hidden);
-
-    *out_layer = reinterpret_cast<NavatalaFnoLayer*>(impl);
-    return NAVATALA_SUCCESS;
+    NavatalaGpuContext*, const NavatalaFnoConfig*, NavatalaFnoLayer**) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
-NavatalaErrorCode navatala_fno_destroy(NavatalaFnoLayer* layer) {
-    if (!layer) {
-        return NAVATALA_INVALID_HANDLE;
-    }
-
-    auto* impl = reinterpret_cast<NavatalaFnoLayerImpl*>(layer);
-    impl->valid = false;
-    delete impl;
-    return NAVATALA_SUCCESS;
+NavatalaErrorCode navatala_fno_destroy(NavatalaFnoLayer*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
 NavatalaErrorCode navatala_fno_forward(
-    NavatalaFnoLayer* layer,
-    const void* input,
-    size_t batch_size,
-    void* output,
-    NavatalaGpuQueue* /*queue*/)
-{
-    if (!layer || !input || !output) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    auto* impl = reinterpret_cast<NavatalaFnoLayerImpl*>(layer);
-    if (!impl->valid) {
-        return NAVATALA_INVALID_HANDLE;
-    }
-
-    // Stub: compute output size and fill with zeros
-    size_t output_elements = batch_size;
-    for (size_t i = 0; i < impl->config.output_shape_len; ++i) {
-        output_elements *= impl->config.output_shape[i];
-    }
-    std::memset(output, 0, output_elements * sizeof(float));
-
-    return NAVATALA_SUCCESS;
+    NavatalaFnoLayer*, const void*, size_t, void*, NavatalaGpuQueue*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
 NavatalaErrorCode navatala_fno_forward_with_params(
-    NavatalaFnoLayer* layer,
-    const void* input,
-    const void* /*params*/,
-    size_t batch_size,
-    void* output,
-    NavatalaGpuQueue* queue)
-{
-    // Stub: same as forward without params
-    return navatala_fno_forward(layer, input, batch_size, output, queue);
+    NavatalaFnoLayer*, const void*, const void*, size_t, void*, NavatalaGpuQueue*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
-NavatalaErrorCode navatala_fno_save(
-    NavatalaFnoLayer* layer,
-    const char* path)
-{
-    if (!layer || !path) {
-        return NAVATALA_INVALID_PARAM;
-    }
-    return NAVATALA_SUCCESS;
+NavatalaErrorCode navatala_fno_save(NavatalaFnoLayer*, const char*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
 NavatalaErrorCode navatala_fno_load(
-    NavatalaGpuContext* ctx,
-    const char* /*path*/,
-    const NavatalaFnoConfig* config,
-    NavatalaFnoLayer** out_layer)
-{
-    // Stub: just create a new layer
-    return navatala_fno_create(ctx, config, out_layer);
+    NavatalaGpuContext*, const char*, const NavatalaFnoConfig*, NavatalaFnoLayer**) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
-NavatalaErrorCode navatala_fno_num_params(
-    NavatalaFnoLayer* layer,
-    size_t* out_num_params)
-{
-    if (!layer || !out_num_params) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    auto* impl = reinterpret_cast<NavatalaFnoLayerImpl*>(layer);
-    if (!impl->valid) {
-        return NAVATALA_INVALID_HANDLE;
-    }
-
-    *out_num_params = impl->num_params;
-    return NAVATALA_SUCCESS;
+NavatalaErrorCode navatala_fno_num_params(NavatalaFnoLayer*, size_t*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
-// PINO Functions
-
 NavatalaErrorCode navatala_pino_create(
-    NavatalaGpuContext* ctx,
-    const NavatalaPINOConfig* config,
-    NavatalaPINOLayer** out_layer)
-{
-    if (!ctx || !config || !out_layer) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    auto* ctx_impl = reinterpret_cast<NavatalaGpuContextImpl*>(ctx);
-    if (!ctx_impl->valid) {
-        return NAVATALA_INVALID_HANDLE;
-    }
-
-    auto* impl = new (std::nothrow) NavatalaPINOLayerImpl;
-    if (!impl) {
-        return NAVATALA_OUT_OF_MEMORY;
-    }
-
-    impl->context = ctx_impl;
-    impl->config = *config;
-    impl->training_steps = 0;
-    impl->valid = true;
-
-    *out_layer = reinterpret_cast<NavatalaPINOLayer*>(impl);
-    return NAVATALA_SUCCESS;
+    NavatalaGpuContext*, const NavatalaPINOConfig*, NavatalaPINOLayer**) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
-NavatalaErrorCode navatala_pino_destroy(NavatalaPINOLayer* layer) {
-    if (!layer) {
-        return NAVATALA_INVALID_HANDLE;
-    }
-
-    auto* impl = reinterpret_cast<NavatalaPINOLayerImpl*>(layer);
-    impl->valid = false;
-    delete impl;
-    return NAVATALA_SUCCESS;
+NavatalaErrorCode navatala_pino_destroy(NavatalaPINOLayer*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
 NavatalaErrorCode navatala_pino_forward(
-    NavatalaPINOLayer* layer,
-    const void* input,
-    size_t batch_size,
-    void* output,
-    NavatalaGpuQueue* /*queue*/)
-{
-    if (!layer || !input || !output) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    auto* impl = reinterpret_cast<NavatalaPINOLayerImpl*>(layer);
-    if (!impl->valid) {
-        return NAVATALA_INVALID_HANDLE;
-    }
-
-    // Stub: compute output size and fill with zeros
-    size_t output_elements = batch_size;
-    for (size_t i = 0; i < impl->config.output_shape_len; ++i) {
-        output_elements *= impl->config.output_shape[i];
-    }
-    std::memset(output, 0, output_elements * sizeof(float));
-
-    return NAVATALA_SUCCESS;
+    NavatalaPINOLayer*, const void*, size_t, void*, NavatalaGpuQueue*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
 NavatalaErrorCode navatala_pino_train_step(
-    NavatalaPINOLayer* layer,
-    const void* input,
-    const void* ground_truth,
-    size_t batch_size,
-    float* total_loss,
-    float* data_loss,
-    float* physics_loss,
-    float* bc_loss,
-    NavatalaGpuQueue* /*queue*/)
-{
-    if (!layer || !input || !ground_truth) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    auto* impl = reinterpret_cast<NavatalaPINOLayerImpl*>(layer);
-    if (!impl->valid) {
-        return NAVATALA_INVALID_HANDLE;
-    }
-
-    (void)batch_size;
-
-    // Stub: return decreasing losses to simulate training
-    impl->training_steps++;
-    float step_factor = 1.0f / (1.0f + 0.01f * static_cast<float>(impl->training_steps));
-
-    if (data_loss) *data_loss = 0.3f * step_factor;
-    if (physics_loss) *physics_loss = 0.5f * step_factor;
-    if (bc_loss) *bc_loss = 0.1f * step_factor;
-    if (total_loss) {
-        *total_loss = (data_loss ? *data_loss : 0) +
-                      (physics_loss ? *physics_loss : 0) +
-                      (bc_loss ? *bc_loss : 0);
-    }
-
-    return NAVATALA_SUCCESS;
+    NavatalaPINOLayer*, const void*, const void*, size_t,
+    float*, float*, float*, float*, NavatalaGpuQueue*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
 NavatalaErrorCode navatala_pino_compute_residual(
-    NavatalaPINOLayer* layer,
-    const void* solution,
-    size_t batch_size,
-    float* mean_residual,
-    NavatalaGpuQueue* /*queue*/)
-{
-    if (!layer || !solution || !mean_residual) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    auto* impl = reinterpret_cast<NavatalaPINOLayerImpl*>(layer);
-    if (!impl->valid) {
-        return NAVATALA_INVALID_HANDLE;
-    }
-
-    (void)batch_size;
-
-    // Stub: return small residual
-    *mean_residual = 0.01f;
-    return NAVATALA_SUCCESS;
+    NavatalaPINOLayer*, const void*, size_t, float*, NavatalaGpuQueue*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
-NavatalaErrorCode navatala_pino_save(
-    NavatalaPINOLayer* layer,
-    const char* path)
-{
-    if (!layer || !path) {
-        return NAVATALA_INVALID_PARAM;
-    }
-    return NAVATALA_SUCCESS;
+NavatalaErrorCode navatala_pino_save(NavatalaPINOLayer*, const char*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
 NavatalaErrorCode navatala_pino_load(
-    NavatalaGpuContext* ctx,
-    const char* /*path*/,
-    const NavatalaPINOConfig* config,
-    NavatalaPINOLayer** out_layer)
-{
-    return navatala_pino_create(ctx, config, out_layer);
+    NavatalaGpuContext*, const char*, const NavatalaPINOConfig*, NavatalaPINOLayer**) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
-// MGN Functions
-
 NavatalaErrorCode navatala_mgn_create(
-    NavatalaGpuContext* ctx,
-    const NavatalaMGNConfig* config,
-    NavatalaMeshGraphNet** out_mgn)
-{
-    if (!ctx || !config || !out_mgn) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    auto* ctx_impl = reinterpret_cast<NavatalaGpuContextImpl*>(ctx);
-    if (!ctx_impl->valid) {
-        return NAVATALA_INVALID_HANDLE;
-    }
-
-    auto* impl = new (std::nothrow) NavatalaMeshGraphNetImpl;
-    if (!impl) {
-        return NAVATALA_OUT_OF_MEMORY;
-    }
-
-    impl->context = ctx_impl;
-    impl->config = *config;
-    impl->valid = true;
-
-    // Calculate approximate number of parameters
-    size_t hidden = config->hidden_size;
-    size_t n_layers = config->n_layers;
-    size_t node_dim = config->node_features_len > 0 ? config->node_features[config->node_features_len - 1] : 0;
-    size_t edge_dim = config->edge_features_len > 0 ? config->edge_features[config->edge_features_len - 1] : 0;
-
-    // Encoder + processor + decoder params
-    impl->num_params = (node_dim + edge_dim) * hidden +    // Encoder
-                       n_layers * (3 * hidden * hidden) +  // Message passing
-                       hidden * config->output_size;       // Decoder
-
-    *out_mgn = reinterpret_cast<NavatalaMeshGraphNet*>(impl);
-    return NAVATALA_SUCCESS;
+    NavatalaGpuContext*, const NavatalaMGNConfig*, NavatalaMeshGraphNet**) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
-NavatalaErrorCode navatala_mgn_destroy(NavatalaMeshGraphNet* mgn) {
-    if (!mgn) {
-        return NAVATALA_INVALID_HANDLE;
-    }
-
-    auto* impl = reinterpret_cast<NavatalaMeshGraphNetImpl*>(mgn);
-    impl->valid = false;
-    delete impl;
-    return NAVATALA_SUCCESS;
+NavatalaErrorCode navatala_mgn_destroy(NavatalaMeshGraphNet*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
 NavatalaErrorCode navatala_mgn_forward(
-    NavatalaMeshGraphNet* mgn,
-    const void* node_features,
-    size_t n_nodes,
-    const void* edge_index,
-    size_t n_edges,
-    const void* edge_features,
-    void* output,
-    NavatalaGpuQueue* /*queue*/)
-{
-    if (!mgn || !node_features || !edge_index || !output) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    auto* impl = reinterpret_cast<NavatalaMeshGraphNetImpl*>(mgn);
-    if (!impl->valid) {
-        return NAVATALA_INVALID_HANDLE;
-    }
-
-    (void)edge_features;
-    (void)n_edges;
-
-    // Stub: fill output with zeros
-    size_t output_size = n_nodes * impl->config.output_size * sizeof(float);
-    std::memset(output, 0, output_size);
-
-    return NAVATALA_SUCCESS;
+    NavatalaMeshGraphNet*, const void*, size_t, const void*, size_t,
+    const void*, void*, NavatalaGpuQueue*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
 NavatalaErrorCode navatala_mgn_forward_no_edge_features(
-    NavatalaMeshGraphNet* mgn,
-    const void* node_features,
-    size_t n_nodes,
-    const void* edge_index,
-    size_t n_edges,
-    void* output,
-    NavatalaGpuQueue* queue)
-{
-    return navatala_mgn_forward(mgn, node_features, n_nodes, edge_index, n_edges, nullptr, output, queue);
+    NavatalaMeshGraphNet*, const void*, size_t, const void*, size_t,
+    void*, NavatalaGpuQueue*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
 NavatalaErrorCode navatala_mgn_build_edge_index(
-    NavatalaGpuContext* ctx,
-    const void* faces,
-    size_t n_faces,
-    size_t vertices_per_face,
-    void* edge_index,
-    size_t* n_edges,
-    NavatalaGpuQueue* /*queue*/)
-{
-    if (!ctx || !faces || !edge_index || !n_edges) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    const uint32_t* f = static_cast<const uint32_t*>(faces);
-    uint32_t* edges = static_cast<uint32_t*>(edge_index);
-
-    // Build edges from faces (each face edge is bidirectional)
-    size_t edge_count = 0;
-
-    for (size_t fi = 0; fi < n_faces; ++fi) {
-        for (size_t vi = 0; vi < vertices_per_face; ++vi) {
-            uint32_t v1 = f[fi * vertices_per_face + vi];
-            uint32_t v2 = f[fi * vertices_per_face + (vi + 1) % vertices_per_face];
-
-            // Add both directions
-            edges[edge_count * 2] = v1;
-            edges[edge_count * 2 + 1] = v2;
-            edge_count++;
-
-            edges[edge_count * 2] = v2;
-            edges[edge_count * 2 + 1] = v1;
-            edge_count++;
-        }
-    }
-
-    *n_edges = edge_count;
-    return NAVATALA_SUCCESS;
+    NavatalaGpuContext*, const void*, size_t, size_t, void*, size_t*, NavatalaGpuQueue*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
 NavatalaErrorCode navatala_mgn_compute_edge_features(
-    NavatalaGpuContext* ctx,
-    const void* node_positions,
-    size_t n_nodes,
-    const void* edge_index,
-    size_t n_edges,
-    void* edge_features,
-    NavatalaGpuQueue* /*queue*/)
-{
-    if (!ctx || !node_positions || !edge_index || !edge_features) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    (void)n_nodes;
-
-    const float* pos = static_cast<const float*>(node_positions);
-    const uint32_t* edges = static_cast<const uint32_t*>(edge_index);
-    float* features = static_cast<float*>(edge_features);
-
-    // For each edge, compute: relative position (3) + distance (1)
-    for (size_t ei = 0; ei < n_edges; ++ei) {
-        uint32_t src = edges[ei * 2];
-        uint32_t dst = edges[ei * 2 + 1];
-
-        float dx = pos[dst * 3] - pos[src * 3];
-        float dy = pos[dst * 3 + 1] - pos[src * 3 + 1];
-        float dz = pos[dst * 3 + 2] - pos[src * 3 + 2];
-        float dist = std::sqrt(dx * dx + dy * dy + dz * dz);
-
-        features[ei * 4] = dx;
-        features[ei * 4 + 1] = dy;
-        features[ei * 4 + 2] = dz;
-        features[ei * 4 + 3] = dist;
-    }
-
-    return NAVATALA_SUCCESS;
+    NavatalaGpuContext*, const void*, size_t, const void*, size_t, void*, NavatalaGpuQueue*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
-NavatalaErrorCode navatala_mgn_save(
-    NavatalaMeshGraphNet* mgn,
-    const char* path)
-{
-    if (!mgn || !path) {
-        return NAVATALA_INVALID_PARAM;
-    }
-    return NAVATALA_SUCCESS;
+NavatalaErrorCode navatala_mgn_save(NavatalaMeshGraphNet*, const char*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
 NavatalaErrorCode navatala_mgn_load(
-    NavatalaGpuContext* ctx,
-    const char* /*path*/,
-    const NavatalaMGNConfig* config,
-    NavatalaMeshGraphNet** out_mgn)
-{
-    return navatala_mgn_create(ctx, config, out_mgn);
+    NavatalaGpuContext*, const char*, const NavatalaMGNConfig*, NavatalaMeshGraphNet**) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
-NavatalaErrorCode navatala_mgn_num_params(
-    NavatalaMeshGraphNet* mgn,
-    size_t* out_num_params)
-{
-    if (!mgn || !out_num_params) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    auto* impl = reinterpret_cast<NavatalaMeshGraphNetImpl*>(mgn);
-    if (!impl->valid) {
-        return NAVATALA_INVALID_HANDLE;
-    }
-
-    *out_num_params = impl->num_params;
-    return NAVATALA_SUCCESS;
+NavatalaErrorCode navatala_mgn_num_params(NavatalaMeshGraphNet*, size_t*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
-// ============================================================================
-// Profiling Functions ()
-// ============================================================================
 
 NavatalaErrorCode navatala_event_elapsed_ms(
-    NavatalaGpuEvent* start,
-    NavatalaGpuEvent* end,
-    float* elapsed_ms)
-{
-    if (!start || !end || !elapsed_ms) {
-        return NAVATALA_INVALID_PARAM;
-    }
-
-    auto* start_impl = reinterpret_cast<NavatalaGpuEventImpl*>(start);
-    auto* end_impl = reinterpret_cast<NavatalaGpuEventImpl*>(end);
-
-    if (!start_impl->recorded || !end_impl->recorded) {
-        return NAVATALA_INVALID_HANDLE;
-    }
-
-    // Real timing integration is backend-specific; return a deterministic
-    // non-zero placeholder in the generic wrapper FFI path.
-    *elapsed_ms = 0.001f;
-    return NAVATALA_SUCCESS;
+    NavatalaGpuEvent*, NavatalaGpuEvent*, float*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
-NavatalaErrorCode navatala_profiler_push_marker(
-    NavatalaGpuContext* /*ctx*/,
-    const char* /*name*/)
-{
-    // Marker plumbing is backend specific (NVTX/ROCTX/etc.).
-    return NAVATALA_SUCCESS;
+NavatalaErrorCode navatala_profiler_push_marker(NavatalaGpuContext*, const char*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
-
-NavatalaErrorCode navatala_profiler_pop_marker(
-    NavatalaGpuContext* /*ctx*/)
-{
-    return NAVATALA_SUCCESS;
+NavatalaErrorCode navatala_profiler_pop_marker(NavatalaGpuContext*) {
+    return NAVATALA_NOT_IMPLEMENTED;
 }
 
 } // extern "C"

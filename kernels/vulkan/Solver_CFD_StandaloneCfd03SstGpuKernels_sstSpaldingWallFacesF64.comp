@@ -1,0 +1,214 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Navatala Systems (OPC) Pvt Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+double gpu_cbrt_pos_f64(double x) {
+  double ax = (x > 0.0 ? x : 0.0);
+  if (ax == 0.0) { return 0.0; }
+  double y = double(pow(float(ax), 0.3333333432674408));
+  if (y == 0.0) { y = 1.0e-100; }
+  y = ((2.0 * y) + (ax / (y * y))) / 3.0;
+  y = ((2.0 * y) + (ax / (y * y))) / 3.0;
+  y = ((2.0 * y) + (ax / (y * y))) / 3.0;
+  y = ((2.0 * y) + (ax / (y * y))) / 3.0;
+  y = ((2.0 * y) + (ax / (y * y))) / 3.0;
+  return y;
+}
+
+double gpu_pow_pos_f64_two_thirds(double x) {
+  double r = gpu_cbrt_pos_f64(x);
+  return r * r;
+}
+
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer buf_tangentialVelocityX {
+  double tangentialVelocityX[];
+};
+layout(std430, binding = 1) readonly buffer buf_tangentialVelocityY {
+  double tangentialVelocityY[];
+};
+layout(std430, binding = 2) readonly buffer buf_tangentialVelocityZ {
+  double tangentialVelocityZ[];
+};
+layout(std430, binding = 3) readonly buffer buf_wallDistance {
+  double wallDistance[];
+};
+layout(std430, binding = 4) readonly buffer buf_kinematicViscosity {
+  double kinematicViscosity[];
+};
+layout(std430, binding = 5) readonly buffer buf_density {
+  double density[];
+};
+layout(std430, binding = 6) readonly buffer buf_dynamicViscosity {
+  double dynamicViscosity[];
+};
+layout(std430, binding = 7) readonly buffer buf_referenceVelocity {
+  double referenceVelocity[];
+};
+layout(std430, binding = 8) readonly buffer buf_nFaces {
+  uint nFaces[];
+};
+layout(std430, binding = 9) writeonly buffer buf_densityOut {
+  double densityOut[];
+};
+layout(std430, binding = 10) writeonly buffer buf_tangentMagnitudeOut {
+  double tangentMagnitudeOut[];
+};
+layout(std430, binding = 11) writeonly buffer buf_frictionVelocityOut {
+  double frictionVelocityOut[];
+};
+layout(std430, binding = 12) writeonly buffer buf_tangentUnitXOut {
+  double tangentUnitXOut[];
+};
+layout(std430, binding = 13) writeonly buffer buf_tangentUnitYOut {
+  double tangentUnitYOut[];
+};
+layout(std430, binding = 14) writeonly buffer buf_tangentUnitZOut {
+  double tangentUnitZOut[];
+};
+layout(std430, binding = 15) writeonly buffer buf_wallShearOnFluidXOut {
+  double wallShearOnFluidXOut[];
+};
+layout(std430, binding = 16) writeonly buffer buf_wallShearOnFluidYOut {
+  double wallShearOnFluidYOut[];
+};
+layout(std430, binding = 17) writeonly buffer buf_wallShearOnFluidZOut {
+  double wallShearOnFluidZOut[];
+};
+layout(std430, binding = 18) writeonly buffer buf_uPlusOut {
+  double uPlusOut[];
+};
+layout(std430, binding = 19) writeonly buffer buf_yPlusOut {
+  double yPlusOut[];
+};
+layout(std430, binding = 20) writeonly buffer buf_wallShearMagnitudeOut {
+  double wallShearMagnitudeOut[];
+};
+layout(std430, binding = 21) writeonly buffer buf_omegaViscousOut {
+  double omegaViscousOut[];
+};
+layout(std430, binding = 22) writeonly buffer buf_omegaLogarithmicOut {
+  double omegaLogarithmicOut[];
+};
+layout(std430, binding = 23) writeonly buffer buf_omegaWallOut {
+  double omegaWallOut[];
+};
+layout(std430, binding = 24) writeonly buffer buf_turbulentKinematicViscosityWallOut {
+  double turbulentKinematicViscosityWallOut[];
+};
+layout(std430, binding = 25) writeonly buffer buf_finalResidualOut {
+  double finalResidualOut[];
+};
+layout(std430, binding = 26) writeonly buffer buf_iterationsOut {
+  uint iterationsOut[];
+};
+layout(std430, binding = 27) writeonly buffer buf_zeroVelocityBranchOut {
+  uint zeroVelocityBranchOut[];
+};
+
+// kernel: Solver_CFD_StandaloneCfd03SstGpuKernels_sstSpaldingWallFacesF64
+void main() {
+  int gid0 = int(gl_GlobalInvocationID.x);
+  uint gid = uint(int(gl_GlobalInvocationID.x));
+  uint faceCount = nFaces[0];
+  if (gid < faceCount) {
+    double velocityX = tangentialVelocityX[gid];
+    double velocityY = tangentialVelocityY[gid];
+    double velocityZ = tangentialVelocityZ[gid];
+    double distance = wallDistance[gid];
+    double nu = kinematicViscosity[gid];
+    double rho = density[gid];
+    double mu = dynamicViscosity[gid];
+    double reference = referenceVelocity[gid];
+    double tangentMagnitude = sqrt((((velocityX * velocityX) + (velocityY * velocityY)) + (velocityZ * velocityZ)));
+    double velocityFloor = (packDouble2x32(uvec2(0x86a12b9bu, 0x3d06849bu)) * (((reference < packDouble2x32(uvec2(0x00000000u, 0x3ff00000u)))) ? (packDouble2x32(uvec2(0x00000000u, 0x3ff00000u))) : (reference)));
+    double tangentUnitX = (((packDouble2x32(uvec2(0x00000000u, 0x00000000u)) < tangentMagnitude)) ? ((velocityX / tangentMagnitude)) : (packDouble2x32(uvec2(0x00000000u, 0x00000000u))));
+    double tangentUnitY = (((packDouble2x32(uvec2(0x00000000u, 0x00000000u)) < tangentMagnitude)) ? ((velocityY / tangentMagnitude)) : (packDouble2x32(uvec2(0x00000000u, 0x00000000u))));
+    double tangentUnitZ = (((packDouble2x32(uvec2(0x00000000u, 0x00000000u)) < tangentMagnitude)) ? ((velocityZ / tangentMagnitude)) : (packDouble2x32(uvec2(0x00000000u, 0x00000000u))));
+    double omegaViscous = ((packDouble2x32(uvec2(0x00000000u, 0x40180000u)) * nu) / ((packDouble2x32(uvec2(0x33333333u, 0x3fb33333u)) * distance) * distance));
+    double frictionVelocity = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
+    double uPlus = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
+    double yPlus = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
+    double wallShearMagnitude = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
+    double omegaLogarithmic = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
+    double omegaWall = omegaViscous;
+    double nutWall = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
+    double finalResidual = packDouble2x32(uvec2(0x00000000u, 0x00000000u));
+    uint iterations = 0u;
+    uint zeroVelocityBranch = 0u;
+    if (tangentMagnitude <= velocityFloor) {
+      zeroVelocityBranch = 1u;
+    } else {
+      double reynoldsY = ((distance * tangentMagnitude) / nu);
+      double lower = packDouble2x32(uvec2(0x00000000u, 0x3eb00000u));
+      double upper = packDouble2x32(uvec2(0x00000000u, 0x40500000u));
+      double lowerResidual = ((lower + (((((double(exp(float((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * lower)))) - packDouble2x32(uvec2(0x00000000u, 0x3ff00000u))) - (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * lower)) - (((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * lower) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * lower)) / packDouble2x32(uvec2(0x00000000u, 0x40000000u)))) - ((((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * lower) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * lower)) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * lower)) / packDouble2x32(uvec2(0x00000000u, 0x40180000u)))) / packDouble2x32(uvec2(0x9999999au, 0x40239999u)))) - (reynoldsY / lower));
+      for (int iteration = 0; iteration < int(80); ++iteration) {
+        double midpoint = (lower + (packDouble2x32(uvec2(0x00000000u, 0x3fe00000u)) * (upper - lower)));
+        double midpointResidual = ((midpoint + (((((double(exp(float((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * midpoint)))) - packDouble2x32(uvec2(0x00000000u, 0x3ff00000u))) - (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * midpoint)) - (((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * midpoint) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * midpoint)) / packDouble2x32(uvec2(0x00000000u, 0x40000000u)))) - ((((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * midpoint) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * midpoint)) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * midpoint)) / packDouble2x32(uvec2(0x00000000u, 0x40180000u)))) / packDouble2x32(uvec2(0x9999999au, 0x40239999u)))) - (reynoldsY / midpoint));
+        if ((midpointResidual < packDouble2x32(uvec2(0x00000000u, 0x00000000u))) == (lowerResidual < packDouble2x32(uvec2(0x00000000u, 0x00000000u)))) {
+          lower = midpoint;
+          lowerResidual = midpointResidual;
+        } else {
+          upper = midpoint;
+        }
+      }
+      double midpointCandidate = (lower + (packDouble2x32(uvec2(0x00000000u, 0x3fe00000u)) * (upper - lower)));
+      double selectedUPlus = lower;
+      double selectedResidual = (((((lower + (((((double(exp(float((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * lower)))) - packDouble2x32(uvec2(0x00000000u, 0x3ff00000u))) - (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * lower)) - (((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * lower) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * lower)) / packDouble2x32(uvec2(0x00000000u, 0x40000000u)))) - ((((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * lower) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * lower)) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * lower)) / packDouble2x32(uvec2(0x00000000u, 0x40180000u)))) / packDouble2x32(uvec2(0x9999999au, 0x40239999u)))) - (reynoldsY / lower)) < packDouble2x32(uvec2(0x00000000u, 0x00000000u)))) ? ((-((lower + (((((double(exp(float((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * lower)))) - packDouble2x32(uvec2(0x00000000u, 0x3ff00000u))) - (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * lower)) - (((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * lower) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * lower)) / packDouble2x32(uvec2(0x00000000u, 0x40000000u)))) - ((((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * lower) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * lower)) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * lower)) / packDouble2x32(uvec2(0x00000000u, 0x40180000u)))) / packDouble2x32(uvec2(0x9999999au, 0x40239999u)))) - (reynoldsY / lower)))) : (((lower + (((((double(exp(float((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * lower)))) - packDouble2x32(uvec2(0x00000000u, 0x3ff00000u))) - (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * lower)) - (((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * lower) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * lower)) / packDouble2x32(uvec2(0x00000000u, 0x40000000u)))) - ((((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * lower) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * lower)) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * lower)) / packDouble2x32(uvec2(0x00000000u, 0x40180000u)))) / packDouble2x32(uvec2(0x9999999au, 0x40239999u)))) - (reynoldsY / lower))));
+      double upperCandidateResidual = (((((upper + (((((double(exp(float((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * upper)))) - packDouble2x32(uvec2(0x00000000u, 0x3ff00000u))) - (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * upper)) - (((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * upper) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * upper)) / packDouble2x32(uvec2(0x00000000u, 0x40000000u)))) - ((((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * upper) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * upper)) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * upper)) / packDouble2x32(uvec2(0x00000000u, 0x40180000u)))) / packDouble2x32(uvec2(0x9999999au, 0x40239999u)))) - (reynoldsY / upper)) < packDouble2x32(uvec2(0x00000000u, 0x00000000u)))) ? ((-((upper + (((((double(exp(float((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * upper)))) - packDouble2x32(uvec2(0x00000000u, 0x3ff00000u))) - (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * upper)) - (((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * upper) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * upper)) / packDouble2x32(uvec2(0x00000000u, 0x40000000u)))) - ((((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * upper) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * upper)) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * upper)) / packDouble2x32(uvec2(0x00000000u, 0x40180000u)))) / packDouble2x32(uvec2(0x9999999au, 0x40239999u)))) - (reynoldsY / upper)))) : (((upper + (((((double(exp(float((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * upper)))) - packDouble2x32(uvec2(0x00000000u, 0x3ff00000u))) - (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * upper)) - (((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * upper) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * upper)) / packDouble2x32(uvec2(0x00000000u, 0x40000000u)))) - ((((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * upper) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * upper)) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * upper)) / packDouble2x32(uvec2(0x00000000u, 0x40180000u)))) / packDouble2x32(uvec2(0x9999999au, 0x40239999u)))) - (reynoldsY / upper))));
+      if (upperCandidateResidual < selectedResidual) {
+        selectedUPlus = upper;
+        selectedResidual = upperCandidateResidual;
+      }
+      double midpointCandidateResidual = (((((midpointCandidate + (((((double(exp(float((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * midpointCandidate)))) - packDouble2x32(uvec2(0x00000000u, 0x3ff00000u))) - (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * midpointCandidate)) - (((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * midpointCandidate) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * midpointCandidate)) / packDouble2x32(uvec2(0x00000000u, 0x40000000u)))) - ((((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * midpointCandidate) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * midpointCandidate)) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * midpointCandidate)) / packDouble2x32(uvec2(0x00000000u, 0x40180000u)))) / packDouble2x32(uvec2(0x9999999au, 0x40239999u)))) - (reynoldsY / midpointCandidate)) < packDouble2x32(uvec2(0x00000000u, 0x00000000u)))) ? ((-((midpointCandidate + (((((double(exp(float((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * midpointCandidate)))) - packDouble2x32(uvec2(0x00000000u, 0x3ff00000u))) - (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * midpointCandidate)) - (((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * midpointCandidate) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * midpointCandidate)) / packDouble2x32(uvec2(0x00000000u, 0x40000000u)))) - ((((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * midpointCandidate) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * midpointCandidate)) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * midpointCandidate)) / packDouble2x32(uvec2(0x00000000u, 0x40180000u)))) / packDouble2x32(uvec2(0x9999999au, 0x40239999u)))) - (reynoldsY / midpointCandidate)))) : (((midpointCandidate + (((((double(exp(float((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * midpointCandidate)))) - packDouble2x32(uvec2(0x00000000u, 0x3ff00000u))) - (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * midpointCandidate)) - (((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * midpointCandidate) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * midpointCandidate)) / packDouble2x32(uvec2(0x00000000u, 0x40000000u)))) - ((((packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * midpointCandidate) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * midpointCandidate)) * (packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u)) * midpointCandidate)) / packDouble2x32(uvec2(0x00000000u, 0x40180000u)))) / packDouble2x32(uvec2(0x9999999au, 0x40239999u)))) - (reynoldsY / midpointCandidate))));
+      if (midpointCandidateResidual < selectedResidual) {
+        selectedUPlus = midpointCandidate;
+        selectedResidual = midpointCandidateResidual;
+      }
+      uPlus = selectedUPlus;
+      finalResidual = selectedResidual;
+      iterations = 80u;
+      frictionVelocity = (tangentMagnitude / selectedUPlus);
+      yPlus = ((distance * frictionVelocity) / nu);
+      wallShearMagnitude = ((rho * frictionVelocity) * frictionVelocity);
+      omegaLogarithmic = (frictionVelocity / ((sqrt(packDouble2x32(uvec2(0x70a3d70au, 0x3fb70a3du))) * packDouble2x32(uvec2(0xa3d70a3du, 0x3fda3d70u))) * distance));
+      omegaWall = sqrt(((omegaViscous * omegaViscous) + (omegaLogarithmic * omegaLogarithmic)));
+      double turbulentDynamicViscosityWall = ((((((((rho * frictionVelocity) * frictionVelocity) * distance) / (((tangentMagnitude < velocityFloor)) ? (velocityFloor) : (tangentMagnitude))) - mu) < packDouble2x32(uvec2(0x00000000u, 0x00000000u)))) ? (packDouble2x32(uvec2(0x00000000u, 0x00000000u))) : ((((((rho * frictionVelocity) * frictionVelocity) * distance) / (((tangentMagnitude < velocityFloor)) ? (velocityFloor) : (tangentMagnitude))) - mu)));
+      nutWall = (turbulentDynamicViscosityWall / rho);
+    }
+    densityOut[gid] = rho;
+    tangentMagnitudeOut[gid] = tangentMagnitude;
+    frictionVelocityOut[gid] = frictionVelocity;
+    tangentUnitXOut[gid] = tangentUnitX;
+    tangentUnitYOut[gid] = tangentUnitY;
+    tangentUnitZOut[gid] = tangentUnitZ;
+    wallShearOnFluidXOut[gid] = (-(wallShearMagnitude * tangentUnitX));
+    wallShearOnFluidYOut[gid] = (-(wallShearMagnitude * tangentUnitY));
+    wallShearOnFluidZOut[gid] = (-(wallShearMagnitude * tangentUnitZ));
+    uPlusOut[gid] = uPlus;
+    yPlusOut[gid] = yPlus;
+    wallShearMagnitudeOut[gid] = wallShearMagnitude;
+    omegaViscousOut[gid] = omegaViscous;
+    omegaLogarithmicOut[gid] = omegaLogarithmic;
+    omegaWallOut[gid] = omegaWall;
+    turbulentKinematicViscosityWallOut[gid] = nutWall;
+    finalResidualOut[gid] = finalResidual;
+    iterationsOut[gid] = iterations;
+    zeroVelocityBranchOut[gid] = zeroVelocityBranch;
+  }
+}

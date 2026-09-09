@@ -809,7 +809,8 @@ def test_readonly_role_validation_accepts_inputs_and_rejects_outputs():
     with pytest.raises(PermissionError, match="requires write access"):
         validate_call("linalg", "axpy", {"x": FakeTensor(readonly=False), "y": FakeTensor(readonly=True)}, {"alpha": 1.0, "backend": "cuda"})
 
-def test_dlpack_backend_neutral_adapter_surface():
+def test_dlpack_backend_neutral_adapter_surface(monkeypatch):
+    monkeypatch.setattr(runtime, "get_capabilities", lambda: {"runtime_mode": "real", "extension_loaded": True, "backends": {"cuda": {"available": True}}})
     assert runtime.dlpack_device_to_backend(2) == "cuda"
     assert runtime.dlpack_device_to_backend(10) == "hip"
     assert runtime.dlpack_backend_device_type("cuda") == 2
@@ -824,6 +825,36 @@ def test_dlpack_backend_neutral_adapter_surface():
     assert not adapter.supports_zero_copy_import((10, 0), dtype="float32")
     with pytest.raises(runtime.UnsupportedBackendError):
         runtime.dlpack_device_to_backend(9999)
+
+def test_execution_availability_not_manifest_membership(monkeypatch):
+    from types import SimpleNamespace
+    binding = next(b for b in runtime._API_MANIFEST["bindings"] if b.get("backendSupport"))
+    row = binding["backendSupport"][0]
+    backend, dtype = row["backend"], row["dtypes"][0]
+    name = binding["module"] + "." + binding["pythonName"]
+    caps = {"runtime_mode": "real", "extension_loaded": True,
+            "backends": {backend: {"available": True}},
+            "linked_operation_support": {name: {backend: [dtype]}}}
+    ext = SimpleNamespace(get_capabilities=lambda: caps.copy())
+    monkeypatch.setattr(runtime._core, "_load_extension", lambda required=False: ext)
+    assert runtime.supports(name, backend=backend, dtype=dtype)
+    assert runtime.supports(name)
+    assert runtime.get_capabilities()["operations"][name]["available"]
+    assert not runtime.supports(name, dtype="unknown-dtype")
+    assert not runtime.supports(name, backend="unknown-backend")
+    assert not runtime.supports("unknown-operation")
+    caps["backends"][backend]["available"] = False
+    assert not runtime.supports(name)
+    assert not runtime.get_capabilities()["operations"][name]["available"]
+    caps["backends"][backend]["available"] = True
+    for mode in ("stub", "unavailable"):
+        caps["runtime_mode"] = mode
+        assert not runtime.supports(name)
+    caps["runtime_mode"] = "real"
+    caps["linked_operation_support"] = {}
+    assert not runtime.supports(name)
+    monkeypatch.setattr(runtime._core, "_load_extension", lambda required=False: None)
+    assert not runtime.supports(name)
 
 def test_internal_kernel_launch_fixture_if_backend_available():
     np = pytest.importorskip("numpy")

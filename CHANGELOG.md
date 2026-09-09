@@ -4,6 +4,22 @@ All notable user-visible changes to `navatala_gpu` are recorded here. This
 file follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the
 project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Removed
+
+- Retired the Metal, OpenCL and Vulkan GLSL sources and Vulkan SPIR-V artifact for
+  `navatala_cfd_scalar_ldu_coupled_interface_add`. The older implementation
+  used non-atomic read-modify-write and could lose contributions when multiple
+  interface faces target the same cell. The corrected contract requires
+  Float32 scatter accumulation, which the current Metal/Vulkan/OpenCL emitters do
+  not support. Historical artifacts are not retained as a fallback.
+- The generated manifest reports this operation unavailable on Metal, Vulkan
+  and OpenCL; CUDA and HIP source implementations remain available. This is
+  an operation-level retirement, not removal of those backend implementations
+  or their source-build workflows. F32 kernel classification does not imply
+  availability on every backend. See `docs/BACKENDS.md`.
+
 ## [0.1.6] — Pre-alpha (2026-07-09)
 
 ### Changed
